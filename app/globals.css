@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   DESIGN SYSTEM — "Midnight Aqua" (modern, premium, fintech-terminal)
+   Dark cool base · teal-aqua dominant accent · warm amber support · coral kill.
+   New code should use the real names: aqua / aqua-bright / amber / ember.
+   The legacy slots gold / gold-bright / cyan are kept as ALIASES so the original
+   components keep working unchanged (gold→aqua, cyan→amber). Documented in CLAUDE.md.
+   Motion grammar lives in lib/motion.ts; one ease-out curve, transform/opacity only.
+   ========================================================================== */
+
+@theme {
+  /* — Surfaces (cool near-black → slate) — */
+  --color-canvas: #0b0f12;
+  --color-surface: #121820;
+  --color-elevated: #18212a;
+  --color-raised: #202b35;
+
+  /* — Hairlines / borders (cool, low-alpha, kept visible for a11y) — */
+  --color-line: rgba(230, 237, 243, 0.1);
+  --color-line-strong: rgba(230, 237, 243, 0.2);
+
+  /* — Text (contrast on canvas: ink ~15:1, stone ~8.6:1, muted ~5.1:1) — */
+  --color-ink: #e6edf3;
+  --color-stone: #9db0bd;
+  --color-muted: #7c8c9a;
+
+  /* — Accents (real names) — */
+  --color-aqua: #2dd4bf; /* dominant */
+  --color-aqua-bright: #5eead4; /* hover / glow */
+  --color-amber: #f4b740; /* support (sparing) */
+  --color-ember: #ef6f6c; /* semantic only: "killed" markers */
+
+  /* — Legacy aliases so pre-recolor components keep working — */
+  --color-gold: var(--color-aqua);
+  --color-gold-bright: var(--color-aqua-bright);
+  --color-cyan: var(--color-amber);
+
+  /* — Type — */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-newsreader);
+
+  /* — Radii (slightly larger = more modern) — */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+
+  /* — Motion: one ease-out curve drives every CSS transition too — */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --default-transition-timing-function: var(--ease-out);
+  --default-transition-duration: 200ms;
+}
+
+/* ----------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --header-h: 68px;
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 24px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-aqua) 32%, transparent);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-aqua);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Reusable primitives
+   -------------------------------------------------------------------------- */
+@layer components {
+  .container-edge {
+    width: 100%;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-edge {
+      padding-inline: 2rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .editorial {
+    font-family: var(--font-serif), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .measure {
+    max-width: 64ch;
+  }
+
+  /* Aqua gradient ink for select words (static, not an animated sheen) */
+  .text-gold-grad,
+  .text-accent-grad {
+    background: linear-gradient(
+      100deg,
+      var(--color-aqua-bright),
+      var(--color-aqua) 55%,
+      color-mix(in oklab, var(--color-aqua) 70%, var(--color-ink))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Soft aqua glow for hero/CTA emphasis */
+  .glow-accent {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--color-aqua) 30%, transparent),
+      0 12px 40px -12px color-mix(in oklab, var(--color-aqua) 45%, transparent);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Texture utilities
+   -------------------------------------------------------------------------- */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility bg-grid-fine {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 26px 26px;
+}
+
+.grain {
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ----------------------------------------------------------------------------
+   The one ambient "alive" detail: a mono terminal cursor blink.
+   -------------------------------------------------------------------------- */
+@keyframes blink-soft {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0.18;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.cursor-blink {
+  animation: blink-soft 1.5s steps(1, end) infinite;
+}
+
+/* Slow conic shimmer for gradient ring borders (used on key cards/buttons). */
+@keyframes spin-slow {
+  to {
+    transform: rotate(1turn);
+  }
+}
+.ring-shimmer {
+  animation: spin-slow 6s linear infinite;
+}
+
+/* Horizontal marquee (credibility strip) — only applied by the client component
+   when motion is allowed, so reduced-motion users get a static row instead. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-x 38s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ----------------------------------------------------------------------------
+   Amplified hover interactions — make existing structure feel clickable/alive.
+   All transform/opacity only; reduced-motion neutralizes them via the global
+   transition-duration override above.
+   -------------------------------------------------------------------------- */
+
+/* Tag fill-wipe: a teal wash sweeps in left→right on hover (stack tags). */
+.tag-wipe {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  transition:
+    color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out);
+}
+.tag-wipe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in oklab, var(--color-aqua) 22%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out);
+}
+.tag-wipe:hover::before {
+  transform: scaleX(1);
+}
+
+/* Row hover rail + wash: a left aqua bar grows + a faint wash sweeps in
+   (capabilities matrix, writing list — turns flat rows into live targets). */
+.row-rail {
+  position: relative;
+}
+.row-rail::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 12%;
+  bottom: 12%;
+  width: 2px;
+  background: var(--color-aqua);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.35s var(--ease-out);
+}
+.row-rail:hover::before {
+  transform: scaleY(1);
+}
+.row-rail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--color-aqua) 9%, transparent),
+    transparent 65%
+  );
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out);
+}
+.row-rail:hover::after {
+  transform: scaleX(1);
+}
+
+/* DRAFT badge — a slow opacity pulse so it reads as "in progress", not dead. */
+@keyframes draft-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.draft-pulse {
+  animation: draft-pulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .draft-pulse {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+/* Card hover-lift: a clear raise + shadow on interactive cards. Pairs with the
+   SpotlightCard spotlight; transform-only so it composes with tilt springs. */
+.card-lift {
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 50px -24px rgba(0, 0, 0, 0.85);
+}
