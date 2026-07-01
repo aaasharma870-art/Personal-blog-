@@ -20,15 +20,16 @@ export default function Home() {
       <Journey />
       <MediaBand
         video="/media/band-flow.mp4"
-        image="/media/hero-still.png"
+        image="/media/still-terminal.png"
         kicker="Operating ethos"
         statement="Treat every backtest as guilty until proven innocent."
+        converge
       />
       <Projects />
       <Capabilities />
       <MediaBand
         video="/media/v-contour.mp4"
-        image="/media/hero-still.png"
+        image="/media/still-network.png"
         kicker="On method"
         statement="A good system is not merely fast — it is inspectable, resilient, and honest about its limits."
       />

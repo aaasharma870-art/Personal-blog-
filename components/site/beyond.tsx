@@ -2,6 +2,8 @@ import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
+import { ParallaxLayer } from "@/components/visuals/parallax-layer";
+import { BeyondMotif } from "@/components/visuals/beyond-motif";
 import { beyond } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +12,7 @@ export function Beyond() {
     <Section
       id="beyond"
       seam
+      rhythm="tight"
       backdrop={
         <AmbientBackground
           image="/media/hero-still.png"
@@ -42,12 +45,24 @@ export function Beyond() {
           >
             <div
               className={cn(
-                "lg:col-span-4",
+                "relative lg:col-span-4",
                 i % 2 === 1 && "lg:order-2 lg:col-start-9",
               )}
             >
-              <p className="eyebrow text-aqua/80">{b.kicker}</p>
-              <h3 className="mt-3 font-serif text-2xl font-medium text-ink">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -left-1 -top-8 select-none font-serif text-7xl leading-none text-ink/[0.05] sm:text-8xl"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <ParallaxLayer
+                depth={-0.7}
+                className="pointer-events-none absolute right-0 top-1 hidden size-20 opacity-70 lg:block"
+              >
+                <BeyondMotif variant={i} />
+              </ParallaxLayer>
+              <p className="eyebrow relative text-aqua/80">{b.kicker}</p>
+              <h3 className="relative mt-3 font-serif text-2xl font-medium text-ink">
                 {b.title}
               </h3>
             </div>

@@ -46,7 +46,7 @@ export function SectionRail() {
           >
             <span
               className={cn(
-                "pointer-events-none rounded bg-canvas/80 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider backdrop-blur-sm transition-all duration-200",
+                "pointer-events-none rounded bg-canvas/80 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider backdrop-blur-sm transition-[transform,opacity,color] duration-200",
                 isActive
                   ? "text-aqua opacity-100"
                   : "translate-x-1 text-stone opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
@@ -56,7 +56,7 @@ export function SectionRail() {
             </span>
             <span
               className={cn(
-                "h-2 w-2 shrink-0 rounded-full border transition-all duration-300",
+                "h-2 w-2 shrink-0 rounded-full border transition-[transform,border-color,background-color] duration-300",
                 isActive
                   ? "scale-[1.6] border-aqua bg-aqua shadow-[0_0_10px_2px_rgba(45,212,191,0.6)]"
                   : "border-stone/50 bg-transparent group-hover:border-aqua group-hover:bg-aqua/30",

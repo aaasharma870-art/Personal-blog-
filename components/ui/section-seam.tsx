@@ -2,16 +2,21 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import type { Variants } from "motion/react";
-import { dur, ease, viewportReplay } from "@/lib/motion";
+import { dur, ease, viewportSignature } from "@/lib/motion";
 
 /**
- * SectionSeam — a dramatic cinematic transition that plays at a section's top
- * edge as it scrolls in: the aqua line draws from center with a white flash, a
- * large glow blooms, a soft light shaft falls into the section, and a bright
- * streak sweeps across. One-shot (viewport once), transform/opacity only.
- * Reduced motion collapses to a static hairline.
+ * SectionSeam — a section-top transition marker.
+ * `quiet` (default) = an aqua line draws from center + a soft bloom at halved
+ * opacity; no flash, shaft, or sweep — the calm boundary used on most sections.
+ * `signature` = the full cinematic seam (aqua draw + white flash + bloom + light
+ * shaft + bright sweep), reserved for EXACTLY 2 sites (Projects entry, Contact
+ * finale). Transform/opacity only; reduced motion collapses to a static hairline.
  */
-export function SectionSeam() {
+export function SectionSeam({
+  variant = "quiet",
+}: {
+  variant?: "signature" | "quiet";
+}) {
   const reduce = useReducedMotion();
 
   if (reduce) {
@@ -23,21 +28,23 @@ export function SectionSeam() {
     );
   }
 
+  const signature = variant === "signature";
+
   const line: Variants = {
     hidden: { scaleX: 0, opacity: 0.2 },
     show: { scaleX: 1, opacity: 1, transition: { duration: dur.reveal, ease } },
   };
-  const flash: Variants = {
-    hidden: { opacity: 0 },
-    show: { opacity: [0, 1, 0], transition: { duration: 0.9, ease, times: [0, 0.22, 1] } },
-  };
   const bloom: Variants = {
     hidden: { opacity: 0, scaleX: 0.4 },
     show: {
-      opacity: [0, 0.9, 0.32],
+      opacity: signature ? [0, 0.9, 0.32] : [0, 0.45, 0.16],
       scaleX: 1,
       transition: { duration: 1.2, ease, times: [0, 0.4, 1] },
     },
+  };
+  const flash: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: [0, 1, 0], transition: { duration: 0.9, ease, times: [0, 0.22, 1] } },
   };
   const shaft: Variants = {
     hidden: { opacity: 0, scaleY: 0.3 },
@@ -58,15 +65,11 @@ export function SectionSeam() {
       className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px"
       initial="hidden"
       whileInView="show"
-      viewport={viewportReplay}
+      viewport={viewportSignature}
     >
       <motion.div
         variants={line}
         className="absolute inset-0 origin-center bg-gradient-to-r from-transparent via-aqua/80 to-transparent"
-      />
-      <motion.div
-        variants={flash}
-        className="absolute inset-0 origin-center bg-gradient-to-r from-transparent via-white/60 to-transparent"
       />
       <motion.div
         variants={bloom}
@@ -75,18 +78,26 @@ export function SectionSeam() {
           background: "radial-gradient(ellipse, rgba(45,212,191,0.28), transparent 70%)",
         }}
       />
-      <motion.div
-        variants={shaft}
-        className="absolute left-1/2 top-0 h-48 w-[60rem] max-w-[96vw] origin-top -translate-x-1/2"
-        style={{
-          background: "linear-gradient(to bottom, rgba(45,212,191,0.14), transparent 80%)",
-        }}
-      />
-      <motion.div
-        variants={sweep}
-        className="absolute top-0 h-0.5 w-56 -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent via-aqua to-transparent"
-        style={{ boxShadow: "0 0 18px 3px rgba(45,212,191,0.6)" }}
-      />
+      {signature ? (
+        <>
+          <motion.div
+            variants={flash}
+            className="absolute inset-0 origin-center bg-gradient-to-r from-transparent via-white/60 to-transparent"
+          />
+          <motion.div
+            variants={shaft}
+            className="absolute left-1/2 top-0 h-48 w-[60rem] max-w-[96vw] origin-top -translate-x-1/2"
+            style={{
+              background: "linear-gradient(to bottom, rgba(45,212,191,0.14), transparent 80%)",
+            }}
+          />
+          <motion.div
+            variants={sweep}
+            className="absolute top-0 h-0.5 w-56 -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent via-aqua to-transparent"
+            style={{ boxShadow: "0 0 18px 3px rgba(45,212,191,0.6)" }}
+          />
+        </>
+      ) : null}
     </motion.div>
   );
 }

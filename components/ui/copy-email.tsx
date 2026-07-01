@@ -2,14 +2,20 @@
 
 import { useRef, useState } from "react";
 import { Check, Mail } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { ease } from "@/lib/motion";
 
 /**
  * CopyEmail — the primary contact affordance. Clicking copies the real address
  * to the clipboard and flashes a confirmation; a secondary mailto link remains
- * for opening a mail client. No fake form (the site is static / backend-free).
+ * for opening a mail client. On a successful copy it emits a one-shot aqua ring
+ * ripple (transform + opacity only). No fake form (the site is static /
+ * backend-free). Reduced motion: keep the Check + aria-live only, no ripple.
  */
 export function CopyEmail({ email }: { email: string }) {
   const [copied, setCopied] = useState(false);
+  const [ripple, setRipple] = useState(0);
+  const reduce = useReducedMotion();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const copy = async () => {
@@ -19,6 +25,7 @@ export function CopyEmail({ email }: { email: string }) {
       return;
     }
     setCopied(true);
+    if (!reduce) setRipple((n) => n + 1);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 1800);
   };
@@ -30,6 +37,16 @@ export function CopyEmail({ email }: { email: string }) {
       aria-label={`Copy email address ${email}`}
       className="glow-accent group relative inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 text-sm font-medium text-canvas transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-gold-bright hover:shadow-[0_0_0_1px_rgba(94,234,212,0.5),0_16px_50px_-12px_rgba(45,212,191,0.7)]"
     >
+      {!reduce && ripple > 0 ? (
+        <motion.span
+          key={ripple}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-aqua-bright"
+          initial={{ scale: 0.9, opacity: 0.5 }}
+          animate={{ scale: 1.15, opacity: 0 }}
+          transition={{ duration: 0.4, ease }}
+        />
+      ) : null}
       {copied ? (
         <Check className="h-4 w-4" aria-hidden="true" />
       ) : (

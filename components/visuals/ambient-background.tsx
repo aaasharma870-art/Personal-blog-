@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
 import { SeamlessVideo } from "@/components/visuals/seamless-video";
@@ -19,17 +19,65 @@ function useMediaQuery(query: string): boolean {
   );
 }
 
+/* Global "one active ambient video at a time" guard. During fast scroll two
+   adjacent in-view sections must not both decode video; the most recent section
+   to enter view claims the single slot and deactivates the previous claimant. */
+const videoClaimants = new Map<symbol, (v: boolean) => void>();
+let activeVideoClaim: symbol | null = null;
+
+function claimActiveVideo(id: symbol, setActive: (v: boolean) => void): void {
+  videoClaimants.set(id, setActive);
+  if (activeVideoClaim && activeVideoClaim !== id) {
+    videoClaimants.get(activeVideoClaim)?.(false);
+  }
+  activeVideoClaim = id;
+}
+
+function releaseActiveVideo(id: symbol): void {
+  if (activeVideoClaim === id) activeVideoClaim = null;
+  videoClaimants.delete(id);
+}
+
+/* Respect Data Saver / slow links: skip video entirely, keep the still poster. */
+function connectionAllowsVideo(): boolean {
+  if (typeof navigator === "undefined") return true;
+  const nav = navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+  const c = nav.connection;
+  if (!c) return true;
+  if (c.saveData) return false;
+  if (c.effectiveType && /(?:^|-)(?:2g|3g)$/.test(c.effectiveType)) return false;
+  return true;
+}
+
 /* Opacity lives on these wrappers so the (opaque) video fully covers its still
    poster — no still bleeding through a semi-transparent video. */
-function StaticMedia({ opacity, children }: { opacity: number; children: ReactNode }) {
+function StaticMedia({
+  opacity,
+  style,
+  children,
+}: {
+  opacity: number;
+  style?: CSSProperties;
+  children: ReactNode;
+}) {
   return (
-    <div className="absolute inset-[-8%]" style={{ opacity }}>
+    <div className="absolute inset-[-8%]" style={{ opacity, ...style }}>
       {children}
     </div>
   );
 }
 
-function ParallaxMedia({ opacity, children }: { opacity: number; children: ReactNode }) {
+function ParallaxMedia({
+  opacity,
+  style,
+  children,
+}: {
+  opacity: number;
+  style?: CSSProperties;
+  children: ReactNode;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -37,7 +85,7 @@ function ParallaxMedia({ opacity, children }: { opacity: number; children: React
   });
   const y = useTransform(scrollYProgress, [0, 1], ["-7%", "7%"]);
   return (
-    <motion.div ref={ref} style={{ y, opacity }} className="absolute inset-[-8%]">
+    <motion.div ref={ref} style={{ y, opacity, ...style }} className="absolute inset-[-8%]">
       {children}
     </motion.div>
   );
@@ -58,6 +106,7 @@ export function AmbientBackground({
   opacity = 0.5,
   parallax = true,
   priority = false,
+  featherMask = false,
   overlayClassName = "bg-gradient-to-b from-canvas/55 via-canvas/65 to-canvas",
   className,
 }: {
@@ -66,22 +115,39 @@ export function AmbientBackground({
   opacity?: number;
   parallax?: boolean;
   priority?: boolean;
+  featherMask?: boolean;
   overlayClassName?: string;
   className?: string;
 }) {
   const reduce = useReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const showVideo = Boolean(video) && !reduce && isDesktop;
+  // Lazy init: connectionAllowsVideo() returns true under SSR (no navigator),
+  // so the server renders netOk=true and the client reads the real link speed on
+  // first render. netOk never affects first-paint DOM (video is gated by `active`,
+  // which starts false), so this is hydration-safe and avoids a setState-in-effect.
+  const [netOk] = useState(connectionAllowsVideo);
+  const showVideo = Boolean(video) && !reduce && isDesktop && netOk;
   const doParallax = parallax && !reduce;
   const rootRef = useRef<HTMLDivElement>(null);
+  const idRef = useRef<symbol | null>(null);
+  if (idRef.current === null) idRef.current = Symbol("ambient-video");
   const [active, setActive] = useState(false);
 
   useEffect(() => {
     if (!showVideo) return;
     const host = rootRef.current;
-    if (!host) return;
+    const id = idRef.current;
+    if (!host || !id) return;
     const io = new IntersectionObserver(
-      ([entry]) => setActive(entry.isIntersecting),
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          claimActiveVideo(id, setActive);
+          setActive(true);
+        } else {
+          releaseActiveVideo(id);
+          setActive(false);
+        }
+      },
       { rootMargin: "-12% 0px -12% 0px", threshold: 0 },
     );
     // small defer so the very first paint isn't competing with video fetch
@@ -89,6 +155,7 @@ export function AmbientBackground({
     return () => {
       clearTimeout(t);
       io.disconnect();
+      releaseActiveVideo(id);
       setActive(false);
     };
   }, [showVideo]);
@@ -100,7 +167,7 @@ export function AmbientBackground({
         alt=""
         fill
         priority={priority}
-        quality={55}
+        quality={45}
         sizes="116vw"
         className="object-cover"
       />
@@ -113,6 +180,14 @@ export function AmbientBackground({
     </>
   );
 
+  const featherStyle: CSSProperties | undefined = featherMask
+    ? {
+        WebkitMaskImage:
+          "radial-gradient(120% 90% at 50% 40%, #000 55%, transparent)",
+        maskImage: "radial-gradient(120% 90% at 50% 40%, #000 55%, transparent)",
+      }
+    : undefined;
+
   return (
     <div
       ref={rootRef}
@@ -120,9 +195,13 @@ export function AmbientBackground({
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
     >
       {doParallax ? (
-        <ParallaxMedia opacity={opacity}>{media}</ParallaxMedia>
+        <ParallaxMedia opacity={opacity} style={featherStyle}>
+          {media}
+        </ParallaxMedia>
       ) : (
-        <StaticMedia opacity={opacity}>{media}</StaticMedia>
+        <StaticMedia opacity={opacity} style={featherStyle}>
+          {media}
+        </StaticMedia>
       )}
       <div className={cn("absolute inset-0", overlayClassName)} />
     </div>

@@ -21,18 +21,32 @@ export const dur = {
   hero: 0.85,
 } as const;
 
-/** Reveal config — `once: false` so reveals REPLAY (reset + re-animate when a
- *  block re-enters). CRITICAL: amount is tiny (0.04) so a block counts as
- *  "in view" while ANY part is on screen and only resets once it is FULLY gone.
- *  This keeps the replay/reset behaviour but prevents the dead "black void" at
- *  section boundaries that amount:0.2 caused (content fading out while still
- *  partly visible, before the next section triggered). */
-export const viewportReplay = { once: false, amount: 0.04 } as const;
+/* — Replay grammar (Spec §5). Two named viewport configs; replay is a
+     deliberate opt-in, not the global default. —
+     viewportOnce      = new DEFAULT for body content: settles ONCE, no
+                         mid-scroll re-trigger flicker.
+     viewportSignature = re-fires only on a full deliberate re-entry; applied
+                         to the ~6 signature beats (Hero, the two MediaBands,
+                         Projects header) via <Reveal replay />, and to the
+                         SectionSeam transition marker. */
+export const viewportOnce = { once: true, amount: 0.25 } as const;
+export const viewportSignature = {
+  once: false,
+  amount: 0.55,
+  margin: "-8% 0px -8% 0px",
+} as const;
 
-/* — Standard reveal: opacity + a clearly-visible upward drift — */
+/* — Standard reveal: a precise "settle" (opacity + a small upward drift + a
+     hair of scale), NOT a jump. Tightened y:38→24 + scale:0.99 for the
+     once-settle grammar (Spec §5). Transform + opacity only. — */
 export const reveal: Variants = {
-  hidden: { opacity: 0, y: 38 },
-  show: { opacity: 1, y: 0, transition: { duration: dur.reveal, ease } },
+  hidden: { opacity: 0, y: 24, scale: 0.99 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: dur.reveal, ease },
+  },
 };
 
 /* — Parent that orchestrates a visible stagger over children carrying `item` — */
@@ -75,6 +89,44 @@ export const revealReduced: Variants = {
 };
 
 export const itemReduced: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.2, ease } },
+};
+
+/* ============================================================================
+   SPRING TOKENS — one physics language shared by ScrollProgress,
+   ScrollVelocity, Parallax(Layer), and every scrub. Passed straight to
+   motion/react's useSpring(). Do not inline per-component spring configs.
+   ========================================================================== */
+
+/** Parallax / progress / scrub — buttery, weighted, no visible overshoot. */
+export const springSoft = { stiffness: 120, damping: 30, mass: 0.4 } as const;
+
+/** Velocity edge-glow — fast, light, snaps in on a genuine flick. */
+export const springSnappy = {
+  stiffness: 500,
+  damping: 16,
+  mass: 0.15,
+} as const;
+
+/** Finale Ken-Burns — slow, heavy, deliberate. */
+export const springWeighted = { stiffness: 60, damping: 20 } as const;
+
+/** Nav glide (layoutId active indicator) — crisp but not twitchy. */
+export const springNav = { stiffness: 380, damping: 30 } as const;
+
+/* — Masked line reveal (Spec §5): the default h2 / MediaBand-statement
+     entrance. The MASK is the consumer's `overflow-hidden` wrapper; this
+     variant only slides the inner line up from below its own box. `115%`
+     (not 100%) clears ~0.15em descender padding the consumer adds inside the
+     mask so g/y/p aren't shaved. Transform-only (no clip-path, no
+     background-clip). Reduced-motion swaps to opacity-only. — */
+export const maskedLine: Variants = {
+  hidden: { y: "115%" },
+  show: { y: 0, transition: { duration: dur.reveal, ease } },
+};
+
+export const maskedLineReduced: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { duration: 0.2, ease } },
 };

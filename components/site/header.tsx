@@ -7,7 +7,7 @@ import { GithubMark } from "@/components/ui/icons";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
 import { nav, site } from "@/lib/content";
 import { cn } from "@/lib/utils";
-import { dur, ease } from "@/lib/motion";
+import { dur, ease, springNav } from "@/lib/motion";
 
 export function Header() {
   const [active, setActive] = useState("");
@@ -86,13 +86,22 @@ export function Header() {
                 )}
               >
                 {n.label}
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "absolute inset-x-3 -bottom-px h-0.5 origin-left rounded-full bg-cyan transition-transform duration-200 group-hover:scale-x-100",
-                    isActive ? "scale-x-100" : "scale-x-0",
-                  )}
-                />
+                {/* hover-only underline for inactive links (preserves affordance) */}
+                {!isActive ? (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-3 -bottom-px h-0.5 origin-left scale-x-0 rounded-full bg-cyan/60 transition-transform duration-200 group-hover:scale-x-100"
+                  />
+                ) : null}
+                {/* single shared indicator — FLIP-glides between active links */}
+                {isActive ? (
+                  <motion.span
+                    aria-hidden="true"
+                    layoutId="nav-underline"
+                    className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-cyan"
+                    transition={reduce ? { duration: 0 } : springNav}
+                  />
+                ) : null}
               </a>
             );
           })}
@@ -136,6 +145,14 @@ export function Header() {
           </button>
         </div>
       </div>
+
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-aqua/25 to-transparent transition-opacity duration-300",
+          scrolled ? "opacity-100" : "opacity-0",
+        )}
+      />
 
       <AnimatePresence>
         {open ? (

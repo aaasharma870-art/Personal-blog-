@@ -212,11 +212,11 @@ export function CommandPalette() {
             role="dialog"
             aria-modal="true"
             aria-label="Command palette"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: dur.base, ease }}
-            className="relative z-10 w-full max-w-xl overflow-hidden rounded-xl border border-line-strong bg-elevated/95 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.85)] backdrop-blur-md"
+            className="relative z-10 w-full max-w-xl overflow-hidden rounded-xl border border-line-strong bg-elevated shadow-[0_30px_80px_-20px_rgba(0,0,0,0.85)] backdrop-blur-md"
           >
             <div className="flex items-center gap-3 border-b border-line px-4">
               <Search className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
@@ -273,13 +273,17 @@ export function CommandPalette() {
                             onMouseMove={() => setActive(idx)}
                             onClick={() => runAt(idx)}
                             className={cn(
-                              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
-                              sel ? "bg-gold/15 text-ink" : "text-stone",
+                              "relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
+                              sel ? "bg-raised text-ink" : "text-stone",
                             )}
                           >
-                            <span
-                              className={cn(sel ? "text-gold" : "text-muted")}
-                            >
+                            {sel ? (
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-aqua"
+                              />
+                            ) : null}
+                            <span className={cn(sel ? "text-aqua" : "text-muted")}>
                               {c.icon}
                             </span>
                             <span className="flex-1">{c.label}</span>
@@ -287,7 +291,7 @@ export function CommandPalette() {
                               <ArrowUpRight className="h-3.5 w-3.5 text-muted" />
                             ) : null}
                             {sel ? (
-                              <CornerDownLeft className="h-3.5 w-3.5 text-gold" />
+                              <CornerDownLeft className="h-3.5 w-3.5 text-aqua" />
                             ) : null}
                           </button>
                         );

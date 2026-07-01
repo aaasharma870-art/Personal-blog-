@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Check, X } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -8,16 +8,16 @@ import { SpotlightCard } from "@/components/visuals/spotlight-card";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { BacktestDemo } from "@/components/visuals/backtest-demo";
 import { ConceptTicker } from "@/components/visuals/concept-ticker";
-import { CountUp } from "@/components/ui/count-up";
+import { QuantCover } from "@/components/visuals/quant-cover";
+import { MetricTile } from "@/components/site/metric-tile";
+import { SurvivorsPanel, KillList } from "@/components/site/ledger-reckoning";
 import { Tag } from "@/components/ui/tag";
 import {
   earlierRepos,
   featuredProjects,
   gauntlet,
-  killList,
   optionAlpha,
   supportingProjects,
-  survivors,
   type Project,
 } from "@/lib/content";
 
@@ -37,7 +37,9 @@ function SubHeading({ kicker, title }: { kicker: string; title: string }) {
 
 function FeaturedProject({ p }: { p: Project }) {
   return (
-    <SpotlightCard accent={p.accent} className="p-6 sm:p-8">
+    <SpotlightCard accent={p.accent} tier="showcase" className="p-6 sm:p-8">
+      <QuantCover src={p.cover} />
+      <div className="relative z-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
@@ -96,22 +98,18 @@ function FeaturedProject({ p }: { p: Project }) {
         </div>
 
         <div className="lg:col-span-5">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          <Reveal
+            stagger
+            role="list"
+            ariaLabel={`${p.name} — key figures`}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1"
+          >
             {p.metrics.map((m) => (
-              <div
-                key={m.label}
-                className="card-lift rounded-lg border border-line bg-elevated/60 p-4 hover:border-gold/40"
-              >
-                <div className="tnum font-mono text-2xl font-medium text-gold">
-                  {m.count ? <CountUp value={m.value} /> : m.value}
-                </div>
-                <div className="mt-1 text-sm text-ink">{m.label}</div>
-                {m.note ? (
-                  <div className="mt-0.5 text-xs text-muted">{m.note}</div>
-                ) : null}
-              </div>
+              <RevealItem key={m.label} role="listitem">
+                <MetricTile m={m} />
+              </RevealItem>
             ))}
-          </div>
+          </Reveal>
 
           <div className="mt-5">
             <p className="eyebrow mb-3">Stack</p>
@@ -143,20 +141,31 @@ function FeaturedProject({ p }: { p: Project }) {
           </div>
         </div>
       </div>
+      </div>
     </SpotlightCard>
   );
 }
 
 function Gauntlet() {
   return (
-    <div className="mt-20">
-      <SubHeading
-        kicker="Inside the flagship"
-        title="The seven-part validation gauntlet."
+    <div className="relative mt-20 isolate">
+      {/* Decorative "data through the gauntlet" atmosphere — abstract, text-free,
+          heavily scrimmed so the tab text stays AA-legible. aria-hidden. */}
+      <AmbientBackground
+        image="/media/methodology.webp"
+        opacity={0.16}
+        overlayClassName="bg-gradient-to-b from-canvas/82 via-canvas/86 to-canvas/92"
+        className="rounded-3xl"
       />
-      <Reveal>
-        <GauntletTabs steps={gauntlet} />
-      </Reveal>
+      <div className="relative z-10">
+        <SubHeading
+          kicker="Inside the flagship"
+          title="The seven-part validation gauntlet."
+        />
+        <Reveal>
+          <GauntletTabs steps={gauntlet} />
+        </Reveal>
+      </div>
     </div>
   );
 }
@@ -164,96 +173,8 @@ function Gauntlet() {
 function SurvivorsKillList() {
   return (
     <div className="mt-20 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <Reveal
-        variant="left"
-        className="rounded-xl border border-line bg-surface p-6 sm:p-8"
-      >
-        <div className="flex items-center gap-2.5">
-          <Check className="h-4 w-4 text-gold" aria-hidden="true" />
-          <h3 className="font-serif text-xl font-medium text-ink">
-            What survived
-          </h3>
-        </div>
-        <p className="mt-2 text-sm text-muted">
-          Three strategies cleared the full process out of many more tested.
-        </p>
-        <ul className="mt-6 space-y-2">
-          {survivors.map((s) => (
-            <li
-              key={s.name}
-              className="group relative -ml-px rounded-r-md border-l-2 border-gold/40 py-2 pl-4 transition-colors duration-200 hover:border-gold hover:bg-elevated/50"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="flex items-center gap-1.5 font-medium text-ink">
-                  {s.name}
-                  <ArrowRight
-                    className="h-3.5 w-3.5 -translate-x-1.5 text-gold opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
-                    aria-hidden="true"
-                  />
-                </span>
-                <Tag accent="gold">{s.status}</Tag>
-              </div>
-              <p className="editorial mt-1.5 text-sm italic text-stone">
-                {s.thesis}
-              </p>
-              <p className="tnum mt-1.5 font-mono text-xs text-gold/90">
-                {s.evidence}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
-
-      <Reveal
-        id="kill-list"
-        variant="right"
-        className="scroll-mt-24 rounded-xl border border-line bg-surface p-6 sm:p-8"
-      >
-        <div className="flex items-center gap-2.5">
-          <X className="h-4 w-4 text-ember" aria-hidden="true" />
-          <h3 className="font-serif text-xl font-medium text-ink">
-            The kill-list
-          </h3>
-        </div>
-        <p className="mt-2 text-sm text-muted">
-          Killed and never retuned — each ships a written post-mortem. This is
-          the part I am proudest of.
-        </p>
-        <ul className="mt-6 space-y-1.5">
-          {killList.map((k) => (
-            <li
-              key={k.name}
-              className="group -ml-px rounded-r-md border-l-2 border-ember/30 py-2 pl-4 pr-2 transition-colors duration-200 hover:border-ember/70 hover:bg-ember/10"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-ember/70 transition-transform duration-200 group-hover:scale-150"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm text-stone transition-colors group-hover:text-ink">
-                    {k.name}
-                  </span>
-                </div>
-                <a
-                  href={featuredProjects[0].href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={`Post-mortem for ${k.name} on GitHub`}
-                  className="flex shrink-0 -translate-x-1 items-center gap-1 rounded border border-ember/40 px-2 py-0.5 font-mono text-[0.58rem] uppercase tracking-wider text-ember opacity-0 transition-all duration-200 hover:bg-ember/15 focus-visible:translate-x-0 focus-visible:opacity-100 group-hover:translate-x-0 group-hover:opacity-100"
-                >
-                  Post-mortem
-                  <ArrowUpRight className="h-3 w-3" />
-                </a>
-              </div>
-              <p className="mt-1 pl-3.5 text-xs text-muted">{k.reason}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="editorial mt-6 border-t border-line pt-4 text-sm italic text-stone">
-          “Tuning to a backtest usually enlarges your future loss.”
-        </p>
-      </Reveal>
+      <SurvivorsPanel />
+      <KillList />
     </div>
   );
 }
@@ -339,7 +260,7 @@ function SupportingGrid() {
       >
         {supportingProjects.map((s) => (
           <RevealItem key={s.repo} role="listitem">
-            <SpotlightCard accent="cyan" tilt className="h-full p-6">
+            <SpotlightCard accent="cyan" tier="flat" className="h-full p-6">
               <div className="flex items-center justify-between gap-3">
                 <code className="font-mono text-sm text-cyan">{s.repo}</code>
                 <a
@@ -385,7 +306,8 @@ export function Projects() {
   return (
     <Section
       id="work"
-      seam
+      seam="signature"
+      rhythm="spacious"
       backdrop={
         <AmbientBackground
           image="/media/still-terminal.png"

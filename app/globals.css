@@ -192,10 +192,49 @@ body {
   background-size: 26px 26px;
 }
 
+/* Feather a grid (compose with `bg-grid`): the lattice dissolves outward from
+   the top so it never hard-crops. Static mask — no motion. (Spec §4) */
+@utility bg-grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse at top, black, transparent 70%);
+  mask-image: radial-gradient(ellipse at top, black, transparent 70%);
+}
+
+/* Section seam dissolve: a top band that fades canvas→surface so section
+   boundaries blend instead of butting. Drop on an aria-hidden positioned band
+   div at a section's top. Static mask — no motion. (Spec §4) */
+@utility seam-fade {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-surface),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+  mask-image: linear-gradient(to bottom, transparent, black);
+}
+
 .grain {
   pointer-events: none;
   opacity: 0.02;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Grain drift — nudges the grain texture on a transform-only loop so the film
+   grain reads as alive, not a frozen overlay. steps(6) + alternate keeps it
+   cheap and non-distracting; keep grain opacity ≤4–5%. Reduced-motion off.
+   (Spec §4) */
+@keyframes grain-drift {
+  to {
+    transform: translate3d(6%, 4%, 0);
+  }
+}
+.grain-drift {
+  animation: grain-drift 8s steps(6) infinite alternate;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain-drift {
+    animation: none;
+  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -227,23 +266,6 @@ body {
 }
 .ring-shimmer {
   animation: spin-slow 6s linear infinite;
-}
-
-/* Horizontal marquee (credibility strip) — only applied by the client component
-   when motion is allowed, so reduced-motion users get a static row instead. */
-@keyframes marquee-x {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  animation: marquee-x 38s linear infinite;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
 }
 
 /* ----------------------------------------------------------------------------

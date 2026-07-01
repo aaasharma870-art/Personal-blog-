@@ -8,22 +8,28 @@ import {
   revealByName,
   revealReduced,
   staggerParent,
-  viewportReplay,
+  viewportOnce,
+  viewportSignature,
   type RevealVariant,
 } from "@/lib/motion";
 
 /**
  * Reveal — the single scroll-reveal primitive used site-wide.
- * One-shot (viewport once), transform+opacity only, with a real reduced-motion
- * path (gentle opacity, no movement). Set `stagger` to orchestrate children
- * wrapped in <RevealItem>. NOTE: for stagger to work, RevealItems must be the
- * DIRECT children of a stagger Reveal — never nest a plain <ul>/<ol> between.
+ * DEFAULT is once-settle (viewportOnce): a block animates in ONCE and stays,
+ * no mid-scroll re-trigger flicker (Spec §5 replay grammar). Pass `replay` to
+ * opt a signature beat into re-firing on a full deliberate re-entry
+ * (viewportSignature) — reserved for Hero, the two MediaBands, and the
+ * Projects header. Transform+opacity only, with a real reduced-motion path
+ * (gentle opacity, no movement). Set `stagger` to orchestrate children wrapped
+ * in <RevealItem>. NOTE: for stagger to work, RevealItems must be the DIRECT
+ * children of a stagger Reveal — never nest a plain <ul>/<ol> between.
  */
 export function Reveal({
   children,
   className,
   stagger = false,
   variant = "up",
+  replay = false,
   role,
   ariaLabel,
   id,
@@ -32,6 +38,7 @@ export function Reveal({
   className?: string;
   stagger?: boolean;
   variant?: RevealVariant;
+  replay?: boolean;
   role?: string;
   ariaLabel?: string;
   id?: string;
@@ -51,7 +58,7 @@ export function Reveal({
       variants={variants}
       initial="hidden"
       whileInView="show"
-      viewport={viewportReplay}
+      viewport={replay ? viewportSignature : viewportOnce}
     >
       {children}
     </motion.div>

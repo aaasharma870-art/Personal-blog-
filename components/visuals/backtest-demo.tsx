@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { animate, motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -79,8 +79,23 @@ export function BacktestDemo() {
   const hoverVal = hover === null ? undefined : vals[hover];
   const endVal = vals[N] ?? 100;
 
+  const [endDisplay, setEndDisplay] = useState(endVal);
+  const prevEnd = useRef(endVal);
+  useEffect(() => {
+    // Reduced motion updates instantly; otherwise tween the endpoint between
+    // modes. setState stays inside animate's async onUpdate (never synchronous
+    // in the effect body) to satisfy react-hooks/set-state-in-effect.
+    const controls = animate(prevEnd.current, endVal, {
+      duration: reduce ? 0 : 0.7,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setEndDisplay(v),
+    });
+    prevEnd.current = endVal;
+    return () => controls.stop();
+  }, [endVal, reduce]);
+
   return (
-    <div className="rounded-xl border border-line bg-surface/60 p-5 sm:p-6">
+    <div className="rounded-xl border border-line bg-surface/60 p-5 shadow-[inset_0_1px_0_0_rgba(230,237,243,0.06),0_1px_2px_-1px_rgba(0,0,0,0.5),0_18px_40px_-22px_rgba(0,0,0,0.7)] sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="eyebrow text-gold/80">Interactive · conceptual</p>
@@ -181,6 +196,24 @@ export function BacktestDemo() {
             animate={{ d: PATHS[mode].line, stroke }}
             transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
           />
+          {/* one-shot left→right scan on each mode toggle (transform-only, no loop) */}
+          {!reduce ? (
+            <motion.g
+              key={mode}
+              initial={{ x: 0, opacity: 0 }}
+              animate={{ x: W, opacity: [0, 0.85, 0] }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <line
+                x1="0"
+                x2="0"
+                y1={PAD_T}
+                y2={H - PAD_B}
+                stroke="rgba(45,212,191,0.55)"
+                strokeWidth="1.5"
+              />
+            </motion.g>
+          ) : null}
           {/* hover crosshair */}
           {hover !== null && hoverVal !== undefined ? (
             <g>
@@ -201,7 +234,7 @@ export function BacktestDemo() {
         <div className="pointer-events-none absolute right-2 top-1 rounded-md border border-line bg-canvas/80 px-2.5 py-1 font-mono text-[0.66rem] text-stone backdrop-blur-sm">
           <span className="text-muted">index </span>
           <span className="tnum text-ink">
-            {(hoverVal ?? endVal).toFixed(1)}
+            {(hoverVal ?? endDisplay).toFixed(1)}
           </span>
           <span className="text-muted"> · start 100</span>
         </div>

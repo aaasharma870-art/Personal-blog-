@@ -3,13 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "motion/react";
 import { ease } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 /**
  * CountUp — animates the numeric part of a metric from 0 to its real value when
- * scrolled into view. Preserves any prefix/suffix (e.g. "3,000+", "25%"). The
- * final value is always the real one (honest); reduced motion and no-JS render
- * it statically. NOTE: the regex MUST be computed inside the effect — a fresh
- * match array in the deps array would restart the animation every frame.
+ * scrolled into view, then plays a one-shot "settle" (a subtle scale pop + a
+ * brief aqua digit flash that decays back to the resting color). Preserves any
+ * prefix/suffix (e.g. "3,000+", "25%"). The final value is always the real one
+ * (honest); reduced motion and no-JS render it statically with no settle. Scope
+ * to NEUTRAL magnitude counts only (trades/trials/files/months) — never
+ * Sharpe/PSR/PF (those render statically per the honesty ethos).
+ * NOTE: the regex MUST be computed inside the effect — a fresh match array in
+ * the deps array would restart the animation every frame.
  */
 export function CountUp({
   value,
@@ -45,12 +50,29 @@ export function CountUp({
         if (hasComma) s = Number(s).toLocaleString("en-US");
         setDisplay(`${prefix}${s}${suffix}`);
       },
+      onComplete: () => {
+        // One-shot settle: transform (scale) + a brief aqua→rest color flash.
+        // Fires once per entry; the displayed value is already the real number.
+        const el = ref.current;
+        if (!el) return;
+        const rest = getComputedStyle(el).color;
+        animate(el, { scale: [1, 1.03, 1] }, { duration: 0.18, ease });
+        animate(
+          el,
+          { color: ["#2dd4bf", rest] },
+          {
+            duration: 0.42,
+            ease,
+            onComplete: () => el.style.removeProperty("color"),
+          },
+        );
+      },
     });
     return () => controls.stop();
   }, [inView, reduce, value]);
 
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className={cn("inline-block", className)}>
       {display}
     </span>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -20,7 +21,9 @@ const SEED: Row[] = [
 ];
 
 export function ConceptTicker() {
+  const reduce = useReducedMotion();
   const [rows, setRows] = useState<Row[]>(SEED);
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -31,12 +34,13 @@ export function ConceptTicker() {
           return { ...r, price: Math.max(0, r.price + step) };
         }),
       );
+      setTick((t) => t + 1);
     }, 1700);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <div className="flex h-full flex-col rounded-xl border border-line bg-surface/60 p-5 sm:p-6">
+    <div className="flex h-full flex-col rounded-xl border border-line bg-surface/60 p-5 shadow-[inset_0_1px_0_0_rgba(230,237,243,0.06),0_1px_2px_-1px_rgba(0,0,0,0.5),0_18px_40px_-22px_rgba(0,0,0,0.7)] sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
@@ -65,7 +69,17 @@ export function ConceptTicker() {
                 <p className="font-mono text-sm font-medium text-ink">{r.sym}</p>
                 <p className="text-[0.68rem] text-muted">{r.name}</p>
               </div>
-              <div className="text-right">
+              <div className="relative text-right">
+                {!reduce ? (
+                  <motion.span
+                    key={tick}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-x-2 inset-y-0 rounded bg-aqua/10"
+                    initial={{ opacity: 0, y: -1 }}
+                    animate={{ opacity: [0, 0.25, 0], y: 0 }}
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                ) : null}
                 <p className="tnum font-mono text-sm text-ink">
                   {r.price.toLocaleString("en-US", {
                     minimumFractionDigits: 2,

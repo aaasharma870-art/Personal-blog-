@@ -96,6 +96,9 @@ export type JourneyStep = {
   marker: string;
   title: string;
   body: string;
+  /** Decorative abstract still (reused from public/media). Rendered aria-hidden
+   *  with alt="" — atmosphere only, never a claim. DATA field, not copy. */
+  image: string;
 };
 
 export const journey: JourneyStep[] = [
@@ -103,21 +106,25 @@ export const journey: JourneyStep[] = [
     marker: "Origin",
     title: "Trading alongside my father",
     body: "Years of watching markets at home, then asking my own questions: what is the edge, where is the risk, and how do you stay process-focused when the screen is loud?",
+    image: "/media/still-terminal.png",
   },
   {
     marker: "Early work",
     title: "Pine Script & 'Smart Money' patterns",
     body: "I started on TradingView, coding chart-pattern strategies that looked excellent in-sample — fair-value gaps, order blocks, liquidity sweeps. They were persuasive and, it turned out, mostly fitted to the past.",
+    image: "/media/still-blueprint.png",
   },
   {
     marker: "The break",
     title: "They failed out-of-sample",
     body: "Tested properly on data they had never seen, the pretty backtests collapsed. That failure was the turning point: the hard problem was never finding patterns — it was telling a real edge from an artifact.",
+    image: "/media/still-rays-img.png",
   },
   {
     marker: "Now",
     title: "A validation methodology of my own",
     body: "I rebuilt everything around a pre-registered, guilty-until-proven-innocent process on QuantConnect and a Python research pipeline — and a kill-list that treats a disciplined 'no' as the product.",
+    image: "/media/still-network.png",
   },
 ];
 
@@ -195,6 +202,9 @@ export type Project = {
   learned: string;
   limitations: string;
   href: string;
+  /** Abstract, text-free Higgsfield cover art (media/data field, filled in
+   *  Phase 5). Decorative only — never a claim or a real figure. */
+  cover?: string;
 };
 
 export const featuredProjects: Project[] = [
@@ -224,6 +234,7 @@ export const featuredProjects: Project[] = [
     limitations:
       "The Volatility Breakout's deflated Sharpe sits below my own threshold — its case rests on surviving the blind test, not on clearing every gate. I say so in the repo.",
     href: "https://github.com/aaasharma870-art/Trading_Algos-",
+    cover: "/media/cover-trading-algos.webp",
   },
   {
     id: "optuna-screener",
@@ -251,6 +262,7 @@ export const featuredProjects: Project[] = [
     limitations:
       "It is a research and screening tool, not a turnkey trading system — surviving the pipeline earns a candidate a paper deployment, nothing more.",
     href: "https://github.com/aaasharma870-art/Optuna-Screener",
+    cover: "/media/cover-optuna.webp",
   },
 ];
 

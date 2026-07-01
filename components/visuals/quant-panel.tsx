@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
+import type { MouseEvent } from "react";
 import { Check } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import type { Variants } from "motion/react";
 import { dur, ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -18,6 +20,29 @@ import { cn } from "@/lib/utils";
  */
 export function QuantPanel({ className }: { className?: string }) {
   const reduce = useReducedMotion();
+
+  const cardRef = useRef<HTMLDivElement>(null);
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  // Spec §3: ≤5° tilt, snappy-ish spring (stiffness 150 / damping 20).
+  const rotateX = useSpring(tiltX, { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(tiltY, { stiffness: 150, damping: 20 });
+
+  const onTilt = (e: MouseEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const el = cardRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - (r.left + r.width / 2)) / (r.width / 2); // -1..1
+    const py = (e.clientY - (r.top + r.height / 2)) / (r.height / 2); // -1..1
+    tiltY.set(Math.max(-5, Math.min(5, px * 5)));
+    tiltX.set(Math.max(-5, Math.min(5, -py * 5)));
+  };
+  const resetTilt = () => {
+    tiltX.set(0);
+    tiltY.set(0);
+  };
 
   const W = 340;
   const H = 150;
@@ -53,12 +78,14 @@ export function QuantPanel({ className }: { className?: string }) {
   const viewport = { once: true, amount: 0.5 } as const;
 
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-xl border border-line bg-elevated/80 p-4 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.8)]",
-        className,
-      )}
-    >
+    <div className={cn("[perspective:900px]", className)}>
+      <motion.div
+        ref={cardRef}
+        onMouseMove={onTilt}
+        onMouseLeave={resetTilt}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative overflow-hidden rounded-xl border border-line bg-elevated/80 p-4 ring-1 ring-aqua/10 shadow-[0_40px_80px_-32px_rgba(0,0,0,0.9),0_8px_24px_-12px_rgba(0,0,0,0.7)] before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-16 before:bg-gradient-to-b before:from-white/[0.04] before:to-transparent before:content-['']"
+      >
       {/* window chrome */}
       <div className="flex items-center justify-between border-b border-line pb-3">
         <div className="flex items-center gap-2">
@@ -156,6 +183,7 @@ export function QuantPanel({ className }: { className?: string }) {
         <span>verdict: survives blind test</span>
         <span className="cursor-blink ml-0.5 inline-block h-3.5 w-[7px] bg-gold/80" />
       </motion.p>
+      </motion.div>
     </div>
   );
 }

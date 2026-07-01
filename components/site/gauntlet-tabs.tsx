@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { dur, ease } from "@/lib/motion";
+import { AnimatePresence, animate, motion, useInView, useReducedMotion } from "motion/react";
+import type { Variants } from "motion/react";
+import { dur, ease, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 type Step = { n: string; title: string; body: string };
@@ -14,6 +15,42 @@ type Step = { n: string; title: string; body: string };
  * right swaps in. Condenses a tall wall of cards into one tight, stateful module
  * (proper ARIA tablist + roving tabindex + reduced-motion path).
  */
+/** A step numeral that counts up from 00 as the spine assembles (once). Neutral
+ *  ordinal, not a metric — honesty-safe. Reduced motion renders the final value. */
+function StepNumber({ n, sel }: { n: string; sel: boolean }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const parsed = Number.parseInt(n, 10);
+  const target = Number.isNaN(parsed) ? 0 : parsed;
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    // Reduced motion snaps to the final value; otherwise count from 0 once in
+    // view. setState stays inside animate's async onUpdate (never synchronous in
+    // the effect body) to satisfy react-hooks/set-state-in-effect.
+    if (!reduce && !inView) return;
+    const controls = animate(0, target, {
+      duration: reduce ? 0 : 0.6,
+      ease,
+      onUpdate: (v) => setVal(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, reduce, target]);
+
+  return (
+    <span
+      ref={ref}
+      className={cn(
+        "tnum font-mono text-sm font-medium transition-colors",
+        sel ? "text-gold-bright" : "text-gold/70",
+      )}
+    >
+      {String(val).padStart(2, "0")}
+    </span>
+  );
+}
+
 export function GauntletTabs({ steps }: { steps: readonly Step[] }) {
   const [active, setActive] = useState(0);
   const reduce = useReducedMotion();
@@ -35,22 +72,37 @@ export function GauntletTabs({ steps }: { steps: readonly Step[] }) {
     }
   };
 
-  const cur = steps[active];
+  const cur = steps[active] ?? steps[0];
+  if (!cur) return null;
+
+  const spine: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+  };
+  const stepVar: Variants = {
+    hidden: reduce ? { opacity: 0 } : { opacity: 0, y: -14 },
+    show: { opacity: 1, y: 0, transition: { duration: dur.base, ease } },
+  };
 
   return (
     <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-8">
-      <div
+      <motion.div
         role="tablist"
         aria-label="Validation gauntlet steps"
         aria-orientation="vertical"
         onKeyDown={onKey}
+        variants={spine}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
         className="flex gap-2 overflow-x-auto pb-1 lg:col-span-5 lg:flex-col lg:overflow-visible lg:pb-0"
       >
         {steps.map((s, i) => {
           const sel = i === active;
           return (
-            <button
+            <motion.button
               key={s.n}
+              variants={stepVar}
               type="button"
               role="tab"
               id={`gtab-${s.n}`}
@@ -72,14 +124,7 @@ export function GauntletTabs({ steps }: { steps: readonly Step[] }) {
                   transition={{ duration: dur.base, ease }}
                 />
               ) : null}
-              <span
-                className={cn(
-                  "tnum font-mono text-sm font-medium transition-colors",
-                  sel ? "text-gold-bright" : "text-gold/70",
-                )}
-              >
-                {s.n.padStart(2, "0")}
-              </span>
+              <StepNumber n={s.n} sel={sel} />
               <span
                 className={cn(
                   "text-sm font-medium transition-colors",
@@ -88,10 +133,10 @@ export function GauntletTabs({ steps }: { steps: readonly Step[] }) {
               >
                 {s.title}
               </span>
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       <div className="lg:col-span-7">
         <div

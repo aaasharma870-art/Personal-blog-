@@ -48,3 +48,10 @@ next-env.d.ts
 
 # local QA / screenshot scratch
 /.playwright-mcp/
+
+# media masters (3–4k Higgsfield originals) — never shipped; run
+# `npm run optimize:media` to regenerate the capped public/media deliverables
+/media-src/
+
+# design specs / build plans (AI process) — kept out of the public repo
+/docs/superpowers/

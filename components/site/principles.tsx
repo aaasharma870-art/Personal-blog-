@@ -1,7 +1,8 @@
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal, RevealItem } from "@/components/ui/reveal";
+import { Reveal } from "@/components/ui/reveal";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
+import { PrincipleRow } from "@/components/site/principle-row";
 import { principles } from "@/lib/content";
 
 export function Principles() {
@@ -9,6 +10,7 @@ export function Principles() {
     <Section
       id="principles"
       seam
+      rhythm="spacious"
       backdrop={
         <AmbientBackground
           image="/media/still-rays-img.png"
@@ -33,32 +35,7 @@ export function Principles() {
         className="mt-14 border-t border-line"
       >
         {principles.map((p) => (
-          <RevealItem
-            key={p.n}
-            role="listitem"
-            className="row-rail group relative -mx-3 grid grid-cols-1 gap-3 rounded-r-md border-b border-line px-3 py-8 transition-colors duration-200 hover:bg-elevated/20 sm:grid-cols-12 sm:gap-8"
-          >
-            <div className="sm:col-span-2">
-              <span className="font-serif text-5xl font-medium leading-none text-aqua/25 transition-colors duration-300 group-hover:text-aqua/70">
-                {p.n}
-              </span>
-            </div>
-            <div className="sm:col-span-7">
-              <h3 className="font-serif text-2xl font-medium text-ink">
-                {p.title}
-              </h3>
-              <p className="mt-2 max-w-xl text-base leading-relaxed text-stone">
-                {p.body}
-              </p>
-            </div>
-            <div className="sm:col-span-3 sm:text-right">
-              {p.thinker ? (
-                <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted transition-colors duration-200 group-hover:text-aqua">
-                  {p.thinker}
-                </span>
-              ) : null}
-            </div>
-          </RevealItem>
+          <PrincipleRow key={p.n} principle={p} />
         ))}
       </Reveal>
     </Section>
