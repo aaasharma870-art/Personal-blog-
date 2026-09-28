@@ -7,6 +7,7 @@ import { capabilities } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { Microscope, Activity, Cpu, ShieldCheck, Languages } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 /**
@@ -67,7 +68,7 @@ function Chips({ label, value }: { label: string; value: string }) {
 export function Capabilities({ entry, number }: SectionProps<"systems">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       rhythm="tight"
       backdrop={

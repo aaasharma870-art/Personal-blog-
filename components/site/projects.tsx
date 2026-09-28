@@ -20,6 +20,7 @@ import {
   supportingProjects,
   type Project,
 } from "@/lib/content";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 function SubHeading({ kicker, title }: { kicker: string; title: string }) {
@@ -306,7 +307,7 @@ function SupportingGrid() {
 export function Projects({ entry, number }: SectionProps<"work">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam="signature"
       rhythm="spacious"
       backdrop={

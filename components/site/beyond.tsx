@@ -6,12 +6,13 @@ import { ParallaxLayer } from "@/components/visuals/parallax-layer";
 import { BeyondMotif } from "@/components/visuals/beyond-motif";
 import { beyond } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 export function Beyond({ entry, number }: SectionProps<"beyond">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       rhythm="tight"
       backdrop={

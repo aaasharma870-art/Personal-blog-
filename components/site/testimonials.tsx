@@ -4,6 +4,7 @@ import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/visuals/spotlight-card";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { testimonials } from "@/lib/content";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 const HONORIFICS = new Set([
@@ -38,7 +39,7 @@ export function Testimonials({ entry, number }: SectionProps<"voices">) {
 
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       rhythm="default"
       backdrop={

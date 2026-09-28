@@ -32,8 +32,8 @@ export function HeroScene({
   panelCaption,
   children,
 }: {
-  /** The section's #anchor (from the page manifest). */
-  id: string;
+  /** The section's #anchor (from the page manifest; none when `anchor: false`). */
+  id?: string;
   media: ReactNode;
   lattice: ReactNode;
   panel: ReactNode;

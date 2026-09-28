@@ -2,12 +2,13 @@ import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { JourneyExperience } from "@/components/site/journey-experience";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 export function Journey({ entry, number }: SectionProps<"journey">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       backdrop={
         <AmbientBackground

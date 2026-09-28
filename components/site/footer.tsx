@@ -2,6 +2,7 @@ import { Mail } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { footerLine, site } from "@/lib/content";
+import { topHref } from "@/lib/sections";
 
 export function Footer() {
   const year = 2026; // build-stamped; update on rebuild
@@ -25,7 +26,7 @@ export function Footer() {
         <Reveal stagger>
           <RevealItem className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
             <a
-              href="#top"
+              href={topHref}
               className="flex items-center gap-3"
               aria-label={`${site.name} — back to top`}
             >

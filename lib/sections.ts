@@ -10,6 +10,7 @@ import {
   DEFAULT_WORLD,
   page,
   type SectionEntry,
+  type SectionType,
   type Tone,
   type World,
 } from "./page";
@@ -40,6 +41,24 @@ export function worldOf(entry: SectionEntry): World {
 export const anchors: readonly string[] = enabledSections
   .filter((s) => s.anchor !== false)
   .map((s) => s.id);
+
+/** The DOM id a section component renders: its `id`, or undefined when the
+ *  entry says `anchor: false` (so what renders matches `anchors`). */
+export function anchorId(entry: SectionEntry): string | undefined {
+  return entry.anchor === false ? undefined : entry.id;
+}
+
+/** `#id` of the first enabled, anchored section of `type`, or null. Hard-wired
+ *  CTAs (hero buttons, logo) link through this and hide themselves on null, so
+ *  hiding or re-id-ing a section can't leave a dead link. */
+export function hrefOfType(type: SectionType): string | null {
+  const s = enabledSections.find((e) => e.type === type && e.anchor !== false);
+  return s ? `#${s.id}` : null;
+}
+
+/** Logo / back-to-top target: the hero's anchor ("#" scrolls to the top too,
+ *  if the hero ever loses its anchor). */
+export const topHref: string = hrefOfType("hero") ?? "#";
 
 /* — Numbering: "01"…"NN" over enabled `numbered` entries, in page order. — */
 const numbers = new Map<string, string>(

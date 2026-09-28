@@ -4,12 +4,13 @@ import { Reveal } from "@/components/ui/reveal";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { PrincipleRow } from "@/components/site/principle-row";
 import { principles } from "@/lib/content";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 export function Principles({ entry, number }: SectionProps<"principles">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       rhythm="spacious"
       backdrop={

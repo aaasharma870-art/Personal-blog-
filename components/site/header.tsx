@@ -8,7 +8,7 @@ import { GithubMark } from "@/components/ui/icons";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
 import { useActiveSection } from "@/components/site/use-active-section";
 import { site } from "@/lib/content";
-import { contactItem, navItems } from "@/lib/sections";
+import { contactItem, navItems, topHref } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import { dur, ease, springNav } from "@/lib/motion";
 
@@ -49,7 +49,7 @@ export function Header() {
     >
       <div className="container-edge flex h-[68px] items-center justify-between">
         <a
-          href="#top"
+          href={topHref}
           className="flex items-center gap-3"
           aria-label={`${site.name} — home`}
         >

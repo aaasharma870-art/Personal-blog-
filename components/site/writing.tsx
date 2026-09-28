@@ -5,12 +5,13 @@ import { Tag } from "@/components/ui/tag";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { SignalThumb } from "@/components/visuals/signal-thumb";
 import { writing } from "@/lib/content";
+import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 export function Writing({ entry, number }: SectionProps<"writing">) {
   return (
     <Section
-      id={entry.id}
+      id={anchorId(entry)}
       seam
       rhythm="tight"
       backdrop={

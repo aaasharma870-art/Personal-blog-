@@ -56,8 +56,10 @@ type Base<T extends string, P> = {
   /** Default true. false = hidden everywhere (page, nav, rail, palette,
    *  numbering, sitemap); the content stays in lib/content.ts. */
   enabled?: boolean;
-  /** Default true. false = the component renders no #id, so it can't be a
-   *  nav / rail / sitemap target (Phase 0: credibility strip, media bands). */
+  /** Default true. false = no #id is rendered, so the section can't be a
+   *  nav / rail / palette / sitemap target. Types in ANCHORLESS_TYPES have
+   *  nowhere to put an id and must say `anchor: false` (compile error, and
+   *  the validator re-checks). */
   anchor?: boolean;
   nav?: NavSpec;
   /** Participates in the derived 01…NN numbering. */
@@ -72,6 +74,18 @@ type Base<T extends string, P> = {
   motion?: MotionLevel;
   props: P;
 };
+
+/** Section types whose component renders no #id at all. Their entries must
+ *  set `anchor: false` and cannot have `nav` (the compiler enforces both). */
+export const ANCHORLESS_TYPES = ["credibility", "mediaBand"] as const;
+type AnchorlessType = (typeof ANCHORLESS_TYPES)[number];
+
+/** One manifest entry of type T. Anchorless types pin `anchor: false` and
+ *  forbid `nav`, so a new media band can't leak a dead #id into the sitemap,
+ *  observer, nav, rail or palette. */
+type Entry<T extends string, P> = T extends AnchorlessType
+  ? Omit<Base<T, P>, "anchor" | "nav"> & { anchor: false; nav?: never }
+  : Base<T, P>;
 
 type NoProps = Record<string, never>;
 
@@ -88,18 +102,18 @@ export type MediaBandProps = {
 /** One member per existing section component (Phase 0). Later phases add
  *  types (statement, chapter, scene, story, …) as new members. */
 export type SectionEntry =
-  | Base<"hero", NoProps>
-  | Base<"credibility", NoProps>
-  | Base<"about", NoProps>
-  | Base<"journey", NoProps>
-  | Base<"mediaBand", MediaBandProps>
-  | Base<"work", NoProps>
-  | Base<"systems", NoProps>
-  | Base<"principles", NoProps>
-  | Base<"writing", NoProps>
-  | Base<"beyond", NoProps>
-  | Base<"voices", NoProps>
-  | Base<"contact", NoProps>;
+  | Entry<"hero", NoProps>
+  | Entry<"credibility", NoProps>
+  | Entry<"about", NoProps>
+  | Entry<"journey", NoProps>
+  | Entry<"mediaBand", MediaBandProps>
+  | Entry<"work", NoProps>
+  | Entry<"systems", NoProps>
+  | Entry<"principles", NoProps>
+  | Entry<"writing", NoProps>
+  | Entry<"beyond", NoProps>
+  | Entry<"voices", NoProps>
+  | Entry<"contact", NoProps>;
 
 export type SectionType = SectionEntry["type"];
 export type EntryOf<K extends SectionType> = Extract<SectionEntry, { type: K }>;
