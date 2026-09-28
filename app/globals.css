@@ -141,6 +141,18 @@
   /* — Motion mirrors of lib/motion.ts (CSS transitions only) — */
   --ease-clip: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* — The neutral loader's indeterminate sweep (compositor-only; the Loader
+       removes it after loader.idleStopMs beside readable content). — */
+  --animate-loader-sweep: loader-sweep 1.6s var(--ease-out) infinite;
+  @keyframes loader-sweep {
+    from {
+      translate: -100% 0;
+    }
+    to {
+      translate: 300% 0;
+    }
+  }
 }
 
 /* — Semantic, plane-aware utilities (DESIGN v2 §1.3.4): bg-bg, text-fg,
@@ -400,6 +412,14 @@
   --accent-bright: var(--paper-accent); /* DESIGN v2 names no brighter paper accent */
   --kill: var(--paper-kill);
   --exception: var(--paper-exception);
+  /* The world role inks are dark-plane inks (bp-line, brass… vanish on
+     parchment). DESIGN v2 names no paper inks, so paper remaps them to its
+     own ink ramp (PROP; all ≥ 5:1 on --paper). Tone blocks follow the world
+     blocks, so this wins on an element carrying both attributes. */
+  --world-line: var(--paper-muted);
+  --world-emphasis: var(--paper-fg);
+  --world-quiet: var(--paper-ghost);
+  --world-panel: var(--paper-s1);
 }
 
 /* — Pause toggle (MotionToggle sets html[data-motion="paused"]): CSS motion
