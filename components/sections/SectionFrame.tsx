@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import type { SectionEntry } from "@/lib/page";
+import { toneOf, worldOf } from "@/lib/sections";
+import { planeAttrs } from "@/lib/worlds";
+import { WorldProvider } from "@/components/primitives/world";
 
 /**
  * SectionFrame — the per-section wrapper every manifest entry renders inside.
@@ -7,20 +10,42 @@ import type { SectionEntry } from "@/lib/page";
  * A SERVER component on purpose: its props never enter the RSC payload, so
  * handing it whole manifest entries costs nothing on the wire.
  *
- * Phase 0: renders NO DOM of its own, so the page is pixel-identical to the
- * pre-manifest build; each section still owns its <section id={anchorId(entry)}>.
- * Phase 1 moves the cross-cutting concerns here: the #id from `anchorId(entry)`
- * + scroll-margin, the tone plane, an auto-seam where toneOf(prevEntry) differs,
- * density, and the enter-once reveal. If a client leaf ever needs section
- * context, mount a small client provider here that receives only serializable
- * scalars (id, tone, world, number) — never whole entries.
+ * v1.5 (P1-early): emits the section's PLANE — `data-tone` + `data-world`
+ * from the manifest entry (defaults canvas / house) — so every descendant
+ * resolves the semantic tokens (--bg, --fg, --accent, --world-line …) of its
+ * world × tone (app/globals.css), and mounts WorldProvider so client leaves
+ * know their plane as data. Nothing is painted here: sections opt in by
+ * using bg-bg / text-fg …, so the page stays pixel-identical.
+ *
+ * WHY `display: contents`: the wrapper must not generate a box, so layout,
+ * margin collapsing, sticky containment and every section's own <section>
+ * stay exactly as before. `display: contents` removes only the element's box;
+ * the element stays in the DOM tree, and inheritance (custom properties
+ * included) follows the DOM tree, so descendants still inherit the vars its
+ * data attributes select (CSS Display 3 §2.5 — Chrome 65+, Firefox 37+,
+ * Safari 11.1+). The historical display:contents accessibility bugs concern
+ * semantic elements (buttons, headings, lists) losing their role; this is a
+ * role-less <div>. Limits, by design: the frame itself has no box, so it
+ * can't paint, be observed (IntersectionObserver) or measured — the section
+ * element inside it does those. Phase 1 moves the <section id> itself here
+ * (plus scroll-margin, density, the auto dome Seam where toneOf(prevEntry)
+ * differs, and the enter-once reveal); the wrapper then becomes that box.
  */
 export function SectionFrame({
+  entry,
   children,
 }: {
   entry: SectionEntry;
   prevEntry: SectionEntry | null;
   children: ReactNode;
 }) {
-  return <>{children}</>;
+  const tone = toneOf(entry);
+  const world = worldOf(entry);
+  return (
+    <div className="contents" data-section={entry.id} {...planeAttrs(tone, world)}>
+      <WorldProvider world={world} tone={tone}>
+        {children}
+      </WorldProvider>
+    </div>
+  );
 }
