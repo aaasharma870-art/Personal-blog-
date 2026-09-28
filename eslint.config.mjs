@@ -32,6 +32,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local agent tooling (skills, stale worktrees): never part of the app,
+    // excluded from git via .git/info/exclude.
+    ".claude/**",
   ]),
 ]);
 

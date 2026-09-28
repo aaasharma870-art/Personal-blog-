@@ -9,6 +9,7 @@ import { CommandPalette } from "@/components/site/command-palette";
 import { ScrollProgress } from "@/components/visuals/scroll-progress";
 import { ScrollVelocity } from "@/components/visuals/scroll-velocity";
 import { CursorGlow } from "@/components/visuals/cursor-glow";
+import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
 
 const geistSans = Geist({
@@ -104,22 +105,28 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col">
         <MotionProvider>
-          <CursorGlow />
-          <ScrollProgress />
-          <ScrollVelocity />
-          <SectionRail />
-          <CommandPalette />
+          <ChromeGate>
+            <CursorGlow />
+            <ScrollProgress />
+            <ScrollVelocity />
+            <SectionRail />
+            <CommandPalette />
+          </ChromeGate>
           <a
             href="#main"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:rounded-md focus:border focus:border-line focus:bg-elevated focus:px-4 focus:py-2 focus:text-sm focus:text-ink"
           >
             Skip to content
           </a>
-          <Header />
+          <ChromeGate>
+            <Header />
+          </ChromeGate>
           <main id="main" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </main>
-          <Footer />
+          <ChromeGate>
+            <Footer />
+          </ChromeGate>
         </MotionProvider>
         <script
           type="application/ld+json"
