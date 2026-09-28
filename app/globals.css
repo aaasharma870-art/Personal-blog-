@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* `motion-off:` = OS reduced motion OR the Pause toggle (html[data-motion=
+   "paused"]). CSS-level, so server HTML is already right for reduced-motion
+   visitors before any JS runs. */
+@custom-variant motion-off {
+  @media (prefers-reduced-motion: reduce) {
+    @slot;
+  }
+  &:where(:root[data-motion="paused"] *) {
+    @slot;
+  }
+}
+
 /* ============================================================================
    DESIGN SYSTEM — "Midnight Aqua" (modern, premium, fintech-terminal)
    Dark cool base · teal-aqua dominant accent · warm amber support · coral kill.
@@ -53,12 +65,355 @@
   --default-transition-duration: 200ms;
 }
 
+/* `static`: always emitted as CSS variables (Tailwind otherwise drops theme
+   vars no utility uses yet), so primitives, the validator and inline styles
+   can rely on every DESIGN v2 token existing. */
+@theme static {
+  /* ==========================================================================
+     DESIGN v2 TOKENS (build/DESIGN.md; P1-early). ADDITIONS ONLY — every token
+     above keeps its name and value, so the live site renders unchanged.
+     Naming collision, resolved in favour of the live site: DESIGN v2 calls
+     #121820 "--color-raised", but the legacy --color-raised is #202b35 (used
+     by components). So the legacy name stays, #202b35 is also exposed as
+     --color-slate, and the house raised ground is --house-raised (below).
+     ========================================================================== */
+
+  /* — House base palette additions (DESIGN v2 §1.1) — */
+  --color-deep: #05080a;
+  --color-overlay: #18212a; /* = legacy --color-elevated */
+  --color-slate: #202b35; /* = legacy --color-raised */
+  --color-intro-night: #06080d;
+
+  /* — Type: the 8 steps (DESIGN v2 §2.2). These size bundles also generate
+       text-display … text-meta, but use the complete type-* utilities below
+       (family, weight, case and wrapping included). — */
+  --text-display: clamp(4.5rem, 11vw, 10.5rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.03em;
+  --text-chapter: clamp(2.75rem, 6vw, 6rem);
+  --text-chapter--line-height: 0.95;
+  --text-chapter--letter-spacing: -0.025em;
+  --text-title: clamp(2.2rem, 4.4vw, 4.75rem);
+  --text-title--line-height: 1.02;
+  --text-title--letter-spacing: -0.015em;
+  --text-heading: 1.75rem;
+  --text-heading--line-height: 1.15;
+  --text-heading--letter-spacing: -0.015em;
+  --text-heading--font-weight: 500;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.01em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: -0.005em;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.5;
+  --text-small--letter-spacing: 0em;
+  --text-meta: 0.8125rem; /* 13 px: the floor for any text */
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.04em;
+
+  /* — Radii: the v2 set of 5 (DESIGN v2 §4.1). `none` is Tailwind's
+       rounded-none. Legacy --radius-sm/md/lg/xl stay until retirement. — */
+  --radius-focus: 3px;
+  --radius-control: 12px;
+  --radius-frame: 20px;
+  --radius-pill: 9999px;
+
+  /* — Space (DESIGN v2 §3). Base unit stays Tailwind's --spacing: .25rem;
+       permitted steps 1 2 3 4 6 8 12 16 24. Tier defaults (each ≥ 2× the
+       previous): pair 12 · group 24 · block 64 · section = --section-pad.
+       NAMING TRAP: a spacing key that equals a keyword hijacks existing
+       classes (a bare "--spacing-block" turns every `inline-block` into
+       `inline-size: 4rem`), hence the tier- prefix: gap-tier-pair,
+       mt-tier-block, px-gutter, py-section. — */
+  --spacing-tier-pair: 0.75rem;
+  --spacing-tier-group: 1.5rem;
+  --spacing-tier-block: 4rem;
+  --spacing-gutter: clamp(1.25rem, 0.54rem + 3.85vw, 4rem);
+
+  /* — Measures + page container (max-w-page / -body / -lead / -title) — */
+  --container-page: 90rem;
+  --container-body: 68ch;
+  --container-lead: 46ch;
+  --container-title: 20ch;
+
+  /* — Motion mirrors of lib/motion.ts (CSS transitions only) — */
+  --ease-clip: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* — Semantic, plane-aware utilities (DESIGN v2 §1.3.4): bg-bg, text-fg,
+     text-fg-muted, text-fg-ghost, bg-surface-1, border-rule, text-accent …
+     `inline` so each utility reads the live var of the plane it sits in. — */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-ghost: var(--fg-ghost);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-kill: var(--kill);
+  --color-exception: var(--exception);
+  /* the world's role inks (decorative strokes and fills, never body text) */
+  --color-world-line: var(--world-line);
+  --color-world-emphasis: var(--world-emphasis);
+  --color-world-quiet: var(--world-quiet);
+  --color-world-panel: var(--world-panel);
+  --spacing-section: var(--section-pad);
+}
+
 /* ----------------------------------------------------------------------------
    Base
    -------------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
   --header-h: 68px;
+}
+
+/* ============================================================================
+   DESIGN v2 PLANES — worlds × tones (DESIGN v2 §1.3; P1-early)
+   ----------------------------------------------------------------------------
+   1. RAW PALETTE (:root). Every world hex lives here and only here, under the
+      DESIGN v2 token names, so any component (e.g. a card crossfading house
+      deep → hp deep) can reach any world's value, and the validator can
+      compute the AA table from this file.
+   2. WORLD BLOCKS [data-world]. Map one world's palette onto the ROLE slots
+      --world-canvas/raised/overlay/slate/deep (grounds) and --world-line/
+      emphasis/quiet/panel (decorative inks = SPEC §12.1 slots). Every block
+      sets EVERY slot; a new world (rdr2) = one new block.
+   3. TONE BLOCKS [data-tone]. Map the slots onto the semantic vars sections
+      read: --bg --surface-1 --surface-2 --fg --fg-muted --fg-ghost --rule
+      --accent --accent-bright --kill --exception.
+   Set data-tone and data-world TOGETHER (lib/worlds.ts planeAttrs): a var
+   like --bg is resolved on the element that carries data-tone, from the
+   --world-* values in effect there, and descendants inherit the result.
+   Nothing here PAINTS: a plane only changes what bg-bg / text-fg … mean.
+   ========================================================================== */
+:root {
+  /* house (DESIGN v2 §1.1 / §1.3.1) */
+  --house-canvas: #0b0f12;
+  --house-raised: #121820;
+  --house-overlay: #18212a;
+  --house-slate: #202b35;
+  --house-deep: #05080a;
+
+  /* pirates — sea-night (Act I) */
+  --pir-canvas: #0a1519;
+  --pir-raised: #10202a;
+  --pir-overlay: #12232b; /* retuned from #162a33 (muted 4.30 failed) */
+  --pir-deep: #050b0d;
+
+  /* idiots — green-black board (Act II) */
+  --idi-canvas: #0d1513;
+  --idi-raised: #141d1b;
+  --idi-overlay: #1a2320; /* retuned from #1b2522 (muted 4.55, too tight) */
+  --idi-deep: #060a09;
+  --bp-panel: #0f2c47; /* figure ground <= 40% of a section; NO muted/ghost text on it (4.13) */
+
+  /* hp — candle-night (prologue, Act III) */
+  --hp-canvas: #0f0c09;
+  --hp-raised: #18130e;
+  --hp-overlay: #1f1812;
+  --hp-deep: #070504;
+
+  /* paper plane — parchment (Writing only, D-4) */
+  --paper: #ebe0c6;
+  --paper-s1: #f3ecda;
+  --paper-s2: #f7f2e4;
+  --paper-fg: #2e2318;
+  --paper-muted: #5a4632;
+  --paper-ghost: #6b5a47;
+  --paper-accent: #115e59; /* aqua on paper is ~1.5:1 and is never used */
+  --paper-kill: #b42318;
+  --paper-exception: #7a4f00;
+  --paper-rule: rgb(46 35 24 / 0.14);
+  --paper-edge: #e6d3a8; /* edge vignette only, never under text */
+  --paper-edge-deep: #c9ac72;
+
+  /* world decorative inks (DESIGN v2 §1.3.3): strokes and fills, never body text */
+  --w-brass: #a8834a;
+  --w-moon: #a9bcc0;
+  --w-storm: #5f6e75; /* never text */
+  --w-chalk: #f2efe6;
+  --w-bp-line: #cfe8f7; /* never links or body text */
+  --w-graphite: #8b949e;
+  --w-grid: #22303c; /* at 4-6% opacity only */
+  --w-ink-contour: #c9ac72;
+  --w-patronus: #b9d9f2;
+  --w-lumos: #eaf6ff; /* sprite cores only, never DOM paint */
+  --w-flame-core: #ffe9c4; /* sprite stops only, never DOM paint */
+  --w-flame-halo: #f4b740; /* sprite stops only, never a DOM colour */
+
+  /* density (DESIGN v2 §3.2): data-density="spacious|default|tight" */
+  --density-spacious: clamp(5.5rem, 10vw, 8.75rem);
+  --density-default: clamp(4.5rem, 8vw, 7.5rem);
+  --density-tight: clamp(4rem, 7vw, 6.25rem);
+  --section-pad: var(--density-default);
+
+  /* motion durations (mirror lib/motion.ts dur.*) */
+  --dur-micro: 180ms;
+  --dur-base: 340ms;
+  --dur-preview: 260ms;
+  --dur-reveal: 620ms;
+  --dur-hero: 850ms;
+
+  /* z-scale (DESIGN v2 §3.3): z-(--z-intro) etc. */
+  --z-content: 0;
+  --z-sticky: 10;
+  --z-header: 40;
+  --z-menu: 60;
+  --z-intro: 80;
+  --z-skip: 90;
+
+  /* primitive geometry (DESIGN v2 §5, §3.3): Lens bracket, dome seam, letterbox */
+  --lens-stroke: 2px;
+  --lens-inset: 16px;
+  --lens-arm-min: 8px;
+  --lens-arm-max: 24px;
+  --seam-h: 10vh;
+  --letterbox-ratio: 2.39;
+  --loader-mini: 3rem;
+  --loader-card: 7.5rem;
+  --loader-route: 10rem;
+}
+@media (width < 64rem) {
+  :root {
+    --lens-stroke: 1.5px;
+    --lens-inset: 8px;
+  }
+}
+@media (width <= 33.75rem) {
+  :root {
+    --seam-h: 5vh; /* <= 540 px */
+  }
+}
+
+[data-density="spacious"] {
+  --section-pad: var(--density-spacious);
+}
+[data-density="default"] {
+  --section-pad: var(--density-default);
+}
+[data-density="tight"] {
+  --section-pad: var(--density-tight);
+}
+
+/* — World blocks: ground slots + role inks (house = the default) — */
+:root,
+[data-world="house"] {
+  --world-canvas: var(--house-canvas);
+  --world-raised: var(--house-raised);
+  --world-overlay: var(--house-overlay);
+  --world-slate: var(--house-slate); /* raised-tone surface-2: ink + stone text only */
+  --world-deep: var(--house-deep);
+  /* house has no film inks (DESIGN "—"): neutral text-ramp stand-ins (PROP) */
+  --world-line: var(--color-stone);
+  --world-emphasis: var(--color-ink);
+  --world-quiet: var(--color-muted);
+  --world-panel: var(--house-raised);
+}
+[data-world="pirates"] {
+  --world-canvas: var(--pir-canvas);
+  --world-raised: var(--pir-raised);
+  --world-overlay: var(--pir-overlay);
+  --world-slate: var(--pir-overlay);
+  --world-deep: var(--pir-deep);
+  --world-line: var(--w-brass); /* the course line */
+  --world-emphasis: var(--w-brass); /* the brass X-stamp (never ember) */
+  --world-quiet: var(--w-storm);
+  --world-panel: var(--pir-raised);
+}
+[data-world="idiots"] {
+  --world-canvas: var(--idi-canvas);
+  --world-raised: var(--idi-raised);
+  --world-overlay: var(--idi-overlay);
+  --world-slate: var(--idi-overlay);
+  --world-deep: var(--idi-deep);
+  --world-line: var(--w-bp-line); /* the blueprint line */
+  --world-emphasis: var(--w-chalk); /* the chalk circle */
+  --world-quiet: var(--w-graphite);
+  --world-panel: var(--bp-panel);
+}
+[data-world="hp"] {
+  --world-canvas: var(--hp-canvas);
+  --world-raised: var(--hp-raised);
+  --world-overlay: var(--hp-overlay);
+  --world-slate: var(--hp-overlay);
+  --world-deep: var(--hp-deep);
+  --world-line: var(--w-ink-contour); /* the ink line */
+  --world-emphasis: var(--w-patronus); /* the ribbons */
+  --world-quiet: var(--color-muted);
+  --world-panel: var(--hp-raised);
+}
+[data-world="rdr2"] {
+  /* TODO(rdr2): the RDR2 design pass supplies this palette (grounds + role
+     inks: every slot the house block sets) and flips worlds.rdr2.ready in
+     lib/worlds.ts. Until then the block is empty on purpose: every slot
+     inherits, so an rdr2 section renders house values. */
+}
+
+/* — Tone blocks: semantic vars (the dark planes share one text ramp) — */
+:root,
+[data-tone="canvas"],
+[data-tone="raised"],
+[data-tone="deep"],
+[data-world]:not([data-tone]) {
+  --fg: var(--color-ink);
+  --fg-muted: var(--color-stone);
+  --fg-ghost: var(--color-muted);
+  --rule: var(--color-line);
+  --accent: var(--color-aqua);
+  --accent-bright: var(--color-aqua-bright);
+  --kill: var(--color-ember);
+  --exception: var(--color-amber);
+}
+:root,
+[data-tone="canvas"],
+[data-world]:not([data-tone]) {
+  --bg: var(--world-canvas);
+  --surface-1: var(--world-raised);
+  --surface-2: var(--world-overlay);
+}
+[data-tone="raised"] {
+  --bg: var(--world-raised);
+  --surface-1: var(--world-overlay);
+  --surface-2: var(--world-slate);
+}
+[data-tone="deep"] {
+  --bg: var(--world-deep);
+  --surface-1: var(--world-canvas);
+  --surface-2: var(--world-raised);
+}
+[data-tone="paper"] {
+  --bg: var(--paper);
+  --surface-1: var(--paper-s1);
+  --surface-2: var(--paper-s2);
+  --fg: var(--paper-fg);
+  --fg-muted: var(--paper-muted);
+  --fg-ghost: var(--paper-ghost);
+  --rule: var(--paper-rule);
+  --accent: var(--paper-accent);
+  --accent-bright: var(--paper-accent); /* DESIGN v2 names no brighter paper accent */
+  --kill: var(--paper-kill);
+  --exception: var(--paper-exception);
+}
+
+/* — Pause toggle (MotionToggle sets html[data-motion="paused"]): CSS motion
+     behaves exactly as under prefers-reduced-motion (DESIGN v2 §6.5). — */
+:root[data-motion="paused"] {
+  scroll-behavior: auto;
+}
+:root[data-motion="paused"] *,
+:root[data-motion="paused"] *::before,
+:root[data-motion="paused"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 * {
@@ -165,6 +520,86 @@ body {
       0 0 0 1px color-mix(in oklab, var(--color-aqua) 30%, transparent),
       0 12px 40px -12px color-mix(in oklab, var(--color-aqua) 45%, transparent);
   }
+}
+
+/* ----------------------------------------------------------------------------
+   DESIGN v2 type steps (§2.2) — each utility is a COMPLETE step: family,
+   size, leading, tracking, weight, case and wrapping. <= 3 per viewport.
+   -------------------------------------------------------------------------- */
+@utility type-display {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-chapter {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-chapter);
+  line-height: var(--text-chapter--line-height);
+  letter-spacing: var(--text-chapter--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-title {
+  font-family: var(--font-serif), "Source Serif 4", Literata, Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
+  letter-spacing: var(--text-title--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-heading {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  letter-spacing: var(--text-heading--letter-spacing);
+  font-weight: var(--text-heading--font-weight);
+}
+@utility type-lead {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-lead);
+  line-height: var(--text-lead--line-height);
+  letter-spacing: var(--text-lead--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-body {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: var(--text-body--letter-spacing);
+  font-weight: 400;
+  text-wrap: pretty;
+}
+@utility type-small {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  letter-spacing: var(--text-small--letter-spacing);
+  font-weight: 400;
+}
+@utility type-meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  letter-spacing: var(--text-meta--letter-spacing);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Surface ladder (DESIGN v2 §4.2): surfaces are for INTERACTIVE objects only.
+   Elevation = one tone step + a 1 px inset rule (no drop shadows). */
+@utility surface-1 {
+  background-color: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+@utility surface-2 {
+  background-color: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 
 /* ----------------------------------------------------------------------------

@@ -7,8 +7,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ANCHORLESS_TYPES, page } from "../lib/page.ts";
+import { ANCHORLESS_TYPES, DEFAULT_TONE, DEFAULT_WORLD, page } from "../lib/page.ts";
 import { mediaAssets } from "../lib/media.ts";
+import {
+  DEFAULT_TONE as WORLDS_DEFAULT_TONE,
+  DEFAULT_WORLD as WORLDS_DEFAULT_WORLD,
+  TONE_IDS,
+  WORLD_IDS,
+  worlds,
+} from "../lib/worlds.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -17,8 +24,8 @@ const REQUIRED_ANCHORS = ["top", "about", "journey", "work", "systems", "princip
 const NAV_LABEL_WARN = 12;
 /** SYNTHESIS §8: at most 3 `motion: "signature"` sections page-wide. */
 const MAX_SIGNATURE = 3;
-const TONES = ["canvas", "raised", "deep", "paper"];
-const WORLDS = ["neutral", "hp", "potc", "idiots"];
+const TONES = TONE_IDS;
+const WORLDS = WORLD_IDS;
 const USABLE = new Set(["accepted", "integrated"]);
 /** Prop keys that hold MediaIds (string or string[]) anywhere in `props`. */
 const MEDIA_KEY = /^(media|mediaMobile|image|video|poster|cover|evidence|still|stills|from|to)$|Media$/;
@@ -102,6 +109,16 @@ page.forEach((s, i) => {
     else if (s.nav.label.length > NAV_LABEL_WARN) warn(`"${s.id}": nav label "${s.nav.label}" is ${s.nav.label.length} chars (> ${NAV_LABEL_WARN})`);
   }
 });
+
+/* — Worlds / tones (lib/worlds.ts is the single list of ids) ———————— */
+if (DEFAULT_TONE !== WORLDS_DEFAULT_TONE) err(`lib/page.ts DEFAULT_TONE "${DEFAULT_TONE}" != lib/worlds.ts "${WORLDS_DEFAULT_TONE}"`);
+if (DEFAULT_WORLD !== WORLDS_DEFAULT_WORLD) err(`lib/page.ts DEFAULT_WORLD "${DEFAULT_WORLD}" != lib/worlds.ts "${WORLDS_DEFAULT_WORLD}"`);
+for (const s of page) {
+  const w = s.world ?? DEFAULT_WORLD;
+  if (s.enabled !== false && WORLDS.includes(w) && !worlds[w].ready) {
+    warn(`"${s.id}": world "${w}" is a placeholder (its token block is empty; renders house values)`);
+  }
+}
 
 const heroes = page.filter((s) => s.type === "hero");
 if (heroes.length !== 1) err(`expected exactly one hero, found ${heroes.length}`);

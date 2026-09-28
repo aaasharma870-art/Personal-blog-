@@ -20,19 +20,24 @@
    ========================================================================== */
 
 import type { MediaId } from "./media";
+import type { ToneId, WorldId } from "./worlds";
 
-/** Ground plane a section sits on. Reserved: SectionFrame will own it (Phase 1+). */
-export type Tone = "canvas" | "raised" | "deep" | "paper";
+/** Ground plane a section sits on (DESIGN v2 §1.3.4). SectionFrame emits it
+ *  as `data-tone`; it selects --bg / --surface-* / --fg … from the world. */
+export type Tone = ToneId;
 
-/** Film world a section belongs to (later design phase): neutral, Harry
- *  Potter, Pirates of the Caribbean, 3 Idiots. Unused in Phase 0. */
-export type World = "neutral" | "hp" | "potc" | "idiots";
+/** Film world a section belongs to (lib/worlds.ts). SectionFrame emits it as
+ *  `data-world`; its palette lives in app/globals.css `[data-world]`. */
+export type World = WorldId;
 
 export type Density = "spacious" | "default" | "tight";
 export type MotionLevel = "static" | "standard" | "signature";
 
+// Mirrors lib/worlds.ts DEFAULT_TONE / DEFAULT_WORLD (this file may only
+// type-import, because Node strips types but does not resolve "./worlds";
+// the validator checks the two stay equal).
 export const DEFAULT_TONE: Tone = "canvas";
-export const DEFAULT_WORLD: World = "neutral";
+export const DEFAULT_WORLD: World = "house";
 
 export type NavSpec = {
   /** Shown in the header nav, section rail and command palette. */
@@ -64,9 +69,11 @@ type Base<T extends string, P> = {
   nav?: NavSpec;
   /** Participates in the derived 01…NN numbering. */
   numbered?: boolean;
-  /** Reserved for the design phases (default "canvas"); unused in Phase 0. */
+  /** Ground plane (default "canvas"). Emitted by SectionFrame as data-tone;
+   *  sections opt in to painting it (bg-bg, text-fg …), so P1-early has no
+   *  visual effect until a section reads the semantic tokens. */
   tone?: Tone;
-  /** Reserved for the film-world phase (default "neutral"); unused in Phase 0. */
+  /** Film world (default "house"). Emitted by SectionFrame as data-world. */
   world?: World;
   /** Reserved: SectionFrame will own spacing (Phase 1+). */
   density?: Density;
