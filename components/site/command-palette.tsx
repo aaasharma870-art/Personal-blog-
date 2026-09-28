@@ -11,18 +11,47 @@ import {
   Search,
 } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
-import { nav, site } from "@/lib/content";
+import {
+  paletteCommands,
+  type PaletteAction,
+  type PaletteGroup,
+  type PaletteIcon,
+} from "@/lib/sections";
 import { dur, ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 type Cmd = {
   id: string;
   label: string;
-  group: "Navigate" | "Links";
+  group: PaletteGroup;
   keywords?: string;
   icon: ReactNode;
   run: () => void;
 };
+
+const ICONS: Record<PaletteIcon, ReactNode> = {
+  hash: <Hash className="h-4 w-4" />,
+  github: <GithubMark className="h-4 w-4" />,
+  mail: <Mail className="h-4 w-4" />,
+};
+
+/** Browser behaviour for a palette action (runs on selection, never in render). */
+function performAction(a: PaletteAction, go: (id: string) => void): void {
+  switch (a.kind) {
+    case "scroll":
+      go(a.target);
+      return;
+    case "open":
+      window.open(a.href, "_blank", "noopener,noreferrer");
+      return;
+    case "mailto":
+      window.location.href = `mailto:${a.address}`;
+      return;
+    case "copy":
+      navigator.clipboard?.writeText(a.text).catch(() => {});
+      return;
+  }
+}
 
 /** Event other components (the header button) dispatch to open the palette. */
 export const OPEN_PALETTE_EVENT = "open-command-palette";
@@ -46,73 +75,20 @@ export function CommandPalette() {
       });
   }, []);
 
-  const commands = useMemo<Cmd[]>(() => {
-    const navCmds: Cmd[] = nav.map((n) => ({
-      id: `nav-${n.href}`,
-      label: `Go to ${n.label}`,
-      group: "Navigate",
-      keywords: n.label,
-      icon: <Hash className="h-4 w-4" />,
-      run: () => go(n.href.slice(1)),
-    }));
-    const extra: Cmd[] = [
-      {
-        id: "nav-killlist",
-        label: "Go to the Kill-list",
-        group: "Navigate",
-        keywords: "killed rejected post-mortem failures graveyard",
-        icon: <Hash className="h-4 w-4" />,
-        run: () => go("kill-list"),
-      },
-      {
-        id: "nav-voices",
-        label: "Go to Testimonials",
-        group: "Navigate",
-        keywords: "teachers voices quotes recommendations",
-        icon: <Hash className="h-4 w-4" />,
-        run: () => go("voices"),
-      },
-      {
-        id: "nav-top",
-        label: "Back to top",
-        group: "Navigate",
-        keywords: "hero home start",
-        icon: <Hash className="h-4 w-4" />,
-        run: () => go("top"),
-      },
-    ];
-    const links: Cmd[] = [
-      {
-        id: "link-github",
-        label: "View GitHub",
-        group: "Links",
-        keywords: "code repos source projects",
-        icon: <GithubMark className="h-4 w-4" />,
-        run: () => window.open(site.github, "_blank", "noopener,noreferrer"),
-      },
-      {
-        id: "link-email",
-        label: `Email ${site.name.split(" ")[0]}`,
-        group: "Links",
-        keywords: `contact reach mail ${site.email}`,
-        icon: <Mail className="h-4 w-4" />,
-        run: () => {
-          window.location.href = `mailto:${site.email}`;
-        },
-      },
-      {
-        id: "link-copy",
-        label: "Copy email address",
-        group: "Links",
-        keywords: `clipboard ${site.email}`,
-        icon: <Mail className="h-4 w-4" />,
-        run: () => {
-          navigator.clipboard?.writeText(site.email).catch(() => {});
-        },
-      },
-    ];
-    return [...navCmds, ...extra, ...links];
-  }, [go]);
+  // Commands are data derived from the page manifest (lib/sections.ts); this
+  // only binds each action to its browser behaviour.
+  const commands = useMemo<Cmd[]>(
+    () =>
+      paletteCommands.map((c) => ({
+        id: c.id,
+        label: c.label,
+        group: c.group,
+        keywords: c.keywords,
+        icon: ICONS[c.icon],
+        run: () => performAction(c.action, go),
+      })),
+    [go],
+  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

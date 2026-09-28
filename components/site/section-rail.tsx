@@ -1,41 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { nav } from "@/lib/content";
+import { useActiveSection } from "@/components/site/use-active-section";
+import { railItems } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 
 /**
  * SectionRail — a slim wayfinding rail of section dots pinned to the right edge.
- * The active section's dot glows (driven by the same IntersectionObserver scheme
- * as the header), hovering a dot reveals its label, and clicking jumps to it.
- * Desktop-wide only (xl+) so it sits in the margin, never over content. The
- * header nav remains the primary nav; this is ambient progress + quick-jump.
+ * The active section's dot glows (driven by the page's one shared
+ * active-section observer, same as the header), hovering a dot reveals its
+ * label, and clicking jumps to it. Dots derive from the page manifest
+ * (lib/sections.ts `railItems`). Desktop-wide only (xl+) so it sits in the
+ * margin, never over content. The header nav remains the primary nav; this is
+ * ambient progress + quick-jump.
  */
 export function SectionRail() {
-  const [active, setActive] = useState("");
-
-  useEffect(() => {
-    const sections = nav
-      .map((n) => document.getElementById(n.href.slice(1)))
-      .filter((el): el is HTMLElement => Boolean(el));
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
-    );
-    sections.forEach((s) => obs.observe(s));
-    return () => obs.disconnect();
-  }, []);
+  const active = useActiveSection();
 
   return (
     <nav
       aria-label="Section navigation"
       className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-3 xl:flex"
     >
-      {nav.map((n) => {
-        const id = n.href.slice(1);
-        const isActive = active === id;
+      {railItems.map((n) => {
+        const isActive = active === n.id;
         return (
           <a
             key={n.href}

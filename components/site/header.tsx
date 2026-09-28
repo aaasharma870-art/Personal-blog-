@@ -5,12 +5,14 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Menu, Search, X } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
-import { nav, site } from "@/lib/content";
+import { useActiveSection } from "@/components/site/use-active-section";
+import { site } from "@/lib/content";
+import { contactItem, navItems } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import { dur, ease, springNav } from "@/lib/motion";
 
 export function Header() {
-  const [active, setActive] = useState("");
+  const active = useActiveSection();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
@@ -26,20 +28,6 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const sections = nav
-      .map((n) => document.getElementById(n.href.slice(1)))
-      .filter((el): el is HTMLElement => Boolean(el));
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
-    );
-    sections.forEach((s) => obs.observe(s));
-    return () => obs.disconnect();
   }, []);
 
   useEffect(() => {
@@ -73,8 +61,8 @@ export function Header() {
         </a>
 
         <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
-          {nav.map((n) => {
-            const isActive = active === n.href.slice(1);
+          {navItems.map((n) => {
+            const isActive = active === n.id;
             return (
               <a
                 key={n.href}
@@ -128,12 +116,14 @@ export function Header() {
           >
             <GithubMark className="h-4 w-4" />
           </a>
-          <a
-            href="#contact"
-            className="hidden rounded-md border border-gold/40 px-3.5 py-2 text-sm text-gold transition-colors hover:bg-gold/10 sm:inline-block"
-          >
-            Contact
-          </a>
+          {contactItem ? (
+            <a
+              href={contactItem.href}
+              className="hidden rounded-md border border-gold/40 px-3.5 py-2 text-sm text-gold transition-colors hover:bg-gold/10 sm:inline-block"
+            >
+              {contactItem.label}
+            </a>
+          ) : null}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -165,15 +155,15 @@ export function Header() {
             className="overflow-hidden border-b border-line bg-canvas lg:hidden"
           >
             <nav aria-label="Mobile" className="container-edge grid gap-1 py-4">
-              {nav.map((n) => (
+              {navItems.map((n) => (
                 <a
                   key={n.href}
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  aria-current={active === n.href.slice(1) ? "page" : undefined}
+                  aria-current={active === n.id ? "page" : undefined}
                   className={cn(
                     "rounded-md px-3 py-2.5 text-base transition-colors",
-                    active === n.href.slice(1)
+                    active === n.id
                       ? "bg-elevated text-ink"
                       : "text-stone hover:bg-elevated hover:text-ink",
                   )}
@@ -190,13 +180,15 @@ export function Header() {
                 >
                   <GithubMark className="h-4 w-4" /> GitHub
                 </a>
-                <a
-                  href="#contact"
-                  onClick={() => setOpen(false)}
-                  className="flex-1 rounded-md border border-gold/40 px-3 py-2.5 text-center text-sm text-gold"
-                >
-                  Contact
-                </a>
+                {contactItem ? (
+                  <a
+                    href={contactItem.href}
+                    onClick={() => setOpen(false)}
+                    className="flex-1 rounded-md border border-gold/40 px-3 py-2.5 text-center text-sm text-gold"
+                  >
+                    {contactItem.label}
+                  </a>
+                ) : null}
               </div>
             </nav>
           </motion.div>
