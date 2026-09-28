@@ -6,6 +6,10 @@ import type { Variants } from "motion/react";
    variety. One ease-out curve, a tight duration scale, transform+opacity only,
    and a real reduced-motion path. Color/spacing tokens live in globals.css;
    timing lives here. Do not introduce per-component magic numbers.
+   DESIGN v2 (build/DESIGN.md §6.1) adds exactly two scoped curves — easeClip
+   (clip/inset openings) and easeDraw (stroke draw-on) — plus the named
+   springs and budgets at the bottom of this file. No other eases.
+   CSS mirrors: --ease-out / --ease-clip / --ease-draw and --dur-* in globals.css.
    ========================================================================== */
 
 /** Near-universal ease-out (used for entrances + most micro-interactions). */
@@ -19,7 +23,26 @@ export const dur = {
   base: 0.34,
   reveal: 0.62,
   hero: 0.85,
+  /* — DESIGN v2 §6.1 additions (P1-early) — */
+  /** Crossfades: preview, mono → colour, plate state swaps, poster → video. */
+  preview: 0.26,
+  /** A single commit flash (loader tip, contact flare). Never repeats within 1 s. */
+  flash: 0.12,
+  /** Stroke draw-ons (pair with `easeDraw`): chalk circle / gate derivation /
+   *  schematic. All ≤ 1.5 s. */
+  draw: { short: 0.7, med: 1.2, long: 1.5 },
 } as const;
+
+/** Clip and inset openings ONLY: the Lens aperture and launch, cover clips,
+ *  films frames, the dome exit (DESIGN v2 §6.1, VER Obys d.css). */
+export const easeClip = [0.16, 1, 0.3, 1] as const;
+
+/** Stroke draw-on ONLY (`pathLength`): ink, chalk, blueprint, course lines,
+ *  the bracket drawn-in. Never for position, opacity or UI state. */
+export const easeDraw = [0.65, 0, 0.35, 1] as const;
+
+/** R1 multi-line headings: per-line stagger, applied to at most 4 lines. */
+export const stagger = { line: 0.08, maxLines: 4 } as const;
 
 /* — Replay grammar (Spec §5). Two named viewport configs; replay is a
      deliberate opt-in, not the global default. —
@@ -130,3 +153,64 @@ export const maskedLineReduced: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { duration: 0.2, ease } },
 };
+
+/* ============================================================================
+   DESIGN v2 §6.1 SPRINGS + BUDGETS (P1-early). Existing tokens above keep
+   their values (springSoft and springNav already match DESIGN v2). Springs
+   are {stiffness, damping, mass}; ζ / overshoot are CALC (build/tools/springs.mjs).
+   Rules: time-based only (never per-frame lerps); ≤ ~800 ms to 2% settle;
+   NO overshoot on anything a reader clicks.
+   ========================================================================== */
+
+/** Preview follow, lens track, magnetic pull. ζ 1.30, 0% overshoot, t63 187 ms. */
+export const springFollow = { stiffness: 120, damping: 22, mass: 0.6 } as const;
+
+/** Anything a reader clicks (nav, CTAs, tabs, Play/Skip, links).
+ *  ζ 1.00 (critically damped), 0% overshoot, t63 105 ms, 2% settle 286 ms. */
+export const springSnap = { stiffness: 420, damping: 41, mass: 1 } as const;
+
+/** "The Settle": NON-interactive entrances in the idiots world only (board
+ *  frame, schematic panels, gauge). ζ 0.72, 3.8% overshoot, settle 347 ms. */
+export const springSettle = { stiffness: 260, damping: 22, mass: 0.9 } as const;
+
+/** Decorative motifs only (gear-teeth nudge, waypoint tick pop). Never text,
+ *  never controls. ζ 0.50, 16.4% overshoot, settle 631 ms. */
+export const springPlayful = { stiffness: 180, damping: 14, mass: 1.1 } as const;
+
+/** The instrument needle's hunt-and-settle (decorative, aria-hidden).
+ *  ζ 0.54, 13.3% overshoot, settle 781 ms — the one >~800 ms-class exception. */
+export const springNeedle = { stiffness: 55, damping: 8, mass: 1 } as const;
+
+/** Prologue timing (SPEC §5). */
+export const intro = {
+  flightMaxS: 6.0,
+  landing: 0.62,
+  readyWaitMs: 4000,
+  loaderDelayMs: 250,
+  motesRestMs: 5000,
+  failsafeMs: 3000,
+  mobileFlightS: 1.6,
+  mobileTotalMaxS: 2.4,
+} as const;
+
+/** Loader timing (SPEC §8). `showDelayMs` is the media/real-load delay (the
+ *  intro uses `intro.loaderDelayMs`). Indeterminate motion stops after
+ *  `idleStopMs` whenever it runs in parallel with readable content. */
+export const loader = {
+  showDelayMs: 400,
+  idleStopMs: 5000,
+  needleReexciteMs: 1800,
+  gaugeIdleDegPerS: 30,
+  inkBreatheHz: 0.5,
+} as const;
+
+/** Scroll budgets (read by the validator in a later phase). */
+export const scrollBudget = {
+  stickyMaxVh: 30,
+  longCardMaxVh: 60,
+  maxLongCards: 2,
+  pageStickyMaxVh: 150,
+  mobileStickyMaxVh: 0,
+  maxSignature: 5,
+  maxScenes: 2,
+} as const;
