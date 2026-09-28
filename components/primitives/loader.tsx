@@ -173,7 +173,9 @@ export function Loader(props: LoaderProps) {
     rootRef.current?.setAttribute("data-progress", progress.get().toFixed(3));
   }, [progress, shown]);
 
-  if (!shown) return null;
+  // A real load keeps its (empty) live region mounted from the first render,
+  // so screen readers register it before the status text arrives.
+  if (!shown) return status ? <div role="status" className={className} /> : null;
 
   const animate = mode === "indeterminate" && !reduced && !idleStopped;
   // Registry lookup → createElement: renderers are module-level components
