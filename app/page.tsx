@@ -9,17 +9,13 @@ export default function Home() {
     <>
       {enabledSections.map((entry, i) => {
         const Section = rendererFor(entry.type);
-        const number = numberOf(entry.id);
         return (
           <SectionFrame
             key={entry.id}
             entry={entry}
-            number={number}
-            index={i}
             prevEntry={enabledSections[i - 1] ?? null}
-            nextEntry={enabledSections[i + 1] ?? null}
           >
-            <Section entry={entry} number={number} />
+            <Section entry={entry} number={numberOf(entry.id)} />
           </SectionFrame>
         );
       })}
