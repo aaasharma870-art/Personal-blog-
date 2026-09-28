@@ -4,6 +4,7 @@ import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/visuals/spotlight-card";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { testimonials } from "@/lib/content";
+import type { SectionProps } from "@/components/sections/types";
 
 const HONORIFICS = new Set([
   "dr",
@@ -32,12 +33,12 @@ function monogram(name: string): string {
   return out.length > 0 ? out : "•";
 }
 
-export function Testimonials() {
+export function Testimonials({ entry, number }: SectionProps<"voices">) {
   const [lead, ...rest] = testimonials;
 
   return (
     <Section
-      id="voices"
+      id={entry.id}
       seam
       rhythm="default"
       backdrop={
@@ -49,7 +50,7 @@ export function Testimonials() {
       }
     >
       <SectionHeading
-        index="08"
+        index={number ?? ""}
         eyebrow="What teachers say"
         title="In their words."
         variant="scale"

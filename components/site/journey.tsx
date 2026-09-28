@@ -2,11 +2,12 @@ import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { JourneyExperience } from "@/components/site/journey-experience";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Journey() {
+export function Journey({ entry, number }: SectionProps<"journey">) {
   return (
     <Section
-      id="journey"
+      id={entry.id}
       seam
       backdrop={
         <AmbientBackground
@@ -18,7 +19,7 @@ export function Journey() {
       }
     >
       <SectionHeading
-        index="02"
+        index={number ?? ""}
         eyebrow="The Journey"
         title="How the methodology was earned."
         intro="Every part of the process I trust today exists because an earlier, prettier version of it failed me first. Step through it."

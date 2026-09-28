@@ -4,11 +4,12 @@ import { Reveal } from "@/components/ui/reveal";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { PrincipleRow } from "@/components/site/principle-row";
 import { principles } from "@/lib/content";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Principles() {
+export function Principles({ entry, number }: SectionProps<"principles">) {
   return (
     <Section
-      id="principles"
+      id={entry.id}
       seam
       rhythm="spacious"
       backdrop={
@@ -20,7 +21,7 @@ export function Principles() {
       }
     >
       <SectionHeading
-        index="05"
+        index={number ?? ""}
         eyebrow="Operating Principles"
         title="A small philosophy of work."
         intro="Five ideas I actually use when I build. The names are sources, not decoration."

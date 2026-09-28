@@ -9,10 +9,12 @@ import { Magnetic } from "@/components/ui/magnetic";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { GithubMark } from "@/components/ui/icons";
 import { microTags, site } from "@/lib/content";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Hero() {
+export function Hero({ entry }: SectionProps<"hero">) {
   return (
     <HeroScene
+      id={entry.id}
       media={
         <AmbientBackground
           image="/media/hero-volsurface.webp"

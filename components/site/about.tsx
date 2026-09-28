@@ -3,11 +3,12 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { AboutBio } from "@/components/site/about-bio";
 import { AboutPillars } from "@/components/site/about-pillars";
+import type { SectionProps } from "@/components/sections/types";
 
-export function About() {
+export function About({ entry, number }: SectionProps<"about">) {
   return (
     <Section
-      id="about"
+      id={entry.id}
       seam
       backdrop={
         <AmbientBackground
@@ -19,7 +20,7 @@ export function About() {
       }
     >
       <SectionHeading
-        index="01"
+        index={number ?? ""}
         eyebrow="About"
         title="A builder of quantitative systems."
         variant="left"

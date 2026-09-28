@@ -25,12 +25,15 @@ import { springSoft } from "@/lib/motion";
  * scroll-driven, beginning only after load).
  */
 export function HeroScene({
+  id,
   media,
   lattice,
   panel,
   panelCaption,
   children,
 }: {
+  /** The section's #anchor (from the page manifest). */
+  id: string;
   media: ReactNode;
   lattice: ReactNode;
   panel: ReactNode;
@@ -106,7 +109,7 @@ export function HeroScene({
 
   return (
     <section
-      id="top"
+      id={id}
       ref={sectionRef}
       onMouseMove={onPointerMove}
       onMouseLeave={onPointerLeave}

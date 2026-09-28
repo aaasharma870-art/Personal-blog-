@@ -1,43 +1,28 @@
-import { Hero } from "@/components/site/hero";
-import { CredibilityStrip } from "@/components/site/credibility-strip";
-import { About } from "@/components/site/about";
-import { Journey } from "@/components/site/journey";
-import { MediaBand } from "@/components/site/media-band";
-import { Projects } from "@/components/site/projects";
-import { Capabilities } from "@/components/site/capabilities";
-import { Principles } from "@/components/site/principles";
-import { Writing } from "@/components/site/writing";
-import { Beyond } from "@/components/site/beyond";
-import { Testimonials } from "@/components/site/testimonials";
-import { Contact } from "@/components/site/contact";
+import { SectionFrame } from "@/components/sections/SectionFrame";
+import { rendererFor } from "@/components/sections/registry";
+import { enabledSections, numberOf } from "@/lib/sections";
 
+/** The home page is the manifest (lib/page.ts), rendered in order. Add,
+ *  hide or reorder sections there — not here. */
 export default function Home() {
   return (
     <>
-      <Hero />
-      <CredibilityStrip />
-      <About />
-      <Journey />
-      <MediaBand
-        video="/media/band-flow.mp4"
-        image="/media/still-terminal.png"
-        kicker="Operating ethos"
-        statement="Treat every backtest as guilty until proven innocent."
-        converge
-      />
-      <Projects />
-      <Capabilities />
-      <MediaBand
-        video="/media/v-contour.mp4"
-        image="/media/still-network.png"
-        kicker="On method"
-        statement="A good system is not merely fast — it is inspectable, resilient, and honest about its limits."
-      />
-      <Principles />
-      <Writing />
-      <Beyond />
-      <Testimonials />
-      <Contact />
+      {enabledSections.map((entry, i) => {
+        const Section = rendererFor(entry.type);
+        const number = numberOf(entry.id);
+        return (
+          <SectionFrame
+            key={entry.id}
+            entry={entry}
+            number={number}
+            index={i}
+            prevEntry={enabledSections[i - 1] ?? null}
+            nextEntry={enabledSections[i + 1] ?? null}
+          >
+            <Section entry={entry} number={number} />
+          </SectionFrame>
+        );
+      })}
     </>
   );
 }

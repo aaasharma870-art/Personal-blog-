@@ -5,11 +5,12 @@ import { Tag } from "@/components/ui/tag";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { SignalThumb } from "@/components/visuals/signal-thumb";
 import { writing } from "@/lib/content";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Writing() {
+export function Writing({ entry, number }: SectionProps<"writing">) {
   return (
     <Section
-      id="writing"
+      id={entry.id}
       seam
       rhythm="tight"
       backdrop={
@@ -21,7 +22,7 @@ export function Writing() {
       }
     >
       <SectionHeading
-        index="06"
+        index={number ?? ""}
         eyebrow="Writing · Notes"
         title="Thinking in public, soon."
         intro="Short essays in progress — written for people who don't trade, about how I try not to fool myself."

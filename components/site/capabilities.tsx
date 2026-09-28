@@ -7,6 +7,7 @@ import { capabilities } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { Microscope, Activity, Cpu, ShieldCheck, Languages } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { SectionProps } from "@/components/sections/types";
 
 /**
  * Split a delimited spec string ("a, b · c") into trimmed, non-empty chips.
@@ -63,10 +64,10 @@ function Chips({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function Capabilities() {
+export function Capabilities({ entry, number }: SectionProps<"systems">) {
   return (
     <Section
-      id="systems"
+      id={entry.id}
       seam
       rhythm="tight"
       backdrop={
@@ -78,7 +79,7 @@ export function Capabilities() {
       }
     >
       <SectionHeading
-        index="04"
+        index={number ?? ""}
         eyebrow="Systems · Capabilities"
         title="What I can actually do."
         intro="A working map, not a skills cloud: the methods I rely on, the tools behind them, and what they are meant to produce."

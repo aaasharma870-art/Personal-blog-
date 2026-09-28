@@ -2,11 +2,12 @@ import { SectionSeam } from "@/components/ui/section-seam";
 import { ContactFinaleMedia } from "@/components/site/contact-finale-media";
 import { ContactFinale } from "@/components/site/contact-finale";
 import { site } from "@/lib/content";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Contact() {
+export function Contact({ entry }: SectionProps<"contact">) {
   return (
     <section
-      id="contact"
+      id={entry.id}
       className="relative isolate flex min-h-[92svh] scroll-mt-24 items-center overflow-hidden border-t border-line py-28 lg:min-h-[100svh]"
     >
       <SectionSeam variant="signature" />

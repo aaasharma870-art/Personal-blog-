@@ -6,11 +6,12 @@ import { ParallaxLayer } from "@/components/visuals/parallax-layer";
 import { BeyondMotif } from "@/components/visuals/beyond-motif";
 import { beyond } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Beyond() {
+export function Beyond({ entry, number }: SectionProps<"beyond">) {
   return (
     <Section
-      id="beyond"
+      id={entry.id}
       seam
       rhythm="tight"
       backdrop={
@@ -23,7 +24,7 @@ export function Beyond() {
       }
     >
       <SectionHeading
-        index="07"
+        index={number ?? ""}
         eyebrow="Beyond the screen"
         title="Discipline, service, and a trained eye."
         intro="The same temperament, away from the terminal."
