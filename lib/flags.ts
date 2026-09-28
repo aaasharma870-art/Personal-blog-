@@ -7,7 +7,9 @@
    to the conservative default, so the hydration pass renders exactly what the
    server rendered and the real value arrives in a follow-up render — never a
    mismatched tree (React #418). Do not add raw `window` / `navigator`
-   readers here that components could call during render.
+   readers here that components could call during render. (For reduced
+   motion, MotionProvider then remounts the app once so mount-only props like
+   Motion's `initial` take their reduced values.)
 
    `useReducedMotion` replaces Motion's hook of the same name (which reads the
    OS preference synchronously on the client's FIRST render and so broke
