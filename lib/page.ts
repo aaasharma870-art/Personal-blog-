@@ -70,7 +70,7 @@ type Base<T extends string, P> = {
   world?: World;
   /** Reserved: SectionFrame will own spacing (Phase 1+). */
   density?: Density;
-  /** Reserved: the validator will cap "signature" sections (Phase 1+). */
+  /** Reserved for the motion phases; the validator caps "signature" at 3. */
   motion?: MotionLevel;
   props: P;
 };

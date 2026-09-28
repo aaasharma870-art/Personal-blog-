@@ -7,19 +7,27 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { page } from "../lib/page.ts";
+import { ANCHORLESS_TYPES, page } from "../lib/page.ts";
 import { mediaAssets } from "../lib/media.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 /** Anchors the brief requires while their section is enabled (relaxable). */
 const REQUIRED_ANCHORS = ["top", "about", "journey", "work", "systems", "principles", "writing", "beyond", "contact"];
-const NAV_LABEL_WARN = 18;
+const NAV_LABEL_WARN = 12;
+/** SYNTHESIS §8: at most 3 `motion: "signature"` sections page-wide. */
+const MAX_SIGNATURE = 3;
 const TONES = ["canvas", "raised", "deep", "paper"];
 const WORLDS = ["neutral", "hp", "potc", "idiots"];
 const USABLE = new Set(["accepted", "integrated"]);
 /** Prop keys that hold MediaIds (string or string[]) anywhere in `props`. */
 const MEDIA_KEY = /^(media|mediaMobile|image|video|poster|cover|evidence|still|stills|from|to)$|Media$/;
+/** Prop keys whose slot renders one specific kind (declared kind must match). */
+const KEY_KIND = { image: "image", still: "image", stills: "image", cover: "image", poster: "image", video: "video" };
+/** What a fallback may be for each kind. An image slot can't play a video;
+ *  a video (or sequence) may degrade to a still, and its consumer must check
+ *  the RESOLVED kind before rendering a <video> (see MediaBandSection). */
+const FALLBACK_OK = { image: ["image"], video: ["video", "image"], sequence: ["sequence", "image"] };
 
 const errors = [];
 const warnings = [];
@@ -44,6 +52,15 @@ function resolves(id) {
 for (const [id, a] of Object.entries(mediaAssets)) {
   for (const k of ["poster", "fallback"]) {
     if (a[k] !== undefined && !mediaIds.has(a[k])) err(`media "${id}": ${k} "${a[k]}" is not a MediaId`);
+  }
+  if (a.poster && mediaIds.has(a.poster) && mediaAssets[a.poster].kind !== "image") {
+    err(`media "${id}": poster "${a.poster}" is a ${mediaAssets[a.poster].kind}, not an image`);
+  }
+  if (a.fallback && mediaIds.has(a.fallback)) {
+    const fk = mediaAssets[a.fallback].kind;
+    if (!(FALLBACK_OK[a.kind] ?? [a.kind]).includes(fk)) {
+      err(`media "${id}": ${a.kind} cannot fall back to "${a.fallback}" (${fk})`);
+    }
   }
   if (a.fallback) {
     const chain = [id];
@@ -76,8 +93,11 @@ page.forEach((s, i) => {
   if (!/^[a-z][a-z0-9-]*$/.test(s.id)) err(`id "${s.id}" must be a lowercase slug (it is the #anchor)`);
   if (s.tone !== undefined && !TONES.includes(s.tone)) err(`"${s.id}": unknown tone "${s.tone}"`);
   if (s.world !== undefined && !WORLDS.includes(s.world)) err(`"${s.id}": unknown world "${s.world}"`);
+  if (ANCHORLESS_TYPES.includes(s.type) && s.anchor !== false) {
+    err(`"${s.id}": type "${s.type}" renders no #id — set anchor: false (else it leaks a dead #${s.id} into the sitemap/observer)`);
+  }
   if (s.nav) {
-    if (s.anchor === false) err(`"${s.id}": has nav but anchor:false (nothing to jump to)`);
+    if (s.anchor === false || ANCHORLESS_TYPES.includes(s.type)) err(`"${s.id}": has nav but no anchor (nothing to jump to)`);
     if (!s.nav.label?.trim()) err(`"${s.id}": nav.label is empty`);
     else if (s.nav.label.length > NAV_LABEL_WARN) warn(`"${s.id}": nav label "${s.nav.label}" is ${s.nav.label.length} chars (> ${NAV_LABEL_WARN})`);
   }
@@ -87,6 +107,11 @@ const heroes = page.filter((s) => s.type === "hero");
 if (heroes.length !== 1) err(`expected exactly one hero, found ${heroes.length}`);
 if (page[0]?.type !== "hero") err(`the first entry must be the hero (found "${page[0]?.type}")`);
 if (heroes[0] && heroes[0].enabled === false) err(`the hero cannot be disabled`);
+
+const signature = page.filter((s) => s.enabled !== false && s.motion === "signature").map((s) => s.id);
+if (signature.length > MAX_SIGNATURE) {
+  err(`${signature.length} enabled "signature" sections (max ${MAX_SIGNATURE}): ${signature.join(", ")}`);
+}
 
 for (const id of REQUIRED_ANCHORS) {
   const s = page.find((e) => e.id === id);
@@ -109,7 +134,11 @@ for (const s of page) {
   for (const { key, id } of refs) {
     mediaRefs++;
     if (!mediaIds.has(id)) err(`"${s.id}": props.${key} references unknown media "${id}"`);
-    else if (s.enabled !== false && !resolves(id)) err(`"${s.id}": media "${id}" has no usable asset in its fallback chain`);
+    else {
+      const want = KEY_KIND[key];
+      if (want && mediaAssets[id].kind !== want) err(`"${s.id}": props.${key} expects kind "${want}", but "${id}" is "${mediaAssets[id].kind}"`);
+      if (s.enabled !== false && !resolves(id)) err(`"${s.id}": media "${id}" has no usable asset in its fallback chain`);
+    }
   }
 }
 
