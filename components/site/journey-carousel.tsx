@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { KeyboardEvent } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { dur, ease } from "@/lib/motion";
 import { journey } from "@/lib/content";

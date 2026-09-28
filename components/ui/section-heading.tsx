@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import type { Variants } from "motion/react";
 import { Reveal } from "@/components/ui/reveal";
 import { dur, ease, maskedLine, type RevealVariant } from "@/lib/motion";

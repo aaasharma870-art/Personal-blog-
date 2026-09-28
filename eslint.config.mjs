@@ -5,6 +5,26 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    rules: {
+      // Motion's useReducedMotion reads the OS preference on the client's first
+      // render, so any tree that branches on it fails hydration (React #418)
+      // under prefers-reduced-motion. lib/flags.ts has the hydration-safe one.
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "motion/react",
+              importNames: ["useReducedMotion"],
+              message:
+                "Import useReducedMotion from \"@/lib/flags\" (hydration-safe) instead.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

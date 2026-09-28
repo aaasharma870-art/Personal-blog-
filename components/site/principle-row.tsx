@@ -4,11 +4,11 @@ import { useRef, useSyncExternalStore } from "react";
 import {
   motion,
   useInView,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { RevealItem } from "@/components/ui/reveal";
 import { DecryptText } from "@/components/ui/decrypt-text";
 import { ease, springSoft } from "@/lib/motion";

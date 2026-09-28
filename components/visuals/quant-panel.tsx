@@ -3,7 +3,8 @@
 import { useRef } from "react";
 import type { MouseEvent } from "react";
 import { Check } from "lucide-react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import type { Variants } from "motion/react";
 import { dur, ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";

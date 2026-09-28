@@ -3,11 +3,11 @@
 import { useRef, useSyncExternalStore } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
 import { springWeighted } from "@/lib/motion";
 

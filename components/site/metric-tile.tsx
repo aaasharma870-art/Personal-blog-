@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { CountUp } from "@/components/ui/count-up";
 import { ease } from "@/lib/motion";
 import type { Metric } from "@/lib/content";

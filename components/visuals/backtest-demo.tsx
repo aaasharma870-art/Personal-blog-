@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
-import { animate, motion, useReducedMotion } from "motion/react";
+import { animate, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 
 /**

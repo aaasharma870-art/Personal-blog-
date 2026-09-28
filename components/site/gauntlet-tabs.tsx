@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { AnimatePresence, animate, motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, animate, motion, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import type { Variants } from "motion/react";
 import { dur, ease, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 
 /**
  * CursorGlow — a soft aqua light that eases toward the pointer across the whole

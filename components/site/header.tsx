@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { Menu, Search, X } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";

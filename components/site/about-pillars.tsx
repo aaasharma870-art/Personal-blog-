@@ -1,7 +1,8 @@
 "use client";
 
 import type { Variants } from "motion/react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { SpotlightCard } from "@/components/visuals/spotlight-card";
 import { ParallaxLayer } from "@/components/visuals/parallax-layer";
 import { dur, ease, viewportOnce } from "@/lib/motion";

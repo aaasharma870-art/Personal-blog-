@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { motion, useScroll, useSpring } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 
 /** A bright aqua reading-progress bar pinned to the top of the viewport —
  *  thick + glowing so it reads as "alive" from the first pixel. */

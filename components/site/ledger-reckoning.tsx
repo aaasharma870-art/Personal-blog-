@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { ArrowRight, ArrowUpRight, Check, X } from "lucide-react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import type { Variants } from "motion/react";
 import { Tag } from "@/components/ui/tag";
 import { ease, viewportOnce } from "@/lib/motion";

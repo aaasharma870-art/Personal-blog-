@@ -5,11 +5,11 @@ import type { MouseEvent, ReactNode } from "react";
 import {
   motion,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { Parallax } from "@/components/visuals/parallax";
 import { HeroBloom } from "@/components/visuals/hero-bloom";
 import { ScrollCue } from "@/components/visuals/scroll-cue";

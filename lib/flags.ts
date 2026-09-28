@@ -1,13 +1,24 @@
 /* ============================================================================
    FLAGS — URL flags + environment preferences (SYNTHESIS §8).
-   Client-safe AND server-safe: every reader returns the conservative default
-   when `window` / `navigator` are unavailable (SSR, Node). No behaviour
-   depends on these yet (Phase 0); later phases gate intros, cinematic scenes
-   and heavy media on them.
+
+   HYDRATION RULE: environment state (reduced motion, pointer type, Save-Data,
+   `?skip`) is unknowable on the server, so it is exposed ONLY through the
+   hooks below. Each is a `useSyncExternalStore` with a server snapshot equal
+   to the conservative default, so the hydration pass renders exactly what the
+   server rendered and the real value arrives in a follow-up render — never a
+   mismatched tree (React #418). Do not add raw `window` / `navigator`
+   readers here that components could call during render.
+
+   `useReducedMotion` replaces Motion's hook of the same name (which reads the
+   OS preference synchronously on the client's FIRST render and so broke
+   hydration under prefers-reduced-motion). ESLint bans importing Motion's
+   version (eslint.config.mjs).
 
    ?skip                → skip every skippable moment (intro, scenes, …)
    ?skip=intro,scene    → skip only the named moments
    ========================================================================== */
+
+import { useSyncExternalStore } from "react";
 
 export type SkipFlags = {
   /** Bare `?skip` (or `?skip=all`): skip everything skippable. */
@@ -32,57 +43,108 @@ export function parseSkipFlags(search: string): SkipFlags {
   return { all: names.size === 0 || names.has("all"), names };
 }
 
-/** `?skip` flags for the current page (no flags on the server). */
-export function readSkipFlags(): SkipFlags {
-  if (typeof window === "undefined") return NO_SKIP;
-  return parseSkipFlags(window.location.search);
-}
-
-/** True when `name` (e.g. "intro") should be skipped. */
-export function shouldSkip(name: string, flags: SkipFlags = readSkipFlags()): boolean {
+/** True when `name` (e.g. "intro") should be skipped. Pure. */
+export function shouldSkip(name: string, flags: SkipFlags): boolean {
   return flags.all || flags.names.has(name.toLowerCase());
 }
 
-/* — Environment preferences ——————————————————————————————————————————— */
+/* — Stores (client snapshot + subscription; module-private) ——————————— */
 
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
-const FINE_POINTER = "(pointer: fine)";
+const noop = () => {};
+const serverFalse = () => false;
+const hasMatchMedia = () =>
+  typeof window !== "undefined" && typeof window.matchMedia === "function";
 
-function matches(query: string): boolean {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-    return false;
-  }
-  return window.matchMedia(query).matches;
+function mediaQueryStore(query: string) {
+  return {
+    subscribe(onChange: () => void): () => void {
+      if (!hasMatchMedia()) return noop;
+      const m = window.matchMedia(query);
+      m.addEventListener("change", onChange);
+      return () => m.removeEventListener("change", onChange);
+    },
+    getSnapshot(): boolean {
+      return hasMatchMedia() && window.matchMedia(query).matches;
+    },
+  };
 }
 
-/** OS-level reduced-motion preference (false on the server). */
-export function prefersReducedMotion(): boolean {
-  return matches(REDUCED_MOTION);
+const reducedMotion = mediaQueryStore("(prefers-reduced-motion: reduce)");
+const finePointer = mediaQueryStore("(pointer: fine)");
+
+type NetworkInformationLike = EventTarget & {
+  saveData?: boolean;
+  effectiveType?: string;
+};
+
+function connection(): NetworkInformationLike | undefined {
+  if (typeof navigator === "undefined") return undefined;
+  return (navigator as Navigator & { connection?: NetworkInformationLike })
+    .connection;
 }
 
-/** Primary input is a precise pointer (mouse / trackpad). */
-export function prefersFinePointer(): boolean {
-  return matches(FINE_POINTER);
+function subscribeConnection(onChange: () => void): () => void {
+  const c = connection();
+  if (!c || typeof c.addEventListener !== "function") return noop;
+  c.addEventListener("change", onChange);
+  return () => c.removeEventListener("change", onChange);
 }
 
-/** Subscribe to reduced-motion changes (for useSyncExternalStore). */
-export function subscribeReducedMotion(onChange: () => void): () => void {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-    return () => {};
-  }
-  const m = window.matchMedia(REDUCED_MOTION);
-  m.addEventListener("change", onChange);
-  return () => m.removeEventListener("change", onChange);
-}
-
-type NetworkInformationLike = { saveData?: boolean; effectiveType?: string };
-
-/** Data Saver on, or a 2G/3G-class link: prefer stills over video. Mirrors the
- *  rule AmbientBackground already applies to its ambient loops. */
-export function prefersSaveData(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const c = (navigator as Navigator & { connection?: NetworkInformationLike }).connection;
+/** Data Saver on, or a 2G/3G-class link. Mirrors the rule AmbientBackground
+ *  already applies to its ambient loops. */
+function saveDataSnapshot(): boolean {
+  const c = connection();
   if (!c) return false;
   if (c.saveData) return true;
   return Boolean(c.effectiveType && /(?:^|-)(?:2g|3g)$/.test(c.effectiveType));
+}
+
+// `?skip` only changes on navigation. The snapshot is cached per search
+// string so useSyncExternalStore sees a stable reference between renders.
+let lastSearch: string | null = null;
+let lastSkip: SkipFlags = NO_SKIP;
+
+function skipSnapshot(): SkipFlags {
+  const search = window.location.search;
+  if (search !== lastSearch) {
+    lastSearch = search;
+    lastSkip = parseSkipFlags(search);
+  }
+  return lastSkip;
+}
+
+function subscribePopState(onChange: () => void): () => void {
+  window.addEventListener("popstate", onChange);
+  return () => window.removeEventListener("popstate", onChange);
+}
+
+/* — Hooks (the only public readers) ————————————————————————————————— */
+
+/** OS reduced-motion preference. false on the server and during hydration,
+ *  then the real value; follows live OS changes. */
+export function useReducedMotion(): boolean {
+  return useSyncExternalStore(
+    reducedMotion.subscribe,
+    reducedMotion.getSnapshot,
+    serverFalse,
+  );
+}
+
+/** Primary input is a precise pointer (mouse / trackpad). */
+export function useFinePointer(): boolean {
+  return useSyncExternalStore(
+    finePointer.subscribe,
+    finePointer.getSnapshot,
+    serverFalse,
+  );
+}
+
+/** Data Saver or a slow link: prefer stills over video. */
+export function useSaveData(): boolean {
+  return useSyncExternalStore(subscribeConnection, saveDataSnapshot, serverFalse);
+}
+
+/** `?skip` flags for the current page (no flags on the server). */
+export function useSkipFlags(): SkipFlags {
+  return useSyncExternalStore(subscribePopState, skipSnapshot, () => NO_SKIP);
 }

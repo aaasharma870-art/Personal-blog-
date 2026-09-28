@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { JourneyCarousel } from "@/components/site/journey-carousel";
 import { JourneyTrack } from "@/components/site/journey-track";
 

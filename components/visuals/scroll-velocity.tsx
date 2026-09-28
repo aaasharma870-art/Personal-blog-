@@ -2,12 +2,12 @@
 
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
   useVelocity,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { springSnappy } from "@/lib/motion";
 
 /**

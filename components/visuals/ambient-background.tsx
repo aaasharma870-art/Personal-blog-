@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 import { SeamlessVideo } from "@/components/visuals/seamless-video";
 

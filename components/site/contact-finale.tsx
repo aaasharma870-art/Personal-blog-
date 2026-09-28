@@ -1,7 +1,8 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import type { Variants } from "motion/react";
 import { GithubMark } from "@/components/ui/icons";
 import { Magnetic } from "@/components/ui/magnetic";
