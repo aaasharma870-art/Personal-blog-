@@ -1,37 +1,42 @@
 /* ============================================================================
-   PAGE MANIFEST — the ordered list of sections on the home page (SYNTHESIS §8).
-   PURE DATA: no React / component imports (type-only imports are fine), so
-   Node can import it directly (scripts/check-manifest.mjs).
+   PAGE MANIFEST — the ordered list of sections on the home page (SPEC v2 §3,
+   §12.2). PURE DATA: no React / component imports (type-only imports are
+   fine), so Node can import it directly (scripts/check-manifest.mjs).
 
-   Everything else DERIVES from this array (lib/sections.ts): the header nav,
-   the section rail, the command palette, the 01…NN section numbers, the
-   sitemap anchors and the active-section observer.
+   Everything else DERIVES from this array (lib/sections.ts): each section's
+   WORLD (from its act, lib/film.ts), the derived ACT CARDS between act runs
+   (`pageItems`), act numerals and header labels, the nav / menu groups, the
+   command palette, the sitemap anchors and the active-section observer.
 
    HOW TO ADD / REMOVE / REORDER A SECTION
-   1. Add, remove or move ONE entry in `page` below. To hide a section without
-      deleting its content, set `enabled: false`. To rename it in the nav,
-      change `nav.label` — never `id` (it is the #anchor; links would break).
+   1. Add, remove or move ONE entry in `page` below. Put it inside the run of
+      its act and set `act` (null = outside acts: the hero cold open, the
+      intermission, the credits). To hide a section without deleting its
+      content, set `enabled: false`. To rename it in the nav, change
+      `nav.label` — never `id` (it is the #anchor; links would break).
    2. Brand-new kind of section? Add a member to `SectionEntry` (its props),
       then one line in components/sections/registry.ts — the compiler names
       anything you missed. Facts go in lib/content.ts, media in lib/media.ts
-      (referenced here by MediaId, never by path).
+      (referenced here by MediaId, never by path), works/acts in lib/film.ts.
    3. Run `npm run check` (tsc + manifest validator), then `npm run build`.
-      Nav, rail, palette, numbering and sitemap update themselves.
+   Section TYPES are structural (story, gauntlet, chapter …); the world skins
+   them through lib/film.ts `slots.dressing` (SPEC §12.2).
    ========================================================================== */
 
 import type { MediaId } from "./media";
 import type { ToneId, WorldId } from "./worlds";
+import type { ActId, Intensity } from "./film";
 
-/** Ground plane a section sits on (DESIGN v2 §1.3.4). SectionFrame emits it
+/** Ground plane a section sits on (DESIGN v3 §1.3.4). SectionFrame emits it
  *  as `data-tone`; it selects --bg / --surface-* / --fg … from the world. */
 export type Tone = ToneId;
 
-/** Film world a section belongs to (lib/worlds.ts). SectionFrame emits it as
- *  `data-world`; its palette lives in app/globals.css `[data-world]`. */
+/** Film world (lib/worlds.ts). DERIVED from the act (lib/sections.ts
+ *  `worldOf`); SectionFrame emits it as `data-world`. */
 export type World = WorldId;
 
 export type Density = "spacious" | "default" | "tight";
-export type MotionLevel = "static" | "standard" | "signature";
+export type MotionLevel = "static" | "standard" | "signature" | "scene";
 
 // Mirrors lib/worlds.ts DEFAULT_TONE / DEFAULT_WORLD (this file may only
 // type-import, because Node strips types but does not resolve "./worlds";
@@ -59,7 +64,7 @@ type Base<T extends string, P> = {
   id: string;
   type: T;
   /** Default true. false = hidden everywhere (page, nav, rail, palette,
-   *  numbering, sitemap); the content stays in lib/content.ts. */
+   *  numbering, sitemap, act derivation); the content stays in content.ts. */
   enabled?: boolean;
   /** Default true. false = no #id is rendered, so the section can't be a
    *  nav / rail / palette / sitemap target. Types in ANCHORLESS_TYPES have
@@ -69,15 +74,21 @@ type Base<T extends string, P> = {
   nav?: NavSpec;
   /** Participates in the derived 01…NN numbering. */
   numbered?: boolean;
-  /** Ground plane (default "canvas"). Emitted by SectionFrame as data-tone;
-   *  sections opt in to painting it (bg-bg, text-fg …), so P1-early has no
-   *  visual effect until a section reads the semantic tokens. */
-  tone?: Tone;
-  /** Film world (default "house"). Emitted by SectionFrame as data-world. */
+  /** The act this section belongs to (lib/film.ts `acts[].id`). null =
+   *  outside acts (hero cold open, intermission, credits). Acts must be
+   *  contiguous runs in page order (validator). Default null. */
+  act?: ActId | null;
+  /** Rare override of the act's world. "house" is allowed silently; any
+   *  other value is a "world cameo" (validator warning). */
   world?: World;
+  /** Default film.intensity. whisper = ground + act label only; grade = plus
+   *  motifs and static cards (no loops, no long cards); full = everything. */
+  worldIntensity?: Intensity;
+  /** Ground plane (default "canvas"). Emitted by SectionFrame as data-tone. */
+  tone?: Tone;
   /** Reserved: SectionFrame will own spacing (Phase 1+). */
   density?: Density;
-  /** Reserved for the motion phases; the validator caps "signature" at 3. */
+  /** "signature" ≤ 6 page-wide; "scene" + derived long cards ≤ 2. */
   motion?: MotionLevel;
   props: P;
 };
@@ -96,6 +107,11 @@ type Entry<T extends string, P> = T extends AnchorlessType
 
 type NoProps = Record<string, never>;
 
+/** A non-media reference: drawn in code, or an authentic (Aryan's own) file
+ *  that is not a generated MediaId. The validator skips these prefixes. */
+export type CodeRef = `code:${string}`;
+export type AuthenticRef = `authentic:${string}`;
+
 export type MediaBandProps = {
   image: MediaId;
   video?: MediaId;
@@ -106,46 +122,105 @@ export type MediaBandProps = {
   converge?: boolean;
 };
 
-/** One member per existing section component (Phase 0). Later phases add
- *  types (statement, chapter, scene, story, …) as new members. */
+export type HeroProps = {
+  cta: { label: string; to: string };
+  media: MediaId;
+  mediaMobile: MediaId;
+  loop?: MediaId;
+};
+
+/** Story variants are STRUCTURAL; the world supplies the skin (SPEC §12.2):
+ *  `notes` in rdr2 = the frontier dressing, in hp = HP-06 footprints. */
+export type StoryProps =
+  | { variant: "split" }
+  | { variant: "voyage"; stills?: MediaId[]; sequence?: MediaId }
+  | {
+      variant: "notes";
+      media?: MediaId;
+      mediaMobile?: MediaId;
+      handbill?: { enabled: boolean; portrait: AuthenticRef | null };
+    };
+
+/** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
+ *  retired D-3 layer, kept only until the retirement pass deletes them. */
 export type SectionEntry =
-  | Entry<"hero", NoProps>
-  | Entry<"credibility", NoProps>
-  | Entry<"about", NoProps>
-  | Entry<"journey", NoProps>
-  | Entry<"mediaBand", MediaBandProps>
-  | Entry<"work", NoProps>
-  | Entry<"systems", NoProps>
+  | Entry<"hero", HeroProps>
+  | Entry<"story", StoryProps>
+  | Entry<"gauntlet", { board: MediaId }>
+  | Entry<"chapter", { projectId: string; cover: CodeRef }>
+  | Entry<"experiment", { demo: "backtest" }>
+  | Entry<"matrix", { source: "capabilities" }>
+  | Entry<"ledger", { include: ("flagships" | "survivors" | "killed")[] }>
+  | Entry<"films", { order: "acts" }>
+  | Entry<"index", { source: "writing"; preview: "vignette" | "filmstrip" | "inline" }>
+  | Entry<"quotes", { source: "testimonials"; media?: MediaId; loop?: MediaId }>
   | Entry<"principles", NoProps>
-  | Entry<"writing", NoProps>
-  | Entry<"beyond", NoProps>
-  | Entry<"voices", NoProps>
-  | Entry<"contact", NoProps>;
+  | Entry<"contact", { media?: MediaId; loop?: MediaId }>
+  | Entry<"credits", NoProps>
+  | Entry<"credibility", NoProps>
+  | Entry<"mediaBand", MediaBandProps>;
 
 export type SectionType = SectionEntry["type"];
 export type EntryOf<K extends SectionType> = Extract<SectionEntry, { type: K }>;
 
+/* ============================================================================
+   THE DEFAULT MANIFEST — SPEC v2 §3 order. Acts: I The Crossing (pirates) ·
+   II The Workshop (idiots) · Intermission (house) · III The Frontier (rdr2) ·
+   IV The Light (hp). Cards act-1…act-4 are DERIVED (lib/sections.ts).
+
+   M1 NOTE — entries marked `enabled: false // M2` are data stubs: their
+   content still renders INSIDE a legacy component (the `work` gauntlet
+   renders the chapters, the demo and the kill-list; the layout footer
+   renders the credits). Whoever builds one flips it on AND removes the
+   duplicate from the legacy component in the same change (else #ids clash).
+   ========================================================================== */
 export const page: readonly SectionEntry[] = [
-  { id: "top", type: "hero", props: {} },
-  { id: "credibility", type: "credibility", anchor: false, props: {} },
+  /* — Cold open (act null; world = the first act's: pirates) — */
+  {
+    id: "top",
+    type: "hero",
+    act: null,
+    tone: "deep",
+    motion: "signature",
+    props: {
+      cta: { label: "View the quant portfolio ↓", to: "work" },
+      media: "MV-01",
+      mediaMobile: "MV-02",
+      loop: "MV-03",
+    },
+  },
+
+  /* — Retired D-3 layer (the credibility marquee, the media bands): the
+       ethos line is now Card I→II's epigraph. Delete at the retirement pass. */
+  { id: "credibility", type: "credibility", anchor: false, enabled: false, props: {} },
+
+  /* ══ ACT I · THE CROSSING · pirates ══ (card act-1: `opening`) */
   {
     id: "about",
-    type: "about",
+    type: "story",
+    act: "act-1",
     numbered: true,
     nav: { label: "About", primary: true },
-    props: {},
+    props: { variant: "split" },
   },
   {
     id: "journey",
-    type: "journey",
+    type: "story",
+    act: "act-1",
     numbered: true,
+    motion: "signature",
     nav: { label: "Journey", primary: true },
-    props: {},
+    props: {
+      variant: "voyage",
+      stills: ["MV-05a", "MV-05b", "MV-05c", "MV-05d"],
+      sequence: "JV",
+    },
   },
   {
     id: "band-ethos",
     type: "mediaBand",
     anchor: false,
+    enabled: false,
     props: {
       video: "band-flow",
       image: "still-terminal",
@@ -154,24 +229,56 @@ export const page: readonly SectionEntry[] = [
       converge: true,
     },
   },
+
+  /* ══ ACT II · THE WORKSHOP · idiots ══ (card act-2: `seam`, long #1) */
   {
     id: "work",
-    type: "work",
+    type: "gauntlet",
+    act: "act-2",
     numbered: true,
+    motion: "signature",
     nav: { label: "Work", primary: true },
-    props: {},
+    props: { board: "MV-06" },
+  },
+  {
+    id: "trading-algos",
+    type: "chapter",
+    act: "act-2",
+    numbered: true,
+    enabled: false, // M2: rendered inside the `work` gauntlet today
+    nav: { label: "Trading_Algos", keywords: ["flagship", "research", "futures"] },
+    props: { projectId: "trading-algos", cover: "code:schematic-trading-algos" },
+  },
+  {
+    id: "optuna-screener",
+    type: "chapter",
+    act: "act-2",
+    numbered: true,
+    enabled: false, // M2: rendered inside the `work` gauntlet today
+    nav: { label: "Optuna", keywords: ["pipeline", "screener", "optimizer"] },
+    props: { projectId: "optuna-screener", cover: "code:schematic-optuna" },
+  },
+  {
+    id: "experiment",
+    type: "experiment",
+    act: "act-2",
+    tone: "raised",
+    enabled: false, // M2: BacktestDemo renders inside the `work` gauntlet today
+    props: { demo: "backtest" },
   },
   {
     id: "systems",
-    type: "systems",
+    type: "matrix",
+    act: "act-2",
     numbered: true,
     nav: { label: "Systems", primary: true },
-    props: {},
+    props: { source: "capabilities" },
   },
   {
     id: "band-method",
     type: "mediaBand",
     anchor: false,
+    enabled: false,
     props: {
       video: "v-contour",
       image: "still-network",
@@ -181,29 +288,56 @@ export const page: readonly SectionEntry[] = [
     },
   },
   {
-    id: "principles",
-    type: "principles",
+    id: "kill-list",
+    type: "ledger",
+    act: "act-2",
+    motion: "signature",
+    enabled: false, // M2: #kill-list renders inside the `work` gauntlet today
+    nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
+    props: { include: ["flagships", "survivors", "killed"] },
+  },
+
+  /* ══ INTERMISSION · house ══ (act null) */
+  {
+    id: "films",
+    type: "films",
+    act: null,
+    world: "house",
+    tone: "deep",
+    enabled: false, // M2: the films chapter (SM-9) is not built yet
+    nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
+    props: { order: "acts" },
+  },
+
+  /* ══ ACT III · THE FRONTIER · rdr2 ══ (card act-3: `tintype`, 0 travel) */
+  {
+    id: "beyond",
+    type: "story",
+    act: "act-3",
     numbered: true,
-    nav: { label: "Principles", primary: true },
-    props: {},
+    motion: "signature",
+    nav: { label: "Beyond", primary: true },
+    props: {
+      variant: "notes",
+      media: "MV-10",
+      mediaMobile: "MV-10m",
+      handbill: { enabled: true, portrait: "authentic:portrait" },
+    },
   },
   {
     id: "writing",
-    type: "writing",
+    type: "index",
+    act: "act-3",
+    tone: "paper",
     numbered: true,
     nav: { label: "Writing", primary: true },
-    props: {},
-  },
-  {
-    id: "beyond",
-    type: "beyond",
-    numbered: true,
-    nav: { label: "Beyond", primary: true },
-    props: {},
+    props: { source: "writing", preview: "vignette" },
   },
   {
     id: "voices",
-    type: "voices",
+    type: "quotes",
+    act: "act-3",
+    tone: "deep",
     numbered: true,
     nav: {
       label: "Voices",
@@ -211,6 +345,16 @@ export const page: readonly SectionEntry[] = [
       paletteLabel: "Testimonials",
       keywords: ["teachers", "voices", "quotes", "recommendations"],
     },
+    props: { source: "testimonials", media: "MV-11", loop: "MV-11L" },
+  },
+
+  /* ══ ACT IV · THE LIGHT · hp ══ (card act-4: `ignite`, long #2) */
+  {
+    id: "principles",
+    type: "principles",
+    act: "act-4",
+    numbered: true,
+    nav: { label: "Principles", primary: true },
     props: {},
   },
   {
@@ -218,7 +362,22 @@ export const page: readonly SectionEntry[] = [
     // single header entry point. Still in the rail and the palette.
     id: "contact",
     type: "contact",
+    act: "act-4",
+    tone: "deep",
     nav: { label: "Contact" },
+    props: { media: "MV-08", loop: "MV-09" },
+  },
+
+  /* — Credits (act null, house). M1: the roll renders in the layout
+       <Footer> (components/site/footer.tsx) from the `credits` derivation in
+       lib/sections.ts; flip this on only when the footer moves here. — */
+  {
+    id: "credits",
+    type: "credits",
+    act: null,
+    world: "house",
+    tone: "deep",
+    enabled: false,
     props: {},
   },
 ];

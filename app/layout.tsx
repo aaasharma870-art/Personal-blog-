@@ -11,6 +11,7 @@ import { ScrollVelocity } from "@/components/visuals/scroll-velocity";
 import { CursorGlow } from "@/components/visuals/cursor-glow";
 import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
+import { worldFontVariables } from "@/lib/fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -101,7 +102,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${worldFontVariables} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <MotionProvider>

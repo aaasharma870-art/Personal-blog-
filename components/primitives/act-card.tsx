@@ -33,7 +33,9 @@ import { WorldProvider } from "@/components/primitives/world";
  * a percentage and never carries role="status" — the Loader is used in its
  * decorative scroll mode here. 0 tab stops; no aqua at rest.
  */
-export type ActCardKind = "opening" | "seam" | "ignite" | "reel" | "title";
+/** = lib/film.ts TransitionKind minus "flight" (the prologue is an overlay,
+ *  never a card). `tintype` = Card II→III (rdr2, reel-class, 0 travel). */
+export type ActCardKind = "opening" | "seam" | "tintype" | "ignite" | "reel" | "title";
 
 type ActCardProps = {
   /** Section id / anchor, e.g. "act-2". The h2 gets `${id}-title`. */

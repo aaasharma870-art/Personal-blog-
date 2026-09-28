@@ -65,7 +65,7 @@ function Chips({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function Capabilities({ entry, number }: SectionProps<"systems">) {
+export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   return (
     <Section
       id={anchorId(entry)}

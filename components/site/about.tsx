@@ -6,7 +6,7 @@ import { AboutPillars } from "@/components/site/about-pillars";
 import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
-export function About({ entry, number }: SectionProps<"about">) {
+export function About({ entry, number }: SectionProps<"story">) {
   return (
     <Section
       id={anchorId(entry)}

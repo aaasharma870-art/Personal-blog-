@@ -9,12 +9,23 @@
    an empty rectangle.
 
    Dimensions are the real intrinsic sizes (images read with sharp, videos with
-   ffprobe). All current files are the pre-redesign ("legacy") set; every one is
-   decorative atmosphere (aria-hidden, alt="") so `alt` is null throughout.
+   ffprobe). Every asset here is decorative atmosphere (aria-hidden, alt="")
+   so `alt` is null throughout: generated media is never evidence (SPEC §15 H4).
+
+   Two families:
+   - LEGACY (pre-redesign, /media/*): the "Midnight Aqua" stills and loops.
+     They are the fallbacks of every planned film asset.
+   - FILMS (/media/films/*, MEDIA-PLAN v2 filenames, SPEC ids MV-nn / IN-nn /
+     F-xx): Higgsfield generations accepted at the MEDIA-PLAN gates. Each one
+     carries provenance {source:"higgsfield", model, credits, date, jobId} and
+     the Check-L2 `accept` block (SPEC §12.5 #8). `*.master.*` files and
+     `media/masters/` NEVER enter public/ (H2).
 
    Adding an asset: add one entry below (status "planned" is fine while it is
-   being made — give it a `fallback`, usually LEGACY_FALLBACK_STILL), then run
-   `npm run check`.
+   being made — give it a `fallback`, usually a legacy still), then run
+   `npm run check`. When the file is accepted: copy the web encode into
+   public/media/films/, set status "accepted", real width/height, provenance
+   and `accept`.
    ========================================================================== */
 
 export type MediaKind = "image" | "video" | "sequence";
@@ -23,11 +34,32 @@ export type MediaSource = "higgsfield" | "authentic" | "code" | "legacy";
 
 export type MediaProvenance = {
   source: MediaSource;
+  /** Higgsfield model id (+ mode), e.g. "gpt_image_2_5 16:9 4k xhigh". */
   model?: string;
+  /** Credits billed for THIS accepted output (the asset's total incl.
+   *  drafts/alternates is in research/build/media/LEDGER.md). */
   credits?: number;
   date?: string;
+  /** Higgsfield job id of the accepted output. */
+  jobId?: string;
   note?: string;
 };
+
+/** Check L2 (SPEC §15, DESIGN v3 §7): every generated asset is ours, has no
+ *  people or likeness, no legible text/marks, nothing ripped. `checkL2` is
+ *  "claude:<date>+aryan:<date|pending>"; production needs both dates. */
+export type MediaAccept = {
+  people: false;
+  likeness: false;
+  text: false;
+  ripped: false;
+  /** ICONS.md icon ids the image depicts (recreated by us). */
+  icon?: readonly string[];
+  checkL2: `claude:${string}+aryan:${string}`;
+};
+
+/** Normalised 0-1 box of the plate's focal subject (the hero Lens `frame`). */
+export type FocalBox = { x0: number; x1: number; y0: number; y1: number };
 
 /** Shape of one manifest entry. `poster` / `fallback` hold MediaIds (typed as
  *  string here only to avoid a self-referential type; the validator checks
@@ -37,21 +69,44 @@ type MediaDef = {
   status: MediaStatus;
   src: string;
   srcMobile?: string;
+  /** VP9 WebM twin of a video `src` (list it first in <source>). */
+  webm?: string;
+  /** Video whose LAST frame is registered to this still (MediaId): the
+   *  prologue flight lands on the hero plate (SPEC §5.5). */
+  endsOn?: string;
   poster?: string;
   width: number;
   height: number;
   /** Seconds (video only). */
   durationS?: number;
   focal?: readonly [x: number, y: number];
+  focalBox?: FocalBox;
+  /** Named 0-1 points measured on the plate (MEDIA LOG), e.g. the Pearl's
+   *  stern lantern: the page's one warm point (SPEC §1, §6). */
+  marks?: Readonly<Record<string, readonly [x: number, y: number]>>;
   /** null => decorative: aria-hidden, alt="". */
   alt: string | null;
   provenance: MediaProvenance;
+  accept?: MediaAccept;
   fallback?: string;
   /** Reduced-motion / Save-Data behaviour. */
   reduced: "poster" | "hide";
 };
 
 const legacy: MediaProvenance = { source: "legacy" };
+
+/** Check L2 signed by Claude on 2026-09-28; Aryan's countersignature pending
+ *  (MEDIA LOG "Open flags"). The validator warns until it is dated. */
+const L2_PENDING = "claude:2026-09-28+aryan:pending" as const;
+const clean = (icon?: readonly string[]): MediaAccept => ({
+  people: false, likeness: false, text: false, ripped: false,
+  ...(icon ? { icon } : {}), checkL2: L2_PENDING,
+});
+const hf = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
+  source: "higgsfield", model, credits, date: "2026-09-28", jobId, ...(note ? { note } : {}),
+});
+/** Planned film assets: provenance is filled in when they are accepted. */
+const planned: MediaProvenance = { source: "higgsfield", note: "planned (MEDIA-PLAN v2)" };
 
 export const mediaAssets = {
   /* — Hero ———————————————————————————————————————————————————————— */
@@ -159,15 +214,179 @@ export const mediaAssets = {
     kind: "image", status: "received", src: "/media/writing-paths.webp",
     width: 900, height: 900, alt: null, provenance: legacy, reduced: "poster",
   },
+
+  /* == FILMS (MEDIA-PLAN v2; public/media/films/) =========================
+     ACCEPTED. Check L2: Claude 2026-09-28, Aryan pending.                  */
+
+  /* — Prologue (hp): the play screen and the broom flight (SPEC §5) — */
+  "IN-01": {
+    kind: "image", status: "accepted", src: "/media/films/intro-play.webp",
+    width: 2560, height: 1440, focal: [0.77, 0.51], alt: null,
+    marks: { broom: [0.77, 0.51] },
+    provenance: hf("gpt_image_2_5 16:9 4k xhigh", 7, "3edb46de-7312-414f-bbac-9f0a1bbd12ed",
+      "castle, Black Lake, ~22 floating candles, riderless broom; Play zone x 9-46% y 28-64% p95 0.0060"),
+    accept: clean(["IC-HP-01", "IC-HP-02", "IC-HP-03", "IC-HP-04"]),
+    fallback: "hero-volsurface", reduced: "poster",
+  },
+  "IN-01m": {
+    kind: "image", status: "accepted", src: "/media/films/intro-play-mobile.webp",
+    width: 1290, height: 2281, focal: [0.5, 0.31], alt: null,
+    marks: { broom: [0.5, 0.31] },
+    provenance: hf("gpt_image_2_5 9:16 2k high", 2.75, "57484139-4999-4e06-90fe-1e09186cca34",
+      "portrait play screen; castle upper-middle, broom at ~31% height; lower half p95 0.0048"),
+    accept: clean(["IC-HP-01", "IC-HP-02", "IC-HP-03", "IC-HP-04"]),
+    fallback: "IN-01", reduced: "poster",
+  },
+  "IN-02": {
+    kind: "video", status: "accepted", src: "/media/films/intro-flight.mp4",
+    webm: "/media/films/intro-flight.webm", poster: "IN-01", endsOn: "MV-01",
+    width: 1920, height: 1080, durationS: 6.04, focal: [0.5, 0.5], alt: null,
+    provenance: hf("kling3_0 pro 16:9 6s sound-off", 10.5, "c3f279c6-108a-4f75-ae70-a864a57fe5a6",
+      "start IN-01, end MV-01; tail-anchored (last 0.33 s blended into MV-01, SSIM 0.985, 0 px); the broom exits through the top at ~4.6 s; G3 (Aryan) pending: pale-handle flag"),
+    accept: clean(["IC-HP-01", "IC-HP-03", "IC-HP-04", "IC-PC-01"]),
+    fallback: "IN-01", reduced: "hide",
+  },
+  "IN-02-poster": {
+    kind: "image", status: "accepted", src: "/media/films/intro-flight-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf("frame 0 of IN-02", 0, "c3f279c6-108a-4f75-ae70-a864a57fe5a6",
+      "identical in content to IN-01; code may keep using IN-01 (already fetched)"),
+    accept: clean(), fallback: "IN-01", reduced: "poster",
+  },
+
+  /* — Act I (pirates): the hero sea with the Black Pearl (SPEC §6) — */
+  "MV-01": {
+    kind: "image", status: "accepted", src: "/media/films/hero-sea.webp",
+    width: 2560, height: 1440, focal: [0.7, 0.5],
+    focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 },
+    marks: { lantern: [0.893, 0.419], horizon: [0, 0.426] },
+    alt: null,
+    provenance: hf("gpt_image_2_5 16:9 4k xhigh", 7, "548e5fc0-1d27-4024-bbf4-98e85e018e0e",
+      "the Act I anchor; crest aqua from x 0.485, bright body 0.60-0.96; name zone x 9-46% p95 0.0079; the Pearl's stern lantern is the one warm pixel"),
+    accept: clean(["IC-PC-01", "IC-PC-08"]),
+    fallback: "hero-volsurface", reduced: "poster",
+  },
+  "MV-02": {
+    kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile.webp",
+    width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    provenance: hf("gpt_image_2_5 4:5 2k high", 2.75, "10b81664-5614-4298-9601-17ae26c50073",
+      "hero mobile 4:5; crest xp02 0.268 / xp98 0.939; ship + lantern kept"),
+    accept: clean(["IC-PC-01", "IC-PC-08"]),
+    fallback: "MV-01", reduced: "poster",
+  },
+  "MV-03": {
+    kind: "video", status: "accepted", src: "/media/films/hero-sea-loop.mp4",
+    webm: "/media/films/hero-sea-loop.webm", poster: "MV-01", endsOn: "MV-01",
+    width: 1920, height: 1080, durationS: 8.04, focal: [0.7, 0.5],
+    focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 }, alt: null,
+    provenance: hf("kling3_0 pro 16:9 8s sound-off", 14, "764ca916-286d-41a4-b06f-81f36fd06c92",
+      "start = end = MV-01 (encoded reg 0.982/0.975, join 0.987, 0 px shift); x<50% static; the lantern flickers softly (director); wrap step ~2 frames (Aryan to watch)"),
+    accept: clean(["IC-PC-01", "IC-PC-08"]),
+    fallback: "MV-01", reduced: "poster",
+  },
+  "MV-03-poster": {
+    kind: "image", status: "accepted", src: "/media/films/hero-sea-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf("frame 0 of MV-03", 0, "764ca916-286d-41a4-b06f-81f36fd06c92",
+      "frame 0 of the loop; code keeps MV-01 (the priority poster) as the loop's poster"),
+    accept: clean(), fallback: "MV-01", reduced: "poster",
+  },
+
+  /* -- PLANNED (MEDIA-PLAN v2 §4): the ids exist so builders can code against
+        them; resolveMedia() walks the fallback until something is usable. -- */
+  "MV-04": {
+    kind: "image", status: "planned", src: "/media/films/storm.webp",
+    width: 2560, height: 1440, focal: [0.7, 0.5], alt: null, provenance: planned,
+    fallback: "MV-01", reduced: "poster",
+  },
+  "MV-05a": {
+    kind: "image", status: "planned", src: "/media/films/voyage-a.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+  },
+  "MV-05b": {
+    kind: "image", status: "planned", src: "/media/films/voyage-b.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+  },
+  "MV-05c": {
+    kind: "image", status: "planned", src: "/media/films/voyage-c.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+  },
+  "MV-05d": {
+    kind: "image", status: "planned", src: "/media/films/voyage-d.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+  },
+  JV: {
+    kind: "sequence", status: "planned", src: "/media/films/voyage-seq/",
+    width: 1280, height: 720, alt: null, provenance: planned, fallback: "MV-05a", reduced: "poster",
+  },
+  "MV-06": {
+    kind: "image", status: "planned", src: "/media/films/board-dawn.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-blueprint", reduced: "poster",
+  },
+  "MV-10": {
+    kind: "image", status: "planned", src: "/media/films/frontier-dusk.webp",
+    width: 2560, height: 1440, focal: [0.78, 0.45], alt: null, provenance: planned,
+    fallback: "still-calm", reduced: "poster",
+  },
+  "MV-10m": {
+    kind: "image", status: "planned", src: "/media/films/frontier-dusk-mobile.webp",
+    width: 1280, height: 1600, alt: null, provenance: planned, fallback: "MV-10", reduced: "poster",
+  },
+  "MV-11": {
+    kind: "image", status: "planned", src: "/media/films/campfire.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-calm", reduced: "poster",
+  },
+  "MV-11L": {
+    kind: "video", status: "planned", src: "/media/films/campfire-loop.mp4",
+    webm: "/media/films/campfire-loop.webm", poster: "MV-11",
+    width: 1920, height: 1080, alt: null, provenance: planned, fallback: "MV-11", reduced: "poster",
+  },
+  "MV-07": {
+    kind: "image", status: "planned", src: "/media/films/lights-line.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-rays-img", reduced: "poster",
+  },
+  "MV-08": {
+    kind: "image", status: "planned", src: "/media/films/last-light.webp",
+    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "hero-still", reduced: "poster",
+  },
+  "MV-09": {
+    kind: "video", status: "planned", src: "/media/films/last-light-loop.mp4",
+    webm: "/media/films/last-light-loop.webm", poster: "MV-08",
+    width: 1920, height: 1080, alt: null, provenance: planned, fallback: "MV-08", reduced: "poster",
+  },
+  "F-PC": {
+    kind: "image", status: "planned", src: "/media/films/films-pirates.webp",
+    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+  },
+  "F-3I": {
+    kind: "image", status: "planned", src: "/media/films/films-idiots.webp",
+    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-06", reduced: "poster",
+  },
+  "F-RD": {
+    kind: "image", status: "planned", src: "/media/films/films-rdr2.webp",
+    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-10", reduced: "poster",
+  },
+  "F-HP": {
+    kind: "image", status: "planned", src: "/media/films/films-hp.webp",
+    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-07", reduced: "poster",
+  },
 } satisfies Record<string, MediaDef>;
 
 export type MediaId = keyof typeof mediaAssets;
 
-export type MediaAsset = Omit<MediaDef, "poster" | "fallback"> & {
+export type MediaAsset = Omit<MediaDef, "poster" | "fallback" | "endsOn"> & {
   id: MediaId;
   poster?: MediaId;
   fallback?: MediaId;
+  endsOn?: MediaId;
 };
+
+/** Every public file an entry owns (src, srcMobile, the WebM twin). The
+ *  validator's H2 check (every public file has a provenance row) uses it. */
+export function filesOf(id: MediaId): string[] {
+  const a = mediaAssets[id] as MediaDef;
+  return [a.src, a.srcMobile, a.webm].filter((x): x is string => Boolean(x));
+}
 
 /** The tracked last-resort still for planned assets (SYNTHESIS §8). */
 export const LEGACY_FALLBACK_STILL: MediaId = "hero-volsurface";

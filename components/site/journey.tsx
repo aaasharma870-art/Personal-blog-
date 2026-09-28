@@ -5,7 +5,7 @@ import { JourneyExperience } from "@/components/site/journey-experience";
 import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
-export function Journey({ entry, number }: SectionProps<"journey">) {
+export function Journey({ entry, number }: SectionProps<"story">) {
   return (
     <Section
       id={anchorId(entry)}

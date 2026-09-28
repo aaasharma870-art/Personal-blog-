@@ -34,7 +34,7 @@ function monogram(name: string): string {
   return out.length > 0 ? out : "•";
 }
 
-export function Testimonials({ entry, number }: SectionProps<"voices">) {
+export function Testimonials({ entry, number }: SectionProps<"quotes">) {
   const [lead, ...rest] = testimonials;
 
   return (

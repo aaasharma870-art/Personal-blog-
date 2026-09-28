@@ -8,7 +8,7 @@ import { writing } from "@/lib/content";
 import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
-export function Writing({ entry, number }: SectionProps<"writing">) {
+export function Writing({ entry, number }: SectionProps<"index">) {
   return (
     <Section
       id={anchorId(entry)}

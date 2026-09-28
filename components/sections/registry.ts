@@ -3,14 +3,13 @@ import type { SectionType } from "@/lib/page";
 import type { SectionProps } from "@/components/sections/types";
 import { Hero } from "@/components/site/hero";
 import { CredibilitySection } from "@/components/sections/credibility-section";
-import { About } from "@/components/site/about";
-import { Journey } from "@/components/site/journey";
+import { StorySection } from "@/components/sections/story-section";
 import { MediaBandSection } from "@/components/sections/media-band-section";
+import { pendingSection } from "@/components/sections/pending-section";
 import { Projects } from "@/components/site/projects";
 import { Capabilities } from "@/components/site/capabilities";
 import { Principles } from "@/components/site/principles";
 import { Writing } from "@/components/site/writing";
-import { Beyond } from "@/components/site/beyond";
 import { Testimonials } from "@/components/site/testimonials";
 import { Contact } from "@/components/site/contact";
 
@@ -21,17 +20,28 @@ type Renderers = { [K in SectionType]: ComponentType<SectionProps<K>> };
 
 export const registry = {
   hero: Hero,
-  credibility: CredibilitySection,
-  about: About,
-  journey: Journey,
-  mediaBand: MediaBandSection,
-  work: Projects,
-  systems: Capabilities,
+  /* Act I + III: about (split), journey (voyage), beyond (notes). */
+  story: StorySection,
+  /* Act II. The legacy gauntlet still renders the chapters, the demo and
+     the kill-list inside it (their own entries are M2 stubs). */
+  gauntlet: Projects,
+  chapter: pendingSection("chapter"),
+  experiment: pendingSection("experiment"),
+  matrix: Capabilities,
+  ledger: pendingSection("ledger"),
+  /* Intermission. */
+  films: pendingSection("films"),
+  /* Act III: writing (the journal), voices (the campfire). */
+  index: Writing,
+  quotes: Testimonials,
+  /* Act IV. */
   principles: Principles,
-  writing: Writing,
-  beyond: Beyond,
-  voices: Testimonials,
   contact: Contact,
+  /* M1: the credits roll lives in the layout footer. */
+  credits: pendingSection("credits"),
+  /* Retired D-3 layer (entries disabled; delete at the retirement pass). */
+  credibility: CredibilitySection,
+  mediaBand: MediaBandSection,
 } satisfies Renderers;
 
 /* — Strict-slot check ————————————————————————————————————————————————

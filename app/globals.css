@@ -82,7 +82,7 @@
   --color-deep: #05080a;
   --color-overlay: #18212a; /* = legacy --color-elevated */
   --color-slate: #202b35; /* = legacy --color-raised */
-  --color-intro-night: #06080d;
+  --color-intro-night: #020e1c; /* DESIGN v3: retuned from #06080d to IN-01's bluer night */
 
   /* — Type: the 8 steps (DESIGN v2 §2.2). These size bundles also generate
        text-display … text-meta, but use the complete type-* utilities below
@@ -176,6 +176,9 @@
   --color-world-quiet: var(--world-quiet);
   --color-world-panel: var(--world-panel);
   --spacing-section: var(--section-pad);
+  /* `font-world-act`: the plane's display lettering (act titles, loader
+     route cards, eggs ONLY — SPEC §9.7). Newsreader when the face is absent. */
+  --font-world-act: var(--world-font-act);
 }
 
 /* ----------------------------------------------------------------------------
@@ -226,7 +229,16 @@
   --idi-deep: #060a09;
   --bp-panel: #0f2c47; /* figure ground <= 40% of a section; NO muted/ghost text on it (4.13) */
 
-  /* hp — candle-night (prologue, Act III) */
+  /* rdr2 — oxblood-umber dusk (Act III: The Frontier; DESIGN v3 §1.3,
+     rdr2/STUDY §3, all AA CALC). Redder in hue than hp at nearly equal
+     luminance: the cards and the media carry the change. */
+  --rd-canvas: #130d0b;
+  --rd-raised: #1c1411;
+  --rd-overlay: #231915; /* the tightest cell: muted 4.97 */
+  --rd-deep: #0a0605;
+  --rd-deadeye-bg: #1a0907; /* the ledger's ground while the Dead Eye egg runs; text colours never change */
+
+  /* hp — candle-night (prologue, Act IV) */
   --hp-canvas: #0f0c09;
   --hp-raised: #18130e;
   --hp-overlay: #1f1812;
@@ -245,6 +257,16 @@
   --paper-rule: rgb(46 35 24 / 0.14);
   --paper-edge: #e6d3a8; /* edge vignette only, never under text */
   --paper-edge-deep: #c9ac72;
+  /* v3: the rdr2 journal inks on the same paper (DESIGN v3 §1.3.2) */
+  --paper-pencil: #4a4036; /* 7.71: graphite vignettes, the nib dot, entry Meta */
+  --paper-red: #9b1c14; /* 6.23: the journal's ONE pencil underline (rdr2 emphasis); never a verdict, never beside --paper-kill */
+
+  /* rdr2 paper OBJECTS on the rd canvas (not planes; DESIGN v3 §1.3.2a) */
+  --handbill: #e4d5b3; /* WANTED handbill: graphite/fg/pencil/muted/red/accent only; NO ghost text, NO verdicts */
+  --handbill-graphite: #2f2a24; /* 9.79 on the handbill */
+  --trail-map: #dec29b; /* trail-map paper: graphite (8.32) and pencil (5.92) only; v3 puts no text on it */
+  --trail-map-contour: #c8b28d; /* decorative fill only */
+  --trail-map-water: #9e9985; /* decorative fill only */
 
   /* world decorative inks (DESIGN v2 §1.3.3): strokes and fills, never body text */
   --w-brass: #a8834a;
@@ -259,6 +281,15 @@
   --w-lumos: #eaf6ff; /* sprite cores only, never DOM paint */
   --w-flame-core: #ffe9c4; /* sprite stops only, never DOM paint */
   --w-flame-halo: #f4b740; /* sprite stops only, never a DOM colour */
+  --pir-compass-red: #a8453a; /* Jack's compass red arrow ONLY (3.15 pirates canvas, 3.37 deep); never on pirates raised (2.83), never beside ember */
+
+  /* v3 rdr2 decorative inks (non-text; CALC rd canvas / rd deep / house canvas) */
+  --w-bone: #e3d6bd; /* 13.41 / 14.04: tintype hairline, plate border, handbill edge on dark */
+  --w-pencil: #a39686; /* 6.66 / 6.98: the Line in graphite, trail dashes, hachures, shoe prints */
+  --w-sage: #8f9c78; /* 6.60 / 6.91: grass contours (trail map) */
+  --w-dusk: #e0a458; /* low sun + ember sprites: SPRITES AND MEDIA ONLY (in the DOM it reads as amber = EXCEPTION) */
+  --w-deadeye: #d64236; /* Dead Eye grade stop + media vignette ONLY: never text, never the X (the X is ember), never beside ember */
+  --w-leather: #b5653a; /* 4.48: the journal's spread edge and strap (decorative) */
 
   /* density (DESIGN v2 §3.2): data-density="spacious|default|tight" */
   --density-spacious: clamp(5.5rem, 10vw, 8.75rem);
@@ -327,6 +358,11 @@
   --world-emphasis: var(--color-ink);
   --world-quiet: var(--color-muted);
   --world-panel: var(--house-raised);
+  /* The world's display lettering (SPEC §9.7): act titles, loader route
+     cards and eggs ONLY — never the name, body, Meta, quotes or data. The
+     --font-world-* vars come from lib/fonts.ts (next/font/local, applied on
+     <html>); a missing face falls through to Newsreader (fixture L). */
+  --world-font-act: var(--font-newsreader), "Source Serif 4", Georgia, serif;
 }
 [data-world="pirates"] {
   --world-canvas: var(--pir-canvas);
@@ -338,6 +374,7 @@
   --world-emphasis: var(--w-brass); /* the brass X-stamp (never ember) */
   --world-quiet: var(--w-storm);
   --world-panel: var(--pir-raised);
+  --world-font-act: var(--font-world-pirates, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* Pirata One */
 }
 [data-world="idiots"] {
   --world-canvas: var(--idi-canvas);
@@ -349,6 +386,7 @@
   --world-emphasis: var(--w-chalk); /* the chalk circle */
   --world-quiet: var(--w-graphite);
   --world-panel: var(--bp-panel);
+  --world-font-act: var(--font-world-idiots, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* Kalam */
 }
 [data-world="hp"] {
   --world-canvas: var(--hp-canvas);
@@ -360,12 +398,25 @@
   --world-emphasis: var(--w-patronus); /* the ribbons */
   --world-quiet: var(--color-muted);
   --world-panel: var(--hp-raised);
+  --world-font-act: var(--font-world-hp, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* IM Fell English */
 }
 [data-world="rdr2"] {
-  /* TODO(rdr2): the RDR2 design pass supplies this palette (grounds + role
-     inks: every slot the house block sets) and flips worlds.rdr2.ready in
-     lib/worlds.ts. Until then the block is empty on purpose: every slot
-     inherits, so an rdr2 section renders house values. */
+  /* DESIGN v3 §1.3 / rdr2 STUDY §3 (M1). Slot inks are PROP: the Line is
+     graphite (SPEC §4), the emphasis on dark is bone (the plate border /
+     tintype hairline; on the journal paper it becomes the red pencil
+     underline, below), quiet is sage (contours), the panel is rd raised. */
+  --world-canvas: var(--rd-canvas);
+  --world-raised: var(--rd-raised);
+  --world-overlay: var(--rd-overlay);
+  --world-slate: var(--rd-overlay);
+  --world-deep: var(--rd-deep);
+  --world-line: var(--w-pencil);
+  --world-emphasis: var(--w-bone);
+  --world-quiet: var(--w-sage);
+  --world-panel: var(--rd-raised);
+  /* Chinese Rocks is outline-only by licence and not shipped in M1
+     (FONTS.md): --font-world-rdr2 resolves to Newsreader until it is. */
+  --world-font-act: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
 }
 
 /* — Tone blocks: semantic vars (the dark planes share one text ramp) — */
@@ -420,6 +471,14 @@
   --world-emphasis: var(--paper-fg);
   --world-quiet: var(--paper-ghost);
   --world-panel: var(--paper-s1);
+}
+/* The journal page (rdr2 × paper, RD-1 option A): graphite line, ONE red
+   pencil underline as the emphasis (DESIGN v3 §1.3.2). hp × paper (option B)
+   keeps the generic paper inks above. */
+[data-world="rdr2"][data-tone="paper"] {
+  --world-line: var(--paper-pencil);
+  --world-emphasis: var(--paper-red);
+  --world-quiet: var(--paper-ghost);
 }
 
 /* — Pause toggle (MotionToggle sets html[data-motion="paused"]): CSS motion

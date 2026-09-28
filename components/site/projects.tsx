@@ -304,7 +304,7 @@ function SupportingGrid() {
   );
 }
 
-export function Projects({ entry, number }: SectionProps<"work">) {
+export function Projects({ entry, number }: SectionProps<"gauntlet">) {
   return (
     <Section
       id={anchorId(entry)}

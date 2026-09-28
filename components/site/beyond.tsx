@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { anchorId } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
-export function Beyond({ entry, number }: SectionProps<"beyond">) {
+export function Beyond({ entry, number }: SectionProps<"story">) {
   return (
     <Section
       id={anchorId(entry)}

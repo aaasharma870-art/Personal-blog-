@@ -14,7 +14,7 @@ import type { SectionProps } from "@/components/sections/types";
 
 export function Hero({ entry }: SectionProps<"hero">) {
   // CTA targets come from the manifest; a CTA hides if its section is hidden.
-  const workHref = hrefOfType("work");
+  const workHref = hrefOfType("gauntlet");
   const contactHref = hrefOfType("contact");
   return (
     <HeroScene

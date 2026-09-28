@@ -8,7 +8,10 @@
    components read only the semantic vars (--bg, --surface-1, --fg, --accent,
    --world-line …) and so work unchanged in every world.
 
-   ADD A WORLD (e.g. when the RDR2 design pass lands):
+   Everything ABOUT the works (titles, acts, slots, copy, lettering, eggs)
+   lives in lib/film.ts; this file stays the key registry.
+
+   ADD A WORLD (this is how rdr2 entered, SPEC v2 §12.4):
    1. Add its id to WORLD_IDS and an entry to `worlds` below.
    2. Fill its `[data-world="<id>"]` block in app/globals.css (every slot the
       house block sets; an empty block silently renders house values).
@@ -22,8 +25,10 @@ export type WorldId = (typeof WORLD_IDS)[number];
 export const TONE_IDS = ["canvas", "raised", "deep", "paper"] as const;
 export type ToneId = (typeof TONE_IDS)[number];
 
-/** Loader motif a world supplies (SPEC §8; `plain` = the neutral renderer). */
-export type LoaderKind = "plain" | "course" | "gauge" | "ink-light";
+/** Loader motif a world supplies (SPEC v2 §8; `plain` = the neutral renderer).
+ *  course = LD-PC Jack's compass · gauge = LD-3I honest gauge ·
+ *  plate-trail = LD-RD tintype plate & graphite trail · ink-light = LD-HP. */
+export type LoaderKind = "plain" | "course" | "gauge" | "plate-trail" | "ink-light";
 
 export type WorldDef = {
   /** false = its globals.css token block is still a placeholder: the world
@@ -40,8 +45,8 @@ export const worlds = {
   pirates: { ready: true, loader: "course" },
   idiots: { ready: true, loader: "gauge" },
   hp: { ready: true, loader: "ink-light" },
-  // TODO(rdr2): placeholder until the RDR2 design pass supplies palette + loader.
-  rdr2: { ready: false, loader: "plain" },
+  // DESIGN v3 §1.3 tokens landed in app/globals.css [data-world="rdr2"] (M1).
+  rdr2: { ready: true, loader: "plate-trail" },
 } as const satisfies Record<WorldId, WorldDef>;
 
 export const DEFAULT_WORLD: WorldId = "house";
