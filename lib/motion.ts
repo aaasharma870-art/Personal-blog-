@@ -144,6 +144,10 @@ export const springNav = { stiffness: 380, damping: 30 } as const;
      (not 100%) clears ~0.15em descender padding the consumer adds inside the
      mask so g/y/p aren't shaved. Transform-only (no clip-path, no
      background-clip). Reduced-motion swaps to opacity-only. — */
+/** How far a masked line sits below its mask before it rises (DESIGN v2
+ *  §2.3: keep 115% with a .15em descender pad). Same value as maskedLine. */
+export const maskTravel = "115%" as const;
+
 export const maskedLine: Variants = {
   hidden: { y: "115%" },
   show: { y: 0, transition: { duration: dur.reveal, ease } },
