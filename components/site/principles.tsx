@@ -22,7 +22,7 @@ export function Principles({ entry, number }: SectionProps<"principles">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="Operating Principles"
         title="A small philosophy of work."
         intro="Five ideas I actually use when I build. The names are sources, not decoration."

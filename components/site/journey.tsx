@@ -20,7 +20,7 @@ export function Journey({ entry, number }: SectionProps<"journey">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="The Journey"
         title="How the methodology was earned."
         intro="Every part of the process I trust today exists because an earlier, prettier version of it failed me first. Step through it."

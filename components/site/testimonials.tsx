@@ -51,7 +51,7 @@ export function Testimonials({ entry, number }: SectionProps<"voices">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="What teachers say"
         title="In their words."
         variant="scale"

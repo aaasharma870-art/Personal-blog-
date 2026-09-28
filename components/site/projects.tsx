@@ -320,7 +320,7 @@ export function Projects({ entry, number }: SectionProps<"work">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="Work · Quant Portfolio"
         title="Led by what survived scrutiny."
         intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."

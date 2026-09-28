@@ -27,7 +27,8 @@ export function SectionHeading({
   className,
   variant = "up",
 }: {
-  index: string;
+  /** Derived "01"…"NN"; omit for an un-numbered section (no numerals). */
+  index?: string;
   eyebrow: string;
   title: string;
   intro?: string;
@@ -39,14 +40,16 @@ export function SectionHeading({
     <Reveal variant={variant} className={cn("relative max-w-3xl", className)}>
       {/* Oversized ghost serif index numeral — editorial spine, decorative only.
           Newsreader (never mono/tnum) so it never reads as a metric. */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-8 left-0 -z-10 select-none font-serif text-[5rem] leading-none text-line-strong/60 sm:text-[7rem]"
-      >
-        {index}
-      </span>
+      {index ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-8 left-0 -z-10 select-none font-serif text-[5rem] leading-none text-line-strong/60 sm:text-[7rem]"
+        >
+          {index}
+        </span>
+      ) : null}
       <div className="flex items-center gap-3">
-        <span className="eyebrow text-gold/80">{index}</span>
+        {index ? <span className="eyebrow text-gold/80">{index}</span> : null}
         {reduce ? (
           <span className="h-px w-8 bg-line-strong" aria-hidden="true" />
         ) : (

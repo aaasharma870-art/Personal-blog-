@@ -25,7 +25,7 @@ export function Beyond({ entry, number }: SectionProps<"beyond">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="Beyond the screen"
         title="Discipline, service, and a trained eye."
         intro="The same temperament, away from the terminal."

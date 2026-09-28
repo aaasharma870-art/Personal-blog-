@@ -21,7 +21,7 @@ export function About({ entry, number }: SectionProps<"about">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="About"
         title="A builder of quantitative systems."
         variant="left"

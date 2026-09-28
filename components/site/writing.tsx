@@ -23,7 +23,7 @@ export function Writing({ entry, number }: SectionProps<"writing">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="Writing · Notes"
         title="Thinking in public, soon."
         intro="Short essays in progress — written for people who don't trade, about how I try not to fool myself."

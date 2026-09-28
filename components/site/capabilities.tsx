@@ -80,7 +80,7 @@ export function Capabilities({ entry, number }: SectionProps<"systems">) {
       }
     >
       <SectionHeading
-        index={number ?? ""}
+        index={number}
         eyebrow="Systems · Capabilities"
         title="What I can actually do."
         intro="A working map, not a skills cloud: the methods I rely on, the tools behind them, and what they are meant to produce."
