@@ -68,3 +68,4 @@ next-env.d.ts
 # capture frames (large PNGs; contact sheets reference them locally)
 /docs/build/m2-after/*.png
 /docs/build/final-frames/*.png
+/docs/build/m2-after2/*.png
