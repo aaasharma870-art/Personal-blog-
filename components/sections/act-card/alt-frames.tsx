@@ -8,18 +8,21 @@ import dynamic from "next/dynamic";
  * server hands CardShell an `altFrame` element built from these wrappers,
  * but a chunk is fetched only when its frame actually renders — the page
  * that plays the defaults never downloads an alternate.
- *   opening  "chart-unfold"     the Pearl ALT plate (iconic-pearl-alt) with
- *                                its Jolly Roger; below it a folded chart
- *                                opens and a dotted trail climbs to an X on
- *                                Act I  (frames/opening-plate + opening-map)
- *   seam     "duster-erase"     a chalk duster wipes the storm (MV-04-alt)
- *                                off the ICE board (iconic-ice-alt) stroke by
- *                                stroke; FIG. 0 chalked on it (frames/seam-chalk)
+ *   opening  "chart-unfold"     the Pearl ALT plate (iconic-pearl-alt);
+ *                                below it a folded chart opens, a dotted
+ *                                trail climbs to an X on Act I, and the
+ *                                caption sits under the chart
+ *                                (frames/opening-plate + opening-map)
+ *   seam     "duster-erase"     a chalk duster sweeps the storm (MV-04-alt)
+ *                                off the ICE board (iconic-ice-alt) in one
+ *                                feathered diagonal pass, left → right; the
+ *                                board is left WIPED CLEAN (frames/seam-chalk)
  *   tintype  "dead-eye"         the frozen frontier (iconic-deadeye) takes
  *                                the Dead Eye grade, ember X marks lock onto
  *                                the four act points and STAY (frames/tintype-deadeye)
- *   ignite   "lumos-sweep"      one wand-tip light sweeps the hall and lights
- *                                the candles in its wake, then the Great Hall
+ *   ignite   "lumos-sweep"      a wand-tip light is struck at the camp's
+ *                                fire, sweeps the hall and lights the
+ *                                candles in its wake, then the Great Hall
  *                                (iconic-hall-alt)            (frames/ignite-lumos)
  * The opening's Pearl frame (frames/opening-plate) is shared by both sides
  * (a static import: it is the card's first paint).

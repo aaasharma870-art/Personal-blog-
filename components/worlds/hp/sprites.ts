@@ -23,3 +23,60 @@ export const CANDLE_UNLIT_SPRITE =
 /** Intrinsic sprite size (px) and the flame centre as a fraction of it. */
 export const CANDLE_SPRITE_SIZE = { w: 48, h: 144 } as const;
 export const CANDLE_FLAME_AT = { x: 0.5, y: 0.2 } as const;
+
+/* — The enchanted ceiling (IC-HP-03's sky: the Great Hall's night ceiling) —
+   Pre-rendered by code as SVG images (Law 1: light is an image, never DOM
+   glow). Deterministic (integer hash), so server and client agree. — */
+
+/** Deterministic 0–1 hash (integer math). */
+function hash01(i: number, salt: number): number {
+  const x = (Math.imul(i + 1, 2654435761) ^ Math.imul(salt + 11, 40503)) >>> 0;
+  return (x % 10007) / 10007;
+}
+
+const svgUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+/** A tileable star field (STAR_TILE_SIZE px square): ~50 cool-white points
+ *  of varied size and brightness, a few with a four-point glint. */
+export const STAR_TILE_SIZE = 420;
+export const STAR_TILE = (() => {
+  const S = STAR_TILE_SIZE;
+  let body = "";
+  for (let i = 0; i < 52; i++) {
+    const x = 6 + hash01(i, 101) * (S - 12);
+    const y = 6 + hash01(i, 202) * (S - 12);
+    const b = hash01(i, 303);
+    const r = 0.45 + b * b * 1.05;
+    const o = 0.28 + b * 0.62;
+    body += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="#eef2fa" fill-opacity="${o.toFixed(2)}"/>`;
+    if (b > 0.9) {
+      const l = 3.5 + b * 2;
+      body += `<path d="M${(x - l).toFixed(1)} ${y.toFixed(1)}H${(x + l).toFixed(1)}M${x.toFixed(1)} ${(y - l).toFixed(1)}V${(y + l).toFixed(1)}" stroke="#eef2fa" stroke-opacity="0.45" stroke-width="0.6"/>`;
+    }
+  }
+  return svgUri(`<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">${body}</svg>`);
+})();
+
+/** Night clouds drifting across the enchanted ceiling: soft blue-grey
+ *  banks, stretched to their box (preserveAspectRatio none). Dim by design:
+ *  a ground for the candles, never a light source. */
+export const CEILING_CLOUDS = (() => {
+  let body = "";
+  for (let i = 0; i < 9; i++) {
+    const cx = 80 + hash01(i, 11) * 1440;
+    const cy = 60 + hash01(i, 12) * 330;
+    const rx = 150 + hash01(i, 13) * 230;
+    const ry = 26 + hash01(i, 14) * 40;
+    const o = 0.07 + hash01(i, 15) * 0.1;
+    body += `<ellipse cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" rx="${rx.toFixed(0)}" ry="${ry.toFixed(0)}" fill="#8ea3cc" fill-opacity="${o.toFixed(2)}"/>`;
+  }
+  return svgUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600" preserveAspectRatio="none">` +
+      `<filter id="c" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="28"/></filter>` +
+      `<g filter="url(#c)">${body}</g></svg>`,
+  );
+})();
+
+/** The ceiling's night blue (the Great Hall plate's sky, darkened): the
+ *  ground under the stars. Not a light — text on it stays AA (≥ 12:1). */
+export const CEILING_NIGHT = "#0d1830";

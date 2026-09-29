@@ -1,38 +1,52 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
-import { dur, ease } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { LINE, LINE_D, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { EMBER_SPRITE, FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
+import {
+  FRAME_ASPECT,
+  PlateBox,
+  anchor,
+  coverBox,
+  inBox,
+  plateOf,
+  type Plate,
+  type Pos,
+} from "@/components/sections/act-card/plate";
 
 /**
  * Card III→IV "Embers → the Line ignites" (SM-10, kind `ignite`, D-5 long
  * #2; ignite.BAR). One pinned driver p (≤ 60vh, desktop fine pointer):
- *   0–.2    the ground crossfades rd deep → hp deep (CardShell `fromGround`);
- *           the world canvas mounts; a code campfire (R-6 sprites) burns low
- *           at the Line's start; the Line lies in graphite at 30 %.
- *   .2–.7   ignition: N ember sprites rise from the fire; ember i arrives at
- *           its point on the Line when p ≥ .2 + .5·i/N and becomes a
- *           floating candle (IC-HP-03). A cool light leads the kindling
- *           front; the graphite is re-inked behind it and fades as the
- *           points light — pencil becomes ink becomes light.
- *   .7–.85  the lit Line (MV-07: the candles densest along the Line)
- *           swaps in on dur.preview (a state swap, never parked half-mixed)
- *           while the canvas fades out over .7–.8;
- *   > .85   THE GREAT HALL (iconic-hall: the long tables, the high table,
- *           the tall window, the enchanted starry ceiling, hundreds of
- *           floating candles) swaps in — RECOGNIZABILITY S17; the canvas
- *           unmounts at p = 1 (and remounts below on the way back).
- *   The embers rise from THE CAMP'S FIRE: the previous section's plate
- *   anchor `fire` (iconic-camp), at the same relative x/y (T10).
+ *   0–.6    THE CAMP holds (T10, M2 ART-DIRECTOR #6): the previous
+ *           section's own plate (Voices: iconic-camp) fills the frame and
+ *           sinks into the hp deep over .3–.6, its fire glowing (a code
+ *           fire sprite over the photograph's fire) until ≈ .45; the ground
+ *           crossfades rd deep → hp deep over 0–.2 (CardShell `fromGround`);
+ *           the Line lies in graphite at 30 %.
+ *   .2–.7   ignition: N ember sprites rise FROM THE CAMP'S FIRE (the
+ *           plate's `fire` anchor, registered in the 2.39 frame); ember i
+ *           arrives at its point on the Line when p ≥ .2 + .5·i/N and
+ *           becomes a floating candle (IC-HP-03). A cool light leads the
+ *           kindling front; the graphite is re-inked behind it and fades as
+ *           the points light — pencil becomes ink becomes light.
+ *   .35–.55 THE GREAT HALL comes up to a third behind the candles, so the
+ *           MIDDLE (p .5) shows both worlds — the camp going, the hall
+ *           arriving, the candles between them;
+ *   .78–.9  the hall (iconic-hall: the long tables, the high table, the
+ *           tall window, the enchanted starry ceiling, hundreds of floating
+ *           candles) takes the frame (RECOGNIZABILITY S17) as the canvas
+ *           fades out (.8–.9); the canvas unmounts at p = 1 (and remounts
+ *           below on the way back). Every layer is an opacity scrub of p.
  * Everything is a pure function of p (G2, G3: reversible, pixel-identical
- * on return); frames are drawn only when p changes (0 rAF at rest, offscreen
- * or on a hidden tab). Luminous points are pre-rendered sprites drawn with
+ * on return; the ember glow now overlaps the first candles — G12's "one
+ * warm family at a time" yields to ART-DIRECTOR #6); frames are drawn
+ * only when p changes (0 rAF at rest, offscreen or on a hidden tab).
+ * Luminous points are pre-rendered sprites drawn with
  * drawImage (Law 1; 0 gradients per frame); DPR ≤ 2; ≤ 36 embers + 1 light
  * + 3 fire frames. The canvas lives only while the card is within one
  * viewport and the device has ≥ 4 cores. Static card (RM, Pause, < 1024 /
@@ -74,26 +88,32 @@ export function IgniteFrame({
   hall,
   mid = null,
   fire = null,
+  camp = null,
 }: {
   /** The settled plate: the Great Hall (iconic-hall). */
   hall: MediaId | null;
-  /** The lit Line (MV-07), shown at p .7–.85 before the hall. */
+  /** The lit Line (MV-07): the settled plate only when the hall is missing. */
   mid?: MediaId | null;
-  /** The previous section's fire (0–1 of its plate, `fire` anchor): the
-   *  embers rise from the same relative x/y (T10). null → the Line's start. */
+  /** The previous section's fire (0–1 of its plate, `fire` anchor), used
+   *  as frame fractions when there is no `camp` plate (the lab). */
   fire?: readonly [number, number] | null;
+  /** The previous section's plate (Voices: iconic-camp): the outgoing
+   *  picture, held until p ≈ .5; the embers rise from ITS fire. */
+  camp?: MediaId | null;
 }) {
   const { p, live } = useCard();
   const hostRef = useRef<HTMLDivElement>(null);
+  const campPlate = plateOf(camp);
+  // the camp's fire in FRAME fractions (the plate as the 2.39 frame crops
+  // it); memoised: the canvas re-initialises when its fire changes
+  const fireAt = useMemo(() => {
+    const c = plateOf(camp);
+    return c ? (fireInFrame(c) ?? fire) : fire;
+  }, [camp, fire]);
 
-  // The plates: state swaps (never parked half-mixed; ignite G8). The
-  // static card: the hall (or the lit Line when the hall is missing).
-  const stageOf = (v: number) => (v > 0.85 ? 2 : v > 0.7 ? 1 : 0);
-  const [stage, setStage] = useState(() => stageOf(p.get()));
+  // The static card: the hall (or the lit Line when the hall is missing).
   const [done, setDone] = useState(() => p.get() >= 0.999);
   useMotionValueEvent(p, "change", (v) => {
-    const s = stageOf(v);
-    if (s !== stage) setStage(s);
     const d = v >= 0.999;
     if (d !== done) setDone(d);
   });
@@ -113,32 +133,63 @@ export function IgniteFrame({
 
   const plated = Boolean(hall || mid);
   // with no plate to hand over to, the canvas keeps its final frame
-  const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.7, 0.8) : 1));
+  const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.8, 0.9) : 1));
   const showCanvas = live && near && (!done || !plated);
-  const midOn = !live ? !hall : stage === 1 || (stage === 2 && !hall);
-  const hallOn = !live || stage === 2;
-  const swap = live ? { duration: dur.preview, ease } : { duration: 0 };
+  const campOpacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
+  const hallOpacity = useTransform(p, hallAt);
+  // MV-07 stands in for the hall only when the hall is missing
+  const midOpacity = useTransform(p, (v) => remap(v, 0.7, 0.85));
 
   return (
     <div ref={hostRef} aria-hidden="true" data-frame="ignite" className="absolute inset-0">
-      {mid ? (
-        <motion.div className="absolute inset-0" initial={false} animate={{ opacity: midOn ? 1 : 0 }} transition={swap}>
+      {live && campPlate ? (
+        <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity: campOpacity }}>
+          <PlateBox plate={campPlate}>
+            <MediaFrame media={campPlate.asset.id} layout="fill" playOn="never" sizes="100vw" />
+          </PlateBox>
+        </motion.div>
+      ) : null}
+      {mid && !hall ? (
+        <motion.div className="absolute inset-0" style={live ? { opacity: midOpacity } : undefined}>
           <MediaFrame media={mid} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
       ) : null}
       {hall ? (
-        <motion.div className="absolute inset-0" initial={false} animate={{ opacity: hallOn ? 1 : 0 }} transition={swap}>
+        <motion.div className="absolute inset-0" style={live ? { opacity: hallOpacity } : undefined}>
           <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
       ) : null}
       {!plated && (!live || !near) ? <StaticIgnition /> : null}
       {showCanvas ? (
         <motion.div className="absolute inset-0" style={{ opacity: canvasOpacity }}>
-          <IgniteCanvas p={p} fire={fire} />
+          <IgniteCanvas p={p} fire={fireAt} />
         </motion.div>
       ) : null}
     </div>
   );
+}
+
+/** The camp sinks into the hp deep over this window of p. */
+export const CAMP_OUT = { from: 0.3, to: 0.6 };
+/** The camp's ember glow holds until ≈ .45 and is out by .5. */
+export const EMBER_OUT = { from: 0.4, to: 0.5 };
+/** The Great Hall: up to a third from p .35 (behind the candles, the camp
+ *  still in the frame: both worlds at the middle), then the whole frame
+ *  over .78–.9. Shared with the ALT (frames/ignite-lumos.tsx). */
+export function hallAt(v: number): number {
+  return 0.35 * remap(v, 0.35, 0.55) + 0.65 * remap(v, 0.78, 0.9);
+}
+
+/** Measured fires (0–1 of the plate) for plates without a `fire` mark
+ *  (cards builder, 2026-09-29, on the 2560 px files); the plate's own mark
+ *  wins. MV-11 is the Voices ALT's campfire. */
+const PLATE_FIRE: Partial<Record<MediaId, Pos>> = { "MV-11": [0.76, 0.62], "MV-11-alt": [0.76, 0.62] };
+
+/** A camp plate's fire in FRAME fractions of the 2.39:1 letterbox (the
+ *  canvas and the sweep only run there: live is ≥ 1024), or null. */
+export function fireInFrame(plate: Plate): readonly [number, number] | null {
+  const f = anchor(plate, "fire", PLATE_FIRE[plate.asset.id] ?? null);
+  return f ? inBox(coverBox(FRAME_ASPECT.sm, plate.ratio, plate.pos), f) : null;
 }
 
 /** The ignition's final frame (every point lit), drawn once in SVG from the
@@ -247,9 +298,9 @@ function IgniteCanvas({ p, fire: fireAt }: { p: MotionValue<number>; fire: reado
       // the fire: where the camp's fire was (the Voices plate's anchor, in
       // frame fractions), else the Line's start
       const fire = fireAt ? { x: fireAt[0] * W, y: fireAt[1] * H } : at(LINE.at(0));
-      // one warm family at a time (ignite.BAR G12): the fire burns down as
-      // the first embers leave it and is out when the first candle lights
-      const fireA = 1 - remap(v, 0.12, 0.2);
+      // the camp's ember glow holds while its picture does (ART-DIRECTOR
+      // #6: the outgoing world stays in the frame to the middle), out by .5
+      const fireA = 1 - remap(v, EMBER_OUT.from, EMBER_OUT.to);
       if (fireA > 0) {
         const f = sprites.fire[Math.floor(v * 90) % 3];
         const fw = 22 * unit;

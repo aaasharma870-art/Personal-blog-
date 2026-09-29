@@ -6,6 +6,7 @@ import { Meta } from "@/components/site/world-kit";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { ChalkboardFrame } from "@/components/worlds/idiots/chalk";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
+import { MachineBoard } from "@/components/worlds/idiots/machine-board";
 import { BlueprintSchematic, type SchematicSpec } from "@/components/worlds/idiots/schematic";
 import { Rise } from "@/components/site/world-motion";
 import {
@@ -40,6 +41,13 @@ import type { SectionProps } from "@/components/sections/types";
    after the LAST chapter (they lived at the end of `work`).
    Variants: `<id>.schematic` — default "draw" (the blueprint inks itself),
    alt "assemble" (the parts drop in, the tape slaps on).
+   HEAD (M2 finish, `props.head`; IC-3I-05): a chapter may open on a plate
+   band BEFORE its facts. Optuna-Screener's is the ICE lecture hall's board
+   with the lecture's question chalked on it and Rancho's answer (Q-3I-3,
+   lettered) under it — the pipeline is "anything that reduces human
+   effort" — captioned WHAT IS A MACHINE? • 3 IDIOTS (machine-board.tsx;
+   `<id>.head`: default chalk-write, alt rancho-circle). The line lives on
+   the board now, so the pipeline FIG below carries no caption of its own.
    ========================================================================== */
 
 /** Each flagship's schematic: nodes ONLY from content.ts approach/stack
@@ -132,7 +140,8 @@ function ChapterBody({
               pieceKey={`${entry.id}.schematic`}
             />
           </ChalkboardFrame>
-          <SceneCaption k={isOptuna ? "cap.optuna-screener" : "cap.trading-algos"} place="under" className="mt-tier-group" />
+          {/* the pipeline's film cue is its head band (MachineBoard) */}
+          {isOptuna ? null : <SceneCaption k="cap.trading-algos" place="under" className="mt-tier-group" />}
         </Rise>
       ) : null}
 
@@ -277,6 +286,17 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
   const appendix = entry.props.appendix ?? [];
   return (
     <IdiotsSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
+      {/* the machine board is the pipeline's scene (IC-3I-05); another
+          chapter's `head` would need its own scene + caption */}
+      {entry.props.head && p.id === "optuna-screener" ? (
+        <MachineBoard
+          spec={entry.props.head}
+          choice={variantChoiceOf(entry)}
+          pieceKey={`${entry.id}.head`}
+          captionKey="cap.optuna-screener"
+          className="mb-tier-block"
+        />
+      ) : null}
       <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} entry={entry} />
       {appendix.length ? (
         <div className="mt-tier-block space-y-tier-block">

@@ -197,10 +197,16 @@ const lettering = [
   { id: "hp-film", text: "HARRY POTTER", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
   // the WANTED handbill word (S14, FT-1)
   { id: "rd-wanted", text: "WANTED", face: "Rye", mode: "A", slot: "caption", shipped: true },
+  // the principles map's banner title (copy "principles.map.title"; every glyph already in the hp subset)
+  { id: "hp-map-title", text: "THE MAP OF THE PRINCIPLES", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
   // lettered film quotes (<FilmQuote rendition="lettered">; text lives in lib/quotes.ts)
   { id: "q-pc-1", text: "", quote: "Q-PC-1", face: "Pirata One", mode: "A", slot: "caption", shipped: true },
   { id: "q-3i-2", text: "", quote: "Q-3I-2", face: "Kalam", mode: "A", slot: "caption", shipped: true },
   { id: "q-3i-3", text: "", quote: "Q-3I-3", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  // M2 finish (Act II builder): the lecture's question, chalked on the ICE
+  // board at the optuna-screener head (IC-3I-05; the moment's name, not a
+  // registered line: the answer is Q-3I-3, lettered through <FilmQuote>)
+  { id: "3i-machine-q", text: "What is a machine?", face: "Kalam", mode: "A", slot: "caption", shipped: true },
   { id: "q-hp-2", text: "", quote: "Q-HP-2", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
 ] as const satisfies readonly LetteringSpec[];
 export type LetteringId = (typeof lettering)[number]["id"];
@@ -466,6 +472,8 @@ const copy = {
   },
   /* — M2 principles: the Marauder's Map banner over the reader's step — */
   "principles.you": { text: "YOU", status: "proposed" },
+  /* the map's own banner title (our wording, not a film line; lettering "hp-map-title") */
+  "principles.map.title": { text: "THE MAP OF THE PRINCIPLES", status: "proposed" },
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 
@@ -543,11 +551,17 @@ const captions = {
   "cap.act-2.out": { world: "pirates", moment: moment("THE KRAKEN’S STORM"), variant: "both", place: "br", where: "card I→II outgoing half, p .1–.35 (O-7)" },
   "cap.act-2": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "default", place: "br", where: "card I→II settled (iconic-ice)" },
   "cap.act-2.alt": { world: "idiots", moment: moment("THE ICE BOARD, WIPED CLEAN"), variant: "alt", place: "br", where: "card I→II settled (duster over iconic-ice-alt)" },
-  "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "bl", where: "the gauntlet board frame, lower-left" },
+  // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
+  "cap.work.head": { world: "idiots", moment: moment("THE CORRIDORS OF ICE"), variant: "both", place: "bl", where: "work head band, calm left (iconic-corridor / -alt)" },
+  "cap.work.head.standin": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "both", place: "bl", where: "work head band while iconic-corridor is planned (stand-in iconic-ice-alt / iconic-ice)" },
+  // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
+  "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
   "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "under", where: "under the Trading_Algos chalkboard panel (never beside a metric)" },
-  "cap.optuna-screener": { world: "idiots", quote: "Q-3I-3", variant: "both", place: "under", where: "under the Optuna pipeline FIG (lettered Q-3I-3)" },
+  // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself
+  "cap.optuna-screener": { world: "idiots", moment: moment("WHAT IS A MACHINE?"), variant: "both", place: "bl", where: "optuna-screener head band (iconic-ice-alt / iconic-ice), before the chapter's facts" },
   "cap.systems": { world: "idiots", moment: moment("THE HOMEMADE DRONE"), variant: "both", place: "bl", where: "systems band (iconic-drone); names no character" },
-  "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "head", where: "kill-list head, right of the h2 (O-5; never on a row)" },
+  // M2 finish: under the header inset (iconic-pen, or its PenCase stand-in)
+  "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "under", where: "kill-list header inset, under the plate (O-5; never on a row)" },
   /* Intermission · the films chapter (house plane, one world per screen) */
   "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL AT ANCHOR"), variant: "both", place: "under", where: "films screen (F-PC)" },
   "cap.films.idiots": { world: "idiots", moment: moment("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "films screen (F-3I)" },
@@ -568,8 +582,8 @@ const captions = {
   "cap.act-4": { world: "hp", moment: moment("THE GREAT HALL"), variant: "default", place: "br", where: "card III→IV settled, p > .85 (iconic-hall)" },
   "cap.act-4.alt": { world: "hp", moment: moment("LUMOS — THE GREAT HALL LIGHTS UP"), variant: "alt", place: "br", where: "card III→IV settled (Lumos sweep)" },
   "cap.principles": { world: "hp", moment: moment("THE MARAUDER’S MAP"), variant: "default", place: "head", where: "principles head, right of the h2 (parchment)" },
-  "cap.principles.alt": { world: "hp", moment: moment("LUMOS"), variant: "alt", place: "head", where: "principles head (candles alt)" },
-  "cap.contact": { world: "hp", moment: moment("A FLOATING CANDLE FROM THE GREAT HALL"), variant: "both", place: "head", where: "contact: head on desktop (the loop moves), under the plate on mobile" },
+  "cap.principles.alt": { world: "hp", moment: moment("LUMOS — THE ENCHANTED CEILING"), variant: "alt", place: "head", where: "principles head (the Great Hall's starry ceiling + floating candles, each row's candle lights)" },
+  "cap.contact": { world: "hp", moment: moment("A FLOATING CANDLE FROM THE GREAT HALL"), variant: "both", place: "under", where: "contact: under the last-light plate at every width (never stacked on the h2; the loop moves)" },
   /* Route loaders (loaders-eggs-chrome; under the loader art) */
   "cap.loader.pirates": { world: "pirates", moment: moment("JACK’S COMPASS"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.pirates.alt": { world: "pirates", moment: moment("THE BLACK PEARL IN A BOTTLE"), variant: "alt", place: "under", where: "route card, under the loader" },

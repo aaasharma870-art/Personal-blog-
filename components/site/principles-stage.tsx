@@ -6,7 +6,7 @@ import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { PrinciplesMap } from "@/components/site/principles-map";
-import { CeilingCandles, PrinciplesLumos } from "@/components/site/principles-lumos";
+import { PrinciplesLumos } from "@/components/site/principles-lumos";
 
 /**
  * PrinciplesStage — picks the Principles choreography (lib/variants.ts
@@ -15,9 +15,12 @@ import { CeilingCandles, PrinciplesLumos } from "@/components/site/principles-lu
  * render the same heading, list and text (choreography and caption change;
  * content and focus targets never do).
  *
- * The head: the server-rendered SectionHead at left, the scene caption
+ * The head row: the server-rendered SectionHead at left, the scene caption
  * (RECOGNIZABILITY S18, `head`: right of the h2 on desktop, under it on
- * mobile) at right — "THE MARAUDER'S MAP • HARRY POTTER" / "LUMOS • …".
+ * mobile) at right — "THE MARAUDER'S MAP • HARRY POTTER" / "LUMOS — THE
+ * ENCHANTED CEILING • …". The choreography hosts it: DEFAULT sets it ON
+ * the Map (the whole section is one sheet of parchment); ALT hangs the
+ * Great Hall's ceiling over it.
  */
 export function PrinciplesStage({
   choice,
@@ -30,17 +33,18 @@ export function PrinciplesStage({
 }) {
   const variant = useVariant(choice, "principles.map");
   const alt = variant === "alt";
+  const headRow = (
+    <div className="flex flex-col gap-tier-group xl:flex-row xl:items-end xl:justify-between xl:gap-x-10">
+      {head}
+      {/* the caption's own CSS owns its margins: size and place it from here */}
+      <div className="xl:w-[26rem] xl:shrink-0 xl:pb-2">
+        <SceneCaption k={captionKeyFor("cap.principles", variant)} place="head" />
+      </div>
+    </div>
+  );
   return (
     <div data-variant={variant} data-principles-stage="">
-      {alt ? <CeilingCandles /> : null}
-      <div className="flex flex-col gap-tier-group xl:flex-row xl:items-end xl:justify-between xl:gap-x-10">
-        {head}
-        {/* the caption's own CSS owns its margins: size and place it from here */}
-        <div className="xl:w-[26rem] xl:shrink-0 xl:pb-2">
-          <SceneCaption k={captionKeyFor("cap.principles", variant)} place="head" />
-        </div>
-      </div>
-      {alt ? <PrinciplesLumos ribbons={ribbons} /> : <PrinciplesMap ribbons={ribbons} />}
+      {alt ? <PrinciplesLumos ribbons={ribbons} head={headRow} /> : <PrinciplesMap ribbons={ribbons} head={headRow} />}
     </div>
   );
 }

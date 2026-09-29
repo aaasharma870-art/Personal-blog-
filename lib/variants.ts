@@ -336,15 +336,42 @@ export const VARIANT_REGISTRY = {
     },
     files: ["components/site/projects.tsx", "components/site/gauntlet-tabs.tsx", "components/worlds/idiots/gauntlet-board.tsx", "components/worlds/idiots/chalk.tsx"],
   },
+  // M2 finish (Act II): the work section's full-bleed head band
+  "work.head": {
+    default: {
+      name: "slow-settle",
+      note: "A full-bleed 21:9 band (4:3 < 640) of the ICE stone corridor under pergola stripes fades up while settling from 1.07x, captioned THE CORRIDORS OF ICE • 3 IDIOTS. While iconic-corridor is planned it shows the lecture hall (iconic-ice-alt) as THE LECTURE HALL AT ICE.",
+      media: ["iconic-corridor"],
+    },
+    alt: {
+      name: "light-sweep",
+      note: "The plate comes up from shadow as bars of pergola light rake across it once; same caption (stand-in: iconic-ice).",
+      media: ["iconic-corridor-alt"],
+    },
+    files: ["components/worlds/idiots/plate-band.tsx", "components/site/projects.tsx", "components/worlds/idiots/idiots-section.tsx"],
+  },
   "trading-algos.schematic": {
     default: { name: "draw", note: "SM-7: the blueprint of the real pipeline inks itself inside an ICE chalkboard frame; the chalk circle goes around the caveat." },
     alt: { name: "assemble", note: "SM-7: the blueprint's parts drop into place and are taped down on the chalkboard; same circle round the caveat." },
     files: ["components/sections/chapter/chapter-section.tsx", "components/worlds/idiots/schematic.tsx"],
   },
   "optuna-screener.schematic": {
-    default: { name: "draw", note: "SM-7: the Optuna pipeline (with its v3 ensemble branch) inks itself on the chalkboard; the machine definition lettered in Kalam under it." },
+    default: { name: "draw", note: "SM-7: the Optuna pipeline (with its v3 ensemble branch) inks itself on the chalkboard (the machine definition now lives on the head board: optuna-screener.head)." },
     alt: { name: "assemble", note: "SM-7: the pipeline's parts drop in and are taped down; same caption and caveat circle." },
     files: ["components/sections/chapter/chapter-section.tsx", "components/worlds/idiots/schematic.tsx"],
+  },
+  // M2 finish (Act II): WHAT IS A MACHINE? on the lecture-hall board (IC-3I-05)
+  "optuna-screener.head": {
+    default: {
+      name: "chalk-write",
+      note: "The ICE lecture-hall board (iconic-ice-alt): 'What is a machine?' writes itself on, its underline draws, then Rancho's answer (Q-3I-3, Kalam) writes on; captioned WHAT IS A MACHINE? • 3 IDIOTS.",
+      media: ["iconic-ice-alt"],
+    },
+    alt: {
+      name: "rancho-circle",
+      note: "The pair's other plate (iconic-ice) with both lines already written; Rancho's chalk circle draws round 'reduces human effort'.",
+    },
+    files: ["components/worlds/idiots/machine-board.tsx", "components/worlds/idiots/plate-band.tsx", "components/sections/chapter/chapter-section.tsx"],
   },
   "systems.fig": {
     default: { name: "draw", note: "'How this page is built' inks itself on the chalkboard." },
@@ -374,6 +401,20 @@ export const VARIANT_REGISTRY = {
       note: "SM-8: the plain ruled ledger with one sliding bar beside the active row. Dead Eye stays an opt-in egg, never a variant.",
     },
     files: ["components/sections/ledger/ledger-section.tsx", "components/sections/ledger/lens-figure.tsx", "components/site/ledger-reckoning.tsx"],
+  },
+  // M2 finish (Act II): the kill-list's header inset
+  "kill-list.head": {
+    default: {
+      name: "pats",
+      note: "A 16:9 inset of Virus's astronaut pen in its open velvet case (iconic-pen; the PenCase drawing while planned) settles in two soft pats; caption VIRUS'S ASTRONAUT PEN • 3 IDIOTS under it.",
+      media: ["iconic-pen"],
+    },
+    alt: {
+      name: "lid-lift",
+      note: "The inset opens from its bottom edge upward like the case lid lifting while the plate settles from 1.05x; same caption.",
+      media: ["iconic-pen-alt"],
+    },
+    files: ["components/worlds/idiots/plate-band.tsx", "components/worlds/idiots/chalk.tsx", "components/sections/ledger/ledger-section.tsx"],
   },
   "films.screens": {
     default: {
