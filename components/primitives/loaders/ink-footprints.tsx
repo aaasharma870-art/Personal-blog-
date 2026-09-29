@@ -147,7 +147,10 @@ function tagAt(v: number, done: boolean): { x: number; y: number } {
   for (const w of WALK) if (v >= w.at - 1e-6) s = w;
   return { x: s.x, y: s.y };
 }
-const tagT = (q: { x: number; y: number }) => `translate(${q.x.toFixed(2)} ${q.y.toFixed(2)})`;
+/** The tag flies up and right of the feet; past mid-sheet it flies left
+ *  (mirrored), so it never leaves the parchment. */
+const tagT = (q: { x: number; y: number }) =>
+  `translate(${q.x.toFixed(2)} ${q.y.toFixed(2)})${q.x > 100 ? " scale(-1 1)" : ""}`;
 
 export default function InkFootprintsLoader(props: LoaderRendererProps) {
   // one MotionValue source per mode (useTransform binds once): remount on mode
