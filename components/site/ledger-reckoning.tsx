@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { featuredProjects, killList, site, survivors } from "@/lib/content";
 import { Meta } from "@/components/site/world-kit";
@@ -12,8 +13,12 @@ import { cn } from "@/lib/utils";
  * here: the graveyard's power is austerity (the opt-in Dead Eye egg is M2).
  * Figures verbatim from content.ts and static (ratios never animate).
  * Server-rendered: no JS needed for anything on this ledger.
+ *
+ * M2: the ledger is its own manifest section (`kill-list`, type ledger):
+ * components/sections/ledger/ledger-section.tsx renders the <section
+ * id="kill-list"> and passes the h2 id + the derived number here.
  */
-export function Ledger() {
+export function Ledger({ titleId, number, headExtra }: { titleId: string; number?: string; headExtra?: ReactNode }) {
   const flagshipHref = featuredProjects[0]?.href ?? site.github;
   const rows = [
     ...survivors.map((s) => ({
@@ -33,11 +38,12 @@ export function Ledger() {
   ];
 
   return (
-    <div id="kill-list" className="scroll-mt-24" aria-labelledby="kill-list-title">
-      <Meta fields={["The reckoning", `${survivors.length} survived the full process`]} />
-      <h3 id="kill-list-title" className="mt-tier-pair type-title text-fg">
+    <div>
+      <Meta fields={[number, "The reckoning", `${survivors.length} survived the full process`]} />
+      <h2 id={titleId} className="mt-tier-pair type-title text-fg">
         The kill-list
-      </h3>
+      </h2>
+      {headExtra}
       <p className="mt-tier-group max-w-body type-body text-fg-muted">
         Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
       </p>

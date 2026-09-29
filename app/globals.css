@@ -1121,3 +1121,88 @@ html[data-motion="paused"] .opening-vignette {
     );
 }
 /* === /hero & cards === */
+
+/* === scene captions & world faces (M2, RECOGNIZABILITY §4) ===============
+   The fan faces set ONLY registered lettering strings (lib/film.ts
+   `lettering`; components/primitives/scene-caption.tsx decides). A missing
+   face falls through to Newsreader, then Georgia (fixture L). */
+.world-face-pirates { font-family: var(--font-world-pirates, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+.world-face-idiots { font-family: var(--font-world-idiots, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+.world-face-rdr2 { font-family: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+.world-face-hp { font-family: var(--font-world-hp, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+/* the fan faces are single-weight display cuts: never synthesize bold */
+[class*="world-face-"] { font-weight: 400; font-synthesis: none; }
+
+/* SceneCaption: MOMENT • FILM, 22–32 px, the world face, a 24 px accent rule
+   above ("museum label"). Colours come from the PLANE (--fg / --world-
+   emphasis are AA-checked per world × tone by the validator, incl. paper). */
+.scene-caption {
+  position: relative;
+  margin: 0;
+  max-width: 44rem;
+  padding-top: 0.75rem;
+  font-size: clamp(1.375rem, 1rem + 1vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.scene-caption::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 1px;
+  background: var(--world-emphasis);
+}
+.scene-caption__sep {
+  display: inline-block;
+  margin-inline: 0.45em;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6em;
+  vertical-align: 0.25em;
+  color: var(--fg-ghost);
+}
+.scene-caption__film { color: var(--world-emphasis); }
+.scene-caption__quote .film-quote-lettered__by { font-size: 0.8125rem; letter-spacing: 0.02em; }
+.film-quote-lettered__by { white-space: nowrap; }
+
+/* bl / br: over the media's bottom corner, inside a `.scene-caption-host`
+   (position: relative) that holds the media and the caption. The scrim is
+   the world's deep ground under the glyph box (probe with tools/contrast.mjs:
+   ≥ 4.5:1 on the worst pixel, the ALT plate included). */
+.scene-caption-host { position: relative; }
+@media (min-width: 40rem) {
+  .scene-caption[data-place="bl"],
+  .scene-caption[data-place="br"] {
+    position: absolute;
+    bottom: 24px;
+    z-index: 2;
+    max-width: min(40rem, calc(100% - 48px));
+    isolation: isolate;
+  }
+  .scene-caption[data-place="bl"] { left: 24px; }
+  .scene-caption[data-place="br"] { right: 24px; text-align: right; }
+  .scene-caption[data-place="br"]::before { left: auto; right: 0; }
+  .scene-caption[data-place="bl"]::after,
+  .scene-caption[data-place="br"]::after {
+    content: "";
+    position: absolute;
+    inset: -56px -24px -24px -24px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--world-deep) 0 40%, transparent 100%);
+  }
+}
+/* under (and every placement below 640 px): in flow, below the frame */
+.scene-caption[data-place="under"] { margin-top: var(--spacing-tier-pair); }
+@media (max-width: 39.999rem) {
+  .scene-caption { font-size: max(1.25rem, clamp(1.375rem, 1rem + 1vw, 2rem)); }
+  .scene-caption[data-place="bl"],
+  .scene-caption[data-place="br"] { margin-top: var(--spacing-tier-pair); }
+  /* wrap at the "•": moment / film on two lines */
+  .scene-caption__sep { display: none; }
+  .scene-caption__film { display: block; margin-top: 0.2em; }
+}
+/* === /scene captions === */

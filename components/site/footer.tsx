@@ -4,7 +4,8 @@ import { footerLine, site } from "@/lib/content";
 import { film } from "@/lib/film";
 import { isUsable, mediaAssets, type MediaProvenance, type MediaStatus } from "@/lib/media";
 import { quotes, type QuoteId } from "@/lib/quotes";
-import { bookendWorld, copyVisible, credits, sectionById, topHref, worksInUse } from "@/lib/sections";
+import { anchorId, bookendWorld, copyVisible, credits, topHref, worksInUse } from "@/lib/sections";
+import type { SectionProps } from "@/components/sections/types";
 import { planeAttrs } from "@/lib/worlds";
 import { GithubMark } from "@/components/ui/icons";
 import { FilmQuote } from "@/components/site/film-quote";
@@ -12,7 +13,9 @@ import { HallowsMark, TimeTurnerLink } from "@/components/site/hp-ink";
 
 /* ============================================================================
    CREDITS — the closing roll (SPEC v2 SM-13; ICONS §10), rendered as the page
-   <footer id="credits"> while the manifest's `credits` entry is a stub (M1).
+   <footer id="credits"> by the manifest's `credits` section (M2:
+   components/sections/credits/credits-section.tsx; app/page.tsx places it
+   after </main>).
    Native scroll IS the roll: no pin, no auto-scroll. Centred rows: the role
    in Meta at left, the name in body at right. Every row is DERIVED and
    factual — works from the enabled acts, lines from the quote registry
@@ -31,9 +34,6 @@ const UNBUILT_HOST = (host: string) => host.startsWith("egg:") || host === "cons
 
 function linesQuoted(): { work: string; ids: QuoteId[] }[] {
   const ids = new Set<QuoteId>(credits.quotes.filter((id) => !UNBUILT_HOST(quotes[id].host)));
-  // M1: the chapters render INSIDE `work` (their entries are stubs), so the
-  // Optuna figure's caption line renders there.
-  if (film.enabled && sectionById("work") && !sectionById("optuna-screener")) ids.add("Q-3I-3");
   const visible = [...ids].filter((id) => copyVisible({ text: quotes[id].text, status: quotes[id].status }));
   // act order: the index of the work's world in worksInUse
   const rank = (id: QuoteId) => {
@@ -88,7 +88,7 @@ const Dot = () => (
   </span>
 );
 
-export function Footer() {
+export function Footer({ entry }: SectionProps<"credits">) {
   const year = new Date().getFullYear(); // the build year (static page)
   const on = credits.enabled;
   const lines = on ? linesQuoted() : [];
@@ -98,7 +98,7 @@ export function Footer() {
 
   return (
     <footer
-      id="credits"
+      id={anchorId(entry)}
       aria-labelledby="credits-title"
       {...planeAttrs("deep", "house")}
       className="relative bg-bg py-section text-fg"

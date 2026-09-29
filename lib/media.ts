@@ -36,6 +36,14 @@
    `npm run check`. When the file is accepted: copy the web encode into
    public/media/films/, set status "accepted", real width/height, provenance
    and `accept`.
+
+   M2 (integrator, 2026-09-29): every staged M2 asset and the eight iconic
+   plates are registered below. Status "received" = the file is in public/
+   with its provenance but is NEVER played (resolveMedia skips it): MV-01-alt
+   (a reject; the hero plays MV-01 under both variants) and MV-06-alt (fails
+   board evenness; waits on Aryan). ANCHORS: `marks` (points) and `rects`
+   (boxes) are the named registration points code draws against — read them
+   with markOf() / rectOf(); `sequenceFrames()` lists a sequence's frames.
    ========================================================================== */
 
 import type { Variant } from "./variants";
@@ -98,8 +106,16 @@ type MediaDef = {
   focal?: readonly [x: number, y: number];
   focalBox?: FocalBox;
   /** Named 0-1 points measured on the plate (MEDIA LOG), e.g. the Pearl's
-   *  stern lantern: the page's one warm point (SPEC §1, §6). */
+   *  stern lantern: the page's one warm point (SPEC §1, §6). These are the
+   *  plate ANCHORS code registers against (RECOGNIZABILITY §7.2: the Jolly
+   *  Roger on `mastTop`, embers from `fire` …). Read them with `markOf()`. */
   marks?: Readonly<Record<string, readonly [x: number, y: number]>>;
+  /** Named 0-1 boxes measured on the plate (the ICE board, the WANTED
+   *  poster …). Read them with `rectOf()`. */
+  rects?: Readonly<Record<string, FocalBox>>;
+  /** `sequence` only: frame count. Frames are `${src}000.webp` …
+   *  (3-digit, zero-based); `sequenceFrames()` lists them. */
+  frames?: number;
   /** null => decorative: aria-hidden, alt="". */
   alt: string | null;
   provenance: MediaProvenance;
@@ -136,8 +152,20 @@ const hf = (model: string, credits: number, jobId: string, note?: string): Media
 const cleanAlt = (icon?: readonly string[]): MediaAccept => ({
   ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
 });
-/** Planned film assets: provenance is filled in when they are accepted. */
-const planned: MediaProvenance = { source: "higgsfield", note: "planned (MEDIA-PLAN v2)" };
+/** M2 media (lanes A + B, the M2-R iconic lane; 2026-09-29): Check L2
+ *  signed by Claude on 2026-09-29 (M2-MEDIA-REPORT §3, LEDGER-m2iconic);
+ *  Aryan pending. */
+const cleanM2 = (icon?: readonly string[]): MediaAccept => ({
+  ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
+});
+const hf2 = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
+  source: "higgsfield", model, credits, date: "2026-09-29", jobId, ...(note ? { note } : {}),
+});
+/** The iconic plates (M2-R lane, LEDGER-m2iconic.md): gpt_image_2_5 16:9 4k
+ *  xhigh, 3840×2160 masters, 2560×1440 web encodes here. Anchors (marks /
+ *  rects) marked "provisional" are Claude's estimates at 960 px; the
+ *  builder that registers code to them re-measures on the accepted plate. */
+const ICONIC = "gpt_image_2_5 16:9 4k xhigh";
 
 export const mediaAssets = {
   /* — Hero ———————————————————————————————————————————————————————— */
@@ -400,131 +428,569 @@ export const mediaAssets = {
     accept: cleanAlt(), variantOf: "IN-02-poster", fallback: "IN-02-poster", reduced: "poster",
   },
   "MV-01-alt": {
-    kind: "image", status: "accepted", src: "/media/films/hero-sea-alt.webp",
+    // M2: REJECTED and parked (status "received" = on disk, never played).
+    // No acceptable MV-01 ALT exists (M2-MEDIA-REPORT §5): IN-02, MV-03,
+    // MV-04, MV-05 and LINE_D are all registered to MV-01, so the hero plays
+    // the DEFAULT plate under both variants and differs in choreography
+    // (RECOGNIZABILITY S03). resolveVariant("MV-01", "alt") -> MV-01.
+    kind: "image", status: "received", src: "/media/films/hero-sea-alt.webp",
     width: 2560, height: 1440, focal: [0.74, 0.52],
     focalBox: { x0: 0.53, x1: 0.98, y0: 0.46, y1: 0.6 },
     marks: { lantern: [0.897, 0.417], horizon: [0, 0.426] },
     alt: null,
     provenance: hf("nano_banana_pro 16:9 4k (Route A)", 4, "00c4c97b-4281-4691-ac3c-d398980a9d02",
-      "MV-01 batch runner-up (LOG verdict 'Reject': purple cast in the sky, loud moon glow top-right; crest body from x 0.532, running to the right edge); 5504x3072 centre-cropped to 16:9. focalBox measured on this file (aqua mask, calibrated against MV-01's). MV-03 and MV-03-alt are registered to MV-01, NOT to this plate"),
+      "MV-01 batch runner-up (LOG verdict 'Reject': purple cast in the sky, loud moon glow top-right; crest body from x 0.532, running to the right edge); 5504x3072 centre-cropped to 16:9. focalBox measured on this file (aqua mask, calibrated against MV-01's). MV-03 and MV-03-alt are registered to MV-01, NOT to this plate. M2: parked as a reject (status received)"),
     accept: cleanAlt(["IC-PC-01", "IC-PC-08"]),
     variantOf: "MV-01", fallback: "MV-01", reduced: "poster",
   },
   "MV-02-alt": {
-    kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile-alt.webp",
-    width: 1280, height: 1600, focal: [0.62, 0.5], alt: null,
-    marks: { lantern: [0.781, 0.412] },
-    provenance: hf("nano_banana_pro 4:5 2k", 2, "84001a3b-5c99-4416-8625-15c3597d8a75",
-      "MV-02 batch runner-up (LOG verdict 'Reject (alternate)': strong curl, but the crest runs off the right edge and some aqua sits in the bottom 22%); 1856x2304 centre-cropped to 4:5"),
-    accept: cleanAlt(["IC-PC-01", "IC-PC-08"]),
+    // M2 alt2: replaces the rejected M1.5 runner-up (nbp 84001a3b), per
+    // M2-MEDIA-REPORT §6.6 and RECOGNIZABILITY S03. Lantern not re-measured.
+    kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile-alt2.webp",
+    width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    provenance: hf2("gpt_image_2_5 4:5 2k high (ref MV-01)", 2.75, "37eb75b2-d3b1-48c5-97df-787555f63abd",
+      "MV-02 alt2 (extra run; the nbp runner-ups were rejects): crest xp02 0.306 / xp98 0.924; top 8% p95 0.0070; bottom 22% p95 0.0023; ship clean at 2.5x"),
+    accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
     variantOf: "MV-02", fallback: "MV-02", reduced: "poster",
   },
   "MV-03-alt": {
-    kind: "video", status: "accepted", src: "/media/films/hero-sea-loop-alt.mp4",
-    webm: "/media/films/hero-sea-loop-alt.webm", poster: "MV-01", endsOn: "MV-01",
-    width: 1920, height: 1080, durationS: 8.0, focal: [0.7, 0.5],
+    // M2 alt2: replaces the rejected minimax runner-up (ebb7db32).
+    kind: "video", status: "accepted", src: "/media/films/hero-sea-loop-alt2.mp4",
+    webm: "/media/films/hero-sea-loop-alt2.webm", poster: "MV-01", endsOn: "MV-01",
+    width: 1920, height: 1080, durationS: 8.04, focal: [0.7, 0.5],
     focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 }, alt: null,
-    provenance: {
-      source: "higgsfield", model: "minimax_h3 2K 8s (audio stream stripped)", credits: 16, date: "2026-09-28",
-      jobId: "ebb7db32-d4e5-42ce-a933-dc1452d9f909",
-      note: "MV-03 batch runner-up (LOG verdict 'Reject: not restrained'): the crest breaks and exits right, the scene becomes a dark swell, a white sparkle point appears mid-frame, the lantern flares. start = end = MV-01: encoded first 0.976 / last 0.977 vs MV-01, join 0.990 (960x540 SSIM). Encoded 2026-09-29 from the 2560x1440 master: H.264 CRF 24 aq-mode 3 faststart 2.20 MB, VP9 CRF 30 1.74 MB, -an, ffmpeg -threads 2",
-    },
-    accept: cleanAlt(["IC-PC-01", "IC-PC-08"]),
+    provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "f5130107-5bde-46a1-84b4-094c1b72fc4c",
+      "MV-03 alt2 (extra run): start = end = MV-01; first/last 0.987 / 0.986, join 0.995 (web MP4 0.975); left half <= 0.41/255; lantern peak +-2.3%; calmer (crest amplitude ~57% of the default). H.264 0.66 MB / VP9 0.35 MB, silent"),
+    accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
     variantOf: "MV-03", fallback: "MV-03", reduced: "poster",
   },
   "MV-03-alt-poster": {
-    kind: "image", status: "accepted", src: "/media/films/hero-sea-loop-alt-poster.webp",
+    kind: "image", status: "accepted", src: "/media/films/hero-sea-loop-alt2-poster.webp",
     width: 1920, height: 1080, alt: null,
-    provenance: {
-      source: "higgsfield", model: "frame 0 of MV-03-alt", credits: 0, date: "2026-09-29",
-      jobId: "ebb7db32-d4e5-42ce-a933-dc1452d9f909", note: "frame 0 (0.976 vs MV-01); code may keep using MV-01 as the loop's poster",
-    },
-    accept: cleanAlt(), variantOf: "MV-03-poster", fallback: "MV-03-poster", reduced: "poster",
+    provenance: hf2("frame 0 of MV-03-alt (alt2)", 0, "f5130107-5bde-46a1-84b4-094c1b72fc4c",
+      "frame 0; code keeps MV-01 as the loop's poster"),
+    accept: cleanM2(), variantOf: "MV-03-poster", fallback: "MV-03-poster", reduced: "poster",
   },
 
-  /* -- PLANNED (MEDIA-PLAN v2 §4): the ids exist so builders can code against
-        them; resolveMedia() walks the fallback until something is usable. -- */
+  /* == M2 MEDIA (lanes A + B; M2-MEDIA-REPORT) ==========================
+     ACCEPTED 2026-09-29 (Check L2: Claude 09-29, Aryan pending). Every
+     DEFAULT names its ALT (`variants.alt`); job ids from LEDGER-laneA/B.
+     `codeAlt` strings are kept on the entries that had one: they document
+     what the consumer draws if the asset is ever parked again. -- */
+
+  /* — Act I (pirates): the storm, the voyage stills and sequence — */
   "MV-04": {
-    kind: "image", status: "planned", src: "/media/films/storm.webp",
-    width: 2560, height: 1440, focal: [0.7, 0.5], alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/storm.webp",
+    width: 2560, height: 1440, focal: [0.7, 0.5], alt: null,
+    marks: { horizon: [0, 0.423] },
+    provenance: hf2("gpt_image_2_5 16:9 4k xhigh (edit of MV-01)", 7, "350f546b-fb55-4549-820c-3e052999cfc4",
+      "the hero's camera in a night squall: no ship, lantern or lightning; the kraken mass reads as a swell under the foam (IC-PC-05 egg); horizon -0.28% vs MV-01; crest centreline median 1.7% / p90 4.5%; 0 warm px. LINE_D re-check pending lib/line.ts"),
+    accept: cleanM2(["IC-PC-05", "IC-PC-08"]),
     fallback: "MV-01", reduced: "poster",
+    variants: { alt: "MV-04-alt" },
+  },
+  "MV-04-alt": {
+    kind: "image", status: "accepted", src: "/media/films/storm-alt.webp",
+    width: 2560, height: 1440, focal: [0.7, 0.5], alt: null,
+    marks: { horizon: [0, 0.426] },
+    provenance: hf2("gpt_image_2_5 16:9 4k xhigh (edit of MV-01)", 7, "a0060b78-f625-4ea9-a38d-768ff6653ad1",
+      "ALT: horizon 0; centreline median 3.0% / p90 5.75% (marginal); 26% brighter mean than MV-01"),
+    accept: cleanM2(["IC-PC-05", "IC-PC-08"]),
+    variantOf: "MV-04", fallback: "MV-04", reduced: "poster",
   },
   "MV-05a": {
-    kind: "image", status: "planned", src: "/media/films/voyage-a.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/voyage-a.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.431] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "6ce86233-1be6-4d6a-b6b3-535932a1609a",
+      "Port Royal harbour at night: piers, lanterns, masts; quays empty at 2.5x gain; JV-1 start"),
+    accept: cleanM2(["IC-PC-11"]),
+    fallback: "MV-01", reduced: "poster",
+    variants: { alt: "MV-05a-alt" },
+  },
+  "MV-05a-alt": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-a-alt.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.437] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "8af307c9-a43d-4d71-8f54-3653a0b2c373",
+      "ALT: horizon +1.2% vs the set mean (marginal). Swapping any MV-05 still to its ALT breaks the JV sequence at that beat"),
+    accept: cleanM2(["IC-PC-11"]),
+    variantOf: "MV-05a", fallback: "MV-05a", reduced: "poster",
   },
   "MV-05b": {
-    kind: "image", status: "planned", src: "/media/films/voyage-b.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/voyage-b.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.45] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01, regen 1)", 4.25, "57a84723-17e6-4bb8-8314-543e3cd92acd",
+      "the fog around Isla de Muerta: real fog, soft horizon ~0.45, mean lum 0.032"),
+    accept: cleanM2(),
+    fallback: "MV-01", reduced: "poster",
+    variants: { alt: "MV-05b-alt" },
+  },
+  "MV-05b-alt": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-b-alt.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01, regen 1)", 4.25, "c864d744-01d9-4120-a647-86039426caa7",
+      "ALT: fog with a brighter moon glow (mean 0.041)"),
+    accept: cleanM2(),
+    variantOf: "MV-05b", fallback: "MV-05b", reduced: "poster",
   },
   "MV-05c": {
-    kind: "image", status: "planned", src: "/media/films/voyage-c.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/voyage-c.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.425] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "bcb620aa-274b-4c74-bcff-a7b02686c467",
+      "the squall (The break): squall wall, one aqua glint, no vessel, no lightning"),
+    accept: cleanM2(["IC-PC-08"]),
+    fallback: "MV-01", reduced: "poster",
+    variants: { alt: "MV-05c-alt" },
+  },
+  "MV-05c-alt": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-c-alt.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.428] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "3c50b647-5060-442c-a40a-a13e37e3fbb4", "ALT"),
+    accept: cleanM2(["IC-PC-08"]),
+    variantOf: "MV-05c", fallback: "MV-05c", reduced: "poster",
   },
   "MV-05d": {
-    kind: "image", status: "planned", src: "/media/films/voyage-d.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/voyage-d.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.419] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "f73d3e86-05ea-424c-a04d-53544952cbe1",
+      "first light WITH the distant ship (a silhouette: no crew, flag or lettering at 100%); the DEFAULT (MEDIA-PLAN Q6, RECOGNIZABILITY S06); JV-3 end"),
+    accept: cleanM2(["IC-PC-01"]),
+    fallback: "MV-01", reduced: "poster",
+    variants: { alt: "MV-05d-alt" },
+  },
+  "MV-05d-alt": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-d-alt.webp",
+    width: 2560, height: 1440, alt: null, marks: { horizon: [0, 0.42] },
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-01)", 4.25, "fe8963a1-c8bc-49f9-9bf6-9862de6a673f",
+      "ALT: first light, empty sea (no ship). Swapping it in breaks the JV sequence's last beat"),
+    accept: cleanM2(),
+    variantOf: "MV-05d", fallback: "MV-05d", reduced: "poster",
   },
   JV: {
-    kind: "sequence", status: "planned", src: "/media/films/voyage-seq/",
-    width: 1280, height: 720, alt: null, provenance: planned, fallback: "MV-05a", reduced: "poster",
+    kind: "sequence", status: "accepted", src: "/media/films/voyage-seq/", frames: 72,
+    width: 1280, height: 720, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 5s sound-off x3 -> 72 webp frames", 26.25, "ab5526ac-c3ea-4ed4-9e99-2266da0b0333",
+      "JV-1 ab5526ac (MV-05a -> b, frames 0-24) + JV-2 169d76b5-d55a-4556-b841-6d004bf0967e (b -> c, 24-47; end SSIM 0.910 < 0.93 on texture only, <= 1 px: TAIL-ANCHORED) + JV-3 ee674bcf-b6c0-49ce-a444-0951f4ce0555 (c -> d, 48-71; 0.929). 1.47 MB, max frame 46 KB; largest luminance step 5.6/255"),
+    accept: cleanM2(["IC-PC-11", "IC-PC-08", "IC-PC-01"]),
+    fallback: "MV-05a", reduced: "poster",
+    variants: { alt: "JV-alt" },
   },
+  "JV-alt": {
+    kind: "sequence", status: "accepted", src: "/media/films/voyage-seq-alt/", frames: 72,
+    width: 1280, height: 720, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 5s sound-off x3 -> 72 webp frames", 26.25, "bf8f2262-d610-4a77-8722-8be6050da54b",
+      "ALT: JV-1 bf8f2262 + JV-2 64a0052d-37af-4ddf-aac6-53d33255ea4c (end SSIM 0.899, tail-anchored) + JV-3 8c75dd34-e51a-45d2-a145-d7bd1a2b65ea; neon-aqua overshoot at frames 55-66; 1.61 MB. Built on the DEFAULT stills (MV-05a-d)"),
+    accept: cleanM2(["IC-PC-11", "IC-PC-08", "IC-PC-01"]),
+    variantOf: "JV", fallback: "JV", reduced: "poster",
+  },
+
+  /* — Act II (idiots): the dawn board — */
   "MV-06": {
-    kind: "image", status: "planned", src: "/media/films/board-dawn.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/board-dawn.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 2k high (edit of 1935fc6f)", 2.75, "4686928b-b125-419b-aa30-af1b607c5b0e",
+      "the wiped chalkboard under stone colonnade windows at dawn (IC-3I-09); board interior left 60%: p95 0.013, SD 5.0; the beam confined right of 65%; no ghost text at 6x gain"),
+    accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
     codeAlt: "a CSS board (--idi-canvas + a 4% grid); the seam card uses its storm plate", reduced: "poster",
+    variants: { alt: "MV-06-alt" },
   },
+  "MV-06-alt": {
+    // "received", NOT accepted: it fails board evenness. The gauntlet's ALT
+    // variant plays the DEFAULT board until Aryan accepts this one
+    // (M2-MEDIA-REPORT §6.1, RECOGNIZABILITY S08) — flip to "accepted" then.
+    kind: "image", status: "received", src: "/media/films/board-dawn-alt.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 2k xhigh", 4.5, "1935fc6f-82b8-47ee-8ac7-a191d371f116",
+      "ALT, FAILS check 1: left-60% SD 12.5 > 6 (the diagonal beam); p95 0.038 ok, local SD 2.8 ok; the stronger 'morning' read"),
+    accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
+    variantOf: "MV-06", fallback: "MV-06", reduced: "poster",
+  },
+
+  /* — Act III (rdr2): the frontier, the campfire — */
   "MV-10": {
-    kind: "image", status: "planned", src: "/media/films/frontier-dusk.webp",
-    width: 2560, height: 1440, focal: [0.78, 0.45], alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/frontier-dusk.webp",
+    width: 2560, height: 1440, focal: [0.78, 0.45], alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 2k high (edit of e0987388)", 2.75, "32281e86-6f1d-4db7-8bb5-73eb276e6618",
+      "the Heartlands at golden hour: a riderless horse (clean at 200%), a river; left 45% x y 25-75% p95 0.0059; the rdr2 anchor (card II->III settled state = the Beyond band, a declared reuse)"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
     codeAlt: "the tintype develops into a CSS golden-hour ground with the code low sun (card III)", reduced: "poster",
+    variants: { alt: "MV-10-alt" },
+  },
+  "MV-10-alt": {
+    kind: "image", status: "accepted", src: "/media/films/frontier-dusk-alt.webp",
+    width: 2560, height: 1440, focal: [0.78, 0.45], alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 2k high (edit of e0987388)", 2.75, "c249b137-3f83-4bc7-9f0f-33ce136af6ce",
+      "ALT: left45 p95 0.0073 (the sub-band x .30-.45 x y .25-.45 is 0.106)"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
+    variantOf: "MV-10", fallback: "MV-10", reduced: "poster",
   },
   "MV-10m": {
-    kind: "image", status: "planned", src: "/media/films/frontier-dusk-mobile.webp",
-    width: 1280, height: 1600, alt: null, provenance: planned, fallback: "MV-10", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/frontier-dusk-mobile.webp",
+    width: 1280, height: 1600, alt: null,
+    provenance: hf2("gpt_image_2_5 4:5 2k high (ref MV-10, regen 1)", 2.75, "8f6f4c4f-a360-46a7-9836-e44f3200df50",
+      "frontier mobile 4:5; the horse clean at 200% (the first pair was rejected: a two-headed horse, a cut-off horse)"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
+    fallback: "MV-10", reduced: "poster",
+    variants: { alt: "MV-10m-alt" },
+  },
+  "MV-10m-alt": {
+    kind: "image", status: "accepted", src: "/media/films/frontier-dusk-mobile-alt.webp",
+    width: 1280, height: 1600, alt: null,
+    provenance: hf2("gpt_image_2_5 4:5 2k high (ref MV-10, regen 1)", 2.75, "76920a65-e7d1-468a-9bdf-850f8cbec21c", "ALT"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
+    variantOf: "MV-10m", fallback: "MV-10m", reduced: "poster",
   },
   "MV-11": {
-    kind: "image", status: "planned", src: "/media/films/campfire.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/campfire.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-10)", 4.25, "a2e95902-b79b-4402-9057-6a74d51e4233",
+      "the campfire in a stone ring, two tents behind; left 55% p95 0.0038, SD 3.75; MV-11L start/end. RECOGNIZABILITY S16: the Voices ALT (iconic-camp is the default)"),
+    accept: cleanM2(["IC-RD-04"]),
     codeAlt: "the R-6 code campfire on --rd-deep (Voices)", reduced: "poster",
+    variants: { alt: "MV-11-alt" },
+  },
+  "MV-11-alt": {
+    kind: "image", status: "accepted", src: "/media/films/campfire-alt.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-10)", 4.25, "dc902346-fc12-4423-82be-9af37e12f247",
+      "ALT: fire centroid x 0.735 (range 0.74-0.82, marginal); left 55% p95 0.0030, SD 3.30. MV-11L-alt is registered to MV-11, not to this plate"),
+    accept: cleanM2(["IC-RD-04"]),
+    variantOf: "MV-11", fallback: "MV-11", reduced: "poster",
   },
   "MV-11L": {
-    kind: "video", status: "planned", src: "/media/films/campfire-loop.mp4",
-    webm: "/media/films/campfire-loop.webm", poster: "MV-11",
-    width: 1920, height: 1080, alt: null, provenance: planned, fallback: "MV-11", reduced: "poster",
+    kind: "video", status: "accepted", src: "/media/films/campfire-loop.mp4",
+    webm: "/media/films/campfire-loop.webm", poster: "MV-11", endsOn: "MV-11",
+    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "d4086e11-bb78-451d-ae83-438b841f3a4c",
+      "start = end = MV-11; web join 0.970; silent; passes every flash check. H.264 0.54 MB / VP9 0.24 MB"),
+    accept: cleanM2(["IC-RD-04"]),
+    fallback: "MV-11", reduced: "poster",
+    variants: { alt: "MV-11L-alt" },
   },
+  "MV-11L-alt": {
+    kind: "video", status: "accepted", src: "/media/films/campfire-loop-alt.mp4",
+    webm: "/media/films/campfire-loop-alt.webm", poster: "MV-11", endsOn: "MV-11",
+    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "8d687e50-6273-4711-a462-d03cc7ab5531",
+      "ALT: start = end = MV-11 (the DEFAULT plate); web join 0.973; BORDERLINE: ground glow 16.6% (limit 15) and <= 3/s reversals on a very dark mean"),
+    accept: cleanM2(["IC-RD-04"]),
+    variantOf: "MV-11L", fallback: "MV-11L", reduced: "poster",
+  },
+  "MV-11L-poster": {
+    kind: "image", status: "accepted", src: "/media/films/campfire-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf2("frame 0 of MV-11L", 0, "d4086e11-bb78-451d-ae83-438b841f3a4c", "frame 0; code keeps MV-11 as the loop's poster"),
+    accept: cleanM2(), fallback: "MV-11", reduced: "poster",
+    variants: { alt: "MV-11L-alt-poster" },
+  },
+  "MV-11L-alt-poster": {
+    kind: "image", status: "accepted", src: "/media/films/campfire-loop-alt-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf2("frame 0 of MV-11L-alt", 0, "8d687e50-6273-4711-a462-d03cc7ab5531", "frame 0"),
+    accept: cleanM2(), variantOf: "MV-11L-poster", fallback: "MV-11L-poster", reduced: "poster",
+  },
+
+  /* — Act IV (hp): the hall of lights, the last light — */
   "MV-07": {
-    kind: "image", status: "planned", src: "/media/films/lights-line.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/lights-line.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k xhigh", 7, "5155788f-adb3-410a-bd57-b462456ba723",
+      "the enchanted hall of lights: floating candles densest along the Line; no people, tables, banners or crests; left 40% p95 0.024; flame ridge vs the provisional LINE_D 14/15 bands within +-6% (re-run tools/laneB_ridge.py once lib/line.ts lands). RECOGNIZABILITY S17: card III->IV at p .7-.85, then iconic-hall"),
+    accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
     codeAlt: "the ignition's final frame in code: the candles lit along the Line (card IV)", reduced: "poster",
+    variants: { alt: "MV-07-alt" },
+  },
+  "MV-07-alt": {
+    kind: "image", status: "accepted", src: "/media/films/lights-line-alt.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("nano_banana_pro 16:9 4k (5504x3072 -> 2560x1440)", 4, "c9c70e36-728b-437d-b670-9ce6078c0c36",
+      "ALT: ridge 13/15 (max 0.08), centroid 15/15; bluer windows; left 40% p95 0.020"),
+    accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
+    variantOf: "MV-07", fallback: "MV-07", reduced: "poster",
   },
   "MV-08": {
-    kind: "image", status: "planned", src: "/media/films/last-light.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned,
+    kind: "image", status: "accepted", src: "/media/films/last-light.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-07)", 4.25, "b31ef3f6-2456-48eb-b0f2-e546c474a149",
+      "one floating candle far right at the end of a fading trail of lights; FLAG (disclosed): the trail runs left to x ~0.44, darkness still passes (left 65% p95 0.0016, SD 2.72); MV-09 start/end"),
+    accept: cleanM2(["IC-HP-03"]),
     codeAlt: "the InkCandle drawing on --hp-deep (Contact)", reduced: "poster",
+    variants: { alt: "MV-08-alt" },
+  },
+  "MV-08-alt": {
+    kind: "image", status: "accepted", src: "/media/films/last-light-alt.webp",
+    width: 2560, height: 1440, alt: null,
+    provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-07, regen 1)", 4.25, "47e9a970-dde7-41aa-b082-8055ca573fc3",
+      "ALT: trail 0.63-0.80, nothing left of 62%; but the nearest trail candle is 4.8% from the flame (calm +-8% fails). MV-09 exists for the DEFAULT plate only"),
+    accept: cleanM2(["IC-HP-03"]),
+    variantOf: "MV-08", fallback: "MV-08", reduced: "poster",
   },
   "MV-09": {
-    kind: "video", status: "planned", src: "/media/films/last-light-loop.mp4",
-    webm: "/media/films/last-light-loop.webm", poster: "MV-08",
-    width: 1920, height: 1080, alt: null, provenance: planned, fallback: "MV-08", reduced: "poster",
+    kind: "video", status: "accepted", src: "/media/films/last-light-loop.mp4",
+    webm: "/media/films/last-light-loop.webm", poster: "MV-08", endsOn: "MV-08",
+    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "154f82ce-aa27-4328-abb8-b2e43bc44911",
+      "start = end = MV-08; the flame breathes 3.8%, no flicker (the ~10 Hz take b1fed92b was rejected); web join 0.975; silent"),
+    accept: cleanM2(["IC-HP-03"]),
+    fallback: "MV-08", reduced: "poster",
+    variants: { alt: "MV-09-alt" },
   },
+  "MV-09-alt": {
+    kind: "video", status: "accepted", src: "/media/films/last-light-loop-alt.mp4",
+    webm: "/media/films/last-light-loop-alt.webm", poster: "MV-08", endsOn: "MV-08",
+    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "634151ff-7928-49c4-b113-03c2a9fcce4d",
+      "ALT: start = end = MV-08 (the DEFAULT plate); nearly still (flame breathing ~1.6%); web join 0.977"),
+    accept: cleanM2(["IC-HP-03"]),
+    variantOf: "MV-09", fallback: "MV-09", reduced: "poster",
+  },
+  "MV-09-poster": {
+    kind: "image", status: "accepted", src: "/media/films/last-light-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf2("frame 0 of MV-09", 0, "154f82ce-aa27-4328-abb8-b2e43bc44911", "frame 0; code keeps MV-08 as the loop's poster"),
+    accept: cleanM2(), fallback: "MV-08", reduced: "poster",
+    variants: { alt: "MV-09-alt-poster" },
+  },
+  "MV-09-alt-poster": {
+    kind: "image", status: "accepted", src: "/media/films/last-light-loop-alt-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hf2("frame 0 of MV-09-alt", 0, "634151ff-7928-49c4-b113-03c2a9fcce4d", "frame 0"),
+    accept: cleanM2(), variantOf: "MV-09-poster", fallback: "MV-09-poster", reduced: "poster",
+  },
+
+  /* — Intermission: the films chapter screens (21:9; crop to 2.39:1 in
+       code). F-3I / F-RD have bright skies: captions go UNDER the frame. — */
   "F-PC": {
-    kind: "image", status: "planned", src: "/media/films/films-pirates.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-01", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/films-pirates.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-01)", 4.5, "8c581de2-0d87-4c9d-80b6-2593bc3793bc",
+      "the Black Pearl at anchor in still black water at night; no flag, crew or hull lettering (100% crop); left 45% SD 7.74"),
+    accept: cleanM2(["IC-PC-01"]),
+    fallback: "MV-01", reduced: "poster",
+    variants: { alt: "F-PC-alt" },
+  },
+  "F-PC-alt": {
+    kind: "image", status: "accepted", src: "/media/films/films-pirates-alt.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-01)", 4.5, "f86e2553-5b2b-4ffc-bbab-27a01e83c8e1", "ALT: left 45% SD 7.34"),
+    accept: cleanM2(["IC-PC-01"]),
+    variantOf: "F-PC", fallback: "F-PC", reduced: "poster",
   },
   "F-3I": {
-    kind: "image", status: "planned", src: "/media/films/films-idiots.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-06", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/films-idiots.webp",
+    width: 2520, height: 1080, alt: null, marks: { scooter: [0.79, 0.7] },
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-06)", 4.5, "a4ec7e96-84d8-4d8a-a6b9-b71c6547e72f",
+      "the yellow scooter at Pangong lake at first light (no badge or plate at 100%); scooter at x ~0.79 (plan 0.72; y provisional); FLAG: left 45% SD 41.6 (the pale sky) -> captions under the frame"),
+    accept: cleanM2(["IC-3I-10"]),
+    fallback: "MV-06", reduced: "poster",
+    variants: { alt: "F-3I-alt" },
+  },
+  "F-3I-alt": {
+    kind: "image", status: "accepted", src: "/media/films/films-idiots-alt.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only)", 4.5, "8b981679-0da7-4154-ac7e-3f274bb00a6c",
+      "ALT: the sun disc and its reflection compete with the scooter as the warm point; left 45% SD 49.8"),
+    accept: cleanM2(["IC-3I-10"]),
+    variantOf: "F-3I", fallback: "F-3I", reduced: "poster",
   },
   "F-RD": {
-    kind: "image", status: "planned", src: "/media/films/films-rdr2.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned,
-    codeAlt: "films chapter (M2, not built): the screen shows its world's code ground", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/films-rdr2.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only, regen 1)", 4.5, "7a6da513-4572-4785-b826-77b068747f54",
+      "the Heartlands at dusk: a ridge in afterglow, riderless horses (4 legs, 1 head); regenerated WITHOUT the MV-10 ref (it copied MV-10's composition); FLAG: left 45% SD 23.7 (dusk sky) -> captions under the frame"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
+    codeAlt: "films chapter: the screen shows its world's code ground", reduced: "poster",
+    variants: { alt: "F-RD-alt" },
+  },
+  "F-RD-alt": {
+    kind: "image", status: "accepted", src: "/media/films/films-rdr2-alt.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only, regen 1)", 4.5, "f66a8f31-ade5-46f9-9baa-034678a0b386",
+      "ALT: left 45% SD 19.0; horses confirmed on the master"),
+    accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
+    variantOf: "F-RD", fallback: "F-RD", reduced: "poster",
   },
   "F-HP": {
-    kind: "image", status: "planned", src: "/media/films/films-hp.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned,
-    codeAlt: "films chapter (M2, not built): the screen shows its world's code ground", reduced: "poster",
+    kind: "image", status: "accepted", src: "/media/films/films-hp.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-07)", 4.5, "0b8c414a-1f0f-4e70-b694-a22b320482f4",
+      "enchanted ink branching on cream paper under floating candles (organic lines, not letters or a map), a soft castle glimpse through the far window (IC-HP-01); left 45% SD 4.74. RECOGNIZABILITY S12: the HP screen's ALT (iconic-express is its default)"),
+    accept: cleanM2(["IC-HP-03", "IC-HP-01"]),
+    codeAlt: "films chapter: the screen shows its world's code ground", reduced: "poster",
+    variants: { alt: "F-HP-alt" },
+  },
+  "F-HP-alt": {
+    kind: "image", status: "accepted", src: "/media/films/films-hp-alt.webp",
+    width: 2520, height: 1080, alt: null,
+    provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-07)", 4.5, "0fcde977-b391-42af-bb48-bb35043d1fe6",
+      "ALT: left 45% SD 8.19 (marginal; local SD 1.85)"),
+    accept: cleanM2(["IC-HP-03"]),
+    variantOf: "F-HP", fallback: "F-HP", reduced: "poster",
+  },
+
+  /* == ICONIC PLATES (M2-R recognizability lane; LEDGER-m2iconic) ==========
+     One per scene that imagery alone must carry (RECOGNIZABILITY §7.2).
+     Registered ACCEPTED (Claude L2 09-29; the lane finished before this
+     integration), each keeping its planned fallback so parking one again
+     is a one-word change. -- */
+  "iconic-pearl": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pearl.webp",
+    width: 2560, height: 1440, focal: [0.66, 0.45], alt: null,
+    // provisional (Claude, 960 px): mastTop = the main mast's crow's nest (the
+    // masts run off the top edge); mizzenTop; the lit stern windows; horizon.
+    marks: { mastTop: [0.61, 0.05], mizzenTop: [0.755, 0.14], stern: [0.87, 0.6], horizon: [0, 0.8] },
+    provenance: hf2(ICONIC, 7, "4273a1be-64f7-4c66-aabf-5b44710d490c",
+      "S04 opening card: the Black Pearl close, three-quarter bow view, full tattered black sails, lit stern windows, deck lanterns, moon path, aqua wake. No crew, flag or figurehead; clean at 9x ghost gain. The Jolly Roger is added in code at mastTop"),
+    accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
+    fallback: "F-PC", reduced: "poster",
+    variants: { alt: "iconic-pearl-alt" },
+  },
+  "iconic-pearl-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pearl-alt.webp",
+    width: 2560, height: 1440, focal: [0.63, 0.45], alt: null,
+    marks: { mastTop: [0.67, 0.05], mizzenTop: [0.545, 0.2], stern: [0.9, 0.52], horizon: [0, 0.81] },
+    provenance: hf2(ICONIC, 7, "c2967ce4-6951-4ea3-b003-2f194f54b2ec",
+      "ALT: close stern-quarter galleon, tattered black sails, moon and aqua wake; a carved finial on the stern rail at ~1% of the frame (no face at 600%). Marks provisional"),
+    accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
+    variantOf: "iconic-pearl", fallback: "iconic-pearl", reduced: "poster",
+  },
+  "iconic-ice": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-ice.webp",
+    width: 2560, height: 1440, focal: [0.62, 0.3], alt: null,
+    // boardRect measured by the lane; the chalk ledge is the board's bottom
+    // edge, slanted in perspective (ledgeL -> ledgeR; provisional).
+    rects: { boardRect: { x0: 0.389, x1: 0.961, y0: 0.091, y1: 0.41 } },
+    marks: { ledgeL: [0.385, 0.34], ledgeR: [0.962, 0.415] },
+    provenance: hf2(ICONIC, 7, "0e7a3d5c-2e37-4a53-b635-6a618e773405",
+      "S07 card I->II incoming: the ICE lecture hall, tiered wooden benches, a huge blank green board on granite, a pergola corridor casting striped sun; board inner SD 9.2/255, no marks"),
+    accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
+    fallback: "MV-06", reduced: "poster",
+    variants: { alt: "iconic-ice-alt" },
+  },
+  "iconic-ice-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-ice-alt.webp",
+    width: 2560, height: 1440, focal: [0.65, 0.35], alt: null,
+    rects: { boardRect: { x0: 0.398, x1: 1, y0: 0.178, y1: 0.473 } },
+    marks: { ledgeL: [0.39, 0.375], ledgeR: [1, 0.475] },
+    provenance: hf2(ICONIC, 7, "950f30c7-8bb9-4782-82e6-a4f6a647e26f",
+      "ALT: the same hall with a bench-style lecturer's table; board inner SD 8.8, no marks"),
+    accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
+    variantOf: "iconic-ice", fallback: "iconic-ice", reduced: "poster",
+  },
+  "iconic-drone": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-drone.webp",
+    width: 2560, height: 1440, focal: [0.6, 0.47], alt: null,
+    marks: { drone: [0.6, 0.47] },
+    provenance: hf2(`${ICONIC} (edit of e979d365)`, 7, "69cafb24-6ff8-4408-a81f-0ab89821ebfe",
+      "S10 systems band: Rancho's homemade quadcopter hovering in a sunlit stone-colonnade college courtyard; the PCB shows pads and traces only, the camera is plain, the tag is gone. IC-3I-08 sensitivity: no window or camera feed; never linked to Aryan's own drone work"),
+    accept: cleanM2(["IC-3I-08", "IC-3I-09"]),
+    fallback: "F-3I", reduced: "poster",
+    variants: { alt: "iconic-drone-alt" },
+  },
+  "iconic-drone-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-drone-alt.webp",
+    width: 2560, height: 1440, focal: [0.6, 0.47], alt: null,
+    provenance: hf2(`${ICONIC} (edit of eb254302)`, 7, "07096f02-550d-472a-958e-b2ba002af637",
+      "ALT: the PCB rows are header pins and parts (no glyph row); the blue battery is unlabelled"),
+    accept: cleanM2(["IC-3I-08", "IC-3I-09"]),
+    variantOf: "iconic-drone", fallback: "iconic-drone", reduced: "poster",
+  },
+  "iconic-camp": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-camp.webp",
+    width: 2560, height: 1440, focal: [0.55, 0.55], alt: null,
+    // `fire` is the hand-off point: the ignite card's embers rise from it
+    // (RECOGNIZABILITY S16/S17). Provisional; the builder re-measures.
+    marks: { fire: [0.535, 0.68] },
+    provenance: hf2(ICONIC, 7, "3c420eac-b80f-44ff-beae-c89b4e4bb3cb",
+      "S16 voices default: the gang's camp at dusk: 3 horses at the rail facing camera (4 legs, 1 head each), a lit wall tent, a covered wagon, the fire with its tripod pot, the lake glinting at sunset; no people or lettering; lower-left p95 0.044"),
+    accept: cleanM2(["IC-RD-04", "IC-RD-06"]),
+    fallback: "MV-11", reduced: "poster",
+    variants: { alt: "iconic-camp-alt" },
+  },
+  "iconic-camp-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-camp-alt.webp",
+    width: 2560, height: 1440, focal: [0.6, 0.55], alt: null,
+    marks: { fire: [0.62, 0.71] },
+    provenance: hf2(ICONIC, 7, "37726d77-ed0d-4777-8986-e84216079cfe",
+      "ALT: the fire with its tripod pot, a covered wagon, A-frame and wall tents, 3 hitched horses from behind (4 legs each), the lake, sunset; no people or lettering"),
+    accept: cleanM2(["IC-RD-04", "IC-RD-06"]),
+    variantOf: "iconic-camp", fallback: "iconic-camp", reduced: "poster",
+  },
+  "iconic-wanted": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-wanted.webp",
+    width: 2560, height: 1440, focal: [0.37, 0.47], alt: null,
+    // the HTML handbill registers over the central blank poster
+    rects: { posterRect: { x0: 0.257, x1: 0.494, y0: 0.192, y1: 0.748 } },
+    provenance: hf2(ICONIC, 7, "3af08f65-9d2e-4d84-937d-91ea9fe2991c",
+      "S14 handbill board: a shingle-roofed notice board with 5 blank aged posters on a golden-hour false-front street with no signs. WANTED is set in HTML (Rye), never in the plate"),
+    accept: cleanM2(["IC-RD-03"]),
+    codeAlt: "a CSS plank board (--rd-deep + 3 plank gradients + nails)", reduced: "poster",
+    variants: { alt: "iconic-wanted-alt" },
+  },
+  "iconic-wanted-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-wanted-alt.webp",
+    width: 2560, height: 1440, focal: [0.36, 0.48], alt: null,
+    rects: { posterRect: { x0: 0.245, x1: 0.468, y0: 0.206, y1: 0.756 } },
+    provenance: hf2(ICONIC, 7, "afe7b162-40c8-438a-b932-350b7480f3ba",
+      "ALT: a larger board; all posters blank"),
+    accept: cleanM2(["IC-RD-03"]),
+    variantOf: "iconic-wanted", fallback: "iconic-wanted", reduced: "poster",
+  },
+  "iconic-deadeye": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-deadeye.webp",
+    width: 2560, height: 1440, focal: [0.5, 0.5], alt: null,
+    marks: { oak: [0.2, 0.45], homestead: [0.66, 0.49] },
+    provenance: hf2(ICONIC, 7, "0a60fa27-78e8-4340-8ddd-ca77858eed7a",
+      "S13 ALT settled / SM-17 egg grade: a lone oak, a split-rail fence, a trail and a homestead with frozen birds under a heavy desaturated red-sepia grade and vignette (the Dead Eye look). No reticle, no figure; the X marks are code"),
+    accept: cleanM2(["IC-RD-02", "IC-RD-05"]),
+    fallback: "MV-10", reduced: "poster",
+    variants: { alt: "iconic-deadeye-alt" },
+  },
+  "iconic-deadeye-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-deadeye-alt.webp",
+    width: 2560, height: 1440, focal: [0.5, 0.5], alt: null,
+    provenance: hf2(ICONIC, 7, "56c0a864-3e48-472e-8b1a-a6183c4ac10e",
+      "ALT: the same icons in a vivid red sunset, less 'filtered'"),
+    accept: cleanM2(["IC-RD-02", "IC-RD-05"]),
+    variantOf: "iconic-deadeye", fallback: "iconic-deadeye", reduced: "poster",
+  },
+  "iconic-hall": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-hall.webp",
+    width: 2560, height: 1440, focal: [0.5, 0.45], alt: null,
+    // provisional: lineStart = where the Line's candle run enters the plate
+    // (the builder re-measures against LINE_D once lib/line.ts lands)
+    marks: { window: [0.52, 0.33], highTable: [0.5, 0.63], lineStart: [0.08, 0.3] },
+    provenance: hf2(ICONIC, 7, "1ef4355e-d82b-4513-a273-1cbdebbd8755",
+      "S17 card III->IV settled (p > .85): the Great Hall: four long tables with gold plates, the high table, a tall central gothic window, the enchanted starry ceiling, hundreds of floating candles; no people, banners or crests; lower-left p95 0.088; clean at 9x ghost gain"),
+    accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
+    fallback: "MV-07", reduced: "poster",
+    variants: { alt: "iconic-hall-alt" },
+  },
+  "iconic-hall-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-hall-alt.webp",
+    width: 2560, height: 1440, focal: [0.48, 0.45], alt: null,
+    marks: { window: [0.48, 0.35], highTable: [0.47, 0.64], lineStart: [0.08, 0.3] },
+    provenance: hf2(ICONIC, 7, "0fd211fb-b4e9-4b19-ac70-3ac88bd8d771",
+      "ALT: the same icons; slightly brighter lower-left (p95 0.105)"),
+    accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
+    variantOf: "iconic-hall", fallback: "iconic-hall", reduced: "poster",
+  },
+  "iconic-express": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-express.webp",
+    width: 2560, height: 1440, focal: [0.8, 0.55], alt: null,
+    marks: { engine: [0.86, 0.58] },
+    provenance: hf2(`${ICONIC} (edit of 30cb966e) + local OpenCV Telea retouch`, 7, "4c065bde-7166-496b-a481-6c34465683ab",
+      "S12 films HP screen default: a red steam train crossing a curving many-arched viaduct over a loch in mist (the Hogwarts Express). The edit removed the carriage ciphers; a blank tender oval and a small cab plate were inpainted locally (2 masks <= 30 px, 0 credits). FLAG (L2 #4): recreates a famous landmark angle"),
+    accept: cleanM2(),
+    fallback: "F-HP", reduced: "poster",
+    variants: { alt: "iconic-express-alt" },
+  },
+  "iconic-express-alt": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-express-alt.webp",
+    width: 2560, height: 1440, focal: [0.8, 0.55], alt: null,
+    provenance: hf2(`${ICONIC} (edit of 179e03ab)`, 7, "5d84e0b7-b33b-4156-ad6e-fa7df438fc33",
+      "ALT: tender and cab plain; the carriages keep <= 5 px non-legible gold dots / handles at 2560"),
+    accept: cleanM2(),
+    variantOf: "iconic-express", fallback: "iconic-express", reduced: "poster",
   },
 } satisfies Record<string, MediaDef>;
 
@@ -641,6 +1107,32 @@ export function variantPair(id: MediaId): { default: MediaAsset | null; alt: Med
  *  end frame), so a cut between them does not jump. */
 export function registeredTo(video: MediaAsset, plate: MediaId): boolean {
   return video.poster === plate || video.endsOn === plate;
+}
+
+/* — Plate anchors and sequences (M2) ————————————————————————————————— */
+
+/** A named 0-1 point on the plate `id` (its `marks`), or null. Pass the id
+ *  of the asset you actually render (e.g. `resolveVariant(id, v)?.id`): an
+ *  ALT plate carries its own anchors (iconic-camp-alt's fire sits elsewhere). */
+export function markOf(id: MediaId, name: string): readonly [x: number, y: number] | null {
+  const m = (mediaAssets[id] as MediaDef).marks;
+  return m && Object.prototype.hasOwnProperty.call(m, name) ? m[name] : null;
+}
+
+/** A named 0-1 box on the plate `id` (its `rects`), or null. Same rule as
+ *  markOf: pass the rendered asset's id. */
+export function rectOf(id: MediaId, name: string): FocalBox | null {
+  const r = (mediaAssets[id] as MediaDef).rects;
+  return r && Object.prototype.hasOwnProperty.call(r, name) ? r[name] : null;
+}
+
+/** Frame URLs of a `sequence` asset (`${src}000.webp` … in order), or [] when
+ *  `id` does not resolve to a usable sequence (its fallback is a still: the
+ *  consumer then renders the stills path). */
+export function sequenceFrames(id: MediaId): string[] {
+  const a = resolveMedia(id);
+  if (!a || a.kind !== "sequence" || !a.frames) return [];
+  return Array.from({ length: a.frames }, (_, i) => `${a.src}${String(i).padStart(3, "0")}.webp`);
 }
 
 /** Resolved public path for `id`; throws (failing the build loudly) rather

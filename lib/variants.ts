@@ -163,7 +163,7 @@ export const VARIANT_REGISTRY = {
     },
     alt: {
       name: "moonlit-pearl",
-      note: "MV-01-alt / MV-02-alt: violet-cast sky, bright moon glow, the crest running off the right edge; own Lens frame; no loop over it.",
+      note: "M2: MV-01 has no acceptable alt (MV-01-alt is parked as a reject, status received), so desktop plays the DEFAULT plate; mobile plays MV-02-alt (alt2, 37eb75b2). The variant differs in choreography (RECOGNIZABILITY S03).",
       media: ["MV-01-alt", "MV-02-alt"],
     },
     files: ["components/sections/hero/hero-section.tsx", "components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
@@ -175,8 +175,8 @@ export const VARIANT_REGISTRY = {
       media: ["MV-03"],
     },
     alt: {
-      name: "restless-sea",
-      note: "MV-03-alt: the crest breaks and runs off right, the lantern flares; over the DEFAULT plate only (registered to MV-01).",
+      name: "calm-swell",
+      note: "MV-03-alt (M2 alt2, f5130107): a calmer swell (crest amplitude ~57% of the default), join 0.995; over the DEFAULT plate only (registered to MV-01).",
       media: ["MV-03-alt"],
     },
     files: ["components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
@@ -296,6 +296,12 @@ export const VARIANT_REGISTRY = {
     alt: null,
     plan: "M2-A: the dawn-board gauntlet with its verb (SM-6).",
     files: ["components/site/projects.tsx"],
+  },
+  "kill-list.reckoning": {
+    default: { name: "austere-ledger", note: "The reckoning (SM-8): equally quiet rows, the verdict word carries the meaning; ember strike only on the active killed row." },
+    alt: null,
+    plan: "M2 act2-idiots: the Lens Index ledger (SM-8) as one side and the austere rows as the other; the header's astronaut-pen motif + caption (O-5) in both. Dead Eye stays an opt-in egg, never a variant.",
+    files: ["components/sections/ledger/ledger-section.tsx", "components/site/ledger-reckoning.tsx"],
   },
   "beyond.frontier": {
     default: { name: "handbill-and-map", note: "The frontier handbill, the trail map and the code golden-hour band." },

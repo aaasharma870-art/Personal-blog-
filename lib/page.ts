@@ -146,8 +146,16 @@ export type StoryProps =
       variant: "notes";
       media?: MediaId;
       mediaMobile?: MediaId;
-      handbill?: { enabled: boolean; portrait: AuthenticRef | null };
+      /** `board`: the notice-board plate the HTML handbill registers on
+       *  (M2: iconic-wanted; its `rects.posterRect`, RECOGNIZABILITY S14). */
+      handbill?: { enabled: boolean; portrait: AuthenticRef | null; board?: MediaId };
     };
+
+/** What a chapter renders after its own article (M2): the Option Alpha
+ *  origin story and the supporting-work list moved out of the retired
+ *  `work` monolith and follow the LAST chapter (the flagships lead, CLAUDE
+ *  §5 "order the index by strength"). */
+export type ChapterAppendix = "origin" | "supporting";
 
 /** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
  *  retired D-3 layer, kept only until the retirement pass deletes them. */
@@ -155,13 +163,17 @@ export type SectionEntry =
   | Entry<"hero", HeroProps>
   | Entry<"story", StoryProps>
   | Entry<"gauntlet", { board: MediaId }>
-  | Entry<"chapter", { projectId: string; cover: CodeRef }>
+  | Entry<"chapter", { projectId: string; cover: CodeRef; appendix?: readonly ChapterAppendix[] }>
   | Entry<"experiment", { demo: "backtest" }>
-  | Entry<"matrix", { source: "capabilities" }>
+  /** `media`: the 21:9 band at the section head (M2: iconic-drone, S10). */
+  | Entry<"matrix", { source: "capabilities"; media?: MediaId }>
   | Entry<"ledger", { include: ("flagships" | "survivors" | "killed")[] }>
   | Entry<"films", { order: "acts" }>
   | Entry<"index", { source: "writing"; preview: "vignette" | "filmstrip" | "inline" }>
-  | Entry<"quotes", { source: "testimonials"; media?: MediaId; loop?: MediaId }>
+  /** `media`: the DEFAULT plate (M2: iconic-camp); `altMedia` + `loop`: the
+   *  ALT variant's still and its loop (MV-11 + MV-11L, registered to each
+   *  other; RECOGNIZABILITY S16). */
+  | Entry<"quotes", { source: "testimonials"; media?: MediaId; altMedia?: MediaId; loop?: MediaId }>
   | Entry<"principles", NoProps>
   | Entry<"contact", { media?: MediaId; loop?: MediaId }>
   | Entry<"credits", NoProps>
@@ -176,11 +188,10 @@ export type EntryOf<K extends SectionType> = Extract<SectionEntry, { type: K }>;
    II The Workshop (idiots) · Intermission (house) · III The Frontier (rdr2) ·
    IV The Light (hp). Cards act-1…act-4 are DERIVED (lib/sections.ts).
 
-   M1 NOTE — entries marked `enabled: false // M2` are data stubs: their
-   content still renders INSIDE a legacy component (the `work` gauntlet
-   renders the chapters, the demo and the kill-list; the layout footer
-   renders the credits). Whoever builds one flips it on AND removes the
-   duplicate from the legacy component in the same change (else #ids clash).
+   M2 NOTE — every SPEC v2 section is its own entry now: the chapters,
+   the experiment and the kill-list moved out of the `work` gauntlet, the
+   films chapter is on, and the credits roll is the `credits` section
+   (rendered after <main> by app/page.tsx, so it stays the page <footer>).
    ========================================================================== */
 export const page: readonly SectionEntry[] = [
   /* — Cold open (act null; world = the first act's: pirates) — */
@@ -256,7 +267,6 @@ export const page: readonly SectionEntry[] = [
     type: "chapter",
     act: "act-2",
     numbered: true,
-    enabled: false, // M2: rendered inside the `work` gauntlet today
     nav: { label: "Trading_Algos", keywords: ["flagship", "research", "futures"] },
     props: { projectId: "trading-algos", cover: "code:schematic-trading-algos" },
   },
@@ -265,16 +275,18 @@ export const page: readonly SectionEntry[] = [
     type: "chapter",
     act: "act-2",
     numbered: true,
-    enabled: false, // M2: rendered inside the `work` gauntlet today
     nav: { label: "Optuna", keywords: ["pipeline", "screener", "optimizer"] },
-    props: { projectId: "optuna-screener", cover: "code:schematic-optuna" },
+    props: {
+      projectId: "optuna-screener",
+      cover: "code:schematic-optuna",
+      appendix: ["origin", "supporting"],
+    },
   },
   {
     id: "experiment",
     type: "experiment",
     act: "act-2",
     tone: "raised",
-    enabled: false, // M2: BacktestDemo renders inside the `work` gauntlet today
     props: { demo: "backtest" },
   },
   {
@@ -283,7 +295,7 @@ export const page: readonly SectionEntry[] = [
     act: "act-2",
     numbered: true,
     nav: { label: "Systems", primary: true },
-    props: { source: "capabilities" },
+    props: { source: "capabilities", media: "iconic-drone" },
   },
   {
     id: "band-method",
@@ -303,7 +315,7 @@ export const page: readonly SectionEntry[] = [
     type: "ledger",
     act: "act-2",
     motion: "signature",
-    enabled: false, // M2: #kill-list renders inside the `work` gauntlet today
+    variant: "default",
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
     props: { include: ["flagships", "survivors", "killed"] },
   },
@@ -315,7 +327,6 @@ export const page: readonly SectionEntry[] = [
     act: null,
     world: "house",
     tone: "deep",
-    enabled: false, // M2: the films chapter (SM-9) is not built yet
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     props: { order: "acts" },
   },
@@ -333,7 +344,7 @@ export const page: readonly SectionEntry[] = [
       variant: "notes",
       media: "MV-10",
       mediaMobile: "MV-10m",
-      handbill: { enabled: true, portrait: "authentic:portrait" },
+      handbill: { enabled: true, portrait: "authentic:portrait", board: "iconic-wanted" },
     },
   },
   {
@@ -357,7 +368,7 @@ export const page: readonly SectionEntry[] = [
       paletteLabel: "Testimonials",
       keywords: ["teachers", "voices", "quotes", "recommendations"],
     },
-    props: { source: "testimonials", media: "MV-11", loop: "MV-11L" },
+    props: { source: "testimonials", media: "iconic-camp", altMedia: "MV-11", loop: "MV-11L" },
   },
 
   /* ══ ACT IV · THE LIGHT · hp ══ (card act-4: `ignite`, long #2) */
@@ -380,16 +391,14 @@ export const page: readonly SectionEntry[] = [
     props: { media: "MV-08", loop: "MV-09" },
   },
 
-  /* — Credits (act null, house). M1: the roll renders in the layout
-       <Footer> (components/site/footer.tsx) from the `credits` derivation in
-       lib/sections.ts; flip this on only when the footer moves here. — */
+  /* — Credits (act null, house): the closing roll, the page <footer>. It
+       must stay the LAST entry: app/page.tsx renders it after </main>. — */
   {
     id: "credits",
     type: "credits",
     act: null,
     world: "house",
     tone: "deep",
-    enabled: false,
     props: {},
   },
 ];

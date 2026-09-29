@@ -1,6 +1,7 @@
 import { quotes, type QuoteId } from "@/lib/quotes";
-import { copyVisible } from "@/lib/sections";
+import { copyVisible, quoteLetteringWorld } from "@/lib/sections";
 import { cn } from "@/lib/utils";
+import { worldFaceClass } from "@/components/primitives/world-face";
 
 /**
  * FilmQuote — the ONLY way a line from one of the works reaches the page
@@ -14,8 +15,17 @@ import { cn } from "@/lib/utils";
  *              crowded viewports; never beside a metric.
  *   epigraph — Newsreader italic at the lead size (the viewport's one italic).
  *   line     — inherits the host block's style (credits, loader status).
+ *   lettered — (M2, RECOGNIZABILITY O-1) the line in its world's fan face
+ *              (the lettering entry with `quote: id` names the face; none →
+ *              the host's type), attribution in Meta beside it. INLINE
+ *              (a <span>): the host supplies the block (<p>, a caption, the
+ *              board's top margin). Used for Q-PC-1 (journey step 4),
+ *              Q-3I-2 (the board header, Kalam chalk), Q-3I-3 (under the
+ *              Optuna FIG) and Q-HP-2 (the credits' last line).
  * attribution
  *   inline   — the speaker and work in Meta in the same block.
+ *   speaker  — the speaker only (Meta); for a caption whose film span
+ *              already names the work in the fan face.
  *   credits  — none here; the credits' LINES QUOTED row carries it (allowed
  *              only for the intro oath, card epigraphs and the credits' last
  *              line).
@@ -24,7 +34,7 @@ import { cn } from "@/lib/utils";
  * lines are checked in the work): dev + preview render it; a production build
  * without sign-off renders nothing (and the validator fails the build first).
  */
-export type QuoteRendition = "caption" | "epigraph" | "line";
+export type QuoteRendition = "caption" | "epigraph" | "line" | "lettered";
 
 /** "Pirates of the Caribbean: The Curse of the Black Pearl" → the franchise
  *  title before the colon; the year disambiguates the film. */
@@ -49,7 +59,7 @@ export function FilmQuote({
 }: {
   id: QuoteId;
   rendition: QuoteRendition;
-  attribution?: "inline" | "credits";
+  attribution?: "inline" | "speaker" | "credits";
   /** Render the registry's marked excerpt (`excerptText`) when it has one. */
   excerpt?: boolean;
   className?: string;
@@ -58,6 +68,24 @@ export function FilmQuote({
   if (!copyVisible({ text: q.text, status: q.status })) return null;
   const text = excerpt && "excerptText" in q && q.excerptText ? q.excerptText : q.text;
   const speaker = "speaker" in q ? q.speaker : undefined;
+
+  if (rendition === "lettered") {
+    const world = quoteLetteringWorld(id);
+    const by =
+      attribution === "inline" ? quoteAttribution(id) : attribution === "speaker" ? (speaker ?? quoteAttribution(id)) : null;
+    return (
+      <span className={cn("film-quote-lettered", className)} data-quote={id}>
+        <q className={cn("[quotes:none]", world && worldFaceClass(world))}>{`“${text}”`}</q>
+        {by ? (
+          <span className="film-quote-lettered__by type-meta text-fg-muted">
+            <span aria-hidden="true">{" — "}</span>
+            <span className="sr-only">, </span>
+            {by}
+          </span>
+        ) : null}
+      </span>
+    );
+  }
 
   if (rendition === "caption") {
     return (

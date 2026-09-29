@@ -149,6 +149,28 @@ for (const [id, a] of Object.entries(mediaAssets)) {
     const b = a.focalBox;
     if (!(0 <= b.x0 && b.x0 < b.x1 && b.x1 <= 1 && 0 <= b.y0 && b.y0 < b.y1 && b.y1 <= 1)) err(`media "${id}": focalBox out of 0-1 order`);
   }
+  // plate anchors (M2): rects are 0-1 boxes, marks 0-1 points
+  for (const [name, b] of Object.entries(a.rects ?? {})) {
+    if (!(0 <= b.x0 && b.x0 < b.x1 && b.x1 <= 1 && 0 <= b.y0 && b.y0 < b.y1 && b.y1 <= 1)) err(`media "${id}": rects.${name} out of 0-1 order`);
+  }
+  for (const [name, m] of Object.entries(a.marks ?? {})) {
+    if (!(m[0] >= 0 && m[0] <= 1 && m[1] >= 0 && m[1] <= 1)) err(`media "${id}": marks.${name} outside 0-1`);
+  }
+  // sequences (M2): a directory src ending "/", with exactly `frames` frames 000.webp …
+  if (a.kind === "sequence") {
+    if (!a.src.endsWith("/")) err(`media "${id}": a sequence src must be a directory ending "/"`);
+    if (!Number.isInteger(a.frames) || a.frames < 2) err(`media "${id}": a sequence needs an integer frames count`);
+    else if (a.status !== "planned") {
+      const dir = path.join(ROOT, "public", a.src);
+      for (let i = 0; i < a.frames; i++) {
+        const f = path.join(dir, `${String(i).padStart(3, "0")}.webp`);
+        if (!fs.existsSync(f)) {
+          err(`media "${id}": frame ${String(i).padStart(3, "0")}.webp missing under public${a.src}`);
+          break;
+        }
+      }
+    }
+  } else if (a.frames !== undefined) err(`media "${id}": frames is for sequences only`);
 }
 
 /* — Media variants (M1.5): default.variants.alt <-> alt.variantOf ———— */
@@ -191,7 +213,18 @@ if (mediaNoAlt.image.length) warn(`variants: film still(s) with no alternate (fi
 {
   // every public/ file has a provenance row (src / srcMobile / webm of an entry)
   const owned = new Set();
-  for (const a of Object.values(mediaAssets)) for (const k of ["src", "srcMobile", "webm"]) if (a[k]) owned.add(a[k]);
+  const ownedDirs = [];
+  for (const a of Object.values(mediaAssets)) {
+    for (const k of ["src", "srcMobile", "webm"]) if (a[k]) owned.add(a[k]);
+    // a sequence owns its numbered frames (000.webp …) and nothing else
+    if (a.kind === "sequence" && a.src.endsWith("/")) ownedDirs.push({ dir: a.src, frames: a.frames ?? 0 });
+  }
+  const ownedBySequence = (rel) =>
+    ownedDirs.some(({ dir, frames }) => {
+      if (!rel.startsWith(dir)) return false;
+      const m = /^(\d{3})\.webp$/.exec(rel.slice(dir.length));
+      return Boolean(m) && Number(m[1]) < frames;
+    });
   const walk = (dir) =>
     fs.existsSync(dir)
       ? fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) =>
@@ -201,7 +234,7 @@ if (mediaNoAlt.image.length) warn(`variants: film still(s) with no alternate (fi
   for (const f of walk(path.join(ROOT, "public"))) {
     const rel = "/" + path.relative(path.join(ROOT, "public"), f).split(path.sep).join("/");
     if (/\.master\./i.test(rel)) err(`H2: ${rel} is a master file (masters never enter public/)`);
-    else if (/\.(webp|png|jpe?g|avif|gif|mp4|webm|mov)$/i.test(rel) && !owned.has(rel)) {
+    else if (/\.(webp|png|jpe?g|avif|gif|mp4|webm|mov)$/i.test(rel) && !owned.has(rel) && !ownedBySequence(rel)) {
       err(`H2: public${rel} has no lib/media.ts provenance row`);
     }
   }
@@ -613,6 +646,7 @@ const copyStats = { drafts: 0, proposed: 0, quotes: 0 };
     visit(s.reason, `${w}.reason`);
   }
   film.tips.forEach((t, i) => visit(t, `tip #${i + 1}`));
+  for (const [k, c] of Object.entries(film.captions ?? {})) visit(c.moment, k);
   const qProposed = Object.entries(quotes).filter(([, q]) => q.status === "proposed" && !film.copySignedOff).map(([id]) => id);
   Object.assign(copyStats, { drafts: drafts.length, proposed: proposed.length, quotes: qProposed.length });
   if (film.branchPreview) gate(`#6 film.branchPreview is ON: proposed and draft copy render in every build (turn it off before main)`);
@@ -672,12 +706,22 @@ const uiFiles = (() => {
 
 /* — #10 lettering scope + display-face allow-list —————————————————— */
 {
+  // M2 (RECOGNIZABILITY O-1): the "caption" slot is in scope only while
+  // film.fontScope.extended is on.
+  const SLOTS = ["act-title", "loader", "egg", ...(film.fontScope.extended ? ["caption"] : [])];
+  const QUOTE_IDS = new Set(Object.keys(quotes));
   for (const l of film.lettering) {
-    if (!["act-title", "loader", "egg"].includes(l.slot) && !film.fontScope.extended) err(`#10 lettering "${l.id}" slot "${l.slot}" is outside the display-font scope`);
+    if (!SLOTS.includes(l.slot)) err(`#10 lettering "${l.id}" slot "${l.slot}" is outside the display-font scope`);
+    if (l.quote !== undefined && !QUOTE_IDS.has(l.quote)) err(`#10 lettering "${l.id}": unknown quote "${l.quote}"`);
+    if (l.quote === undefined && !l.text) err(`#10 lettering "${l.id}" has no text`);
     if (l.mode === "B" && l.shipped && !fs.existsSync(path.join(ROOT, "lib", "lettering.generated.ts"))) err(`#10 lettering "${l.id}" is mode B + shipped but lib/lettering.generated.ts is missing`);
   }
-  // who may reference a display face (font-world-*, --font-egg-*)
+  // who may reference a display face (font-world-*, --font-egg-*, the M2
+  // .world-face-<world> classes). Everyone else sets a fan face through
+  // scene-caption.tsx (<SceneCaption>, <Lettered>, <FilmTitle>), which only
+  // letters REGISTERED strings (lib/sections.ts letteredIn).
   const ALLOW = [
+    /^components[\\/]primitives[\\/](scene-caption\.tsx|world-face\.ts)$/,
     /^app[\\/]globals\.css$/,
     /^app[\\/]layout\.tsx$/,
     /^lib[\\/]fonts\.ts$/,
@@ -691,7 +735,7 @@ const uiFiles = (() => {
   for (const f of uiFiles) {
     const rel = path.relative(ROOT, f);
     const src = fs.readFileSync(f, "utf8");
-    if (/font-world-|--font-egg-|fontWorld(Pirates|Idiots|Hp)|fontEggRye/.test(src) && !ALLOW.some((re) => re.test(rel))) {
+    if (/font-world-|--font-egg-|world-face-|fontWorld(Pirates|Idiots|Hp|Rdr2)|fontEggRye/.test(src) && !ALLOW.some((re) => re.test(rel))) {
       err(`#10 ${rel} uses a world display face outside the allowed slots (act titles, loader route cards, eggs)`);
     }
   }
