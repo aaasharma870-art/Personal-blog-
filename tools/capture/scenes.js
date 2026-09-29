@@ -64,8 +64,18 @@ const rectOf = (page, sel) => page.evaluate(s => {
   const r = e.getBoundingClientRect(); return { top: r.top + scrollY, h: r.height };
 }, sel);
 
+// Wait until every <img> intersecting the viewport has decoded (first hits on
+// /_next/image are optimized on demand and can take seconds).
+async function imagesReady(page, timeout = 12000) {
+  await page.waitForFunction(() => [...document.images].filter(i => {
+    const r = i.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0 && getComputedStyle(i).display !== 'none';
+  }).every(i => i.complete && i.naturalWidth > 0), null, { timeout, polling: 250 }).catch(() => console.error('images not ready before shot'));
+  await sleep(350);
+}
+
 async function shoot(page, name, meta, { blind = true, clip } = {}) {
   if (NAMES && !NAMES.has(name.split('.')[0])) return;
+  await imagesReady(page);
   const o = clip ? { clip } : {};
   await page.screenshot({ path: path.join(OUT, `${name}.captioned.png`), ...o }).catch(e => console.error(name, e.message));
   if (blind) {
@@ -205,6 +215,7 @@ async function sweep(browser, kind) {
     for (const off of pts) {
       await scrollToY(page, r.top + off, mobile ? 1200 : 900);
       const name = `${tag}-${String(i++).padStart(2, '0')}-${id}${off ? '-' + off : ''}`;
+      await imagesReady(page);
       await page.screenshot({ path: path.join(OUT, `${name}.png`) }).catch(() => {});
       manifest.push({ frame: name, world: WORLD[id], moment: `${id} @ ${kind}`, mode: kind });
       console.log('shot', name);

@@ -135,9 +135,12 @@ export function SceneCaption({
       )}
       {c.film ? (
         <>
+          {/* Inline, glued to the moment's last word: the only break
+              opportunity is the space AFTER the "•", so a wrapped caption
+              never starts its second line with the separator. */}
           <span className="scene-caption__sep" aria-hidden="true">
             •
-          </span>
+          </span>{" "}
           <span className="sr-only">, </span>
           <span className={cn("scene-caption__film", filmFace.lettered && worldFaceClass(c.world))}>{c.film}</span>
         </>

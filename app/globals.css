@@ -1157,8 +1157,8 @@ html[data-motion="paused"] .opening-vignette {
   background: var(--world-emphasis);
 }
 .scene-caption__sep {
-  display: inline-block;
-  margin-inline: 0.45em;
+  display: inline; /* inline-block would allow a break BEFORE the "•" */
+  margin-inline: 0.45em 0.2em;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.6em;
   vertical-align: 0.25em;
