@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/·#%>";
 
@@ -51,7 +51,7 @@ export function DecryptText({
   return (
     <span className={className}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">{display}</span>
+      <span aria-hidden="true">{reduce ? text : display}</span>
     </span>
   );
 }

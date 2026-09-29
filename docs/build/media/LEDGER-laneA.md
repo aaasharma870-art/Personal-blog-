@@ -1,0 +1,51 @@
+# Higgsfield credit LEDGER — Lane A (Acts I & II: Pirates + 3 Idiots) · M2-media · 2026-09-29
+
+**Scope:** MV-04 (storm), MV-05a–d (voyage set), JV-1…3 (voyage sequence), MV-06-C / MV-06 (dawn board). F-PC / F-3I belong to Lane B (films chapter).
+**Lane cap:** 330 · **Reserve floor:** balance never below 150 · **Balance at lane start:** 995.5 (2026-09-29, `balance`; Lane B runs in parallel on the same account, so lane spend is tracked per job from preflights, not from balance deltas).
+**Authorization:** Aryan's overnight autonomy ("use Higgsfield credits as needed") covers the A gates tonight; Claude runs C and L2. Aryan reviews in the morning and can swap to the ALT.
+
+**Preflights (2026-09-29, `get_cost`):** `gpt_image_2_5` 16:9 4k high **4.25** · 4k xhigh **7** · 2k medium **1** · 2k xhigh **4.5** · `kling3_0` pro 5 s sound off **8.75**.
+
+| # | Time ET | Gate | World | Asset | Batch | Model | Params | Refs (job ids) | Count | Preflight | Charged | Lane spent | Job id | Verdict | Failed check / reason | Check L2 (Claude/Aryan) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A1-1 | 09-29 00:14 | S3 (A→overnight auth) | pirates | MV-04 | A1 | gpt_image_2_5 | 16:9 / 4k / xhigh | 548e5fc0 | 1 | 7 | 7 | 7 | 350f546b-fb55-4549-820c-3e052999cfc4 | **DEFAULT** → storm.webp | horizon Δ −0.28%; crest centreline vs MV-01 median 1.7% / p90 4.5% of height; 0 warm px; kraken reads as a swell | Claude ✓ 09-29 / Aryan — |
+| A1-2 | 09-29 00:14 | S3 | pirates | MV-04 | A1 | gpt_image_2_5 | 16:9 / 4k / xhigh | 548e5fc0 | 1 | 7 | 7 | 14 | a0060b78-f625-4ea9-a38d-768ff6653ad1 | **ALT** → storm-alt.webp | horizon Δ 0; centreline median 3.0% / p90 5.75% (marginal); 26% brighter mean than MV-01 | Claude ✓ 09-29 / Aryan — |
+| A1-3 | 09-29 00:14 | S3 | pirates | MV-05a | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 18.25 | 6ce86233-1be6-4d6a-b6b3-535932a1609a | **DEFAULT** → voyage-a.webp | horizon 0.431 (set ±1%); no people/marks at 2.5× gain | Claude ✓ 09-29 / Aryan — |
+| A1-4 | 09-29 00:14 | S3 | pirates | MV-05a | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 22.5 | 8af307c9-a43d-4d71-8f54-3653a0b2c373 | **ALT** → voyage-a-alt.webp | horizon 0.437 (+1.2% vs set mean, marginal) | Claude ✓ 09-29 / Aryan — |
+| A1-5 | 09-29 00:14 | S3 | pirates | MV-05b | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 26.75 | 2e78c7e5-7ac2-4301-90e3-3c8f5bd63c0a | reject | not fog: a clear moonlit sea that copies MV-01's crest | Claude ✓ 09-29 |
+| A1-6 | 09-29 00:14 | S3 | pirates | MV-05b | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 31 | a03c0090-d9da-43bc-b1ec-709a07ab5c75 | reject | not fog (crisp moon, MV-01 crest) | Claude ✓ 09-29 |
+| A1-7 | 09-29 00:14 | S3 | pirates | MV-05c | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 35.25 | bcb620aa-274b-4c74-bcff-a7b02686c467 | **DEFAULT** → voyage-c.webp | horizon 0.425; squall wall, one aqua glint, no vessel, no lightning | Claude ✓ 09-29 / Aryan — |
+| A1-8 | 09-29 00:14 | S3 | pirates | MV-05c | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 39.5 | 3c50b647-5060-442c-a40a-a13e37e3fbb4 | **ALT** → voyage-c-alt.webp | horizon 0.428 | Claude ✓ 09-29 / Aryan — |
+| A1-9 | 09-29 00:14 | S3 | pirates | MV-05d | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 43.75 | f73d3e86-05ea-424c-a04d-53544952cbe1 | **DEFAULT** → voyage-d.webp (with the distant ship) | horizon 0.419; ship tiny, no crew/flag | Claude ✓ 09-29 / Aryan — |
+| A1-10 | 09-29 00:14 | S3 | pirates | MV-05d | A1 | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 48 | fe8963a1-c8bc-49f9-9bf6-9862de6a673f | **ALT** → voyage-d-alt.webp (no ship; answers Q6) | horizon 0.420 | Claude ✓ 09-29 / Aryan — |
+| A1-11 | 09-29 00:14 | G1 (overnight auth) | idiots | MV-06-C | A1 | gpt_image_2_5 | 16:9 / 2k / medium | — | 1 | 1 | 1 | 49 | 1d9b3761-1f73-4f6e-b39a-87ea26f76f90 | runner-up (ref-only) | gothic tracery window; brighter board | Claude ✓ 09-29 |
+| A1-12 | 09-29 00:14 | G1 | idiots | MV-06-C | A1 | gpt_image_2_5 | 16:9 / 2k / medium | — | 1 | 1 | 1 | 50 | c7cce70e-16eb-40f0-a3ee-85ef5515c1f5 | **winner (ref-only)** | left-60% p95 0.064; beam too wide | Claude ✓ 09-29 |
+| A2-1 | 09-29 00:20 | S3 | pirates | MV-05b | A2 (regen 1) | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 54.25 | 57a84723-17e6-4bb8-8314-543e3cd92acd | **DEFAULT** → voyage-b.webp | real fog; soft horizon ≈0.45; mean lum 0.032 | Claude ✓ 09-29 / Aryan — |
+| A2-2 | 09-29 00:20 | S3 | pirates | MV-05b | A2 (regen 1) | gpt_image_2_5 | 16:9 / 4k / high | 548e5fc0 | 1 | 4.25 | 4.25 | 58.5 | c864d744-01d9-4120-a647-86039426caa7 | **ALT** → voyage-b-alt.webp | fog; brighter moon glow (mean 0.041) | Claude ✓ 09-29 / Aryan — |
+| A2-3 | 09-29 00:20 | S2 | idiots | MV-06 | A2 | gpt_image_2_5 | 16:9 / 2k / xhigh | c7cce70e | 1 | 4.5 | 4.5 | 63 | 1aaf48c1-07bd-4cb9-8880-f0d7c48bdc31 | backup (not shipped) | left-60% SD 13.8/255 (beam spill x 0.45–0.6) | Claude ✓ 09-29 |
+| A2-4 | 09-29 00:20 | S2 | idiots | MV-06 | A2 | gpt_image_2_5 | 16:9 / 2k / xhigh | c7cce70e | 1 | 4.5 | 4.5 | 67.5 | 1935fc6f-82b8-47ee-8ac7-a191d371f116 | **ALT** → board-dawn-alt.webp | FLAG left-60% global SD 12.4/255 (> 6) from the diagonal beam; p95 0.038 ✓, local SD 2.8 ✓; the stronger "morning" read | Claude ✓ 09-29 / Aryan — |
+| A3-1 | 09-29 00:21 | G4 (overnight auth) | pirates | JV-3 | A3 | kling3_0 | 16:9 / pro / 5 s / sound off | start bcb620aa → end f73d3e86 | 1 | 8.75 | 8.75 | 76.25 | ee674bcf-b6c0-49ce-a444-0951f4ce0555 | **DEFAULT** (seq frames 48–71) | first/last SSIM 0.984 / 0.929 (@960); 0 px shift; min step 0.95; no flash; lum monotone | Claude ✓ 09-29 / Aryan — |
+| A3-2 | 09-29 00:21 | G4 | pirates | JV-3 | A3 | kling3_0 | 16:9 / pro / 5 s / sound off | start bcb620aa → end f73d3e86 | 1 | 8.75 | 8.75 | 85 | 8c75dd34-e51a-45d2-a145-d7bd1a2b65ea | **ALT** (alt sequence) | 0.983 / 0.931; mid-clip overshoot (neon aqua, lum 0.074 vs end 0.046); early orange sun spot | Claude ✓ 09-29 / Aryan — |
+| A4-1 | 09-29 00:23 | S2 | idiots | MV-06 | A4 (regen 1) | gpt_image_2_5 | 16:9 / 2k / high | 1935fc6f | 1 | 2.75 | 2.75 | 87.75 | 2eef6eaa-cd6d-43b8-a6f3-8a9f002405bd | backup (not shipped) | SD 6.49 (marginal), p95 0.016 | Claude ✓ 09-29 |
+| A4-2 | 09-29 00:23 | S2 | idiots | MV-06 | A4 (regen 1) | gpt_image_2_5 | 16:9 / 2k / high | 1935fc6f | 1 | 2.75 | 2.75 | 90.5 | 4686928b-b125-419b-aa30-af1b607c5b0e | **DEFAULT** → board-dawn.webp | left-60% p95 0.0135, SD 5.69 ✓, local SD 2.2; beam confined right of 65% | Claude ✓ 09-29 / Aryan — |
+| A5-1 | 09-29 00:27 | G4 (overnight auth) | pirates | JV-1 | A5 | kling3_0 | 16:9 / pro / 5 s / sound off | start 6ce86233 → end 57a84723 | 1 | 8.75 | 8.75 | 99.25 | ab5526ac-c3ea-4ed4-9e99-2266da0b0333 | **DEFAULT** (seq frames 0–24) | 0.981 / 0.958; ≤1 px shift; min step 0.963; no flash; mist dissolves the harbour; no people in quay sweep | Claude ✓ 09-29 / Aryan — |
+| A5-2 | 09-29 00:27 | G4 | pirates | JV-1 | A5 | kling3_0 | 16:9 / pro / 5 s / sound off | start 6ce86233 → end 57a84723 | 1 | 8.75 | 8.75 | 108 | bf8f2262-d610-4a77-8722-8be6050da54b | **ALT** (alt sequence) | 0.981 / 0.970; billowing smoke-like fog banks | Claude ✓ 09-29 / Aryan — |
+| A5-3 | 09-29 00:27 | G4 | pirates | JV-2 | A5 | kling3_0 | 16:9 / pro / 5 s / sound off | start 57a84723 → end bcb620aa | 1 | 8.75 | 8.75 | 116.75 | 64a0052d-37af-4ddf-aac6-53d33255ea4c | **ALT** (alt sequence) | 0.989 / **0.899** (< 0.93: texture, 0–1 px shift) → tail-anchored in the build; the moon slides right ≈0.3 of the width | Claude ✓ 09-29 / Aryan — |
+| A5-4 | 09-29 00:27 | G4 | pirates | JV-2 | A5 | kling3_0 | 16:9 / pro / 5 s / sound off | start 57a84723 → end bcb620aa | 1 | 8.75 | 8.75 | 125.5 | 169d76b5-d55a-4556-b841-6d004bf0967e | **DEFAULT** (seq frames 24–47) | 0.989 / **0.910** (< 0.93: texture, ≤1 px shift) → tail-anchored; the moon's reflection becomes the aqua crest (bright mid-clip) | Claude ✓ 09-29 / Aryan — |
+| A6-1 | 09-29 00:39 | G2 downstream (overnight auth) | pirates | MV-03 (alt) | A6 (extra run: the only runner-up, minimax ebb7db32, was a reject) | kling3_0 | 16:9 / pro / 8 s / sound off | start = end 548e5fc0 | 1 | 14 | 14 | 139.5 | f5130107-5bde-46a1-84b4-094c1b72fc4c | **ALT** → hero-sea-loop-alt2.mp4/.webm/-poster.webp (proposed replacement for the M1.5 alt, which is the rejected minimax ebb7db32) | first/last 0.987 / 0.986, join **0.995** (default 0.991); left half ≤ 0.41/255; lantern peak ±2.3%; calmer (crest amplitude ≈57% of the default) | Claude ✓ 09-29 / Aryan — |
+| A6-2 | 09-29 00:39 | S3 (overnight auth) | pirates | MV-02 (alt) | A6 (extra run: nano runner-ups were rejects) | gpt_image_2_5 | 4:5 / 2k / high | 548e5fc0 | 1 | 2.75 | 2.75 | **142.25** | 37eb75b2-d3b1-48c5-97df-787555f63abd | **ALT** → hero-sea-mobile-alt2.webp (proposed replacement for the M1.5 alt, the rejected nbp 84001a3b) | crest xp02 0.306 / xp98 0.924; top 8% p95 0.0070; bottom 22% p95 0.0023; ship clean at 2.5× | Claude ✓ 09-29 / Aryan — |
+
+## Lane A totals (2026-09-29 00:45 ET)
+- **Lane A spent: 142.25 / 330 cap** (29 generations: 21 images + 8 videos). Every charge matches its preflight in `transactions` (04:14–04:40 UTC).
+- **Balance after: 674.5** (`balance`, 00:45 ET; includes Lane B's parallel spend). Reserve floor 150 never approached.
+- Regenerations used: MV-05b 1 (fog), MV-06 1 (beam). JV-2 was not regenerated: both takes miss end-SSIM 0.93 on texture only (≤1 px shift), so the build tail-anchors them (disclosed in LOG).
+
+| Asset | MEDIA-PLAN plan / cap | Lane A spent | Default (job) | Alt (job) |
+|---|---|---|---|---|
+| MV-04 | 15 / 29 | 14 | 350f546b | a0060b78 |
+| MV-05a–d | 22 / 44 | 42.5 (4k high, not 2k: exact 16:9 for Kling) | 6ce86233 · 57a84723 · bcb620aa · f73d3e86 | 8af307c9 · c864d744 · 3c50b647 · fe8963a1 |
+| JV-1…3 | 66 / 110 | 52.5 | ab5526ac · 169d76b5 · ee674bcf | bf8f2262 · 64a0052d · 8c75dd34 |
+| MV-06 (+ comp) | 10 / 19 | 16.5 | 4686928b | 1935fc6f |
+| MV-03 alt | (MV-03 cap 80; 30 spent) | 14 | 764ca916 (unchanged) | f5130107 |
+| MV-02 alt | (MV-02 cap 8; 6.75 spent) | 2.75 → MV-02 total 9.5 (**1.5 over its cap**, alt rule) | 10b81664 (unchanged) | 37eb75b2 |
+| **Total** | | **142.25** | | |

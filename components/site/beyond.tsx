@@ -1,94 +1,90 @@
-import { Section } from "@/components/ui/section";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal, RevealItem } from "@/components/ui/reveal";
-import { AmbientBackground } from "@/components/visuals/ambient-background";
-import { ParallaxLayer } from "@/components/visuals/parallax-layer";
-import { BeyondMotif } from "@/components/visuals/beyond-motif";
 import { beyond } from "@/lib/content";
-import { cn } from "@/lib/utils";
+import { slot } from "@/lib/sections";
+import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
+import { Rise } from "@/components/site/world-motion";
+import { SatchelStrip, ShoePrints } from "@/components/site/rdr2-graphite";
+import { Handbill, TrailMap } from "@/components/site/rdr2-frontier";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Beyond() {
+/**
+ * Beyond — story `notes` (Act III "The Frontier"; SPEC v2 SM-15, rdr2
+ * `frontier` dressing on the rd canvas). The life around the work, in the
+ * dark foreground: four plain notes (verbatim content.ts), each an h3 with
+ * its facts beside it — no zig-zag, no ghost numerals, no parallax motifs,
+ * no stale backdrop video (retired, SPEC §11.3).
+ *
+ * The frontier dressing, M1 (code only; the MV-10 golden-hour band joins
+ * when the plate is accepted, MEDIA-PLAN v2):
+ *   - Athletics: a small ILLUSTRATIVE trail map (desktop, ≤ 30 %) whose fog
+ *     lifts as you read, and a line of running-shoe prints drawn once
+ *     (IC-RD-07; human prints, it is his running).
+ *   - Creative: the satchel strip of his real kit (IC-RD-11).
+ *   - The end: the WANTED handbill of confirmed facts that asks you to
+ *     write (IC-RD-03 / RD-07) — the section's later HERO.
+ * Leadership and Community stay plain rows: the camp is carried by the
+ * ground alone. In any world whose `notes` dressing is not `frontier` the
+ * same notes render plain (SPEC §12.4).
+ */
+export function Beyond({ entry, number }: SectionProps<"story">) {
+  const titleId = `${entry.id}-title`;
+  const frontier = slot(entry, "dressing").notes === "frontier";
+  const handbill =
+    frontier && entry.props.variant === "notes" && entry.props.handbill?.enabled !== false;
+
   return (
-    <Section
-      id="beyond"
-      seam
-      rhythm="tight"
-      backdrop={
-        <AmbientBackground
-          image="/media/hero-still.png"
-          video="/media/v-waveform.mp4"
-          opacity={0.36}
-          overlayClassName="bg-gradient-to-b from-canvas/80 via-canvas/84 to-canvas/90"
-        />
-      }
-    >
-      <SectionHeading
-        index="07"
-        eyebrow="Beyond the screen"
+    <WorldSection entry={entry} labelledBy={titleId}>
+      <SectionHead
+        id={titleId}
+        number={number}
+        label={entry.nav?.label ?? "Beyond"}
         title="Discipline, service, and a trained eye."
         intro="The same temperament, away from the terminal."
-        variant="left"
       />
 
-      {/* Alternating zig-zag rows — a different organization from the card grids. */}
-      <Reveal
-        stagger
-        role="list"
-        ariaLabel="Life beyond the screen"
-        className="mt-14 divide-y divide-line border-y border-line"
-      >
-        {beyond.map((b, i) => (
-          <RevealItem
-            role="listitem"
-            key={b.kicker}
-            className="grid grid-cols-1 gap-6 py-10 lg:grid-cols-12 lg:items-start lg:gap-10"
-          >
-            <div
-              className={cn(
-                "relative lg:col-span-4",
-                i % 2 === 1 && "lg:order-2 lg:col-start-9",
-              )}
+      <div className="mt-tier-block border-t border-rule">
+        {beyond.map((b, i) => {
+          const noteId = `${entry.id}-note-${i + 1}`;
+          const athletics = frontier && b.kicker === "Athletics";
+          const creative = frontier && b.kicker === "Creative";
+          return (
+            <Rise
+              as="article"
+              key={b.kicker}
+              className="grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
             >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -left-1 -top-8 select-none font-serif text-7xl leading-none text-ink/[0.05] sm:text-8xl"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <ParallaxLayer
-                depth={-0.7}
-                className="pointer-events-none absolute right-0 top-1 hidden size-20 opacity-70 lg:block"
-              >
-                <BeyondMotif variant={i} />
-              </ParallaxLayer>
-              <p className="eyebrow relative text-aqua/80">{b.kicker}</p>
-              <h3 className="relative mt-3 font-serif text-2xl font-medium text-ink">
-                {b.title}
-              </h3>
-            </div>
-            <div
-              className={cn(
-                "grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:col-span-7",
-                i % 2 === 1 ? "lg:order-1 lg:col-start-1" : "lg:col-start-6",
-              )}
-            >
-              {b.items.map((it) => (
-                <div
-                  key={it.head}
-                  className="group -mx-2 rounded-md px-2 py-1 transition-colors duration-200 hover:bg-elevated/25"
-                >
-                  <p className="text-sm font-medium text-ink transition-colors duration-200 group-hover:text-gold-bright">
-                    {it.head}
-                  </p>
-                  <p className="mt-0.5 text-sm leading-relaxed text-stone">
-                    {it.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </RevealItem>
-        ))}
-      </Reveal>
-    </Section>
+              <div className="lg:col-span-4">
+                <Meta fields={[b.kicker]} />
+                <h3 id={noteId} className="mt-tier-pair type-heading text-fg">
+                  {b.title}
+                </h3>
+                {athletics ? (
+                  <div className="mt-tier-group hidden max-w-[24rem] lg:block">
+                    <TrailMap />
+                    <ShoePrints className="mt-tier-group" />
+                  </div>
+                ) : null}
+              </div>
+              <div className="lg:col-span-8">
+                <dl aria-labelledby={noteId} className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
+                  {b.items.map((it) => (
+                    <div key={it.head}>
+                      <dt className="type-body text-fg">{it.head}</dt>
+                      <dd className="mt-1 type-small text-fg-muted">{it.body}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {creative ? <SatchelStrip className="mt-tier-block" /> : null}
+              </div>
+            </Rise>
+          );
+        })}
+      </div>
+
+      {handbill ? (
+        <div className="mt-tier-block flex justify-center lg:justify-end lg:pr-[8%]">
+          <Handbill />
+        </div>
+      ) : null}
+    </WorldSection>
   );
 }

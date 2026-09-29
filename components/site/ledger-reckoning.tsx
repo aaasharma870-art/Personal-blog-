@@ -1,164 +1,92 @@
-"use client";
-
-import { useRef } from "react";
-import { ArrowRight, ArrowUpRight, Check, X } from "lucide-react";
-import { motion, useInView, useReducedMotion } from "motion/react";
-import type { Variants } from "motion/react";
-import { Tag } from "@/components/ui/tag";
-import { ease, viewportOnce } from "@/lib/motion";
+import { ArrowUpRight } from "lucide-react";
 import { featuredProjects, killList, site, survivors } from "@/lib/content";
+import { Meta } from "@/components/site/world-kit";
+import { cn } from "@/lib/utils";
 
 /**
- * The Ledger Reckoning (signature moment 3, second half). Settles ONCE
- * (viewportOnce — no replay). Survivors: an aqua edge-light ignites top->down
- * and rows report in from the left. Kill-list: rows drop in from the right and
- * a thin EMBER strike-line draws across each killed idea (ember = killed-only,
- * low alpha so copy stays legible). Transform/opacity only; reduced motion =
- * opacity-only, strike-line pre-drawn.
+ * The reckoning — the kill-list ledger (SPEC v2 SM-8 / D-6, M1 form; the
+ * Lens Index is the ledger builder's M2 work). Rows are EQUALLY QUIET at
+ * rest: the verdict WORD carries the meaning (SURVIVED / KILLED), ember is
+ * reserved for KILLED, and a killed row takes its ember strike only while it
+ * is the active row (hover or keyboard focus within). No chalk and no icons
+ * here: the graveyard's power is austerity (the opt-in Dead Eye egg is M2).
+ * Figures verbatim from content.ts and static (ratios never animate).
+ * Server-rendered: no JS needed for anything on this ledger.
  */
-export function SurvivorsPanel() {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, viewportOnce);
-
-  const row: Variants = {
-    hidden: reduce ? { opacity: 0 } : { opacity: 0, x: -24 },
-    show: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.5, ease, delay: 0.15 + i * 0.08 },
-    }),
-  };
-
-  return (
-    <div
-      ref={ref}
-      className="relative overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
-    >
-      <motion.span
-        aria-hidden="true"
-        className="absolute inset-y-0 left-0 w-px origin-top bg-gradient-to-b from-aqua/80 via-aqua/40 to-transparent"
-        initial={reduce ? { opacity: 1, scaleY: 1 } : { opacity: 0, scaleY: 0 }}
-        animate={inView ? { opacity: 1, scaleY: 1 } : undefined}
-        transition={{ duration: 0.7, ease }}
-      />
-      <div className="flex items-center gap-2.5">
-        <Check className="h-4 w-4 text-aqua" aria-hidden="true" />
-        <h3 className="font-serif text-xl font-medium text-ink">
-          What survived
-        </h3>
-      </div>
-      <p className="mt-2 text-sm text-muted">
-        Three strategies cleared the full process out of many more tested.
-      </p>
-      <ul className="mt-6 space-y-2">
-        {survivors.map((s, i) => (
-          <motion.li
-            key={s.name}
-            custom={i}
-            variants={row}
-            initial="hidden"
-            animate={inView ? "show" : "hidden"}
-            className="group relative -ml-px rounded-r-md border-l-2 border-aqua/40 py-2 pl-4 transition-colors duration-200 hover:border-aqua hover:bg-elevated/50"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="flex items-center gap-1.5 font-medium text-ink">
-                {s.name}
-                <ArrowRight
-                  className="h-3.5 w-3.5 -translate-x-1.5 text-aqua opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
-                  aria-hidden="true"
-                />
-              </span>
-              <Tag accent="gold">{s.status}</Tag>
-            </div>
-            <p className="editorial mt-1.5 text-sm italic text-stone">
-              {s.thesis}
-            </p>
-            <p className="tnum mt-1.5 font-mono text-xs text-aqua/90">
-              {s.evidence}
-            </p>
-          </motion.li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export function KillList() {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, viewportOnce);
+export function Ledger() {
   const flagshipHref = featuredProjects[0]?.href ?? site.github;
-
-  const row: Variants = {
-    hidden: reduce ? { opacity: 0 } : { opacity: 0, x: 24 },
-    show: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.45, ease, delay: 0.1 + i * 0.07 },
-    }),
-  };
+  const rows = [
+    ...survivors.map((s) => ({
+      kind: "survived" as const,
+      name: s.name,
+      detail: s.thesis,
+      evidence: s.evidence,
+      status: s.status,
+    })),
+    ...killList.map((k) => ({
+      kind: "killed" as const,
+      name: k.name,
+      detail: k.reason,
+      evidence: null,
+      status: null,
+    })),
+  ];
 
   return (
-    <div
-      ref={ref}
-      id="kill-list"
-      className="scroll-mt-24 rounded-xl border border-line bg-surface p-6 sm:p-8"
-    >
-      <div className="flex items-center gap-2.5">
-        <X className="h-4 w-4 text-ember" aria-hidden="true" />
-        <h3 className="font-serif text-xl font-medium text-ink">
-          The kill-list
-        </h3>
-      </div>
-      <p className="mt-2 text-sm text-muted">
-        Killed and never retuned — each ships a written post-mortem. This is
-        the part I am proudest of.
+    <div id="kill-list" className="scroll-mt-24" aria-labelledby="kill-list-title">
+      <Meta fields={["The reckoning", `${survivors.length} survived the full process`]} />
+      <h3 id="kill-list-title" className="mt-tier-pair type-title text-fg">
+        The kill-list
+      </h3>
+      <p className="mt-tier-group max-w-body type-body text-fg-muted">
+        Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
       </p>
-      <ul className="mt-6 space-y-1.5">
-        {killList.map((k, i) => (
-          <motion.li
-            key={k.name}
-            custom={i}
-            variants={row}
-            initial="hidden"
-            animate={inView ? "show" : "hidden"}
-            className="group -ml-px rounded-r-md border-l-2 border-ember/30 py-2 pl-4 pr-2 transition-colors duration-200 hover:border-ember/70 hover:bg-ember/10"
+
+      <ol aria-label="Ledger: survivors and killed ideas" className="mt-tier-block border-t border-rule">
+        {rows.map((r, i) => (
+          <li
+            key={r.name}
+            className="group grid grid-cols-[2.5rem_1fr] gap-x-4 gap-y-1 border-b border-rule py-5 sm:grid-cols-[3rem_1fr_auto] sm:items-baseline"
           >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-ember/70 transition-transform duration-200 group-hover:scale-150"
-                  aria-hidden="true"
-                />
-                <span className="relative text-sm text-stone transition-colors group-hover:text-ink">
-                  {k.name}
-                  <motion.span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 top-1/2 h-px origin-left bg-ember/50"
-                    initial={reduce ? { scaleX: 1 } : { scaleX: 0 }}
-                    animate={inView ? { scaleX: 1 } : undefined}
-                    transition={{ duration: 0.5, ease, delay: 0.1 + i * 0.07 + 0.25 }}
-                  />
+            <span className="tnum type-meta text-fg-ghost">{String(i + 1).padStart(2, "0")}</span>
+            <div className="min-w-0">
+              <p className="type-body text-fg">
+                <span className="relative">
+                  {r.name}
+                  {r.kind === "killed" ? (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-x-0 top-1/2 h-px origin-left scale-x-0 bg-kill transition-transform duration-(--dur-base) group-focus-within:scale-x-100 group-hover:scale-x-100"
+                    />
+                  ) : null}
                 </span>
-              </div>
-              <a
-                href={flagshipHref}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label={`Post-mortem for ${k.name} on GitHub`}
-                className="flex shrink-0 -translate-x-1 items-center gap-1 rounded border border-ember/40 px-2 py-0.5 font-mono text-[0.58rem] uppercase tracking-wider text-ember opacity-0 transition-all duration-200 hover:bg-ember/15 focus-visible:translate-x-0 focus-visible:opacity-100 group-hover:translate-x-0 group-hover:opacity-100"
-              >
-                Post-mortem
-                <ArrowUpRight className="h-3 w-3" />
-              </a>
+              </p>
+              <p className="mt-1 type-small text-fg-muted">{r.detail}</p>
+              {r.evidence ? <p className="tnum mt-1 type-small text-fg-muted">{r.evidence}</p> : null}
             </div>
-            <p className="mt-1 pl-3.5 text-xs text-muted">{k.reason}</p>
-          </motion.li>
+            <div className="col-start-2 flex flex-wrap items-center gap-x-4 sm:col-start-3 sm:justify-end">
+              <span className={cn("type-meta", r.kind === "killed" ? "text-kill" : "text-fg")}>
+                {r.kind === "killed" ? "Killed" : "Survived"}
+              </span>
+              {r.status ? <span className="type-meta text-fg-muted">{r.status}</span> : null}
+              {r.kind === "killed" ? (
+                <a
+                  href={flagshipHref}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`Post-mortem for ${r.name} on GitHub`}
+                  className="inline-flex min-h-11 items-center gap-1 type-meta text-fg-muted transition-colors hover:text-fg"
+                >
+                  Post-mortem
+                  <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
+                </a>
+              ) : null}
+            </div>
+          </li>
         ))}
-      </ul>
-      <p className="editorial mt-6 border-t border-line pt-4 text-sm italic text-stone">
-        &ldquo;Tuning to a backtest usually enlarges your future loss.&rdquo;
+      </ol>
+      <p className="mt-tier-group max-w-body type-small text-fg-muted">
+        Tuning to a backtest usually enlarges your future loss.
       </p>
     </div>
   );

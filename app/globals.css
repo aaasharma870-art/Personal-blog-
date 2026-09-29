@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* `motion-off:` = OS reduced motion OR the Pause toggle (html[data-motion=
+   "paused"]). CSS-level, so server HTML is already right for reduced-motion
+   visitors before any JS runs. */
+@custom-variant motion-off {
+  @media (prefers-reduced-motion: reduce) {
+    @slot;
+  }
+  &:where(:root[data-motion="paused"] *) {
+    @slot;
+  }
+}
+
 /* ============================================================================
    DESIGN SYSTEM — "Midnight Aqua" (modern, premium, fintech-terminal)
    Dark cool base · teal-aqua dominant accent · warm amber support · coral kill.
@@ -53,12 +65,434 @@
   --default-transition-duration: 200ms;
 }
 
+/* `static`: always emitted as CSS variables (Tailwind otherwise drops theme
+   vars no utility uses yet), so primitives, the validator and inline styles
+   can rely on every DESIGN v2 token existing. */
+@theme static {
+  /* ==========================================================================
+     DESIGN v2 TOKENS (build/DESIGN.md; P1-early). ADDITIONS ONLY — every token
+     above keeps its name and value, so the live site renders unchanged.
+     Naming collision, resolved in favour of the live site: DESIGN v2 calls
+     #121820 "--color-raised", but the legacy --color-raised is #202b35 (used
+     by components). So the legacy name stays, #202b35 is also exposed as
+     --color-slate, and the house raised ground is --house-raised (below).
+     ========================================================================== */
+
+  /* — House base palette additions (DESIGN v2 §1.1) — */
+  --color-deep: #05080a;
+  --color-overlay: #18212a; /* = legacy --color-elevated */
+  --color-slate: #202b35; /* = legacy --color-raised */
+  --color-intro-night: #020e1c; /* DESIGN v3: retuned from #06080d to IN-01's bluer night */
+
+  /* — Type: the 8 steps (DESIGN v2 §2.2). These size bundles also generate
+       text-display … text-meta, but use the complete type-* utilities below
+       (family, weight, case and wrapping included). — */
+  --text-display: clamp(4.5rem, 11vw, 10.5rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.03em;
+  --text-chapter: clamp(2.75rem, 6vw, 6rem);
+  --text-chapter--line-height: 0.95;
+  --text-chapter--letter-spacing: -0.025em;
+  --text-title: clamp(2.2rem, 4.4vw, 4.75rem);
+  --text-title--line-height: 1.02;
+  --text-title--letter-spacing: -0.015em;
+  --text-heading: 1.75rem;
+  --text-heading--line-height: 1.15;
+  --text-heading--letter-spacing: -0.015em;
+  --text-heading--font-weight: 500;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.01em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: -0.005em;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.5;
+  --text-small--letter-spacing: 0em;
+  --text-meta: 0.8125rem; /* 13 px: the floor for any text */
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.04em;
+
+  /* — Radii: the v2 set of 5 (DESIGN v2 §4.1). `none` is Tailwind's
+       rounded-none. Legacy --radius-sm/md/lg/xl stay until retirement. — */
+  --radius-focus: 3px;
+  --radius-control: 12px;
+  --radius-frame: 20px;
+  --radius-pill: 9999px;
+
+  /* — Space (DESIGN v2 §3). Base unit stays Tailwind's --spacing: .25rem;
+       permitted steps 1 2 3 4 6 8 12 16 24. Tier defaults (each ≥ 2× the
+       previous): pair 12 · group 24 · block 64 · section = --section-pad.
+       NAMING TRAP: a spacing key that equals a keyword hijacks existing
+       classes (a bare "--spacing-block" turns every `inline-block` into
+       `inline-size: 4rem`), hence the tier- prefix: gap-tier-pair,
+       mt-tier-block, px-gutter, py-section. — */
+  --spacing-tier-pair: 0.75rem;
+  --spacing-tier-group: 1.5rem;
+  --spacing-tier-block: 4rem;
+  --spacing-gutter: clamp(1.25rem, 0.54rem + 3.85vw, 4rem);
+
+  /* — Measures + page container (max-w-page / -body / -lead / -title) — */
+  --container-page: 90rem;
+  --container-body: 68ch;
+  --container-lead: 46ch;
+  --container-title: 20ch;
+
+  /* — Motion mirrors of lib/motion.ts (CSS transitions only) — */
+  --ease-clip: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* — The neutral loader's indeterminate sweep (compositor-only; the Loader
+       removes it after loader.idleStopMs beside readable content). — */
+  --animate-loader-sweep: loader-sweep 1.6s var(--ease-out) infinite;
+  @keyframes loader-sweep {
+    from {
+      translate: -100% 0;
+    }
+    to {
+      translate: 300% 0;
+    }
+  }
+}
+
+/* — Semantic, plane-aware utilities (DESIGN v2 §1.3.4): bg-bg, text-fg,
+     text-fg-muted, text-fg-ghost, bg-surface-1, border-rule, text-accent …
+     `inline` so each utility reads the live var of the plane it sits in. — */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-ghost: var(--fg-ghost);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-kill: var(--kill);
+  --color-exception: var(--exception);
+  /* the world's role inks (decorative strokes and fills, never body text) */
+  --color-world-line: var(--world-line);
+  --color-world-emphasis: var(--world-emphasis);
+  --color-world-quiet: var(--world-quiet);
+  --color-world-panel: var(--world-panel);
+  --spacing-section: var(--section-pad);
+  /* `font-world-act`: the plane's display lettering (act titles, loader
+     route cards, eggs ONLY — SPEC §9.7). Newsreader when the face is absent. */
+  --font-world-act: var(--world-font-act);
+}
+
 /* ----------------------------------------------------------------------------
    Base
    -------------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
   --header-h: 68px;
+}
+
+/* ============================================================================
+   DESIGN v2 PLANES — worlds × tones (DESIGN v2 §1.3; P1-early)
+   ----------------------------------------------------------------------------
+   1. RAW PALETTE (:root). Every world hex lives here and only here, under the
+      DESIGN v2 token names, so any component (e.g. a card crossfading house
+      deep → hp deep) can reach any world's value, and the validator can
+      compute the AA table from this file.
+   2. WORLD BLOCKS [data-world]. Map one world's palette onto the ROLE slots
+      --world-canvas/raised/overlay/slate/deep (grounds) and --world-line/
+      emphasis/quiet/panel (decorative inks = SPEC §12.1 slots). Every block
+      sets EVERY slot; a new world (rdr2) = one new block.
+   3. TONE BLOCKS [data-tone]. Map the slots onto the semantic vars sections
+      read: --bg --surface-1 --surface-2 --fg --fg-muted --fg-ghost --rule
+      --accent --accent-bright --kill --exception.
+   Set data-tone and data-world TOGETHER (lib/worlds.ts planeAttrs): a var
+   like --bg is resolved on the element that carries data-tone, from the
+   --world-* values in effect there, and descendants inherit the result.
+   Nothing here PAINTS: a plane only changes what bg-bg / text-fg … mean.
+   ========================================================================== */
+:root {
+  /* house (DESIGN v2 §1.1 / §1.3.1) */
+  --house-canvas: #0b0f12;
+  --house-raised: #121820;
+  --house-overlay: #18212a;
+  --house-slate: #202b35;
+  --house-deep: #05080a;
+
+  /* pirates — sea-night (Act I) */
+  --pir-canvas: #0a1519;
+  --pir-raised: #10202a;
+  --pir-overlay: #12232b; /* retuned from #162a33 (muted 4.30 failed) */
+  --pir-deep: #050b0d;
+
+  /* idiots — green-black board (Act II) */
+  --idi-canvas: #0d1513;
+  --idi-raised: #141d1b;
+  --idi-overlay: #1a2320; /* retuned from #1b2522 (muted 4.55, too tight) */
+  --idi-deep: #060a09;
+  --bp-panel: #0f2c47; /* figure ground <= 40% of a section; NO muted/ghost text on it (4.13) */
+
+  /* rdr2 — oxblood-umber dusk (Act III: The Frontier; DESIGN v3 §1.3,
+     rdr2/STUDY §3, all AA CALC). Redder in hue than hp at nearly equal
+     luminance: the cards and the media carry the change. */
+  --rd-canvas: #130d0b;
+  --rd-raised: #1c1411;
+  --rd-overlay: #231915; /* the tightest cell: muted 4.97 */
+  --rd-deep: #0a0605;
+  --rd-deadeye-bg: #1a0907; /* the ledger's ground while the Dead Eye egg runs; text colours never change */
+
+  /* hp — candle-night (prologue, Act IV) */
+  --hp-canvas: #0f0c09;
+  --hp-raised: #18130e;
+  --hp-overlay: #1f1812;
+  --hp-deep: #070504;
+
+  /* paper plane — parchment (Writing only, D-4) */
+  --paper: #ebe0c6;
+  --paper-s1: #f3ecda;
+  --paper-s2: #f7f2e4;
+  --paper-fg: #2e2318;
+  --paper-muted: #5a4632;
+  --paper-ghost: #6b5a47;
+  --paper-accent: #115e59; /* aqua on paper is ~1.5:1 and is never used */
+  --paper-kill: #b42318;
+  --paper-exception: #7a4f00;
+  --paper-rule: rgb(46 35 24 / 0.14);
+  --paper-edge: #e6d3a8; /* edge vignette only, never under text */
+  --paper-edge-deep: #c9ac72;
+  /* v3: the rdr2 journal inks on the same paper (DESIGN v3 §1.3.2) */
+  --paper-pencil: #4a4036; /* 7.71: graphite vignettes, the nib dot, entry Meta */
+  --paper-red: #9b1c14; /* 6.23: the journal's ONE pencil underline (rdr2 emphasis); never a verdict, never beside --paper-kill */
+
+  /* rdr2 paper OBJECTS on the rd canvas (not planes; DESIGN v3 §1.3.2a) */
+  --handbill: #e4d5b3; /* WANTED handbill: graphite/fg/pencil/muted/red/accent only; NO ghost text, NO verdicts */
+  --handbill-graphite: #2f2a24; /* 9.79 on the handbill */
+  --trail-map: #dec29b; /* trail-map paper: graphite (8.32) and pencil (5.92) only; v3 puts no text on it */
+  --trail-map-contour: #c8b28d; /* decorative fill only */
+  --trail-map-water: #9e9985; /* decorative fill only */
+
+  /* world decorative inks (DESIGN v2 §1.3.3): strokes and fills, never body text */
+  --w-brass: #a8834a;
+  --w-moon: #a9bcc0;
+  --w-storm: #5f6e75; /* never text */
+  --w-chalk: #f2efe6;
+  --w-bp-line: #cfe8f7; /* never links or body text */
+  --w-graphite: #8b949e;
+  --w-grid: #22303c; /* at 4-6% opacity only */
+  --w-ink-contour: #c9ac72;
+  --w-patronus: #b9d9f2;
+  --w-lumos: #eaf6ff; /* sprite cores only, never DOM paint */
+  --w-flame-core: #ffe9c4; /* sprite stops only, never DOM paint */
+  --w-flame-halo: #f4b740; /* sprite stops only, never a DOM colour */
+  --pir-compass-red: #a8453a; /* Jack's compass red arrow ONLY (3.15 pirates canvas, 3.37 deep); never on pirates raised (2.83), never beside ember */
+
+  /* v3 rdr2 decorative inks (non-text; CALC rd canvas / rd deep / house canvas) */
+  --w-bone: #e3d6bd; /* 13.41 / 14.04: tintype hairline, plate border, handbill edge on dark */
+  --w-pencil: #a39686; /* 6.66 / 6.98: the Line in graphite, trail dashes, hachures, shoe prints */
+  --w-sage: #8f9c78; /* 6.60 / 6.91: grass contours (trail map) */
+  --w-dusk: #e0a458; /* low sun + ember sprites: SPRITES AND MEDIA ONLY (in the DOM it reads as amber = EXCEPTION) */
+  --w-deadeye: #d64236; /* Dead Eye grade stop + media vignette ONLY: never text, never the X (the X is ember), never beside ember */
+  --w-leather: #b5653a; /* 4.48: the journal's spread edge and strap (decorative) */
+
+  /* density (DESIGN v2 §3.2): data-density="spacious|default|tight" */
+  --density-spacious: clamp(5.5rem, 10vw, 8.75rem);
+  --density-default: clamp(4.5rem, 8vw, 7.5rem);
+  --density-tight: clamp(4rem, 7vw, 6.25rem);
+  --section-pad: var(--density-default);
+
+  /* motion durations (mirror lib/motion.ts dur.*) */
+  --dur-micro: 180ms;
+  --dur-base: 340ms;
+  --dur-preview: 260ms;
+  --dur-reveal: 620ms;
+  --dur-hero: 850ms;
+
+  /* z-scale (DESIGN v2 §3.3): z-(--z-intro) etc. */
+  --z-content: 0;
+  --z-sticky: 10;
+  --z-header: 40;
+  --z-menu: 60;
+  --z-intro: 80;
+  --z-skip: 90;
+
+  /* primitive geometry (DESIGN v2 §5, §3.3): Lens bracket, dome seam, letterbox */
+  --lens-stroke: 2px;
+  --lens-inset: 16px;
+  --lens-arm-min: 8px;
+  --lens-arm-max: 24px;
+  --seam-h: 10vh;
+  --letterbox-ratio: 2.39;
+  --loader-mini: 3rem;
+  --loader-card: 7.5rem;
+  --loader-route: 10rem;
+}
+@media (width < 64rem) {
+  :root {
+    --lens-stroke: 1.5px;
+    --lens-inset: 8px;
+  }
+}
+@media (width <= 33.75rem) {
+  :root {
+    --seam-h: 5vh; /* <= 540 px */
+  }
+}
+
+[data-density="spacious"] {
+  --section-pad: var(--density-spacious);
+}
+[data-density="default"] {
+  --section-pad: var(--density-default);
+}
+[data-density="tight"] {
+  --section-pad: var(--density-tight);
+}
+
+/* — World blocks: ground slots + role inks (house = the default) — */
+:root,
+[data-world="house"] {
+  --world-canvas: var(--house-canvas);
+  --world-raised: var(--house-raised);
+  --world-overlay: var(--house-overlay);
+  --world-slate: var(--house-slate); /* raised-tone surface-2: ink + stone text only */
+  --world-deep: var(--house-deep);
+  /* house has no film inks (DESIGN "—"): neutral text-ramp stand-ins (PROP) */
+  --world-line: var(--color-stone);
+  --world-emphasis: var(--color-ink);
+  --world-quiet: var(--color-muted);
+  --world-panel: var(--house-raised);
+  /* The world's display lettering (SPEC §9.7): act titles, loader route
+     cards and eggs ONLY — never the name, body, Meta, quotes or data. The
+     --font-world-* vars come from lib/fonts.ts (next/font/local, applied on
+     <html>); a missing face falls through to Newsreader (fixture L). */
+  --world-font-act: var(--font-newsreader), "Source Serif 4", Georgia, serif;
+}
+[data-world="pirates"] {
+  --world-canvas: var(--pir-canvas);
+  --world-raised: var(--pir-raised);
+  --world-overlay: var(--pir-overlay);
+  --world-slate: var(--pir-overlay);
+  --world-deep: var(--pir-deep);
+  --world-line: var(--w-brass); /* the course line */
+  --world-emphasis: var(--w-brass); /* the brass X-stamp (never ember) */
+  --world-quiet: var(--w-storm);
+  --world-panel: var(--pir-raised);
+  --world-font-act: var(--font-world-pirates, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* Pirata One */
+}
+[data-world="idiots"] {
+  --world-canvas: var(--idi-canvas);
+  --world-raised: var(--idi-raised);
+  --world-overlay: var(--idi-overlay);
+  --world-slate: var(--idi-overlay);
+  --world-deep: var(--idi-deep);
+  --world-line: var(--w-bp-line); /* the blueprint line */
+  --world-emphasis: var(--w-chalk); /* the chalk circle */
+  --world-quiet: var(--w-graphite);
+  --world-panel: var(--bp-panel);
+  --world-font-act: var(--font-world-idiots, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* Kalam */
+}
+[data-world="hp"] {
+  --world-canvas: var(--hp-canvas);
+  --world-raised: var(--hp-raised);
+  --world-overlay: var(--hp-overlay);
+  --world-slate: var(--hp-overlay);
+  --world-deep: var(--hp-deep);
+  --world-line: var(--w-ink-contour); /* the ink line */
+  --world-emphasis: var(--w-patronus); /* the ribbons */
+  --world-quiet: var(--color-muted);
+  --world-panel: var(--hp-raised);
+  --world-font-act: var(--font-world-hp, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; /* IM Fell English */
+}
+[data-world="rdr2"] {
+  /* DESIGN v3 §1.3 / rdr2 STUDY §3 (M1). Slot inks are PROP: the Line is
+     graphite (SPEC §4), the emphasis on dark is bone (the plate border /
+     tintype hairline; on the journal paper it becomes the red pencil
+     underline, below), quiet is sage (contours), the panel is rd raised. */
+  --world-canvas: var(--rd-canvas);
+  --world-raised: var(--rd-raised);
+  --world-overlay: var(--rd-overlay);
+  --world-slate: var(--rd-overlay);
+  --world-deep: var(--rd-deep);
+  --world-line: var(--w-pencil);
+  --world-emphasis: var(--w-bone);
+  --world-quiet: var(--w-sage);
+  --world-panel: var(--rd-raised);
+  /* Chinese Rocks is outline-only by licence and not shipped in M1
+     (FONTS.md): --font-world-rdr2 resolves to Newsreader until it is. */
+  --world-font-act: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
+}
+
+/* — Tone blocks: semantic vars (the dark planes share one text ramp) — */
+:root,
+[data-tone="canvas"],
+[data-tone="raised"],
+[data-tone="deep"],
+[data-world]:not([data-tone]) {
+  --fg: var(--color-ink);
+  --fg-muted: var(--color-stone);
+  --fg-ghost: var(--color-muted);
+  --rule: var(--color-line);
+  --accent: var(--color-aqua);
+  --accent-bright: var(--color-aqua-bright);
+  --kill: var(--color-ember);
+  --exception: var(--color-amber);
+}
+:root,
+[data-tone="canvas"],
+[data-world]:not([data-tone]) {
+  --bg: var(--world-canvas);
+  --surface-1: var(--world-raised);
+  --surface-2: var(--world-overlay);
+}
+[data-tone="raised"] {
+  --bg: var(--world-raised);
+  --surface-1: var(--world-overlay);
+  --surface-2: var(--world-slate);
+}
+[data-tone="deep"] {
+  --bg: var(--world-deep);
+  --surface-1: var(--world-canvas);
+  --surface-2: var(--world-raised);
+}
+[data-tone="paper"] {
+  --bg: var(--paper);
+  --surface-1: var(--paper-s1);
+  --surface-2: var(--paper-s2);
+  --fg: var(--paper-fg);
+  --fg-muted: var(--paper-muted);
+  --fg-ghost: var(--paper-ghost);
+  --rule: var(--paper-rule);
+  --accent: var(--paper-accent);
+  --accent-bright: var(--paper-accent); /* DESIGN v2 names no brighter paper accent */
+  --kill: var(--paper-kill);
+  --exception: var(--paper-exception);
+  /* The world role inks are dark-plane inks (bp-line, brass… vanish on
+     parchment). DESIGN v2 names no paper inks, so paper remaps them to its
+     own ink ramp (PROP; all ≥ 5:1 on --paper). Tone blocks follow the world
+     blocks, so this wins on an element carrying both attributes. */
+  --world-line: var(--paper-muted);
+  --world-emphasis: var(--paper-fg);
+  --world-quiet: var(--paper-ghost);
+  --world-panel: var(--paper-s1);
+}
+/* The journal page (rdr2 × paper, RD-1 option A): graphite line, ONE red
+   pencil underline as the emphasis (DESIGN v3 §1.3.2). hp × paper (option B)
+   keeps the generic paper inks above. */
+[data-world="rdr2"][data-tone="paper"] {
+  --world-line: var(--paper-pencil);
+  --world-emphasis: var(--paper-red);
+  --world-quiet: var(--paper-ghost);
+}
+
+/* — Pause toggle (MotionToggle sets html[data-motion="paused"]): CSS motion
+     behaves exactly as under prefers-reduced-motion (DESIGN v2 §6.5). — */
+:root[data-motion="paused"] {
+  scroll-behavior: auto;
+}
+:root[data-motion="paused"] *,
+:root[data-motion="paused"] *::before,
+:root[data-motion="paused"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 * {
@@ -165,6 +599,86 @@ body {
       0 0 0 1px color-mix(in oklab, var(--color-aqua) 30%, transparent),
       0 12px 40px -12px color-mix(in oklab, var(--color-aqua) 45%, transparent);
   }
+}
+
+/* ----------------------------------------------------------------------------
+   DESIGN v2 type steps (§2.2) — each utility is a COMPLETE step: family,
+   size, leading, tracking, weight, case and wrapping. <= 3 per viewport.
+   -------------------------------------------------------------------------- */
+@utility type-display {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-chapter {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-chapter);
+  line-height: var(--text-chapter--line-height);
+  letter-spacing: var(--text-chapter--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-title {
+  font-family: var(--font-serif), "Source Serif 4", Literata, Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
+  letter-spacing: var(--text-title--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-heading {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  letter-spacing: var(--text-heading--letter-spacing);
+  font-weight: var(--text-heading--font-weight);
+}
+@utility type-lead {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-lead);
+  line-height: var(--text-lead--line-height);
+  letter-spacing: var(--text-lead--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+}
+@utility type-body {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: var(--text-body--letter-spacing);
+  font-weight: 400;
+  text-wrap: pretty;
+}
+@utility type-small {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  letter-spacing: var(--text-small--letter-spacing);
+  font-weight: 400;
+}
+@utility type-meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  letter-spacing: var(--text-meta--letter-spacing);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Surface ladder (DESIGN v2 §4.2): surfaces are for INTERACTIVE objects only.
+   Elevation = one tone step + a 1 px inset rule (no drop shadows). */
+@utility surface-1 {
+  background-color: var(--surface-1);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+@utility surface-2 {
+  background-color: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 
 /* ----------------------------------------------------------------------------
@@ -368,3 +882,242 @@ body {
   transform: translateY(-6px);
   box-shadow: 0 22px 50px -24px rgba(0, 0, 0, 0.85);
 }
+
+/* === world skins === ========================================================
+   M1 builder "four worlds across the page" (components/site/**). Every rule
+   reads the plane vars that SectionFrame's data-world × data-tone resolve, so
+   a section moved to another act re-skins itself; nothing names a section.
+   ========================================================================== */
+
+/* The focus ring follows the plane's accent: aqua on the dark planes, the
+   paper accent on the journal (aqua on paper is ~1.5:1). */
+[data-tone] :focus-visible,
+.handbill :focus-visible {
+  outline-color: var(--accent);
+}
+
+/* — World grounds (DESIGN v3 §1.4): an aria-hidden layer behind a section's
+     content (WorldSection `ground`). pirates = the rhumb lattice ≤ 4 %,
+     desktop only (PC-02: two original 16-point roses, mask + brass);
+     idiots = the 24 px graph grid ≤ 6 % (3I-07); house / rdr2 / hp = none
+     (darkness and the dark foreground are the texture). — */
+.world-ground {
+  display: none;
+}
+@media (min-width: 64rem) {
+  [data-world="pirates"] .world-ground {
+    display: block;
+    background-color: var(--w-brass);
+    opacity: 0.04;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cpath d='M420 380L420 -1820M420 380L1262 -1653M420 380L1976 -1176M420 380L2453 -462M420 380L2620 380M420 380L2453 1222M420 380L1976 1936M420 380L1262 2413M420 380L420 2580M420 380L-422 2413M420 380L-1136 1936M420 380L-1613 1222M420 380L-1780 380M420 380L-1613 -462M420 380L-1136 -1176M420 380L-422 -1653M1240 700L1240 -1500M1240 700L2082 -1333M1240 700L2796 -856M1240 700L3273 -142M1240 700L3440 700M1240 700L3273 1542M1240 700L2796 2256M1240 700L2082 2733M1240 700L1240 2900M1240 700L398 2733M1240 700L-316 2256M1240 700L-793 1542M1240 700L-960 700M1240 700L-793 -142M1240 700L-316 -856M1240 700L398 -1333' stroke='black' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='420' cy='380' r='64' stroke='black' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='1240' cy='700' r='64' stroke='black' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Cpath d='M420 380L420 -1820M420 380L1262 -1653M420 380L1976 -1176M420 380L2453 -462M420 380L2620 380M420 380L2453 1222M420 380L1976 1936M420 380L1262 2413M420 380L420 2580M420 380L-422 2413M420 380L-1136 1936M420 380L-1613 1222M420 380L-1780 380M420 380L-1613 -462M420 380L-1136 -1176M420 380L-422 -1653M1240 700L1240 -1500M1240 700L2082 -1333M1240 700L2796 -856M1240 700L3273 -142M1240 700L3440 700M1240 700L3273 1542M1240 700L2796 2256M1240 700L2082 2733M1240 700L1240 2900M1240 700L398 2733M1240 700L-316 2256M1240 700L-793 1542M1240 700L-960 700M1240 700L-793 -142M1240 700L-316 -856M1240 700L398 -1333' stroke='black' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='420' cy='380' r='64' stroke='black' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='1240' cy='700' r='64' stroke='black' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+}
+[data-world="idiots"] .world-ground {
+  display: block;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--w-chalk) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--w-chalk) 6%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+/* The grid thins toward open air (3I-07): full at the top, 0 by the end. */
+[data-world="idiots"] .world-ground--fade {
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 72%);
+  mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 72%);
+}
+
+/* — The journal spread (rdr2 × paper, SPEC SM-11 / RD-05): ≥ 1024 a 6 px
+     leather edge at the section's inline edges and a soft gutter down the
+     centre; below, one page. Decorative only (no text on the edge). — */
+@media (min-width: 64rem) {
+  .journal-spread {
+    box-shadow:
+      inset 6px 0 0 var(--w-leather),
+      inset -6px 0 0 var(--w-leather);
+  }
+  .journal-gutter {
+    background-image: linear-gradient(
+      to right,
+      transparent calc(50% - 2.5rem),
+      color-mix(in oklab, var(--paper-fg) 7%, transparent) 50%,
+      transparent calc(50% + 2.5rem)
+    );
+  }
+}
+
+/* — The WANTED handbill (rdr2 paper OBJECT on the rd canvas, DESIGN v3
+     §1.3.2a): remaps the plane vars so the house utilities resolve to the
+     handbill's AA-safe inks. NO ghost text and NO verdicts on it (ghost 4.55,
+     kill 4.53): --fg-ghost falls back to muted, and nothing on the handbill
+     reads --kill (no verdict belongs here). — */
+.handbill {
+  --bg: var(--handbill);
+  --fg: var(--paper-fg);
+  --fg-muted: var(--paper-muted);
+  --fg-ghost: var(--paper-muted);
+  --rule: var(--paper-rule);
+  --accent: var(--paper-accent);
+  --accent-bright: var(--paper-accent);
+  --world-line: var(--paper-pencil);
+  --world-emphasis: var(--paper-red);
+  background-color: var(--handbill);
+  color: var(--paper-fg);
+}
+@media (min-width: 40rem) {
+  .handbill {
+    rotate: -1.2deg;
+  }
+}
+.handbill-rule {
+  border-block: 3px double var(--handbill-graphite);
+}
+
+/* — The trail map (R-5, IC-RD-07 host): map paper, graphite/pencil only, no
+     text on it. The brown fog lifts along the trail as the section scrolls
+     past (CSS view() timeline, 0 runtime JS). Unsupported, reduced motion or
+     Pause: no fog at all, the map is fully revealed. — */
+.trail-map {
+  background-color: var(--trail-map);
+}
+.trail-fog {
+  display: none;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="paused"]) .trail-fog {
+      display: block;
+      background-color: var(--trail-map);
+      animation: trail-fog-lift linear both;
+      animation-timeline: view();
+      animation-range: entry 35% cover 55%;
+    }
+  }
+}
+@keyframes trail-fog-lift {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+/* === hero & cards ===========================================================
+   Owned by the hero + act-cards builder (components/sections/hero/**,
+   components/sections/act-card/**). Keep additions inside this block.
+   ========================================================================== */
+
+/* Hero — the Lens's clip layer fills the full-bleed plate box (its children
+   are absolutely positioned, so the layer would otherwise have no height). */
+[data-hero-lens="desktop"] > [data-lens] > div:first-child {
+  position: absolute;
+  inset: 0;
+}
+
+/* Hero — the aperture's PRE-PAINT state (hero-boot.ts; hero-lens.BAR S0):
+   both plates start as a slit at the focal x and the bracket halves wait.
+   The inline clip of the Lens takes over at hydration; a failsafe in the
+   boot script removes the attribute if the page never hydrates. */
+[data-hero][data-aperture="pending"] [data-hero-lens] > [data-lens] > div:first-child {
+  clip-path: inset(0 var(--hero-slit-r, 30%) 0 var(--hero-slit-l, 70%)) !important;
+}
+[data-hero][data-aperture="pending"] [data-hero-lens] > [data-lens] > div:last-child {
+  visibility: hidden;
+}
+
+/* Act cards — the pinned travel of the two long cards (seam, ignite; D-5
+   ≤ 60vh each), reserved in CSS so SSR already has it (CLS 0), and only
+   where it runs: ≥ 1024, a fine pointer, OS motion on. Elsewhere: 0 travel.
+   (A view that starts paused drops the attribute; a mid-session Pause keeps
+   the spacer so the page never reflows under the reader — CardShell.) */
+:root {
+  --act-card-travel: 58vh;
+}
+@media (min-width: 64rem) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-act-card-long] {
+    min-height: calc(100svh + var(--act-card-travel));
+  }
+  [data-act-card-long] .act-card-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+}
+
+/* Act cards — the opening card's row vignette: that act's Line material,
+   drawn on hover AND focus (a stroke draw-on; instant when motion is off). */
+.opening-vignette {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--dur-reveal) var(--ease-draw);
+}
+a:hover .opening-vignette,
+a:focus-visible .opening-vignette {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .opening-vignette {
+    transition: none;
+  }
+}
+html[data-motion="paused"] .opening-vignette {
+  transition: none;
+}
+
+/* Card I→II — the code "storm grade" on the hero sea until MV-04 exists,
+   and the blueprint ground (--bp-panel + a 24 px grid at 6%). */
+.act-storm-grade {
+  filter: grayscale(0.55) saturate(0.8) brightness(0.62) contrast(1.12);
+}
+.act-blueprint {
+  background-color: var(--bp-panel);
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--w-bp-line) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--w-bp-line) 6%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Card II→III — the tintype (STUDY R-2): 6 px radius, grayscale + .45
+   sepia, and an inset DARKENING vignette in the plane's own ground (edges
+   only; never light paint). */
+.act-tintype {
+  border-radius: 6px;
+}
+/* A title set in its world lettering (act cards, route loaders): a FIXED
+   line box — the face swaps in (display: swap) while the card is still
+   below the fold, and the title's line never changes height when it does
+   (adjustFontFallback is off, so the fallback metrics differ). */
+.lettered-title {
+  display: inline-block;
+  vertical-align: top;
+  min-height: calc(var(--text-title--line-height) * 1em);
+  line-height: 1;
+}
+
+.act-tintype img,
+.act-tintype .act-tintype-code {
+  filter: grayscale(1) sepia(0.45) contrast(1.04);
+}
+.act-tintype-vignette {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--bg) 62%, transparent),
+      transparent 16%,
+      transparent 84%,
+      color-mix(in oklab, var(--bg) 62%, transparent)
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--bg) 56%, transparent),
+      transparent 18%,
+      transparent 80%,
+      color-mix(in oklab, var(--bg) 66%, transparent)
+    );
+}
+/* === /hero & cards === */

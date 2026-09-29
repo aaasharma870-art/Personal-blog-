@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
+import { acquireDecoder, releaseDecoder } from "@/lib/decoder-lock";
 import { cn } from "@/lib/utils";
 import { SeamlessVideo } from "@/components/visuals/seamless-video";
 
@@ -19,23 +21,17 @@ function useMediaQuery(query: string): boolean {
   );
 }
 
-/* Global "one active ambient video at a time" guard. During fast scroll two
-   adjacent in-view sections must not both decode video; the most recent section
-   to enter view claims the single slot and deactivates the previous claimant. */
-const videoClaimants = new Map<symbol, (v: boolean) => void>();
-let activeVideoClaim: symbol | null = null;
-
+/* "One active video at a time": during fast scroll two adjacent in-view
+   sections must not both decode video; the most recent section to enter view
+   claims the single slot and deactivates the previous claimant. The slot is
+   the page-wide DecoderLock (lib/decoder-lock.ts), shared with MediaFrame;
+   `wait: false` keeps this component's original most-recent-wins behaviour. */
 function claimActiveVideo(id: symbol, setActive: (v: boolean) => void): void {
-  videoClaimants.set(id, setActive);
-  if (activeVideoClaim && activeVideoClaim !== id) {
-    videoClaimants.get(activeVideoClaim)?.(false);
-  }
-  activeVideoClaim = id;
+  acquireDecoder(id, { onRevoke: () => setActive(false), label: "ambient" });
 }
 
 function releaseActiveVideo(id: symbol): void {
-  if (activeVideoClaim === id) activeVideoClaim = null;
-  videoClaimants.delete(id);
+  releaseDecoder(id);
 }
 
 /* Respect Data Saver / slow links: skip video entirely, keep the still poster. */

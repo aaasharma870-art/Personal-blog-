@@ -1,25 +1,118 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Menu, Search, X } from "lucide-react";
-import { GithubMark } from "@/components/ui/icons";
-import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
-import { nav, site } from "@/lib/content";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { ArrowUpRight, Search, X } from "lucide-react";
+import { useReducedMotion } from "@/lib/flags";
+import { dur, ease } from "@/lib/motion";
+import { site } from "@/lib/content";
+import {
+  actCards,
+  copyText,
+  copyVisible,
+  headerLabel,
+  hrefOfType,
+  navGroups,
+  sectionById,
+  topHref,
+  worldOf,
+} from "@/lib/sections";
+import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
-import { dur, ease, springNav } from "@/lib/motion";
+import { GithubMark } from "@/components/ui/icons";
+import { MotionToggle } from "@/components/primitives/motion-toggle";
+import { useMotionPreference } from "@/components/providers/motion-provider";
+import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
+import { useActiveSection } from "@/components/site/use-active-section";
 
-export function Header() {
-  const [active, setActive] = useState("");
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const reduce = useReducedMotion();
-  // client-only platform check (SSR-safe via server snapshot = false), no effect
-  const isMac = useSyncExternalStore(
+/* ============================================================================
+   HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
+   Work pill · the waveform Pause (Nox / Lumos) · Menu. Chrome speaks Meta.
+   There is NO compass, no NOW SHOWING, no progress bar and no rail (the
+   compass is never chrome; DESIGN §11.5) — the header's film layer is the
+   ACT LABEL (Meta, not aria-live; empty at the top; hidden < 640) and a
+   ground that follows the active act's world (its deep plane) once the page
+   has scrolled. The menu is grouped by act, with the work credits in the
+   group headers (derived: lib/sections.ts navGroups).
+   ========================================================================== */
+
+/** true after hydration (server + hydration render = false). */
+function useMounted(): boolean {
+  return useSyncExternalStore(
     () => () => {},
-    () => /Mac|iPhone|iPad/.test(navigator.platform),
+    () => true,
     () => false,
   );
+}
+
+/** The world whose plane the header wears for the active id. */
+function worldForId(id: string): WorldId {
+  const card = actCards.find((c) => c.id === id);
+  if (card) return card.to;
+  const s = sectionById(id);
+  return s ? worldOf(s) : "house";
+}
+
+/** The [AS] logo: the bracket's chrome use (DESIGN §5.1 ⑤, not counted). */
+function Logo() {
+  return (
+    <a
+      href={topHref}
+      aria-label={`${site.name} — back to the top`}
+      className="group inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-control px-1"
+    >
+      <svg viewBox="0 0 8 28" aria-hidden="true" focusable="false" className="h-6 w-2 stroke-fg-ghost transition-colors duration-(--dur-micro) group-hover:stroke-fg-muted">
+        <path d="M7 1 L1 1 L1 27 L7 27" fill="none" strokeWidth={1.5} strokeLinecap="square" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <span className="type-meta text-fg">{site.initials}</span>
+      <svg viewBox="0 0 8 28" aria-hidden="true" focusable="false" className="h-6 w-2 stroke-fg-ghost transition-colors duration-(--dur-micro) group-hover:stroke-fg-muted">
+        <path d="M1 1 L7 1 L7 27 L1 27" fill="none" strokeWidth={1.5} strokeLinecap="square" vectorEffect="non-scaling-stroke" />
+      </svg>
+    </a>
+  );
+}
+
+/** The waveform Pause with its Lumos / Nox tooltip (IC-HP-09). The
+ *  accessible name stays literal ("Pause motion", state in aria-pressed);
+ *  the tooltip is a proposed-copy alias shown on hover AND focus, rendered
+ *  only after hydration (no server/client copy-gate disagreement). */
+function PauseWithTooltip() {
+  const mounted = useMounted();
+  const { paused } = useMotionPreference();
+  const tip = copyText(paused ? "pause.tooltip.resume" : "pause.tooltip.pause");
+  return (
+    <span className="group/tip relative inline-flex">
+      <MotionToggle />
+      {mounted && copyVisible(tip) ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-control px-3 py-1.5 type-meta text-fg-muted opacity-0 transition-opacity duration-(--dur-micro) surface-2 group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
+        >
+          {tip.text}
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/** The menu's first section link (focused when the menu opens). */
+const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
+
+export function Header() {
+  const active = useActiveSection();
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [cardsPresent, setCardsPresent] = useState<ReadonlySet<string>>(new Set());
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  const label = active === "credits" && !sectionById("credits") ? "CREDITS" : headerLabel(active);
+  const world = worldForId(active);
+  const workHref = hrefOfType("gauntlet");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -28,174 +121,198 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const sections = nav
-      .map((n) => document.getElementById(n.href.slice(1)))
-      .filter((el): el is HTMLElement => Boolean(el));
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
-    );
-    sections.forEach((s) => obs.observe(s));
-    return () => obs.disconnect();
+  const openMenu = () => {
+    // act-card anchors only exist once the cards render: link group headers
+    // only to cards that are actually on the page (no dead links)
+    setCardsPresent(new Set(actCards.map((c) => c.id).filter((id) => document.getElementById(id))));
+    setOpen(true);
+  };
+  const closeMenu = useCallback((restoreFocus = true) => {
+    setOpen(false);
+    if (restoreFocus) window.setTimeout(() => menuButtonRef.current?.focus(), 0);
   }, []);
 
+  // while open: lock scroll, focus the first link, Esc closes
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const t = window.setTimeout(() => {
+      sheetRef.current?.querySelector<HTMLElement>("[data-menu-first]")?.focus();
+    }, 20);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMenu();
+      }
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, closeMenu]);
+
+  // focus trap inside the sheet (dialog rules)
+  const onSheetKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const els = Array.from(sheetRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
+    const first = els[0];
+    const last = els[els.length - 1];
+    if (!first || !last) return;
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <header
+      {...planeAttrs("deep", world)}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-200",
-        scrolled
-          ? "border-b border-line bg-canvas/90 backdrop-blur-sm"
-          : "border-b border-transparent",
+        "fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base)",
+        scrolled ? "bg-bg" : "bg-transparent",
       )}
     >
-      <div className="container-edge flex h-[68px] items-center justify-between">
-        <a
-          href="#top"
-          className="flex items-center gap-3"
-          aria-label={`${site.name} — home`}
-        >
-          <span className="flex h-8 w-8 items-center justify-center rounded-md border border-line-strong font-mono text-xs tracking-wide text-gold">
-            {site.initials}
-          </span>
-          <span className="hidden text-sm font-medium tracking-tight text-ink sm:block">
-            {site.name}
-          </span>
-        </a>
+      <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
+        <div className="flex min-w-0 items-center gap-4">
+          <Logo />
+          <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
+            {label}
+          </p>
+        </div>
 
-        <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
-          {nav.map((n) => {
-            const isActive = active === n.href.slice(1);
-            return (
-              <a
-                key={n.href}
-                href={n.href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "group relative px-3 py-2 text-sm transition-colors",
-                  isActive ? "text-ink" : "text-stone hover:text-ink",
-                )}
-              >
-                {n.label}
-                {/* hover-only underline for inactive links (preserves affordance) */}
-                {!isActive ? (
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-3 -bottom-px h-0.5 origin-left scale-x-0 rounded-full bg-cyan/60 transition-transform duration-200 group-hover:scale-x-100"
-                  />
-                ) : null}
-                {/* single shared indicator — FLIP-glides between active links */}
-                {isActive ? (
-                  <motion.span
-                    aria-hidden="true"
-                    layoutId="nav-underline"
-                    className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-cyan"
-                    transition={reduce ? { duration: 0 } : springNav}
-                  />
-                ) : null}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          {workHref ? (
+            <a
+              href={workHref}
+              aria-current={active === workHref.slice(1) ? "location" : undefined}
+              className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
+            >
+              Work
+            </a>
+          ) : null}
+          <PauseWithTooltip />
           <button
+            ref={menuButtonRef}
             type="button"
-            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            aria-label="Open command palette"
-            className="hidden items-center gap-2 rounded-md border border-line px-2.5 py-1.5 text-xs text-muted transition-colors hover:border-gold/40 hover:text-stone md:inline-flex"
-          >
-            <Search className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="font-mono tracking-tight">
-              {isMac ? "⌘" : "Ctrl"} K
-            </span>
-          </button>
-          <a
-            href={site.github}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="GitHub profile"
-            className="hidden h-9 w-9 items-center justify-center rounded-md border border-line text-stone transition-colors hover:border-gold/40 hover:text-ink sm:flex"
-          >
-            <GithubMark className="h-4 w-4" />
-          </a>
-          <a
-            href="#contact"
-            className="hidden rounded-md border border-gold/40 px-3.5 py-2 text-sm text-gold transition-colors hover:bg-gold/10 sm:inline-block"
-          >
-            Contact
-          </a>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => (open ? closeMenu() : openMenu())}
             aria-expanded={open}
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-ink lg:hidden"
+            aria-controls="site-menu"
+            aria-haspopup="dialog"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control px-3 type-meta text-fg-muted transition-colors duration-(--dur-micro) hover:text-fg"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            Menu
           </button>
         </div>
       </div>
 
-      <span
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-aqua/25 to-transparent transition-opacity duration-300",
-          scrolled ? "opacity-100" : "opacity-0",
-        )}
-      />
-
       <AnimatePresence>
         {open ? (
           <motion.div
-            key="mobile-menu"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: dur.base, ease }}
-            className="overflow-hidden border-b border-line bg-canvas lg:hidden"
+            key="menu"
+            ref={sheetRef}
+            id="site-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            onKeyDown={onSheetKey}
+            {...planeAttrs("deep", "house")}
+            className="fixed inset-0 z-(--z-menu) overflow-y-auto bg-bg text-fg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduce ? 0 : dur.base, ease }}
           >
-            <nav aria-label="Mobile" className="container-edge grid gap-1 py-4">
-              {nav.map((n) => (
-                <a
-                  key={n.href}
-                  href={n.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={active === n.href.slice(1) ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3 py-2.5 text-base transition-colors",
-                    active === n.href.slice(1)
-                      ? "bg-elevated text-ink"
-                      : "text-stone hover:bg-elevated hover:text-ink",
-                  )}
+            <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between px-gutter">
+              <p className="type-meta text-fg-muted">Contents</p>
+              <button
+                type="button"
+                onClick={() => closeMenu()}
+                className="inline-flex min-h-11 items-center gap-2 rounded-control px-3 type-meta text-fg-muted transition-colors hover:text-fg"
+              >
+                Close
+                <X className="size-4" strokeWidth={1.5} aria-hidden="true" />
+              </button>
+            </div>
+
+            <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
+              <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
+                {navGroups.map((g) => {
+                  const cardLink = g.href && cardsPresent.has(g.href.slice(1)) ? g.href : null;
+                  return (
+                    <li key={g.id} className="border-t border-rule pt-tier-group">
+                      <p className="type-meta text-fg-muted">
+                        {cardLink ? (
+                          <a
+                            href={cardLink}
+                            onClick={() => closeMenu(false)}
+                            className="inline-flex min-h-11 items-center transition-colors hover:text-fg"
+                          >
+                            {g.label}
+                          </a>
+                        ) : (
+                          <span className="inline-flex min-h-11 items-center">{g.label}</span>
+                        )}
+                        {g.credit ? (
+                          <>
+                            <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+                            <span className="sr-only">, </span>
+                            <span>{g.credit}</span>
+                          </>
+                        ) : null}
+                      </p>
+                      {g.items.length ? (
+                        <ul className="mt-tier-pair space-y-1">
+                          {g.items.map((n) => {
+                            return (
+                              <li key={n.id}>
+                                <a
+                                  href={n.href}
+                                  data-menu-first={n.id === FIRST_LINK_ID ? "" : undefined}
+                                  onClick={() => closeMenu(false)}
+                                  aria-current={active === n.id ? "location" : undefined}
+                                  className={cn(
+                                    "inline-flex min-h-11 items-center type-heading transition-colors duration-(--dur-micro)",
+                                    active === n.id ? "text-fg" : "text-fg-muted hover:text-fg",
+                                  )}
+                                >
+                                  {n.label}
+                                </a>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <div className="mt-tier-block flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-rule pt-tier-group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMenu(false);
+                    window.setTimeout(() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT)), 0);
+                  }}
+                  className="inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
                 >
-                  {n.label}
-                </a>
-              ))}
-              <div className="mt-2 flex items-center gap-2">
+                  <Search className="size-4" strokeWidth={1.5} aria-hidden="true" />
+                  Search
+                </button>
                 <a
                   href={site.github}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-md border border-line px-3 py-2.5 text-sm text-stone"
+                  className="inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
                 >
-                  <GithubMark className="h-4 w-4" /> GitHub
-                </a>
-                <a
-                  href="#contact"
-                  onClick={() => setOpen(false)}
-                  className="flex-1 rounded-md border border-gold/40 px-3 py-2.5 text-center text-sm text-gold"
-                >
-                  Contact
+                  <GithubMark className="size-4" />
+                  GitHub
+                  <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
                 </a>
               </div>
             </nav>

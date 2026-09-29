@@ -1,33 +1,25 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
+import { useFinePointer, useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { JourneyCarousel } from "@/components/site/journey-carousel";
-import { JourneyTrack } from "@/components/site/journey-track";
-
-function useMediaQuery(query: string): boolean {
-  return useSyncExternalStore(
-    (cb) => {
-      const m = window.matchMedia(query);
-      m.addEventListener("change", cb);
-      return () => m.removeEventListener("change", cb);
-    },
-    () => window.matchMedia(query).matches,
-    () => false, // server + first paint: assume the fallback
-  );
-}
+import { JourneyVoyage } from "@/components/site/journey-voyage";
 
 /**
- * JourneyExperience — picks the presentation:
- *  • desktop + fine pointer + motion-on → the sticky-pinned horizontal track.
- *  • touch / coarse pointer / reduced-motion / <sm → the vertical carousel
- *    (role=tablist + arrow-keys + roving tabindex, all content in normal DOM
- *    flow). The pin is progressive enhancement.
+ * JourneyExperience — picks the voyage presentation (SPEC v2 SM-4, §13):
+ *   desktop ≥ 1024 + fine pointer + motion on → the voyage (steps in normal
+ *   flow beside a sticky chart with Jack's compass; 0 extra travel);
+ *   mobile / coarse / reduced motion / Pause → the carousel with the compass
+ *   at each leg's bearing. The hooks are hydration-safe (false on the server),
+ *   so the server HTML is the carousel and the voyage enhances after mount.
  */
-export function JourneyExperience() {
+export function JourneyExperience({ nowCaption }: { nowCaption?: ReactNode }) {
   const reduce = useReducedMotion();
-  const finePointer = useMediaQuery("(pointer: fine)");
-  const wideEnough = useMediaQuery("(min-width: 640px)");
-  const pinned = finePointer && wideEnough && !reduce;
-  return pinned ? <JourneyTrack /> : <JourneyCarousel />;
+  const fine = useFinePointer();
+  const wide = useMediaQuery("(min-width: 1024px)");
+  return fine && wide && !reduce ? (
+    <JourneyVoyage nowCaption={nowCaption} />
+  ) : (
+    <JourneyCarousel nowCaption={nowCaption} />
+  );
 }

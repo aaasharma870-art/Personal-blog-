@@ -23,17 +23,6 @@ export const site = {
   domainNote: "aryansharma.dev", // EDITABLE PLACEHOLDER — register & confirm preferred domain
 } as const;
 
-export const nav = [
-  { label: "About", href: "#about" },
-  { label: "Journey", href: "#journey" },
-  { label: "Work", href: "#work" },
-  { label: "Systems", href: "#systems" },
-  { label: "Principles", href: "#principles" },
-  { label: "Writing", href: "#writing" },
-  { label: "Beyond", href: "#beyond" },
-  { label: "Contact", href: "#contact" },
-] as const;
-
 /** Rotating micro-tags under the hero (rendered statically, not as a ticker). */
 export const microTags = [
   "Quantitative research",

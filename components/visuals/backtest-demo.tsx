@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
-import { animate, motion, useReducedMotion } from "motion/react";
+import { animate, motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 
 /**
@@ -64,7 +65,10 @@ export function BacktestDemo() {
   const svgRef = useRef<SVGSVGElement>(null);
 
   const vals = mode === "naive" ? naive : real;
-  const stroke = mode === "naive" ? "#2dd4bf" : "#ef6f6c";
+  // semantic, plane-aware inks: the naive curve is the viewport's in-focus
+  // mark (accent); the realistic one is the idea being killed (kill = ember)
+  const strokeClass = mode === "naive" ? "stroke-accent" : "stroke-kill";
+  const dotClass = mode === "naive" ? "fill-accent" : "fill-kill";
   const fillId = mode === "naive" ? "bd-aqua" : "bd-ember";
   const dur = reduce ? 0 : 0.9;
 
@@ -95,21 +99,25 @@ export function BacktestDemo() {
   }, [endVal, reduce]);
 
   return (
-    <div className="rounded-xl border border-line bg-surface/60 p-5 shadow-[inset_0_1px_0_0_rgba(230,237,243,0.06),0_1px_2px_-1px_rgba(0,0,0,0.5),0_18px_40px_-22px_rgba(0,0,0,0.7)] sm:p-6">
+    <div className="surface-1 rounded-frame p-tier-group sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="eyebrow text-gold/80">Interactive · conceptual</p>
-          <h4 className="mt-2 font-serif text-xl font-medium text-ink">
+          <p className="type-meta text-fg-muted">
+            Interactive<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+            <span className="sr-only">, </span>conceptual
+          </p>
+          <h4 className="mt-tier-pair type-heading text-fg">
             Why a pretty backtest isn&rsquo;t an edge
           </h4>
         </div>
-        <span className="rounded-full border border-line bg-elevated/60 px-2.5 py-1 font-mono text-[0.58rem] uppercase tracking-wider text-muted">
-          Synthetic · illustrative
-        </span>
+        <p className="type-meta text-fg">
+          Synthetic<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+          <span className="sr-only">, </span>illustrative
+        </p>
       </div>
 
       {/* toggle */}
-      <div className="mt-4 inline-flex rounded-lg border border-line bg-canvas/40 p-1">
+      <div className="mt-tier-group inline-flex flex-wrap rounded-control p-1 shadow-[inset_0_0_0_1px_var(--rule)]">
         {(
           [
             ["naive", "Naïve · zero-cost · in-sample"],
@@ -122,12 +130,12 @@ export function BacktestDemo() {
             aria-pressed={mode === m}
             onClick={() => setMode(m)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+              "min-h-11 rounded-[9px] px-3 type-small transition-colors",
               mode === m
                 ? m === "naive"
-                  ? "bg-aqua/15 text-aqua"
-                  : "bg-ember/15 text-ember"
-                : "text-stone hover:text-ink",
+                  ? "bg-surface-2 text-fg"
+                  : "bg-surface-2 text-kill"
+                : "text-fg-muted hover:text-fg",
             )}
           >
             {label}
@@ -149,12 +157,12 @@ export function BacktestDemo() {
         >
           <defs>
             <linearGradient id="bd-aqua" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2dd4bf" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#2dd4bf" stopOpacity="0" />
+              <stop offset="0%" style={{ stopColor: "var(--accent)", stopOpacity: 0.18 }} />
+              <stop offset="100%" style={{ stopColor: "var(--accent)", stopOpacity: 0 }} />
             </linearGradient>
             <linearGradient id="bd-ember" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ef6f6c" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#ef6f6c" stopOpacity="0" />
+              <stop offset="0%" style={{ stopColor: "var(--kill)", stopOpacity: 0.16 }} />
+              <stop offset="100%" style={{ stopColor: "var(--kill)", stopOpacity: 0 }} />
             </linearGradient>
           </defs>
           {[0.25, 0.5, 0.75].map((g) => (
@@ -164,7 +172,7 @@ export function BacktestDemo() {
               x2={W}
               y1={H * g}
               y2={H * g}
-              stroke="rgba(230,237,243,0.06)"
+              className="stroke-rule"
               strokeWidth="1"
             />
           ))}
@@ -174,7 +182,7 @@ export function BacktestDemo() {
             x2={W}
             y1={sy(100)}
             y2={sy(100)}
-            stroke="rgba(230,237,243,0.18)"
+            className="stroke-fg-ghost"
             strokeWidth="1"
             strokeDasharray="3 4"
           />
@@ -188,12 +196,12 @@ export function BacktestDemo() {
           <motion.path
             d={PATHS[mode].line}
             fill="none"
-            stroke={stroke}
+            className={cn(strokeClass, "transition-[stroke] duration-(--dur-base)")}
             strokeWidth="2"
             strokeLinejoin="round"
             strokeLinecap="round"
             initial={false}
-            animate={{ d: PATHS[mode].line, stroke }}
+            animate={{ d: PATHS[mode].line }}
             transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
           />
           {/* one-shot left→right scan on each mode toggle (transform-only, no loop) */}
@@ -209,7 +217,8 @@ export function BacktestDemo() {
                 x2="0"
                 y1={PAD_T}
                 y2={H - PAD_B}
-                stroke="rgba(45,212,191,0.55)"
+                className="stroke-fg-muted"
+                strokeOpacity={0.6}
                 strokeWidth="1.5"
               />
             </motion.g>
@@ -222,30 +231,31 @@ export function BacktestDemo() {
                 x2={sx(hover)}
                 y1={PAD_T}
                 y2={H - PAD_B}
-                stroke="rgba(230,237,243,0.25)"
+                className="stroke-fg-ghost"
                 strokeWidth="1"
               />
-              <circle cx={sx(hover)} cy={sy(hoverVal)} r="3.5" fill={stroke} />
+              <circle cx={sx(hover)} cy={sy(hoverVal)} r="3.5" className={dotClass} />
             </g>
           ) : null}
         </svg>
 
         {/* readout */}
-        <div className="pointer-events-none absolute right-2 top-1 rounded-md border border-line bg-canvas/80 px-2.5 py-1 font-mono text-[0.66rem] text-stone backdrop-blur-sm">
-          <span className="text-muted">index </span>
-          <span className="tnum text-ink">
+        <div className="surface-2 pointer-events-none absolute right-2 top-1 rounded-control px-2.5 py-1 type-meta text-fg-muted">
+          <span>index </span>
+          <span className="tnum text-fg">
             {(hoverVal ?? endDisplay).toFixed(1)}
           </span>
-          <span className="text-muted"> · start 100</span>
+          <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+          <span>start 100</span>
         </div>
       </div>
 
-      <p className="mt-4 text-xs leading-relaxed text-muted">
+      <p className="mt-tier-group max-w-body type-small text-fg-muted">
         Synthetic illustration, not my results. Same idea every strategy meets:
         a curve that looks unbeatable with{" "}
-        <span className="text-aqua/90">no costs and in-sample tuning</span>{" "}
+        <span className="text-fg">no costs and in-sample tuning</span>{" "}
         often flattens or bleeds once you add{" "}
-        <span className="text-ember/90">realistic costs and an honest holdout</span>.
+        <span className="text-fg">realistic costs and an honest holdout</span>.
         That gap is exactly what the gauntlet above is built to expose.
       </p>
     </div>

@@ -1,76 +1,77 @@
-import { Section } from "@/components/ui/section";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal, RevealItem } from "@/components/ui/reveal";
-import { Tag } from "@/components/ui/tag";
-import { AmbientBackground } from "@/components/visuals/ambient-background";
-import { SignalThumb } from "@/components/visuals/signal-thumb";
 import { writing } from "@/lib/content";
+import { slot } from "@/lib/sections";
+import { cn } from "@/lib/utils";
+import { Meta, WorldSection } from "@/components/site/world-kit";
+import { Rise } from "@/components/site/world-motion";
+import { JournalVignette, NibTitle } from "@/components/site/rdr2-graphite";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Writing() {
+/**
+ * Writing — the journal (SPEC v2 SM-11; `index` on the paper plane, Act III
+ * "The Frontier", rdr2 `journal` dressing). The dome seam rises in paper over
+ * the rd canvas: a page of the journal brought into the lamplight.
+ *
+ *   - The h2 writes itself in pencil (HP-05 re-hosted: a mask wipe of real
+ *     Newsreader text behind a moving graphite nib, once), then takes the
+ *     world's ONE emphasis mark: the red pencil underline (--world-emphasis,
+ *     = --paper-red on rdr2 × paper).
+ *   - ≥ 1024 the section is a two-page spread (leather edge + gutter, CSS in
+ *     the world-skins block): each dated entry on the left page, its graphite
+ *     sketch opposite it on the right page, drawn once as the row enters (R1,
+ *     never hover-gated: the entries are drafts and carry no focusables).
+ *   - Entries are VERBATIM content.ts, Meta `ENTRY I … V`, a static DRAFT
+ *     field; drafts are not links (unchanged).
+ * Retired here: the candle-lit covers, SignalThumb tiles, bordered tag pills,
+ * the pulsing draft badge and the aqua hover wash. Under RD-1 option B (the
+ * entry moved to an hp act) the same component renders plain parchment: no
+ * leather edge, and the nib + underline take the hp paper inks.
+ */
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+export function Writing({ entry, number }: SectionProps<"index">) {
+  const titleId = `${entry.id}-title`;
+  const journal = slot(entry, "dressing").index === "journal";
   return (
-    <Section
-      id="writing"
-      seam
-      rhythm="tight"
-      backdrop={
-        <AmbientBackground
-          image="/media/still-calm.png"
-          opacity={0.3}
-          overlayClassName="bg-gradient-to-b from-canvas/78 via-canvas/84 to-canvas/90"
-        />
-      }
+    <WorldSection
+      entry={entry}
+      labelledBy={titleId}
+      className={cn(journal && "journal-spread")}
+      containerClassName={cn(journal && "journal-gutter")}
     >
-      <SectionHeading
-        index="06"
-        eyebrow="Writing · Notes"
-        title="Thinking in public, soon."
-        intro="Short essays in progress — written for people who don't trade, about how I try not to fool myself."
-        variant="left"
-      />
-
-      <Reveal
-        stagger
-        role="list"
-        ariaLabel="Writing"
-        className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {writing.map((post) => {
-          const killed = post.title.toLowerCase().includes("kill-list");
-          return (
-            <RevealItem
-              key={post.title}
-              role="listitem"
-              className="group relative flex flex-col overflow-hidden rounded-lg border border-line bg-surface/70 shadow-[inset_0_1px_0_0_rgba(230,237,243,0.05),0_16px_36px_-18px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-aqua/40"
-            >
-              {/* Higgsfield thumbnail slot (Phase 5) — deterministic SVG for now. */}
-              <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-line bg-canvas">
-                <SignalThumb seed={post.title} className="absolute inset-0" />
-                <span className="draft-pulse eyebrow absolute right-3 top-3 rounded-full border border-aqua/30 bg-canvas/70 px-2 py-0.5 text-aqua/80">
-                  Draft
-                </span>
-              </div>
-
-              <div className="flex flex-1 flex-col gap-3 p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <Tag accent={killed ? "ember" : "aqua"}>{post.tag}</Tag>
-                </div>
-                <h3 className="font-serif text-xl font-medium text-ink transition-colors duration-200 group-hover:text-aqua-bright">
-                  {post.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-stone">
-                  {post.angle}
-                </p>
-              </div>
-            </RevealItem>
-          );
-        })}
-      </Reveal>
-
-      <Reveal className="mt-6">
-        <p className="text-sm text-muted">
-          Drafts in progress — published essays will appear here.
+      <header className="max-w-[56rem] lg:max-w-[calc(50%-var(--spacing-gutter))]">
+        <Meta fields={[number, entry.nav?.label ?? "Writing"]} />
+        <NibTitle id={titleId} className="mt-tier-group max-w-title type-title text-fg">
+          Thinking in public, soon.
+        </NibTitle>
+        <p className="mt-tier-block max-w-lead type-lead text-fg-muted">
+          Short essays in progress — written for people who don&rsquo;t trade, about how I try not to fool myself.
         </p>
-      </Reveal>
-    </Section>
+      </header>
+
+      <ol aria-label="Journal entries" className="mt-tier-block border-t border-rule">
+        {writing.map((post, i) => (
+          <Rise
+            as="li"
+            key={post.title}
+            delay={Math.min(i, 3) * 0.06}
+            className="grid grid-cols-[1fr_auto] items-start gap-x-6 border-b border-rule py-tier-block lg:grid-cols-2 lg:gap-x-[calc(var(--spacing-gutter)*2)]"
+          >
+            <div className="min-w-0">
+              <Meta fields={[`Entry ${ROMAN[i] ?? i + 1}`, post.tag, "Draft"]} />
+              <h3 className="mt-tier-pair type-title text-fg">{post.title}</h3>
+              <p className="mt-tier-group max-w-body type-body text-fg-muted">{post.angle}</p>
+            </div>
+            {/* the right page: this entry's sketch (aria-hidden; its meaning is the title) */}
+            <div className="pt-1 lg:flex lg:justify-start lg:pl-tier-block">
+              <JournalVignette index={i} className="size-16 lg:size-28" />
+            </div>
+          </Rise>
+        ))}
+      </ol>
+
+      <p className="mt-tier-group type-small text-fg-muted">
+        Drafts in progress — published essays will appear here.
+      </p>
+    </WorldSection>
   );
 }

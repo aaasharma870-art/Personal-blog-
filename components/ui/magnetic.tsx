@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import type { MouseEvent, ReactNode } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 
 /**
