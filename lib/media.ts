@@ -894,37 +894,46 @@ export const mediaAssets = {
     accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
     variantOf: "iconic-ice", fallback: "iconic-ice", reduced: "poster",
   },
-  /* M2 finish (media agent, 2026-09-29): two more 3 Idiots plates,
-     pre-registered "planned" so builders can reference the ids; they resolve
-     to their fallbacks until the files land (LOG "M2 finish · 3 Idiots scenes").
-     Generated (candidates, UNCHECKED: the cloud egress proxy blocks the
-     Higgsfield CDN, so nothing could be downloaded or viewed): corridor
-     f71ce666 / 14f08567, pen 8ad09fd8 / d8c90c09. Stay "planned" until a
-     session that can fetch them checks, encodes and flips them. */
+  /* M2 finish (2026-09-29): two more 3 Idiots plates (LOG "M2 finish · 3
+     Idiots scenes"). Generated 13:04 UTC (4 × 7 cr); fetched, viewed and
+     checked at 14:06 UTC once the environment allowed the Higgsfield CDN:
+     no people / hands / faces, no signage, no legible text or pseudo-glyphs
+     (full-res crops of the stopwatch dials = tick marks only; the pen's
+     engraving = abstract waves). DEFAULT = the better of each pair. */
   "iconic-corridor": {
-    kind: "image", status: "planned", src: "/media/films/iconic-corridor.webp",
-    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the ICE stone corridor, pergola stripes, left 40% calm" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-corridor.webp",
+    width: 2560, height: 1440, focal: [0.46, 0.51], alt: null,
+    provenance: hf2(ICONIC, 7, "14f08567-a7ea-4474-afda-050a12407aea",
+      "S08 work head: the ICE stone corridor — rough granite wall (the calm dark left ~40%), massive square columns in long perspective, a concrete pergola casting bold striped morning sun, a bougainvillea courtyard; no people, no signage. focal = the vanishing point"),
+    accept: cleanM2(["IC-3I-09"]),
     fallback: "iconic-ice", reduced: "poster",
     variants: { alt: "iconic-corridor-alt" },
   },
   "iconic-corridor-alt": {
-    kind: "image", status: "planned", src: "/media/films/iconic-corridor-alt.webp",
-    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-corridor" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-corridor-alt.webp",
+    width: 2560, height: 1440, focal: [0.51, 0.51], alt: null,
+    provenance: hf2(ICONIC, 7, "f71ce666-7b28-42db-b714-761832ac572c",
+      "ALT: the same corridor, a longer and narrower run with finer pergola slats and more floor stripes; the courtyard trees brighter; no people, no signage"),
+    accept: cleanM2(["IC-3I-09"]),
     variantOf: "iconic-corridor", fallback: "iconic-corridor", reduced: "poster",
   },
   "iconic-pen": {
-    kind: "image", status: "planned", src: "/media/films/iconic-pen.webp",
-    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the astronaut pen in its velvet case, left 40% calm" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen.webp",
+    width: 2560, height: 1440, focal: [0.65, 0.6], alt: null,
+    marks: { pen: [0.65, 0.6] },
+    provenance: hf2(ICONIC, 7, "8ad09fd8-3fc2-439e-9e14-b8c31c71a929",
+      "S11 kill-list head: Virus's astronaut pen (silver with abstract engraving, gold trim) in an open velvet-lined wooden case on a professor's desk, a silver stopwatch beside it (dial ticks only, no numerals), an ICE chalkboard behind; calm dark left ~40%; no people or text"),
+    accept: cleanM2(["IC-3I-01"]),
     fallback: "MV-06", reduced: "poster",
     variants: { alt: "iconic-pen-alt" },
   },
   "iconic-pen-alt": {
-    kind: "image", status: "planned", src: "/media/films/iconic-pen-alt.webp",
-    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-pen" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen-alt.webp",
+    width: 2560, height: 1440, focal: [0.67, 0.59], alt: null,
+    marks: { pen: [0.67, 0.59] },
+    provenance: hf2(ICONIC, 7, "d8c90c09-68a4-4a09-b7c9-782bd2577575",
+      "ALT: a larger case and pen, the stopwatch in the foreground right, the board darker; dial ticks only, no numerals; no people or text"),
+    accept: cleanM2(["IC-3I-01"]),
     variantOf: "iconic-pen", fallback: "iconic-pen", reduced: "poster",
   },
   "iconic-drone": {

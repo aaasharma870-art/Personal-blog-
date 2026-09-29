@@ -930,3 +930,15 @@ The encodes are sharp lanczos3 WebP (effort 6), with a centre crop that is a no-
 1. **Egress:** `d8j0ntlcm91z4.cloudfront.net` is denied by the cloud proxy's organization policy. Aryan (or a local session) must fetch the four masters, or allow that host for this environment.
 2. **Captions:** until the plates land, `iconic-corridor` renders `iconic-ice` and `iconic-pen` renders `MV-06`. A caption naming the corridor or the pen over those fallbacks would name the wrong moment; builders should gate those captions on `resolveMedia(id)?.id === id` or keep them proposed-off.
 3. **Check L2:** not signed; no candidate has been viewed.
+
+### M2 finish · fetched, checked and delivered (2026-09-29 14:06 UTC, 0 extra credits)
+The environment's network access was widened by Aryan, so the four candidates were fetched from the Higgsfield CDN (3840×2160 PNG masters in `media-src/m2finish/`, gitignored), viewed in full, and checked at full resolution (crops of both stopwatch dials, the pen engraving and the courtyard buildings).
+
+| Job | Plate | Verdict | Checks |
+|---|---|---|---|
+| 14f08567-a7ea-4474-afda-050a12407aea | CORRIDOR b | **DEFAULT → iconic-corridor** | Bold pergola stripes, massive granite columns in deep perspective, bougainvillea courtyard; the left ~40% is the dark granite wall (caption side). No people, no signage (courtyard building crop clean). focal = vanishing point (0.46, 0.51). 2560 WebP q82, 437 KB |
+| f71ce666-7b28-42db-b714-761832ac572c | CORRIDOR a | **ALT → iconic-corridor-alt** | Longer, narrower run, finer slats, more floor stripes. Clean building crop. focal (0.51, 0.51). q82, 434 KB |
+| 8ad09fd8-3fc2-439e-9e14-b8c31c71a929 | PEN a | **DEFAULT → iconic-pen** | Silver pen with gold trim in an open blue-velvet wooden case; silver stopwatch (dial = tick marks only, no numerals); an ICE chalkboard behind (a second 3 Idiots cue); left ~40% dark. Engraving = abstract waves, no glyphs. focal (0.65, 0.60). q84, 161 KB |
+| d8c90c09-68a4-4a09-b7c9-782bd2577575 | PEN b | **ALT → iconic-pen-alt** | Larger case and pen, stopwatch foreground right, darker board. Dial ticks only. focal (0.67, 0.59). q84, 148 KB |
+
+All four registered `accepted` in `lib/media.ts` (Check L2: Claude ✓ 09-29 / Aryan pending). `npm run check` OK.
