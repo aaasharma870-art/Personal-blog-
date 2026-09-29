@@ -10,8 +10,8 @@ import type { SectionProps } from "@/components/sections/types";
  * Journey — story `voyage` (Act I "The Crossing", pirates canvas; SPEC v2
  * SM-4; bars/journey-voyage.BAR.md; RECOGNIZABILITY S06). The voyage that
  * earned the method: four verbatim steps beside a sticky SEA that turns from
- * Port Royal's harbour at night → the fog around Isla de Muerta → the squall
- * → first light with the Black Pearl on the horizon (MV-05a–d / the JV
+ * Port Royal's harbour at night → the fog around Isla de Muerta → Calypso's
+ * storm → first light with the Black Pearl on the horizon (MV-05a–d / the JV
  * sequence), over a brass chart where Jack's compass hunts and settles on
  * each leg, the course kinks with one ember tick at the break, the cursed
  * Aztec medallion turns to its moonlit skull, and the brass X marks Now.
@@ -21,7 +21,7 @@ import type { SectionProps } from "@/components/sections/types";
  * (the act title lettered in the world face) and one SceneCaption per step —
  *   PORT ROYAL HARBOUR AT NIGHT • PIRATES OF THE CARIBBEAN
  *   THE FOG AROUND ISLA DE MUERTA • …
- *   THE CURSE OF THE AZTEC GOLD • …
+ *   CALYPSO’S STORM • … (the squall it shows: ART-DIRECTOR #9)
  *   the registry line Q-PC-1 (lettered, via FilmQuote) • …
  * handed to the client experience as nodes. The variant choice is the
  * manifest's (lib/page.ts `variant`), resolved per piece on the client.

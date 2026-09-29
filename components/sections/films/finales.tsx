@@ -32,18 +32,20 @@ import { filmMark } from "@/components/sections/films/plate-marks";
      pirates  Jack's compass (lid open) hunts on springNeedle and settles on
               the bearing of the NEXT ACT on the page (derived); a brass
               course line draws from it to the frame's edge.
-     idiots   the gauntlet's gates (gauntlet.length, derived) draw on as a
-              blueprint across the lake's sky; ONE chalk circle closes on
-              the last gate.
-     rdr2     a graphite trail crosses the hill's hachures to a campfire
-              point that kindles (3 fire frames + 2 embers: 5 sprites).
+     idiots   the gauntlet's gates (gauntlet.length, derived) draw on in
+              chalk white (1 px board-dark halo) across the lake's sky; ONE
+              chalk circle closes on the last gate.
+     rdr2     a dashed graphite map route follows the hill below its brow
+              to a campfire on its shoulder that kindles (3 fire frames +
+              2 embers: 5 sprites).
      hp       LD-HP complete: the ink Line draws while a cool light (the
               Lumos sprite) travels it (1.4 s), then ONE warm point lights at
               the Line's start — the point Card II→III sinks into its sun.
    ALT (piece films.screens "iris-marks"; the frame irises open from the
    plate's focal mark)
-     pirates  "X marks the spot": a dotted brass course inks across the water
-              to a brass X before the Pearl's bow.
+     pirates  "X marks the spot": a dotted brass course inks low across the
+              water to a brass X on the moon path before the Pearl's bow
+              (iconic-pearl's `treasure` mark).
      idiots   one chalk circle closes around the yellow scooter, then a chalk
               tick (the idiots success mark).
      rdr2     the still becomes a clipping in a journal: a pencil border and
@@ -170,9 +172,24 @@ function PiratesCompass({ mode, W, bearing }: { mode: FinaleMode; W: number; bea
 }
 
 function PiratesChart({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId: MediaId }) {
-  const lantern = filmMark(stillId, "lantern") ?? [0.836, 0.556];
-  const X = { x: (lantern[0] - 0.29) * W, y: 760 };
-  const d = `M${(0.02 * W).toFixed(1)} 905 C${(0.12 * W).toFixed(1)} 870 ${(0.2 * W).toFixed(1)} 720 ${(0.3 * W).toFixed(1)} 745 C${(0.38 * W).toFixed(1)} 765 ${(X.x - 90).toFixed(1)} 800 ${X.x.toFixed(1)} ${X.y}`;
+  const f = (v: number) => v.toFixed(1);
+  const treasure = filmMark(stillId, "treasure");
+  let X: { x: number; y: number };
+  let d: string;
+  if (treasure) {
+    // the tattered-sail Pearl (iconic-pearl): the sea is only the plate's
+    // bottom band in the 2.39:1 crop, so the course runs LOW across the
+    // water (y ≈ .815–.85, never into the fog or the hull) and the X lands on
+    // the moon path just before the bow
+    X = { x: treasure[0] * W, y: treasure[1] * 1000 };
+    d =
+      `M${f(0.02 * W)} ${f(X.y + 30)} C${f(0.1 * W)} ${f(X.y + 34)} ${f(0.18 * W)} ${f(X.y + 2)} ${f(0.26 * W)} ${f(X.y + 12)}` +
+      ` C${f(0.32 * W)} ${f(X.y + 22)} ${f(X.x - 80)} ${f(X.y + 16)} ${f(X.x)} ${f(X.y)}`;
+  } else {
+    const lantern = filmMark(stillId, "lantern") ?? [0.836, 0.556];
+    X = { x: (lantern[0] - 0.29) * W, y: 760 };
+    d = `M${f(0.02 * W)} 905 C${f(0.12 * W)} 870 ${f(0.2 * W)} 720 ${f(0.3 * W)} 745 C${f(0.38 * W)} 765 ${f(X.x - 90)} 800 ${f(X.x)} ${X.y}`;
+  }
   const course = measurePath(d);
   const DOTS = 18;
   const dots = Array.from({ length: DOTS }, (_, k) => course.at(k / DOTS));
@@ -180,7 +197,7 @@ function PiratesChart({ mode, W, stillId }: { mode: FinaleMode; W: number; still
   return (
     <g data-finale="pirates-chart">
       {dots.map((q, k) => (
-        <motion.circle key={k} cx={q.x} cy={q.y} r={4.5} fill="var(--w-brass)" {...appear(mode, 0.55 + k * 0.07, 0.95, 0.2)} />
+        <motion.circle key={k} cx={q.x} cy={q.y} r={5.5} fill="var(--w-brass)" {...appear(mode, 0.55 + k * 0.07, 0.95, 0.2)} />
       ))}
       {[`M${X.x - s} ${X.y - s} L${X.x + s} ${X.y + s}`, `M${X.x + s} ${X.y - s} L${X.x - s} ${X.y + s}`].map((p, k) => (
         <motion.path
@@ -218,12 +235,31 @@ function chalkLoop(cx: number, cy: number, rx: number, ry: number): string {
   );
 }
 
-/** Chalk over a faint board-ink shadow, so it reads on a pale sky too. */
-function ChalkStroke({ d, mode, delay, duration, width = 2.6 }: { d: string; mode: FinaleMode; delay: number; duration: number; width?: number }) {
+/** Chalk over a faint board-ink shadow, so it reads on a pale sky too.
+ *  `halo` = the shadow's extra width (3 = 1.5 px each side). */
+function ChalkStroke({
+  d,
+  mode,
+  delay,
+  duration,
+  width = 2.6,
+  halo = 3,
+  haloOpacity = 0.6,
+  linecap = "round",
+}: {
+  d: string;
+  mode: FinaleMode;
+  delay: number;
+  duration: number;
+  width?: number;
+  halo?: number;
+  haloOpacity?: number;
+  linecap?: "round" | "square";
+}) {
   return (
     <>
-      <motion.path d={d} stroke="var(--bp-panel)" strokeOpacity={0.6} strokeWidth={width + 3} strokeLinecap="round" vectorEffect="non-scaling-stroke" {...draw(mode, delay, duration)} />
-      <motion.path d={d} stroke="var(--w-chalk)" strokeWidth={width} strokeLinecap="round" vectorEffect="non-scaling-stroke" {...draw(mode, delay, duration)} />
+      <motion.path d={d} stroke="var(--bp-panel)" strokeOpacity={haloOpacity} strokeWidth={width + halo} strokeLinecap={linecap} vectorEffect="non-scaling-stroke" {...draw(mode, delay, duration)} />
+      <motion.path d={d} stroke="var(--w-chalk)" strokeWidth={width} strokeLinecap={linecap} vectorEffect="non-scaling-stroke" {...draw(mode, delay, duration)} />
     </>
   );
 }
@@ -236,29 +272,17 @@ function IdiotsGates({ mode, W, gates }: { mode: FinaleMode; W: number; gates: n
   const gw = 50;
   const gh = 84;
   const xs = Array.from({ length: n }, (_, k) => x0 + (x1 - x0) * (n === 1 ? 0 : k / (n - 1)));
-  const ink = "var(--bp-panel)";
   const circleAt = 0.6 + n * 0.14 + 0.45;
+  // CHALK on the sky, not board ink: dark strokes on the pale dawn read as
+  // fence posts (ART-DIRECTOR #12). Chalk white with a 1 px board-dark halo
+  // (width + 2) so they hold on the bright sky and on the lake alike.
   return (
-    <g data-finale="idiots-gates" data-gates={n} strokeLinecap="square">
-      <motion.path
-        d={`M${x0 - 44} ${base} L${x1 + 44} ${base}`}
-        stroke={ink}
-        strokeOpacity={0.7}
-        strokeWidth={1.2}
-        vectorEffect="non-scaling-stroke"
-        {...draw(mode, 0.45, dur.draw.long)}
-      />
+    <g data-finale="idiots-gates" data-gates={n}>
+      <ChalkStroke d={`M${x0 - 44} ${base} L${x1 + 44} ${base}`} mode={mode} delay={0.45} duration={dur.draw.long} width={1.4} halo={2} haloOpacity={0.55} linecap="square" />
       {xs.map((x, k) => (
-        <motion.path
-          key={k}
-          d={gatePath(x, base, gw, gh)}
-          stroke={ink}
-          strokeOpacity={0.92}
-          strokeWidth={1.5}
-          vectorEffect="non-scaling-stroke"
-          data-gate={k + 1}
-          {...draw(mode, 0.6 + k * 0.14, 0.6)}
-        />
+        <g key={k} data-gate={k + 1}>
+          <ChalkStroke d={gatePath(x, base, gw, gh)} mode={mode} delay={0.6 + k * 0.14} duration={0.6} width={1.8} halo={2} haloOpacity={0.7} linecap="square" />
+        </g>
       ))}
       <ChalkStroke d={chalkLoop(xs[n - 1], base - gh / 2 - 4, 66, 72)} mode={mode} delay={circleAt} duration={dur.draw.short} />
     </g>
@@ -283,26 +307,33 @@ function IdiotsScooter({ mode, W, stillId }: { mode: FinaleMode; W: number; stil
 /* — RED DEAD REDEMPTION 2 ————————————————————————————————————————————— */
 
 function RdrTrail({ mode, W }: { mode: FinaleMode; W: number }) {
-  const fire = { x: 0.41 * W, y: 712 };
+  const f = (v: number) => v.toFixed(1);
+  // F-RD's ridge (measured on a 0.05 grid): the brow falls from y ≈ .60 at
+  // the left edge to ≈ .49 under the horse. The trail is a dashed graphite
+  // map route that FOLLOWS the hill, ~65 units below the brow (the old
+  // straight diagonal and the floating hachure arcs read as bugs,
+  // ART-DIRECTOR #12), to a campfire on the hill's shoulder.
+  const fire = { x: 0.42 * W, y: 598 };
   const trail =
-    `M${(0.02 * W).toFixed(1)} 945 C${(0.1 * W).toFixed(1)} 910 ${(0.16 * W).toFixed(1)} 865 ${(0.23 * W).toFixed(1)} 835` +
-    ` C${(0.3 * W).toFixed(1)} 805 ${(0.35 * W).toFixed(1)} 770 ${(fire.x - 14).toFixed(1)} ${fire.y + 40}`;
-  // the hill's brow falls from ~0.6 (left) to ~0.48 (right) of the height
-  const hachures = [0.07, 0.15, 0.23, 0.31, 0.5, 0.58].map((f) => {
-    const x = f * W;
-    const y = 605 - f * 150 + 34;
-    return `M${(x - 28).toFixed(1)} ${y.toFixed(1)} Q${x.toFixed(1)} ${(y - 13).toFixed(1)} ${(x + 28).toFixed(1)} ${y.toFixed(1)}`;
+    `M${f(0.03 * W)} 672 C${f(0.1 * W)} 666 ${f(0.16 * W)} 655 ${f(0.22 * W)} 643` +
+    ` C${f(0.28 * W)} 631 ${f(0.34 * W)} 616 ${f(fire.x - 26)} ${fire.y + 12}`;
+  const route = measurePath(trail);
+  const DASHES = 24;
+  const dashes = Array.from({ length: DASHES }, (_, k) => {
+    const a = route.at(k / DASHES);
+    const b = route.at((k + 0.55) / DASHES);
+    return `M${f(a.x)} ${f(a.y)} L${f(b.x)} ${f(b.y)}`;
   });
+  const step = dur.draw.med / DASHES;
   const t0 = 0.45 + dur.draw.med + 0.1;
-  const fw = 46;
-  const fh = 69;
+  const fw = 58;
+  const fh = 86;
   const frames = [FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE];
   return (
     <g data-finale="rdr2-trail" strokeLinecap="round">
-      {hachures.map((d, k) => (
-        <motion.path key={k} d={d} stroke="var(--w-pencil)" strokeOpacity={0.8} strokeWidth={1.2} vectorEffect="non-scaling-stroke" {...draw(mode, 0.3 + k * 0.08, 0.35)} />
+      {dashes.map((d, k) => (
+        <motion.path key={k} d={d} stroke="var(--w-pencil)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" {...appear(mode, 0.45 + k * step, 1, 0.12)} />
       ))}
-      <motion.path d={trail} stroke="var(--w-pencil)" strokeWidth={1.4} vectorEffect="non-scaling-stroke" {...draw(mode, 0.45, dur.draw.med)} />
       {/* the kindle: three flame frames, once, settling on the last */}
       {frames.map((src, k) => {
         const last = k === frames.length - 1;

@@ -352,6 +352,10 @@ export const mediaAssets = {
     width: 2560, height: 1440, focal: [0.7, 0.5],
     focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 },
     marks: { lantern: [0.893, 0.419], horizon: [0, 0.426] },
+    // M2 fix (ART-DIRECTOR #3): the Black Pearl's silhouette (mast tips →
+    // hull, the stern lantern), measured on the 2560 px web file. The hero
+    // Lens frames focalBox (the crest) ∪ pearl; the ALT spyglass frames it.
+    rects: { pearl: { x0: 0.862, x1: 0.896, y0: 0.375, y1: 0.428 } },
     alt: null,
     provenance: hf("gpt_image_2_5 16:9 4k xhigh", 7, "548e5fc0-1d27-4024-bbf4-98e85e018e0e",
       "the Act I anchor; crest aqua from x 0.485, bright body 0.60-0.96; name zone x 9-46% p95 0.0079; the Pearl's stern lantern is the one warm pixel"),
@@ -362,6 +366,7 @@ export const mediaAssets = {
   "MV-02": {
     kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile.webp",
     width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    rects: { pearl: { x0: 0.758, x1: 0.81, y0: 0.31, y1: 0.347 } }, // M2 fix: the Pearl (ART-DIRECTOR #3)
     provenance: hf("gpt_image_2_5 4:5 2k high", 2.75, "10b81664-5614-4298-9601-17ae26c50073",
       "hero mobile 4:5; crest xp02 0.268 / xp98 0.939; ship + lantern kept"),
     accept: clean(["IC-PC-01", "IC-PC-08"]),
@@ -448,6 +453,7 @@ export const mediaAssets = {
     // M2-MEDIA-REPORT §6.6 and RECOGNIZABILITY S03. Lantern not re-measured.
     kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile-alt2.webp",
     width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    rects: { pearl: { x0: 0.754, x1: 0.805, y0: 0.343, y1: 0.378 } }, // M2 fix: the Pearl (the ALT spyglass)
     provenance: hf2("gpt_image_2_5 4:5 2k high (ref MV-01)", 2.75, "37eb75b2-d3b1-48c5-97df-787555f63abd",
       "MV-02 alt2 (extra run; the nbp runner-ups were rejects): crest xp02 0.306 / xp98 0.924; top 8% p95 0.0070; bottom 22% p95 0.0023; ship clean at 2.5x"),
     accept: cleanM2(["IC-PC-01", "IC-PC-08"]),

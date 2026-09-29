@@ -932,15 +932,11 @@ body {
   mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 72%);
 }
 
-/* — The journal spread (rdr2 × paper, SPEC SM-11 / RD-05): ≥ 1024 a 6 px
-     leather edge at the section's inline edges and a soft gutter down the
-     centre; below, one page. Decorative only (no text on the edge). — */
+/* — The journal spread (rdr2 × paper, SPEC SM-11 / RD-05): ≥ 1024 a soft
+     gutter down the centre; below, one page. (The 6 px leather edges at the
+     viewport's sides are gone: at full bleed they read as orange bug bars,
+     ART-DIRECTOR #15.) Decorative only. — */
 @media (min-width: 64rem) {
-  .journal-spread {
-    box-shadow:
-      inset 6px 0 0 var(--w-leather),
-      inset -6px 0 0 var(--w-leather);
-  }
   .journal-gutter {
     background-image: linear-gradient(
       to right,
@@ -1190,6 +1186,11 @@ html[data-motion="paused"] .opening-vignette {
 .scene-caption__film { color: var(--world-emphasis); }
 .scene-caption__quote .film-quote-lettered__by { font-size: 0.8125rem; letter-spacing: 0.02em; }
 .film-quote-lettered__by { white-space: nowrap; }
+/* the films screens' lettered line (film-screen.tsx): the Meta attribution
+   takes its own line under the display-size quote and wraps (a nowrap
+   "Albus Dumbledore • Harry Potter and the …" would overflow 320 px) */
+.films-line .film-quote-lettered__by { display: block; margin-top: var(--spacing-tier-pair); white-space: normal; }
+.films-line .film-quote-lettered__by > [aria-hidden="true"] { display: none; }
 
 /* bl / br: over the media's bottom corner, inside a `.scene-caption-host`
    (position: relative) that holds the media and the caption. The scrim is

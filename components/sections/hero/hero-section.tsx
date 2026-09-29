@@ -6,6 +6,7 @@ import { intro as introTiming } from "@/lib/motion";
 import {
   acts,
   anchorId,
+  captionOf,
   copyVisible,
   hrefOfId,
   intensityOf,
@@ -14,17 +15,26 @@ import {
 } from "@/lib/sections";
 import { VARIANTS, type Variant } from "@/lib/variants";
 import type { SectionProps } from "@/components/sections/types";
+import { SceneCaption } from "@/components/primitives/scene-caption";
 import { prepaintVariants } from "@/components/intro/prepaint-variants";
 import {
   boxAroundFocal,
-  coverBox,
+  boxCentre,
+  marginFor,
+  padBox,
+  plateGeo,
   REFERENCE_GUTTER,
   REFERENCE_VIEWPORT,
   settleFrame,
-  type Box01,
+  unionBox,
 } from "@/components/sections/hero/focal";
 import { heroBootHtml } from "@/components/sections/hero/hero-boot";
-import { HeroStage, type HeroPlate, type HeroPlates } from "@/components/sections/hero/hero-stage";
+import {
+  HeroStage,
+  type HeroGeo,
+  type HeroPlate,
+  type HeroPlates,
+} from "@/components/sections/hero/hero-stage";
 
 /**
  * The cold open (SPEC v2 §6, SM-2; hero-lens.BAR). A SERVER component: the
@@ -51,7 +61,29 @@ import { HeroStage, type HeroPlate, type HeroPlates } from "@/components/section
  * ends on it: lib/media.ts registeredTo). Today both loops are cut from the
  * default plate, so over the ALT plate the hero keeps its still rather than
  * jump (preview the loop ALT with ?variant=hero.loop:alt).
+ *
+ * M2 FIX (ART-DIRECTOR #3 / #15; RECOGNIZABILITY S03, T1):
+ *   - The Lens frames the crest AND the Black Pearl: its box is the plate's
+ *     `focalBox` (the crest) ∪ `rects.pearl` (lib/media.ts), so the bracket
+ *     now holds the ship instead of a wave beside it.
+ *   - hero.plate ALT "spyglass": there is no acceptable MV-01 ALT, so the
+ *     ALT is a different FRAMING of the same registered plate — it pushes in
+ *     ×SPYGLASS.zoom about the Pearl and the Lens frames the ship alone (the
+ *     velocity wake / spray still ride the crest: `crest`). Mobile plays
+ *     MV-02-alt with the same framing (static). The push-in runs after the
+ *     flight lands (HeroStage), so the landing still meets the flight's
+ *     last frame at zoom 1.
+ *   - cap.hero "THE BLACK PEARL ON THE HORIZON • PIRATES OF THE CARIBBEAN"
+ *     (proposed): a <p>, never a heading. ≥ 640 it sits bottom-right over
+ *     the calm dark water on its own scrim — exactly where the flight's
+ *     Pirates caption lingers, so the hand-off is a crossfade in place
+ *     (app/intro.css "T1"); < 640 it sits under the portrait still.
  */
+
+/** hero.plate ALT (M2): the push-in toward the Pearl and the Lens's margin
+ *  around the ship (plate fractions). ≤ 1.2 keeps the crest's bright body
+ *  right of the name (MV-01 name zone) and the loop near its native size. */
+const SPYGLASS = { zoom: 1.18, pad: [0.012, 0.018] } as const;
 
 /** Crest band around the focal point when a plate has no measured
  *  `focalBox` (half-width, half-height in plate fractions). */
@@ -72,7 +104,12 @@ function plateOf(
   const asset = resolveVariant(still, variant);
   if (!asset) return null;
   const focal = (asset.focal ?? [0.5, 0.5]) as readonly [number, number];
-  const box = asset.focalBox ?? boxAroundFocal(focal, band[0], band[1]);
+  // the crest (measured, else the band) and the Pearl (when measured)
+  const crest = asset.focalBox ?? boxAroundFocal(focal, band[0], band[1]);
+  const pearl = asset.rects?.pearl ?? null;
+  const spy = variant === "alt" && pearl !== null;
+  const wide = pearl ? unionBox(crest, pearl) : crest;
+  const box = spy ? padBox(pearl, SPYGLASS.pad[0], SPYGLASS.pad[1]) : wide;
   const loopFor = (v: Variant): MediaId | null => {
     const l = loop ? resolveVariant(loop, v) : null;
     return l && l.kind === "video" && registeredTo(l, asset.id) ? l.id : null;
@@ -82,9 +119,14 @@ function plateOf(
     size: { w: asset.width, h: asset.height },
     focal,
     box,
+    wide,
+    crest,
+    keep: pearl,
+    zoom: spy ? SPYGLASS.zoom : 1,
+    zoomAt: pearl ? boxCentre(pearl) : focal,
     // where the ALT film gate opens: the horizon, else the lantern, else
     // the middle of the crest band
-    horizon: asset.marks?.horizon?.[1] ?? asset.marks?.lantern?.[1] ?? (box.y0 + box.y1) / 2,
+    horizon: asset.marks?.horizon?.[1] ?? asset.marks?.lantern?.[1] ?? (crest.y0 + crest.y1) / 2,
     loops: { default: loopFor("default"), alt: loopFor("alt") },
   };
 }
@@ -125,13 +167,22 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
   const showCredit = film.enabled && film.heroCredit && acts.length > 0 && copyVisible(credit);
 
   const onceKey = `aperture:${entry.id}`;
-  // the bracket's SSR frame at the reference viewport, per plate side
-  const frameOf = (plate: HeroPlate): Box01 =>
-    settleFrame(coverBox(plate.box, plate.size, REFERENCE_VIEWPORT, plate.focal), {
-      ...REFERENCE_VIEWPORT,
-      inset: 16,
-      margin: REFERENCE_GUTTER,
-    });
+  // the bracket's SSR frame (and the zoom origin, the wake band) at the
+  // reference viewport, per plate side — HeroStage re-measures after mount
+  const geoOf = (plate: HeroPlate): HeroGeo => {
+    const g = plateGeo(plate, REFERENCE_VIEWPORT);
+    const margin = marginFor(g.keep, REFERENCE_VIEWPORT.w, 16, REFERENCE_GUTTER);
+    return {
+      frame: settleFrame(g.lens, { ...REFERENCE_VIEWPORT, inset: 16, margin }),
+      origin: g.origin,
+      wake: g.wake,
+      zoom: g.zoom,
+    };
+  };
+  // the hero's scene caption (RECOGNIZABILITY S03): null when its copy may
+  // not render in this build
+  const cap = captionOf("cap.hero");
+  const caption = cap ? <SceneCaption k="cap.hero" place="under" className="mt-0 sm:mt-0" /> : null;
 
   const column = (
     <div className="flex flex-col items-start">
@@ -190,7 +241,9 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
       choice={choice}
       plates={plates}
       mobiles={mobiles}
-      frames={Object.fromEntries(VARIANTS.map((v) => [v, frameOf(plates[v])])) as Record<Variant, Box01>}
+      frames={Object.fromEntries(VARIANTS.map((v) => [v, geoOf(plates[v])])) as Record<Variant, HeroGeo>}
+      caption={caption}
+      captionWorld={cap?.world ?? null}
     >
       {column}
     </HeroStage>

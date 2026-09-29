@@ -26,9 +26,12 @@ import type { Variant, VariantChoice } from "@/lib/variants";
 import { Lens, type LensState } from "@/components/primitives/lens";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import {
-  coverBox,
+  coverPoint,
+  marginFor,
+  plateGeo,
   sameBox,
   settleFrame,
+  zoomBox,
   type Box01,
   type Size,
 } from "@/components/sections/hero/focal";
@@ -82,6 +85,25 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *                  attribute (hero-boot.ts), i.e. what the reader was shown.
  *   hero.velocity  DEFAULT grain + chroma + wake | ALT crest spray + wake
  *                  (velocity-layers.tsx).
+ *
+ * M2 FIX (ART-DIRECTOR #3 / #15; RECOGNIZABILITY S03, T1; hero-section.tsx):
+ *   lens       the bracket frames the crest ∪ the Black Pearl (DEFAULT) or
+ *              the Pearl alone (ALT "spyglass"), its margin relaxed where the
+ *              gutter would cut the ship (focal.ts marginFor).
+ *   spyglass   ALT only: the plate (and its velocity layers) sit in a zoom
+ *              layer scaled ×zoom about the Pearl (×1 — the DEFAULT framing —
+ *              where the cover fit crops the Pearl out). SSR / hydration /
+ *              RM / Pause / a dismissal: the final (zoomed) composition.
+ *              While the prologue is up the layer waits at ×1 — the flight's
+ *              last frame IS the plate at ×1, so the landing meets it with no
+ *              jump — and the bracket halves are held invisible; once the
+ *              flight has landed the plate pushes in toward the ship
+ *              (PUSH_S) and the halves grow onto it. Mobile: static ×zoom.
+ *   caption    cap.hero (a server-rendered <SceneCaption>): ≥ 640 bottom-
+ *              right on its own scrim, exactly where the flight's Pirates
+ *              caption lingers (app/intro.css "T1": hidden while the prologue
+ *              is up and during the linger, then a crossfade in place);
+ *              < 640 under the portrait still. Static under RM / Pause.
  */
 
 const WIDE = "(min-width: 40rem)";
@@ -93,13 +115,18 @@ const APERTURE_TIMEOUT_MS = 1200;
 const LETTERBOX = 2.39;
 const GATE_FEATHER = 48;
 const GATE_CLOSED = "linear-gradient(transparent, transparent)";
+/** The ALT spyglass push-in after the flight lands (s): slow enough to read
+ *  as the camera leaning toward the ship, done inside the caption linger. */
+const PUSH_S = 2.2;
 /** Pointer shift cap (px) and the scroll-out map (hero-lens.BAR S4). */
 const SHIFT_PX = 6;
-const EXIT: Record<"scale" | "mediaY" | "textY" | "darken", { at: number[]; to: number[] }> = {
+const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", { at: number[]; to: number[] }> = {
   scale: { at: [0, 0.2, 0.7], to: [1, 1.03, 1.08] },
   mediaY: { at: [0.2, 0.7], to: [0, -24] },
   textY: { at: [0.2, 0.7], to: [0, -16] },
   darken: { at: [0.7, 1], to: [0, 1] },
+  // cap.hero leaves before the Act I card's film title arrives below it
+  caption: { at: [0.25, 0.55], to: [1, 0] },
 };
 
 export type HeroPlate = {
@@ -108,8 +135,19 @@ export type HeroPlate = {
   /** The still's intrinsic size (the cover fit). */
   size: Size;
   focal: readonly [number, number];
-  /** The crest box in PLATE fractions. */
+  /** The Lens box in PLATE fractions (the crest ∪ the Pearl; the ALT: the
+   *  Pearl, padded). */
   box: Box01;
+  /** The DEFAULT framing (crest ∪ Pearl): the ALT's fallback where the
+   *  cover fit crops the Pearl out (focal.ts plateGeo). */
+  wide: Box01;
+  /** The crest band in PLATE fractions: the velocity wake / spray. */
+  crest: Box01;
+  /** What the bracket must enclose (the Pearl), or null. */
+  keep: Box01 | null;
+  /** The spyglass push-in (1 = none) and its anchor (PLATE fractions). */
+  zoom: number;
+  zoomAt: readonly [number, number];
   /** The horizon's y (plate fraction): where the ALT film gate opens. */
   horizon: number;
   /** The loop each hero.loop variant plays over THIS still (a video
@@ -118,6 +156,15 @@ export type HeroPlate = {
 };
 /** Both sides of hero.plate. */
 export type HeroPlates = Record<Variant, HeroPlate>;
+/** One side's measured geometry (frame fractions): the bracket's settled
+ *  frame, the zoom layer's transform-origin, the crest band at ×1. */
+export type HeroGeo = {
+  frame: Box01;
+  origin: readonly [number, number];
+  wake: Box01;
+  /** The zoom this view plays (the ALT's, or 1 where it falls back). */
+  zoom: number;
+};
 
 type Which = "desktop" | "mobile";
 /** `hold`: closed but waiting for the prologue to leave (no aperture yet).
@@ -134,13 +181,22 @@ type Props = {
   choice: VariantChoice;
   plates: HeroPlates;
   mobiles: HeroPlates;
-  /** Each plate's crest box in frame fractions at the reference viewport. */
-  frames: Record<Variant, Box01>;
+  /** Each plate's geometry at the reference viewport (the SSR frame). */
+  frames: Record<Variant, HeroGeo>;
+  /** cap.hero, server-rendered (or null: its copy may not render). */
+  caption?: ReactNode;
+  /** The caption's world: its plane (colours = the flight caption's). */
+  captionWorld?: string | null;
   children: ReactNode;
 };
 
 const pos = (f: readonly [number, number]) =>
   `${(f[0] * 100).toFixed(2)}% ${(f[1] * 100).toFixed(2)}%`;
+
+const samePoint = (a: readonly [number, number], b: readonly [number, number]) =>
+  Math.abs(a[0] - b[0]) < 1e-4 && Math.abs(a[1] - b[1]) < 1e-4;
+const sameGeo = (a: HeroGeo, b: HeroGeo) =>
+  sameBox(a.frame, b.frame) && sameBox(a.wake, b.wake) && samePoint(a.origin, b.origin) && a.zoom === b.zoom;
 
 const slitVars = (origin: number): CSSProperties =>
   ({
@@ -157,6 +213,8 @@ export function HeroStage({
   plates,
   mobiles,
   frames,
+  caption,
+  captionWorld,
   children,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -313,9 +371,11 @@ export function HeroStage({
   // the film gate clips the plate itself (below); its Lens stays open
   const lensState = (w: Which): LensState => (run.which === w && run.kind !== "gate" ? run.state : "open");
 
-  /* — The bracket's frame: the crest box through the cover fit, ≥ 16 px
-       right of the h1 (H7). Measured on resize and after the fonts land. — */
-  const [frame, setFrame] = useState<Box01>(frames[plateV]);
+  /* — The bracket's frame: the Lens box through the cover fit (and the
+       spyglass zoom), ≥ 16 px right of the h1 (H7). Measured on resize and
+       after the fonts land, with the zoom origin and the wake band. — */
+  const [geo, setGeo] = useState<HeroGeo>(frames[plateV]);
+  const frame = geo.frame;
   const boxW = useMotionValue(1440);
   const boxH = useMotionValue(900);
   useEffect(() => {
@@ -336,15 +396,21 @@ export function HeroStage({
       // the page gutter (the text column's px-gutter, resolved): the right
       // spine rests on the page grid, not 8 px from the viewport edge
       const col = columnRef.current;
-      const margin = col ? parseFloat(getComputedStyle(col).paddingRight) || 8 : 8;
-      const next = settleFrame(coverBox(plate.box, plate.size, { w, h }, plate.focal), {
-        w,
-        h,
-        inset,
-        margin,
-        avoidRight,
-      });
-      setFrame((prev) => (sameBox(prev, next) ? prev : next));
+      const gutter = col ? parseFloat(getComputedStyle(col).paddingRight) || 8 : 8;
+      const g = plateGeo(plate, { w, h });
+      const next: HeroGeo = {
+        frame: settleFrame(g.lens, {
+          w,
+          h,
+          inset,
+          margin: marginFor(g.keep, w, inset, gutter),
+          avoidRight,
+        }),
+        origin: g.origin,
+        wake: g.wake,
+        zoom: g.zoom,
+      };
+      setGeo((prev) => (sameGeo(prev, next) ? prev : next));
     };
     const ro = new ResizeObserver(measure);
     ro.observe(box);
@@ -357,7 +423,81 @@ export function HeroStage({
       alive = false;
       ro.disconnect();
     };
-  }, [plate.box, plate.size, plate.focal, boxW, boxH]);
+  }, [plate, boxW, boxH]);
+
+  /* — The ALT spyglass push-in (see the header). The halves are held with
+       WAAPI (React's markup untouched), like the film gate's. — */
+  const zoom = useMotionValue(geo.zoom);
+  const spyHold = useRef<Animation | null>(null);
+  const spyWaits = useRef(false);
+  const frameRef = useRef(frame);
+  useEffect(() => {
+    frameRef.current = frame;
+  });
+  const spyZoom = geo.zoom;
+  useEffect(() => {
+    const halves =
+      lensBoxRef.current?.querySelector<HTMLElement>(":scope > [data-lens] > div:last-child") ?? null;
+    const release = () => {
+      spyHold.current?.cancel();
+      spyHold.current = null;
+    };
+    const final = () => {
+      spyWaits.current = false;
+      zoom.jump(spyZoom);
+      release();
+    };
+    if (spyZoom === 1 || reduced || !wide) {
+      final();
+      return;
+    }
+    if (phase === "armed") {
+      // under the opaque prologue: wait at ×1 (the flight lands on it)
+      spyWaits.current = true;
+      zoom.jump(1);
+      if (halves && !spyHold.current && typeof halves.animate === "function") {
+        spyHold.current = halves.animate({ opacity: [0, 0] }, { duration: 1, fill: "forwards" });
+      }
+      return;
+    }
+    if (!spyWaits.current || phase !== "played") {
+      // never held (no prologue, SSR / hydration) or dismissed: final
+      final();
+      return;
+    }
+    spyWaits.current = false;
+    const f = frameRef.current;
+    const origin = `50% ${(((f.y0 + f.y1) / 2) * 100).toFixed(2)}%`;
+    let settle: Animation | null = null;
+    const run = animate(zoom, spyZoom, {
+      duration: PUSH_S,
+      ease,
+      onComplete: () => {
+        release();
+        if (halves && typeof halves.animate === "function") {
+          settle = halves.animate(
+            [
+              { opacity: 0, transform: "scaleY(0.12)", transformOrigin: origin },
+              { opacity: 1, transform: "scaleY(1)", transformOrigin: origin },
+            ],
+            { duration: dur.reveal * 1000, easing: `cubic-bezier(${ease.join(",")})` },
+          );
+        }
+      },
+    });
+    return () => {
+      // interrupted (motion off, a variant switch, unmount): the final frame
+      run.stop();
+      settle?.cancel();
+      zoom.jump(spyZoom);
+      release();
+    };
+  }, [spyZoom, phase, reduced, wide, zoom]);
+  useEffect(() => () => spyHold.current?.cancel(), []);
+
+  // the portrait's Lens frame (intrinsic layout: plate fractions = frame
+  // fractions), through its static spyglass zoom
+  const mobileFrame = zoomBox(mobile.box, mobile.zoom, mobile.zoomAt);
 
   /* — The film gate (hero.aperture ALT) ————————————————————————————————
        closed    the plate is masked to nothing; the bracket halves are held
@@ -399,7 +539,10 @@ export function HeroStage({
     const p = gateWhich === "desktop" ? plate : mobile;
     const w = wrap.offsetWidth;
     const h = wrap.offsetHeight;
-    const cy = coverBox({ x0: 0, x1: 1, y0: p.horizon, y1: p.horizon }, p.size, { w, h }, p.focal).y0 * h;
+    // the horizon through the cover fit and the spyglass zoom (final here)
+    const hy = coverPoint([0, p.horizon], p.size, { w, h }, p.focal)[1];
+    const oy = coverPoint(p.zoomAt, p.size, { w, h }, p.focal)[1];
+    const cy = (oy + (hy - oy) * (gateWhich === "desktop" ? geo.zoom : p.zoom)) * h;
     const band = Math.min(h, w / LETTERBOX) / 2;
     const full = Math.max(cy, h - cy) + GATE_FEATHER;
     const setHalf = (half: number) => {
@@ -410,7 +553,7 @@ export function HeroStage({
         `linear-gradient(to bottom, transparent ${(a - f).toFixed(1)}px, #000 ${(a + f).toFixed(1)}px, #000 ${(b - f).toFixed(1)}px, transparent ${(b + f).toFixed(1)}px)`,
       );
     };
-    const frameBox = gateWhich === "desktop" ? frame : p.box;
+    const frameBox = gateWhich === "desktop" ? frame : mobileFrame;
     const origin = `50% ${(((frameBox.y0 + frameBox.y1) / 2) * 100).toFixed(2)}%`;
     const runs: ReturnType<typeof animate>[] = [];
     let settle: Animation | null = null;
@@ -488,6 +631,7 @@ export function HeroStage({
   const exitY = useTransform(exit, EXIT.mediaY.at, EXIT.mediaY.to);
   const textY = useTransform(exit, EXIT.textY.at, EXIT.textY.to);
   const darken = useTransform(exit, EXIT.darken.at, EXIT.darken.to);
+  const capOut = useTransform(exit, EXIT.caption.at, EXIT.caption.to);
   const plateScale = useTransform(
     [exitScale, shiftX, shiftY, boxW, boxH],
     ([s, x, y, w, h]) =>
@@ -541,29 +685,37 @@ export function HeroStage({
               ...(moving ? { scale: plateScale, x: shiftX, y: plateY } : null),
             }}
           >
-            <MediaFrame
-              // a plate / loop switch (?variant=…) remounts: fresh poster
-              // state and a fresh decoder claim
-              key={`${plate.poster}:${media}`}
-              media={media}
-              poster={plate.poster}
-              priority
-              layout="fill"
-              // art direction without a double download: below 640 this
-              // frame is display:none, so its preload resolves to the 16 w
-              // rung; the mobile frame does the inverse.
-              sizes="(max-width: 639px) 1vw, 100vw"
-              playOn={playOn}
-            />
-            {noisy ? (
-              <VelocityLayers
-                key={plate.poster}
-                hostRef={plateRef}
-                wake={frame}
-                objectPosition={pos(plate.focal)}
-                dialect={velocityV === "alt" ? "spray" : "grain"}
+            {/* the spyglass zoom layer (×1 on the DEFAULT side) */}
+            <motion.div
+              data-hero-zoom=""
+              className="absolute inset-0"
+              style={{ scale: zoom, transformOrigin: pos(geo.origin) }}
+            >
+              <MediaFrame
+                // a plate / loop switch (?variant=…) remounts: fresh poster
+                // state and a fresh decoder claim
+                key={`${plate.poster}:${media}`}
+                media={media}
+                poster={plate.poster}
+                priority
+                layout="fill"
+                // art direction without a double download: below 640 this
+                // frame is display:none, so its preload resolves to the 16 w
+                // rung; the mobile frame does the inverse.
+                sizes="(max-width: 639px) 1vw, 100vw"
+                playOn={playOn}
               />
-            ) : null}
+              {noisy ? (
+                <VelocityLayers
+                  key={plate.poster}
+                  hostRef={plateRef}
+                  // the crest band at ×1: the layers ride inside the zoom
+                  wake={geo.wake}
+                  objectPosition={pos(plate.focal)}
+                  dialect={velocityV === "alt" ? "spray" : "grain"}
+                />
+              ) : null}
+            </motion.div>
             {moving ? (
               <motion.div
                 aria-hidden="true"
@@ -584,6 +736,22 @@ export function HeroStage({
         {children}
       </motion.div>
 
+      {/* — cap.hero ≥ 640 (T1): bottom-right, where the flight caption
+           lingers; in flow below the column on short screens (intro.css) — */}
+      {caption ? (
+        <motion.div
+          data-hero-cap=""
+          data-world={captionWorld ?? undefined}
+          data-tone={captionWorld ? "deep" : undefined}
+          className="hero-cap relative z-10 hidden sm:block"
+          // the scroll-out fade lives here; the T1 hand-off (a class on
+          // <html>) on the inner box, so neither overrides the other
+          style={moving ? { opacity: capOut } : undefined}
+        >
+          <div className="hero-cap__in">{caption}</div>
+        </motion.div>
+      ) : null}
+
       {/* — Mobile: the portrait still below the CTA, with its own bracket — */}
       <div className="relative px-gutter pt-tier-block pb-section sm:hidden">
         <div
@@ -595,23 +763,39 @@ export function HeroStage({
         >
           <Lens
             state={lensState("mobile")}
-            frame={mobile.box}
+            frame={mobileFrame}
             origin={mobile.focal[0]}
             onSettled={onSettled}
           >
             <motion.div style={{ maskImage: gateMask, WebkitMaskImage: gateMask }}>
-              <MediaFrame
-                key={mobile.poster}
-                media={mobile.poster}
-                poster={mobile.poster}
-                priority
-                layout="intrinsic"
-                sizes="(max-width: 639px) 92vw, 1vw"
-                playOn="never"
-              />
+              {/* the spyglass framing, static (mobile gets stills); the
+                  Lens clip and the section's overflow crop it */}
+              <div
+                style={
+                  mobile.zoom !== 1
+                    ? { transform: `scale(${mobile.zoom})`, transformOrigin: pos(mobile.zoomAt) }
+                    : undefined
+                }
+              >
+                <MediaFrame
+                  key={mobile.poster}
+                  media={mobile.poster}
+                  poster={mobile.poster}
+                  priority
+                  layout="intrinsic"
+                  sizes="(max-width: 639px) 92vw, 1vw"
+                  playOn="never"
+                />
+              </div>
             </motion.div>
           </Lens>
         </div>
+        {/* cap.hero < 640: under the still (static, in flow) */}
+        {caption ? (
+          <div data-world={captionWorld ?? undefined} data-tone={captionWorld ? "deep" : undefined}>
+            {caption}
+          </div>
+        ) : null}
       </div>
     </section>
   );

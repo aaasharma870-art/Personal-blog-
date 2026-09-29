@@ -208,6 +208,12 @@ const lettering = [
   // registered line: the answer is Q-3I-3, lettered through <FilmQuote>)
   { id: "3i-machine-q", text: "What is a machine?", face: "Kalam", mode: "A", slot: "caption", shipped: true },
   { id: "q-hp-2", text: "", quote: "Q-HP-2", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
+  // the films chapter's four lines, lettered in their world faces (ART-DIRECTOR #11: the most
+  // famous lines on the page were 10 px mono); attribution stays in Meta beside each
+  { id: "q-pc-2", text: "", quote: "Q-PC-2", face: "Pirata One", mode: "A", slot: "caption", shipped: true },
+  { id: "q-3i-1", text: "", quote: "Q-3I-1", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  { id: "q-rd-1", text: "", quote: "Q-RD-1", face: "Rye", mode: "A", slot: "caption", shipped: true },
+  { id: "q-hp-4", text: "", quote: "Q-HP-4", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
 ] as const satisfies readonly LetteringSpec[];
 export type LetteringId = (typeof lettering)[number]["id"];
 
@@ -288,7 +294,12 @@ const pirates: WorldSpec = {
     loader: "course", dressing: plainDressing,
   },
   lettering: "pc-crossing",
-  media: { plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "iconic-pearl", filmsStill: "F-PC" },
+  // films screen (ART-DIRECTOR #9): the tattered-sail Pearl, CROSSED with the Act I card so no
+  // variant shows the same plate twice (card: iconic-pearl / ALT -alt; films: -alt / ALT iconic-pearl)
+  media: {
+    plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "iconic-pearl",
+    filmsStill: "iconic-pearl-alt", filmsAltStill: "iconic-pearl",
+  },
   borrowed: {
     text: "On this page it became the course line through the Journey and Jack's compass, which settles on each bearing.",
     status: "proposed",
@@ -506,7 +517,8 @@ export const worldFaces = {
    branch preview renders them. Keys ending ".alt" name the ALT variant's
    imagery: pick with captionKeyFor(base, variant) (lib/sections.ts).
    Accuracy (rule c): Port Royal / Isla de Muerta / the Aztec gold are Curse
-   of the Black Pearl (2003); the bottled Pearl is On Stranger Tides (2011);
+   of the Black Pearl (2003); Calypso's storm (the maelstrom battle) is At
+   World's End (2007); the bottled Pearl is On Stranger Tides (2011);
    ICE = the film's Imperial College of Engineering; the yellow scooter at
    Pangong lake is 3 Idiots' final scene; the astronaut pen is Virus's pen,
    kept for a worthy student. NOT used (unverified): "Virus's stopwatch". */
@@ -538,14 +550,18 @@ const captions = {
   /* prologue + hero (cards builder: components/intro/**) */
   "cap.intro.play": { world: "hp", moment: moment("HOGWARTS, ACROSS THE BLACK LAKE"), variant: "both", place: "bl", where: "intro play screen, below Play; clears with the intro text" },
   "cap.intro.flight.hp": { world: "hp", moment: moment("A BROOMSTICK OVER HOGWARTS"), variant: "both", place: "bl", where: "flight 0–2.5 s", ariaHidden: true },
-  "cap.intro.flight.pc": { world: "pirates", moment: moment("TOWARD THE BLACK PEARL"), variant: "both", place: "br", where: "flight 3.5 s → the landed hero +2.5 s, then fades for good", ariaHidden: true },
+  "cap.intro.flight.pc": { world: "pirates", moment: moment("TOWARD THE BLACK PEARL"), variant: "both", place: "br", where: "flight 3.5 s → the landed hero +2.5 s, then crossfades in place into cap.hero", ariaHidden: true },
+  // M2 fix (ART-DIRECTOR #3): the hero names its plate for good (T1: the flight caption hands off to it in place)
+  "cap.hero": { world: "pirates", moment: moment("THE BLACK PEARL ON THE HORIZON"), variant: "both", place: "br", where: "hero, bottom-right over the calm dark water on its own scrim (≥ 640; never over the crest); under the portrait still < 640" },
   /* Act I · pirates */
   "cap.act-1": { world: "pirates", moment: moment("THE BLACK PEARL"), variant: "default", place: "br", where: "opening card plate (iconic-pearl)" },
   "cap.act-1.alt": { world: "pirates", moment: moment("THE CHART TO ISLA DE MUERTA"), variant: "alt", place: "br", where: "opening card plate (iconic-pearl-alt + the chart)" },
   "cap.about": { world: "pirates", moment: moment("JACK’S COMPASS — IT POINTS TO WHAT YOU WANT MOST"), variant: "both", place: "head", where: "about head, opposite the h2" },
   "cap.journey.1": { world: "pirates", moment: moment("PORT ROYAL HARBOUR AT NIGHT"), variant: "both", place: "bl", where: "journey media, step 1 (still frame only)" },
   "cap.journey.2": { world: "pirates", moment: moment("THE FOG AROUND ISLA DE MUERTA"), variant: "both", place: "bl", where: "journey media, step 2" },
-  "cap.journey.3": { world: "pirates", moment: moment("THE CURSE OF THE AZTEC GOLD"), variant: "both", place: "bl", where: "journey media, step 3" },
+  // step 3 shows a squall with no ship and no gold (MV-05c / -alt), so it names the storm it shows
+  // (ART-DIRECTOR #9: "the curse of the Aztec gold" promised a medallion the frame never had)
+  "cap.journey.3": { world: "pirates", moment: moment("CALYPSO’S STORM"), variant: "both", place: "bl", where: "journey media, step 3 (the squall)" },
   "cap.journey.4": { world: "pirates", quote: "Q-PC-1", variant: "both", place: "bl", where: "journey media, step 4 (lettered Q-PC-1)" },
   /* Card I→II + Act II · idiots */
   "cap.act-2.out": { world: "pirates", moment: moment("THE KRAKEN’S STORM"), variant: "both", place: "br", where: "card I→II outgoing half, p .1–.35 (O-7)" },
@@ -563,7 +579,9 @@ const captions = {
   // M2 finish: under the header inset (iconic-pen, or its PenCase stand-in)
   "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "under", where: "kill-list header inset, under the plate (O-5; never on a row)" },
   /* Intermission · the films chapter (house plane, one world per screen) */
-  "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL AT ANCHOR"), variant: "both", place: "under", where: "films screen (F-PC)" },
+  // the films screen shows the TATTERED-sail Pearl under the moon (iconic-pearl-alt / iconic-pearl,
+  // ART-DIRECTOR #9: F-PC's intact grey sails were not the Black Pearl)
+  "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL BY MOONLIGHT"), variant: "both", place: "under", where: "films screen (iconic-pearl-alt; ALT iconic-pearl)" },
   "cap.films.idiots": { world: "idiots", moment: moment("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "films screen (F-3I)" },
   "cap.films.rdr2": { world: "rdr2", moment: moment("THE HEARTLANDS AT DUSK"), variant: "both", place: "under", where: "films screen (F-RD)" },
   "cap.films.hp": { world: "hp", moment: moment("THE HOGWARTS EXPRESS"), variant: "default", place: "under", where: "films screen (iconic-express)" },
@@ -575,7 +593,7 @@ const captions = {
   "cap.beyond.satchel": { world: "rdr2", moment: moment("WHAT’S IN THE SATCHEL"), variant: "both", place: "head", where: "Creative block head" },
   "cap.beyond.handbill": { world: "rdr2", moment: moment("A WANTED POSTER"), variant: "both", place: "under", where: "under the notice board (iconic-wanted)" },
   "cap.writing": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "both", place: "head", where: "writing, left page head (paper plane)" },
-  "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "br", where: "voices plate (iconic-camp)" },
+  "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "head", where: "voices head, under the h2 (iconic-camp behind; ART-DIRECTOR #14)" },
   "cap.voices.alt": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "alt", place: "under", where: "under the MV-11L loop (it moves)" },
   /* Card III→IV + Act IV · hp */
   "cap.act-4.out": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "both", place: "br", where: "card III→IV outgoing, p .05–.3" },

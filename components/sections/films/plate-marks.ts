@@ -15,6 +15,11 @@ const MEASURED: Partial<Record<MediaId, Readonly<Record<string, Mark>>>> = {
   // the Pearl's stern lantern (the page's one warm point on the sea)
   "F-PC": { lantern: [0.84, 0.555] },
   "F-PC-alt": { lantern: [0.836, 0.556] },
+  // the tattered-sail Pearl plates (ART-DIRECTOR #9; measured on a 0.05 grid,
+  // 2026-09-29, films-sections): the stern lantern; `treasure` = the moon
+  // path on the water just before the bow, where the ALT's X is inked
+  "iconic-pearl": { lantern: [0.925, 0.565], treasure: [0.39, 0.815] },
+  "iconic-pearl-alt": { lantern: [0.948, 0.48], treasure: [0.41, 0.815] },
   // the yellow scooter's body (Pangong lake)
   "F-3I": { scooter: [0.79, 0.62] },
   "F-3I-alt": { scooter: [0.76, 0.6] },
@@ -33,7 +38,7 @@ export function filmMark(id: MediaId, name: string): Mark | null {
 
 /** Each world's focal mark name on its films still (the ALT iris origin). */
 export const FOCAL_MARK = {
-  pirates: "lantern",
+  pirates: "lantern", // the Pearl's stern lantern
   idiots: "scooter",
   rdr2: "horse",
   hp: "ink",

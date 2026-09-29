@@ -26,10 +26,27 @@ type Plane = { tone: ToneId; world: WorldId };
  *  after one needs no dome (it would repaint the old plane over the fade). */
 const EXITS_TO_PAGE_DEEP: ReadonlySet<string> = new Set(["ledger"]);
 
+/** Section types that recede into the NEXT section's plane themselves when
+ *  it is their own world's deep (T9: the journal's page sinks into dusk
+ *  before the camp, components/site/writing.tsx): that section then needs
+ *  no dome either (a paper dome would repaint the page over the dusk). */
+const RECEDES_INTO_WORLD_DEEP: ReadonlySet<string> = new Set(["index"]);
+
+/** The deep plane `entry` recedes into at its foot, or null. */
+export function recedeInto(entry: SectionEntry): Plane | null {
+  if (!RECEDES_INTO_WORLD_DEEP.has(entry.type) || toneOf(entry) === "deep") return null;
+  const i = pageItems.findIndex((it) => it.kind === "section" && it.entry.id === entry.id);
+  const next = i >= 0 ? pageItems[i + 1] : undefined;
+  if (!next || next.kind !== "section") return null;
+  if (next.world !== worldOf(entry) || next.tone !== "deep") return null;
+  return { tone: next.tone, world: next.world };
+}
+
 /** The plane the dome seam should paint at the top of `entry`, or null:
  *  - the item before it is an act card (the incoming world owns that cut);
  *  - it is the first item; or the two planes are identical;
- *  - the previous section already fades into this house-deep plane. */
+ *  - the previous section already fades into this house-deep plane, or
+ *    recedes into this plane itself (recedeInto). */
 export function seamFromFor(entry: SectionEntry): Plane | null {
   const i = pageItems.findIndex((it) => it.kind === "section" && it.entry.id === entry.id);
   if (i <= 0) return null;
@@ -37,6 +54,7 @@ export function seamFromFor(entry: SectionEntry): Plane | null {
   if (!prev || prev.kind !== "section") return null;
   if (prev.tone === toneOf(entry) && prev.world === worldOf(entry)) return null;
   if (EXITS_TO_PAGE_DEEP.has(prev.entry.type) && worldOf(entry) === "house" && toneOf(entry) === "deep") return null;
+  if (recedeInto(prev.entry)) return null;
   return { tone: prev.tone, world: prev.world };
 }
 

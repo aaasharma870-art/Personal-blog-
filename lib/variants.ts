@@ -158,12 +158,12 @@ export const VARIANT_REGISTRY = {
   "hero.plate": {
     default: {
       name: "pearl-at-night",
-      note: "MV-01 / MV-02: the night sea, the aqua crest, the Black Pearl with its one warm lantern.",
+      note: "MV-01 / MV-02: the night sea, the aqua crest, the Black Pearl with its one warm lantern; the Lens frames the crest AND the Pearl (focalBox ∪ rects.pearl).",
       media: ["MV-01", "MV-02"],
     },
     alt: {
       name: "moonlit-pearl",
-      note: "M2: MV-01 has no acceptable alt (MV-01-alt is parked as a reject, status received), so desktop plays the DEFAULT plate; mobile plays MV-02-alt (alt2, 37eb75b2). The variant differs in choreography (RECOGNIZABILITY S03).",
+      note: "M2: MV-01 has no acceptable alt (MV-01-alt is parked as a reject, status received), so desktop plays the DEFAULT plate; mobile plays MV-02-alt (alt2, 37eb75b2). M2 fix (ART-DIRECTOR #15): the 'spyglass' framing — the plate pushes in x1.18 about the Pearl (after the flight lands; static under RM / Pause / mobile) and the Lens frames the ship alone.",
       media: ["MV-01-alt", "MV-02-alt"],
     },
     files: ["components/sections/hero/hero-section.tsx", "components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
@@ -419,13 +419,13 @@ export const VARIANT_REGISTRY = {
   "films.screens": {
     default: {
       name: "clip-finales",
-      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course, blueprint gates + chalk circle, a graphite trail to a kindling campfire, an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
-      media: ["F-PC", "F-3I", "F-RD", "iconic-express"],
+      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course over the tattered-sail Pearl (iconic-pearl-alt), chalk-white blueprint gates + chalk circle, a graphite trail along the ridge to a kindling campfire, an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
+      media: ["iconic-pearl-alt", "F-3I", "F-RD", "iconic-express"],
     },
     alt: {
       name: "iris-marks",
-      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course to an X, a chalk circle + tick round the scooter, a journal clipping, footprints on the enchanted paper (F-HP).",
-      media: ["F-PC-alt", "F-3I-alt", "F-RD-alt"],
+      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course across the moon path to an X before the Pearl's bow (iconic-pearl: the Act I card's other plate, so no variant repeats one), a chalk circle + tick round the scooter, a journal clipping, footprints on the enchanted paper (F-HP).",
+      media: ["F-3I-alt", "F-RD-alt"],
     },
     files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts"],
   },

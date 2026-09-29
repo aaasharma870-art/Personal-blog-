@@ -308,7 +308,11 @@
 }
 /* RD-P6 / D1: the quotes sit in a near-black left half (the plate's sunset
    sky and horses glow through, dimmed); the camp is lit to the right. Top
-   and bottom feather into the rd deep ground (T9, T10). */
+   and bottom feather into the rd deep ground (T9, T10).
+   ART-DIRECTOR #14: the quote column (≤ 46 % of the page) ran over the lit
+   tent and tripod, so the deep holds SOLID-ish across the whole column
+   (0–45 %) and only then falls away, transparent by 65 % — the fire
+   (≈ 59 % of the viewport) keeps ~3/4 of its light. */
 .campScrim {
   position: absolute;
   inset: 0;
@@ -318,10 +322,10 @@
     linear-gradient(to top, var(--bg) 0, transparent 20%),
     linear-gradient(
       to right,
-      color-mix(in oklab, var(--rd-deep) 92%, transparent) 0%,
-      color-mix(in oklab, var(--rd-deep) 84%, transparent) 32%,
-      color-mix(in oklab, var(--rd-deep) 62%, transparent) 47%,
-      transparent 64%
+      color-mix(in oklab, var(--rd-deep) 94%, transparent) 0%,
+      color-mix(in oklab, var(--rd-deep) 90%, transparent) 45%,
+      color-mix(in oklab, var(--rd-deep) 38%, transparent) 55%,
+      transparent 65%
     );
 }
 .duskVeil {
@@ -337,7 +341,17 @@
   .campCopy {
     max-width: 46%;
     padding-top: 2rem;
-    padding-bottom: 12rem; /* the backdrop's caption corner stays clear */
+    padding-bottom: 12rem; /* the camp's lit foot shows under the last voice */
+  }
+}
+/* cap.voices in the head (desktop; < 1024 the mobile still carries it) */
+.campHeadCaption {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .campHeadCaption {
+    display: block;
+    margin-top: var(--spacing-tier-group);
   }
 }
 .campMobile {

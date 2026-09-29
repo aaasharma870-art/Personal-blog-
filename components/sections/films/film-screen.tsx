@@ -19,8 +19,10 @@ import { FilmFrame } from "@/components/sections/films/film-frame";
      h3    the FILM TITLE, big, in the world's fan face (RECOGNIZABILITY O-1
            overrides the bar's "house type" for film titles: <FilmTitle>)
      the letterboxed still + its finale; the caption UNDER it
-     left:  the line — one verbatim quote, Meta caption rendition, with its
-            speaker and work (never Aryan's words, never beside a metric)
+     left:  the line — one verbatim quote, LETTERED in the world's fan face
+            (lib/film.ts lettering q-pc-2 / q-3i-1 / q-rd-1 / q-hp-4), its
+            speaker and work in Meta on the line below (never Aryan's
+            words, never beside a metric)
      right: what this page BORROWED (a site fact) · Aryan's REASON (his
             one-liner from lib/film.ts: a Claude draft he will rewrite,
             visible on this branch via branchPreview, no badge) · "Seen here
@@ -101,7 +103,13 @@ export function FilmScreen({
 
       <div className="mt-tier-block grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-5">
-          {spec.line ? <FilmQuote id={spec.line} rendition="caption" className="max-w-[34rem]" /> : null}
+          {spec.line ? (
+            // the film's most famous line, LETTERED in its world face (ART-DIRECTOR #11:
+            // it was 10 px mono); the speaker and work stay beside it in Meta
+            <p className="films-line max-w-[34rem] text-[clamp(1.75rem,1.15rem+1.7vw,2.75rem)] leading-[1.12] tracking-[0.01em] text-fg" data-films-line={world}>
+              <FilmQuote id={spec.line} rendition="lettered" />
+            </p>
+          ) : null}
         </div>
         <div className="lg:col-span-7">
           {borrowed ? <p className="max-w-body type-body text-fg">{borrowed.text}</p> : null}

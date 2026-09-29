@@ -42,7 +42,9 @@ import type { IntroModel } from "./intro-model";
                2.5 s of the 6 s flight, a 1 s cross-dissolve, then "TOWARD
                THE BLACK PEARL • PIRATES OF THE CARIBBEAN" through the
                landing and 2.5 s over the landed hero (≥ 640), then a
-               600 ms fade, never to return. The code flight runs the same
+               600 ms fade that crossfades IN PLACE into the hero's own
+               cap.hero (same corner, both right-aligned with the rule at
+               the right: app/intro.css "T1"). The code flight runs the same
                timeline scaled to its length. aria-hidden (it narrates a
                visual). Hidden by CSS until the controller animates it, so
                no JS / reduced motion / Pause / ?skip / Skip never show it.
@@ -187,7 +189,8 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
           id="intro-cap-pc"
           data-world="pirates"
           data-tone="deep"
-          className="absolute right-(--spacing-gutter) bottom-[max(7svh,2.75rem)] left-(--spacing-gutter) opacity-0 sm:left-auto sm:max-w-[40rem]"
+          // the same corner and width as the hero's cap.hero (T1 hand-off)
+          className="absolute right-(--spacing-gutter) bottom-[max(7svh,2.75rem)] left-(--spacing-gutter) opacity-0 sm:left-auto sm:max-w-[min(52rem,calc(100%_-_2*var(--spacing-gutter)))]"
         >
           <SceneCaption k="cap.intro.flight.pc" place="under" className="mt-0 sm:mt-0" />
         </div>

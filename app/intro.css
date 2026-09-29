@@ -20,6 +20,9 @@
      intro-alt-<p>   (pre-paint) piece <p> plays its ALT (variants block below)
      intro-inked     intro.play ALT: the ink route reached Play
      intro-fold      intro.landing ALT: the page is folding away
+     intro-caps-linger  T1: the flight's Pirates caption lingers over the
+                     landed hero; the hero's own cap.hero waits hidden
+                     (added / removed by the controller after the end)
    Law 1: no text-shadow, glow box-shadow, filter animation or
    radial-gradient paint on the DOM here; luminous paint lives only in the
    canvas and the video (#intro-stage).
@@ -40,6 +43,23 @@
   }
   to {
     --intro-draw: 1;
+  }
+}
+
+/* The map-fold's edge feather (ART-DIRECTOR #8): grows from 0 as the page
+   starts to turn, so frame one of the fold is still the full flight frame. */
+@property --intro-fold-feather {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes intro-fold-feather {
+  from {
+    --intro-fold-feather: 0px;
+  }
+  to {
+    --intro-fold-feather: 72px;
   }
 }
 
@@ -370,6 +390,94 @@ html.intro-armed.intro-alt-play.intro-inked .intro-lens {
 html.intro-fold #intro {
   transform-origin: 100% 50%;
   backface-visibility: hidden;
+  /* M2 (ART-DIRECTOR #8): no hard-edged card turning over the hero — the
+     free (left) edge and the top / bottom edges feather out (the mask rides
+     the transform; the hinge edge stays on the viewport's edge), over the
+     canvas's parchment wash and edge shadow (controller foldShade). */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 var(--intro-fold-feather)),
+    linear-gradient(
+      to bottom,
+      transparent,
+      #000 calc(var(--intro-fold-feather) * 0.67),
+      #000 calc(100% - var(--intro-fold-feather) * 0.67),
+      transparent
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 var(--intro-fold-feather)),
+    linear-gradient(
+      to bottom,
+      transparent,
+      #000 calc(var(--intro-fold-feather) * 0.67),
+      #000 calc(100% - var(--intro-fold-feather) * 0.67),
+      transparent
+    );
+  mask-composite: intersect;
+  animation: intro-fold-feather 0.3s var(--ease-out) both;
+}
+/* Skip never turns with the page (it rotated across MENU): gone the moment
+   the fold starts (the fold is the exit; Skip / Esc stand down). */
+html.intro-fold .intro-skip {
+  visibility: hidden;
+  opacity: 0;
+  transition: none;
+}
+
+/* — T1 (RECOGNIZABILITY S02 / S03; ART-DIRECTOR #3): the hero's own
+     caption, cap.hero (components/sections/hero/hero-stage.tsx
+     [data-hero-cap]). ≥ 640 × ≥ 32rem tall it sits exactly where the
+     flight's Pirates caption (#intro-cap-pc) lingers — right gutter,
+     max(7svh, 2.75rem) up — right-aligned with the museum rule at the right
+     on BOTH, so the hand-off is a crossfade in place: the film name and the
+     rule never move, only the moment changes. Its scrim is the flight's,
+     feathered to the left, over the calm dark water below the crest.
+     Hidden while the prologue is up (it would double under the flight
+     caption during the landing) and during the linger; fades in over the
+     linger's 600 ms fade. No JS / RM / Pause / ?skip: static, visible. — */
+.hero-cap {
+  padding: 0 var(--spacing-gutter) var(--spacing-tier-block);
+}
+.hero-cap__in {
+  position: relative;
+  isolation: isolate;
+  transition: opacity 600ms var(--ease-out);
+}
+html.intro-armed .hero-cap__in,
+html.intro-caps-linger .hero-cap__in {
+  opacity: 0;
+}
+.hero-cap .scene-caption,
+#intro-cap-pc .scene-caption {
+  margin-left: auto;
+  text-align: right;
+}
+.hero-cap .scene-caption::before,
+#intro-cap-pc .scene-caption::before {
+  left: auto;
+  right: 0;
+}
+@media (min-width: 40rem) and (min-height: 32rem) {
+  .hero-cap {
+    position: absolute;
+    right: var(--spacing-gutter);
+    bottom: max(7svh, 2.75rem);
+    max-width: min(52rem, calc(100% - 2 * var(--spacing-gutter)));
+    padding: 0;
+  }
+  .hero-cap__in::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: calc(-1 * var(--spacing-gutter));
+    bottom: calc(-1 * max(7svh, 2.75rem));
+    width: calc(100% + var(--spacing-gutter) + 16rem);
+    height: calc(100% + max(7svh, 2.75rem) + 9rem);
+    pointer-events: none;
+    background: linear-gradient(to top, rgb(2 14 28 / 0.72), rgb(2 14 28 / 0.3) 55%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 16rem);
+    mask-image: linear-gradient(to right, transparent, #000 16rem);
+  }
 }
 
 /* — Below 1024 or portrait: the Play block sits in the lower third. — */

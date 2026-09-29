@@ -17,9 +17,10 @@ import type { SectionProps } from "@/components/sections/types";
  *
  * The camp (components/worlds/rdr2/campfire-stage):
  *   DEFAULT camp-at-dusk — the iconic camp plate stays behind the quotes as
- *     you read (a sticky full-bleed backdrop with a deep scrim over its left
- *     55 %), fading up from --rd-deep out of the journal; "THE GANG'S CAMP
- *     AT DUSK • RED DEAD REDEMPTION 2" at its bottom-right.
+ *     you read (a sticky full-bleed backdrop, the deep holding across the
+ *     quote column and falling away by 65 %), fading up from --rd-deep out
+ *     of the journal; "THE GANG'S CAMP AT DUSK • RED DEAD REDEMPTION 2" in
+ *     the section head, under the h2.
  *   ALT fireside-loop — the campfire band (MV-11 → the MV-11L loop, desktop,
  *     one decoder) opens from a cutscene letterbox; "THE CAMPFIRE • RED DEAD
  *     REDEMPTION 2" under it; each voice is read into firelight in turn.
@@ -67,7 +68,7 @@ export function Testimonials({ entry, number }: SectionProps<"quotes">) {
             quote: <blockquote className="max-w-body type-body text-fg">{`“${t.quote}”`}</blockquote>,
             cite: cite(t.name, t.roleLine),
           }))}
-          caption={<SceneCaption k="cap.voices" place="br" />}
+          caption={<SceneCaption k="cap.voices" place="head" />}
           captionUnder={<SceneCaption k="cap.voices" place="under" />}
           altCaption={<SceneCaption k="cap.voices.alt" place="under" />}
         />

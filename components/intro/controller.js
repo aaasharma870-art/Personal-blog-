@@ -43,10 +43,12 @@
    FLIGHT CAPTIONS (M2, RECOGNIZABILITY S02 / T1): #intro-caps, a sibling of
    #intro rendered by intro-overlay.tsx, names the flight — HP for the first
    2.5 s of a 6 s flight, a 1 s cross-dissolve, then Pirates through the
-   landing and 2.5 s over the landed hero (≥ 640), then a 600 ms fade; the
-   code flight runs the same timeline scaled to its length. WAAPI only (it
-   writes no attribute: the hydration contract). Skip / Esc / scroll / motion
-   off: gone at once; a scroll during the linger fades it in 200 ms.
+   landing and 2.5 s over the landed hero (≥ 640), then a 600 ms fade that
+   hands off IN PLACE to the hero's own cap.hero (html.intro-caps-linger,
+   app/intro.css "T1"); the code flight runs the same timeline scaled to its
+   length. WAAPI only (it writes no attribute but that <html> class: the
+   hydration contract). Skip / Esc / scroll / motion off: gone at once; a
+   scroll during the linger fades it in 200 ms.
    ========================================================================== */
 (function (w, d) {
   "use strict";
@@ -551,6 +553,7 @@
   function capsStop(ms) {
     if (capTimer) { clearTimeout(capTimer); capTimer = 0; }
     if (capOff) { var off = capOff; capOff = null; off(); }
+    R.classList.remove("intro-caps-linger"); // T1: the hero's cap.hero fades in, in place
     var list = capAnims;
     capAnims = [];
     if (!list.length) return;
@@ -577,15 +580,26 @@
     } catch { capsStop(0); }
   }
   /** Landed: the Pirates caption stays 2.5 s over the hero (≥ 640, where it
-   *  sits below the crest), then fades for good; any scroll fades it sooner. */
+   *  sits below the crest), then hands off (T1): html.intro-caps-linger holds
+   *  the hero's own caption (cap.hero, in the very same spot) hidden, and
+   *  removing it as this one fades crossfades the two in place — the film
+   *  name never moves. Any scroll hands off sooner; Pause hands off at once. */
   function capsLinger() {
     if (!capAnims.length) return;
     if (!(w.matchMedia && w.matchMedia("(min-width: 40rem)").matches)) return capsStop(C.t.base);
+    R.classList.add("intro-caps-linger");
     capTimer = setTimeout(function () { capTimer = 0; capsStop(600); }, 2500);
     var early = function () { capsStop(200); };
     var evs = ["wheel", "touchmove", "keydown"];
     for (var i = 0; i < evs.length; i++) w.addEventListener(evs[i], early, { passive: true });
-    capOff = function () { for (var j = 0; j < evs.length; j++) w.removeEventListener(evs[j], early); };
+    var mo = w.MutationObserver ? new MutationObserver(function () {
+      if (R.getAttribute("data-motion") === "paused") capsStop(0);
+    }) : null;
+    if (mo) mo.observe(R, { attributes: true, attributeFilter: ["data-motion"] });
+    capOff = function () {
+      for (var j = 0; j < evs.length; j++) w.removeEventListener(evs[j], early);
+      if (mo) mo.disconnect();
+    };
   }
 
   /* — S1 launch ————————————————————————————————————————————————————— */
@@ -986,7 +1000,7 @@
    *  the turning page to parchment shade. Replaces the sweep (video) and the
    *  dome (code flight). Transform only; finish() cancels it. */
   function fold() {
-    domeOn = true; // exiting: Skip / Esc / Tab stand down
+    domeOn = true; // exiting: Skip / Esc / Tab stand down (intro.css hides Skip at once: it never turns with the page)
     foldAt = now();
     mark("landing");
     R.classList.add("intro-landing", "intro-fold");
@@ -995,17 +1009,36 @@
       function () { finish(true, "played"); });
     kick();
   }
+  /** M2 (ART-DIRECTOR #8): the turning page IS the Marauder's Map — its
+   *  parchment reaches alpha ≥ .8 by p = .35 (before the page has turned
+   *  far), folded in three panels (creases, the shaded middle panel) inside
+   *  an inked border; the free (left) edge darkens into a soft shadow that
+   *  the CSS mask (app/intro.css, html.intro-fold) feathers out, so no
+   *  hard-edged card rotates over the hero. */
   function foldShade(t) {
     var p = E(clamp01((t - foldAt) / C.t.fold));
     if (p <= 0) return;
+    var a = clamp01(p / 0.35), i, pw = W / 3, sw = M.min(160, W * 0.12);
     cx.globalAlpha = 1;
-    cx.fillStyle = "rgba(214,189,136," + (0.16 * p).toFixed(3) + ")"; // the map's paper
+    cx.fillStyle = "rgba(214,189,136," + (0.88 * a).toFixed(3) + ")"; // the map's paper
     cx.fillRect(0, 0, W, H);
+    cx.fillStyle = "rgba(92,62,24," + (0.14 * a).toFixed(3) + ")"; // the middle panel, folded away from the light
+    cx.fillRect(pw, 0, pw, H);
+    cx.fillStyle = "rgba(74,48,18," + (0.45 * a).toFixed(3) + ")"; // the creases
+    for (i = 1; i < 3; i++) cx.fillRect(M.round(i * pw) - 1, 0, 2, H);
+    cx.strokeStyle = "rgba(58,36,14," + (0.5 * a).toFixed(3) + ")"; // the inked border
+    cx.lineWidth = 1.5;
+    cx.strokeRect(24.5, 24.5, W - 49, H - 49);
     var g = cx.createLinearGradient(0, 0, W, 0); // turning out of the light: the far edge darkest
-    g.addColorStop(0, "rgba(10,7,4," + (0.72 * p).toFixed(3) + ")");
-    g.addColorStop(1, "rgba(10,7,4," + (0.2 * p).toFixed(3) + ")");
+    g.addColorStop(0, "rgba(28,18,8," + (0.4 * p).toFixed(3) + ")");
+    g.addColorStop(1, "rgba(28,18,8," + (0.06 * p).toFixed(3) + ")");
     cx.fillStyle = g;
     cx.fillRect(0, 0, W, H);
+    var e = cx.createLinearGradient(0, 0, sw, 0); // the soft edge shadow
+    e.addColorStop(0, "rgba(12,8,4," + (0.55 * a).toFixed(3) + ")");
+    e.addColorStop(1, "rgba(12,8,4,0)");
+    cx.fillStyle = e;
+    cx.fillRect(0, 0, sw, H);
     if (p < 1) kick();
   }
 
