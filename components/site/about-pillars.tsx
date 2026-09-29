@@ -1,80 +1,35 @@
-"use client";
-
-import type { Variants } from "motion/react";
-import { motion } from "motion/react";
-import { useReducedMotion } from "@/lib/flags";
-import { SpotlightCard } from "@/components/visuals/spotlight-card";
-import { ParallaxLayer } from "@/components/visuals/parallax-layer";
-import { dur, ease, viewportOnce } from "@/lib/motion";
 import { pillars } from "@/lib/content";
+import { RhumbRose } from "@/components/site/pirates-instruments";
+import { Rise } from "@/components/site/world-motion";
+import { Meta } from "@/components/site/world-kit";
 
-/** "Dealt-in" stagger — transform+opacity only; a slight rotate reads like a
- *  card being dealt onto the table. Reduced-motion → opacity only. */
-const dealtParent: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
-};
-const dealtCard: Variants = {
-  hidden: { opacity: 0, y: 30, rotate: -1.5, scale: 0.985 },
-  show: {
-    opacity: 1,
-    y: 0,
-    rotate: 0,
-    scale: 1,
-    transition: { duration: dur.reveal, ease },
-  },
-};
-const dealtReduced: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.2, ease } },
-};
+/**
+ * The four pillars as four BEARINGS on a rhumb rose (TA-06, SPEC v2 §3 row
+ * 1). Desktop: a 2 × 2 chart whose centre cross holds the brass rose (drawn
+ * once); each pillar sits in its quadrant under a Meta bearing. Below lg the
+ * rose leads a plain list. Copy verbatim (content.ts `pillars`).
+ */
+const BEARINGS = ["NW", "NE", "SW", "SE"] as const;
 
 export function AboutPillars() {
-  const reduce = useReducedMotion();
-  const child = reduce ? dealtReduced : dealtCard;
   return (
-    <div className="relative lg:col-span-7">
-      {/* research-glow depth — sibling behind the cards */}
-      <ParallaxLayer depth={0.6} className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          aria-hidden="true"
-          className="absolute -inset-x-6 -top-10 h-64"
-          style={{
-            background:
-              "radial-gradient(60% 60% at 70% 20%, rgba(45,212,191,0.08), transparent 70%)",
-          }}
-        />
-      </ParallaxLayer>
-
-      <motion.div
-        role="list"
+    <div className="relative">
+      {/* the rose: in the centre cross on desktop, leading the list below */}
+      <div className="mb-tier-group lg:pointer-events-none lg:absolute lg:left-1/2 lg:top-1/2 lg:mb-0 lg:-translate-x-1/2 lg:-translate-y-1/2">
+        <RhumbRose size={132} className="size-24 lg:size-[8.25rem]" />
+      </div>
+      <ol
         aria-label="Four operating pillars"
-        variants={dealtParent}
-        initial="hidden"
-        whileInView="show"
-        viewport={viewportOnce}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        className="grid grid-cols-1 gap-y-tier-block sm:grid-cols-2 sm:gap-x-12 lg:gap-x-40 lg:gap-y-24"
       >
-        {pillars.map((p) => (
-          <motion.div key={p.index} role="listitem" variants={child} className="h-full">
-            <SpotlightCard tier="raised" accent="aqua" tilt className="h-full p-6">
-              {/* oversized ghost index numeral (editorial spine) — clipped by
-                  the card's own overflow-hidden, sits behind the copy */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[7rem] leading-none text-ink/[0.05]"
-              >
-                {p.index}
-              </span>
-              <div className="relative flex items-baseline justify-between gap-4">
-                <h3 className="font-serif text-lg font-medium text-ink">{p.title}</h3>
-                <span className="font-mono text-xs text-aqua/80">{p.index}</span>
-              </div>
-              <p className="relative mt-3 text-sm leading-relaxed text-stone">{p.body}</p>
-            </SpotlightCard>
-          </motion.div>
+        {pillars.map((p, i) => (
+          <Rise as="li" key={p.index} delay={i * 0.06} className="max-w-[34ch]">
+            <Meta fields={[p.index, BEARINGS[i] ?? null]} />
+            <h3 className="mt-tier-pair type-heading text-fg">{p.title}</h3>
+            <p className="mt-tier-pair type-body text-fg-muted">{p.body}</p>
+          </Rise>
         ))}
-      </motion.div>
+      </ol>
     </div>
   );
 }
