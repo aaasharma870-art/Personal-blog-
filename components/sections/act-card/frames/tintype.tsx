@@ -27,6 +27,12 @@ import { useCard } from "@/components/sections/act-card/card-context";
  * The progress element IS the pencil trail: no "loading", no %, no status.
  * Static card (RM, Pause, no JS, < 640, SSR): the developed plate, the
  * trail drawn, the sun low, the border drawn. aria-hidden art.
+ *
+ * MV-10 missing (`plate` null): the plate that develops is its MEDIA-PLAN
+ * code alternative, a golden-hour frontier drawn in SVG gradients (sky haze
+ * brightest at the far ridge under the low sun, two ridges, a dark grass
+ * foreground where the graphite trail runs), tintyped like the photograph.
+ * Never a legacy still (the validator forbids it on a film card).
  */
 
 const VB = { w: 1000, h: 418 };
@@ -49,7 +55,7 @@ function undevelopedMatrix(q: number): string {
   return `-6 0 0 0 ${c} 0 -6 0 0 ${c} 0 0 -6 0 ${c} 0 0 0 1 0`;
 }
 
-export function TintypeFrame({ plate }: { plate: MediaId }) {
+export function TintypeFrame({ plate }: { plate: MediaId | null }) {
   const { p, live } = useCard();
   const ids = useId();
   const noise = useDevelopNoise(64, 26);
@@ -73,7 +79,11 @@ export function TintypeFrame({ plate }: { plate: MediaId }) {
     <div aria-hidden="true" className="absolute inset-0">
       {/* the plate: the frontier, as a tintype (R-2) */}
       <div className="act-tintype absolute overflow-hidden" style={plateBox}>
-        <MediaFrame media={plate} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
+        {plate ? (
+          <MediaFrame media={plate} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
+        ) : (
+          <FrontierGround id={`${ids}g`} />
+        )}
         {/* not yet developed: an rd-deep cover with holes where the plate has
             developed (our procedural ink-bleed mask; live only) */}
         {live && noise ? (
@@ -157,6 +167,69 @@ export function TintypeFrame({ plate }: { plate: MediaId }) {
         )}
       </svg>
     </div>
+  );
+}
+
+/* — The code frontier (MV-10's code alternative), in plate units. The low
+     sun sprite sits at x .78 of the frame, y .36 (≈ .34 of the plate): the
+     far ridge runs just under it, and the haze is brightest there. — */
+const RIDGE_FAR =
+  "M0 176C60 168 120 172 190 162C260 152 320 160 390 154C460 148 520 158 590 150C650 144 690 152 720 150C760 147 800 140 850 146C880 149 900 144 920 146V374H0Z";
+const RIDGE_NEAR =
+  "M0 214C80 204 150 210 230 198C300 188 360 196 430 190C520 182 600 196 680 186C760 176 840 190 920 182V374H0Z";
+/** The grass: a low rolling foreground whose top edge is frayed by fine,
+ *  irregular blades (a hashed jitter: deterministic, never Math.random, so
+ *  SSR == client; never a regular zigzag). */
+const GRASS = (() => {
+  const n = 184;
+  let d = "M0 244";
+  for (let i = 1; i <= n; i++) {
+    const x = (i / n) * 920;
+    let h = Math.imul(i + 31, 0x9e3779b1);
+    h = Math.imul(h ^ (h >>> 15), 0x85ebca77);
+    const j = (((h ^ (h >>> 13)) >>> 0) % 1000) / 1000; // 0–1
+    const base = 244 - 14 * Math.sin((i / n) * Math.PI * 0.85) + 3 * Math.sin(i * 0.23);
+    const blade = i % 2 ? -(1 + 4.5 * j * j) : 0.6 * j;
+    d += `L${x.toFixed(1)} ${(base + blade).toFixed(1)}`;
+  }
+  return `${d}V374H0Z`;
+})();
+
+function FrontierGround({ id }: { id: string }) {
+  return (
+    <svg
+      viewBox={`0 0 ${PLATE.w} ${PLATE.h}`}
+      preserveAspectRatio="none"
+      focusable="false"
+      className="act-tintype-code absolute inset-0 size-full"
+    >
+      <defs>
+        <linearGradient id={`${id}s`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#1d1611" />
+          <stop offset="0.28" stopColor="#4a3b2c" />
+          <stop offset="0.42" stopColor="#9c8262" />
+          <stop offset="0.47" stopColor="#c7ad86" />
+          <stop offset="0.6" stopColor="#5e4a37" />
+          <stop offset="1" stopColor="#1a130e" />
+        </linearGradient>
+        {/* the light side: haze toward the sun (x .78), never a glow */}
+        <linearGradient id={`${id}h`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#0d0907" stopOpacity="0.55" />
+          <stop offset="0.45" stopColor="#0d0907" stopOpacity="0.15" />
+          <stop offset="0.78" stopColor="#0d0907" stopOpacity="0" />
+          <stop offset="1" stopColor="#0d0907" stopOpacity="0.3" />
+        </linearGradient>
+        <linearGradient id={`${id}r`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6b5842" />
+          <stop offset="0.3" stopColor="#3e3226" />
+        </linearGradient>
+      </defs>
+      <rect width={PLATE.w} height={PLATE.h} fill={`url(#${id}s)`} />
+      <path d={RIDGE_FAR} fill={`url(#${id}r)`} />
+      <path d={RIDGE_NEAR} fill="#2a2119" />
+      <path d={GRASS} fill="#110c09" />
+      <rect width={PLATE.w} height={PLATE.h} fill={`url(#${id}h)`} />
+    </svg>
   );
 }
 

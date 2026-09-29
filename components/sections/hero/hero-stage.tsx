@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, ReactNode } from "react";
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import {
@@ -10,7 +10,6 @@ import {
   useMediaQuery,
   useReducedMotion,
   useSaveData,
-  useSkipFlags,
 } from "@/lib/flags";
 import { hasRunThisSession, markRunThisSession } from "@/lib/session";
 import { springSoft } from "@/lib/motion";
@@ -45,10 +44,11 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *              view (mobile), easeClip / dur.hero; decode failure or 1200 ms
  *              → open (S1′). While the prologue is up the Lens waits CLOSED
  *              under the opaque overlay: Play (html.intro-launched) opens it
- *              instantly, so the flight lands on an open Lens (S0i, H25);
- *              a dismissal before Play (intro:end, played=false) runs the
- *              aperture from that slit — never closing a plate the reader
- *              has already seen.
+ *              instantly, so the flight lands on an open Lens (S0i, H25).
+ *              A dismissal (Skip / Esc / scroll: html.intro-leaving) opens it
+ *              the same way, with NO aperture: the overlay's text is gone in
+ *              80 ms and its plate fades over dur.base onto the open hero
+ *              (a closed Lens under a fading castle read as a stray box).
  *   velocity   VelocityNoise on the plate only (grain, chroma, wake).
  *   pointer    the plate shifts ≤ 6 px (fine pointer), reset on leave.
  *   exit       the D3 scroll-out map: scale 1 → 1.03 (p .2) → 1.08 (p .7),
@@ -122,6 +122,7 @@ export function HeroStage({
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const lensBoxRef = useRef<HTMLDivElement>(null);
+  const columnRef = useRef<HTMLDivElement>(null);
   const plateRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLDivElement>(null);
 
@@ -129,7 +130,6 @@ export function HeroStage({
   const saveData = useSaveData();
   const wide = useMediaQuery(WIDE);
   const fine = useFinePointer();
-  const skip = useSkipFlags();
   const phase = useIntroPhase();
 
   const motionOn = !reduced;
@@ -157,19 +157,23 @@ export function HeroStage({
     if (
       hasRunThisSession(onceKey) ||
       shouldSkip("hero", parseSkipFlags(window.location.search)) ||
-      root.classList.contains("intro-launched")
+      root.classList.contains("intro-launched") ||
+      root.classList.contains("intro-leaving")
     ) {
       return;
     }
+    // Play → the flight, or a dismissal: the Lens must be open before the
+    // overlay reveals the hero (S0i; SX has no aperture)
+    const launched = () =>
+      root.classList.contains("intro-launched") ||
+      root.classList.contains("intro-landing") ||
+      root.classList.contains("intro-leaving");
     t = window.setTimeout(() => {
       // the prologue may have ended in between (it removes the class first)
-      if (root.classList.contains("intro-armed") && !root.classList.contains("intro-launched")) {
+      if (root.classList.contains("intro-armed") && !launched()) {
         setRun({ which, state: "closed", hold: true });
       }
     }, 0);
-    // Play → the flight: the Lens must be open before the landing reveals it
-    const launched = () =>
-      root.classList.contains("intro-launched") || root.classList.contains("intro-landing");
     const mo = new MutationObserver(() => {
       if (launched()) {
         mo.disconnect();
@@ -244,27 +248,16 @@ export function HeroStage({
     };
   }, [run.state, run.which, run.hold, onceKey]);
 
-  // The prologue ended: a landed flight leaves the Lens open (its aperture
-  // was spent on Play, S0i); a dismissal before the flight releases the
-  // held slit into the hero's own aperture, once per session, where motion
-  // allows it. (A Lens that was never closed under the overlay stays open:
-  // closing a plate the reader has just seen would be a flash.)
-  const onEnd = useEffectEvent((played: boolean) => {
-    const allowed =
-      !played &&
-      !reduced &&
-      !saveData &&
-      !shouldSkip("hero", skip) &&
-      !hasRunThisSession(onceKey);
-    setRun((r) =>
-      allowed && r.hold && r.state === "closed"
-        ? { ...r, hold: false }
-        : r.state === "open" && r.which === null
-          ? r
-          : { which: null, state: "open" },
-    );
-  });
-  useEffect(() => onIntroEnd((played) => onEnd(played)), []);
+  // The prologue ended, played or dismissed: the Lens is open (S0i). Its
+  // aperture was spent on Play, and a dismissal opens it without one (the
+  // Esc path double-exposed the closing overlay over a still-closed Lens).
+  useEffect(
+    () =>
+      onIntroEnd(() =>
+        setRun((r) => (r.state === "open" && r.which === null ? r : { which: null, state: "open" })),
+      ),
+    [],
+  );
 
   const onSettled = (s: "open" | "closed" | "track") => {
     if (s === "open") setRun((r) => (r.state === "aperture" ? { ...r, state: "open" } : r));
@@ -291,10 +284,15 @@ export function HeroStage({
       const avoidRight = h1
         ? h1.getBoundingClientRect().right - section.getBoundingClientRect().left
         : 0;
+      // the page gutter (the text column's px-gutter, resolved): the right
+      // spine rests on the page grid, not 8 px from the viewport edge
+      const col = columnRef.current;
+      const margin = col ? parseFloat(getComputedStyle(col).paddingRight) || 8 : 8;
       const next = settleFrame(coverBox(plate.box, plate.size, { w, h }, plate.focal), {
         w,
         h,
         inset,
+        margin,
         avoidRight,
       });
       setFrame((prev) => (sameBox(prev, next) ? prev : next));
@@ -412,6 +410,7 @@ export function HeroStage({
 
       {/* — The text column (server-rendered; the h1 never animates) — */}
       <motion.div
+        ref={columnRef}
         className="relative z-10 mx-auto w-full max-w-page px-gutter pt-[calc(var(--header-h)+var(--spacing-tier-block))] sm:py-(--header-h)"
         style={moving ? { y: textY } : undefined}
       >

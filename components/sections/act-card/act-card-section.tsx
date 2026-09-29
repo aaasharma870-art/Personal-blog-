@@ -10,6 +10,7 @@ import {
   copyVisible,
   enabledSections,
   intensityOf,
+  letteringFor,
   sectionById,
   type ActCardItem,
 } from "@/lib/sections";
@@ -58,15 +59,13 @@ function titleOf(item: ActCardItem): string {
   return visible(item.titleCopy) ? item.title : `Act ${item.numeral}`;
 }
 
-/** The act title's world lettering, only when the face ships and its subset
- *  holds exactly this string (else Newsreader `title`: fixture L). */
-function letteredFace(item: ActCardItem, text: string): boolean {
-  const l = film.lettering.find((x) => x.id === item.lettering);
-  return Boolean(l && l.shipped && l.text.toLowerCase() === text.toLowerCase());
-}
 
+/** `id` when it resolves to FILM media; never a legacy still (validator:
+ *  a film world's media may not resolve to provenance "legacy"). null →
+ *  the frame draws its code alternative. */
 function usable(id: MediaId | undefined): MediaId | null {
-  return id && resolveMedia(id) ? id : null;
+  const a = id ? resolveMedia(id) : null;
+  return id && a && a.provenance.source !== "legacy" ? id : null;
 }
 
 /** The program on the opening card: one row per act card in page order,
@@ -116,10 +115,11 @@ export function ActCardSection({ item }: { item: ActCardItem }) {
   const first = sectionById(item.before);
   const still = (first ? intensityOf(first) : film.intensity) !== "full";
 
+  const face = kind === "opening" ? { lettered: false, upper: false } : letteringFor(item.lettering, title);
   const heading = (
     <h2 id={titleId} className="type-title max-w-title text-fg">
       <CardReveal at={at.title}>
-        <span className={cn(kind !== "opening" && letteredFace(item, title) && "font-world-act")}>
+        <span className={cn(face.lettered && "lettered-title font-world-act", face.upper && "uppercase")}>
           {title}
         </span>
       </CardReveal>
@@ -186,13 +186,15 @@ export function ActCardSection({ item }: { item: ActCardItem }) {
       break;
     }
     case "tintype": {
-      const plate = usable(spec.media.cardStill) ?? usable(spec.media.plate);
-      frame = plate ? <TintypeFrame plate={plate} /> : <ReelFrame world={item.to} still={null} kind="title" />;
+      // no frontier plate yet (MV-10): the tintype develops into its code
+      // alternative, a golden-hour ground under the code low sun
+      frame = <TintypeFrame plate={usable(spec.media.cardStill) ?? usable(spec.media.plate)} />;
       break;
     }
     case "ignite": {
-      const hall = usable(spec.media.cardStill) ?? usable(spec.media.plate);
-      frame = hall ? <IgniteFrame hall={hall} /> : <ReelFrame world={item.to} still={null} kind="title" />;
+      // no hall yet (MV-07): the ignition ends on its own final frame, the
+      // candles lit along the Line (ignite.BAR "MV-07 missing")
+      frame = <IgniteFrame hall={usable(spec.media.cardStill) ?? usable(spec.media.plate)} />;
       break;
     }
     default:
@@ -228,6 +230,8 @@ export function ActCardSection({ item }: { item: ActCardItem }) {
       }
       // the opening program is itself real text and links: no summary twin
       summary={kind === "opening" ? "" : item.summary}
+      // the opening's course (compass → rows) is its progress element
+      progress={kind !== "opening"}
     />
   );
 }

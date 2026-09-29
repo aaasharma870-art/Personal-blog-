@@ -14,10 +14,16 @@ import { useCard } from "@/components/sections/act-card/card-context";
 
 /**
  * Opening card frame (SM-3, kind `opening`): the h2 "A research journal in
- * four acts." above the program — one row per act (plus the Intermission)
- * joined by the LD-PC brass course, with Jack's compass (IC-PC-02, 96 px)
- * beside it. House plane, so no display face anywhere (C8).
- *   R2  the course plots down the rows with the card's passage p (direct).
+ * four acts." beside the program — Jack's compass (IC-PC-02, route size,
+ * 144–160 px) heads it, and the LD-PC brass course runs from the compass
+ * down through every row's waypoint: one row per act (plus the
+ * Intermission). House plane, so no display face anywhere (C8). ≥ 1024 the
+ * frame is two columns (the h2 | the program); below, they stack; < 640
+ * the compass and its lead-in are hidden.
+ *   R2  the course IS the card's progress element (no separate progress
+ *       line): it plots compass → row I → … → the last row with the card's
+ *       passage p (direct), complete by p = .95; a waypoint is reached when
+ *       its leg lands.
  *   R3  hovering OR focusing a row turns the needle toward it ("points to
  *       what you want most", IC-PC-03) and draws that act's Line material
  *       in a 120 px vignette (CSS only; the final state is static).
@@ -66,12 +72,28 @@ export function OpeningFrame({ heading, rows }: { heading: ReactNode; rows: Open
 
   const flash = useOneShot(live && settled && aim === null, dur.flash * 1000, !reduced);
   const n = rows.length;
+  const lead = useLeg(0, n);
+  // leg 0's first half: the compass → the list (its second half is row I's top half)
+  const leadClip = useTransform(lead, (d) => `inset(0 0 ${((1 - remap(d, 0, 0.5)) * 100).toFixed(2)}% 0)`);
 
   return (
-    <div className="grid size-full grid-cols-1 items-center gap-tier-group py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-gutter">
-      <div className="flex flex-col gap-tier-group">
-        {heading}
-        <ol className="flex flex-col justify-center">
+    <div
+      className={cn(
+        "grid size-full grid-cols-1 content-center items-center gap-tier-group py-4 sm:px-gutter",
+        "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-tier-block",
+      )}
+    >
+      {heading}
+      <div className="flex flex-col">
+        {/* the compass heads the course; the waypoints hang under its centre
+            (ml = half the compass − the gutter's 16 px dot centre) */}
+        <div aria-hidden="true" className="hidden sm:block">
+          <JacksCompass heading={needle} flash={flash} className={cn("block", COMPASS)} />
+        </div>
+        <span aria-hidden="true" className={cn("relative hidden h-6 w-8 sm:block", HANG)}>
+          <motion.span className={cn("absolute inset-y-0", LEG)} style={live ? { clipPath: leadClip } : undefined} />
+        </span>
+        <ol className={cn("flex flex-col justify-center", HANG)}>
           {rows.map((row, k) => (
             <Row
               key={row.key}
@@ -83,11 +105,26 @@ export function OpeningFrame({ heading, rows }: { heading: ReactNode; rows: Open
           ))}
         </ol>
       </div>
-      <div aria-hidden="true" className="hidden justify-self-end sm:block">
-        <JacksCompass heading={needle} flash={flash} className="size-24" />
-      </div>
     </div>
   );
+}
+
+/** The compass at route size where the 2.39:1 frame has the height for it
+ *  (112 px ≥ 640, 144 px ≥ 1280, 160 px ≥ 1400), and the program hung under
+ *  its centre: margin = half the compass − the gutter's 16 px dot centre. */
+const COMPASS = "size-28 xl:size-36 min-[1400px]:size-40";
+const HANG = "sm:ml-10 xl:ml-14 min-[1400px]:ml-16";
+/** One dashed brass leg of the course (the gutter's centre line). */
+const LEG =
+  "left-[15px] w-[1.5px] bg-[repeating-linear-gradient(to_bottom,var(--w-brass)_0_6px,transparent_6px_12px)]";
+/** The course is complete by p = .95 (before the needle settles at .98). */
+const COURSE_END = 0.95;
+
+/** Drawn fraction of leg `j` (0 = compass → row I; j = row j−1 → row j). */
+function useLeg(j: number, count: number) {
+  const { p } = useCard();
+  const L = COURSE_END / Math.max(1, count);
+  return useTransform(p, (v) => remap(v, j * L, (j + 1) * L));
 }
 
 function Row({
@@ -102,27 +139,37 @@ function Row({
   onAim: (on: boolean) => void;
 }) {
   const { p, live } = useCard();
-  const segs = Math.max(1, count - 1);
-  const drawn = useTransform(p, (v) => remap(v, index / segs, (index + 1) / segs));
-  const clip = useTransform(drawn, (d) => `inset(0 0 ${((1 - d) * 100).toFixed(2)}% 0)`);
-  const reached = useTransform(p, (v) => (v >= index / segs - 1e-6 ? 1 : 0.3));
+  // leg `index` lands on this row (the second half of leg 0 is the lead-in's
+  // last stretch, row I's top half); leg `index + 1` leaves it
+  const arrive = useLeg(index, count);
+  const leave = useLeg(index + 1, count);
+  const inClip = useTransform(arrive, (d) => `inset(0 0 ${((1 - remap(d, 0.5, 1)) * 100).toFixed(2)}% 0)`);
+  const clip = useTransform(leave, (d) => `inset(0 0 ${((1 - d) * 100).toFixed(2)}% 0)`);
+  const reached = useTransform(p, (v) => (v >= ((index + 1) * COURSE_END) / Math.max(1, count) - 1e-6 ? 1 : 0.3));
   const last = index === count - 1;
 
   return (
     <li className="relative pl-10">
       {/* the course gutter: this row's waypoint and the leg to the next row */}
       <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-8">
-        {last ? null : (
+        {index === 0 ? (
+          // the lead-in from the compass lands here (≥ 640, with the compass)
           <motion.span
-            className="absolute top-1/2 left-[15px] h-full w-[1.5px] bg-[repeating-linear-gradient(to_bottom,var(--w-brass)_0_6px,transparent_6px_12px)]"
-            style={live ? { clipPath: clip } : undefined}
+            className={cn("absolute top-0 hidden h-1/2 sm:block", LEG)}
+            style={live ? { clipPath: inClip } : undefined}
           />
+        ) : null}
+        {last ? null : (
+          <motion.span className={cn("absolute top-1/2 h-full", LEG)} style={live ? { clipPath: clip } : undefined} />
         )}
         <motion.span
           className="absolute top-1/2 left-[11px] size-2.5 -translate-y-1/2 rounded-full border-[1.5px] border-(--w-brass) bg-bg"
           style={live ? { opacity: reached } : undefined}
         />
       </span>
+      {/* two lines (the title + its vignette, then the credit): every row
+          has the same height at every width, so the course's legs land on
+          the waypoints (a wrapped one-line row broke the spacing) */}
       <a
         href={row.href}
         onMouseEnter={() => onAim(true)}
@@ -130,13 +177,15 @@ function Row({
         onFocus={() => onAim(true)}
         onBlur={() => onAim(false)}
         className={cn(
-          "group flex min-h-11 flex-wrap items-baseline gap-x-4 gap-y-1 py-1.5 text-fg outline-none",
+          "group flex min-h-11 flex-col justify-center gap-0.5 py-1.5 text-fg outline-none",
           "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent focus-visible:rounded-(--radius-focus)",
         )}
       >
-        <span className="type-heading transition-colors duration-(--dur-micro) group-hover:text-fg">{row.title}</span>
+        <span className="flex items-center gap-4">
+          <span className="type-heading transition-colors duration-(--dur-micro) group-hover:text-fg">{row.title}</span>
+          <Vignette world={row.world} />
+        </span>
         <span className="type-meta text-fg-muted">{row.credit}</span>
-        <Vignette world={row.world} />
       </a>
     </li>
   );
@@ -158,7 +207,7 @@ function Vignette({ world }: { world: WorldId }) {
       viewBox="0 120 1000 240"
       aria-hidden="true"
       focusable="false"
-      className="hidden h-8 w-[7.5rem] self-center sm:block"
+      className="hidden h-6 w-24 shrink-0 sm:block"
       fill="none"
     >
       <path

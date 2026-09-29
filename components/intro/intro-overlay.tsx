@@ -71,13 +71,9 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
           <div id="intro-oath" className="intro-line intro-oath intro-fade">
             <FilmQuote id={model.oath} rendition="epigraph" attribution="credits" />
           </div>
-          {/* The Marauder's bookend: shown only while the overlay leaves on
-              Skip / Esc / scroll from the play screen. A decorative
-              duplicate of the credits' last line, hidden from assistive tech
-              (focus is already on its way to the h1). */}
-          <div className="intro-line intro-managed" aria-hidden="true">
-            <FilmQuote id={model.managed} rendition="epigraph" attribution="credits" />
-          </div>
+          {/* No Esc bookend here: it could never be read (content returns
+              ≤ 400 ms, I9) and ghosted over the name. Q-HP-2 (the bookend)
+              lives in the credits and the footer egg. */}
         </div>
 
         <button

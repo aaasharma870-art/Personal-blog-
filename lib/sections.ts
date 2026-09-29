@@ -18,7 +18,7 @@ import {
   type World,
 } from "./page";
 import { site } from "./content";
-import { FAN_TRIBUTE_LINE, film, type CopyKey, type Intensity } from "./film";
+import { FAN_TRIBUTE_LINE, film, type CopyKey, type Intensity, type LetteringId } from "./film";
 import { quotes, type QuoteId } from "./quotes";
 import {
   actCardsOf,
@@ -136,6 +136,24 @@ export function copyText(key: CopyKey, extra: Record<string, string | number> = 
  *  outside production and only when non-empty; proposed copy in
  *  production only after Aryan's sign-off. (The validator enforces the same
  *  rule at build time; this is the runtime guard.) */
+/** How an act title sets in its world lettering (SPEC §9.7): only when the
+ *  face ships and its glyph subset holds EXACTLY this string. The subsets
+ *  are cut from `film.lettering[].text` case-sensitively, so an all-caps
+ *  lettering ("THE CROSSING") sets a mixed-case title with text-transform
+ *  uppercase (never "The Crossing" in blackletter T/C + Newsreader
+ *  lowercase). `lettered: false` → Newsreader `title` (fixture L). */
+export function letteringFor(
+  id: LetteringId | null | undefined,
+  text: string,
+): { lettered: boolean; upper: boolean } {
+  const l = id ? film.lettering.find((x) => x.id === id) : undefined;
+  if (!l || !l.shipped) return { lettered: false, upper: false };
+  if (l.text === text) return { lettered: true, upper: false };
+  const caps = l.text === l.text.toUpperCase();
+  if (caps && l.text === text.toUpperCase()) return { lettered: true, upper: true };
+  return { lettered: false, upper: false };
+}
+
 export function copyVisible(c: { text: string; status: string }): boolean {
   if (!c.text) return false;
   const prod = process.env.NODE_ENV === "production" && process.env.FILM_PREVIEW !== "1";

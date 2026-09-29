@@ -13,8 +13,7 @@
      className="font-world-act"   (Tailwind: font-family: var(--world-font-act))
    SectionFrame / ActCard set data-world, and each [data-world] block in
    app/globals.css points --world-font-act at its --font-world-* var, falling
-   back to Newsreader (fixture L: a missing face never shifts layout, because
-   display "optional" never swaps late).
+   back to Newsreader (fixture L).
 
    FILES: assets/fonts/film/<face>/<face>-subset.woff2 + OFL.txt beside it,
    written by scripts/fetch-display-fonts.mjs from the `lettering` strings in
@@ -27,22 +26,31 @@
    --font-world-rdr2 is intentionally undefined → Newsreader. Rye (OFL) is
    loaded for the Dead Eye egg header only (`--font-egg-rye`).
 
-   preload: false + display: "optional" → never on the LCP path; the browser
-   fetches a face only when a glyph in it is actually rendered.
+   preload: false → never on the LCP path; the browser fetches a face only
+   when a glyph in it is laid out.
+   display: "swap" for the three act-title faces (M1 fix; DESIGN v3 §2.1.1
+   said "optional"). With "optional" + no preload a face missed its ~100 ms
+   block window on a first visit and NEVER rendered on that page: every act
+   title fell back to Newsreader. The faces set only act titles (cards, the
+   Journey cartouche) and route loaders — at least a viewport below the fold
+   — so the swap lands offscreen: CLS 0, and the lettered span has a fixed
+   line box (.lettered-title in app/globals.css) so the title's line never
+   changes height. Rye (the Dead Eye egg header) stays "optional".
    ========================================================================== */
 
 import localFont from "next/font/local";
 
 // next/font needs LITERAL options in each call (no spreads, no shared
-// consts), so every face repeats: weight 400 · normal · display "optional"
-// · preload false · adjustFontFallback false (no metric-adjusted Arial: the
-// CSS stack falls through to Newsreader, app/globals.css --world-font-act).
+// consts), so every face repeats: weight 400 · normal · display "swap"
+// (Rye: "optional") · preload false · adjustFontFallback false (no
+// metric-adjusted Arial: the CSS stack falls through to Newsreader,
+// app/globals.css --world-font-act).
 
 /** pirates — Pirata One (OFL 1.1): "THE CROSSING". */
 export const fontWorldPirates = localFont({
   weight: "400",
   style: "normal",
-  display: "optional",
+  display: "swap",
   preload: false,
   adjustFontFallback: false,
   src: "../assets/fonts/film/pirata-one/pirata-one-subset.woff2",
@@ -53,7 +61,7 @@ export const fontWorldPirates = localFont({
 export const fontWorldIdiots = localFont({
   weight: "400",
   style: "normal",
-  display: "optional",
+  display: "swap",
   preload: false,
   adjustFontFallback: false,
   src: "../assets/fonts/film/kalam/kalam-subset.woff2",
@@ -64,7 +72,7 @@ export const fontWorldIdiots = localFont({
 export const fontWorldHp = localFont({
   weight: "400",
   style: "normal",
-  display: "optional",
+  display: "swap",
   preload: false,
   adjustFontFallback: false,
   src: "../assets/fonts/film/im-fell-english/im-fell-english-subset.woff2",

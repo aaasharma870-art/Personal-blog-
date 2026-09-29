@@ -31,7 +31,7 @@
 
   var R = d.documentElement, M = Math, PI = M.PI;
   var SCROLL = { PageDown: 1, PageUp: 1, ArrowDown: 1, ArrowUp: 1, Home: 1, End: 1, " ": 1, Spacebar: 1 };
-  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-landing", "intro-sweep", "intro-bookend", "intro-kbd"];
+  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-landing", "intro-sweep", "intro-leaving", "intro-kbd"];
   var BOLT = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#e9b44c" d="M19.5 1.5 6.5 18h8.2l-2.9 12.5L25.5 13h-8.3z"/></svg>');
 
@@ -39,6 +39,7 @@
   var st = "idle", inited = false, hydrated = !!w.__introHydrated;
   var cv = null, cx = null, dpr = 1, W = 0, H = 0;
   var plate = null, fitP = null, img = null, imgFor = "", imgOk = false, showPlate = false, plateAt = -1;
+  var eimg = null, eimgFor = "", eimgOk = false, tl = null, tlx = null;
   var lite = false, fine = false, video = null, vPlaying = false;
   var sprites = null, cands = [], motes = null, trail = [], lastEmit = null, h1Rect = null;
   var hover = false, kfocus = false, gat = 0, gFrom = 0, gTo = 0, gAt = -1;
@@ -217,6 +218,11 @@
     cv.width = M.round(W * nd);
     cv.height = M.round(H * nd);
     cx.setTransform(nd, 0, 0, nd, 0, 0);
+    // the light trail's own layer: composited at TRAIL_PEAK, so however many
+    // glows overlap the stream never burns to white (no "lightsaber")
+    tl = canvas(W * nd, H * nd);
+    tlx = tl.getContext("2d");
+    tlx.setTransform(nd, 0, 0, nd, 0, 0);
     if (!sprites || nd !== dpr) { dpr = nd; sprites = mkSprites(); }
     if (st === "armed") {
       var p = H > W ? C.plateM : C.plate;
@@ -375,8 +381,24 @@
     im.decoding = "async";
     im.setAttribute("fetchpriority", "low");
     im.src = src;
-    var done = function () { if (img === im) { imgOk = true; revealPlate(); } };
+    var done = function () { if (img === im) { imgOk = true; revealPlate(); loadEmpty(); } };
     if (im.decode) im.decode().then(done, function () { /* keep the night ground */ });
+    else im.onload = done;
+  }
+  /** The plate without its broom (same generation, inpainted): the code
+   *  flight fills the broom's mask from it. Fetched after the plate, at low
+   *  priority; until it has decoded the fill falls back to pull-push. */
+  function loadEmpty() {
+    if (st === "idle" || !plate || !plate.empty) return;
+    var src = plate.empty;
+    if (eimg && eimgFor === src) return;
+    var im = new Image();
+    eimg = im; eimgFor = src; eimgOk = false;
+    im.decoding = "async";
+    im.setAttribute("fetchpriority", "low");
+    im.src = src;
+    var done = function () { if (eimg === im) eimgOk = true; };
+    if (im.decode) im.decode().then(done, function () { /* pull-push fill */ });
     else im.onload = done;
   }
   function revealPlate() {
@@ -765,10 +787,22 @@
       C.t.dome, C.easeClip, function () { finish(true, "played"); });
   }
 
-  /** Lift the broom out of the plate: fill its mask from the surroundings
-   *  (pull-push over a mip pyramid of the plate with the broom cut out),
-   *  feathered, drawn over the plate as the SVG broom takes its place. */
+  /** Lift the broom out of the plate: fill its mask, feathered, drawn over
+   *  the plate on the frame the SVG broom takes the plate broom's pose.
+   *  The fill is the broom-less plate (IN-01-empty / IN-01m-empty: the
+   *  same castle and rock, pixel-registered) when it has decoded; else the
+   *  surroundings, pulled and pushed over a mip pyramid (a soft smear). */
   function mkPatch() {
+    if (eimgOk && eimg && plate && eimgFor === plate.empty) {
+      try {
+        var eo = canvas(W, H), eg = eo.getContext("2d"), em = canvas(W, H);
+        eg.drawImage(eimg, fitP.x, fitP.y, fitP.w, fitP.h);
+        maskPath(em.getContext("2d"), 1, 6, 4);
+        eg.globalCompositeOperation = "destination-in";
+        eg.drawImage(em, 0, 0);
+        return { c: eo, at: now() };
+      } catch { /* fall through to pull-push */ }
+    }
     try {
       var q = 4, base = canvas(W / q, H / q), g = base.getContext("2d"), i;
       g.drawImage(img, fitP.x / q, fitP.y / q, fitP.w / q, fitP.h / q);
@@ -833,17 +867,32 @@
     lastEmit = { x: e.x + dx * ((n * sp) / dist), y: e.y + dy * ((n * sp) / dist), s: s, t: t };
   }
   function push(x, y, s, t, max) {
-    trail.push({ x: x, y: y, s: s, t: t, cut: 0 });
+    // each glow drifts a little once shed (turbulence: the stream frays)
+    var ang = M.random() * 2 * PI;
+    trail.push({ x: x, y: y, s: s, t: t, cut: 0, vx: M.cos(ang) * 9, vy: M.sin(ang) * 9 - 5, ph: M.random() * 2 * PI });
     while (trail.length > max) trail.shift();
   }
+  /** The trail TAPERS to nothing: every glow shrinks as it fades (radius ∝
+   *  alpha^0.7), frays with age (a slow drift + a wobble growing with age),
+   *  and the stream is composited from its own layer at TRAIL_PEAK, so its
+   *  core never exceeds ~0.6 luminance — a trail of light, not a tube. */
+  var TRAIL_PEAK = 0.6;
   function drawTrail(t) {
-    var G = sprites.g;
+    var G = sprites.g, g = tlx || cx, k = code ? code.k : 1, drew = false;
+    if (tlx) { tlx.globalAlpha = 1; tlx.clearRect(0, 0, W, H); }
     for (var i = trail.length - 1; i >= 0; i--) {
-      var p = trail[i], a = M.exp(-(t - p.t) / C.trailTau);
+      var p = trail[i], age = t - p.t, a = M.exp(-age / C.trailTau);
       if (a < 0.03 || p.cut) { trail.splice(i, 1); continue; }
-      var r = G.r * (0.45 + 0.55 * p.s) * (code ? code.k : 1);
-      cx.globalAlpha = a;
-      cx.drawImage(G.c, p.x - r, p.y - r, r * 2, r * 2);
+      var sec = age / 1000, wob = (1 - a) * 3.5 * M.sin(p.ph + age / 170);
+      var r = G.r * (0.45 + 0.55 * p.s) * k * M.pow(a, 0.7);
+      var x = p.x + p.vx * sec + wob, y = p.y + p.vy * sec + wob * 0.6;
+      g.globalAlpha = a;
+      g.drawImage(G.c, x - r, y - r, r * 2, r * 2);
+      drew = true;
+    }
+    if (tlx && drew) {
+      cx.globalAlpha = TRAIL_PEAK;
+      cx.drawImage(tl, 0, 0, W, H);
     }
   }
   function near(p, r, m) {
@@ -851,15 +900,20 @@
   }
 
   /* — exits ———————————————————————————————————————————————————————— */
-  /** SX: Skip / Esc / scroll intent / hidden > 30 s. Content ≤ 0.4 s. */
+  /** SX: Skip / Esc / scroll intent / hidden > 30 s. Content ≤ 0.4 s (I9).
+   *  The overlay's TEXT layer (credits, oath, Play and its bracket, Skip)
+   *  is gone within 80 ms (html.intro-leaving, app/intro.css), so no line
+   *  ever double-exposes over the name; only the plate/canvas and the night
+   *  ground fade, over dur.base. The hero is already OPEN underneath (it
+   *  opens on intro:end without an aperture, as on the landed path). No
+   *  bookend line: Q-HP-2 lives in the credits and the footer egg. */
   function dismiss(reason) {
     if (st === "idle" || st === "leaving" || st === "landing" || domeOn) return;
-    var fromPlay = st === "armed";
     setState("leaving");
     mark("dismiss");
     ses("intro-seen", "1");
     killVideo();
-    if (fromPlay) R.classList.add("intro-bookend");
+    R.classList.add("intro-leaving"); // the hero opens on this class (hero-stage.tsx)
     anim(intro, [{ opacity: 1 }, { opacity: 0 }], C.t.base, C.ease, function () { finish(false, reason); });
   }
 
@@ -887,6 +941,7 @@
     cv = cx = null;
     if (broom) { broom.style.transform = ""; broom.style.opacity = ""; }
     cands = []; trail = []; motes = null; patch = null; code = null; domeOn = false;
+    tl = tlx = null; eimg = null; eimgOk = false;
     focusLanding();
     mark("end");
     try { w.dispatchEvent(new CustomEvent("intro:end", { detail: { played: played, reason: reason } })); } catch { /* old browsers */ }

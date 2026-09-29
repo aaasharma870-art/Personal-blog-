@@ -58,9 +58,12 @@ const EDGE_LINE = EDGE_POINTS.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)
 const EDGE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300' preserveAspectRatio='none'><path d='${EDGE_LINE}L100 300L0 300Z' fill='#fff'/></svg>`,
 )}")`;
-/** mask-position-y (0–1) for the wipe fraction w: the edge rises from just
- *  below the frame (w = 0) to just above it (w = 1). */
-const cutAt = (w: number) => 0.2 + 0.6 * w;
+/** mask-position-y (0–1) for the wipe fraction w. The 300 %-tall mask sits
+ *  at −2H·c, so an edge point at y (of 300) shows at (y/100 − 2c)·H. The
+ *  edge spans y 134.5–165.5 with jitter: c = .1 puts all of it below the
+ *  frame (w = 0), c = .84 all of it above (w = 1). (.2 + .6w left the left
+ *  end 2 % inside the frame at w = 1: the dark wedge in the M1 frames.) */
+const cutAt = (w: number) => 0.1 + 0.74 * w;
 
 export function SeamFrame({ storm, graded }: { storm: MediaId; graded: boolean }) {
   const { p, live } = useCard();
@@ -71,6 +74,8 @@ export function SeamFrame({ storm, graded }: { storm: MediaId; graded: boolean }
   const inY = useTransform(p, (v) => `${(40 * (1 - v) * (1 - v)).toFixed(3)}%`);
   const cut = useTransform(p, (v) => cutAt(remap(v, 0.15, 0.75)));
   const maskY = useTransform(cut, (c) => `0% ${(c * 100).toFixed(3)}%`);
+  // belt and braces: once the wipe is complete the blueprint is unmasked
+  const mask = useTransform(p, (v) => (remap(v, 0.15, 0.75) >= 1 ? "none" : EDGE_MASK));
   const lineY = useTransform(cut, (c) => `${((-2 * c) / 3) * 100}%`);
   const lineOn = useTransform(p, (v) => (v > 0.1 && v < 0.9 ? 1 : 0));
   const fig = useTransform(p, (v) => remap(v, 0.2, 0.75));
@@ -120,8 +125,8 @@ export function SeamFrame({ storm, graded }: { storm: MediaId; graded: boolean }
         style={
           live
             ? {
-                maskImage: EDGE_MASK,
-                WebkitMaskImage: EDGE_MASK,
+                maskImage: mask,
+                WebkitMaskImage: mask,
                 maskSize: "100% 300%",
                 WebkitMaskSize: "100% 300%",
                 maskRepeat: "no-repeat",

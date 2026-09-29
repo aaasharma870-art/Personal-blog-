@@ -73,16 +73,34 @@ const gate = (m) => (RELEASE ? err(m) : warn(`[release gate] ${m}`));
 /* — Media manifest self-consistency ——————————————————————————————— */
 const mediaIds = new Set(Object.keys(mediaAssets));
 
-function resolves(id) {
+/** The usable asset `id` resolves to (the resolveMedia walk), or null. */
+function resolvedOf(id) {
   const seen = new Set();
   let cur = id;
   while (cur && !seen.has(cur) && mediaIds.has(cur)) {
     seen.add(cur);
     const a = mediaAssets[cur];
-    if (USABLE.has(a.status)) return true;
+    if (USABLE.has(a.status)) return { id: cur, ...a };
     cur = a.fallback;
   }
-  return false;
+  return null;
+}
+function resolves(id) {
+  return resolvedOf(id) !== null;
+}
+/** Unresolved, but the chain ends in a planned asset with a declared code
+ *  alternative (`codeAlt`): the consumer draws it (lib/media.ts). */
+function codeAlternative(id) {
+  const seen = new Set();
+  let cur = id;
+  while (cur && !seen.has(cur) && mediaIds.has(cur)) {
+    seen.add(cur);
+    const a = mediaAssets[cur];
+    if (USABLE.has(a.status)) return null;
+    if (a.codeAlt) return a.codeAlt;
+    cur = a.fallback;
+  }
+  return null;
 }
 
 for (const [id, a] of Object.entries(mediaAssets)) {
@@ -118,7 +136,8 @@ for (const [id, a] of Object.entries(mediaAssets)) {
       if (a[k] && !fs.existsSync(path.join(ROOT, "public", a[k]))) err(`media "${id}": ${k} ${a[k]} not found under public/`);
     }
   }
-  if (a.status === "planned" && !a.fallback) warn(`media "${id}": planned with no fallback (resolveMedia returns null)`);
+  if (a.status === "planned" && !a.fallback && !a.codeAlt) warn(`media "${id}": planned with no fallback and no codeAlt (resolveMedia returns null)`);
+  if (a.fallback && a.codeAlt) err(`media "${id}": codeAlt is only for planned assets with NO media fallback`);
   if (a.focalBox) {
     const b = a.focalBox;
     if (!(0 <= b.x0 && b.x0 < b.x1 && b.x1 <= 1 && 0 <= b.y0 && b.y0 < b.y1 && b.y1 <= 1)) err(`media "${id}": focalBox out of 0-1 order`);
@@ -296,14 +315,25 @@ for (const s of page) {
     else {
       const want = KEY_KIND[key];
       if (want && mediaAssets[id].kind !== want) err(`"${s.id}": props.${key} expects kind "${want}", but "${id}" is "${mediaAssets[id].kind}"`);
-      if (s.enabled !== false && !resolves(id)) err(`"${s.id}": media "${id}" has no usable asset in its fallback chain`);
+      if (s.enabled !== false && !resolves(id) && !codeAlternative(id)) err(`"${s.id}": media "${id}" has no usable asset (or codeAlt) in its fallback chain`);
     }
   }
 }
+// A film world's media (its act card plate, loop, films screen) is never a
+// LEGACY still: a legacy fallback put a sci-fi horizon on the frontier card
+// and a teal nebula on the Harry Potter card (M1 critic). Missing film media
+// resolves to nothing and the consumer draws its code alternative.
 for (const [w, spec] of Object.entries(film.worlds)) {
   for (const [k, id] of Object.entries(spec.media ?? {})) {
-    if (!mediaIds.has(id)) err(`film.worlds.${w}.media.${k} references unknown media "${id}"`);
-    else if (!resolves(id)) err(`film.worlds.${w}.media.${k} "${id}" has no usable asset in its fallback chain`);
+    if (!mediaIds.has(id)) {
+      err(`film.worlds.${w}.media.${k} references unknown media "${id}"`);
+      continue;
+    }
+    const r = resolvedOf(id);
+    if (!r && !codeAlternative(id)) err(`film.worlds.${w}.media.${k} "${id}" has no usable asset (or codeAlt) in its fallback chain`);
+    if (r && r.provenance?.source === "legacy") {
+      err(`film.worlds.${w}.media.${k} "${id}" resolves to the LEGACY still "${r.id}": a film card's plate must be film media or its code alternative`);
+    }
   }
 }
 

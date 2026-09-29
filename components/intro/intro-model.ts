@@ -56,6 +56,10 @@ const BROOM: Record<"IN-01" | "IN-01m", { tip: Pt; end: Pt; hw: number; handle: 
 
 export type IntroPlate = {
   src: string;
+  /** The same plate without its broom (IN-01-empty / IN-01m-empty), or
+   *  null: the code flight fills the broom mask from it, else from the
+   *  plate's surroundings (pull-push). */
+  empty: string | null;
   w: number;
   h: number;
   /** object-position fraction used for BOTH the canvas plate and the video. */
@@ -127,7 +131,6 @@ export type IntroModel = {
   creditLead: string;
   credits: string[];
   oath: QuoteId;
-  managed: QuoteId;
   play: string;
   skip: string;
   desc: string;
@@ -146,8 +149,11 @@ function plateOf(id: string, pos: Pt | null): IntroPlate | null {
   // resolveMedia may walk to a fallback; the broom numbers are only valid
   // for the plate itself, so a fallback means "no prologue".
   if (!a || a.id !== id || a.kind !== "image") return null;
+  const e = resolveMedia(`${id}-empty` as MediaId);
   return {
     src: a.src,
+    // only the plate's own broom-less twin (never its fallback: registration)
+    empty: e && e.id === `${id}-empty` && e.width === a.width && e.height === a.height ? e.src : null,
     w: a.width,
     h: a.height,
     pos: pos ?? ((a.focal as Pt | undefined) ?? [0.5, 0.5]),
@@ -168,7 +174,7 @@ export function introModel(): IntroModel | null {
     loading: copyText("intro.loading"),
   };
   if (!Object.values(texts).every(copyVisible)) return null;
-  if (!quoteVisible("Q-HP-1") || !quoteVisible("Q-HP-2")) return null;
+  if (!quoteVisible("Q-HP-1")) return null;
 
   // The flight (IN-02) lands on the hero plate, so the video — and therefore
   // the landscape plate, which IS its first frame — use the hero plate's
@@ -192,7 +198,6 @@ export function introModel(): IntroModel | null {
     creditLead: "After",
     credits: worksInUse.map((w) => w.title),
     oath: "Q-HP-1",
-    managed: "Q-HP-2",
     play: texts.play.text,
     skip: texts.skip.text,
     desc: texts.desc.text,

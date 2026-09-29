@@ -89,6 +89,12 @@ type MediaDef = {
   provenance: MediaProvenance;
   accept?: MediaAccept;
   fallback?: string;
+  /** A planned asset with NO media fallback: what its consumers draw in code
+   *  until it is accepted (MEDIA-PLAN "Code alternative"). A film surface
+   *  never falls back to a LEGACY still (validator: a film world's media must
+   *  not resolve to provenance "legacy"), so these resolve to null and the
+   *  consumer renders its code alternative. */
+  codeAlt?: string;
   /** Reduced-motion / Save-Data behaviour. */
   reduced: "poster" | "hide";
 };
@@ -237,6 +243,35 @@ export const mediaAssets = {
     accept: clean(["IC-HP-01", "IC-HP-02", "IC-HP-03", "IC-HP-04"]),
     fallback: "IN-01", reduced: "poster",
   },
+  /* The play screens WITHOUT their broom (the code flight's plate once the
+     SVG broom has taken the plate broom's pose; SPEC §5.4). Same generation,
+     broom removed by LOCAL inpainting (OpenCV xphoto shift-map in two
+     passes + a warm-highlight clamp so the fill invents no lights; 0
+     credits). Pixel-registered to IN-01 / IN-01m: the controller draws them
+     only inside the feathered broom mask. Masters + scripts:
+     research/build/media/masters/IN-01-empty/. */
+  "IN-01-empty": {
+    kind: "image", status: "accepted", src: "/media/films/intro-play-empty.webp",
+    width: 2560, height: 1440, focal: [0.77, 0.51], alt: null,
+    provenance: {
+      source: "higgsfield", model: "gpt_image_2_5 16:9 4k xhigh (IN-01) + local OpenCV shift-map inpaint",
+      credits: 0, date: "2026-09-28", jobId: "3edb46de-7312-414f-bbac-9f0a1bbd12ed",
+      note: "IN-01 with the broom removed (mask = the intro-model BROOM handle + tail, dilated 7 px)",
+    },
+    accept: clean(["IC-HP-01", "IC-HP-02", "IC-HP-03"]),
+    fallback: "IN-01", reduced: "poster",
+  },
+  "IN-01m-empty": {
+    kind: "image", status: "accepted", src: "/media/films/intro-play-mobile-empty.webp",
+    width: 1290, height: 2281, focal: [0.5, 0.31], alt: null,
+    provenance: {
+      source: "higgsfield", model: "gpt_image_2_5 9:16 2k high (IN-01m) + local OpenCV shift-map inpaint",
+      credits: 0, date: "2026-09-28", jobId: "57484139-4999-4e06-90fe-1e09186cca34",
+      note: "IN-01m with the broom removed (mask = the intro-model BROOM handle + tail, dilated 7 px)",
+    },
+    accept: clean(["IC-HP-01", "IC-HP-02", "IC-HP-03"]),
+    fallback: "IN-01m", reduced: "poster",
+  },
   "IN-02": {
     kind: "video", status: "accepted", src: "/media/films/intro-flight.mp4",
     webm: "/media/films/intro-flight.webm", poster: "IN-01", endsOn: "MV-01",
@@ -321,12 +356,13 @@ export const mediaAssets = {
   },
   "MV-06": {
     kind: "image", status: "planned", src: "/media/films/board-dawn.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-blueprint", reduced: "poster",
+    width: 2560, height: 1440, alt: null, provenance: planned,
+    codeAlt: "a CSS board (--idi-canvas + a 4% grid); the seam card uses its storm plate", reduced: "poster",
   },
   "MV-10": {
     kind: "image", status: "planned", src: "/media/films/frontier-dusk.webp",
     width: 2560, height: 1440, focal: [0.78, 0.45], alt: null, provenance: planned,
-    fallback: "still-calm", reduced: "poster",
+    codeAlt: "the tintype develops into a CSS golden-hour ground with the code low sun (card III)", reduced: "poster",
   },
   "MV-10m": {
     kind: "image", status: "planned", src: "/media/films/frontier-dusk-mobile.webp",
@@ -334,7 +370,8 @@ export const mediaAssets = {
   },
   "MV-11": {
     kind: "image", status: "planned", src: "/media/films/campfire.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-calm", reduced: "poster",
+    width: 2560, height: 1440, alt: null, provenance: planned,
+    codeAlt: "the R-6 code campfire on --rd-deep (Voices)", reduced: "poster",
   },
   "MV-11L": {
     kind: "video", status: "planned", src: "/media/films/campfire-loop.mp4",
@@ -343,11 +380,13 @@ export const mediaAssets = {
   },
   "MV-07": {
     kind: "image", status: "planned", src: "/media/films/lights-line.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "still-rays-img", reduced: "poster",
+    width: 2560, height: 1440, alt: null, provenance: planned,
+    codeAlt: "the ignition's final frame in code: the candles lit along the Line (card IV)", reduced: "poster",
   },
   "MV-08": {
     kind: "image", status: "planned", src: "/media/films/last-light.webp",
-    width: 2560, height: 1440, alt: null, provenance: planned, fallback: "hero-still", reduced: "poster",
+    width: 2560, height: 1440, alt: null, provenance: planned,
+    codeAlt: "the InkCandle drawing on --hp-deep (Contact)", reduced: "poster",
   },
   "MV-09": {
     kind: "video", status: "planned", src: "/media/films/last-light-loop.mp4",
@@ -364,11 +403,13 @@ export const mediaAssets = {
   },
   "F-RD": {
     kind: "image", status: "planned", src: "/media/films/films-rdr2.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-10", reduced: "poster",
+    width: 2520, height: 1080, alt: null, provenance: planned,
+    codeAlt: "films chapter (M2, not built): the screen shows its world's code ground", reduced: "poster",
   },
   "F-HP": {
     kind: "image", status: "planned", src: "/media/films/films-hp.webp",
-    width: 2520, height: 1080, alt: null, provenance: planned, fallback: "MV-07", reduced: "poster",
+    width: 2520, height: 1080, alt: null, provenance: planned,
+    codeAlt: "films chapter (M2, not built): the screen shows its world's code ground", reduced: "poster",
   },
 } satisfies Record<string, MediaDef>;
 
@@ -419,6 +460,22 @@ export function resolveMedia(id: MediaId): MediaAsset | null {
     cur = asset.fallback;
   }
   return null;
+}
+
+/** True when `id` resolves to nothing usable but its chain ends in a
+ *  planned asset with a declared code alternative (`codeAlt`): consumers
+ *  must then draw that alternative (the validator accepts the reference). */
+export function hasCodeAlternative(id: MediaId): boolean {
+  const seen = new Set<string>();
+  let cur: string | undefined = id;
+  while (cur && !seen.has(cur) && isMediaId(cur)) {
+    seen.add(cur);
+    const asset = getMedia(cur);
+    if (isUsable(asset.status)) return false;
+    if (asset.codeAlt) return true;
+    cur = asset.fallback;
+  }
+  return false;
 }
 
 /** Resolved public path for `id`; throws (failing the build loudly) rather

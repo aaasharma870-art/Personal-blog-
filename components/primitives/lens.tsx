@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
-import { motion } from "motion/react";
-import type { Transition } from "motion/react";
+import { animate, motion, useMotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { dur, easeClip, springFollow } from "@/lib/motion";
 import { useOncePerSession } from "@/lib/session";
@@ -20,8 +19,10 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
  * States (controlled by the parent):
  *   closed    halves meet at `origin`; children clipped to a slit
  *             inset(0 (1-o)·100% 0 o·100%). Instant.
- *   aperture  animates closed → open: the clip opens to inset(0) while the
- *             halves ride out to `frame`, on easeClip / dur.hero. Calls
+ *   aperture  animates closed → open on easeClip / dur.hero: the clip opens
+ *             from the slit to the whole box with a 48 px feathered edge,
+ *             and each half rides its clip edge until it reaches `frame`,
+ *             then rests while the plate opens beyond it. Calls
  *             onSettled("open") at the end.
  *   open      halves rest on `frame` (e.g. media.focalBox), children
  *             unclipped. Instant.
@@ -61,6 +62,10 @@ type LensProps = {
 
 const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
 
+/** The aperture's soft leading edge (px): the plate's clip edges are
+ *  feathered, so no hard media seam crosses the text beside the Lens. */
+const FEATHER = 48;
+
 export function Lens({
   state,
   frame = FULL,
@@ -96,23 +101,112 @@ export function Lens({
   const leftF = closed ? o : frame.x0;
   const rightF = closed ? o : frame.x1;
   const measured = boxW !== null;
-  const leftX = tracking ? target.x : measured ? leftF * boxW : 0;
-  const rightX = tracking ? target.x + target.width : measured ? rightF * boxW : 0;
   const anchor = (f: number): CSSProperties | undefined =>
     measured || tracking ? undefined : { left: pct(f) };
-  const y = tracking ? target.y : 0;
-  const clipPath =
-    clip && closed
-      ? `inset(0% ${pct(1 - o)} 0% ${pct(o)})`
-      : "inset(0% 0% 0% 0%)";
+  const slit = `inset(0% ${pct(1 - o)} 0% ${pct(o)})`;
 
-  const transition: Transition = reduced
-    ? { duration: 0 }
-    : state === "aperture"
-      ? { duration: dur.hero, ease: easeClip }
-      : state === "track"
-        ? { type: "spring", ...springFollow }
-        : { duration: 0 };
+  // Everything is driven imperatively through motion values (no re-render
+  // per frame). The APERTURE runs one clock u 0 → 1 (easeClip, dur.hero):
+  // the plate's clip edges open from the slit to the box edges, and each
+  // bracket half RIDES its clip edge until it reaches its frame edge, then
+  // rests there while the plate keeps opening beyond it (hero-lens.BAR H10:
+  // the halves never lag the clip). While it moves, the clip is a feathered
+  // mask, so its edge is soft wherever it passes behind the h1.
+  const xL = useMotionValue(0);
+  const xR = useMotionValue(0);
+  const yT = useMotionValue(0);
+  const clipPath = useMotionValue(clip && closed ? slit : "inset(0% 0% 0% 0%)");
+  const mask = useMotionValue("none");
+  const settledRef = useRef(onSettled);
+  useEffect(() => {
+    settledRef.current = onSettled;
+  });
+
+  const tx = tracking ? target.x : 0;
+  const tw = tracking ? target.width : 0;
+  const ty = tracking ? target.y : 0;
+  const { x0, x1 } = frame;
+  useLayoutEffect(() => {
+    const done = (s: "open" | "closed" | "track") => settledRef.current?.(s);
+    const slitAt = `inset(0% ${pct(1 - o)} 0% ${pct(o)})`;
+    const rest = (open: boolean) => {
+      mask.set("none");
+      clipPath.set(clip && !open ? slitAt : "inset(0% 0% 0% 0%)");
+    };
+    if (state === "track") {
+      if (!tracking) return;
+      rest(true);
+      if (reduced) {
+        xL.jump(tx);
+        xR.jump(tx + tw);
+        yT.jump(ty);
+        done("track");
+        return;
+      }
+      const a = animate(xL, tx, { type: "spring", ...springFollow });
+      const b = animate(xR, tx + tw, { type: "spring", ...springFollow });
+      const c = animate(yT, ty, { type: "spring", ...springFollow });
+      void a.then(() => done("track"));
+      return () => {
+        a.stop();
+        b.stop();
+        c.stop();
+      };
+    }
+    yT.jump(0);
+    if (boxW === null) {
+      // not measured yet: the % anchors place the halves; the clip is final
+      xL.jump(0);
+      xR.jump(0);
+      rest(state !== "closed");
+      if (state === "aperture") done("open");
+      return;
+    }
+    const w = boxW;
+    const ox = o * w;
+    if (state === "closed") {
+      xL.jump(ox);
+      xR.jump(ox);
+      rest(false);
+      return;
+    }
+    if (state === "open" || reduced) {
+      xL.jump(x0 * w);
+      xR.jump(x1 * w);
+      rest(true);
+      if (state === "aperture") done("open");
+      return;
+    }
+    // the aperture
+    const fL = x0 * w;
+    const fR = x1 * w;
+    const run = animate(0, 1, {
+      duration: dur.hero,
+      ease: easeClip,
+      onUpdate: (v) => {
+        const L = ox * (1 - v);
+        const R = ox + (w - ox) * v;
+        // ride the clip edge; a frame edge on the far side of the slit
+        // (rare) is reached by a straight interpolation instead
+        xL.set(fL <= ox ? Math.max(L, fL) : ox + (fL - ox) * v);
+        xR.set(fR >= ox ? Math.min(R, fR) : ox + (fR - ox) * v);
+        if (clip) {
+          // the feather is CENTRED on each clip edge (50 % at L and R), so
+          // the visible plate edge sits right under the riding half
+          const h = Math.min(FEATHER, (R - L) / 2) / 2;
+          clipPath.set("none");
+          mask.set(
+            `linear-gradient(to right, transparent ${(L - h).toFixed(1)}px, #000 ${(L + h).toFixed(1)}px, #000 ${(R - h).toFixed(1)}px, transparent ${(R + h).toFixed(1)}px)`,
+          );
+        }
+      },
+      onComplete: () => {
+        rest(true);
+        done("open");
+      },
+    });
+    return () => run.stop();
+  }, [state, tracking, boxW, o, x0, x1, tx, tw, ty, clip, reduced, xL, xR, yT, clipPath, mask]);
 
   // Bracket height: the frame's share of the box, or the tracked rect.
   const halfStyle: CSSProperties = tracking
@@ -129,13 +223,12 @@ export function Lens({
         width: `clamp(var(--lens-arm-min), ${(12 * (frame.y1 - frame.y0)).toFixed(3)}cqh, var(--lens-arm-max))`,
       };
 
-  const settle = () =>
-    onSettled?.(state === "aperture" ? "open" : state === "track" ? "track" : state);
-
   return (
     <div className={cn("relative", className)} data-lens={state}>
       {clip ? (
-        <motion.div initial={false} animate={{ clipPath }} transition={transition}>
+        // size-full: a definite box for the mask/clip reference (absolutely
+        // positioned children would otherwise leave it 0 px tall)
+        <motion.div className="size-full" style={{ clipPath, maskImage: mask, WebkitMaskImage: mask }}>
           {children}
         </motion.div>
       ) : (
@@ -150,23 +243,10 @@ export function Lens({
           focus ? "text-accent" : "text-fg-ghost",
         )}
       >
-        <motion.div
-          className="absolute inset-y-0 left-0 w-0"
-          style={anchor(leftF)}
-          initial={false}
-          animate={{ x: leftX, y }}
-          transition={transition}
-          onAnimationComplete={settle}
-        >
+        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ ...anchor(leftF), x: xL, y: yT }}>
           <Half side="left" style={halfStyle} />
         </motion.div>
-        <motion.div
-          className="absolute inset-y-0 left-0 w-0"
-          style={anchor(rightF)}
-          initial={false}
-          animate={{ x: rightX, y }}
-          transition={transition}
-        >
+        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ ...anchor(rightF), x: xR, y: yT }}>
           <Half side="right" style={halfStyle} />
         </motion.div>
       </div>

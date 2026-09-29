@@ -59,6 +59,9 @@ type Props = {
   /** Text equivalent of an aria-hidden frame ("" when the frame is itself
    *  readable, as the opening program is). */
   summary: string;
+  /** The lower bar's progress line (default on). The opening card's course
+   *  through its rows IS its progress element, so it passes false. */
+  progress?: boolean;
 };
 
 const WIDE = "(min-width: 40rem)";
@@ -78,6 +81,7 @@ export function CardShell({
   frameShape = "plate",
   lower,
   summary,
+  progress = true,
 }: Props) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
@@ -86,17 +90,23 @@ export function CardShell({
 
   // Offscreen gate: a card already in view at hydration keeps its static
   // composition until it has left the viewport once (never swap in front of
-  // the reader). IntersectionObserver reports the first state at once.
+  // the reader). IntersectionObserver reports the first state at once. An
+  // EDGE-ADJACENT card (its top exactly at the fold: Act I at 1440×900)
+  // reports isIntersecting with ratio 0 — nothing of it is visible, so it is
+  // clear too (else the opening card never went live at the commonest size).
   const [cleared, setCleared] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el || cleared || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => {
-      if (e && !e.isIntersecting) {
-        setCleared(true);
-        io.disconnect();
-      }
-    });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e && (!e.isIntersecting || e.intersectionRatio === 0)) {
+          setCleared(true);
+          io.disconnect();
+        }
+      },
+      { threshold: [0, 0.01] },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, [cleared]);
@@ -172,7 +182,7 @@ export function CardShell({
             {/* lower bar: the h2 + ≤ 1 line + the progress element */}
             <div className="relative order-2 flex flex-col items-start gap-3 sm:order-none sm:px-gutter sm:pt-4">
               {lower}
-              <ProgressLine world={motifWorld} />
+              {progress ? <ProgressLine world={motifWorld} /> : null}
               {/* live: screen-reader only, so the bars keep the letterbox
                   geometry; the static card shows it as a visible line */}
               {summary ? (

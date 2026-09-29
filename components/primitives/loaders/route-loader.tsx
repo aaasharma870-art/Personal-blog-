@@ -1,6 +1,6 @@
 import { film } from "@/lib/film";
 import { loader as loaderTiming } from "@/lib/motion";
-import { actCards, copyVisible, sectionById, tipFor, worldOf } from "@/lib/sections";
+import { actCards, copyVisible, letteringFor, sectionById, tipFor, worldOf } from "@/lib/sections";
 import { planeAttrs, worlds, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
@@ -50,8 +50,7 @@ export function RouteLoader({
 
   const card = entry?.act ? actCards.find((c) => c.act === entry.act) : undefined;
   const title = card && copyVisible(card.titleCopy) ? card.title : null;
-  const lettering = card ? film.lettering.find((l) => l.id === card.lettering) : undefined;
-  const lettered = Boolean(title && lettering?.shipped && lettering.text.toLowerCase() === title.toLowerCase());
+  const face = title && card ? letteringFor(card.lettering, title) : { lettered: false, upper: false };
 
   const hidden = film.tips.filter((t) => !copyVisible(t)).map((t) => t.text);
   const tip = kind === "plate-trail" && film.enabled ? tipFor(tipKey, hidden) : null;
@@ -77,7 +76,9 @@ export function RouteLoader({
       <div className="flex items-end sm:px-gutter sm:pb-4">
         {title ? (
           <p aria-hidden="true" className="type-title max-w-title">
-            <span className={cn(lettered && "font-world-act")}>{title}</span>
+            <span className={cn(face.lettered && "lettered-title font-world-act", face.upper && "uppercase")}>
+              {title}
+            </span>
           </p>
         ) : null}
       </div>

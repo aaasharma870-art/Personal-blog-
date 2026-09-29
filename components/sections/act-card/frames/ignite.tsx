@@ -5,7 +5,7 @@ import { motion, useMotionValueEvent, useTransform, type MotionValue } from "mot
 import { dur, ease } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { LINE, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
+import { LINE, LINE_D, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { EMBER_SPRITE, FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
@@ -31,6 +31,12 @@ import { useCard } from "@/components/sections/act-card/card-context";
  * + 3 fire frames. The canvas lives only while the card is within one
  * viewport and the device has ≥ 4 cores. Static card (RM, Pause, < 1024 /
  * coarse, no JS, SSR): the MV-07 still. aria-hidden art.
+ *
+ * MV-07 missing (`hall` null; ignite.BAR "the code-rendered final frame"):
+ * the live canvas stays on its own final frame at p = 1 (every candle lit
+ * along the Line) instead of handing over to the hall, and the static card
+ * is that same final frame rendered once as SVG from the same sprites
+ * (<StaticIgnition>: 0 canvas, 0 travel).
  */
 
 const N = 36;
@@ -58,7 +64,7 @@ function loadSprites(): Sprites {
   };
 }
 
-export function IgniteFrame({ hall }: { hall: MediaId }) {
+export function IgniteFrame({ hall }: { hall: MediaId | null }) {
   const { p, live } = useCard();
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -85,26 +91,68 @@ export function IgniteFrame({ hall }: { hall: MediaId }) {
     return () => io.disconnect();
   }, [live]);
 
-  const canvasOpacity = useTransform(p, (v) => 1 - remap(v, 0.85, 1));
-  const showCanvas = live && near && !done;
+  // with no hall to hand over to, the canvas keeps its final frame
+  const canvasOpacity = useTransform(p, (v) => (hall ? 1 - remap(v, 0.85, 1) : 1));
+  const showCanvas = live && near && (!done || !hall);
   const hallVisible = !live || hallOn;
 
   return (
     <div ref={hostRef} aria-hidden="true" className="absolute inset-0">
-      <motion.div
-        className="absolute inset-0"
-        initial={false}
-        animate={{ opacity: hallVisible ? 1 : 0 }}
-        transition={live ? { duration: dur.preview, ease } : { duration: 0 }}
-      >
-        <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
-      </motion.div>
+      {hall ? (
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ opacity: hallVisible ? 1 : 0 }}
+          transition={live ? { duration: dur.preview, ease } : { duration: 0 }}
+        >
+          <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
+        </motion.div>
+      ) : !live || !near ? (
+        <StaticIgnition />
+      ) : null}
       {showCanvas ? (
         <motion.div className="absolute inset-0" style={{ opacity: canvasOpacity }}>
           <IgniteCanvas p={p} />
         </motion.div>
       ) : null}
     </div>
+  );
+}
+
+/** The ignition's final frame (every point lit), drawn once in SVG from the
+ *  canvas's own geometry and sprites: the static card while MV-07 is
+ *  missing. Same fit as the canvas (the Line viewBox at 90 %, centred). */
+const STATIC_PAD = { x: (LINE_VIEWBOX.w / 0.9 - LINE_VIEWBOX.w) / 2, y: (LINE_VIEWBOX.h / 0.9 - LINE_VIEWBOX.h) / 2 };
+const STATIC_CANDLES = Array.from({ length: N }, (_, i) => {
+  const q = LINE.at((i + 0.5) / N);
+  const depth = 0.75 + 0.5 * (((i * 7) % 5) / 4);
+  const w = (10 / 1.3) * depth;
+  return { x: q.x - w / 2, y: q.y - w * 3 * 0.22, w, h: w * 3 };
+});
+
+function StaticIgnition() {
+  return (
+    <svg
+      viewBox={`${-STATIC_PAD.x} ${-STATIC_PAD.y} ${LINE_VIEWBOX.w + 2 * STATIC_PAD.x} ${LINE_VIEWBOX.h + 2 * STATIC_PAD.y}`}
+      preserveAspectRatio="xMidYMid meet"
+      focusable="false"
+      className="absolute inset-0 size-full"
+      fill="none"
+    >
+      <path
+        d={LINE_D}
+        stroke="var(--w-ink-contour)"
+        strokeOpacity={0.3}
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+      <g style={{ mixBlendMode: "plus-lighter" }} opacity={0.95}>
+        {STATIC_CANDLES.map((c, i) => (
+          <image key={i} href={CANDLE_SPRITE} x={c.x} y={c.y} width={c.w} height={c.h} preserveAspectRatio="none" />
+        ))}
+      </g>
+    </svg>
   );
 }
 

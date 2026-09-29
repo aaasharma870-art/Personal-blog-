@@ -1088,7 +1088,19 @@ html[data-motion="paused"] .opening-vignette {
 .act-tintype {
   border-radius: 6px;
 }
-.act-tintype img {
+/* A title set in its world lettering (act cards, route loaders): a FIXED
+   line box — the face swaps in (display: swap) while the card is still
+   below the fold, and the title's line never changes height when it does
+   (adjustFontFallback is off, so the fallback metrics differ). */
+.lettered-title {
+  display: inline-block;
+  vertical-align: top;
+  min-height: calc(var(--text-title--line-height) * 1em);
+  line-height: 1;
+}
+
+.act-tintype img,
+.act-tintype .act-tintype-code {
   filter: grayscale(1) sepia(0.45) contrast(1.04);
 }
 .act-tintype-vignette {

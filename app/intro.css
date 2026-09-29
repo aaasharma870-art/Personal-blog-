@@ -16,7 +16,7 @@
      intro-waiting   S1w: the real-loading status is visible
      intro-landing   S3 (sweep or dome): Skip leaves
      intro-sweep     S3 on the video path: the left→right mask dissolve
-     intro-bookend   SX from the play screen: the oath becomes its bookend
+     intro-leaving   SX (Skip / Esc / scroll): the text layer is gone in 80 ms
    Law 1: no text-shadow, glow box-shadow, filter animation or
    radial-gradient paint on the DOM here; luminous paint lives only in the
    canvas and the video (#intro-stage).
@@ -130,10 +130,6 @@ html.intro-armed #intro {
 }
 .intro-line {
   grid-area: 1 / 1;
-}
-.intro-managed {
-  visibility: hidden;
-  opacity: 0;
 }
 
 /* — Play: `[ ▶ Play ]`. Native button; the hit area is the whole bracketed
@@ -316,17 +312,19 @@ html.intro-launched .intro-lens {
   visibility: visible;
 }
 
-/* — SX from the play screen: the oath gives way to its bookend, instantly
-     (the whole overlay is already fading). NB: html state classes must never
-     share a name with an element class (.intro-managed would hide <html>). — */
-html.intro-bookend .intro-oath {
+/* — SX (Skip / Esc / scroll): the TEXT layer — credits, oath, Play and its
+     bracket, Skip, the wait status — leaves within 80 ms, so nothing ghosts
+     over the hero's name; the controller fades the rest (the plate, the
+     canvas, the night ground) over dur.base. NB: html state classes must
+     never share a name with an element class. — */
+html.intro-leaving .intro-block,
+html.intro-leaving .intro-top,
+html.intro-leaving .intro-wait {
   visibility: hidden;
   opacity: 0;
-  transition: none;
-}
-html.intro-bookend .intro-managed {
-  visibility: visible;
-  opacity: 1;
+  transition:
+    opacity 80ms linear,
+    visibility 0s linear 80ms;
 }
 
 /* — S3: Skip leaves; on the video path the overlay dissolves left → right

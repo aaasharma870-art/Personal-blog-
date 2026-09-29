@@ -8,6 +8,7 @@ import type { SectionProps } from "@/components/sections/types";
 import {
   boxAroundFocal,
   coverBox,
+  REFERENCE_GUTTER,
   REFERENCE_VIEWPORT,
   settleFrame,
   type Box01,
@@ -82,6 +83,7 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
     ? settleFrame(coverBox(plate.box, plate.size, REFERENCE_VIEWPORT, plate.focal), {
         ...REFERENCE_VIEWPORT,
         inset: 16,
+        margin: REFERENCE_GUTTER,
       })
     : { x0: 0.5, x1: 0.9, y0: 0.4, y1: 0.6 };
 

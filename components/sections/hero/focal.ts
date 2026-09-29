@@ -8,7 +8,8 @@
    focal, so a plate fraction lands at a different fraction of the frame
    box at every viewport; `coverBox` maps one onto the other. `settleFrame`
    then applies the hero-lens bar's geometry rules (H7): the left spine sits
-   ≥ `gap` px right of the h1, and neither spine leaves the frame.
+   ≥ `gap` px right of the h1, and neither spine comes closer than `margin`
+   to the frame's edge (the hero passes the page gutter).
    ========================================================================== */
 
 export type Box01 = { x0: number; x1: number; y0: number; y1: number };
@@ -88,3 +89,8 @@ export function sameBox(a: Box01, b: Box01): boolean {
 
 /** The reference viewport the SSR frame is computed for (DESIGN §3.3). */
 export const REFERENCE_VIEWPORT: Size = { w: 1440, h: 900 };
+/** --spacing-gutter at the reference viewport (clamp(…, 4rem) = 64 px): the
+ *  hero bracket's outer margin, so its right spine sits on the page grid
+ *  (innerWidth − gutter, where the header's MENU and the card reel marks
+ *  end), never 8 px from the viewport edge. */
+export const REFERENCE_GUTTER = 64;
