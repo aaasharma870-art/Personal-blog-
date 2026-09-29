@@ -14,7 +14,7 @@ import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf } from "@/comp
  * reads "the Black Pearl" in under 3 s; the film title above the frame and
  * the caption under it name it anyway.
  *
- *   T2  the hero's sea has already sunk into the deep (CardShell featherUp,
+ *   T2  the hero's sea has already sunk into the deep (hero-stage.tsx's feather,
  *       the hero's last 18vh); the Pearl then opens by APERTURE from its own
  *       horizon line — a slit at the horizon widening to the full frame,
  *       sides inset(8%) → 0 — "from the horizon to the ship", on the

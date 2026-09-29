@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01 } from "@/components/primitives/loaders/kit";
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
-import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
+import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
 import { BoardFig, boardQuad } from "@/components/sections/act-card/frames/board-fig";
 import {
@@ -100,7 +100,6 @@ const CUT = { from: 0.12, to: 0.66 };
 /** How far (frame heights) the storm is lifted at p 0 (≤ .19: the plate's
  *  box still covers the frame under the 8 % opening inset). */
 const STORM_ENTRY = 0.18;
-export const smooth01 = (t: number) => t * t * (3 - 2 * t);
 
 /** Chalk dust along the cut: ≤ 24 specks at the edge (the edge box's
  *  units: x 0–100, y of 300), deterministic; most settle just BELOW the

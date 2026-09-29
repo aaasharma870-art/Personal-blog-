@@ -13,6 +13,7 @@ import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
 import { loopPath } from "@/components/site/idiots-chalk";
+import { drawn } from "@/components/site/world-motion";
 import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import type { EnterPhase } from "@/components/primitives/use-enter-once";
 import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk";
@@ -108,15 +109,6 @@ function ChalkWrite({
       {children}
     </motion.span>
   );
-}
-
-/** pathLength for a chalk stroke that draws once at `delay` (or is drawn). */
-function strokeProps(phase: EnterPhase, draw: boolean, delay: number, duration: number) {
-  return {
-    initial: false as const,
-    animate: { pathLength: draw && phase === "armed" ? 0 : 1 },
-    transition: draw && phase === "entered" ? { duration, ease: easeDraw, delay } : { duration: 0 },
-  };
 }
 
 type Box = { x: number; y: number; w: number; h: number };
@@ -251,7 +243,7 @@ function PhraseCircle({ host, phase, on }: { host: RefObject<HTMLElement | null>
           strokeWidth={2.4}
           strokeLinecap="round"
           filter={`url(#${fid})`}
-          {...strokeProps(phase, true, 0.45, dur.draw.med)}
+          {...drawn(phase, { delay: 0.45, duration: dur.draw.med })}
         />
       </g>
     </svg>
@@ -275,10 +267,9 @@ export function MachineBoard({
 }) {
   const variant = useVariant(choice, pieceKey);
   const alt = variant === "alt";
-  const pick = headPlateOf(spec, variant);
+  const id = headPlateOf(spec, variant);
   const answerRef = useRef<HTMLDivElement>(null);
   const fid = useSvgId("machine-u");
-  const id: MediaId | null = pick?.id ?? null;
   const rect = id ? rectOf(id, "boardRect") : null;
   const circleOn = alt && quotes["Q-3I-3"].text.includes(CIRCLED);
 
@@ -352,7 +343,7 @@ export function MachineBoard({
                       strokeLinecap="round"
                       vectorEffect="non-scaling-stroke"
                       filter={`url(#${fid})`}
-                      {...strokeProps(phase, !alt, 1.1, dur.draw.short)}
+                      {...drawn(alt ? "static" : phase, { delay: 1.1, duration: dur.draw.short })}
                     />
                   </svg>
                 </span>

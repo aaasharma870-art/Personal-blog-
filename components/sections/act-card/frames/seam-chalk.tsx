@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/kit";
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
-import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
+import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { BoardDrone, boardQuad, onBoard, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
-import { registeredStorm, smooth01, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
+import { BoardDrone, boardQuad, onBoard, poly, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
+import { registeredStorm, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
 import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
 
 /**
@@ -101,10 +101,6 @@ export function SeamChalkFrame({
   const maskPos = useTransform(w, (x) => `${(pxAt(x) * 100).toFixed(3)}% 0%`);
   // belt and braces: a finished sweep hides the storm outright
   const stormOn = useTransform(w, (x) => (x >= 1 ? 0 : 1));
-  const fig = useTransform(p, (v) => remap(v, 0.5, 0.9));
-  const { circle, spin, one } = useRanchoCircle(p, live, reduced);
-
-  const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
 
   return (
     <div aria-hidden="true" data-frame="seam-chalk" className="absolute inset-0 overflow-hidden">
@@ -117,37 +113,7 @@ export function SeamChalkFrame({
           <BoardDrone plate={board} box={DRONE_ALT} live={false} />
         </PlateBox>
       ) : (
-        <div className="act-blueprint absolute inset-0">
-          <svg
-            viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
-            preserveAspectRatio="xMidYMid meet"
-            focusable="false"
-            className="absolute inset-0 size-full"
-            fill="none"
-            strokeLinecap="round"
-          >
-            <path
-              d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
-              stroke="var(--w-bp-line)"
-              strokeWidth={1}
-              vectorEffect="non-scaling-stroke"
-              strokeOpacity={0.7}
-              strokeLinecap="square"
-            />
-            <ChalkLine progress={live ? fig : one} />
-          </svg>
-          <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
-            <GaugeDrawing
-              // useTransform binds one source: remount when static ↔ live
-              key={live ? "live" : "static"}
-              progress={live ? p : one}
-              spin={spin}
-              circle={circle}
-              scale={1.5}
-            />
-          </div>
-          <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
-        </div>
+        <ChalkBlueprint p={p} live={live} reduced={reduced} />
       )}
 
       {/* the storm, under the duster's feathered diagonal edge (mounted even
@@ -184,6 +150,48 @@ export function SeamChalkFrame({
   );
 }
 
+/** No `board`: the code blueprint with FIG. 0 in chalk and the chalk gauge
+ *  (Rancho's circle at ≥ .95). Its drivers live here, so the board path
+ *  (production) never runs them. */
+function ChalkBlueprint({ p, live, reduced }: { p: MotionValue<number>; live: boolean; reduced: boolean }) {
+  const fig = useTransform(p, (v) => remap(v, 0.5, 0.9));
+  const { circle, spin, one } = useRanchoCircle(p, live, reduced);
+  const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
+  return (
+    <div className="act-blueprint absolute inset-0">
+      <svg
+        viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        className="absolute inset-0 size-full"
+        fill="none"
+        strokeLinecap="round"
+      >
+        <path
+          d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
+          stroke="var(--w-bp-line)"
+          strokeWidth={1}
+          vectorEffect="non-scaling-stroke"
+          strokeOpacity={0.7}
+          strokeLinecap="square"
+        />
+        <ChalkLine progress={live ? fig : one} />
+      </svg>
+      <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
+        <GaugeDrawing
+          // useTransform binds one source: remount when static ↔ live
+          key={live ? "live" : "static"}
+          progress={live ? p : one}
+          spin={spin}
+          circle={circle}
+          scale={1.5}
+        />
+      </div>
+      <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
+    </div>
+  );
+}
+
 /** FIG. 0 in chalk: a firm stroke and a lighter offset twin (the grain of a
  *  chalk line, without a per-frame filter). The blueprint fallback only. */
 function ChalkLine({ progress }: { progress: MotionValue<number> }) {
@@ -212,19 +220,25 @@ const ARCS = [0, 1, 2].map((k) => {
 });
 
 function arcPath(q: BoardQuad, pts: [number, number][]): string {
-  return pts
-    .map(([u, v], i) => {
-      const [x, y] = onBoard(q, u, v);
-      return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
-    })
-    .join("");
+  return poly(pts.map(([u, v]) => onBoard(q, u, v)));
+}
+
+/** The arcs on a plate's board quad (null: no board): their paths and the
+ *  pad's width (~a fifth of the slate's height, in plate pixels). The quad
+ *  is a function of the asset alone, so this keys on the plate's id. */
+function dustArt(id: MediaId): { paths: string[]; slateH: number } | null {
+  const plate = plateOf(id);
+  const q = plate ? boardQuad(plate) : null;
+  if (!q) return null;
+  const slateH = (q.bl[1] - q.tl[1] + (q.br[1] - q.tr[1])) / 2;
+  return { paths: ARCS.map((a) => arcPath(q, a.pts)), slateH };
 }
 
 function DustArcs({ plate }: { plate: Plate }) {
-  const q = boardQuad(plate);
-  if (!q) return null;
-  // the pad's width: ~a fifth of the slate's height, in plate pixels
-  const slateH = (q.bl[1] - q.tl[1] + (q.br[1] - q.tr[1])) / 2;
+  const id = plate.asset.id;
+  const art = useMemo(() => dustArt(id), [id]);
+  if (!art) return null;
+  const { paths, slateH } = art;
   return (
     <svg
       viewBox={plateViewBox(plate)}
@@ -236,7 +250,7 @@ function DustArcs({ plate }: { plate: Plate }) {
       strokeLinejoin="round"
     >
       {ARCS.map((a, k) => (
-        <path key={k} d={arcPath(q, a.pts)} stroke="var(--w-chalk)" strokeOpacity={a.o} strokeWidth={slateH * 0.2} />
+        <path key={k} d={paths[k]} stroke="var(--w-chalk)" strokeOpacity={a.o} strokeWidth={slateH * 0.2} />
       ))}
     </svg>
   );

@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { JacksCompass } from "@/components/primitives/loaders/compass";
 import { LINE, LINE_D, fitPath, fitPoint, measurePath, type Box } from "@/components/primitives/loaders/line";
 import { FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
-import { EMBER_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
 import { DEAD_EYE_TARGETS, filmMark } from "@/components/sections/films/plate-marks";
 
@@ -41,8 +40,7 @@ import { DEAD_EYE_TARGETS, filmMark } from "@/components/sections/films/plate-ma
               left → right, 160 ms apart; then all of them take their shot
               AT ONCE (an ember point opens in every X). Settled / static:
               the X's stay locked with their points (IC-RD-02; no reticle,
-              no weapon, no figure). The old graphite trail to a kindling
-              campfire (RdrTrail) stays for a plate without targets.
+              no weapon, no figure).
      hp       LD-HP complete: the ink Line draws while a cool light (the
               Lumos sprite) travels it (1.4 s), then ONE warm point lights at
               the Line's start — the point Card II→III sinks into its sun.
@@ -125,7 +123,7 @@ export function Finale({
   let body: ReactNode = null;
   if (world === "pirates") body = alt ? <PiratesChart mode={mode} W={W} stillId={stillId} /> : <PiratesCompass mode={mode} W={W} bearing={bearing} />;
   else if (world === "idiots") body = alt ? <IdiotsScooter mode={mode} W={W} stillId={stillId} /> : <IdiotsGates mode={mode} W={W} gates={gates} />;
-  else if (world === "rdr2") body = DEAD_EYE_TARGETS[stillId] ? <RdrDeadEye mode={mode} W={W} stillId={stillId} /> : <RdrTrail mode={mode} W={W} />;
+  else if (world === "rdr2") body = <RdrDeadEye mode={mode} W={W} stillId={stillId} />;
   else body = alt ? <HpMapWalk mode={mode} W={W} stillId={stillId} /> : <HpInkLight mode={mode} W={W} />;
   return (
     <PlateSvg aspect={aspect} className="films-finale">
@@ -181,23 +179,15 @@ function PiratesCompass({ mode, W, bearing }: { mode: FinaleMode; W: number; bea
 
 function PiratesChart({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId: MediaId }) {
   const f = (v: number) => v.toFixed(1);
-  const treasure = filmMark(stillId, "treasure");
-  let X: { x: number; y: number };
-  let d: string;
-  if (treasure) {
-    // the tattered-sail Pearl (iconic-pearl): the sea is only the plate's
-    // bottom band in the 2.39:1 crop, so the course runs LOW across the
-    // water (y ≈ .815–.85, never into the fog or the hull) and the X lands on
-    // the moon path just before the bow
-    X = { x: treasure[0] * W, y: treasure[1] * 1000 };
-    d =
-      `M${f(0.02 * W)} ${f(X.y + 30)} C${f(0.1 * W)} ${f(X.y + 34)} ${f(0.18 * W)} ${f(X.y + 2)} ${f(0.26 * W)} ${f(X.y + 12)}` +
-      ` C${f(0.32 * W)} ${f(X.y + 22)} ${f(X.x - 80)} ${f(X.y + 16)} ${f(X.x)} ${f(X.y)}`;
-  } else {
-    const lantern = filmMark(stillId, "lantern") ?? [0.836, 0.556];
-    X = { x: (lantern[0] - 0.29) * W, y: 760 };
-    d = `M${f(0.02 * W)} 905 C${f(0.12 * W)} 870 ${f(0.2 * W)} 720 ${f(0.3 * W)} 745 C${f(0.38 * W)} 765 ${f(X.x - 90)} 800 ${f(X.x)} ${X.y}`;
-  }
+  // the tattered-sail Pearl (iconic-pearl): the sea is only the plate's
+  // bottom band in the 2.39:1 crop, so the course runs LOW across the
+  // water (y ≈ .815–.85, never into the fog or the hull) and the X lands on
+  // the moon path just before the bow (the fallback = iconic-pearl's mark)
+  const t = filmMark(stillId, "treasure") ?? [0.39, 0.815];
+  const X = { x: t[0] * W, y: t[1] * 1000 };
+  const d =
+    `M${f(0.02 * W)} ${f(X.y + 30)} C${f(0.1 * W)} ${f(X.y + 34)} ${f(0.18 * W)} ${f(X.y + 2)} ${f(0.26 * W)} ${f(X.y + 12)}` +
+    ` C${f(0.32 * W)} ${f(X.y + 22)} ${f(X.x - 80)} ${f(X.y + 16)} ${f(X.x)} ${f(X.y)}`;
   const course = measurePath(d);
   const DOTS = 18;
   const dots = Array.from({ length: DOTS }, (_, k) => course.at(k / DOTS));
@@ -315,54 +305,6 @@ function IdiotsScooter({ mode, W, stillId }: { mode: FinaleMode; W: number; stil
 }
 
 /* — RED DEAD REDEMPTION 2 ————————————————————————————————————————————— */
-
-function RdrTrail({ mode, W }: { mode: FinaleMode; W: number }) {
-  const f = (v: number) => v.toFixed(1);
-  // F-RD's ridge (measured on a 0.05 grid): the brow falls from y ≈ .60 at
-  // the left edge to ≈ .49 under the horse. The trail is a dashed graphite
-  // map route that FOLLOWS the hill, ~65 units below the brow (the old
-  // straight diagonal and the floating hachure arcs read as bugs,
-  // ART-DIRECTOR #12), to a campfire on the hill's shoulder.
-  const fire = { x: 0.42 * W, y: 598 };
-  const trail =
-    `M${f(0.03 * W)} 672 C${f(0.1 * W)} 666 ${f(0.16 * W)} 655 ${f(0.22 * W)} 643` +
-    ` C${f(0.28 * W)} 631 ${f(0.34 * W)} 616 ${f(fire.x - 26)} ${fire.y + 12}`;
-  const route = measurePath(trail);
-  const DASHES = 24;
-  const dashes = Array.from({ length: DASHES }, (_, k) => {
-    const a = route.at(k / DASHES);
-    const b = route.at((k + 0.55) / DASHES);
-    return `M${f(a.x)} ${f(a.y)} L${f(b.x)} ${f(b.y)}`;
-  });
-  const step = dur.draw.med / DASHES;
-  const t0 = 0.45 + dur.draw.med + 0.1;
-  // the kindle: a small ember glow SITTING on the hill's shoulder, once —
-  // the old 58 × 86 flame frames read as a glowing vertical smear at card
-  // scale (M2 critic 3 #6)
-  const glow = 30;
-  const core = 12;
-  return (
-    <g data-finale="rdr2-trail" strokeLinecap="round">
-      {dashes.map((d, k) => (
-        <motion.path key={k} d={d} stroke="var(--w-pencil)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" {...appear(mode, 0.45 + k * step, 1, 0.12)} />
-      ))}
-      <motion.g {...appear(mode, t0, 1, dur.base)}>
-        <image href={EMBER_SPRITE} x={fire.x - glow / 2} y={fire.y - glow / 2 - 2} width={glow} height={glow} />
-        <image href={EMBER_SPRITE} x={fire.x - core / 2} y={fire.y - core / 2 - 2} width={core} height={core} />
-      </motion.g>
-      {[0, 1].map((k) => (
-        <motion.g
-          key={`e${k}`}
-          initial={false}
-          animate={mode === "play" ? { opacity: [0, 1, 0], y: [0, -40 - k * 22] } : { opacity: 0, y: 0 }}
-          transition={mode === "play" ? { duration: 1.3, delay: t0 + 0.3 + k * 0.25, ease } : { duration: 0 }}
-        >
-          <image href={EMBER_SPRITE} x={fire.x - 6 + (k ? 10 : -8)} y={fire.y - 30} width={12} height={12} />
-        </motion.g>
-      ))}
-    </g>
-  );
-}
 
 /** DEFAULT: Dead Eye on the frozen frontier — the marks lock on, one bird
  *  at a time, then fire once. Plate space (1000 = the still's height);

@@ -19,7 +19,7 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  * films-chapter §3; RECOGNIZABILITY S12): a letterboxed 2.39:1 still (3:2
  * below 640 px: letterbox off), its finale drawn over it once, and the
  * scene caption UNDER the frame ("THE BLACK PEARL BY MOONLIGHT • PIRATES OF THE
- * CARIBBEAN": the F-3I / F-RD skies are too bright for a corner caption).
+ * CARIBBEAN": the F-3I sky is too bright for a corner caption).
  *
  * Variant piece `films.screens` (lib/variants.ts):
  *   DEFAULT "clip-finales": the world's `filmsStill`; the frame opens from
@@ -27,8 +27,8 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  *     it is in view, then the finale draws (finales.tsx).
  *   ALT "iris-marks": the world's alternate still (`filmsAltStill`, else
  *     the registered media alt); the frame IRISES open from the plate's
- *     focal mark (the Pearl's lantern, the scooter, the horse, the ink), then
- *     the ALT finale draws.
+ *     focal mark (the Pearl's lantern, the scooter, the camp's fire, the
+ *     ink), then the ALT finale draws.
  * Server HTML / reduced motion / Pause / no JS / already in view: the open
  * frame with the finished finale. No video, no sticky stage (bar F13).
  */

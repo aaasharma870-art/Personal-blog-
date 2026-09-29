@@ -322,6 +322,12 @@
   --loader-mini: 3rem;
   --loader-card: 11rem; /* M5 (blind A80/D80 "thumbnails are tiny" at 120 px): 176 px */
   --loader-route: 13.5rem; /* ≥ 200 px (RECOGNIZABILITY S20; M2 fix round 3: 160 px read "tiny") */
+  --loader-stage: 18rem; /* the route card's art: 288 px (M2 fix); 26rem ≥ xl (M5) */
+}
+@media (width >= 80rem) {
+  :root {
+    --loader-stage: 26rem; /* 416 px at Tailwind's xl (--breakpoint-xl) */
+  }
 }
 @media (width < 64rem) {
   :root {

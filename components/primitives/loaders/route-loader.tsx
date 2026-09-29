@@ -96,7 +96,7 @@ export function RouteLoader({
         <div className="flex max-w-full flex-col items-center sm:px-gutter">
           {/* the art's box is reserved (the tallest world art, LD-PC's
               160:156), so nothing moves when it appears after the delay */}
-          <div className="grid aspect-[160/156] w-72 max-w-full place-items-center xl:w-[26rem]">
+          <div className="grid aspect-[160/156] w-(--loader-stage) max-w-full place-items-center">
             <Loader world={world} size="stage" delayMs={loaderTiming.showDelayMs} />
           </div>
           {film.enabled && world !== "house" ? <RouteCaption world={world} /> : null}

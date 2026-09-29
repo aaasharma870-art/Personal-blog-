@@ -82,7 +82,7 @@ function PlainLoader({ mode, size, progress, animate }: LoaderRendererProps) {
         size === "mini" && "w-(--loader-mini)",
         size === "card" && "w-(--loader-card) max-w-full",
         size === "route" && "w-(--loader-route)",
-        size === "stage" && "w-72 max-w-full xl:w-[26rem]",
+        size === "stage" && "w-(--loader-stage) max-w-full",
       )}
     >
       {mode === "indeterminate" ? (

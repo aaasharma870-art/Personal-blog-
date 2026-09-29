@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { LINE, LINE_D, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
+import { LINE, LINE_D, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { EMBER_SPRITE, FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
@@ -135,20 +135,13 @@ export function IgniteFrame({
   // with no plate to hand over to, the canvas keeps its final frame
   const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.8, 0.9) : 1));
   const showCanvas = live && near && (!done || !plated);
-  const campOpacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
   const hallOpacity = useTransform(p, hallAt);
   // MV-07 stands in for the hall only when the hall is missing
   const midOpacity = useTransform(p, (v) => remap(v, 0.7, 0.85));
 
   return (
     <div ref={hostRef} aria-hidden="true" data-frame="ignite" className="absolute inset-0">
-      {live && campPlate ? (
-        <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity: campOpacity }}>
-          <PlateBox plate={campPlate}>
-            <MediaFrame media={campPlate.asset.id} layout="fill" playOn="never" sizes="100vw" />
-          </PlateBox>
-        </motion.div>
-      ) : null}
+      {live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null}
       {mid && !hall ? (
         <motion.div className="absolute inset-0" style={live ? { opacity: midOpacity } : undefined}>
           <MediaFrame media={mid} layout="fill" playOn="never" sizes="100vw" />
@@ -171,7 +164,21 @@ export function IgniteFrame({
 
 /** The camp sinks into the hp deep over this window of p (still ~.4 at the
  *  middle: both worlds, the hall leading). */
-export const CAMP_OUT = { from: 0.3, to: 0.62 };
+const CAMP_OUT = { from: 0.3, to: 0.62 };
+
+/** THE CAMP (the previous section's plate) sinking into the hp deep over
+ *  CAMP_OUT; live only. Shared with the ALT (frames/ignite-lumos.tsx). */
+export function CampLayer({ plate, p }: { plate: Plate; p: MotionValue<number> }) {
+  const opacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
+  return (
+    <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity }}>
+      <PlateBox plate={plate}>
+        <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
+      </PlateBox>
+    </motion.div>
+  );
+}
+
 /** The camp's ember glow holds until ≈ .45 and is out by .5. */
 export const EMBER_OUT = { from: 0.4, to: 0.5 };
 /** The Great Hall: up to a third from p .35 (behind the candles, the camp
@@ -319,7 +326,7 @@ function IgniteCanvas({ p, fire: fireAt }: { p: MotionValue<number>; fire: reado
         const depth = 0.75 + 0.5 * (((i * 7) % 5) / 4);
         if (v < arr) {
           const t = (v - start) / (arr - start);
-          const e = t * t * (3 - 2 * t);
+          const e = smooth01(t);
           const x = fire.x + (q.x - fire.x) * e;
           const y = fire.y + (q.y - fire.y) * e - Math.sin(Math.PI * e) * 60 * s;
           const sz = 9 * unit * depth;

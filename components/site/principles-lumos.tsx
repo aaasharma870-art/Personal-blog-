@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { principles, type Principle } from "@/lib/content";
 import { dur, ease } from "@/lib/motion";
 import { Meta } from "@/components/site/world-kit";
 import { PatronusRibbons } from "@/components/site/hp-ink";
+import { maskIntersect, maskStyle } from "@/components/primitives/mask-style";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { FloatingCandle } from "@/components/worlds/hp/floating-candle";
@@ -44,13 +45,6 @@ import {
    no spark.
    ========================================================================== */
 
-const MASK = (m: string): CSSProperties => ({ maskImage: m, WebkitMaskImage: m });
-const MASK2 = (a: string, b: string): CSSProperties => ({
-  maskImage: `${a}, ${b}`,
-  WebkitMaskImage: `${a}, ${b}`,
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in",
-});
 /** Across the page container, inside a full-bleed layer (100vw wide). */
 const inC = (f: number) =>
   `calc((100vw - min(100vw, var(--container-page))) / 2 + var(--spacing-gutter) + ${f} * (min(100vw, var(--container-page)) - 2 * var(--spacing-gutter)))`;
@@ -113,17 +107,17 @@ function CeilingGround() {
       {/* the clouds stay in the ceiling band, above the words */}
       <CeilingClouds
         className={`${box} top-[calc(-1*var(--section-pad))] h-[26rem]`}
-        style={MASK("linear-gradient(to bottom, transparent, #000 22%, #000 58%, transparent)")}
+        style={maskStyle("linear-gradient(to bottom, transparent, #000 22%, #000 58%, transparent)")}
       />
       {/* over the head: full */}
       <StarField
         className={`${box} top-[calc(-1*var(--section-pad))] h-[56rem]`}
-        style={MASK("linear-gradient(to bottom, transparent, #000 8rem, #000 40rem, transparent)")}
+        style={maskStyle("linear-gradient(to bottom, transparent, #000 8rem, #000 40rem, transparent)")}
       />
       {/* over the list: the side bands full, the text columns dim (sm+) */}
       <StarField
         className={`${box} bottom-0 top-[44rem] hidden sm:block`}
-        style={MASK2(
+        style={maskIntersect(
           `linear-gradient(to right, #000 ${inC(0.06)}, rgb(0 0 0 / 0.18) ${inC(0.1)}, rgb(0 0 0 / 0.18) ${inC(0.74)}, #000 ${inC(0.79)})`,
           "linear-gradient(to bottom, transparent, #000 10rem, #000 70%, transparent)",
         )}

@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { MotionValue } from "motion/react";
-import { DrawPath } from "@/components/primitives/loaders/kit";
+import { DrawPath, arcPts, type Pt } from "@/components/primitives/loaders/kit";
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE, LINE_FIG, LINE_VIEWBOX } from "@/components/primitives/loaders/line";
 import { anchor, anchorRect, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
@@ -79,13 +79,10 @@ const DRONE_HUBS: [number, number][] = [
   [21, 63],
   [79, 63],
 ];
-function droneLocalPolys(): [number, number][][] {
-  const out: [number, number][][] = [];
-  const ring = (cx: number, cy: number, r: number, a0 = 0, a1 = 360, n = 36): [number, number][] =>
-    Array.from({ length: n + 1 }, (_, i) => {
-      const a = ((a0 + ((a1 - a0) * i) / n) * Math.PI) / 180;
-      return [cx + r * Math.cos(a), cy + r * 0.92 * Math.sin(a)];
-    });
+function droneLocalPolys(): Pt[][] {
+  const out: Pt[][] = [];
+  // a ring, squashed to .92 (the drone's slight top-down tilt)
+  const ring = (cx: number, cy: number, r: number, a0 = 0, a1 = 360, n = 36) => arcPts(cx, cy, r, r * 0.92, a0, a1, n);
   // the X frame (hub to hub, through the body)
   out.push([DRONE_HUBS[0], DRONE_HUBS[3]], [DRONE_HUBS[1], DRONE_HUBS[2]]);
   DRONE_HUBS.forEach(([x, y], i) => {
@@ -106,15 +103,12 @@ function droneLocalPolys(): [number, number][][] {
   // the body (a rounded box) and its camera
   const bx = 50;
   const by = 40;
-  const body: [number, number][] = [];
+  const body: Pt[] = [];
   const hw = 13;
   const hh = 9;
   const r = 3;
-  const corner = (cx: number, cy: number, from: number) =>
-    Array.from({ length: 5 }, (_, i) => {
-      const a = ((from + 22.5 * i) * Math.PI) / 180;
-      return [cx + r * Math.cos(a), cy + r * Math.sin(a)] as [number, number];
-    });
+  // a rounded corner: a quarter arc in 4 steps (22.5°)
+  const corner = (cx: number, cy: number, from: number) => arcPts(cx, cy, r, r, from, from + 90, 4);
   body.push(
     ...corner(bx + hw - r, by - hh + r, -90),
     ...corner(bx + hw - r, by + hh - r, 0),
@@ -132,15 +126,22 @@ function droneLocalPolys(): [number, number][][] {
 }
 const DRONE_LOCAL = droneLocalPolys();
 
-/** The drone sketch as one path in plate pixels, inside `box` on the quad. */
+/** The drone sketch as one path in plate pixels, inside `box` on the quad;
+ *  cached per quad + box (exact values), like figPaths. */
+const droneCache = new Map<string, string>();
 function dronePath(q: Q, box: Box): string {
-  return DRONE_LOCAL.map((pts) =>
+  const key = [...[q.tl, q.tr, q.bl, q.br].flat(), box.u0, box.u1, box.v0, box.v1].join(",");
+  const hit = droneCache.get(key);
+  if (hit !== undefined) return hit;
+  const d = DRONE_LOCAL.map((pts) =>
     poly(
       pts.map(([x, y]) =>
         onBoard(q, box.u0 + (box.u1 - box.u0) * (x / 100), box.v0 + (box.v1 - box.v0) * (y / 80)),
       ),
     ),
   ).join("");
+  droneCache.set(key, d);
+  return d;
 }
 
 /** THE HOMEMADE DRONE chalked on the ICE board (both card variants). `draw`
@@ -208,7 +209,8 @@ function figPoint(q: Q, x: number, y: number): [number, number] {
 
 const f1 = (n: number) => n.toFixed(1);
 
-function poly(pts: [number, number][]): string {
+/** An open polyline path ("M x y L x y …", 1 decimal). */
+export function poly(pts: readonly Pt[]): string {
   return pts.map(([x, y], i) => `${i ? "L" : "M"}${f1(x)} ${f1(y)}`).join("");
 }
 

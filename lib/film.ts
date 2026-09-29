@@ -574,14 +574,13 @@ const captions = {
   "cap.act-2.alt": { world: "idiots", moment: moment("THE HOMEMADE DRONE, CHALKED AT ICE"), variant: "alt", place: "br", where: "card I→II settled (the duster wipes the storm off iconic-ice-alt; the drone in chalk under it)" },
   // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
   "cap.work.head": { world: "idiots", moment: moment("THE ASTRONAUT PEN ON VIRUS’S DESK"), variant: "both", place: "bl", where: "work head band, calm dark left (iconic-pen-alt; ALT iconic-pen)" },
-  "cap.work.head.standin": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "both", place: "bl", where: "work head band while iconic-corridor is planned (stand-in iconic-ice-alt / iconic-ice)" },
   // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
   "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
   "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "head", where: "above the Trading_Algos chalkboard panel, naming it as it enters (never beside a metric)" },
   // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself
   "cap.optuna-screener": { world: "idiots", moment: moment("WHAT IS A MACHINE?"), variant: "both", place: "bl", where: "optuna-screener head band (iconic-ice-alt / iconic-ice), before the chapter's facts" },
   "cap.systems": { world: "idiots", moment: moment("THE HOMEMADE DRONE"), variant: "both", place: "bl", where: "systems band (iconic-drone); names no character" },
-  // M2 finish: under the header inset (iconic-pen, or its PenCase stand-in)
+  // M2 finish: under the header inset (iconic-pen; ALT iconic-pen-alt)
   "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "under", where: "kill-list header inset, under the plate (O-5; never on a row)" },
   /* Intermission · the films chapter (house plane, one world per screen) */
   // the films screen shows the TATTERED-sail Pearl under the moon (iconic-pearl-alt / iconic-pearl,

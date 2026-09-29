@@ -39,8 +39,8 @@ function valueNoise(x: number, y: number, seed: number): number {
 }
 
 /** A w×h greyscale noise PNG (data URL), or null where there is no canvas. */
-export function developNoise(w: number, h: number, seed = 11, blobs = 6): string | null {
-  const key = `${w}x${h}:${seed}:${blobs}`;
+export function developNoise(w: number, h: number, seed = 11): string | null {
+  const key = `${w}x${h}:${seed}`;
   const hit = cache.get(key);
   if (hit) return hit;
   if (typeof document === "undefined") return null;
@@ -50,7 +50,7 @@ export function developNoise(w: number, h: number, seed = 11, blobs = 6): string
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
   const img = ctx.createImageData(w, h);
-  const base = blobs / Math.max(w, h); // ~`blobs` blobs across the long side
+  const base = 6 / Math.max(w, h); // ~6 blobs across the long side
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       let v = 0;
@@ -78,10 +78,10 @@ export function developNoise(w: number, h: number, seed = 11, blobs = 6): string
 const noop = () => () => {};
 
 /** The noise data URL after hydration (null on the server / first pass). */
-export function useDevelopNoise(w: number, h: number, seed = 11, blobs = 6): string | null {
+export function useDevelopNoise(w: number, h: number, seed = 11): string | null {
   return useSyncExternalStore(
     noop,
-    () => developNoise(w, h, seed, blobs),
+    () => developNoise(w, h, seed),
     () => null,
   );
 }

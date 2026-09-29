@@ -152,3 +152,6 @@ export function remap(p: number, a: number, b: number): number {
   if (b === a) return p >= b ? 1 : 0;
   return Math.min(1, Math.max(0, (p - a) / (b - a)));
 }
+
+/** Smoothstep on 0–1 (eases in and out; pair it with `remap`). */
+export const smooth01 = (t: number) => t * t * (3 - 2 * t);

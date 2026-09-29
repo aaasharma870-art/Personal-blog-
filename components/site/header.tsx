@@ -96,7 +96,12 @@ function useHeaderActive(): string {
     let t = 0;
     const schedule = () => {
       window.clearTimeout(t);
-      t = window.setTimeout(() => setProbe({ id: probeActive(), base: observedRef.current }), PROBE_SETTLE_MS);
+      t = window.setTimeout(() => {
+        const id = probeActive();
+        const base = observedRef.current;
+        // an unchanged probe keeps its object: no re-render of the header
+        setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
+      }, PROBE_SETTLE_MS);
     };
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });

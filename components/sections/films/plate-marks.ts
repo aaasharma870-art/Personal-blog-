@@ -12,9 +12,6 @@ import { markOf, type MediaId } from "@/lib/media";
 type Mark = readonly [x: number, y: number];
 
 const MEASURED: Partial<Record<MediaId, Readonly<Record<string, Mark>>>> = {
-  // the Pearl's stern lantern (the page's one warm point on the sea)
-  "F-PC": { lantern: [0.84, 0.555] },
-  "F-PC-alt": { lantern: [0.836, 0.556] },
   // the tattered-sail Pearl plates (ART-DIRECTOR #9; measured on a 0.05 grid,
   // 2026-09-29, films-sections): the stern lantern; `treasure` = the moon
   // path on the water just before the bow, where the ALT's X is inked
@@ -23,9 +20,6 @@ const MEASURED: Partial<Record<MediaId, Readonly<Record<string, Mark>>>> = {
   // the yellow scooter's body (Pangong lake)
   "F-3I": { scooter: [0.79, 0.62] },
   "F-3I-alt": { scooter: [0.76, 0.6] },
-  // the riderless horse on the ridge
-  "F-RD": { horse: [0.766, 0.42] },
-  "F-RD-alt": { horse: [0.716, 0.436] },
   // the point the enchanted ink spreads from
   "F-HP": { ink: [0.765, 0.64] },
   "F-HP-alt": { ink: [0.77, 0.62] },

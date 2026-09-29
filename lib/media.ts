@@ -1086,6 +1086,12 @@ export function isUsable(status: MediaStatus): boolean {
   return status === "accepted" || status === "integrated";
 }
 
+/** Whether `id` is itself usable (accepted / integrated), not a fallback:
+ *  the same as `resolveMedia(id)?.id === id`, without the walk. */
+export function isOwnUsable(id: MediaId): boolean {
+  return isUsable(getMedia(id).status);
+}
+
 /** The raw manifest entry for `id` (no fallback walk). */
 export function getMedia(id: MediaId): MediaAsset {
   return { id, ...(mediaAssets[id] as MediaDef) } as MediaAsset;
@@ -1150,8 +1156,7 @@ export function defaultOf(id: MediaId): MediaId | null {
 export function resolveVariant(id: MediaId, variant: Variant): MediaAsset | null {
   if (variant === "alt") {
     const alt = altOf(id);
-    const a = alt ? resolveMedia(alt) : null;
-    if (a && a.id === alt) return a;
+    if (alt && isOwnUsable(alt)) return getMedia(alt);
   }
   return resolveMedia(id);
 }
@@ -1160,8 +1165,7 @@ export function resolveVariant(id: MediaId, variant: Variant): MediaAsset | null
  *  resolution and the alternate's (null when none is registered/usable). */
 export function variantPair(id: MediaId): { default: MediaAsset | null; alt: MediaAsset | null } {
   const alt = altOf(id);
-  const a = alt ? resolveMedia(alt) : null;
-  return { default: resolveMedia(id), alt: a && a.id === alt ? a : null };
+  return { default: resolveMedia(id), alt: alt && isOwnUsable(alt) ? getMedia(alt) : null };
 }
 
 /** True when `video` starts or ends on the still `plate` (its poster or its

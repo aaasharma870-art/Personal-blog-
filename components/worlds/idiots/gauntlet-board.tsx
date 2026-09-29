@@ -8,6 +8,7 @@ import { resolveVariant, type MediaId } from "@/lib/media";
 import { dur, ease, easeDraw } from "@/lib/motion";
 import type { Variant } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import { maskIntersect } from "@/components/primitives/mask-style";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "@/components/worlds/idiots/chalk";
 
@@ -93,8 +94,10 @@ export function useGauntletRun(gates: number) {
 /* — the board dressing (M2 finish, BLIND-1 D25) ————————————————————— */
 /** The board interior on MV-06 (both crops): left of the beam (fades 60 → 80 %
  *  of the frame's width) and above the chalk ledge (fades 86 → 93 %). */
-const BOARD_MASK =
-  "linear-gradient(to right, #000 0 60%, transparent 80%), linear-gradient(to bottom, #000 0 86%, transparent 93%)";
+const BOARD_MASK = maskIntersect(
+  "linear-gradient(to right, #000 0 60%, transparent 80%)",
+  "linear-gradient(to bottom, #000 0 86%, transparent 93%)",
+);
 /** Half-erased chalk: two eraser swipes and a smudge, ≤ 7 % chalk. */
 const BOARD_GHOST = [
   "radial-gradient(ellipse 24% 4.5% at 26% 85%, rgb(242 239 230 / 0.07), transparent 72%)",
@@ -405,13 +408,7 @@ export function GauntletBoard({
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 mix-blend-screen"
-            style={{
-              backgroundColor: "rgb(14 38 29)",
-              WebkitMaskImage: BOARD_MASK,
-              maskImage: BOARD_MASK,
-              WebkitMaskComposite: "source-in",
-              maskComposite: "intersect",
-            }}
+            style={{ backgroundColor: "rgb(14 38 29)", ...BOARD_MASK }}
           />
           {/* … with the ghost of yesterday's lesson half-erased on it (kept
               off the label zones: under the tally and in the open right) */}

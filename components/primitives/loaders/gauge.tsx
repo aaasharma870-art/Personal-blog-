@@ -94,7 +94,6 @@ type DrawingProps = {
   circle: MotionValue<number>;
   /** px per viewBox unit (stroke widths are given in px). */
   scale: number;
-  mini?: boolean;
   /** Drawn in chalk (LD-3I on the ICE board): every stroke --w-chalk with a
    *  static chalkRough displacement that turns WITH each gear (the noise is
    *  in the gear's own space, so it never boils). Default: blueprint ink. */
@@ -103,7 +102,7 @@ type DrawingProps = {
 };
 
 /** The gear train drawing, shared by LD-3I and the Card I→II FIG. 0 gauge. */
-export function GaugeDrawing({ progress, spin, circle, scale, mini = false, chalk = false, className }: DrawingProps) {
+export function GaugeDrawing({ progress, spin, circle, scale, chalk = false, className }: DrawingProps) {
   const filterId = useId();
   const g12 = useRef<SVGGElement>(null);
   const g8 = useRef<SVGGElement>(null);
@@ -122,7 +121,7 @@ export function GaugeDrawing({ progress, spin, circle, scale, mini = false, chal
 
   return (
     <svg
-      viewBox={mini ? "2 6 58 40" : "0 0 160 64"}
+      viewBox="0 0 160 64"
       aria-hidden="true"
       focusable="false"
       className={cn("block h-auto w-full overflow-visible", className)}
@@ -161,29 +160,25 @@ export function GaugeDrawing({ progress, spin, circle, scale, mini = false, chal
           <path d={`M${C8.x - 2} ${C8.y}H${C8.x + 2}`} strokeWidth={sw(1.25 * cw)} />
         </g>
       </g>
-      {mini ? null : (
-        <>
-          {/* dimension line: 0 / end + 10 ticks (bp-line) */}
-          <path d={`M${D0} ${DIM_Y}H${D1}${TICKS}`} strokeWidth={sw(1 * cw)} filter={rough} />
-          {/* the rack: a toothed bar that slides under the pinion, its pointer
-              riding the dimension line; a taped joint mid-bar (jugaad) */}
-          <g ref={rack} transform={tr}>
-            <g filter={rough}>
-              <path d={`M${-BAR} ${RACK_Y}H0${RACK_TEETH}`} strokeWidth={sw(1.25 * cw)} />
-              <path
-                d={`M${-BAR / 2 - 1.5} ${RACK_Y - 1.8}h3v3.6h-3z`}
-                stroke={chalk ? "var(--w-chalk)" : "var(--w-graphite)"}
-                strokeOpacity={chalk ? 0.6 : 1}
-                strokeWidth={sw(1)}
-              />
-              <path d={`M0 ${RACK_Y}V${DIM_Y - 7}M-2.4 ${DIM_Y - 7}H2.4L0 ${DIM_Y - 2.2}Z`} strokeWidth={sw(1.25 * cw)} />
-            </g>
-          </g>
-          <g filter={`url(#${filterId})`}>
-            <DrawPath d={CIRCLE} progress={circle} stroke="var(--w-chalk)" strokeWidth={sw(2)} />
-          </g>
-        </>
-      )}
+      {/* dimension line: 0 / end + 10 ticks (bp-line) */}
+      <path d={`M${D0} ${DIM_Y}H${D1}${TICKS}`} strokeWidth={sw(1 * cw)} filter={rough} />
+      {/* the rack: a toothed bar that slides under the pinion, its pointer
+          riding the dimension line; a taped joint mid-bar (jugaad) */}
+      <g ref={rack} transform={tr}>
+        <g filter={rough}>
+          <path d={`M${-BAR} ${RACK_Y}H0${RACK_TEETH}`} strokeWidth={sw(1.25 * cw)} />
+          <path
+            d={`M${-BAR / 2 - 1.5} ${RACK_Y - 1.8}h3v3.6h-3z`}
+            stroke={chalk ? "var(--w-chalk)" : "var(--w-graphite)"}
+            strokeOpacity={chalk ? 0.6 : 1}
+            strokeWidth={sw(1)}
+          />
+          <path d={`M0 ${RACK_Y}V${DIM_Y - 7}M-2.4 ${DIM_Y - 7}H2.4L0 ${DIM_Y - 2.2}Z`} strokeWidth={sw(1.25 * cw)} />
+        </g>
+      </g>
+      <g filter={`url(#${filterId})`}>
+        <DrawPath d={CIRCLE} progress={circle} stroke="var(--w-chalk)" strokeWidth={sw(2)} />
+      </g>
     </svg>
   );
 }

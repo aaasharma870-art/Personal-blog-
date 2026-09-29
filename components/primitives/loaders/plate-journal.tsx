@@ -129,10 +129,10 @@ const OCCLUDE = [
   polyD([...HORSE_FRONT, ...EAR_1.slice(1), ...EAR_2, ...HORSE_CREST.slice(1), [141.4, 91], [125.5, 91]]),
 ];
 
-/** The ICONIC strokes, in drawing order — the land, the sun, the pines, the
- *  fence, the hat, the horse. The indeterminate sketch parks right after
- *  them. */
-const ICONIC: Pt[][] = [
+/** The ICONIC strokes, in drawing order — the LAND (the hills, the sun, the
+ *  near ground, the pines), then the SUBJECTS (the fence, the hat, the
+ *  horse). The indeterminate sketch parks right after them. */
+const LAND: Pt[][] = [
   // the far hills: a mesa on the left, two rolling hills with a dip for the sun
   poly([22, 57], [26, 48.5], [37, 48], [40.5, 56]),
   cubicPts([38, 57], [50, 41], [66, 43], [80, 53], 14),
@@ -146,6 +146,8 @@ const ICONIC: Pt[][] = [
   // two pines on the left
   ...pine(29, 70, 19),
   ...pine(37.5, 69, 14),
+];
+const SUBJECTS: Pt[][] = [
   // the split-rail fence: a short post, THE post, and the rails between
   poly([43.2, 81], [43.5, 64]),
   poly([45.8, 81], [45.6, 64]),
@@ -176,6 +178,7 @@ const ICONIC: Pt[][] = [
   poly([118.6, 43.4], [116.4, 47.6]),
   ...[0, 1, 2, 3, 4].map((k) => poly([125 + k * 3, 45.5 + k * 5.2], [129.6 + k * 3, 49 + k * 5.6])),
 ];
+const ICONIC: Pt[][] = [...LAND, ...SUBJECTS];
 /** Then the trail, hatching and the birds (drawn after the park point). */
 const FINISH: Pt[][] = [
   trail,
@@ -187,7 +190,7 @@ const FINISH: Pt[][] = [
 ];
 const PLAN: StrokePlan = planStrokes([...ICONIC, ...FINISH]);
 /** The occluders go in after the land (every stroke before the fence). */
-const LAND_N = ICONIC.findIndex((s) => s[0][0] === 43.2 && s[0][1] === 81);
+const LAND_N = LAND.length;
 /** Indeterminate: the sketch parks here (the iconic subjects drawn). */
 const PARK = PLAN.strokes[ICONIC.length - 1].to;
 /** The journal's one red-pencil underline (complete / static). */
@@ -225,11 +228,6 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
     const c = animate(finish, 1, { duration: 0.5, ease: "easeOut" });
     return () => c.stop();
   }, [mode, reduced, finish]);
-
-  // indeterminate: the pencil taps at the head of the parked sketch (frozen
-  // when stopped)
-  const tick = useTicker(mode === "indeterminate" && running, 600);
-  const lift = mode === "indeterminate" && tick % 2 === 1 ? 2 : 0;
 
   return (
     <span className={cn("relative block", SIZE_CLASS[size])}>
@@ -305,7 +303,9 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
               strokeWidth={sw(1.2)}
             />
           )}
-          {mini ? null : <Pencil progress={ink} finish={finish} lift={lift} />}
+          {mini ? null : (
+            <Pencil progress={ink} finish={finish} indeterminate={mode === "indeterminate"} running={running} />
+          )}
         </g>
       </svg>
     </span>
@@ -313,8 +313,24 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
 }
 
 /** The pencil: its graphite tip at the head of the drawing, laid down at
- *  completion. Local drawing: tip at the origin, the body along +x. */
-function Pencil({ progress, finish, lift }: { progress: MotionValue<number>; finish: MotionValue<number>; lift: number }) {
+ *  completion. Local drawing: tip at the origin, the body along +x. The
+ *  indeterminate tap lives here, so its ticks re-render the pencil only
+ *  (never the page's strokes). */
+function Pencil({
+  progress,
+  finish,
+  indeterminate,
+  running,
+}: {
+  progress: MotionValue<number>;
+  finish: MotionValue<number>;
+  indeterminate: boolean;
+  running: boolean;
+}) {
+  // indeterminate: the pencil taps at the head of the parked sketch (frozen
+  // when stopped)
+  const tick = useTicker(indeterminate && running, 600);
+  const lift = indeterminate && tick % 2 === 1 ? 2 : 0;
   const ref = useRef<SVGGElement>(null);
   const place = useTransform([progress, finish], ([v, f]) => {
     const tip = planPoint(PLAN, v as number);

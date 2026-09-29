@@ -229,6 +229,11 @@ export const scrollBudget = {
  * value, so a fade mapped [.25, .55] → [1, 0] springs back to 1 after .55
  * (and one mapped [.3, .6] → [0, 1] starts visible). Holding the edge
  * values out to 0 and 1 makes the accelerated and the JS paths agree.
+ * Which maps are at risk: motion only hardware-accelerates the style keys
+ * it lists (opacity, clipPath, filter and the whole `transform` string —
+ * NOT the x / y / scale shorthands), and never a function transformer
+ * (`useTransform(p, (v) => …)` always runs in JS). So every PARTIAL-range,
+ * ARRAY-form map that lands on an accelerated key must go through spanUnit.
  * Usage: `useTransform(progress, ...spanUnit([0.25, 0.55], [1, 0]))`.
  */
 export function spanUnit<T>(at: readonly number[], to: readonly T[]): [number[], T[]] {

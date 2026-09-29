@@ -28,8 +28,10 @@ export const CANDLE_FLAME_AT = { x: 0.5, y: 0.2 } as const;
    Pre-rendered by code as SVG images (Law 1: light is an image, never DOM
    glow). Deterministic (integer hash), so server and client agree. — */
 
-/** Deterministic 0–1 hash (integer math). */
-function hash01(i: number, salt: number): number {
+/** Deterministic 0–1 hash (integer math: server and client agree). Shared
+ *  by the map ink (map-ink.tsx) and the ceiling (hall-ceiling.tsx); NOT the
+ *  loaders' kit.tsx hash01 (a different algorithm). */
+export function hash01(i: number, salt: number): number {
   const x = (Math.imul(i + 1, 2654435761) ^ Math.imul(salt + 11, 40503)) >>> 0;
   return (x % 10007) / 10007;
 }

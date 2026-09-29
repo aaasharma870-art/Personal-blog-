@@ -135,8 +135,8 @@ function ChapterBody({
           {/* the board is NAMED as it comes into view — above it, not under
               it a screen later (M2 fix round 3, blind D26: the chapter's
               first view showed the board with no film cue); never beside a
-              metric */}
-          {isOptuna ? null : (
+              metric. A chapter with a `head` is named by its head band. */}
+          {entry.props.head ? null : (
             <div className="relative">
               <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
               {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
@@ -299,9 +299,10 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
   const appendix = entry.props.appendix ?? [];
   return (
     <IdiotsSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
-      {/* the machine board is the pipeline's scene (IC-3I-05); another
-          chapter's `head` would need its own scene + caption */}
-      {entry.props.head && p.id === "optuna-screener" ? (
+      {/* the chapter head is the pipeline's machine board (IC-3I-05; only
+          optuna-screener sets `head`): another chapter's `head` would need
+          its own scene + caption */}
+      {entry.props.head ? (
         <MachineBoard
           spec={entry.props.head}
           choice={variantChoiceOf(entry)}

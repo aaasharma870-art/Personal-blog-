@@ -5,7 +5,7 @@ import { motion, useTransform } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath } from "@/components/primitives/loaders/kit";
-import { LINE, LINE_D, fitPath, fitPoint, remap, type Box as LineBox } from "@/components/primitives/loaders/line";
+import { LINE, LINE_D, fitPath, fitPoint, remap, smooth01, type Box as LineBox } from "@/components/primitives/loaders/line";
 import { SUN_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
 import {
@@ -125,7 +125,7 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
   const sunY = useTransform(p, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, 0.22)) * 100).toFixed(3)}%`);
   // …and hands over to the photograph's own sun as the plate develops
   const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.45, 0.72) : 1));
-  const cover = useTransform(develop, (d) => LATENT_COVER * (1 - d * d * (3 - 2 * d)));
+  const cover = useTransform(develop, (d) => LATENT_COVER * (1 - smooth01(d)));
   // fixed: the sepia print lifts off the colour print
   const sepia = useTransform(p, (v) => 1 - remap(v, 0.45, 0.88));
   // the pencil scaffolding gives way to the photograph

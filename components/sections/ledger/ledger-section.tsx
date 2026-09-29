@@ -15,10 +15,10 @@ import type { SectionProps } from "@/components/sections/types";
    pen kept for the one student who proves worthy — here, only the three
    survivors did) as a large inset beside the h2 (M2 finish, ART-DIRECTOR
    #9: the 56 px doodle read as a sled): the iconic-pen plate, the pen in
-   its open velvet case — or its code stand-in, PenCase, while that plate is
-   planned — ≥ 45 % of the content width at 1440, with the caption VIRUS'S
-   ASTRONAUT PEN • 3 IDIOTS under it (never beside the Meta count, never on
-   a row). Variants (`kill-list.head`): default pats, alt lid-lift.
+   its open velvet case, ≥ 45 % of the content width at 1440, with the
+   caption VIRUS'S ASTRONAUT PEN • 3 IDIOTS under it (never beside the Meta
+   count, never on a row). Variants (`kill-list.head`): default pats, alt
+   lid-lift.
    ROWS (components/site/ledger-reckoning.tsx): the Lens Index, equally
    quiet at rest; no chalk, no icons (D-6, H27).
    GROUND: the Act II graph grid (≤ 6 %) arrives here at half strength from

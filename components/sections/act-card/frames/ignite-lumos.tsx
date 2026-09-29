@@ -5,12 +5,12 @@ import { motion, useMotionValue, useTransform, type MotionValue } from "motion/r
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/kit";
-import { LINE, LINE_D, measurePath, remap } from "@/components/primitives/loaders/line";
+import { LINE, LINE_D, measurePath, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { FIRE0_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { CAMP_OUT, EMBER_OUT, fireInFrame, hallAt } from "@/components/sections/act-card/frames/ignite";
-import { FRAME_ASPECT, PlateBox, plateOf } from "@/components/sections/act-card/plate";
+import { CampLayer, EMBER_OUT, fireInFrame, hallAt } from "@/components/sections/act-card/frames/ignite";
+import { FRAME_ASPECT, plateOf } from "@/components/sections/act-card/plate";
 
 /**
  * Card III→IV, ALT choreography "lumos-sweep" (lib/variants.ts
@@ -133,18 +133,10 @@ export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; 
     const f = c ? fireInFrame(c) : null;
     return f ? frameToHall(f) : null;
   }, [camp]);
-  const campOpacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
   const hallOpacity = useTransform(p, hallAt);
   const drawnOpacity = useTransform(p, (v) => 1 - remap(v, 0.84, 0.94));
 
-  const campLayer =
-    live && campPlate ? (
-      <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity: campOpacity }}>
-        <PlateBox plate={campPlate}>
-          <MediaFrame media={campPlate.asset.id} layout="fill" playOn="never" sizes="100vw" />
-        </PlateBox>
-      </motion.div>
-    ) : null;
+  const campLayer = live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null;
 
   if (hall) {
     return (
@@ -172,8 +164,6 @@ export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; 
   );
 }
 
-const smooth = (t: number) => t * t * (3 - 2 * t);
-
 function Hall({ p, fire: campFire }: { p: MotionValue<number>; fire: { x: number; y: number } | null }) {
   const u = useTransform(p, (v) => remap(v, SWEEP_T.from, SWEEP_T.to));
   const reach = useTransform(u, reachAt);
@@ -193,7 +183,7 @@ function Hall({ p, fire: campFire }: { p: MotionValue<number>; fire: { x: number
   const lightT = useSvgAttr(lightRef, p, "transform", (v) => {
     let q = SWEEP.at(remap(v, SWEEP_T.from, SWEEP_T.to));
     if (v < SWEEP_T.from) {
-      const k = smooth(remap(v, 0.12, SWEEP_T.from));
+      const k = smooth01(remap(v, 0.12, SWEEP_T.from));
       q = { x: fireAt.x + (start.x - fireAt.x) * k, y: fireAt.y + (start.y - fireAt.y) * k };
     }
     return `translate(${(q.x - LIGHT / 2).toFixed(1)} ${(q.y - LIGHT / 2).toFixed(1)})`;

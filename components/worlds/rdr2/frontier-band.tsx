@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { resolveVariant, type MediaId } from "@/lib/media";
+import { spanUnit } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
@@ -71,10 +72,8 @@ export function FrontierBand({
   // it opens already pushed in toward the river and the horse (×1.2), then
   // rides on (×1.28), so the reader never sees the card's picture twice
   const push = useTransform(scrollYProgress, [0, 1], [BAND_ZOOM, BAND_ZOOM + 0.08]);
-  // full 0–1 range: an opacity map ending short of 1 is handed to a scroll-
-  // driven WAAPI animation whose implicit last keyframe is the UNDERLYING
-  // opacity (1) — the Dead Eye layer came back after .46 (see hero-stage)
-  const grade = useTransform(scrollYProgress, [0, 0.1, 0.46, 1], [1, 1, 0, 0]);
+  // spanUnit (lib/motion.ts): unpadded, the Dead Eye layer came back after .46
+  const grade = useTransform(scrollYProgress, ...spanUnit([0.1, 0.46], [1, 0]));
   const released = useTransform(grade, (o) => 1 - o);
 
   const live = desktop && !reduced;

@@ -22,6 +22,13 @@ import { viewportOnce } from "@/lib/motion";
  * offscreen, after hydration. (The hero aperture — which must be closed AT
  * first paint — needs that head script; see P1-EARLY open items.)
  * Turning motion off (OS or Pause) at any phase snaps back to "static".
+ *
+ * The OBSERVED element must not carry a zero-area clip-path while "armed"
+ * (a closed iris `circle(0%)`, a wipe's `inset(0% 100% 0% 0%)`): in
+ * Chromium, IntersectionObserver clips its target by the target's own
+ * clip-path, so it may never report "entered" and the element stays shut
+ * (ART-DIRECTOR #1). Observe an unclipped wrapper; clip an inner element
+ * (film-frame.tsx, chalk.tsx SettleFrame).
  */
 export type EnterPhase = "static" | "armed" | "entered";
 

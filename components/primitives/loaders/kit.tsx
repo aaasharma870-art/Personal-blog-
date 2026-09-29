@@ -11,9 +11,9 @@ import type { LoaderSize } from "@/components/primitives/loader";
  */
 
 /** Rendered width of each loader size (the --loader-* tokens: 3 / 11 /
- *  13.5 rem; `stage` = the route CARD's art, 18 rem = the spacing scale's
- *  w-72: RECOGNIZABILITY S20 "the loader art is ≥ 200 px"; M2 fix: 240 →
- *  288 px, so the route card's scene reads at a glance). M5 (blind: "tiny
+ *  13.5 rem; `stage` = the route CARD's art, --loader-stage 18 rem:
+ *  RECOGNIZABILITY S20 "the loader art is ≥ 200 px"; M2 fix: 240 → 288 px,
+ *  so the route card's scene reads at a glance). M5 (blind: "tiny
  *  thumbnails"): card 120 → 176 px, and the stage grows to 26 rem (416 px)
  *  ≥ 1280, where the route card's letterbox has the height for it (strokes
  *  keep the 288 px scale there: a touch bolder, never thinner). */
@@ -25,7 +25,7 @@ export const SIZE_CLASS: Record<LoaderSize, string> = {
   mini: "w-(--loader-mini)",
   card: "w-(--loader-card) max-w-full",
   route: "w-(--loader-route)",
-  stage: "w-72 max-w-full xl:w-[26rem]",
+  stage: "w-(--loader-stage) max-w-full",
 };
 
 /**

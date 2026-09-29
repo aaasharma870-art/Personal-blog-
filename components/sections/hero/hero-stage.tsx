@@ -19,7 +19,7 @@ import {
   useSaveData,
 } from "@/lib/flags";
 import { hasRunThisSession, markRunThisSession } from "@/lib/session";
-import { dur, ease, easeClip, springSoft } from "@/lib/motion";
+import { dur, ease, easeClip, spanUnit, springSoft } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
@@ -121,19 +121,15 @@ const GATE_CLOSED = "linear-gradient(transparent, transparent)";
 const PUSH_S = 2.2;
 /** Pointer shift cap (px) and the scroll-out map (hero-lens.BAR S4). */
 const SHIFT_PX = 6;
-// Every map spans the WHOLE 0–1 range: motion hands an opacity map straight
-// to a scroll-driven WAAPI animation (a ViewTimeline), and keyframes that
-// stop short of offset 1 get an implicit last keyframe at the UNDERLYING
-// value — so a caption mapped [.25, .55] → [1, 0] came BACK up after .55
-// (the ~15 % "ghost" over the Act I card, M2 critic 3 #10; probed: .29 at
-// exit .5 with [.1, .3]).
-const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", { at: number[]; to: number[] }> = {
-  scale: { at: [0, 0.2, 0.7, 1], to: [1, 1.03, 1.08, 1.08] },
-  mediaY: { at: [0, 0.2, 0.7, 1], to: [0, 0, -24, -24] },
-  textY: { at: [0, 0.2, 0.7, 1], to: [0, 0, -16, -16] },
-  darken: { at: [0, 0.7, 1], to: [0, 0, 1] },
+// Every map spans the WHOLE 0–1 range (spanUnit, lib/motion.ts: the caption
+// "ghost" over the Act I card, M2 critic 3 #10).
+const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", [number[], number[]]> = {
+  scale: spanUnit([0, 0.2, 0.7], [1, 1.03, 1.08]),
+  mediaY: spanUnit([0.2, 0.7], [0, -24]),
+  textY: spanUnit([0.2, 0.7], [0, -16]),
+  darken: spanUnit([0.7, 1], [0, 1]),
   // cap.hero leaves before the Act I card's film title arrives below it
-  caption: { at: [0, 0.1, 0.3, 1], to: [1, 1, 0, 0] },
+  caption: spanUnit([0.1, 0.3], [1, 0]),
 };
 
 export type HeroPlate = {
@@ -637,11 +633,11 @@ export function HeroStage({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const exitScale = useTransform(exit, EXIT.scale.at, EXIT.scale.to);
-  const exitY = useTransform(exit, EXIT.mediaY.at, EXIT.mediaY.to);
-  const textY = useTransform(exit, EXIT.textY.at, EXIT.textY.to);
-  const darken = useTransform(exit, EXIT.darken.at, EXIT.darken.to);
-  const capOut = useTransform(exit, EXIT.caption.at, EXIT.caption.to);
+  const exitScale = useTransform(exit, ...EXIT.scale);
+  const exitY = useTransform(exit, ...EXIT.mediaY);
+  const textY = useTransform(exit, ...EXIT.textY);
+  const darken = useTransform(exit, ...EXIT.darken);
+  const capOut = useTransform(exit, ...EXIT.caption);
   const plateScale = useTransform(
     [exitScale, shiftX, shiftY, boxW, boxH],
     ([s, x, y, w, h]) =>

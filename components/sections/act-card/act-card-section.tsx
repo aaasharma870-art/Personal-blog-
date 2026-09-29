@@ -163,14 +163,19 @@ export function openingRows(): OpeningRow[] {
 
 type Ground = { world: WorldId; tone: ToneId };
 
+/** The section right before the card's first section (null at the top). */
+function prevSection(item: ActCardItem) {
+  const i = enabledSections.findIndex((s) => s.id === item.before);
+  return i > 0 ? enabledSections[i - 1] : null;
+}
+
 /** The ground the reader leaves: the previous section's plane — the films
  *  chapter included: its last screen's bottom 24vh returns to the chapter's
  *  own house deep (film-screen.tsx T6), so the tintype card's top dissolves
  *  FROM house deep (T7; painting the last act's deep here left a band where
  *  the house blue-black met it, D10-act-3-enter). */
 function groundBefore(item: ActCardItem): Ground | null {
-  const i = enabledSections.findIndex((s) => s.id === item.before);
-  const prev = i > 0 ? enabledSections[i - 1] : null;
+  const prev = prevSection(item);
   if (!prev) return null;
   return { world: worldOf(prev), tone: toneOf(prev) };
 }
@@ -185,8 +190,7 @@ function groundAfter(item: ActCardItem): Ground | null {
  *  where the ignite card's embers rise from (RECOGNIZABILITY S16/S17).
  *  Exported for /lab/variants. */
 export function fireBefore(item: ActCardItem): readonly [number, number] | null {
-  const i = enabledSections.findIndex((s) => s.id === item.before);
-  const prev = i > 0 ? enabledSections[i - 1] : null;
+  const prev = prevSection(item);
   const media = prev ? (prev.props as { media?: unknown }).media : undefined;
   if (typeof media !== "string" || !isMediaId(media)) return null;
   const a = resolveMedia(media);
@@ -200,8 +204,7 @@ export function fireBefore(item: ActCardItem): readonly [number, number] | null 
  *  Voices' night plate MV-11, whose upper half is black, so the card entered
  *  on an empty frame with "THE CAMPFIRE" over nothing). null → no camp. */
 function campBefore(item: ActCardItem, v: Variant): MediaId | null {
-  const i = enabledSections.findIndex((s) => s.id === item.before);
-  const prev = i > 0 ? enabledSections[i - 1] : null;
+  const prev = prevSection(item);
   const props = prev ? (prev.props as { media?: unknown }) : null;
   const media = typeof props?.media === "string" && isMediaId(props.media) ? props.media : null;
   const id = variantMedia(media ?? undefined, v);
@@ -335,7 +338,7 @@ export function ActCardSection({
   let altCaptions: CaptionCue[] | undefined;
   switch (kind) {
     case "opening": {
-      // S03/S04: the hero sea sinks into the deep (CardShell featherUp);
+      // S03/S04: the hero sea sinks into the deep (hero-stage.tsx's feather);
       // the Black Pearl opens by aperture from its own horizon, its top
       // feathered into the deep; the program (h2 + rows + Jack's compass)
       // below.
@@ -454,8 +457,6 @@ export function ActCardSection({
       fromGround={kind === "ignite" ? item.from : null}
       prevGround={kind === "opening" || same(prev, item.to) ? null : prev}
       nextGround={same(next, item.to) ? null : next}
-      // the hero draws its own feather now, under cap.hero (hero-stage.tsx)
-      featherUp={false}
       upperLeft={upperLeft}
       upperRight={kind === "opening" ? undefined : item.reel}
       film={filmTitle}

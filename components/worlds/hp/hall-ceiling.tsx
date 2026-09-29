@@ -1,7 +1,6 @@
 import { useId } from "react";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-import { hash01 } from "@/components/worlds/hp/map-ink";
 import {
   CANDLE_LIT_SPRITE,
   CANDLE_SPRITE_SIZE,
@@ -9,6 +8,7 @@ import {
   CEILING_NIGHT,
   STAR_TILE,
   STAR_TILE_SIZE,
+  hash01,
 } from "@/components/worlds/hp/sprites";
 
 /* ============================================================================

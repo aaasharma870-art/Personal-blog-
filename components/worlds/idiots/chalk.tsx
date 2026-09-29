@@ -47,8 +47,7 @@ export function useSvgId(prefix: string): string {
  * The IntersectionObserver watches an UNCLIPPED, untransformed wrapper; the
  * clip / transform live on the inner frame (ART-DIRECTOR #1: an observer on
  * the element carrying a zero-area clip-path may never report "entered").
- * `className` styles the inner frame (as before); `wrapperClassName` the
- * observed box.
+ * `className` styles the inner frame.
  */
 const CLIP_OPEN = "inset(0% 0% 0% 0%)";
 const CLIP_WIPED = "inset(0% 100% 0% 0%)";
@@ -56,13 +55,11 @@ const CLIP_WIPED = "inset(0% 100% 0% 0%)";
 export function SettleFrame({
   children,
   className,
-  wrapperClassName,
   entrance = "settle",
   amount = 0.3,
 }: {
   children: ReactNode;
   className?: string;
-  wrapperClassName?: string;
   entrance?: "settle" | "wipe";
   amount?: number;
 }) {
@@ -116,7 +113,7 @@ export function SettleFrame({
   }, [phase, entrance, y, scale, opacity, clipPath]);
 
   return (
-    <div ref={ref} className={wrapperClassName} data-entrance={entrance}>
+    <div ref={ref} data-entrance={entrance}>
       <motion.div className={className} style={entrance === "wipe" ? { clipPath } : { y, scale, opacity }}>
         {children}
       </motion.div>
@@ -234,113 +231,6 @@ export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; class
         {/* a loose wire, the jugaad tell */}
         <path d="M74 40 C82 44 80 50 86 50" strokeOpacity={0.6} strokeWidth={1.4} />
       </g>
-    </svg>
-  );
-}
-
-/* — O-5: Virus's astronaut pen (the kill-list header cue) ———————————— */
-
-/**
- * PenCase — the CODE stand-in for the kill-list's head plate (iconic-pen)
- * while that plate is still "planned": Virus's astronaut pen (3 Idiots; kept
- * for the one student who proves worthy) lying in the groove of an open
- * velvet presentation case, lid up, on a dark desk under a warm side light.
- * Drawn large (it fills the inset, ≥ 45 % of the content width at 1440) so
- * it reads as a pen in its case — the 56 px stand doodle read as a sled
- * (ART-DIRECTOR #9). Our own drawing: no text, no figure, no stopwatch (not
- * verified in the film, RECOGNIZABILITY S11). aria-hidden: the caption
- * VIRUS'S ASTRONAUT PEN • 3 IDIOTS carries the meaning. Static at rest.
- */
-export function PenCase({ className }: { className?: string }) {
-  const id = useSvgId("pen-case");
-  const knurl = Array.from({ length: 10 }, (_, i) => 216 + i * 5);
-  return (
-    <svg
-      viewBox="0 0 640 360"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-      focusable="false"
-      className={cn("block size-full", className)}
-      data-motif="astronaut-pen"
-    >
-      <defs>
-        <radialGradient id={`${id}-desk`} cx="64%" cy="56%" r="78%">
-          <stop offset="0" stopColor="#1c232b" />
-          <stop offset="0.55" stopColor="#0d1115" />
-          <stop offset="1" stopColor="#05070a" />
-        </radialGradient>
-        <linearGradient id={`${id}-shell`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#4a321b" />
-          <stop offset="1" stopColor="#1e140a" />
-        </linearGradient>
-        <linearGradient id={`${id}-lining`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#2a3f6c" />
-          <stop offset="0.5" stopColor="#18264a" />
-          <stop offset="1" stopColor="#0d1630" />
-        </linearGradient>
-        <radialGradient id={`${id}-velvet`} cx="56%" cy="40%" r="72%">
-          <stop offset="0" stopColor="#24386c" />
-          <stop offset="0.65" stopColor="#131f40" />
-          <stop offset="1" stopColor="#0a1126" />
-        </radialGradient>
-        <linearGradient id={`${id}-steel`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f5f7f8" />
-          <stop offset="0.35" stopColor="#cdd4d9" />
-          <stop offset="0.72" stopColor="#8e989f" />
-          <stop offset="1" stopColor="#4c555c" />
-        </linearGradient>
-        <linearGradient id={`${id}-brass`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f2d38e" />
-          <stop offset="0.5" stopColor="#b98e4d" />
-          <stop offset="1" stopColor="#6d4f27" />
-        </linearGradient>
-        <radialGradient id={`${id}-glint`}>
-          <stop offset="0" stopColor="#ffffff" stopOpacity={0.9} />
-          <stop offset="1" stopColor="#ffffff" stopOpacity={0} />
-        </radialGradient>
-      </defs>
-
-      {/* the desk, lit from the right */}
-      <rect width="640" height="360" fill={`url(#${id}-desk)`} />
-      <ellipse cx="362" cy="322" rx="282" ry="20" fill="#000" fillOpacity={0.5} />
-
-      {/* the lid, open behind the case: lacquered shell, satin lining, sheen */}
-      <path d="M150 30 L570 30 L602 150 L118 150 Z" fill={`url(#${id}-shell)`} />
-      <path d="M150 30 L570 30 L602 150 L118 150 Z" fill="none" stroke="#a8834a" strokeOpacity={0.75} strokeWidth={2} strokeLinejoin="round" />
-      <path d="M166 43 L554 43 L582 142 L138 142 Z" fill={`url(#${id}-lining)`} />
-      <path d="M330 43 L404 43 L352 142 L262 142 Z" fill="#ffffff" fillOpacity={0.05} />
-
-      {/* the body: shell, front face, hinge */}
-      <path d="M118 150 L602 150 L630 298 L90 298 Z" fill={`url(#${id}-shell)`} />
-      <path d="M90 298 L630 298 L630 320 L90 320 Z" fill="#24180c" />
-      <path d="M90 298 L630 298" stroke="#a8834a" strokeOpacity={0.6} strokeWidth={1.5} />
-      <path d="M118 150 L602 150" stroke="#c9a15d" strokeWidth={3} strokeLinecap="round" />
-      <rect x="330" y="300" width="60" height="9" rx="2" fill={`url(#${id}-brass)`} />
-
-      {/* the velvet bed and the groove the pen lies in */}
-      <path d="M138 162 L582 162 L608 286 L112 286 Z" fill={`url(#${id}-velvet)`} />
-      <g transform="rotate(-7 362 226)">
-        <rect x="168" y="210" width="386" height="32" rx="16" fill="#050914" />
-        <rect x="186" y="226" width="350" height="14" rx="7" fill="#000" fillOpacity={0.55} />
-        {/* the pen: nib, knurled grip, ring, barrel, cap band, cap + clip, button */}
-        <path d="M182 226 L212 218.5 L212 233.5 Z" fill={`url(#${id}-steel)`} />
-        <path d="M182 226 L190 224" stroke="#2f353a" strokeWidth={1.4} strokeLinecap="round" />
-        <rect x="212" y="218" width="54" height="16" rx="2" fill={`url(#${id}-steel)`} />
-        {knurl.map((x) => (
-          <path key={x} d={`M${x} 219.5 L${x} 232.5`} stroke="#59636b" strokeOpacity={0.75} strokeWidth={1} />
-        ))}
-        <rect x="266" y="216.5" width="7" height="19" fill={`url(#${id}-brass)`} />
-        <rect x="273" y="217" width="202" height="18" rx="3" fill={`url(#${id}-steel)`} />
-        <path d="M280 220.6 L470 220.6" stroke="#ffffff" strokeOpacity={0.75} strokeWidth={1.6} strokeLinecap="round" />
-        <rect x="475" y="215.5" width="8" height="21" fill={`url(#${id}-brass)`} />
-        <rect x="483" y="216.5" width="46" height="19" rx="4" fill={`url(#${id}-steel)`} />
-        <path d="M490 212.5 L447 212.5 Q441 212.5 441 217 L441 219.5 L448 219.5 L448 216.5 L490 216.5 Z" fill={`url(#${id}-brass)`} />
-        <rect x="529" y="220" width="12" height="12" rx="5" fill={`url(#${id}-brass)`} />
-      </g>
-
-      {/* a star glint on the barrel: "it writes in space" */}
-      <circle cx="398" cy="206" r="14" fill={`url(#${id}-glint)`} />
-      <path d="M398 194 L398 218 M386 206 L410 206" stroke="#ffffff" strokeOpacity={0.85} strokeWidth={1.4} strokeLinecap="round" />
     </svg>
   );
 }

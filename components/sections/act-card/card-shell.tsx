@@ -49,9 +49,6 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  *               no-JS included).
  *   nextGround  the card's ground fades into the next section's over its
  *               last 20vh.
- *   featherUp   (opening) the card's ground paints the hero's last 18vh
- *               (≥ 640), so the hero sea sinks into the deep before the
- *               Pearl opens.
  *   fromGround  (ignite) the whole card crossfades rd deep → hp deep over
  *               p 0–.2 (live only).
  *
@@ -96,8 +93,6 @@ type Props = {
   prevGround?: Ground | null;
   /** The next section's plane (the card's bottom fades into it). */
   nextGround?: Ground | null;
-  /** Paint the card's ground over the previous section's last 18vh (≥ 640). */
-  featherUp?: boolean;
   upperLeft: string;
   upperRight?: string;
   /** The film title block (server-rendered <FilmTitle>), set above the frame. */
@@ -145,7 +140,6 @@ export function CardShell({
   fromGround = null,
   prevGround = null,
   nextGround = null,
-  featherUp = false,
   upperLeft,
   upperRight,
   film,
@@ -235,12 +229,6 @@ export function CardShell({
       <WorldProvider world={world} tone="deep">
         <CardContext.Provider value={state}>
           {/* — the world change, never a hard edge (static; RM / NJ too) — */}
-          {featherUp ? (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-full hidden h-[18vh] bg-[linear-gradient(to_bottom,transparent,var(--bg))] sm:block"
-            />
-          ) : null}
           {prevGround ? (
             <span
               aria-hidden="true"
