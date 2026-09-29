@@ -17,6 +17,9 @@
      intro-landing   S3 (sweep or dome): Skip leaves
      intro-sweep     S3 on the video path: the left→right mask dissolve
      intro-leaving   SX (Skip / Esc / scroll): the text layer is gone in 80 ms
+     intro-alt-<p>   (pre-paint) piece <p> plays its ALT (variants block below)
+     intro-inked     intro.play ALT: the ink route reached Play
+     intro-fold      intro.landing ALT: the page is folding away
    Law 1: no text-shadow, glow box-shadow, filter animation or
    radial-gradient paint on the DOM here; luminous paint lives only in the
    canvas and the video (#intro-stage).
@@ -345,6 +348,28 @@ html.intro-sweep #intro {
   mask-repeat: no-repeat;
   -webkit-mask-size: 240% 100%;
   mask-size: 240% 100%;
+}
+
+/* — VARIANTS (M1.5; lib/variants.ts). html.intro-alt-<piece> is set before
+     the first paint by the head script (manifest + ?variant=…), so an ALT
+     never flashes its default first.
+     intro.play ALT "marauders-ink": the bracket is not drawn on arm; it
+     inks in when the ink route reaches Play (the controller adds
+     html.intro-inked; also at launch, so the halves fly out drawn). Play is
+     operable from frame 0 either way (its label is final). — */
+html.intro-armed.intro-alt-play .intro-lens {
+  --intro-draw: 0;
+  animation: none;
+}
+html.intro-armed.intro-alt-play.intro-inked .intro-lens {
+  animation: intro-draw 0.9s var(--ease-draw) both;
+}
+/* intro.landing ALT "map-fold": the overlay turns away on a hinge at its
+   right edge (the controller animates the transform), so the name zone on
+   the left clears first; past edge-on nothing of it shows. */
+html.intro-fold #intro {
+  transform-origin: 100% 50%;
+  backface-visibility: hidden;
 }
 
 /* — Below 1024 or portrait: the Play block sits in the lower third. — */

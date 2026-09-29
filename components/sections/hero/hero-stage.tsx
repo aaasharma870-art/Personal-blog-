@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, ReactNode } from "react";
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import {
   parseSkipFlags,
   shouldSkip,
@@ -12,8 +19,10 @@ import {
   useSaveData,
 } from "@/lib/flags";
 import { hasRunThisSession, markRunThisSession } from "@/lib/session";
-import { springSoft } from "@/lib/motion";
+import { dur, ease, easeClip, springSoft } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
+import { useVariant } from "@/lib/use-variant";
+import type { Variant, VariantChoice } from "@/lib/variants";
 import { Lens, type LensState } from "@/components/primitives/lens";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import {
@@ -23,7 +32,7 @@ import {
   type Box01,
   type Size,
 } from "@/components/sections/hero/focal";
-import { FAILSAFE_SLOT } from "@/components/sections/hero/hero-boot";
+import { apertureKindOf, FAILSAFE_SLOT, type ApertureKind } from "@/components/sections/hero/hero-boot";
 import { introSettled, onIntroEnd, useIntroPhase } from "@/components/sections/hero/intro-phase";
 import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
 
@@ -58,11 +67,32 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *              its own Lens; no video, no noise, no shift, no exit.
  * Reduced motion / Pause: S2 from the first frame, poster only (0 video
  * requests), identity transforms (H18).
+ *
+ * VARIANTS (M1.5; lib/variants.ts host "hero"; hero-section.tsx resolves
+ * both sides, this picks with useVariant — the manifest through hydration,
+ * `?variant=…` after mount; the DOM contract is identical on both sides):
+ *   hero.plate     which still (and so which Lens frame and portrait)
+ *   hero.loop      which loop plays over it (only a loop registered to it)
+ *   hero.aperture  DEFAULT "bracket-clip" (the Lens slit above) | ALT
+ *                  "film-gate": the plate opens as a horizontal letterbox
+ *                  from the horizon — first to the act cards' 2.39:1 reel
+ *                  band, a beat, then to the full frame — and only then the
+ *                  bracket settles onto the crest (its halves grow from the
+ *                  crest's centre line). The KIND comes from the pre-paint
+ *                  attribute (hero-boot.ts), i.e. what the reader was shown.
+ *   hero.velocity  DEFAULT grain + chroma + wake | ALT crest spray + wake
+ *                  (velocity-layers.tsx).
  */
 
 const WIDE = "(min-width: 40rem)";
 /** decode wait before the aperture gives up and opens (S1′). */
 const APERTURE_TIMEOUT_MS = 1200;
+/** The film gate (hero.aperture ALT): its first stop is the act cards'
+ *  letterbox (--letterbox-ratio), and its edges are feathered like the
+ *  Lens clip so no hard seam crosses the name. */
+const LETTERBOX = 2.39;
+const GATE_FEATHER = 48;
+const GATE_CLOSED = "linear-gradient(transparent, transparent)";
 /** Pointer shift cap (px) and the scroll-out map (hero-lens.BAR S4). */
 const SHIFT_PX = 6;
 const EXIT: Record<"scale" | "mediaY" | "textY" | "darken", { at: number[]; to: number[] }> = {
@@ -73,8 +103,6 @@ const EXIT: Record<"scale" | "mediaY" | "textY" | "darken", { at: number[]; to: 
 };
 
 export type HeroPlate = {
-  /** What MediaFrame plays: the loop when there is one, else the still. */
-  media: MediaId;
   /** The still (the LCP poster / the mobile plate). */
   poster: MediaId;
   /** The still's intrinsic size (the cover fit). */
@@ -82,11 +110,19 @@ export type HeroPlate = {
   focal: readonly [number, number];
   /** The crest box in PLATE fractions. */
   box: Box01;
+  /** The horizon's y (plate fraction): where the ALT film gate opens. */
+  horizon: number;
+  /** The loop each hero.loop variant plays over THIS still (a video
+   *  registered to it), or null: the still stays. */
+  loops: Record<Variant, MediaId | null>;
 };
+/** Both sides of hero.plate. */
+export type HeroPlates = Record<Variant, HeroPlate>;
 
 type Which = "desktop" | "mobile";
-/** `hold`: closed but waiting for the prologue to leave (no aperture yet). */
-type Run = { which: Which | null; state: LensState; hold?: boolean };
+/** `hold`: closed but waiting for the prologue to leave (no aperture yet).
+ *  `kind`: which aperture the pre-paint script armed (slit | gate). */
+type Run = { which: Which | null; state: LensState; hold?: boolean; kind?: ApertureKind };
 
 type Props = {
   id?: string;
@@ -94,10 +130,12 @@ type Props = {
   /** innerHTML of the pre-paint boot element (hero-boot.ts). */
   boot: string;
   onceKey: string;
-  plate: HeroPlate;
-  mobile: HeroPlate;
-  /** The plate's crest box in frame fractions at the reference viewport. */
-  initialFrame: Box01;
+  /** The hero's variant choice (lib/sections.ts variantChoiceOf). */
+  choice: VariantChoice;
+  plates: HeroPlates;
+  mobiles: HeroPlates;
+  /** Each plate's crest box in frame fractions at the reference viewport. */
+  frames: Record<Variant, Box01>;
   children: ReactNode;
 };
 
@@ -115,9 +153,10 @@ export function HeroStage({
   titleId,
   boot,
   onceKey,
-  plate,
-  mobile,
-  initialFrame,
+  choice,
+  plates,
+  mobiles,
+  frames,
   children,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -125,6 +164,14 @@ export function HeroStage({
   const columnRef = useRef<HTMLDivElement>(null);
   const plateRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLDivElement>(null);
+
+  /* — Variants (hydration: the manifest's; then ?variant=…) ——————————— */
+  const plateV = useVariant(choice, "hero.plate");
+  const loopV = useVariant(choice, "hero.loop");
+  const velocityV = useVariant(choice, "hero.velocity");
+  const plate = plates[plateV];
+  const mobile = mobiles[plateV];
+  const media = plate.loops[loopV] ?? plate.poster;
 
   const reduced = useReducedMotion();
   const saveData = useSaveData();
@@ -147,10 +194,11 @@ export function HeroStage({
     const root = document.documentElement;
     const which: Which = window.matchMedia(WIDE).matches ? "desktop" : "mobile";
     let t = 0;
-    if (el.getAttribute("data-aperture") === "pending") {
+    const kind = apertureKindOf(el.getAttribute("data-aperture"));
+    if (kind) {
       const slot = window as unknown as Record<string, number | undefined>;
       window.clearTimeout(slot[FAILSAFE_SLOT]);
-      t = window.setTimeout(() => setRun({ which, state: "closed" }), 0);
+      t = window.setTimeout(() => setRun({ which, state: "closed", kind }), 0);
       return () => window.clearTimeout(t);
     }
     if (!root.classList.contains("intro-armed")) return;
@@ -260,13 +308,14 @@ export function HeroStage({
   );
 
   const onSettled = (s: "open" | "closed" | "track") => {
-    if (s === "open") setRun((r) => (r.state === "aperture" ? { ...r, state: "open" } : r));
+    if (s === "open") setRun((r) => (r.state === "aperture" && r.kind !== "gate" ? { ...r, state: "open" } : r));
   };
-  const lensState = (w: Which): LensState => (run.which === w ? run.state : "open");
+  // the film gate clips the plate itself (below); its Lens stays open
+  const lensState = (w: Which): LensState => (run.which === w && run.kind !== "gate" ? run.state : "open");
 
   /* — The bracket's frame: the crest box through the cover fit, ≥ 16 px
        right of the h1 (H7). Measured on resize and after the fonts land. — */
-  const [frame, setFrame] = useState<Box01>(initialFrame);
+  const [frame, setFrame] = useState<Box01>(frames[plateV]);
   const boxW = useMotionValue(1440);
   const boxH = useMotionValue(900);
   useEffect(() => {
@@ -309,6 +358,111 @@ export function HeroStage({
       ro.disconnect();
     };
   }, [plate.box, plate.size, plate.focal, boxW, boxH]);
+
+  /* — The film gate (hero.aperture ALT) ————————————————————————————————
+       closed    the plate is masked to nothing; the bracket halves are held
+                 invisible (WAAPI, so React's markup is untouched)
+       aperture  the mask opens from the horizon: to the 2.39:1 band on
+                 easeClip / dur.reveal, a dur.micro beat, then to the full
+                 frame on easeClip / dur.hero; as the second stage starts
+                 the halves grow onto the crest (dur.reveal, ease)
+       open      mask none, halves released. Motion off (Pause) mid-gate
+                 jumps here. */
+  const gateMask = useMotionValue("none");
+  const holdRef = useRef<Animation | null>(null);
+  const gating = run.kind === "gate" && run.which !== null;
+  const gateWhich = run.which;
+  const gateState = run.state;
+  useEffect(() => {
+    if (!gating || !gateWhich) return;
+    const wrap = gateWhich === "desktop" ? lensBoxRef.current : mobileRef.current;
+    const halves = wrap?.querySelector<HTMLElement>(":scope > [data-lens] > div:last-child") ?? null;
+    const release = () => {
+      holdRef.current?.cancel();
+      holdRef.current = null;
+    };
+    if (gateState === "closed" && !reduced) {
+      gateMask.set(GATE_CLOSED);
+      if (halves && !holdRef.current && typeof halves.animate === "function") {
+        holdRef.current = halves.animate({ opacity: [0, 0] }, { duration: 1, fill: "forwards" });
+      }
+      return;
+    }
+    if (gateState !== "aperture" || reduced || !wrap) {
+      gateMask.set("none");
+      release();
+      if (gateState !== "aperture") return;
+      // motion went off before the gate could run: straight to open
+      const t = window.setTimeout(() => setRun((r) => (r.state === "aperture" ? { ...r, state: "open" } : r)), 0);
+      return () => window.clearTimeout(t);
+    }
+    const p = gateWhich === "desktop" ? plate : mobile;
+    const w = wrap.offsetWidth;
+    const h = wrap.offsetHeight;
+    const cy = coverBox({ x0: 0, x1: 1, y0: p.horizon, y1: p.horizon }, p.size, { w, h }, p.focal).y0 * h;
+    const band = Math.min(h, w / LETTERBOX) / 2;
+    const full = Math.max(cy, h - cy) + GATE_FEATHER;
+    const setHalf = (half: number) => {
+      const f = Math.min(GATE_FEATHER, half) / 2;
+      const a = cy - half;
+      const b = cy + half;
+      gateMask.set(
+        `linear-gradient(to bottom, transparent ${(a - f).toFixed(1)}px, #000 ${(a + f).toFixed(1)}px, #000 ${(b - f).toFixed(1)}px, transparent ${(b + f).toFixed(1)}px)`,
+      );
+    };
+    const frameBox = gateWhich === "desktop" ? frame : p.box;
+    const origin = `50% ${(((frameBox.y0 + frameBox.y1) / 2) * 100).toFixed(2)}%`;
+    const runs: ReturnType<typeof animate>[] = [];
+    let settle: Animation | null = null;
+    let beat = 0;
+    let done = false;
+    const complete = () => {
+      if (done) return;
+      done = true;
+      gateMask.set("none");
+      setRun((r) => (r.state === "aperture" ? { ...r, state: "open" } : r));
+    };
+    runs.push(
+      animate(0, band, {
+        duration: dur.reveal,
+        ease: easeClip,
+        onUpdate: setHalf,
+        onComplete: () => {
+          beat = window.setTimeout(() => {
+            // the bracket settles as the gate leaves the reel band
+            release();
+            if (halves && typeof halves.animate === "function") {
+              settle = halves.animate(
+                [
+                  { opacity: 0, transform: "scaleY(0.12)", transformOrigin: origin },
+                  { opacity: 1, transform: "scaleY(1)", transformOrigin: origin },
+                ],
+                { duration: dur.reveal * 1000, easing: `cubic-bezier(${ease.join(",")})` },
+              );
+            }
+            runs.push(
+              animate(band, full, { duration: dur.hero, ease: easeClip, onUpdate: setHalf, onComplete: complete }),
+            );
+          }, dur.micro * 1000);
+        },
+      }),
+    );
+    return () => {
+      window.clearTimeout(beat);
+      runs.forEach((r) => r.stop());
+      settle?.cancel();
+      if (!done) {
+        // interrupted (unmount, motion off, a variant switch): never leave
+        // the plate masked or the bracket held
+        gateMask.set("none");
+        release();
+      }
+    };
+    // `frame`, `plate` and `mobile` are read once when the gate starts: a
+    // resize mid-gate keeps its geometry (it lasts ~1.7 s)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gating, gateWhich, gateState, reduced, gateMask]);
+  useEffect(() => () => holdRef.current?.cancel(), []);
 
   /* — Pointer shift (≤ 6 px, springSoft; the plate scales just enough to
        never show its edge). — */
@@ -381,10 +535,17 @@ export function HeroStage({
             ref={plateRef}
             data-hero-plate=""
             className="absolute inset-0 origin-center"
-            style={moving ? { scale: plateScale, x: shiftX, y: plateY } : undefined}
+            style={{
+              maskImage: gateMask,
+              WebkitMaskImage: gateMask,
+              ...(moving ? { scale: plateScale, x: shiftX, y: plateY } : null),
+            }}
           >
             <MediaFrame
-              media={plate.media}
+              // a plate / loop switch (?variant=…) remounts: fresh poster
+              // state and a fresh decoder claim
+              key={`${plate.poster}:${media}`}
+              media={media}
               poster={plate.poster}
               priority
               layout="fill"
@@ -395,7 +556,13 @@ export function HeroStage({
               playOn={playOn}
             />
             {noisy ? (
-              <VelocityLayers hostRef={plateRef} wake={frame} objectPosition={pos(plate.focal)} />
+              <VelocityLayers
+                key={plate.poster}
+                hostRef={plateRef}
+                wake={frame}
+                objectPosition={pos(plate.focal)}
+                dialect={velocityV === "alt" ? "spray" : "grain"}
+              />
             ) : null}
             {moving ? (
               <motion.div
@@ -432,14 +599,17 @@ export function HeroStage({
             origin={mobile.focal[0]}
             onSettled={onSettled}
           >
-            <MediaFrame
-              media={mobile.media}
-              poster={mobile.poster}
-              priority
-              layout="intrinsic"
-              sizes="(max-width: 639px) 92vw, 1vw"
-              playOn="never"
-            />
+            <motion.div style={{ maskImage: gateMask, WebkitMaskImage: gateMask }}>
+              <MediaFrame
+                key={mobile.poster}
+                media={mobile.poster}
+                poster={mobile.poster}
+                priority
+                layout="intrinsic"
+                sizes="(max-width: 639px) 92vw, 1vw"
+                playOn="never"
+              />
+            </motion.div>
           </Lens>
         </div>
       </div>

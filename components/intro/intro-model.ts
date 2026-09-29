@@ -15,15 +15,37 @@
      copyVisible: on this branch `film.branchPreview` shows `proposed` copy
      and quotes in every build; with it off, in dev only until Aryan's
      sign-off — the intro is never shipped half-worded).
+
+   VARIANTS (M1.5; lib/variants.ts pieces intro.play · intro.flight ·
+   intro.codeflight · intro.landing). The model ships the data of BOTH sides
+   (the ALT flight clip + its own trail, the tower the ALT code flight
+   circles, the ink and fold parameters); WHICH side plays is decided before
+   the first paint by the head script (./variant-snippet.ts: the manifest
+   choice `introVariant` + `?variant=…`), which sets html.intro-alt-<piece>
+   and window.__introV for the controller. The play-screen plates stay
+   IN-01 / IN-01m on both sides: both flight clips START on IN-01, and the
+   broom masks are measured on these files (IN-01-alt / IN-01m-alt are not
+   pixel-registered to either flight).
    ========================================================================== */
 
 import { film } from "@/lib/film";
-import { anchorId, copyText, copyVisible, sectionById, worksInUse } from "@/lib/sections";
-import { getMedia, isUsable, resolveMedia, type MediaId } from "@/lib/media";
+import {
+  anchorId,
+  copyText,
+  copyVisible,
+  introVariant,
+  sectionById,
+  variantChoiceOf,
+  worksInUse,
+} from "@/lib/sections";
+import { altOf, getMedia, isUsable, resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
 import { dur, ease, easeClip, easeDraw, intro as introTiming } from "@/lib/motion";
 import { quotes, type QuoteId } from "@/lib/quotes";
-import trail from "./intro-trail.json";
+import trailDefault from "./intro-trail.json";
+import trailAlt from "./intro-trail-alt.json";
 import { INTRO_CONTROLLER_VERSION } from "./controller-version";
+import { prepaintVariants } from "./prepaint-variants";
+import type { PrepaintVariants } from "./variant-snippet";
 
 /** public/intro/intro.js is served unhashed; its content hash (written by
  *  components/intro/build-controller.mjs) busts the cache. */
@@ -54,6 +76,38 @@ const BROOM: Record<"IN-01" | "IN-01m", { tip: Pt; end: Pt; hw: number; handle: 
   },
 };
 
+/** The castle's tallest tower on each play-screen plate (0-1 of the plate,
+ *  measured on the files 2026-09-29 on 10% grids): the ALT code flight
+ *  (intro.codeflight "tower-spiral") circles it. `x` = the tower's axis,
+ *  `top` = the spire tip, `base` = the foot of the tower body at the
+ *  roofline, `hw` = the body's half-width (by plate width). */
+const TOWER: Record<"IN-01" | "IN-01m", { x: number; top: number; base: number; hw: number }> = {
+  "IN-01": { x: 0.784, top: 0.031, base: 0.35, hw: 0.02 },
+  "IN-01m": { x: 0.637, top: 0.14, base: 0.3, hw: 0.033 },
+};
+
+/** Per flight clip (keyed by media id): its baked light trail — tracked by
+ *  eye on THAT clip, so it never follows the other clip's broom — and
+ *  whether its last frame is registered to the hero plate (tail-anchored:
+ *  the mask-sweep landing reveals no seam). A clip without an entry flies
+ *  with no trail and lands with a crossfade. */
+type TrailJson = { emitUntil: number; points: number[][] };
+const FLIGHTS: Partial<Record<MediaId, { trail: TrailJson; anchored: boolean }>> = {
+  "IN-02": { trail: trailDefault, anchored: true },
+  // the IN-02 batch runner-up: last frame SSIM 0.957 vs MV-01 (not tail-anchored)
+  "IN-02-alt": { trail: trailAlt, anchored: false },
+};
+
+export type IntroFlight = {
+  mp4: string;
+  webm: string | null;
+  dur: number;
+  /** The last frame is the hero plate (the sweep may reveal it seamlessly). */
+  anchored: boolean;
+  /** The bristle-end path on the video clock, or null (no light trail). */
+  trail: { emitUntil: number; points: number[][] } | null;
+};
+
 export type IntroPlate = {
   src: string;
   /** The same plate without its broom (IN-01-empty / IN-01m-empty), or
@@ -69,6 +123,8 @@ export type IntroPlate = {
   hw: number;
   handle: Pt[];
   tail: Pt[];
+  /** The tallest tower (the ALT code flight's spiral axis). */
+  tower: { x: number; top: number; base: number; hw: number };
 };
 
 export type IntroConfig = {
@@ -77,8 +133,11 @@ export type IntroConfig = {
   /** Portrait play screen (IN-01m) — always the code flight. */
   plateM: IntroPlate;
   /** IN-02 when its media status is usable, else null (code flight only). */
-  flight: { mp4: string; webm: string | null; dur: number } | null;
-  trail: { emitUntil: number; points: number[][] };
+  flight: IntroFlight | null;
+  /** intro.flight ALT: IN-02's registered alternate (IN-02-alt) when it is
+   *  usable and STARTS on the play plate, else null (the ALT then plays the
+   *  default clip). */
+  flightAlt: IntroFlight | null;
   /** Timings in ms (lib/motion.ts `intro.*` and `dur.*`). */
   t: {
     landing: number;
@@ -93,6 +152,8 @@ export type IntroConfig = {
     hero: number;
     preview: number;
     hiddenSkip: number;
+    /** intro.landing ALT "map-fold": the overlay folds away (dur.hero). */
+    fold: number;
   };
   /** The bolt-favicon egg (IC-HP-10) is on. */
   bolt: boolean;
@@ -123,6 +184,41 @@ export type IntroConfig = {
   trailMaxLite: number;
   /** Trail sprite decay τ (ms). */
   trailTau: number;
+  /** intro.play ALT "marauders-ink": an ink route draws itself up to Play
+   *  and a line of footprints walks it; the bracket inks in on arrival.
+   *  Lengths in css px (× `k` at ≥ 1024, × `kLite` below), times in ms. */
+  ink: {
+    color: string;
+    k: number;
+    kLite: number;
+    /** Footprint spacing along the route; side offset of each print. */
+    stride: number;
+    side: number;
+    /** The route ends this far below Play (never under a text box, I18). */
+    gap: number;
+    /** Half-width of the ink corridor that draws in on hover / focus. */
+    corridor: number;
+    routeMs: number;
+    stepAt: number;
+    stepMs: number;
+    /** The walk always ends by then (static long before S0c, I20). */
+    walkMaxMs: number;
+    fadeInMs: number;
+    holdMs: number;
+    fadeOutMs: number;
+    routeAlpha: number;
+    printAlpha: number;
+  };
+  /** intro.codeflight ALT "tower-spiral": fractions of the code flight's
+   *  normalised time for the lift (to the tower foot) and the exit (straight
+   *  up), `turns` round the tower in between, the orbit radius as a multiple
+   *  of the tower's half-width, the broom's length on the orbit as a multiple
+   *  of that radius, and the floor of its end-on foreshortening (so it never
+   *  shrinks to a speck at the orbit's sides). */
+  spiral: { turns: number; radius: number; span: number; minLen: number; lift: number; exit: number };
+  /** intro.landing ALT: the page turns away on a hinge at its right edge. */
+  foldDeg: number;
+  foldPerspective: number;
 };
 
 export type IntroModel = {
@@ -137,6 +233,9 @@ export type IntroModel = {
   loading: string;
   config: IntroConfig;
 };
+
+/** The registry pieces the intro plays (lib/variants.ts, host "intro"). */
+export const INTRO_VARIANT_KEYS = ["intro.play", "intro.flight", "intro.codeflight", "intro.landing"] as const;
 
 function quoteVisible(id: QuoteId): boolean {
   const q = quotes[id];
@@ -158,6 +257,28 @@ function plateOf(id: string, pos: Pt | null): IntroPlate | null {
     h: a.height,
     pos: pos ?? ((a.focal as Pt | undefined) ?? [0.5, 0.5]),
     ...BROOM[id],
+    tower: TOWER[id],
+  };
+}
+
+/** A flight clip the prologue may play: a usable video that STARTS on the
+ *  play plate (its poster), capped at maxFlightS (+0.2 s of encode slack).
+ *  `heroStill` = the hero's default plate: a clip that ends anywhere else
+ *  is never treated as anchored. */
+function flightOf(
+  a: MediaAsset | null,
+  startsOn: string,
+  heroStill: string | null,
+  maxS: number,
+): IntroFlight | null {
+  if (!a || a.kind !== "video" || !isUsable(a.status) || a.poster !== startsOn) return null;
+  const known = FLIGHTS[a.id];
+  return {
+    mp4: a.src,
+    webm: a.webm ?? null,
+    dur: Math.min(a.durationS ?? maxS, maxS + 0.2),
+    anchored: Boolean(known?.anchored && heroStill && a.endsOn === heroStill),
+    trail: known ? { emitUntil: known.trail.emitUntil, points: known.trail.points } : null,
   };
 }
 
@@ -179,15 +300,18 @@ export function introModel(): IntroModel | null {
   // The flight (IN-02) lands on the hero plate, so the video — and therefore
   // the landscape plate, which IS its first frame — use the hero plate's
   // focal as object-position (SPEC §5.5 registration).
-  const f = getMedia(p.flight as MediaId);
-  const flightOk = isUsable(f.status) && f.kind === "video";
-  const heroFocal = f.endsOn ? (getMedia(f.endsOn).focal as Pt | undefined) : undefined;
-  const plate = plateOf(p.poster, flightOk ? (heroFocal ?? null) : null);
-  const plateM = plateOf(p.posterMobile, null);
-  if (!plate || !plateM) return null;
-
   const hero = sectionById(p.landsOn);
   const land = hero ? (anchorId(hero) ?? null) : null;
+  const heroStill = hero?.type === "hero" ? hero.props.media : null;
+
+  const f = getMedia(p.flight as MediaId);
+  const flight = flightOf(f, p.poster, heroStill, p.maxFlightS);
+  const altId = altOf(p.flight as MediaId);
+  const flightAlt = flight && altId ? flightOf(getMedia(altId), p.poster, heroStill, p.maxFlightS) : null;
+  const heroFocal = f.endsOn ? (getMedia(f.endsOn).focal as Pt | undefined) : undefined;
+  const plate = plateOf(p.poster, flight ? (heroFocal ?? null) : null);
+  const plateM = plateOf(p.posterMobile, null);
+  if (!plate || !plateM) return null;
 
   const eggs = film.eggs;
   const bolt = eggs.enabled && Boolean(eggs.list.find((e) => e.id === "bolt-favicon")?.enabled);
@@ -205,10 +329,8 @@ export function introModel(): IntroModel | null {
     config: {
       plate,
       plateM,
-      flight: flightOk
-        ? { mp4: f.src, webm: f.webm ?? null, dur: Math.min(f.durationS ?? p.maxFlightS, p.maxFlightS + 0.2) }
-        : null,
-      trail: { emitUntil: trail.emitUntil, points: trail.points },
+      flight,
+      flightAlt,
       t: {
         landing: ms(introTiming.landing),
         readyWait: introTiming.readyWaitMs,
@@ -224,6 +346,8 @@ export function introModel(): IntroModel | null {
         hero: ms(dur.hero),
         preview: ms(dur.preview),
         hiddenSkip: 30000,
+        // the code path folds from domeAt: 1.2 + 0.85 s ≤ intro.mobileTotalMaxS
+        fold: ms(dur.hero),
       },
       bolt,
       land,
@@ -243,7 +367,41 @@ export function introModel(): IntroModel | null {
       trailMax: 48,
       trailMaxLite: 24,
       trailTau: 600,
+      ink: {
+        // the LD-HP ink (#c9ac72), lifted a step so it reads on the lake
+        color: "#d6bd88",
+        k: 1.6,
+        kLite: 1.25,
+        stride: 22,
+        side: 5,
+        gap: 22,
+        corridor: 11,
+        routeMs: ms(dur.draw.med),
+        stepAt: 250,
+        stepMs: 170,
+        walkMaxMs: 2400,
+        fadeInMs: ms(dur.flash),
+        holdMs: 1500,
+        fadeOutMs: 700,
+        routeAlpha: 0.42,
+        printAlpha: 0.78,
+      },
+      spiral: { turns: 1.25, radius: 5, span: 1.8, minLen: 0.5, lift: 0.22, exit: 0.78 },
+      foldDeg: 92,
+      foldPerspective: 1600,
     },
+  };
+}
+
+/** The pre-paint variant data for the head script (./variant-snippet.ts):
+ *  the intro's pieces, plus the hero plate — the flight is registered to
+ *  the DEFAULT hero plate only, so over the ALT plate it lands with a
+ *  crossfade. */
+export function introPrepaintVariants(): PrepaintVariants {
+  const hero = sectionById(film.prologue.landsOn);
+  return {
+    ...prepaintVariants(introVariant, INTRO_VARIANT_KEYS),
+    ...(hero ? prepaintVariants(variantChoiceOf(hero), ["hero.plate"]) : {}),
   };
 }
 
@@ -255,5 +413,7 @@ export function introHeadConfig() {
     /** Routes the prologue may arm on (it lands on the home hero). `?intro=1`
      *  forces it anywhere, e.g. a future /lab/intro. */
     paths: ["/"],
+    /** Variant pieces, resolved before the first paint (./variant-snippet.ts). */
+    v: introPrepaintVariants(),
   };
 }

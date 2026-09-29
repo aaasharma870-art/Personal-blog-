@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useScroll, type MotionValue } from "motion/react";
 import { useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
+import type { Variant } from "@/lib/variants";
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { Loader } from "@/components/primitives/loader";
 import { WorldProvider } from "@/components/primitives/world";
@@ -57,6 +58,9 @@ type ActCardProps = {
   progress?: number;
   /** Frame content (the transition art). Default: the world's loader motif. */
   children?: ReactNode;
+  /** Force the loader motif's DEFAULT or ALT (lib/variants.ts
+   *  `loader-<kind>.motion`; /lab). Default: the world's loaderVariant. */
+  variant?: Variant;
   className?: string;
 };
 
@@ -71,6 +75,7 @@ export function ActCard({
   summary,
   progress,
   children,
+  variant,
   className,
 }: ActCardProps) {
   const ref = useRef<HTMLElement>(null);
@@ -121,7 +126,7 @@ export function ActCard({
           )}
         >
           {children ?? (
-            <Loader world={world} size="card" progress={motifProgress} mode={motifMode} />
+            <Loader world={world} size="card" progress={motifProgress} mode={motifMode} variant={variant} />
           )}
         </div>
 
@@ -131,7 +136,7 @@ export function ActCard({
             {title}
           </h2>
           {subtitle ? <p className="type-lead max-w-lead text-fg-muted">{subtitle}</p> : null}
-          <Loader world={world} size="route" progress={motifProgress} mode={motifMode} />
+          <Loader world={world} size="route" progress={motifProgress} mode={motifMode} variant={variant} />
           {summary ? (
             <p className={cn("type-small max-w-body text-fg-muted", live && "sr-only")}>
               {summary}

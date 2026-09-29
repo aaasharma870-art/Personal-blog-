@@ -40,13 +40,15 @@ const VB = { w: 1000, h: 418 };
 const PLATE = { x: 40, y: 22, w: 920, h: 374, r: 6 };
 /** The graphite trail across the plate's lower third (the Line, re-traced). */
 const TRAIL_BOX: Box = { x: 90, y: 250, w: 820, h: 120 };
+/** The card's geometry, shared with the ALT (frames/tintype-deadeye.tsx). */
+export const TINTYPE = { VB, PLATE, TRAIL_BOX } as const;
 const TRAIL = fitPath(LINE_D, TRAIL_BOX);
 const HACHURES = Array.from({ length: 6 }, (_, k) => {
   const q = fitPoint(LINE.at((k + 0.55) / 6.3), TRAIL_BOX);
   return `M${(q.x - 26).toFixed(1)} ${(q.y + 20).toFixed(1)}q26 -15 52 0`;
 }).join("");
 /** The low sun: from above the horizon (the warm point) down to it. */
-const SUN = { x: 0.78, from: 0.12, to: 0.36, size: 0.075 };
+export const SUN = { x: 0.78, from: 0.12, to: 0.36, size: 0.075 };
 
 /** feColorMatrix mapping grey noise to "NOT yet developed" (white) for a
  *  developed fraction ≈ q (the inverse of noise.ts thresholdMatrix). */
@@ -195,7 +197,7 @@ const GRASS = (() => {
   return `${d}V374H0Z`;
 })();
 
-function FrontierGround({ id }: { id: string }) {
+export function FrontierGround({ id }: { id: string }) {
   return (
     <svg
       viewBox={`0 0 ${PLATE.w} ${PLATE.h}`}

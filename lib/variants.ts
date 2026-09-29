@@ -109,9 +109,12 @@ export const VARIANT_REGISTRY = {
       note: "The play screen breathes: ≤ 40 candle sprites bob; on hover/focus 12 gather into a ring round the aqua bracket, which draws itself in.",
       media: ["IN-01", "IN-01m"],
     },
-    alt: null,
-    plan: "Marauder's-Map ink: the bracket is drawn by ink lines and a trail of footprints walks to Play (IN-01-alt / IN-01m-alt plates available, but they need their own broom measurements).",
-    files: ["components/intro/controller.js", "components/intro/intro-overlay.tsx", "app/intro.css"],
+    alt: {
+      name: "marauders-ink",
+      note: "An ink route draws itself up to Play, footprints walk it (the last pair waits under Play), the bracket inks in on arrival; hover/focus inks the corridor walls.",
+      media: ["IN-01", "IN-01m"],
+    },
+    files: ["components/intro/controller.js", "components/intro/intro-overlay.tsx", "app/intro.css", "components/intro/variant-snippet.ts", "components/intro/intro-head-script.tsx", "components/intro/prepaint-variants.ts"],
   },
   "intro.flight": {
     default: {
@@ -119,9 +122,12 @@ export const VARIANT_REGISTRY = {
       note: "IN-02 (c3f279c6): the camera chases the broom between the towers, through fog, over the crest; it climbs out above the Pearl.",
       media: ["IN-02"],
     },
-    alt: null,
-    plan: "IN-02-alt (9503416d): the dark-handled broom dives through a real cloud deck and skims into the crest (flag: reads as a splash-down at ≈3.4 s; not tail-anchored, last-frame SSIM 0.959 vs MV-01).",
-    files: ["components/intro/controller.js", "components/intro/intro-model.ts"],
+    alt: {
+      name: "cloud-dive",
+      note: "IN-02-alt (9503416d): swoops off the play screen, dives through the cloud deck into the crest; own tracked trail; not tail-anchored, so the sweep crossfades.",
+      media: ["IN-02-alt"],
+    },
+    files: ["components/intro/controller.js", "components/intro/intro-model.ts", "components/intro/intro-trail-alt.json", "components/intro/variant-snippet.ts", "components/intro/intro-head-script.tsx"],
   },
   "intro.codeflight": {
     default: {
@@ -129,18 +135,23 @@ export const VARIANT_REGISTRY = {
       note: "Lite path (mobile / low-power / late video): the SVG broom lifts off the broom-less plate and flies a bezier past the castle with a tapered trail.",
       media: ["IN-01-empty", "IN-01m-empty"],
     },
-    alt: null,
-    plan: "A spiralling ascent round the tallest tower, then straight up through the dome exit.",
-    files: ["components/intro/controller.js", "components/intro/broom.ts"],
+    alt: {
+      name: "tower-spiral",
+      note: "Lite path: lifts off, spirals 1¼ turns up round the tallest tower (dimmer behind it), shoots straight up past the spire.",
+      media: ["IN-01-empty", "IN-01m-empty"],
+    },
+    files: ["components/intro/controller.js", "components/intro/broom.ts", "components/intro/variant-snippet.ts", "components/intro/intro-head-script.tsx"],
   },
   "intro.landing": {
     default: {
       name: "mask-sweep",
       note: "A left → right mask dissolves the overlay onto the hero; the name zone clears first (the code flight exits by the dome).",
     },
-    alt: null,
-    plan: "Ink-wipe: the overlay folds away like parchment (\"Mischief managed\"), or a Marauder's-Map ink wipe.",
-    files: ["components/intro/controller.js", "app/intro.css"],
+    alt: {
+      name: "map-fold",
+      note: "'Mischief managed': the overlay folds shut on a right-edge hinge (the name clears first), washing to parchment; replaces sweep and dome.",
+    },
+    files: ["components/intro/controller.js", "app/intro.css", "components/intro/variant-snippet.ts", "components/intro/intro-head-script.tsx"],
   },
 
   /* — Hero (host "hero"; components/sections/hero/**) — */
@@ -150,9 +161,12 @@ export const VARIANT_REGISTRY = {
       note: "MV-01 / MV-02: the night sea, the aqua crest, the Black Pearl with its one warm lantern.",
       media: ["MV-01", "MV-02"],
     },
-    alt: null,
-    plan: "MV-01-alt / MV-02-alt (the batch runners-up: storm-lit sky, moon glow, the crest running off the right edge). Needs its own Lens frame (focalBox is measured in lib/media.ts).",
-    files: ["components/sections/hero/hero-section.tsx", "components/sections/hero/hero-stage.tsx"],
+    alt: {
+      name: "moonlit-pearl",
+      note: "MV-01-alt / MV-02-alt: violet-cast sky, bright moon glow, the crest running off the right edge; own Lens frame; no loop over it.",
+      media: ["MV-01-alt", "MV-02-alt"],
+    },
+    files: ["components/sections/hero/hero-section.tsx", "components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
   },
   "hero.loop": {
     default: {
@@ -160,18 +174,34 @@ export const VARIANT_REGISTRY = {
       note: "MV-03 (764ca916): the crest rolls in place, glints run along it, the lantern flickers softly (desktop, motion on, one decoder).",
       media: ["MV-03"],
     },
-    alt: null,
-    plan: "MV-03-alt (ebb7db32): a restless sea — the crest breaks and runs off right, the lantern flares. Registered to MV-01 (not MV-01-alt): pair it with the default plate or crossfade.",
-    files: ["components/sections/hero/hero-stage.tsx"],
+    alt: {
+      name: "restless-sea",
+      note: "MV-03-alt: the crest breaks and runs off right, the lantern flares; over the DEFAULT plate only (registered to MV-01).",
+      media: ["MV-03-alt"],
+    },
+    files: ["components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
   },
   "hero.aperture": {
     default: {
       name: "bracket-clip",
       note: "Once per session (no intro): the Lens bracket opens the hero; each half rides a 48 px feathered clip edge.",
     },
-    alt: null,
-    plan: "A horizontal letterbox that opens top/bottom like a film gate, then the bracket settles.",
-    files: ["components/primitives/lens.tsx", "components/sections/hero/hero-stage.tsx"],
+    alt: {
+      name: "film-gate",
+      note: "Once per session (no intro): a horizontal letterbox opens from the horizon to the 2.39:1 reel band, a beat, then full frame; then the bracket grows onto the crest.",
+    },
+    files: ["components/primitives/lens.tsx", "components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
+  },
+  "hero.velocity": {
+    default: {
+      name: "grain-and-wake",
+      note: "Fast scroll: grain ≤ .10, chroma ≤ 2 px, crest wake ≤ +15 %; clear at rest.",
+    },
+    alt: {
+      name: "crest-spray",
+      note: "Fast scroll: pale spray arcs off the crest (≤ 90 droplets, ≤ .65 s each) + the same wake; clear ≤ 1.5 s after stopping.",
+    },
+    files: ["components/sections/hero/velocity-layers.tsx"],
   },
 
   /* — Act cards (host "card-<transition>"; components/sections/act-card/**) — */
@@ -180,62 +210,78 @@ export const VARIANT_REGISTRY = {
       name: "compass-course",
       note: "Card I: Jack's compass heads a brass course that plots through the four acts as you scroll; the needle settles on Act I.",
     },
-    alt: null,
-    plan: "A treasure-map unfold: the program is a chart that unrolls, and an X marks Act I.",
-    files: ["components/sections/act-card/frames/opening.tsx"],
+    alt: {
+      name: "chart-unfold",
+      note: "Card I: a folded chart opens (down, then out); a dotted trail makes landfall and climbs the program leg by leg; an X is inked on Act I.",
+    },
+    files: ["components/sections/act-card/frames/opening.tsx", "components/sections/act-card/frames/opening-map.tsx"],
   },
   "card-seam.choreo": {
     default: {
       name: "ice-cut",
       note: "Card I→II (pinned): a ragged ice-cut wipes the storm into a blueprint; FIG. 0 draws the Line; Rancho's chalk circle closes it.",
     },
-    alt: null,
-    plan: "Chalk erasing the storm stroke by stroke until the blueprint shows through.",
-    files: ["components/sections/act-card/frames/seam.tsx"],
+    alt: {
+      name: "duster-erase",
+      note: "Card I→II (pinned): a chalk duster wipes the storm off the board in five strokes, leaving chalk dust; FIG. 0 is written in chalk; Rancho's circle closes it (no aqua seam line).",
+    },
+    files: ["components/sections/act-card/frames/seam.tsx", "components/sections/act-card/frames/seam-chalk.tsx"],
   },
   "card-tintype.choreo": {
     default: {
       name: "developing-plate",
       note: "Card II→III: a low sun sinks, a graphite trail draws, and a sepia tintype develops into the frontier dusk.",
     },
-    alt: null,
-    plan: "A Dead-Eye red-tint lock-on that marks the four act points one by one.",
-    files: ["components/sections/act-card/frames/tintype.tsx"],
+    alt: {
+      name: "dead-eye",
+      note: "Card II→III: the Line is drawn across the frontier tintype, the plate takes the Dead Eye grade (media only), bone marks lock onto the four act points in turn, then resolve at once (mark first, fire once).",
+    },
+    files: ["components/sections/act-card/frames/tintype.tsx", "components/sections/act-card/frames/tintype-deadeye.tsx"],
   },
   "card-ignite.choreo": {
     default: {
       name: "embers-to-candles",
       note: "Card III→IV (pinned): embers rise from a campfire and become the floating candles along the Line.",
     },
-    alt: null,
-    plan: "A Lumos wand-tip sweep that lights the candles in sequence along the Line.",
-    files: ["components/sections/act-card/frames/ignite.tsx"],
+    alt: {
+      name: "lumos-sweep",
+      note: "Card III→IV (pinned): the campfire goes out, one wand-tip light is struck and sweeps the hall in a flourish; each floating candle catches as the light passes, the Line inks beneath it, and the light becomes the last warm point.",
+    },
+    files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx"],
   },
 
   /* — World loaders (host "loader-<kind>"; components/primitives/loaders/**) — */
   "loader-course.motion": {
     default: { name: "compass-course", note: "LD-PC: Jack's compass swings and settles on the bearing while the course line plots." },
-    alt: null,
-    plan: "An hourglass / ship-in-a-bottle that fills with the real progress.",
-    files: ["components/primitives/loaders/course-loader.tsx", "components/primitives/loaders/compass.tsx"],
+    alt: {
+      name: "ship-in-bottle",
+      note: "LD-PC alt: a ship in a bottle; the rigging line pulled out through the neck is the progress and the masts rise with it; the cork seats at completion (one glint).",
+    },
+    files: ["components/primitives/loaders/course-loader.tsx", "components/primitives/loaders/compass.tsx", "components/primitives/loaders/course-bottle.tsx"],
   },
   "loader-gauge.motion": {
     default: { name: "honest-gauge", note: "LD-3I: an honest gauge whose needle reports the real progress (never a fake sweep)." },
-    alt: null,
-    plan: "A chalk derivation that writes itself line by line as the load advances.",
-    files: ["components/primitives/loaders/gauge.tsx"],
+    alt: {
+      name: "chalk-derivation",
+      note: "LD-3I alt: a chalk derivation (f(x) = x² + 2x → f′(x) = 2x + 2 → x = −1) writes itself stroke by stroke, then sketches its curve; the answer is boxed at completion.",
+    },
+    files: ["components/primitives/loaders/gauge.tsx", "components/primitives/loaders/gauge-chalk.tsx"],
   },
   "loader-plate-trail.motion": {
     default: { name: "plate-trail", note: "LD-RD: a tintype plate develops while a graphite trail advances along the progress." },
-    alt: null,
-    plan: "A journal page that sketches itself with a pencil stroke by stroke.",
-    files: ["components/primitives/loaders/plate-trail.tsx"],
+    alt: {
+      name: "journal-sketch",
+      note: "LD-RD alt: a journal page; a pencil sketches the frontier (ridges, a pine, the trail, a campfire) stroke by stroke as the progress; one red-pencil underline at completion.",
+    },
+    files: ["components/primitives/loaders/plate-trail.tsx", "components/primitives/loaders/plate-journal.tsx"],
   },
   "loader-ink-light.motion": {
     default: { name: "ink-light", note: "LD-HP: ink draws itself and a light brightens with the real progress." },
-    alt: null,
-    plan: "Marauder's-Map footprints that walk the progress line.",
-    files: ["components/primitives/loaders/ink-light.tsx"],
+    alt: {
+      name: "footprints",
+      note: "LD-HP alt: Marauder's-Map footprints walk the Line with the progress, fading behind the walker, and stop together at its end (ink only, no light).",
+    },
+    files: ["components/primitives/loaders/ink-light.tsx", "components/primitives/loaders/ink-footprints.tsx"],
   },
 
   /* — Signature sections (host = section id; M2 builds their moments) — */

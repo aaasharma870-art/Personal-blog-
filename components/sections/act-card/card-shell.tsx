@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useMediaQuery, useMotionPausedAtBoot, useReducedMotion } from "@/lib/flags";
+import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
+import type { Variant, VariantChoice } from "@/lib/variants";
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { WorldProvider } from "@/components/primitives/world";
 import { remap } from "@/components/primitives/loaders/line";
@@ -32,6 +34,15 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  *
  * Honesty (C11): no "loading", no %, no role=status; the progress line is
  * aria-hidden. 0 tab stops except the opening card's rows. No aqua at rest.
+ *
+ * Variants (lib/variants.ts; registry piece `card-<kind>.choreo`): the
+ * server hands BOTH choreographies — `frame` (DEFAULT) and `altFrame` (ALT,
+ * lazy: components/sections/act-card/alt-frames.tsx) — and this shell plays
+ * one: the manifest's `variantChoice` on the server and during hydration,
+ * the ?variant=… preview after mount (useVariant), or a forced `variant`
+ * (/lab). Only the frame changes: the section, the bars, the h2 and every
+ * focus target are the same DOM in both (the opening card's alt keeps the
+ * same heading node and the same row anchors, in the same order).
  */
 type Props = {
   id: string;
@@ -48,8 +59,14 @@ type Props = {
   fromGround?: WorldId | null;
   upperLeft: string;
   upperRight?: string;
-  /** The frame (choreography). */
+  /** The frame (choreography): the DEFAULT variant. */
   frame: ReactNode;
+  /** The ALT choreography of the same frame (null/absent: none built). */
+  altFrame?: ReactNode;
+  /** The manifest's variant choice for this card (`item.variant`). */
+  variantChoice?: VariantChoice | null;
+  /** Force a variant (the /lab side-by-side); bypasses the URL preview. */
+  variant?: Variant;
   /** A 3:2 image plate below 640 (2.39:1 from 640), or free content (the
    *  opening rows: 2.39:1 from 1024, its own height below). */
   frameShape?: "plate" | "free";
@@ -78,6 +95,9 @@ export function CardShell({
   upperLeft,
   upperRight,
   frame,
+  altFrame = null,
+  variantChoice = null,
+  variant: forced,
   frameShape = "plate",
   lower,
   summary,
@@ -126,7 +146,11 @@ export function CardShell({
   const p = pinned ? travel.scrollYProgress : passage.scrollYProgress;
   const fromOpacity = useTransform(p, (v) => 1 - remap(v, 0, 0.2));
 
-  const state = useMemo(() => ({ p, live, long: pinned }), [p, live, pinned]);
+  // which choreography plays (an ALT that was not built plays the default)
+  const chosen = useVariant(variantChoice, `card-${kind}.choreo`);
+  const variant: Variant = (forced ?? chosen) === "alt" && altFrame != null ? "alt" : "default";
+
+  const state = useMemo(() => ({ p, live, long: pinned, variant }), [p, live, pinned, variant]);
   const titleId = `${id}-title`;
 
   return (
@@ -136,6 +160,7 @@ export function CardShell({
       aria-labelledby={titleId}
       data-section={id}
       data-act-card={kind}
+      data-variant={variant}
       data-act-card-long={travels ? "" : undefined}
       data-live={live ? "" : undefined}
       {...planeAttrs("deep", world)}
@@ -176,7 +201,7 @@ export function CardShell({
                   : "lg:aspect-(--letterbox-ratio)",
               )}
             >
-              {frame}
+              {variant === "alt" ? altFrame : frame}
             </div>
 
             {/* lower bar: the h2 + ≤ 1 line + the progress element */}

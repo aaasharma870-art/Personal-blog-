@@ -10,12 +10,15 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
+import { film } from "@/lib/film";
 import { useReducedMotion } from "@/lib/flags";
 import { loader as loaderTiming } from "@/lib/motion";
+import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
+import type { Variant } from "@/lib/variants";
 import { worlds, type LoaderKind, type WorldId } from "@/lib/worlds";
 import { useWorld } from "@/components/primitives/world";
-import { worldLoaderRenderers } from "@/components/primitives/loaders";
+import { worldLoaderAltRenderers, worldLoaderRenderers } from "@/components/primitives/loaders";
 
 /**
  * Loader — the shell of the world loader system (SPEC §8, loaders.BAR).
@@ -42,6 +45,13 @@ import { worldLoaderRenderers } from "@/components/primitives/loaders";
  * Only the neutral `plain` renderer exists in P1-early — the world motifs
  * (course / gauge / ink-light) register here later and inherit this shell's
  * timing, delay, status and reduced-motion contract for free.
+ *
+ * Variants (lib/variants.ts, piece `loader-<kind>.motion`): every world
+ * motif has a DEFAULT and an ALT renderer (`loaderAltRenderers`, each its
+ * own chunk). Which one draws is data — `film.worlds[w].loaderVariant` —
+ * or the ?variant=… preview after hydration, or a forced `variant` prop
+ * (/lab). Both obey the same modes, delay, idle stop, status and reduced
+ * motion contract, because both live inside this shell.
  */
 
 export type LoaderMode = "indeterminate" | "determinate" | "complete" | "static";
@@ -97,13 +107,26 @@ export const loaderRenderers: Partial<Record<LoaderKind, ComponentType<LoaderRen
   ...worldLoaderRenderers,
 };
 
-export function rendererFor(kind: LoaderKind): ComponentType<LoaderRendererProps> {
+/** Kind → ALT renderer (lib/variants.ts `loader-<kind>.motion`). Kinds
+ *  missing here draw their default in the alt too (`plain` has none). */
+export const loaderAltRenderers: Partial<Record<LoaderKind, ComponentType<LoaderRendererProps>>> = {
+  ...worldLoaderAltRenderers,
+};
+
+export function rendererFor(kind: LoaderKind, variant: Variant = "default"): ComponentType<LoaderRendererProps> {
+  if (variant === "alt") {
+    const alt = loaderAltRenderers[kind];
+    if (alt) return alt;
+  }
   return loaderRenderers[kind] ?? PlainLoader;
 }
 
 type CommonProps = {
   world?: WorldId;
   size?: LoaderSize;
+  /** Force the DEFAULT or ALT motif (the /lab side-by-side). Default: the
+   *  world's `loaderVariant` (lib/film.ts), or the ?variant=… preview. */
+  variant?: Variant;
   /** Indeterminate stops after 5 s beside readable content (default true). */
   parallel?: boolean;
   className?: string;
@@ -133,7 +156,10 @@ export function Loader(props: LoaderProps) {
   const { world: worldProp, size = "mini", parallel = true, className, status } = props;
   const plane = useWorld();
   const world = worldProp ?? plane.world;
+  const kind = worlds[world].loader;
   const reduced = useReducedMotion();
+  const chosen = useVariant(film.worlds[world]?.loaderVariant, `loader-${kind}.motion`);
+  const variant: Variant = (props.variant ?? chosen) === "alt" && loaderAltRenderers[kind] ? "alt" : "default";
 
   // Progress as a MotionValue in every case (a number is mirrored into one).
   const fallback = useMotionValue(typeof props.progress === "number" ? props.progress : 0);
@@ -184,11 +210,12 @@ export function Loader(props: LoaderProps) {
   const animate = mode === "indeterminate" && !reduced && !idleStopped;
   // Registry lookup → createElement: renderers are module-level components
   // (never created in render); the key re-mounts the renderer when the
-  // progress source changes, because a useTransform binds to one MotionValue.
+  // progress source (a useTransform binds to one MotionValue) or the
+  // variant changes.
   const motif = (
     <span aria-hidden="true" className="inline-flex items-center">
-      {createElement(rendererFor(worlds[world].loader), {
-        key: external ? "motion-value" : "number",
+      {createElement(rendererFor(kind, variant), {
+        key: `${external ? "motion-value" : "number"}:${variant}`,
         mode,
         size,
         progress,
@@ -198,7 +225,8 @@ export function Loader(props: LoaderProps) {
   );
 
   const data = {
-    "data-loader": worlds[world].loader,
+    "data-loader": kind,
+    "data-variant": variant,
     "data-mode": mode,
     "data-progress": initialP.toFixed(3),
   };

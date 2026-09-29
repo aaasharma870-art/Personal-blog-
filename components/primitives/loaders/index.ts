@@ -20,3 +20,26 @@ export const worldLoaderRenderers: Partial<Record<LoaderKind, ComponentType<Load
   "plate-trail": dynamic(() => import("@/components/primitives/loaders/plate-trail")),
   "ink-light": dynamic(() => import("@/components/primitives/loaders/ink-light")),
 };
+
+/**
+ * Their ALTERNATES (lib/variants.ts `loader-<kind>.motion`, AUTOPILOT
+ * "two versions of every animation"): a meaningfully different mechanism
+ * for the same verb, under the same shell contract (modes, show delay, 5 s
+ * idle stop, static under reduced motion / Pause, sprites-only light, no
+ * text). Each is its own chunk, fetched only when an alt is chosen.
+ *   course      "bottle"      a ship in a bottle: the rigging line is pulled
+ *                             out through the neck (= progress) and the masts
+ *                             rise; the cork seats at completion
+ *   gauge       "derivation"  a chalk derivation writes itself stroke by
+ *                             stroke (= progress); the answer is boxed
+ *   plate-trail "journal"     a journal page: a pencil sketches the frontier
+ *                             stroke by stroke (= progress); one red underline
+ *   ink-light   "footprints"  Marauder's-Map footprints walk the Line
+ *                             (= progress) and stop together at its end
+ */
+export const worldLoaderAltRenderers: Partial<Record<LoaderKind, ComponentType<LoaderRendererProps>>> = {
+  course: dynamic(() => import("@/components/primitives/loaders/course-bottle")),
+  gauge: dynamic(() => import("@/components/primitives/loaders/gauge-chalk")),
+  "plate-trail": dynamic(() => import("@/components/primitives/loaders/plate-journal")),
+  "ink-light": dynamic(() => import("@/components/primitives/loaders/ink-footprints")),
+};

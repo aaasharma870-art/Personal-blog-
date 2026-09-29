@@ -24,6 +24,21 @@
    window "intro:end" {played, reason}; html[data-intro="played|skipped"].
    Performance marks: intro:arm (head) · ready · play · flight · landing ·
    dismiss · end.
+
+   VARIANTS (M1.5; lib/variants.ts). Every piece has a DEFAULT and an ALT;
+   the head script resolves them before the first paint (manifest +
+   ?variant=…) into window.__introV and html.intro-alt-<piece>:
+     intro.play        candle-motes  | marauders-ink: an ink route draws
+                       itself up to Play, footprints walk it, the bracket
+                       inks in on arrival; hover / focus draws the corridor
+     intro.flight      IN-02         | IN-02-alt (its own trail; not
+                       tail-anchored, so the sweep crossfades)
+     intro.codeflight  bezier past the castle | a spiral round the tallest
+                       tower, then straight up out of the frame
+     intro.landing     mask sweep (video) + dome (code) | map-fold: the page
+                       turns away on its right edge, washing to parchment
+   Both sides share every rule: 0 rAF at rest, focus parity (hover = focus),
+   one video, reduced motion / Pause end the prologue, the name clears first.
    ========================================================================== */
 (function (w, d) {
   "use strict";
@@ -31,7 +46,8 @@
 
   var R = d.documentElement, M = Math, PI = M.PI;
   var SCROLL = { PageDown: 1, PageUp: 1, ArrowDown: 1, ArrowUp: 1, Home: 1, End: 1, " ": 1, Spacebar: 1 };
-  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-landing", "intro-sweep", "intro-leaving", "intro-kbd"];
+  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-landing", "intro-sweep", "intro-leaving", "intro-kbd",
+    "intro-inked", "intro-fold", "intro-alt-play", "intro-alt-flight", "intro-alt-codeflight", "intro-alt-landing"];
   var BOLT = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#e9b44c" d="M19.5 1.5 6.5 18h8.2l-2.9 12.5L25.5 13h-8.3z"/></svg>');
 
@@ -49,12 +65,17 @@
   var modality = "", hiddenAt = 0, touch = null, loaderAt = -1, loader = null;
   var code = null, patch = null, domeOn = false;
   var E, ED;
+  // variants (resolved at arm from window.__introV) and their state
+  var VV = {}, FL = null, altPlay = false, altCode = false, altLand = false, heroAlt = false;
+  var ink = null, inkAt = 0, inked = false, foldAt = -1;
 
   var ctl = { arm: arm, onHydrated: onHydrated, state: function () { return st; } };
   w.__introCtl = ctl;
 
   /* — small helpers ———————————————————————————————————————————————— */
   function now() { return performance.now(); }
+  /** The resolved variant of a piece is its ALT (window.__introV). */
+  function alt(key) { return VV[key] === "alt"; }
   function mark(n) { try { performance.mark("intro:" + n); } catch { /* no-op */ } }
   function setState(s) { st = s; w.__introState = s; }
   function on(t, type, fn, o) { t.addEventListener(type, fn, o); offs.push(function () { t.removeEventListener(type, fn, o); }); }
@@ -151,10 +172,17 @@
     clock = 0; hover = kfocus = false; gat = gFrom = gTo = 0; gAt = -1; modality = "";
     motes = null; trail = []; lastEmit = null; code = null; patch = null; domeOn = false; vPlaying = false;
     loaderAt = -1; showPlate = false; plateAt = -1; plate = null;
+    VV = w.__introV || {};
+    altPlay = alt("intro.play");
+    altCode = alt("intro.codeflight");
+    altLand = alt("intro.landing");
+    heroAlt = VV["hero.plate"] === "alt";
+    FL = alt("intro.flight") && C.flightAlt ? C.flightAlt : C.flight;
+    ink = null; inkAt = armAt; inked = false; foldAt = -1;
 
     var mm = w.matchMedia ? function (q) { return w.matchMedia(q); } : null;
     fine = !!(mm && mm("(pointer: fine)").matches);
-    lite = !C.flight || w.innerWidth < 1024 || !fine || (navigator.hardwareConcurrency || 8) < 4 ||
+    lite = !FL || w.innerWidth < 1024 || !fine || (navigator.hardwareConcurrency || 8) < 4 ||
       w.innerHeight > w.innerWidth;
 
     cv = d.createElement("canvas");
@@ -184,6 +212,7 @@
     }
 
     if (hydrated) setInert(true);
+    if (altPlay) later(setInked, C.ink.routeMs); // the bracket inks in when the route arrives
     focus(play);
     // text boxes move when the web fonts swap in: re-place the candles
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(function () { if (st === "armed" && cv) { layoutCandles(); kick(); } });
@@ -267,9 +296,17 @@
     };
     var ox = pr.left + pr.width / 2, oy = pr.top + pr.height / 2;
     var ring = function (a, rad) { return [ox + M.cos(a) * (pr.width / 2 + rad), oy + M.sin(a) * (pr.height / 2 + rad)]; };
+    // ALT play: no ring (the footprints answer Play); the ink route is laid
+    // first so the ambient candles keep clear of it
+    if (altPlay) layoutInk(texts);
+    var offRoute = function (x, y) {
+      if (!ink) return true;
+      for (var r = 0; r < ink.pts.length; r += 2) if (M.abs(ink.pts[r][0] - x) + M.abs(ink.pts[r][1] - y) < 56) return false;
+      return true;
+    };
 
     cands = [];
-    var valid = [], n = 48;
+    var valid = [], n = altPlay ? 0 : 48;
     for (i = 0; i < n; i++) { // jittered, so the ring reads as hovering candles, not a dial
       var a = ((i + (rnd() - 0.5) * 0.6) / n) * 2 * PI, zi = rnd() < 0.4 ? 0 : 1;
       var rest = ring(a, cc.ringRest + (rnd() - 0.5) * 44), g = ring(a, cc.ringGather + (rnd() - 0.5) * 16);
@@ -283,7 +320,7 @@
     var want = lite ? cc.ambientLite : cc.ambient, tries = 0;
     while (cands.length < k + want && tries++ < 600) {
       var x = rnd() * W, y = (0.05 + rnd() * 0.9) * H, z = rnd() < 0.45 ? 0 : rnd() < 0.7 ? 1 : 2;
-      if (!free(x, y, z) || hits(rectAt(x, y, z), pb)) continue;
+      if (!free(x, y, z) || hits(rectAt(x, y, z), pb) || !offRoute(x, y)) continue;
       var ok = true;
       for (var j = 0; j < cands.length && ok; j++) if (M.abs(cands[j].x - x) + M.abs(cands[j].y - y) < 70) ok = false;
       if (!ok) continue;
@@ -479,11 +516,13 @@
         drawSprite(sprites.c[cands[i].z], p[0], p[1], ca);
       }
     }
+    if (ink && drawInk(t)) more = true;
     if (motes) drawMotes(t);
     if (code) stepCode(t);
     if (st === "flight" && video) { emitVideo(t); checkLanding(); }
     if (st === "wait") waitStep(t);
     if (trail.length) drawTrail(t);
+    if (foldAt >= 0) foldShade(t);
 
     cx.globalAlpha = 1;
     if (more && st !== "idle") kick();
@@ -497,6 +536,7 @@
     launchAt = now();
     focus(skip); // Play leaves the tab order; Skip stays through the flight
     R.classList.add("intro-launched");
+    if (altPlay) setInked(); // the bracket halves fly out drawn
     var rl = lensL && lensL.getBoundingClientRect(), rr = lensR && lensR.getBoundingClientRect();
     if (rl) anim(lensL, [{ transform: "none" }, { transform: "translateX(" + -(rl.right + 8) + "px)" }], C.t.hero, C.easeClip);
     if (rr) anim(lensR, [{ transform: "none" }, { transform: "translateX(" + (W - rr.left + 8) + "px)" }], C.t.hero, C.easeClip);
@@ -538,8 +578,8 @@
 
   /* — the flight video (IN-02) ———————————————————————————————————— */
   function ensureVideo() {
-    if (video || lite || !C.flight || st === "idle") return video;
-    var f = C.flight, v = d.createElement("video");
+    if (video || lite || !FL || st === "idle") return video;
+    var f = FL, v = d.createElement("video");
     v.muted = true;
     v.defaultMuted = true;
     v.playsInline = true;
@@ -669,14 +709,14 @@
       if (d.hidden) { later(wd, 1000); return; }
       landing();
     };
-    later(wd, (C.flight.dur + 1.5) * 1000); // a stalled network never strands the visitor
+    later(wd, (FL.dur + 1.5) * 1000); // a stalled network never strands the visitor
     kick();
   }
 
   function emitVideo(t) {
-    var v = video, tr = C.trail;
-    if (!vPlaying) return;
-    var vt = v.currentTime, vd = v.duration > 0 ? v.duration : C.flight.dur;
+    var v = video, tr = FL.trail;
+    if (!vPlaying || !tr) return; // a clip without its own tracked path flies unlit
+    var vt = v.currentTime, vd = v.duration > 0 ? v.duration : FL.dur;
     if (h1Rect && vd - vt < 1.25) { // no light across the name in the last 1.2 s (I15)
       for (var j = 0; j < trail.length; j++) if (near(trail[j], h1Rect, 24)) trail[j].cut = 1;
     }
@@ -692,19 +732,23 @@
   function checkLanding() {
     var v = video;
     if (!vPlaying || !v) return;
-    var vd = v.duration > 0 ? v.duration : C.flight.dur;
-    if (v.currentTime >= vd - C.t.landing / 1000) landing();
+    var vd = v.duration > 0 ? v.duration : FL.dur;
+    if (v.currentTime >= vd - (altLand ? C.t.fold : C.t.landing) / 1000) landing();
   }
 
-  /** S3: the left → right mask dissolve; the name zone clears first (I14). */
+  /** S3: the left → right mask dissolve; the name zone clears first (I14).
+   *  A clip whose last frame is not the hero plate (IN-02-alt, or the ALT
+   *  hero plate) also crossfades, so no seam is revealed. ALT: map-fold. */
   function landing() {
     if (st !== "flight") return;
     setState("landing");
+    if (altLand) return fold();
     mark("landing");
     R.classList.add("intro-landing", "intro-sweep");
     var k = "maskPosition" in R.style ? "maskPosition" : "webkitMaskPosition", a = {}, b = {};
     a[k] = "100% 0";
     b[k] = "0% 0";
+    if (!FL.anchored || heroAlt) { a.opacity = 1; b.opacity = 0; }
     anim(intro, [a, b], C.t.landing, C.ease, function () { finish(true, "played"); });
     kick();
   }
@@ -735,7 +779,9 @@
       pos: p0,
       k: M.min(1.2, M.max(0.45, L / 1000 / 0.55)),
       P: [b0, [b0[0] - ux * 0.5 * L, b0[1] + uy * 0.5 * L], [P3[0] - W * 0.12, P3[1] + H * 0.34], P3],
+      sp: altCode && p.tower ? spiralSetup(p, p0, L / 1000) : null,
     };
+    if (code.sp) code.k = M.min(1.2, M.max(0.35, code.sp.s1 / 0.55));
     if (showPlate && imgOk) patch = mkPatch();
     if (broom) {
       setBroom(0);
@@ -759,6 +805,7 @@
    *  rotate(-φ) keeps the handle along the tangent φ, continuous with the
    *  plate angle. Returns the tail end (the trail source) once turned. */
   function setBroom(q) {
+    if (code.sp) return setBroomSpiral(q);
     var e = ED(q), ye = E(clamp01(q / 0.25)), sx = 1 - 2 * ye, P = code.P;
     var pos = bz(P, e), dv = bzd(P, e), af = -M.atan2(dv[1], dv[0]), a0 = code.a0;
     while (af - a0 > PI) af -= 2 * PI;
@@ -774,17 +821,247 @@
   }
   function stepCode(t) {
     var q = clamp01((t - code.at) / C.t.mobileFlight), tail = setBroom(q);
-    if (tail && q < 1) emit(tail[0], tail[1], 1 - 0.5 * q, t, C.trailMaxLite);
+    if (tail && q < 1) emit(tail[0], tail[1], code.sp ? tail[2] : 1 - 0.5 * q, t, C.trailMaxLite);
   }
   /** The overlay exits by the dome (the Seam geometry): an ellipse edge
    *  rising over `dome` ms on easeClip, revealing the page top. */
   function dome() {
     if (st !== "code") return;
+    if (altLand) return fold();
     domeOn = true;
     mark("landing");
     R.classList.add("intro-landing");
     anim(intro, [{ clipPath: "ellipse(150% 150% at 50% -20%)" }, { clipPath: "ellipse(150% 150% at 50% -150%)" }],
       C.t.dome, C.easeClip, function () { finish(true, "played"); });
+  }
+
+  /* — intro.codeflight ALT "tower-spiral" ——————————————————————————— */
+  /** The spiral round the plate's tallest tower, in stage px: its axis,
+   *  foot and top, the orbit radius, and the broom's scale on the orbit
+   *  (it darts away toward the castle, so it shrinks to `span` × R long). */
+  function spiralSetup(p, p0, s0) {
+    var T = p.tower, sp = C.spiral;
+    var S = {
+      x: fitP.x + T.x * fitP.w,
+      base: fitP.y + T.base * fitP.h,
+      top: fitP.y + T.top * fitP.h - 0.04 * H,
+      R: M.max(24, T.hw * fitP.w * sp.radius),
+    };
+    S.s1 = M.max(0.04, M.min(s0 * 0.6, (S.R * sp.span) / 1000));
+    var o0 = [S.x - S.R, S.base], dd = M.max(40, M.hypot(o0[0] - p0[0], o0[1] - p0[1]));
+    // the lift: straight up off the plate pose, into the orbit heading up
+    S.lift = [p0, [p0[0], p0[1] - 0.3 * dd], [o0[0], o0[1] + 0.4 * dd], o0];
+    var o1 = orbit(S, 1), l = 0.12 * H, tl = M.hypot(o1[3], o1[4]) || 1;
+    var c = [o1[0] + (o1[3] / tl) * l, o1[1] + (o1[4] / tl) * l];
+    // the exit: along the orbit's last tangent, then straight up out of frame
+    S.exit = [[o1[0], o1[1]], c, [c[0], -0.35 * H]];
+    return S;
+  }
+  /** Orbit at u ∈ [0,1]: [x, y, depth z (1 = in front of the tower), dx, dy, dz]
+   *  (the derivative per u, for the heading and the broom's foreshortening). */
+  function orbit(S, u) {
+    var sp = C.spiral, K = sp.turns * 2 * PI, th = PI + u * K, r = S.R * (1 - 0.3 * u), dr = -0.3 * S.R;
+    var rise = S.top - S.base;
+    return [S.x + r * M.cos(th), S.base + rise * u, M.sin(th),
+      dr * M.cos(th) - r * M.sin(th) * K, rise, dr * M.sin(th) + r * M.cos(th) * K];
+  }
+  /** Pose the broom on the spiral at linear time q. Handle first along the
+   *  screen heading φ, its length foreshortened by the share of the motion
+   *  that runs in depth (seen end-on at the orbit's sides), mirrored when it
+   *  heads right so its lit side stays up (the flip lands where it points
+   *  straight up, so only its shading turns); the plate pose blends into the
+   *  path pose over the lift.
+   *  Behind the tower it dims and shrinks. Returns [tailX, tailY, size]. */
+  function setBroomSpiral(q) {
+    var S = code.sp, sp = C.spiral, pos, dv, z = 0, lf = 1, w = 1, s, o;
+    if (q < sp.lift) {
+      var x = q / sp.lift, f = x + 0.5 * x * (1 - x); // eases out, still moving as it joins the orbit
+      pos = bz(S.lift, f);
+      dv = bzd(S.lift, f);
+      w = f;
+      o = orbit(S, 0);
+      lf = M.hypot(o[3], o[4]) / (M.hypot(o[3], o[4], o[5]) || 1);
+      lf = 1 + (lf - 1) * f; // the dart away into depth foreshortens it
+      s = code.s0 + (S.s1 - code.s0) * f;
+    } else if (q < sp.exit) {
+      o = orbit(S, (q - sp.lift) / (sp.exit - sp.lift));
+      pos = [o[0], o[1]];
+      dv = [o[3], o[4]];
+      z = o[2];
+      lf = M.hypot(o[3], o[4]) / (M.hypot(o[3], o[4], o[5]) || 1);
+      s = S.s1;
+    } else {
+      var v = (q - sp.exit) / (1 - sp.exit), X = S.exit, u1 = 1 - v;
+      pos = [u1 * u1 * X[0][0] + 2 * u1 * v * X[1][0] + v * v * X[2][0], u1 * u1 * X[0][1] + 2 * u1 * v * X[1][1] + v * v * X[2][1]];
+      dv = [2 * u1 * (X[1][0] - X[0][0]) + 2 * v * (X[2][0] - X[1][0]), 2 * u1 * (X[1][1] - X[0][1]) + 2 * v * (X[2][1] - X[1][1])];
+      z = orbit(S, 1)[2] * (1 - E(clamp01(v / 0.5))); // clears the spire: back in the light
+      s = S.s1;
+    }
+    var phi = M.atan2(dv[1], dv[0]), mir = dv[0] > 0 ? -1 : 1;
+    var rho = mir < 0 ? phi : phi + PI, sx = mir * M.max(sp.minLen, lf), a0 = code.a0;
+    if (w < 1) { // plate pose (sx 1, rotate a0) → path pose
+      while (rho - a0 > PI) rho -= 2 * PI;
+      while (rho - a0 < -PI) rho += 2 * PI;
+      rho = a0 + (rho - a0) * w;
+      sx = 1 + (sx - 1) * w;
+    }
+    s *= 1 + 0.16 * z;
+    code.pos = pos;
+    if (broom) {
+      broom.style.transform = "translate(" + (pos[0] - 500).toFixed(1) + "px," + (pos[1] - 100).toFixed(1) +
+        "px) rotate(" + rho.toFixed(4) + "rad) scale(" + (sx * s).toFixed(4) + "," + s.toFixed(4) + ")";
+      broom.style.opacity = (1 - 0.55 * M.max(0, -z)).toFixed(3);
+    }
+    if (w < 1) return null;
+    return [pos[0] + 500 * sx * s * M.cos(rho), pos[1] + 500 * sx * s * M.sin(rho), 0.55 + 0.45 * (1 + z) / 2];
+  }
+
+  /* — intro.landing ALT "map-fold" ——————————————————————————————————— */
+  /** "Mischief managed": the overlay folds shut like the map — the page
+   *  turns away on a hinge at its right edge (rotateY, perspective, the
+   *  enter/exit ease over C.t.fold), so the name zone on the left clears
+   *  first (I14) and the text never ghosts over the name; the canvas washes
+   *  the turning page to parchment shade. Replaces the sweep (video) and the
+   *  dome (code flight). Transform only; finish() cancels it. */
+  function fold() {
+    domeOn = true; // exiting: Skip / Esc / Tab stand down
+    foldAt = now();
+    mark("landing");
+    R.classList.add("intro-landing", "intro-fold");
+    var pp = "perspective(" + C.foldPerspective + "px) rotateY(";
+    anim(intro, [{ transform: pp + "0deg)" }, { transform: pp + -C.foldDeg + "deg)" }], C.t.fold, C.ease,
+      function () { finish(true, "played"); });
+    kick();
+  }
+  function foldShade(t) {
+    var p = E(clamp01((t - foldAt) / C.t.fold));
+    if (p <= 0) return;
+    cx.globalAlpha = 1;
+    cx.fillStyle = "rgba(214,189,136," + (0.16 * p).toFixed(3) + ")"; // the map's paper
+    cx.fillRect(0, 0, W, H);
+    var g = cx.createLinearGradient(0, 0, W, 0); // turning out of the light: the far edge darkest
+    g.addColorStop(0, "rgba(10,7,4," + (0.72 * p).toFixed(3) + ")");
+    g.addColorStop(1, "rgba(10,7,4," + (0.2 * p).toFixed(3) + ")");
+    cx.fillStyle = g;
+    cx.fillRect(0, 0, W, H);
+    if (p < 1) kick();
+  }
+
+  /* — intro.play ALT "marauders-ink" ——————————————————————————————————— */
+  /** Lay the ink route — a cubic from below the frame up to just under
+   *  Play — and the footprints along it (stride apart, alternating sides;
+   *  the last one steps beside the one before: the walker stops at Play).
+   *  A print that would touch a text box is dropped (I18). Runs from
+   *  layoutCandles (arm, resize, font swap), so it tracks the live layout;
+   *  the timeline keeps its clock (inkAt). */
+  function layoutInk(texts) {
+    var I = C.ink, k = lite ? I.kLite : I.k, pr = play.getBoundingClientRect(), i;
+    var Ept = [pr.left + pr.width / 2, pr.bottom + I.gap * k];
+    var Spt = [M.min(W - 24, Ept[0] + 0.12 * W + 40), H + 24], dy = Spt[1] - Ept[1];
+    var P = [Spt, [Spt[0] + 0.06 * W, Spt[1] - dy * 0.38], [Ept[0] - 0.05 * W - 20, Ept[1] + dy * 0.42], Ept];
+    var n = 64, pts = [], len = [0];
+    for (i = 0; i <= n; i++) pts.push(bz(P, i / n));
+    for (i = 1; i <= n; i++) len.push(len[i - 1] + M.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    var L = len[n], st2 = I.stride * k;
+    var along = function (dd) {
+      var j = 1;
+      while (j < n && len[j] < dd) j++;
+      var a = pts[j - 1], b = pts[j], f = len[j] > len[j - 1] ? clamp01((dd - len[j - 1]) / (len[j] - len[j - 1])) : 0;
+      return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, M.atan2(b[1] - a[1], b[0] - a[0])];
+    };
+    var N = M.max(3, M.min(18, M.floor(L / st2) + 1)), prints = [], prev = -1e9;
+    var stepMs = M.min(I.stepMs, (I.walkMaxMs - I.stepAt) / N);
+    // when the ink head (easeDraw over routeMs) passes arc length dd: the
+    // walker never steps ahead of the ink
+    var tHead = function (dd) {
+      var lo = 0, hi = 1;
+      for (var it = 0; it < 18; it++) { var mid = (lo + hi) / 2; if (ED(mid) * L < dd) lo = mid; else hi = mid; }
+      return hi * I.routeMs;
+    };
+    for (i = 0; i < N; i++) {
+      var last = i === N - 1, dd = last ? L - st2 * 0.15 : L - (N - 2 - i) * st2 - st2 * 0.15;
+      if (dd < 0) continue;
+      var q = along(dd), side = i % 2 ? 1 : -1, off = I.side * k;
+      if (last) q[2] = along(L - st2)[2]; // the pair stands together, facing Play
+      var x = q[0] - M.sin(q[2]) * off * side, y = q[1] + M.cos(q[2]) * off * side;
+      var rb = { l: x - 7 * k, t: y - 7 * k, r: x + 7 * k, b: y + 7 * k }, clash = false;
+      for (var tI = 0; tI < texts.length && !clash; tI++) if (hits(rb, texts[tI])) clash = true;
+      if (clash || x < 4 || x > W - 4 || y < 4) continue;
+      var at2 = M.min(I.walkMaxMs, M.max(I.stepAt + i * stepMs, tHead(dd) + 60, prev + 60));
+      prev = at2;
+      prints.push({ x: x, y: y, a: q[2], side: side, at: at2, final: i >= N - 2 });
+    }
+    var end = 0;
+    for (i = 0; i < prints.length; i++) end = M.max(end, prints[i].at + I.fadeInMs + (prints[i].final ? 0 : I.holdMs + I.fadeOutMs));
+    ink = { pts: pts, len: len, L: L, k: k, prints: prints, end: M.max(end, I.routeMs) };
+  }
+  function setInked() {
+    if (inked || !altPlay || st === "idle") return;
+    inked = true;
+    R.classList.add("intro-inked");
+  }
+  /** One shoe print (IC-HP-06, our own drawing): a sole and a heel, toes
+   *  along the heading, splayed a little outward. */
+  function footprint(p, k, a) {
+    cx.save();
+    cx.globalAlpha = a;
+    cx.translate(p.x, p.y);
+    cx.rotate(p.a + PI / 2 + p.side * 0.1);
+    cx.beginPath();
+    cx.ellipse(0, -3.4 * k, 2.5 * k, 4.3 * k, 0, 0, 2 * PI);
+    cx.fill();
+    cx.beginPath();
+    cx.ellipse(0, 4.4 * k, 2 * k, 2.3 * k, 0, 0, 2 * PI);
+    cx.fill();
+    cx.restore();
+  }
+  /** Stroke the route up to arc length `upTo`, offset `off` px to one side. */
+  function inkPath(upTo, off, from) {
+    var P = ink.pts, Ls = ink.len, i, started = false;
+    cx.beginPath();
+    for (i = 0; i < P.length; i++) {
+      if (Ls[i] < (from || 0)) continue;
+      if (Ls[i] > upTo) break;
+      var j = M.min(i + 1, P.length - 1), h = i ? i - 1 : 0;
+      var ang = M.atan2(P[j][1] - P[h][1], P[j][0] - P[h][0]);
+      var x = P[i][0] - M.sin(ang) * off, y = P[i][1] + M.cos(ang) * off;
+      if (started) cx.lineTo(x, y); else { cx.moveTo(x, y); started = true; }
+    }
+    cx.stroke();
+  }
+  /** Draws the ink; returns true while it still changes (keeps the loop up). */
+  function drawInk(t) {
+    var I = C.ink, e = t - inkAt, k = ink.k, fade = 1, i;
+    if (st !== "armed") {
+      fade = 1 - clamp01((t - launchAt) / C.t.base);
+      if (fade <= 0) { ink = null; return false; }
+    }
+    var head = ED(clamp01(e / I.routeMs)) * ink.L;
+    if (e >= I.routeMs * 0.92) setInked();
+    cx.strokeStyle = cx.fillStyle = I.color;
+    cx.lineCap = "round";
+    cx.lineWidth = (1.4 + 0.6 * gat) * k;
+    cx.setLineDash([1.6 * k, 6 * k]);
+    cx.globalAlpha = fade * (I.routeAlpha + (0.9 - I.routeAlpha) * gat);
+    if (head > 0) inkPath(head, 0);
+    cx.setLineDash([]);
+    if (gat > 0.004) { // hover / focus: the corridor's walls ink in, back from Play
+      var reach = M.min(ink.L, 200 * k) * gat;
+      cx.lineWidth = 1.2 * k;
+      cx.globalAlpha = fade * 0.75 * gat;
+      inkPath(ink.L, I.corridor * k, ink.L - reach);
+      inkPath(ink.L, -I.corridor * k, ink.L - reach);
+    }
+    for (i = 0; i < ink.prints.length; i++) {
+      var p = ink.prints[i], pe = e - p.at, a;
+      if (pe <= 0) continue;
+      if (pe < I.fadeInMs) a = pe / I.fadeInMs;
+      else if (p.final || pe < I.fadeInMs + I.holdMs) a = 1;
+      else a = 1 - clamp01((pe - I.fadeInMs - I.holdMs) / I.fadeOutMs);
+      if (a > 0.004) footprint(p, k, a * I.printAlpha * fade);
+    }
+    cx.globalAlpha = 1;
+    return st !== "armed" || e < ink.end;
   }
 
   /** Lift the broom out of the plate: fill its mask, feathered, drawn over
@@ -941,6 +1218,7 @@
     cv = cx = null;
     if (broom) { broom.style.transform = ""; broom.style.opacity = ""; }
     cands = []; trail = []; motes = null; patch = null; code = null; domeOn = false;
+    ink = null; inked = false; foldAt = -1;
     tl = tlx = null; eimg = null; eimgOk = false;
     focusLanding();
     mark("end");

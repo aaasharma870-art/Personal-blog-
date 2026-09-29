@@ -1,10 +1,20 @@
 import { site } from "@/lib/content";
 import { film } from "@/lib/film";
 import { numberWord } from "@/lib/derive";
-import { resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
+import { registeredTo, resolveVariant, type MediaId } from "@/lib/media";
 import { intro as introTiming } from "@/lib/motion";
-import { acts, anchorId, copyVisible, hrefOfId, intensityOf, worksWords } from "@/lib/sections";
+import {
+  acts,
+  anchorId,
+  copyVisible,
+  hrefOfId,
+  intensityOf,
+  variantChoiceOf,
+  worksWords,
+} from "@/lib/sections";
+import { VARIANTS, type Variant } from "@/lib/variants";
 import type { SectionProps } from "@/components/sections/types";
+import { prepaintVariants } from "@/components/intro/prepaint-variants";
 import {
   boxAroundFocal,
   coverBox,
@@ -14,7 +24,7 @@ import {
   type Box01,
 } from "@/components/sections/hero/focal";
 import { heroBootHtml } from "@/components/sections/hero/hero-boot";
-import { HeroStage, type HeroPlate } from "@/components/sections/hero/hero-stage";
+import { HeroStage, type HeroPlate, type HeroPlates } from "@/components/sections/hero/hero-stage";
 
 /**
  * The cold open (SPEC v2 §6, SM-2; hero-lens.BAR). A SERVER component: the
@@ -29,6 +39,18 @@ import { HeroStage, type HeroPlate } from "@/components/sections/hero/hero-stage
  * The h1 is two spans with a real space (the accessible name is `site.name`)
  * and `tabindex=-1`: the prologue lands focus on it (SPEC §5.3 "end"), with
  * no ring drawn on this non-interactive target.
+ *
+ * VARIANTS (M1.5; lib/variants.ts host "hero"): the server resolves BOTH
+ * sides of every media piece and HeroStage picks with useVariant() (the
+ * manifest's choice through hydration, `?variant=…` after mount):
+ *   hero.plate     props.media / mediaMobile | their registered alternates
+ *   hero.loop      props.loop                | its registered alternate
+ *   hero.aperture  bracket slit              | film gate (hero-boot.ts)
+ *   hero.velocity  grain + chroma            | crest spray (velocity-layers)
+ * A loop plays over a still only when it is REGISTERED to it (starts or
+ * ends on it: lib/media.ts registeredTo). Today both loops are cut from the
+ * default plate, so over the ALT plate the hero keeps its still rather than
+ * jump (preview the loop ALT with ?variant=hero.loop:alt).
  */
 
 /** Crest band around the focal point when a plate has no measured
@@ -36,30 +58,54 @@ import { HeroStage, type HeroPlate } from "@/components/sections/hero/hero-stage
 const FALLBACK_BAND = { plate: [0.24, 0.07], mobile: [0.33, 0.06] } as const;
 const ARROW = /\s*([↓↘→↗])\s*$/u;
 
+/** One side of the plate: `still`'s `variant` (resolveVariant: a missing
+ *  alternate falls back to the default), and the loop each hero.loop
+ *  variant plays over it — a VIDEO registered to this very still, else null
+ *  (a loop that fell back to a still, or one cut from another plate, plays
+ *  nothing: the still stays). */
 function plateOf(
   still: MediaId,
+  variant: Variant,
   loop: MediaId | undefined,
   band: readonly [number, number],
 ): HeroPlate | null {
-  const asset = resolveMedia(still);
+  const asset = resolveVariant(still, variant);
   if (!asset) return null;
-  const loopAsset: MediaAsset | null = loop ? resolveMedia(loop) : null;
   const focal = (asset.focal ?? [0.5, 0.5]) as readonly [number, number];
+  const box = asset.focalBox ?? boxAroundFocal(focal, band[0], band[1]);
+  const loopFor = (v: Variant): MediaId | null => {
+    const l = loop ? resolveVariant(loop, v) : null;
+    return l && l.kind === "video" && registeredTo(l, asset.id) ? l.id : null;
+  };
   return {
-    // a loop that fell back to a still plays nothing: show the still itself
-    media: loopAsset?.kind === "video" ? loopAsset.id : asset.id,
     poster: asset.id,
     size: { w: asset.width, h: asset.height },
     focal,
-    box: asset.focalBox ?? boxAroundFocal(focal, band[0], band[1]),
+    box,
+    // where the ALT film gate opens: the horizon, else the lantern, else
+    // the middle of the crest band
+    horizon: asset.marks?.horizon?.[1] ?? asset.marks?.lantern?.[1] ?? (box.y0 + box.y1) / 2,
+    loops: { default: loopFor("default"), alt: loopFor("alt") },
   };
+}
+
+/** Both sides of a plate, or null when the default has nothing usable. */
+function platesOf(
+  still: MediaId,
+  loop: MediaId | undefined,
+  band: readonly [number, number],
+): HeroPlates | null {
+  const d = plateOf(still, "default", loop, band);
+  if (!d) return null;
+  return { default: d, alt: plateOf(still, "alt", loop, band) ?? d };
 }
 
 export function HeroSection({ entry }: SectionProps<"hero">) {
   const { cta, media, mediaMobile, loop } = entry.props;
+  const choice = variantChoiceOf(entry);
   // below `full` intensity (SPEC §12.4) the hero keeps its still: no loop
-  const plate = plateOf(media, intensityOf(entry) === "full" ? loop : undefined, FALLBACK_BAND.plate);
-  const mobile = plateOf(mediaMobile, undefined, FALLBACK_BAND.mobile) ?? plate;
+  const plates = platesOf(media, intensityOf(entry) === "full" ? loop : undefined, FALLBACK_BAND.plate);
+  const mobiles = platesOf(mediaMobile, undefined, FALLBACK_BAND.mobile) ?? plates;
 
   const titleId = `${entry.id}-title`;
   const [first, ...rest] = site.name.split(" ");
@@ -79,13 +125,13 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
   const showCredit = film.enabled && film.heroCredit && acts.length > 0 && copyVisible(credit);
 
   const onceKey = `aperture:${entry.id}`;
-  const initialFrame: Box01 = plate
-    ? settleFrame(coverBox(plate.box, plate.size, REFERENCE_VIEWPORT, plate.focal), {
-        ...REFERENCE_VIEWPORT,
-        inset: 16,
-        margin: REFERENCE_GUTTER,
-      })
-    : { x0: 0.5, x1: 0.9, y0: 0.4, y1: 0.6 };
+  // the bracket's SSR frame at the reference viewport, per plate side
+  const frameOf = (plate: HeroPlate): Box01 =>
+    settleFrame(coverBox(plate.box, plate.size, REFERENCE_VIEWPORT, plate.focal), {
+      ...REFERENCE_VIEWPORT,
+      inset: 16,
+      margin: REFERENCE_GUTTER,
+    });
 
   const column = (
     <div className="flex flex-col items-start">
@@ -118,7 +164,7 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
     </div>
   );
 
-  if (!plate || !mobile) {
+  if (!plates || !mobiles) {
     // No usable plate anywhere in the chain: the name still stands (no media).
     return (
       <section
@@ -135,11 +181,16 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
     <HeroStage
       id={anchorId(entry)}
       titleId={titleId}
-      boot={heroBootHtml({ onceKey, failsafeMs: introTiming.failsafeMs })}
+      boot={heroBootHtml({
+        onceKey,
+        failsafeMs: introTiming.failsafeMs,
+        variants: prepaintVariants(choice, ["hero.aperture"]),
+      })}
       onceKey={onceKey}
-      plate={plate}
-      mobile={mobile}
-      initialFrame={initialFrame}
+      choice={choice}
+      plates={plates}
+      mobiles={mobiles}
+      frames={Object.fromEntries(VARIANTS.map((v) => [v, frameOf(plates[v])])) as Record<Variant, Box01>}
     >
       {column}
     </HeroStage>

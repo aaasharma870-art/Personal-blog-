@@ -162,9 +162,11 @@ function Row({
         {last ? null : (
           <motion.span className={cn("absolute top-1/2 h-full", LEG)} style={live ? { clipPath: clip } : undefined} />
         )}
+        {/* border colour inline: an unlayered `* { border-color }` in
+            app/globals.css outranks the border-(--w-brass) utility */}
         <motion.span
-          className="absolute top-1/2 left-[11px] size-2.5 -translate-y-1/2 rounded-full border-[1.5px] border-(--w-brass) bg-bg"
-          style={live ? { opacity: reached } : undefined}
+          className="absolute top-1/2 left-[11px] size-2.5 -translate-y-1/2 rounded-full border-[1.5px] bg-bg"
+          style={live ? { opacity: reached, borderColor: "var(--w-brass)" } : { borderColor: "var(--w-brass)" }}
         />
       </span>
       {/* two lines (the title + its vignette, then the credit): every row
@@ -192,8 +194,9 @@ function Row({
 }
 
 /** The row's act drawn in its world's Line material, on hover or focus
- *  (CSS dash draw; reduced motion / Pause show the drawn state at once). */
-function Vignette({ world }: { world: WorldId }) {
+ *  (CSS dash draw; reduced motion / Pause show the drawn state at once).
+ *  Shared by the ALT program (frames/opening-map.tsx). */
+export function Vignette({ world }: { world: WorldId }) {
   const ink: Partial<Record<WorldId, { stroke: string; dash?: string }>> = {
     pirates: { stroke: "var(--w-brass)", dash: "18 18" },
     idiots: { stroke: "var(--w-bp-line)" },
@@ -216,7 +219,7 @@ function Vignette({ world }: { world: WorldId }) {
         stroke={m.stroke}
         strokeWidth={14}
         strokeLinecap="round"
-        strokeDasharray="1 1"
+        strokeDasharray="1 2"
         className="opening-vignette"
       />
       {m.dash ? (
