@@ -28,6 +28,8 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
    - **RESTORE Aryan's machine settings:**
      - Create `research/.stop-keep-awake` to stop the guard process.
      - `powercfg /change standby-timeout-ac 20`
+     - `powercfg /change monitor-timeout-ac 20` (the display timeout was 20 min originally)
+     - `Unregister-ScheduledTask -TaskName 'Claude Build Guard Watchdog' -Confirm:$false`. Do this AFTER creating `.stop-keep-awake`, or the watchdog relaunches the guard.
      - Set Windows Update active hours back to Start 6, End 0: `Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name ActiveHoursStart -Value 6`, then the same for `ActiveHoursEnd -Value 0`.
    - `CronDelete` the autopilot job.
    - Stop.
@@ -131,7 +133,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
 
 ## Log
 - 19:40: autopilot armed. M1 running. Cron job 8f398485 (hourly :07, session-only, 7-day expiry). Keep-awake task btu6t3dvm (SetThreadExecutionState; stop it at the end). CPU watchdog bw2fdp95w.
-- 22:32: keep-awake and CPU-watchdog tasks had died, most likely when usage ran out. Relaunched as a DETACHED guard process: `research/keep-awake.ps1`, pid 40192, logging to `keep-awake.log`, 36 h max, stopped by the `.stop-keep-awake` file. AC sleep set to never (was 20 min; Battery Guard only enforces DC values). Windows Update active hours moved to 20:00–14:00 (was 6:00–0:00), so updates can't auto-restart overnight. All three are RESTORED at the end (Tick protocol step 4).
+- 22:32: keep-awake and CPU-watchdog tasks had died, most likely when usage ran out. Relaunched as a DETACHED guard process: `research/keep-awake.ps1`, pid 43528 (relaunched 04:40 with a 72 h limit; originally 40192), logging to `keep-awake.log`, 36 h max, stopped by the `.stop-keep-awake` file. AC sleep set to never (was 20 min; Battery Guard only enforces DC values). Windows Update active hours moved to 20:00–14:00 (was 6:00–0:00), so updates can't auto-restart overnight. All three are RESTORED at the end (Tick protocol step 4).
 - 22:38: one-shot 3 AM reset kickoff cron ec6eb4ca (03:02, 2026-09-29) added alongside the hourly tick 8f398485. The full in-progress M1 snapshot (83 files, tracked and untracked) is pushed to origin `wip/m1-snapshot`; every waiting tick refreshes it.
 - ~00:00: M1 finished and was verified (check, eslint and build pass) and pushed. Launched M1.5 (variants, the one-liners, copy visible on the branch) and M2-media (lanes A and B, default + alt, staged only). M2-A launches after M1.5, because both touch `lib/page.ts` and the section files.
 - ~00:55: M2-media finished. M2-A and M3 wait for M1.5, because they share `lib/page.ts`, `lib/media.ts` and the section files.
@@ -139,3 +141,5 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
 - ~03:15: Aryan added the RECOGNIZABILITY RULE: blatantly obvious scenes, clarifying text, iconic, smooth transitions. Added step M2-R (script `build/m2r-recognizability.js`): blind stranger-test audit → iconic plates → captions and transitions → blind re-test. M2-A, M2-B and M4 must also meet the rule.
 - 03:20: SPEED + CLOUD HANDOFF. The queue is collapsed into M2-COMBINED (6 parallel builders), then M5. `CONTINUE.md`, a `CLAUDE.md` banner, `docs/build/` (synced by `research/sync-to-repo.sh`) and `tools/capture/` now live in the repo, so a claude.ai/code session on branch `design/three-films` continues with just 'continue'. Heartbeat: `docs/build/EXECUTOR.md`. Local ticks run `git fetch` first, and yield if another executor's heartbeat is less than 30 minutes old.
 - 03:30: M1.5 DONE (`492f120`, green). Cloud handoff committed and pushed (`6c893c1`): CONTINUE.md, `.claude/CLAUDE.md` (tracked, auto-loaded; the root CLAUDE.md is gitignored), `docs/build/CONTENT-RULES.md`, the docs, workflows, 51 staged media assets and `tools/capture`. M2-COMBINED is running as `wf_b15d4c6e-f32`.
+- 04:40: guard relaunched with a 72 h limit (new pid 43528; old 40192 stopped). Windows Update active hours moved to 03:00–21:00 (restore to 6/0 at the end). The auto-reboot policy key needs admin, so it was not set; no reboot is pending. AC sleep is still never, hibernate is off, on AC at 100%.
+- 04:47: 'can't risk anything' hardening. The laptop uses Modern Standby with 'Network Disconnected', so sleep would kill the build. The guard now requests SYSTEM + DISPLAY (0x80000003), pid 21468. AC display timeout set to never. Added the user-level scheduled task 'Claude Build Guard Watchdog' (every 5 min for 3 days; relaunches the guard if it dies; stops on .stop-keep-awake). All of this is on the RESTORE list.
