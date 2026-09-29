@@ -1,38 +1,52 @@
 import { GauntletTabs } from "@/components/site/gauntlet-tabs";
 import { FilmQuote } from "@/components/site/film-quote";
 import { ChalkUnderline } from "@/components/site/idiots-chalk";
-import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
+import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
+import { SceneCaption } from "@/components/primitives/scene-caption";
+import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { gauntlet } from "@/lib/content";
+import { film } from "@/lib/film";
 import { quotes } from "@/lib/quotes";
-import { copyVisible } from "@/lib/sections";
+import { copyVisible, variantChoiceOf } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
    WORK — the gauntlet on the dawn board (Act II "The Workshop", idiots
-   canvas; SPEC v2 §3 row 3, SM-6). M2: ONLY the gauntlet lives here now;
-   the chapters (#trading-algos, #optuna-screener), #experiment and
-   #kill-list are their own manifest sections (components/sections/**).
-   The act2-idiots builder wires the MV-06 board (entry.props.board) under
-   the chalk diagram, <SceneCaption k="cap.work" place="bl"> on the board
-   frame, the Q-3I-2 header as <FilmQuote id="Q-3I-2" rendition="lettered">
-   (Kalam chalk, O-1) and the aalIzzWell settle (RECOGNIZABILITY S08).
+   canvas; SPEC v2 §3 row 3, SM-6; RECOGNIZABILITY S08, T4).
 
-   The workshop at first light: the board's top margin carries one line from
-   the film (FilmQuote, chalk-underlined), the seven real gates derive in
-   chalk, each flagship's cover IS a true blueprint schematic (jugaad
-   register) with Rancho's circle around the CAVEAT, never the number
-   (≤ 3 chalk marks in this section: the underline + two circles). The
-   graph-grid ground thins to nothing before the ledger (3I-07). Retired
-   here: the backdrop video, spotlight cards, generated covers, count-ups,
-   glow boxes, bordered tag pills and the simulated "live" ticker.
+   The workshop at first light, and unmistakably the ICE lecture hall: the
+   MV-06 plate IS the board (a wiped chalkboard under stone colonnade
+   windows, a raking morning beam), and on it, in chalk: the board header
+   (Q-3I-2, lettered in Kalam chalk, O-1, one chalk underline), the seven
+   real gates deriving as you choose them, the Run you can make with
+   labelled-illustrative hypotheses, the tally with Rancho's circle, and the
+   quadcopter doodle. THE ICE CHALKBOARD • 3 IDIOTS names the scene at the
+   board's lower left. ≤ 3 chalk marks: the underline + the tally circle.
+   T4 (board → board): the act card's deep fades into this canvas over the
+   first 30vh. The graph grid thins toward open air (3I-07).
+   Variants (lib/variants.ts `work.board`): default "rail-run" (the board
+   settles in two soft pats, hand on heart), alt "marking-sheet" (a duster
+   wipes the board on; the Run marks a chalk grading sheet).
    ========================================================================== */
 
 export function Projects({ entry, number }: SectionProps<"gauntlet">) {
   const titleId = `${entry.id}-title`;
   const board = quotes["Q-3I-2"];
+  const header = copyVisible({ text: board.text, status: board.status }) ? (
+    <ChalkUnderline className="max-w-full">
+      <p className="text-[clamp(0.95rem,0.55rem+1.1vw,1.6rem)] leading-[1.18] tracking-[0.01em] text-(--w-chalk)">
+        <FilmQuote id="Q-3I-2" rendition="lettered" attribution="speaker" excerpt />
+      </p>
+    </ChalkUnderline>
+  ) : null;
+
+  // IC-3I-08: the quadcopter doodle is the `quadcopter-lift` egg's host art
+  const quadcopter =
+    film.enabled && film.eggs.enabled && film.eggs.list.some((e) => e.id === "quadcopter-lift" && e.enabled);
+
   return (
-    <WorldSection entry={entry} labelledBy={titleId} ground groundClassName="world-ground--fade">
+    <IdiotsSection entry={entry} labelledBy={titleId} grid gridMask="linear-gradient(to bottom, black 0%, black 18%, transparent 72%)" fadeIn>
       <SectionHead
         id={titleId}
         number={number}
@@ -51,21 +65,19 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
 
       {/* ── the dawn board: the seven gates ─────────────────────────── */}
       <div className="mt-tier-block border-t border-rule pt-tier-block">
-        {copyVisible({ text: board.text, status: board.status }) ? (
-          <ChalkUnderline className="mb-tier-group">
-            <FilmQuote id="Q-3I-2" rendition="caption" />
-          </ChalkUnderline>
-        ) : null}
         <Meta fields={["Inside the flagship"]} />
         <h3 className="mt-tier-pair max-w-title type-title text-fg">The seven-part validation gauntlet.</h3>
         <div className="mt-tier-block">
-          <GauntletTabs steps={gauntlet} />
+          <GauntletTabs
+            steps={gauntlet}
+            board={entry.props.board}
+            choice={variantChoiceOf(entry)}
+            header={header}
+            caption={<SceneCaption k="cap.work" place="bl" />}
+            quadcopter={quadcopter}
+          />
         </div>
       </div>
-
-      {/* M2: the chapters, the experiment, the kill-list and the Option
-          Alpha / supporting appendix are their own manifest sections now
-          (components/sections/{chapter,experiment,ledger}). */}
-    </WorldSection>
+    </IdiotsSection>
   );
 }

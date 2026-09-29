@@ -10,14 +10,18 @@ import type { LoaderSize } from "@/components/primitives/loader";
  * loaders.BAR). Kept tiny: each world renderer is its own code-split chunk.
  */
 
-/** Rendered width of each loader size (the --loader-* tokens: 3 / 7.5 / 10 rem). */
-export const SIZE_PX: Record<LoaderSize, number> = { mini: 48, card: 120, route: 160 };
+/** Rendered width of each loader size (the --loader-* tokens: 3 / 7.5 /
+ *  10 rem; `stage` = the route CARD's art, 15 rem = the spacing scale's
+ *  w-60: RECOGNIZABILITY S20 "the loader art is ≥ 200 px"). */
+export const SIZE_PX: Record<LoaderSize, number> = { mini: 48, card: 120, route: 160, stage: 240 };
 
-/** CSS width class per size (tokens, never raw px: loaders L17). */
+/** CSS width class per size (tokens, never raw px: loaders L17). `stage`
+ *  shrinks to the column below 15 rem (a 320 px phone keeps its gutters). */
 export const SIZE_CLASS: Record<LoaderSize, string> = {
   mini: "w-(--loader-mini)",
   card: "w-(--loader-card)",
   route: "w-(--loader-route)",
+  stage: "w-60 max-w-full",
 };
 
 /**

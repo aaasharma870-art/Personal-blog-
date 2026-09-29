@@ -21,16 +21,22 @@ import { useCard } from "@/components/sections/act-card/card-context";
  *           floating candle (IC-HP-03). A cool light leads the kindling
  *           front; the graphite is re-inked behind it and fades as the
  *           points light — pencil becomes ink becomes light.
- *   > .8    the enchanted hall (MV-07) swaps in on dur.preview (a state
- *           swap, never parked half-mixed); the canvas fades and unmounts at
- *           p = 1 (and remounts below .8 on the way back).
+ *   .7–.85  the lit Line (MV-07: the candles densest along the Line)
+ *           swaps in on dur.preview (a state swap, never parked half-mixed)
+ *           while the canvas fades out over .7–.8;
+ *   > .85   THE GREAT HALL (iconic-hall: the long tables, the high table,
+ *           the tall window, the enchanted starry ceiling, hundreds of
+ *           floating candles) swaps in — RECOGNIZABILITY S17; the canvas
+ *           unmounts at p = 1 (and remounts below on the way back).
+ *   The embers rise from THE CAMP'S FIRE: the previous section's plate
+ *   anchor `fire` (iconic-camp), at the same relative x/y (T10).
  * Everything is a pure function of p (G2, G3: reversible, pixel-identical
  * on return); frames are drawn only when p changes (0 rAF at rest, offscreen
  * or on a hidden tab). Luminous points are pre-rendered sprites drawn with
  * drawImage (Law 1; 0 gradients per frame); DPR ≤ 2; ≤ 36 embers + 1 light
  * + 3 fire frames. The canvas lives only while the card is within one
  * viewport and the device has ≥ 4 cores. Static card (RM, Pause, < 1024 /
- * coarse, no JS, SSR): the MV-07 still. aria-hidden art.
+ * coarse, no JS, SSR): the Great Hall still. aria-hidden art.
  *
  * MV-07 missing (`hall` null; ignite.BAR "the code-rendered final frame"):
  * the live canvas stays on its own final frame at p = 1 (every candle lit
@@ -64,16 +70,30 @@ function loadSprites(): Sprites {
   };
 }
 
-export function IgniteFrame({ hall }: { hall: MediaId | null }) {
+export function IgniteFrame({
+  hall,
+  mid = null,
+  fire = null,
+}: {
+  /** The settled plate: the Great Hall (iconic-hall). */
+  hall: MediaId | null;
+  /** The lit Line (MV-07), shown at p .7–.85 before the hall. */
+  mid?: MediaId | null;
+  /** The previous section's fire (0–1 of its plate, `fire` anchor): the
+   *  embers rise from the same relative x/y (T10). null → the Line's start. */
+  fire?: readonly [number, number] | null;
+}) {
   const { p, live } = useCard();
   const hostRef = useRef<HTMLDivElement>(null);
 
-  // The hall: a state swap at p > .8 (static card: always the hall).
-  const [hallOn, setHallOn] = useState(() => p.get() > 0.8);
+  // The plates: state swaps (never parked half-mixed; ignite G8). The
+  // static card: the hall (or the lit Line when the hall is missing).
+  const stageOf = (v: number) => (v > 0.85 ? 2 : v > 0.7 ? 1 : 0);
+  const [stage, setStage] = useState(() => stageOf(p.get()));
   const [done, setDone] = useState(() => p.get() >= 0.999);
   useMotionValueEvent(p, "change", (v) => {
-    const on = v > 0.8;
-    if (on !== hallOn) setHallOn(on);
+    const s = stageOf(v);
+    if (s !== stage) setStage(s);
     const d = v >= 0.999;
     if (d !== done) setDone(d);
   });
@@ -91,28 +111,30 @@ export function IgniteFrame({ hall }: { hall: MediaId | null }) {
     return () => io.disconnect();
   }, [live]);
 
-  // with no hall to hand over to, the canvas keeps its final frame
-  const canvasOpacity = useTransform(p, (v) => (hall ? 1 - remap(v, 0.85, 1) : 1));
-  const showCanvas = live && near && (!done || !hall);
-  const hallVisible = !live || hallOn;
+  const plated = Boolean(hall || mid);
+  // with no plate to hand over to, the canvas keeps its final frame
+  const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.7, 0.8) : 1));
+  const showCanvas = live && near && (!done || !plated);
+  const midOn = !live ? !hall : stage === 1 || (stage === 2 && !hall);
+  const hallOn = !live || stage === 2;
+  const swap = live ? { duration: dur.preview, ease } : { duration: 0 };
 
   return (
-    <div ref={hostRef} aria-hidden="true" className="absolute inset-0">
+    <div ref={hostRef} aria-hidden="true" data-frame="ignite" className="absolute inset-0">
+      {mid ? (
+        <motion.div className="absolute inset-0" initial={false} animate={{ opacity: midOn ? 1 : 0 }} transition={swap}>
+          <MediaFrame media={mid} layout="fill" playOn="never" sizes="100vw" />
+        </motion.div>
+      ) : null}
       {hall ? (
-        <motion.div
-          className="absolute inset-0"
-          initial={false}
-          animate={{ opacity: hallVisible ? 1 : 0 }}
-          transition={live ? { duration: dur.preview, ease } : { duration: 0 }}
-        >
+        <motion.div className="absolute inset-0" initial={false} animate={{ opacity: hallOn ? 1 : 0 }} transition={swap}>
           <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
-      ) : !live || !near ? (
-        <StaticIgnition />
       ) : null}
+      {!plated && (!live || !near) ? <StaticIgnition /> : null}
       {showCanvas ? (
         <motion.div className="absolute inset-0" style={{ opacity: canvasOpacity }}>
-          <IgniteCanvas p={p} />
+          <IgniteCanvas p={p} fire={fire} />
         </motion.div>
       ) : null}
     </div>
@@ -156,7 +178,7 @@ function StaticIgnition() {
   );
 }
 
-function IgniteCanvas({ p }: { p: MotionValue<number> }) {
+function IgniteCanvas({ p, fire: fireAt }: { p: MotionValue<number>; fire: readonly [number, number] | null }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const drawRef = useRef<((v: number) => void) | null>(null);
   const frame = useRef(0);
@@ -222,7 +244,9 @@ function IgniteCanvas({ p }: { p: MotionValue<number> }) {
 
       // warm points: additive sprites only
       ctx.globalCompositeOperation = "lighter";
-      const fire = at(LINE.at(0));
+      // the fire: where the camp's fire was (the Voices plate's anchor, in
+      // frame fractions), else the Line's start
+      const fire = fireAt ? { x: fireAt[0] * W, y: fireAt[1] * H } : at(LINE.at(0));
       // one warm family at a time (ignite.BAR G12): the fire burns down as
       // the first embers leave it and is out when the first candle lights
       const fireA = 1 - remap(v, 0.12, 0.2);
@@ -289,7 +313,7 @@ function IgniteCanvas({ p }: { p: MotionValue<number> }) {
       if (frame.current) window.cancelAnimationFrame(frame.current);
       frame.current = 0;
     };
-  }, [p]);
+  }, [p, fireAt]);
 
   useMotionValueEvent(p, "change", (v) => drawRef.current?.(v));
 

@@ -609,6 +609,8 @@ export const mediaAssets = {
   "MV-10": {
     kind: "image", status: "accepted", src: "/media/films/frontier-dusk.webp",
     width: 2560, height: 1440, focal: [0.78, 0.45], alt: null,
+    // the low sun: card II->III sinks its sprite onto it (cards builder, measured)
+    marks: { sun: [0.8125, 0.2185] },
     provenance: hf2("gpt_image_2_5 16:9 2k high (edit of e0987388)", 2.75, "32281e86-6f1d-4db7-8bb5-73eb276e6618",
       "the Heartlands at golden hour: a riderless horse (clean at 200%), a river; left 45% x y 25-75% p95 0.0059; the rdr2 anchor (card II->III settled state = the Beyond band, a declared reuse)"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
@@ -710,6 +712,8 @@ export const mediaAssets = {
   "MV-08": {
     kind: "image", status: "accepted", src: "/media/films/last-light.webp",
     width: 2560, height: 1440, alt: null,
+    // the candle flame: the contact monogram stands on it (act4 builder, measured)
+    marks: { flame: [0.868, 0.428] },
     provenance: hf2("gpt_image_2_5 16:9 4k high (ref MV-07)", 4.25, "b31ef3f6-2456-48eb-b0f2-e546c474a149",
       "one floating candle far right at the end of a fading trail of lights; FLAG (disclosed): the trail runs left to x ~0.44, darkness still passes (left 65% p95 0.0016, SD 2.72); MV-09 start/end"),
     accept: cleanM2(["IC-HP-03"]),
@@ -761,7 +765,7 @@ export const mediaAssets = {
        code). F-3I / F-RD have bright skies: captions go UNDER the frame. — */
   "F-PC": {
     kind: "image", status: "accepted", src: "/media/films/films-pirates.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { lantern: [0.84, 0.555] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-01)", 4.5, "8c581de2-0d87-4c9d-80b6-2593bc3793bc",
       "the Black Pearl at anchor in still black water at night; no flag, crew or hull lettering (100% crop); left 45% SD 7.74"),
     accept: cleanM2(["IC-PC-01"]),
@@ -770,14 +774,14 @@ export const mediaAssets = {
   },
   "F-PC-alt": {
     kind: "image", status: "accepted", src: "/media/films/films-pirates-alt.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { lantern: [0.836, 0.556] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-01)", 4.5, "f86e2553-5b2b-4ffc-bbab-27a01e83c8e1", "ALT: left 45% SD 7.34"),
     accept: cleanM2(["IC-PC-01"]),
     variantOf: "F-PC", fallback: "F-PC", reduced: "poster",
   },
   "F-3I": {
     kind: "image", status: "accepted", src: "/media/films/films-idiots.webp",
-    width: 2520, height: 1080, alt: null, marks: { scooter: [0.79, 0.7] },
+    width: 2520, height: 1080, alt: null, marks: { scooter: [0.79, 0.62] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-06)", 4.5, "a4ec7e96-84d8-4d8a-a6b9-b71c6547e72f",
       "the yellow scooter at Pangong lake at first light (no badge or plate at 100%); scooter at x ~0.79 (plan 0.72; y provisional); FLAG: left 45% SD 41.6 (the pale sky) -> captions under the frame"),
     accept: cleanM2(["IC-3I-10"]),
@@ -786,7 +790,7 @@ export const mediaAssets = {
   },
   "F-3I-alt": {
     kind: "image", status: "accepted", src: "/media/films/films-idiots-alt.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { scooter: [0.76, 0.6] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only)", 4.5, "8b981679-0da7-4154-ac7e-3f274bb00a6c",
       "ALT: the sun disc and its reflection compete with the scooter as the warm point; left 45% SD 49.8"),
     accept: cleanM2(["IC-3I-10"]),
@@ -794,7 +798,7 @@ export const mediaAssets = {
   },
   "F-RD": {
     kind: "image", status: "accepted", src: "/media/films/films-rdr2.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { horse: [0.766, 0.42] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only, regen 1)", 4.5, "7a6da513-4572-4785-b826-77b068747f54",
       "the Heartlands at dusk: a ridge in afterglow, riderless horses (4 legs, 1 head); regenerated WITHOUT the MV-10 ref (it copied MV-10's composition); FLAG: left 45% SD 23.7 (dusk sky) -> captions under the frame"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
@@ -803,7 +807,7 @@ export const mediaAssets = {
   },
   "F-RD-alt": {
     kind: "image", status: "accepted", src: "/media/films/films-rdr2-alt.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { horse: [0.716, 0.436] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only, regen 1)", 4.5, "f66a8f31-ade5-46f9-9baa-034678a0b386",
       "ALT: left 45% SD 19.0; horses confirmed on the master"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
@@ -811,7 +815,7 @@ export const mediaAssets = {
   },
   "F-HP": {
     kind: "image", status: "accepted", src: "/media/films/films-hp.webp",
-    width: 2520, height: 1080, alt: null,
+    width: 2520, height: 1080, alt: null, marks: { ink: [0.765, 0.64] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-07)", 4.5, "0b8c414a-1f0f-4e70-b694-a22b320482f4",
       "enchanted ink branching on cream paper under floating candles (organic lines, not letters or a map), a soft castle glimpse through the far window (IC-HP-01); left 45% SD 4.74. RECOGNIZABILITY S12: the HP screen's ALT (iconic-express is its default)"),
     accept: cleanM2(["IC-HP-03", "IC-HP-01"]),
@@ -837,9 +841,14 @@ export const mediaAssets = {
     width: 2560, height: 1440, focal: [0.66, 0.45], alt: null,
     // provisional (Claude, 960 px): mastTop = the main mast's crow's nest (the
     // masts run off the top edge); mizzenTop; the lit stern windows; horizon.
-    marks: { mastTop: [0.61, 0.05], mizzenTop: [0.755, 0.14], stern: [0.87, 0.6], horizon: [0, 0.8] },
+    marks: {
+      mastTop: [0.61, 0.05], mizzenTop: [0.755, 0.14], stern: [0.87, 0.6], horizon: [0, 0.8],
+      // measured (cards builder): the stern flagstaff the Jolly Roger flies
+      // from (the mast tops leave the 2.39 crop): its head and its foot
+      ensign: [0.908, 0.3], ensignBase: [0.908, 0.456],
+    },
     provenance: hf2(ICONIC, 7, "4273a1be-64f7-4c66-aabf-5b44710d490c",
-      "S04 opening card: the Black Pearl close, three-quarter bow view, full tattered black sails, lit stern windows, deck lanterns, moon path, aqua wake. No crew, flag or figurehead; clean at 9x ghost gain. The Jolly Roger is added in code at mastTop"),
+      "S04 opening card: the Black Pearl close, three-quarter bow view, full tattered black sails, lit stern windows, deck lanterns, moon path, aqua wake. No crew, flag or figurehead; clean at 9x ghost gain. The Jolly Roger is added in code on a stern flagstaff (marks.ensign)"),
     accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
     fallback: "F-PC", reduced: "poster",
     variants: { alt: "iconic-pearl-alt" },
@@ -847,7 +856,10 @@ export const mediaAssets = {
   "iconic-pearl-alt": {
     kind: "image", status: "accepted", src: "/media/films/iconic-pearl-alt.webp",
     width: 2560, height: 1440, focal: [0.63, 0.45], alt: null,
-    marks: { mastTop: [0.67, 0.05], mizzenTop: [0.545, 0.2], stern: [0.9, 0.52], horizon: [0, 0.81] },
+    marks: {
+      mastTop: [0.67, 0.05], mizzenTop: [0.545, 0.2], stern: [0.9, 0.52], horizon: [0, 0.81],
+      ensign: [0.93, 0.215], ensignBase: [0.93, 0.37],
+    },
     provenance: hf2(ICONIC, 7, "c2967ce4-6951-4ea3-b003-2f194f54b2ec",
       "ALT: close stern-quarter galleon, tattered black sails, moon and aqua wake; a carved finial on the stern rail at ~1% of the frame (no face at 600%). Marks provisional"),
     accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
@@ -918,8 +930,9 @@ export const mediaAssets = {
   "iconic-wanted": {
     kind: "image", status: "accepted", src: "/media/films/iconic-wanted.webp",
     width: 2560, height: 1440, focal: [0.37, 0.47], alt: null,
-    // the HTML handbill registers over the central blank poster
-    rects: { posterRect: { x0: 0.257, x1: 0.494, y0: 0.192, y1: 0.748 } },
+    // the HTML handbill registers over the central blank poster (re-measured
+    // at 2560 by the act3 builder + assembler: the paper's top edge is .165)
+    rects: { posterRect: { x0: 0.255, x1: 0.493, y0: 0.165, y1: 0.748 } },
     provenance: hf2(ICONIC, 7, "3af08f65-9d2e-4d84-937d-91ea9fe2991c",
       "S14 handbill board: a shingle-roofed notice board with 5 blank aged posters on a golden-hour false-front street with no signs. WANTED is set in HTML (Rye), never in the plate"),
     accept: cleanM2(["IC-RD-03"]),
@@ -929,7 +942,7 @@ export const mediaAssets = {
   "iconic-wanted-alt": {
     kind: "image", status: "accepted", src: "/media/films/iconic-wanted-alt.webp",
     width: 2560, height: 1440, focal: [0.36, 0.48], alt: null,
-    rects: { posterRect: { x0: 0.245, x1: 0.468, y0: 0.206, y1: 0.756 } },
+    rects: { posterRect: { x0: 0.244, x1: 0.467, y0: 0.176, y1: 0.76 } },
     provenance: hf2(ICONIC, 7, "afe7b162-40c8-438a-b932-350b7480f3ba",
       "ALT: a larger board; all posters blank"),
     accept: cleanM2(["IC-RD-03"]),

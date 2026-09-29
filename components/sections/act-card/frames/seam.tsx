@@ -1,39 +1,63 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { dur, easeDraw } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { DrawPath } from "@/components/primitives/loaders/kit";
+import { DrawPath, hash01 } from "@/components/primitives/loaders/kit";
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
+import { BoardFig, boardQuad } from "@/components/sections/act-card/frames/board-fig";
+import {
+  FRAME_ASPECT,
+  PlateBox,
+  anchor,
+  coverBox,
+  inBox,
+  plateOf,
+  registerY,
+  type Plate,
+} from "@/components/sections/act-card/plate";
 
 /**
- * Card I→II "Storm → Blueprint" (SM-5, kind `seam`, D-5 long #1;
- * noise-order-seam.BAR §3A). One driver p (pinned ≤ 60vh on a desktop fine
- * pointer, direct, no springs):
- *   0–.15   the frame opens inset(8%) → 0 on the storm plate (MV-04; until it
- *           exists, MV-01 in a code "storm grade").
- *   .15–.75 the IceCut: a ragged-diagonal mask wipes the storm into the code
- *           blueprint ground (--bp-panel + a 24 px grid at 6%), order rising
- *           from below; opposing parallax (outgoing −.4·p²·H, incoming
- *           +.4·(1−p)²·H); the 3 px aqua seam line rides the cut for
- *           .1 < p < .9 only (the viewport's one aqua). FIG. 0 — the Line in
- *           blueprint — draws with pathLength = remap(p, .2, .75), labelled
- *           with its TRUE length and control-point count (computed from the
- *           path, never literal). LD-3I: the rack x = p·L, the gears exact.
- *   ≥ .95   one chalk circle (Rancho's circle) around the gauge's end tick.
- * Static card (RM, Pause, no JS, < 1024 / coarse, SSR): the blueprint with
- * FIG. 0 drawn and the gauge complete with its circle. aria-hidden art.
+ * Card I→II "Storm → the ICE lecture hall" (SM-5, kind `seam`, D-5 long #1;
+ * noise-order-seam.BAR §3A, RECOGNIZABILITY S07 / T3). One driver p (pinned
+ * ≤ 60vh on a desktop fine pointer, direct, no springs; reverses exactly):
+ *   0–.15   the frame opens inset(8%) → 0 on the STORM (MV-04: the hero's
+ *           sea in a squall, NO ship — the kraken is a swell under the
+ *           foam). Its horizon is REGISTERED to the ICE board's chalk ledge
+ *           (the crop puts MV-04 `horizon` on the ledge's mid-line), so the
+ *           sea's horizon becomes the ledge.
+ *   .15–.75 the IceCut: a ragged-diagonal mask wipes the storm into the ICE
+ *           lecture hall (iconic-ice: the huge blank green board, the tiered
+ *           wooden benches, the pergola's striped sun), order rising from
+ *           below; opposing parallax (outgoing −.4·p²·H, incoming
+ *           +.4·(1−p)²·H); the teal foam DESATURATES to chalk white as the
+ *           cut rises; chalk dust (≤ 24 specks) rides the cut; the 3 px aqua
+ *           seam line rides it for .1 < p < .9 only (the viewport's one
+ *           aqua). FIG. 0 — the Line — is CHALKED ON THE BOARD
+ *           (frames/board-fig.tsx) with pathLength = remap(p, .2, .75),
+ *           labelled with its TRUE length and control-point count. The
+ *           chalk gauge (LD-3I): rack x = p·L, the gears exact.
+ *   ≥ .95   Rancho's chalk circle round the gauge's end tick.
+ * Captions (CardShell, under the frame): "THE KRAKEN'S STORM • PIRATES OF
+ * THE CARIBBEAN" fades out over p .1–.35; "THE LECTURE HALL AT ICE •
+ * 3 IDIOTS" fades in over .6–.8.
+ * Static card (RM, Pause, no JS, < 1024 / coarse, SSR): the ICE hall with
+ * FIG. 0 chalked on the board and the gauge complete with its circle.
+ * aria-hidden art.
+ *
+ * No `board` (the lab's old call, or the plate missing): the M1 code
+ * blueprint ground stands in (the same FIG in blueprint line).
  */
 
 const W = LINE_VIEWBOX.w;
 const H = Math.round(W / 2.39);
-/** The FIG's dimension line under the Line (Line space). */
+/** The FIG's dimension line under the Line (Line space; blueprint fallback). */
 const DIM_Y = LINE_VIEWBOX.h - 24;
 const DIM_X0 = 40;
 const DIM_X1 = 952;
@@ -58,30 +82,168 @@ const EDGE_LINE = EDGE_POINTS.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)
 const EDGE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300' preserveAspectRatio='none'><path d='${EDGE_LINE}L100 300L0 300Z' fill='#fff'/></svg>`,
 )}")`;
-/** mask-position-y (0–1) for the wipe fraction w. The 300 %-tall mask sits
- *  at −2H·c, so an edge point at y (of 300) shows at (y/100 − 2c)·H. The
- *  edge spans y 134.5–165.5 with jitter: c = .1 puts all of it below the
- *  frame (w = 0), c = .84 all of it above (w = 1). (.2 + .6w left the left
- *  end 2 % inside the frame at w = 1: the dark wedge in the M1 frames.) */
+/** mask-position-y (0–1) for the wipe fraction w (see the M1 note: c = .1
+ *  puts all of the edge below the frame, c = .84 all of it above). */
 const cutAt = (w: number) => 0.1 + 0.74 * w;
 
-export function SeamFrame({ storm, graded }: { storm: MediaId; graded: boolean }) {
+/** Chalk dust along the cut: ≤ 24 specks at the edge (the edge box's
+ *  units: x 0–100, y of 300), deterministic. */
+const DUST = Array.from({ length: 22 }, (_, k) => {
+  const f = (k + hash01(k, 3)) / 22;
+  const i = Math.min(EDGE_POINTS.length - 2, Math.floor(f * (EDGE_POINTS.length - 1)));
+  const t = f * (EDGE_POINTS.length - 1) - i;
+  const [x0, y0] = EDGE_POINTS[i];
+  const [x1, y1] = EDGE_POINTS[i + 1];
+  return {
+    x: x0 + (x1 - x0) * t,
+    y: y0 + (y1 - y0) * t + (hash01(k, 7) - 0.62) * 3.2,
+    s: 2 + Math.round(hash01(k, 11) * 3),
+    o: 0.35 + 0.5 * hash01(k, 13),
+  };
+});
+
+/** The storm's crop: its horizon on the board's ledge mid-line (2.39). */
+export function registeredStorm(stormId: MediaId | null, board: Plate | null): Plate | null {
+  const storm = plateOf(stormId);
+  if (!storm) return null;
+  const q = board ? boardQuad(board) : null;
+  const hz = anchor(storm, "horizon")?.[1];
+  if (!board || !q || hz === undefined) return storm;
+  const bb = coverBox(FRAME_ASPECT.sm, board.ratio, board.pos);
+  const midY = (q.bl[1] + q.br[1]) / 2 / board.asset.height;
+  const ledge = inBox(bb, [0.5, midY])[1];
+  return { ...storm, pos: [storm.pos[0], registerY(FRAME_ASPECT.sm, storm.ratio, hz, ledge)] };
+}
+
+export function SeamFrame({
+  storm: stormId,
+  board: boardId = null,
+  graded,
+}: {
+  storm: MediaId | null;
+  /** The incoming ICE lecture hall (iconic-ice); null → the code blueprint. */
+  board?: MediaId | null;
+  /** The storm is a fallback plate (MV-01): give it the code storm grade. */
+  graded: boolean;
+}) {
   const { p, live } = useCard();
   const reduced = useReducedMotion();
+  const board = plateOf(boardId);
+  const storm = registeredStorm(stormId, board);
 
   const open = useTransform(p, (v) => `inset(${(8 * (1 - remap(v, 0, 0.15))).toFixed(2)}%)`);
   const outY = useTransform(p, (v) => `${(-40 * v * v).toFixed(3)}%`);
   const inY = useTransform(p, (v) => `${(40 * (1 - v) * (1 - v)).toFixed(3)}%`);
   const cut = useTransform(p, (v) => cutAt(remap(v, 0.15, 0.75)));
   const maskY = useTransform(cut, (c) => `0% ${(c * 100).toFixed(3)}%`);
-  // belt and braces: once the wipe is complete the blueprint is unmasked
+  // belt and braces: once the wipe is complete the incoming is unmasked
   const mask = useTransform(p, (v) => (remap(v, 0.15, 0.75) >= 1 ? "none" : EDGE_MASK));
   const lineY = useTransform(cut, (c) => `${((-2 * c) / 3) * 100}%`);
   const lineOn = useTransform(p, (v) => (v > 0.1 && v < 0.9 ? 1 : 0));
+  const dustOn = useTransform(p, (v) => Math.min(remap(v, 0.12, 0.2), 1 - remap(v, 0.7, 0.8)));
+  const grey = useTransform(p, (v) => 0.85 * remap(v, 0.15, 0.75));
   const fig = useTransform(p, (v) => remap(v, 0.2, 0.75));
 
-  // Rancho's circle at p ≥ .95 (state-driven; re-arms only below .9). The
-  // static card always shows it; live, it follows p from the first frame.
+  const { circle, spin, one } = useRanchoCircle(p, live, reduced);
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      data-frame="seam"
+      className="absolute inset-0 overflow-hidden"
+      style={live ? { clipPath: open } : undefined}
+    >
+      {/* outgoing: the storm (mounted hidden while static, so it has
+          decoded before the card goes live) */}
+      <motion.div className="absolute inset-0" style={live ? { y: outY } : { display: "none" }}>
+        {storm ? (
+          <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+            <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
+          </PlateBox>
+        ) : null}
+        {/* the teal foam desaturates toward chalk white as the cut rises */}
+        <motion.span className="absolute inset-0 bg-[#8a8f8c] mix-blend-saturation" style={{ opacity: live ? grey : 0 }} />
+      </motion.div>
+
+      {/* incoming: the ICE lecture hall (or the code blueprint), revealed by
+          the ragged cut */}
+      <motion.div
+        className="absolute inset-0"
+        style={
+          live
+            ? {
+                maskImage: mask,
+                WebkitMaskImage: mask,
+                maskSize: "100% 300%",
+                WebkitMaskSize: "100% 300%",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: maskY,
+                WebkitMaskPosition: maskY,
+              }
+            : undefined
+        }
+      >
+        <motion.div className="absolute inset-0" style={live ? { y: inY } : undefined}>
+          {board ? (
+            <PlateBox plate={board}>
+              <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
+              <BoardFig
+                plate={board}
+                fig={live ? fig : one}
+                rack={live ? p : one}
+                spin={spin}
+                circle={circle}
+                live={live}
+              />
+            </PlateBox>
+          ) : (
+            <BlueprintFig live={live} fig={fig} p={p} one={one} spin={spin} circle={circle} />
+          )}
+        </motion.div>
+      </motion.div>
+
+      {/* the 3 px aqua seam line and the chalk dust, riding the cut */}
+      {live ? (
+        <motion.div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[300%]"
+          style={{ y: lineY }}
+        >
+          <motion.svg
+            viewBox="0 0 100 300"
+            preserveAspectRatio="none"
+            focusable="false"
+            className="absolute inset-0 size-full"
+            fill="none"
+            style={{ opacity: lineOn }}
+          >
+            <path d={EDGE_LINE} stroke="var(--accent)" strokeWidth={3} vectorEffect="non-scaling-stroke" />
+          </motion.svg>
+          <motion.div className="absolute inset-0" style={{ opacity: dustOn }}>
+            {DUST.map((d, k) => (
+              <span
+                key={k}
+                className="absolute block rounded-full bg-(--w-chalk)"
+                style={{
+                  left: `${d.x.toFixed(2)}%`,
+                  top: `${((d.y / 300) * 100).toFixed(3)}%`,
+                  width: d.s,
+                  height: d.s,
+                  opacity: d.o,
+                }}
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </motion.div>
+  );
+}
+
+/** Rancho's circle at p ≥ .95 (state-driven; re-arms only below .9). The
+ *  static card always shows it; live, it follows p from the first frame.
+ *  Shared with the ALT (frames/seam-chalk.tsx). */
+export function useRanchoCircle(p: MotionValue<number>, live: boolean, reduced: boolean) {
   const circle = useMotionValue(1);
   const spin = useMotionValue(0);
   const one = useMotionValue(1);
@@ -102,89 +264,54 @@ export function SeamFrame({ storm, graded }: { storm: MediaId; graded: boolean }
     const c = animate(circle, 1, { duration: dur.draw.short, ease: easeDraw });
     return () => c.stop();
   }, [live, reduced, ringed, circle]);
+  return { circle, spin, one };
+}
 
+/** The M1 code blueprint ground with FIG. 0 in blueprint line: the
+ *  fallback when the ICE plate is missing. */
+function BlueprintFig({
+  live,
+  fig,
+  p,
+  one,
+  spin,
+  circle,
+}: {
+  live: boolean;
+  fig: MotionValue<number>;
+  p: MotionValue<number>;
+  one: MotionValue<number>;
+  spin: MotionValue<number>;
+  circle: MotionValue<number>;
+}) {
   const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
-
   return (
-    <motion.div
-      aria-hidden="true"
-      className="absolute inset-0 overflow-hidden"
-      style={live ? { clipPath: open } : undefined}
-    >
-      {/* outgoing: the storm */}
-      <motion.div
-        className={cn("absolute inset-0", graded && "act-storm-grade")}
-        style={live ? { y: outY } : { display: "none" }}
+    <div className="act-blueprint absolute inset-0">
+      <svg
+        viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
+        preserveAspectRatio="xMidYMid meet"
+        focusable="false"
+        className="absolute inset-0 size-full"
+        fill="none"
+        stroke="var(--w-bp-line)"
+        strokeLinecap="square"
       >
-        <MediaFrame media={storm} layout="fill" playOn="never" sizes="100vw" />
-      </motion.div>
-
-      {/* incoming: the blueprint, revealed by the ragged cut */}
-      <motion.div
-        className="absolute inset-0"
-        style={
-          live
-            ? {
-                maskImage: mask,
-                WebkitMaskImage: mask,
-                maskSize: "100% 300%",
-                WebkitMaskSize: "100% 300%",
-                maskRepeat: "no-repeat",
-                WebkitMaskRepeat: "no-repeat",
-                maskPosition: maskY,
-                WebkitMaskPosition: maskY,
-              }
-            : undefined
-        }
-      >
-        <motion.div className="act-blueprint absolute inset-0" style={live ? { y: inY } : undefined}>
-          <svg
-            viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
-            preserveAspectRatio="xMidYMid meet"
-            focusable="false"
-            className="absolute inset-0 size-full"
-            fill="none"
-            stroke="var(--w-bp-line)"
-            strokeLinecap="square"
-          >
-            {/* dimension line, extension lines and end ticks (static) */}
-            <path
-              d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
-              strokeWidth={1}
-              vectorEffect="non-scaling-stroke"
-              strokeOpacity={0.7}
-            />
-            {live ? (
-              <DrawPath d={LINE_D} progress={fig} stroke="var(--w-bp-line)" strokeWidth={2} />
-            ) : (
-              <path d={LINE_D} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
-            )}
-          </svg>
-          <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
-            <GaugeDrawing
-              // useTransform binds one source: remount when static ↔ live
-              key={live ? "live" : "static"}
-              progress={live ? p : one}
-              spin={spin}
-              circle={circle}
-              scale={1.5}
-            />
-          </div>
-          <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
-        </motion.div>
-      </motion.div>
-
-      {/* the 3 px aqua seam line, riding the cut (.1 < p < .9 only) */}
-      {live ? (
-        <motion.div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[300%]"
-          style={{ y: lineY, opacity: lineOn }}
-        >
-          <svg viewBox="0 0 100 300" preserveAspectRatio="none" focusable="false" className="size-full" fill="none">
-            <path d={EDGE_LINE} stroke="var(--accent)" strokeWidth={3} vectorEffect="non-scaling-stroke" />
-          </svg>
-        </motion.div>
-      ) : null}
-    </motion.div>
+        <path
+          d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
+          strokeWidth={1}
+          vectorEffect="non-scaling-stroke"
+          strokeOpacity={0.7}
+        />
+        {live ? (
+          <DrawPath d={LINE_D} progress={fig} stroke="var(--w-bp-line)" strokeWidth={2} />
+        ) : (
+          <path d={LINE_D} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+        )}
+      </svg>
+      <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
+        <GaugeDrawing key={live ? "live" : "static"} progress={live ? p : one} spin={spin} circle={circle} scale={1.5} />
+      </div>
+      <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
+    </div>
   );
 }

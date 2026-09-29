@@ -1,91 +1,48 @@
-import { MediaFrame } from "@/components/primitives/media-frame";
-import { FilmTitle, SceneCaption } from "@/components/primitives/scene-caption";
-import { FilmQuote } from "@/components/site/film-quote";
-import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
-import type { CaptionKey, CaptionWorld } from "@/lib/film";
-import { film } from "@/lib/film";
+import { film, type CaptionWorld } from "@/lib/film";
 import {
   acts,
+  bearingOf,
   copyText,
   copyVisible,
-  numeralOf,
-  seenHereIn,
+  pageItems,
+  variantChoiceOf,
   worksInUse,
   worksWords,
 } from "@/lib/sections";
+import type { WorldId } from "@/lib/worlds";
+import { SectionHead, WorldSection } from "@/components/site/world-kit";
+import { FilmScreen } from "@/components/sections/films/film-screen";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
-   FILMS — Intermission: "Three films and a game" (SPEC v2 §3 row 9, SM-9;
-   house world, deep; one world per screen). M2 integrator STUB — a correct,
-   accessible skeleton the act4-hp-films builder turns into SM-9 +
-   RECOGNIZABILITY S12:
-     - four <article> screens in act order (worksInUse), each: Meta
-       `ACT n • VERB • YEARS`, a 2.39:1 MediaFrame of the world's
-       `media.filmsStill` (hp: iconic-express; the ALT screen is
-       `filmsAltStill` ?? resolveVariant(filmsStill, "alt")), the FILM TITLE
-       as the h3 in the fan face (<FilmTitle as="h3">), the caption UNDER the
-       frame (F-3I / F-RD skies are too bright for bl/br), the work's line
-       (FilmQuote caption), the borrowed line, "Seen here in" links and the
-       reason (a DRAFT line, visible via branchPreview; never a link).
-     - still to build: the letterbox clip-open entry, the per-world finale
-       motifs (compass / 7 gates / trail-to-fire / ink-light), each
-       article's ground in its world deep with 24vh gradient seams (T6), and
-       the last warm point that card II→III's low sun takes over (T7).
+   FILMS — the Intermission: "Three films and a game" (SPEC v2 SM-9; bar
+   films-chapter; RECOGNIZABILITY S12 + T6). Mid-page, after the graveyard,
+   the house lights come up: Meta INTERMISSION, the h2 (derived from the
+   works in use: "Three films" without RDR2), one lead, then ONE SCREEN PER
+   WORK in act order (worksInUse): Pirates of the Caribbean → 3 Idiots →
+   Red Dead Redemption 2 → Harry Potter. Each screen is ~one viewport and
+   the only world in it (film-screen.tsx), its film named big in its own
+   fan face, its iconic still letterboxed with a caption, one attributed
+   line, what the page borrowed, Aryan's reason and "Seen here in" links.
+   Everything is derived (film.acts × film.worlds × the manifest): 0 film
+   literals here. The last (HP) screen leaves one warm point on the Line,
+   which Card II→III's low sun takes over.
+   Variant piece `films.screens` (DEFAULT "clip-finales", ALT
+   "iris-marks"): film-frame.tsx / finales.tsx.
    ========================================================================== */
-
-const CAPTION: Record<CaptionWorld, CaptionKey> = {
-  pirates: "cap.films.pirates",
-  idiots: "cap.films.idiots",
-  rdr2: "cap.films.rdr2",
-  hp: "cap.films.hp",
-};
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function FilmScreen({ world, years }: { world: CaptionWorld; years: string }) {
-  const spec = film.worlds[world];
-  const titleId = `films-${world}-title`;
-  const act = acts.find((a) => a.world === world);
-  const numeral = act ? numeralOf(act.id) : undefined;
-  const links = seenHereIn(world).slice(0, 3);
-  const still = spec.media.filmsStill;
-  return (
-    <article aria-labelledby={titleId} data-films-world={world} className="border-t border-rule pt-tier-block">
-      <Meta fields={[numeral ? `Act ${numeral}` : null, spec.verb, years]} />
-      {still ? (
-        <div className="mt-tier-group">
-          <MediaFrame media={still} ratio={2.39} radius="frame" playOn="never" sizes="(min-width: 90rem) 1360px, 100vw" />
-          <SceneCaption k={CAPTION[world]} place="under" />
-        </div>
-      ) : null}
-      <FilmTitle world={world} as="h3" id={titleId} className="mt-tier-group type-title text-fg" />
-      {spec.line ? <FilmQuote id={spec.line} rendition="caption" className="mt-tier-pair" /> : null}
-      {spec.borrowed && copyVisible(spec.borrowed) ? (
-        <p className="mt-tier-group max-w-body type-body text-fg">{spec.borrowed.text}</p>
-      ) : null}
-      {links.length ? (
-        <p className="mt-tier-pair type-meta text-fg-muted">
-          <span>Seen here in</span>
-          {links.map((s) => (
-            <span key={s.id}>
-              <span aria-hidden="true" className="text-fg-ghost">
-                {" • "}
-              </span>
-              <a href={`#${s.id}`} className="inline-flex min-h-11 items-center transition-colors hover:text-fg">
-                {s.nav?.label ?? s.id}
-              </a>
-            </span>
-          ))}
-        </p>
-      ) : null}
-      {spec.reason && copyVisible(spec.reason) ? (
-        <p className="mt-tier-group max-w-body type-body text-fg-muted">{spec.reason.text}</p>
-      ) : null}
-    </article>
-  );
+/** Compass bearing of the next act on the page after `id` (the Pirates
+ *  finale's needle: "it points to what you want most" — the story's next
+ *  act). Falls back to the first act. */
+function nextActBearing(id: string): number {
+  const i = pageItems.findIndex((it) => it.kind === "section" && it.entry.id === id);
+  const next = pageItems.slice(i + 1).find((it) => it.kind === "act");
+  const index = next && next.kind === "act" ? acts.findIndex((a) => a.id === next.act) : 0;
+  return bearingOf(Math.max(0, index));
 }
 
 export function FilmsSection({ entry }: SectionProps<"films">) {
@@ -94,17 +51,27 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
   const lead = copyText("films.lead");
   const screens = worksInUse.filter((w): w is typeof w & { world: CaptionWorld } => w.world !== "house");
   if (!film.enabled || screens.length === 0) return null;
+  const choice = variantChoiceOf(entry);
+  const bearing = nextActBearing(entry.id);
   return (
-    <WorldSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
+    <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip scroll-mt-24">
       <SectionHead
         id={titleId}
         label="Intermission"
         title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
         intro={copyVisible(lead) ? lead.text : undefined}
       />
-      <div className="mt-tier-block space-y-tier-block">
-        {screens.map((w) => (
-          <FilmScreen key={w.world} world={w.world} years={w.years} />
+      <div className="mt-tier-block">
+        {screens.map((w, i) => (
+          <FilmScreen
+            key={w.world}
+            world={w.world}
+            years={w.years}
+            prev={(i === 0 ? "house" : screens[i - 1].world) as WorldId}
+            last={i === screens.length - 1}
+            choice={choice}
+            bearing={bearing}
+          />
         ))}
       </div>
     </WorldSection>

@@ -1,9 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { MetricTile } from "@/components/site/metric-tile";
-import { FilmQuote } from "@/components/site/film-quote";
-import { RanchoCircle, Schematic, type SchematicNode } from "@/components/site/idiots-chalk";
-import { Meta, WorldSection } from "@/components/site/world-kit";
+import { RanchoCircle } from "@/components/site/idiots-chalk";
+import { Meta } from "@/components/site/world-kit";
+import { SceneCaption } from "@/components/primitives/scene-caption";
+import { ChalkboardFrame } from "@/components/worlds/idiots/chalk";
+import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
+import { BlueprintSchematic, type SchematicSpec } from "@/components/worlds/idiots/schematic";
 import { Rise } from "@/components/site/world-motion";
 import {
   earlierRepos,
@@ -15,32 +18,36 @@ import {
   type Project,
 } from "@/lib/content";
 import type { ChapterAppendix } from "@/lib/page";
+import { variantChoiceOf } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
    CHAPTER — one flagship project as its own section (SPEC v2 §3 rows 4–5,
-   SM-7 "Honest chalk"; Act II · idiots canvas). M2 integrator STUB: the M1
-   chapter markup moved here verbatim from the retired `work` monolith
-   (components/site/projects.tsx), so the page reads exactly as before while
-   the act2-idiots builder fills SM-7 + RECOGNIZABILITY S09:
-     - frame the blueprint panel as an ICE chalkboard (wood frame, chalk
-       ledge with a chalk stub and a felt duster, slate-green margin);
-     - <SceneCaption k="cap.trading-algos" place="under"> under the panel;
-       for optuna-screener the caption IS the lettered machine line:
-       <SceneCaption k="cap.optuna-screener"> (Q-3I-3 in Kalam chalk) —
-       it replaces the Meta FilmQuote caption below. NEVER beside a metric.
-     - the one chalk circle around the CAVEAT, never the number (kept).
+   SM-7 "Honest chalk"; RECOGNIZABILITY S09; Act II · idiots canvas).
+   The chapter reads top → bottom: the claim (name, repo, summary) beside
+   the problem; then the ICE CLASSROOM BOARD — a wooden frame, a slate
+   margin, a chalk ledge with a chalk stub and a felt duster — holding the
+   cyanotype blueprint of the REAL system in the jugaad register (every
+   node from content.ts; left → right ≥ 1024, stacked below); under it the
+   scene caption (A RANCHO-STYLE BLUEPRINT • 3 IDIOTS, or for the pipeline
+   the lettered machine definition, Q-3I-3 • 3 IDIOTS). Only then the
+   approach, the figures and the limitations: a caption never sits beside
+   a metric (H4). Rancho's ONE chalk circle per chapter goes around the
+   CAVEAT, never a number (TA-07): Trading_Algos' limitations sentence,
+   Optuna's "anything > 2.0 is a red flag".
    The section's h2 is the project name (one h1 on the page: the name).
    `props.appendix` renders the Option Alpha origin and the supporting list
    after the LAST chapter (they lived at the end of `work`).
+   Variants: `<id>.schematic` — default "draw" (the blueprint inks itself),
+   alt "assemble" (the parts drop in, the tape slaps on).
    ========================================================================== */
 
 /** Each flagship's schematic: nodes ONLY from content.ts approach/stack
  *  (SPEC SM-7; "machine for show" is banned, H4). Counts are derived. */
-function schematicOf(p: Project): { nodes: SchematicNode[]; fork?: readonly [SchematicNode, SchematicNode] } | null {
+function schematicOf(p: Project): SchematicSpec | null {
   if (p.id === "trading-algos") {
     return {
-      nodes: [
+      chain: [
         { label: "Pre-registration", note: "committed before any run" },
         { label: "LEAN backtest", note: "signal T close • fill T+1 open" },
         { label: `${gauntlet.length}-gate gauntlet`, note: "blind holdout spent once" },
@@ -53,7 +60,7 @@ function schematicOf(p: Project): { nodes: SchematicNode[]; fork?: readonly [Sch
   }
   if (p.id === "optuna-screener") {
     return {
-      nodes: [
+      chain: [
         { label: "Strategy file / discovery", note: "entry_fn • exit_fn" },
         { label: "Indicators", note: "computed per strategy" },
         { label: "Optuna TPE", note: "walk-forward" },
@@ -61,93 +68,112 @@ function schematicOf(p: Project): { nodes: SchematicNode[]; fork?: readonly [Sch
         { label: "25% holdout", note: "never optimized on" },
         { label: "Report", note: "Plotly HTML" },
       ],
+      branch: { label: "v3.0 ensemble", note: "risk-parity weighting • per-strategy + portfolio CPCV" },
     };
   }
   return null;
 }
 
-function ChapterBody({ p, figNo, number, titleId }: { p: Project; figNo: number; number?: string; titleId: string }) {
+function stagesOf(s: SchematicSpec): string {
+  const n = s.chain.length + (s.fork ? 1 : 0);
+  return `${n} stages${s.branch ? " • 1 branch" : ""}`;
+}
+
+function ChapterBody({
+  p,
+  figNo,
+  number,
+  titleId,
+  entry,
+}: {
+  p: Project;
+  figNo: number;
+  number?: string;
+  titleId: string;
+  entry: SectionProps<"chapter">["entry"];
+}) {
   const s = schematicOf(p);
-  const stages = s ? s.nodes.length + (s.fork ? 1 : 0) : 0;
   const isOptuna = p.id === "optuna-screener";
   return (
-    <div className="grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
-      {/* the facts column: claims with their limitations beside them */}
-      <div className="lg:col-span-7">
-        <Meta fields={[number, p.status]} />
-        <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
-          {p.name}
-        </h2>
-        <a
-          href={p.href}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="mt-tier-pair inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
-        >
-          <GithubMark className="size-4" />
-          <span className="normal-case">{p.repo}</span>
-          <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
-        </a>
-        <p className="mt-tier-group max-w-body type-body text-fg">{p.summary}</p>
-
-        <div className="mt-tier-block space-y-tier-group">
-          <div>
-            <Meta fields={["The problem"]} />
-            <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.problem}</p>
-          </div>
-          <div>
-            <Meta fields={["Approach"]} />
-            <ul className="mt-tier-pair max-w-body list-disc space-y-2 pl-5 type-body text-fg-muted marker:text-fg-ghost">
-              {p.approach.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
-            </ul>
-          </div>
+    <div>
+      {/* the claim, beside the problem it answers */}
+      <div className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+        <div className="lg:col-span-7">
+          <Meta fields={[number, p.status]} />
+          <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
+            {p.name}
+          </h2>
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mt-tier-pair inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
+          >
+            <GithubMark className="size-4" />
+            <span className="normal-case">{p.repo}</span>
+            <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
+          </a>
+          <p className="mt-tier-group max-w-body type-body text-fg">{p.summary}</p>
         </div>
+        <div className="lg:col-span-5 lg:pt-tier-block">
+          <Meta fields={["The problem"]} />
+          <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.problem}</p>
+        </div>
+      </div>
 
-        <dl className="mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-3">
+      {/* the ICE board: the real system as a Rancho-style blueprint */}
+      {s ? (
+        <Rise className="mt-tier-block">
+          <ChalkboardFrame>
+            <BlueprintSchematic
+              fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
+              spec={s}
+              choice={variantChoiceOf(entry)}
+              pieceKey={`${entry.id}.schematic`}
+            />
+          </ChalkboardFrame>
+          <SceneCaption k={isOptuna ? "cap.optuna-screener" : "cap.trading-algos"} place="under" className="mt-tier-group" />
+        </Rise>
+      ) : null}
+
+      <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
+        <div className="lg:col-span-7">
+          <Meta fields={["Approach"]} />
+          <ul className="mt-tier-pair max-w-body list-disc space-y-2 pl-5 type-body text-fg-muted marker:text-fg-ghost">
+            {p.approach.map((a) => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+        </div>
+        <dl className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1">
           {p.metrics.map((m, i) => (
             <MetricTile key={m.label} m={m} circleNote={isOptuna && i === p.metrics.length - 1} />
           ))}
         </dl>
-
-        <div className="mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2">
-          <div>
-            <Meta fields={["What I learned"]} />
-            <p className="mt-tier-pair type-body text-fg-muted">{p.learned}</p>
-          </div>
-          <div>
-            <Meta fields={["Honest limitations"]} />
-            {isOptuna ? (
-              <p className="mt-tier-pair type-body text-fg-muted">{p.limitations}</p>
-            ) : (
-              <RanchoCircle block className="mt-tier-pair">
-                <p className="type-body text-fg-muted">{p.limitations}</p>
-              </RanchoCircle>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-tier-group">
-          <Meta fields={["Stack", p.stack.join(" · ")]} />
-        </div>
-        {/* Honest chart slot: a marked placeholder, never a fabricated curve. */}
-        <p className="mt-tier-group type-meta text-fg-ghost">[ chart slot — drop a real exported equity curve / report here ]</p>
       </div>
 
-      {/* the cover IS the real system, drawn as a blueprint (≤ 40 %) */}
-      <div className="lg:col-span-5">
-        {s ? (
-          <div className="lg:sticky lg:top-24">
-            <Schematic
-              fig={`FIG. ${figNo} • ${p.repo} • ${stages} stages`}
-              nodes={s.nodes}
-              fork={s.fork}
-              caption={isOptuna ? <FilmQuote id="Q-3I-3" rendition="caption" /> : undefined}
-            />
-          </div>
-        ) : null}
+      <div className="mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2 lg:gap-x-6">
+        <div>
+          <Meta fields={["What I learned"]} />
+          <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.learned}</p>
+        </div>
+        <div>
+          <Meta fields={["Honest limitations"]} />
+          {isOptuna ? (
+            <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.limitations}</p>
+          ) : (
+            <RanchoCircle block className="mt-tier-pair max-w-body">
+              <p className="type-body text-fg-muted">{p.limitations}</p>
+            </RanchoCircle>
+          )}
+        </div>
       </div>
+
+      <div className="mt-tier-group">
+        <Meta fields={["Stack", p.stack.join(" · ")]} />
+      </div>
+      {/* Honest chart slot: a marked placeholder, never a fabricated curve. */}
+      <p className="mt-tier-group type-meta text-fg-ghost">[ chart slot — drop a real exported equity curve / report here ]</p>
     </div>
   );
 }
@@ -250,8 +276,8 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
   const titleId = `${entry.id}-title`;
   const appendix = entry.props.appendix ?? [];
   return (
-    <WorldSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
-      <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} />
+    <IdiotsSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
+      <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} entry={entry} />
       {appendix.length ? (
         <div className="mt-tier-block space-y-tier-block">
           {appendix.map((a) => (
@@ -259,6 +285,6 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
           ))}
         </div>
       ) : null}
-    </WorldSection>
+    </IdiotsSection>
   );
 }

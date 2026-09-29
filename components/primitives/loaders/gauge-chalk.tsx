@@ -5,11 +5,10 @@ import { animate, useMotionValue, type MotionValue } from "motion/react";
 import type { LoaderRendererProps } from "@/components/primitives/loader";
 import { useReducedMotion } from "@/lib/flags";
 import { dur, easeDraw } from "@/lib/motion";
-import { cn } from "@/lib/utils";
+import { ChalkBoard } from "@/components/primitives/loaders/chalkboard";
 import {
   DrawPath,
   PlanStroke,
-  SIZE_CLASS,
   SIZE_PX,
   arcPts,
   cubicPts,
@@ -23,9 +22,12 @@ import {
 
 /**
  * LD-3I ALT "The derivation" (idiots; lib/variants.ts `loader-gauge.motion`
- * alt). 3 Idiots explains — the default shows an honest mechanism; this one
- * shows the honest working: a chalk derivation that writes itself on the
- * board, stroke by stroke, then sketches the curve it describes.
+ * alt; caption cap.loader.idiots.alt "A DERIVATION ON THE ICE BOARD"). 3
+ * Idiots explains — the default shows an honest mechanism; this one shows
+ * the honest working: a chalk derivation that writes itself on the ICE
+ * board (the same framed mini chalkboard as the default, M2 RECOGNIZABILITY
+ * S20: it no longer floats on navy), stroke by stroke, then sketches the
+ * curve it describes.
  *
  *   f(x) = x² + 2x        f′(x) = 2x + 2        ⇒ x = −1        ∪ (vertex)
  *
@@ -134,6 +136,9 @@ const ANSWER = (() => {
 /** Mini: a chalk ring round the vertex. */
 const VERTEX_RING = `M${VERTEX[0] + 5} ${VERTEX[1]}a5 4.4 0 1 1 -10 0a5 4.4 0 1 1 10 0.5`;
 
+/** mini: the curve sketch alone, centred on the slate. */
+const MINI_BOX = { left: "30%", top: "10%", width: "40%" } as const;
+
 export default function GaugeChalkLoader(props: LoaderRendererProps) {
   // one MotionValue source per mode (useTransform binds once): remount on mode
   return <Derivation key={props.mode} {...props} />;
@@ -144,7 +149,10 @@ function Derivation({ mode, size, progress, animate: running }: LoaderRendererPr
   const mini = size === "mini";
   const plan = mini ? PLAN_MINI : PLAN;
   const vb = mini ? { x: 104, y: 4, w: 54, h: 58 } : { x: 0, y: 0, w: 160, h: 64 };
-  const scale = SIZE_PX[size] / vb.w;
+  // the drawing fills the board's content box: 80 % of its width (mini: the
+  // sketch alone, 40 %, centred on the slate)
+  const frac = mini ? 0.4 : 0.8;
+  const scale = (SIZE_PX[size] * frac) / vb.w;
   const sw = (px: number) => px / scale;
   const filterId = useId();
 
@@ -172,7 +180,7 @@ function Derivation({ mode, size, progress, animate: running }: LoaderRendererPr
   const tipOn = mode === "determinate" ? true : mode === "indeterminate" ? tick % 2 === 0 : false;
 
   return (
-    <span className={cn("relative block", SIZE_CLASS[size])}>
+    <ChalkBoard size={size} content={mini ? MINI_BOX : undefined}>
       <svg
         viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
         aria-hidden="true"
@@ -198,7 +206,7 @@ function Derivation({ mode, size, progress, animate: running }: LoaderRendererPr
         </g>
         <ChalkTip plan={plan} progress={ink} r={sw(1.4)} visible={tipOn} />
       </svg>
-    </span>
+    </ChalkBoard>
   );
 }
 

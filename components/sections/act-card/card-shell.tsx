@@ -7,23 +7,44 @@ import { useMediaQuery, useMotionPausedAtBoot, useReducedMotion } from "@/lib/fl
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
 import type { Variant, VariantChoice } from "@/lib/variants";
-import { planeAttrs, type WorldId } from "@/lib/worlds";
+import { planeAttrs, type ToneId, type WorldId } from "@/lib/worlds";
 import { WorldProvider } from "@/components/primitives/world";
 import { remap } from "@/components/primitives/loaders/line";
-import { CardContext } from "@/components/sections/act-card/card-context";
+import { CardCaptions, type CaptionCue } from "@/components/sections/act-card/card-captions";
+import { CardContext, type CardState } from "@/components/sections/act-card/card-context";
 import { ProgressLine } from "@/components/sections/act-card/progress-line";
 
 /**
  * CardShell — the letterboxed loading-reel grammar every derived act card
- * shares (SPEC v2 §8.2, §9.3; act-cards.BAR §3–§7).
+ * shares (SPEC v2 §8.2, §9.3; act-cards.BAR §3–§7), with the M2
+ * RECOGNIZABILITY title block (§4.3):
  *
  *   ≥ 640 px  the section is 100svh on the incoming world's DEEP ground — the
  *             ground IS the bars (no bar elements): 1fr · frame 2.39:1 · 1fr
  *             (602.5 px frame, 148.7 px bars at 1440×900).
- *             Upper bar: Meta only (act credit left, reel mark right).
- *             Lower bar: the h2 + ≤ 1 line + the world's progress line.
- *   < 640 px  letterbox off: a stacked static card (Meta → title → line →
- *             frame), 0 travel.
+ *             Upper bar: Meta (act credit left, reel mark right) and, right
+ *               above the frame, THE FILM TITLE in the world's fan face at
+ *               --text-title ("3 IDIOTS"): the card is named at a glance.
+ *             Lower bar, left: the act h2 (smaller than the film title) +
+ *               ≤ 1 line + the world's progress line.
+ *             Lower bar, right, under the frame's corner: the MOMENT
+ *               caption(s) ("THE LECTURE HALL AT ICE • 3 IDIOTS").
+ *   < 640 px  letterbox off: a stacked static card (Meta → film → title →
+ *             line → frame → caption), 0 travel.
+ *   "flow"    (the opening card) the same bars and frame without the 100svh
+ *             letterbox, and the program (`after`) below the frame.
+ *
+ * Smooth world changes (RECOGNIZABILITY §8, rule (d)) — never a hard edge:
+ *   prevGround  the previous section's ground fades into the card's over
+ *               the card's first 30vh (a static opacity mask; SSR, RM and
+ *               no-JS included).
+ *   nextGround  the card's ground fades into the next section's over its
+ *               last 20vh.
+ *   featherUp   (opening) the card's ground paints the hero's last 18vh
+ *               (≥ 640), so the hero sea sinks into the deep before the
+ *               Pearl opens.
+ *   fromGround  (ignite) the whole card crossfades rd deep → hp deep over
+ *               p 0–.2 (live only).
  *
  * Driver p (direct, no spring; reverses by position):
  *   passage (0-travel cards: opening, tintype, reel, title) — 0 as the card's
@@ -31,23 +52,28 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  *   pinned (long cards: seam, ignite) — the card's own ≤ 60vh of travel
  *     (the extra height is CSS: [data-act-card-long] in app/globals.css, only
  *     ≥ 1024 + fine pointer + motion on, so SSR already reserves it: CLS 0).
+ *   The opening program (`after`) runs on its OWN passage (its top entering
+ *     → its bottom in view), so the course is drawn while it is on screen.
  *
  * Honesty (C11): no "loading", no %, no role=status; the progress line is
  * aria-hidden. 0 tab stops except the opening card's rows. No aqua at rest.
  *
  * Variants (lib/variants.ts; registry piece `card-<kind>.choreo`): the
- * server hands BOTH choreographies — `frame` (DEFAULT) and `altFrame` (ALT,
- * lazy: components/sections/act-card/alt-frames.tsx) — and this shell plays
- * one: the manifest's `variantChoice` on the server and during hydration,
- * the ?variant=… preview after mount (useVariant), or a forced `variant`
- * (/lab). Only the frame changes: the section, the bars, the h2 and every
- * focus target are the same DOM in both (the opening card's alt keeps the
- * same heading node and the same row anchors, in the same order).
+ * server hands BOTH choreographies — `frame` / `after` / `captions`
+ * (DEFAULT) and `altFrame` / `altAfter` / `altCaptions` (ALT, lazy chunks:
+ * components/sections/act-card/alt-frames.tsx) — and this shell plays one:
+ * the manifest's `variantChoice` on the server and during hydration, the
+ * ?variant=… preview after mount (useVariant), or a forced `variant` (/lab).
+ * The section, the bars, the film title, the h2 and every focus target are
+ * the same DOM in both (the opening program's alt keeps the same row
+ * anchors, in the same order).
  */
+type Ground = { world: WorldId; tone: ToneId };
+
 type Props = {
   id: string;
   kind: string;
-  /** The plane of the card (the incoming world's deep; house for opening). */
+  /** The plane of the card (the incoming world's deep). */
   world: WorldId;
   /** The world whose loader grammar / progress line the card uses. */
   motifWorld: WorldId;
@@ -57,21 +83,35 @@ type Props = {
   still?: boolean;
   /** Ground the card crossfades FROM over p 0–.2 (the ignite: rd → hp). */
   fromGround?: WorldId | null;
+  /** The previous section's plane (its ground fades into the card's top). */
+  prevGround?: Ground | null;
+  /** The next section's plane (the card's bottom fades into it). */
+  nextGround?: Ground | null;
+  /** Paint the card's ground over the previous section's last 18vh (≥ 640). */
+  featherUp?: boolean;
   upperLeft: string;
   upperRight?: string;
+  /** The film title block (server-rendered <FilmTitle>), set above the frame. */
+  film?: ReactNode;
   /** The frame (choreography): the DEFAULT variant. */
   frame: ReactNode;
   /** The ALT choreography of the same frame (null/absent: none built). */
   altFrame?: ReactNode;
+  /** Content after the frame + bars (the opening program), per variant. */
+  after?: ReactNode;
+  altAfter?: ReactNode;
+  /** The MOMENT caption cues, per variant (card-captions.tsx). */
+  captions?: readonly CaptionCue[];
+  altCaptions?: readonly CaptionCue[];
   /** The manifest's variant choice for this card (`item.variant`). */
   variantChoice?: VariantChoice | null;
   /** Force a variant (the /lab side-by-side); bypasses the URL preview. */
   variant?: Variant;
-  /** A 3:2 image plate below 640 (2.39:1 from 640), or free content (the
-   *  opening rows: 2.39:1 from 1024, its own height below). */
-  frameShape?: "plate" | "free";
+  /** "letterbox" (every card) or "flow" (the opening: no 100svh bars, the
+   *  program follows the frame). */
+  layout?: "letterbox" | "flow";
   /** Lower bar: the h2 and ≤ 1 line (server-rendered). The opening card
-   *  sets its h2 above the program, in the frame, and passes none. */
+   *  sets its h2 beside the program and passes none. */
   lower?: ReactNode;
   /** Text equivalent of an aria-hidden frame ("" when the frame is itself
    *  readable, as the opening program is). */
@@ -92,13 +132,21 @@ export function CardShell({
   long,
   still = false,
   fromGround = null,
+  prevGround = null,
+  nextGround = null,
+  featherUp = false,
   upperLeft,
   upperRight,
+  film,
   frame,
   altFrame = null,
+  after = null,
+  altAfter = null,
+  captions = [],
+  altCaptions = [],
   variantChoice = null,
   variant: forced,
-  frameShape = "plate",
+  layout = "letterbox",
   lower,
   summary,
   progress = true,
@@ -152,6 +200,9 @@ export function CardShell({
 
   const state = useMemo(() => ({ p, live, long: pinned, variant }), [p, live, pinned, variant]);
   const titleId = `${id}-title`;
+  const cues = variant === "alt" && altCaptions.length ? altCaptions : captions;
+  const tail = variant === "alt" && altAfter != null ? altAfter : after;
+  const flow = layout === "flow";
 
   return (
     <section
@@ -168,10 +219,34 @@ export function CardShell({
     >
       <WorldProvider world={world} tone="deep">
         <CardContext.Provider value={state}>
+          {/* — the world change, never a hard edge (static; RM / NJ too) — */}
+          {featherUp ? (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-full hidden h-[18vh] bg-[linear-gradient(to_bottom,transparent,var(--bg))] sm:block"
+            />
+          ) : null}
+          {prevGround ? (
+            <span
+              aria-hidden="true"
+              {...planeAttrs(prevGround.tone, prevGround.world)}
+              className="pointer-events-none absolute inset-x-0 top-0 h-[min(30vh,45%)] bg-bg [mask-image:linear-gradient(to_bottom,#000,transparent)]"
+            />
+          ) : null}
+          {nextGround ? (
+            <span
+              aria-hidden="true"
+              {...planeAttrs(nextGround.tone, nextGround.world)}
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(20vh,30%)] bg-bg [mask-image:linear-gradient(to_top,#000,transparent)]"
+            />
+          ) : null}
+
           <div
             className={cn(
               "relative flex flex-col gap-tier-group px-gutter py-section",
-              "sm:grid sm:min-h-svh sm:grid-rows-[1fr_auto_1fr] sm:gap-0 sm:px-0 sm:py-0",
+              flow
+                ? "sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-0 sm:px-0 sm:pt-[calc(var(--header-h)+var(--spacing-tier-group))] sm:pb-0"
+                : "sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[1fr_auto_1fr] sm:gap-0 sm:px-0 sm:py-0",
               travels && "act-card-stage",
             )}
           >
@@ -184,41 +259,76 @@ export function CardShell({
               />
             ) : null}
 
-            {/* upper bar: Meta only */}
-            <div className="relative order-1 flex items-end justify-between gap-tier-group sm:order-none sm:px-gutter sm:pb-4">
-              <p className="type-meta text-fg-muted">{upperLeft}</p>
-              {upperRight ? <p className="type-meta text-fg-muted">{upperRight}</p> : null}
+            {/* upper bar: Meta, then the film title right above the frame */}
+            <div className="relative order-1 flex flex-col justify-end gap-2 sm:order-none sm:col-span-2 sm:row-start-1 sm:px-gutter sm:pb-4">
+              <div className="flex items-end justify-between gap-tier-group">
+                <p className="type-meta text-fg-muted">{upperLeft}</p>
+                {upperRight ? <p className="type-meta text-fg-muted">{upperRight}</p> : null}
+              </div>
+              {film}
             </div>
 
             {/* the frame (2.39:1 letterbox ≥ 640; 3:2 plate or free below) */}
             <div
               className={cn(
-                "relative order-3 overflow-hidden sm:order-none sm:w-full",
-                // a plate letterboxes from 640; free content (the opening
-                // program) needs the 2.39:1 frame's height, so only from 1024
-                frameShape === "plate"
-                  ? "aspect-[3/2] sm:aspect-(--letterbox-ratio)"
-                  : "lg:aspect-(--letterbox-ratio)",
+                "relative order-3 aspect-[3/2] overflow-hidden sm:order-none sm:col-span-2 sm:row-start-2 sm:w-full sm:aspect-(--letterbox-ratio)",
               )}
             >
               {variant === "alt" ? altFrame : frame}
             </div>
 
-            {/* lower bar: the h2 + ≤ 1 line + the progress element */}
-            <div className="relative order-2 flex flex-col items-start gap-3 sm:order-none sm:px-gutter sm:pt-4">
-              {lower}
-              {progress ? <ProgressLine world={motifWorld} /> : null}
-              {/* live: screen-reader only, so the bars keep the letterbox
-                  geometry; the static card shows it as a visible line */}
-              {summary ? (
-                <p className={cn("type-small max-w-body text-fg-muted", live && "sr-only")}>
-                  {summary}
-                </p>
-              ) : null}
-            </div>
+            {/* lower bar, left: the h2 + ≤ 1 line + the progress element */}
+            {lower || progress || summary ? (
+              <div className="relative order-2 flex min-w-0 flex-col items-start gap-3 sm:order-none sm:col-start-1 sm:row-start-3 sm:px-gutter sm:pt-4">
+                {lower}
+                {progress ? <ProgressLine world={motifWorld} /> : null}
+                {/* live: screen-reader only, so the bars keep the letterbox
+                    geometry; the static card shows it as a visible line */}
+                {summary ? (
+                  <p className={cn("type-small max-w-body text-fg-muted", live && "sr-only")}>{summary}</p>
+                ) : null}
+              </div>
+            ) : null}
+
+            {/* lower bar, right: the MOMENT caption under the frame's corner */}
+            {cues.length ? (
+              <div
+                className={cn(
+                  "relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:max-w-[min(46vw,38rem)] sm:justify-self-end sm:pt-4 sm:pr-gutter sm:pl-6",
+                  // the opening has no lower-left block: the caption spans the
+                  // row and hugs the frame's right corner
+                  flow ? "sm:col-span-2 sm:col-start-1" : "sm:col-start-2",
+                )}
+              >
+                <CardCaptions cues={cues} />
+              </div>
+            ) : null}
           </div>
+
+          {tail != null ? (
+            <ProgramStage live={live} variant={variant}>
+              {tail}
+            </ProgramStage>
+          ) : null}
         </CardContext.Provider>
       </WorldProvider>
     </section>
+  );
+}
+
+/** The opening program's own driver: its passage from its top entering the
+ *  viewport to its bottom coming into view (so the course plots while the
+ *  rows are on screen). Same `live` gate as the card. */
+function ProgramStage({ live, variant, children }: { live: boolean; variant: Variant; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const state = useMemo<CardState>(
+    () => ({ p: scrollYProgress, live, long: false, variant }),
+    [scrollYProgress, live, variant],
+  );
+  return (
+    <div ref={ref} className="relative px-gutter pt-tier-group pb-section sm:pt-tier-block">
+      <CardContext.Provider value={state}>{children}</CardContext.Provider>
+    </div>
   );
 }

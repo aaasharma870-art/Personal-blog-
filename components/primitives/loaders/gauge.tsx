@@ -6,11 +6,17 @@ import type { LoaderRendererProps } from "@/components/primitives/loader";
 import { useReducedMotion } from "@/lib/flags";
 import { dur, easeDraw, loader as loaderTiming } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { DrawPath, SIZE_CLASS, SIZE_PX, useSvgAttr } from "@/components/primitives/loaders/kit";
+import { DrawPath, SIZE_PX, useSvgAttr } from "@/components/primitives/loaders/kit";
+import { ChalkBoard } from "@/components/primitives/loaders/chalkboard";
 
 /**
- * LD-3I "The honest gauge" (idiots; SPEC v2 §8, loaders.BAR L1). A blueprint
- * gear train in the jugaad register (IC-3I-04: visible bolts, a taped joint):
+ * LD-3I "The honest gauge" (idiots; SPEC v2 §8, loaders.BAR L1;
+ * RECOGNIZABILITY S20). M2: the loader is DRAWN IN CHALK ON A MINI ICE
+ * CHALKBOARD (slate green, a wooden frame, a chalk ledge with a stub and a
+ * duster: loaders/chalkboard.tsx), so blind it reads as the 3 Idiots
+ * classroom; caption cap.loader.idiots "THE ICE CHALKBOARD". The mechanism
+ * is unchanged — a gear train in the jugaad register (IC-3I-04: visible
+ * bolts, a taped joint):
  * a 12T drive gear and an 8T driven gear meshing at a TRUE 3:2, a pinion on
  * the 8T driving a rack pointer along a dimension line (0/end + 10 ticks).
  *
@@ -82,11 +88,15 @@ type DrawingProps = {
   /** px per viewBox unit (stroke widths are given in px). */
   scale: number;
   mini?: boolean;
+  /** Drawn in chalk (LD-3I on the ICE board): every stroke --w-chalk with a
+   *  static chalkRough displacement that turns WITH each gear (the noise is
+   *  in the gear's own space, so it never boils). Default: blueprint ink. */
+  chalk?: boolean;
   className?: string;
 };
 
 /** The gear train drawing, shared by LD-3I and the Card I→II FIG. 0 gauge. */
-export function GaugeDrawing({ progress, spin, circle, scale, mini = false, className }: DrawingProps) {
+export function GaugeDrawing({ progress, spin, circle, scale, mini = false, chalk = false, className }: DrawingProps) {
   const filterId = useId();
   const g12 = useRef<SVGGElement>(null);
   const g8 = useRef<SVGGElement>(null);
@@ -99,6 +109,9 @@ export function GaugeDrawing({ progress, spin, circle, scale, mini = false, clas
   const t8 = useSvgAttr(g8, theta8, "transform", (t) => `rotate(${t.toFixed(2)} ${C8.x} ${C8.y})`);
   const tr = useSvgAttr(rack, x, "transform", (v) => `translate(${(D0 + v).toFixed(2)} 0)`);
   const sw = (px: number) => px / scale;
+  const roughId = `${filterId}r`;
+  const rough = chalk ? `url(#${roughId})` : undefined;
+  const cw = chalk ? 1.2 : 1;
 
   return (
     <svg
@@ -107,9 +120,10 @@ export function GaugeDrawing({ progress, spin, circle, scale, mini = false, clas
       focusable="false"
       className={cn("block h-auto w-full overflow-visible", className)}
       fill="none"
-      stroke="var(--w-bp-line)"
+      stroke={chalk ? "var(--w-chalk)" : "var(--w-bp-line)"}
       strokeLinejoin="round"
       strokeLinecap="round"
+      data-ink={chalk ? "chalk" : "blueprint"}
     >
       <defs>
         {/* chalkRough: a static displacement (never boiled) on the circle only */}
@@ -117,27 +131,46 @@ export function GaugeDrawing({ progress, spin, circle, scale, mini = false, clas
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={7} result="n" />
           <feDisplacementMap in="SourceGraphic" in2="n" scale={1.1} />
         </filter>
+        {chalk ? (
+          // chalkRough for the whole drawing: one static displacement, applied
+          // INSIDE each moving group (it travels with its part; never boils)
+          <filter id={roughId} x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves={2} seed={11} result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale={0.7} />
+          </filter>
+        ) : null}
       </defs>
       <g ref={g12} transform={t12}>
-        <path d={G12} strokeWidth={sw(1.5)} />
-        <circle cx={C12.x} cy={C12.y} r={2.2} strokeWidth={sw(1.25)} />
-        <path d={BOLTS12} strokeWidth={sw(2.2)} />
+        <g filter={rough}>
+          <path d={G12} strokeWidth={sw(1.5 * cw)} />
+          <circle cx={C12.x} cy={C12.y} r={2.2} strokeWidth={sw(1.25 * cw)} />
+          <path d={BOLTS12} strokeWidth={sw(2.2)} />
+        </g>
       </g>
       <g ref={g8} transform={t8}>
-        <path d={G8} strokeWidth={sw(1.5)} />
-        <circle cx={C8.x} cy={C8.y} r={R_PINION} strokeWidth={sw(1.25)} />
-        <path d={`M${C8.x - 2} ${C8.y}H${C8.x + 2}`} strokeWidth={sw(1.25)} />
+        <g filter={rough}>
+          <path d={G8} strokeWidth={sw(1.5 * cw)} />
+          <circle cx={C8.x} cy={C8.y} r={R_PINION} strokeWidth={sw(1.25 * cw)} />
+          <path d={`M${C8.x - 2} ${C8.y}H${C8.x + 2}`} strokeWidth={sw(1.25 * cw)} />
+        </g>
       </g>
       {mini ? null : (
         <>
           {/* dimension line: 0 / end + 10 ticks (bp-line) */}
-          <path d={`M${D0} ${DIM_Y}H${D1}${TICKS}`} strokeWidth={sw(1)} />
+          <path d={`M${D0} ${DIM_Y}H${D1}${TICKS}`} strokeWidth={sw(1 * cw)} filter={rough} />
           {/* the rack: a toothed bar that slides under the pinion, its pointer
               riding the dimension line; a taped joint mid-bar (jugaad) */}
           <g ref={rack} transform={tr}>
-            <path d={`M${-BAR} ${RACK_Y}H0${RACK_TEETH}`} strokeWidth={sw(1.25)} />
-            <path d={`M${-BAR / 2 - 1.5} ${RACK_Y - 1.8}h3v3.6h-3z`} stroke="var(--w-graphite)" strokeWidth={sw(1)} />
-            <path d={`M0 ${RACK_Y}V${DIM_Y - 7}M-2.4 ${DIM_Y - 7}H2.4L0 ${DIM_Y - 2.2}Z`} strokeWidth={sw(1.25)} />
+            <g filter={rough}>
+              <path d={`M${-BAR} ${RACK_Y}H0${RACK_TEETH}`} strokeWidth={sw(1.25 * cw)} />
+              <path
+                d={`M${-BAR / 2 - 1.5} ${RACK_Y - 1.8}h3v3.6h-3z`}
+                stroke={chalk ? "var(--w-chalk)" : "var(--w-graphite)"}
+                strokeOpacity={chalk ? 0.6 : 1}
+                strokeWidth={sw(1)}
+              />
+              <path d={`M0 ${RACK_Y}V${DIM_Y - 7}M-2.4 ${DIM_Y - 7}H2.4L0 ${DIM_Y - 2.2}Z`} strokeWidth={sw(1.25 * cw)} />
+            </g>
           </g>
           <g filter={`url(#${filterId})`}>
             <DrawPath d={CIRCLE} progress={circle} stroke="var(--w-chalk)" strokeWidth={sw(2)} />
@@ -189,15 +222,17 @@ function Gauge({ mode, size, progress, animate: running }: LoaderRendererProps) 
   const full = useMotionValue(1);
   const rackP = mode === "indeterminate" ? parked : mode === "determinate" ? progress : full;
 
+  // the drawing fills the board's content box (80 % of its width; mini 62 %)
   return (
-    <span className={cn("relative block", SIZE_CLASS[size])}>
+    <ChalkBoard size={size}>
       <GaugeDrawing
         progress={rackP}
         spin={spin}
         circle={circle}
         mini={mini}
-        scale={SIZE_PX[size] / (mini ? 58 : 160)}
+        chalk
+        scale={(SIZE_PX[size] * (mini ? 0.62 : 0.8)) / (mini ? 58 : 160)}
       />
-    </span>
+    </ChalkBoard>
   );
 }

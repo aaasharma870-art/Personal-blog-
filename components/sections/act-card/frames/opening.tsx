@@ -13,13 +13,15 @@ import { LINE_D, remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
 
 /**
- * Opening card frame (SM-3, kind `opening`): the h2 "A research journal in
- * four acts." beside the program — Jack's compass (IC-PC-02, route size,
- * 144–160 px) heads it, and the LD-PC brass course runs from the compass
- * down through every row's waypoint: one row per act (plus the
- * Intermission). House plane, so no display face anywhere (C8). ≥ 1024 the
- * frame is two columns (the h2 | the program); below, they stack; < 640
- * the compass and its lead-in are hidden.
+ * Opening card PROGRAM (SM-3, kind `opening`; M2: it sits BELOW the Black
+ * Pearl frame, frames/opening-plate.tsx, on its own passage driver — see
+ * CardShell `after`): the h2 "A research journal in four acts." beside the
+ * program — Jack's compass (IC-PC-02) with its lid OPEN (the star chart,
+ * RECOGNIZABILITY S04) heads it, and the LD-PC brass course runs from the
+ * compass down through every row's waypoint: one row per act (plus the
+ * Intermission). The rows stay in house type (O-4 letters only the film
+ * title and the caption). ≥ 1024 two columns (the h2 | the program);
+ * below, they stack; < 640 the compass and its lead-in are hidden.
  *   R2  the course IS the card's progress element (no separate progress
  *       line): it plots compass → row I → … → the last row with the card's
  *       passage p (direct), complete by p = .95; a waypoint is reached when
@@ -79,7 +81,9 @@ export function OpeningFrame({ heading, rows }: { heading: ReactNode; rows: Open
   return (
     <div
       className={cn(
-        "grid size-full grid-cols-1 content-center items-center gap-tier-group py-4 sm:px-gutter",
+        // the program below the Pearl (CardShell `after`: the stage has the
+        // gutters); the lab still mounts it in a 2.39 box, so it fills one
+        "grid size-full grid-cols-1 content-center items-center gap-tier-group",
         "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-tier-block",
       )}
     >
@@ -88,7 +92,7 @@ export function OpeningFrame({ heading, rows }: { heading: ReactNode; rows: Open
         {/* the compass heads the course; the waypoints hang under its centre
             (ml = half the compass − the gutter's 16 px dot centre) */}
         <div aria-hidden="true" className="hidden sm:block">
-          <JacksCompass heading={needle} flash={flash} className={cn("block", COMPASS)} />
+          <JacksCompass heading={needle} flash={flash} lid="chart" className={cn("block", COMPASS)} />
         </div>
         <span aria-hidden="true" className={cn("relative hidden h-6 w-8 sm:block", HANG)}>
           <motion.span className={cn("absolute inset-y-0", LEG)} style={live ? { clipPath: leadClip } : undefined} />
@@ -109,11 +113,13 @@ export function OpeningFrame({ heading, rows }: { heading: ReactNode; rows: Open
   );
 }
 
-/** The compass at route size where the 2.39:1 frame has the height for it
- *  (112 px ≥ 640, 144 px ≥ 1280, 160 px ≥ 1400), and the program hung under
- *  its centre: margin = half the compass − the gutter's 16 px dot centre. */
-const COMPASS = "size-28 xl:size-36 min-[1400px]:size-40";
-const HANG = "sm:ml-10 xl:ml-14 min-[1400px]:ml-16";
+/** Jack's compass with its lid OPEN (M2, RECOGNIZABILITY S04: the dot
+ *  star chart on the lid's inner face reads "Jack's compass" at a glance;
+ *  the drawing is 100 × 132, so it is sized by WIDTH: 96 px ≥ 640, 112 px
+ *  ≥ 1280, 120 px ≥ 1400), and the program hung under its centre:
+ *  margin = half the compass − the gutter's 16 px dot centre. */
+const COMPASS = "h-auto w-24 xl:w-28 min-[1400px]:w-30";
+const HANG = "sm:ml-8 xl:ml-10 min-[1400px]:ml-11";
 /** One dashed brass leg of the course (the gutter's centre line). */
 const LEG =
   "left-[15px] w-[1.5px] bg-[repeating-linear-gradient(to_bottom,var(--w-brass)_0_6px,transparent_6px_12px)]";

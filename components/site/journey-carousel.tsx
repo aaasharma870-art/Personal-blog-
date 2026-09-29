@@ -4,37 +4,55 @@ import { useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useReducedMotion } from "@/lib/flags";
-import { dur, ease } from "@/lib/motion";
 import { journey } from "@/lib/content";
+import { useReducedMotion } from "@/lib/flags";
+import type { MediaId } from "@/lib/media";
+import { dur, ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { JackCompass } from "@/components/site/pirates-instruments";
-import { headingOf } from "@/components/site/journey-voyage";
+import type { Variant } from "@/lib/variants";
+import { MediaFrame } from "@/components/primitives/media-frame";
+import { JourneyChart, Waypoint, WaypointLabel } from "@/components/site/journey-chart";
+import { BREAK_INDEX, NOW_INDEX, bearingTo, legHeading } from "@/components/worlds/pirates/voyage-chart";
 
-/**
- * JourneyCarousel — the voyage's fallback (SPEC v2 SM-4: mobile, coarse
- * pointer, reduced motion / Pause, Save-Data): a role=tablist stepper on a
- * dashed brass course (arrow keys, Home/End, roving tabindex) and one panel.
- * The legacy abstract stills are retired; the panel carries Jack's compass at
- * the TRUE bearing of the selected leg (the same chart geometry as the
- * desktop voyage), static under reduced motion. One ember tick marks The
- * break (killed: those patterns are on the kill-list); the last step ends on
- * the brass X and the caption.
- */
-const BREAK_INDEX = 2;
-const NOW_INDEX = 3;
+/* ============================================================================
+   JourneyCarousel — the voyage's touch / reduced-motion / Save-Data path
+   (SPEC v2 SM-4 fallbacks; journey-voyage.BAR §4, J13; RECOGNIZABILITY S06):
+   the same chart strip, whose four waypoints ARE the tabs (role=tablist:
+   arrow keys, Home/End, roving tabindex), Jack's compass on the selected
+   leg's heading (static under reduced motion), the step's STILL (MV-05a–d;
+   0 sequence requests) with its caption — "PORT ROYAL HARBOUR AT NIGHT •
+   PIRATES OF THE CARIBBEAN" bottom-left over the still (≥ 640) or under it —
+   and the verbatim step text in the tabpanel.
+   ALT ("sail-on-cue"): the course plots leg by leg as slides are visited
+   and the X inks at Now (instant under reduced motion). Save-Data: the
+   smallest still. ≥ 1024 (reduced motion on desktop): chart + text on the
+   left, the still on the right.
+   ========================================================================== */
 
-export function JourneyCarousel({ nowCaption }: { nowCaption?: ReactNode }) {
+type Props = {
+  variant: Variant;
+  /** The still per step (this variant's set). */
+  stills: readonly MediaId[];
+  captions: readonly ReactNode[];
+  cartouche: ReactNode;
+  saveData?: boolean;
+};
+
+export function JourneyCarousel({ variant, stills, captions, cartouche, saveData = false }: Props) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
+  const [seen, setSeen] = useState(0); // the furthest slide visited
+  const [intent, setIntent] = useState<number | null>(null);
   const n = journey.length;
   const cur = journey[i];
+  const alt = variant === "alt";
 
   const goto = (idx: number) => {
     const clamped = Math.max(0, Math.min(n - 1, idx));
     setDir(clamped >= i ? 1 : -1);
     setI(clamped);
+    setSeen((s) => Math.max(s, clamped));
   };
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -51,75 +69,103 @@ export function JourneyCarousel({ nowCaption }: { nowCaption?: ReactNode }) {
   if (!cur) return null;
 
   return (
-    <div className="mt-tier-block">
+    <div className="mt-tier-block grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6" data-voyage={variant} data-carousel="">
+      <div className="lg:col-span-5 lg:col-start-1">{cartouche}</div>
+
+      {/* the chart strip: its waypoints are the tabs */}
       <div
         role="tablist"
         aria-label="Journey timeline"
         aria-orientation="horizontal"
         onKeyDown={onKey}
-        className="relative"
+        className="lg:col-span-5 lg:col-start-1"
       >
-        {/* the dashed brass course under the stepper */}
-        <svg aria-hidden="true" focusable="false" className="absolute inset-x-5 top-[1.3rem] h-2 w-[calc(100%-2.5rem)] overflow-visible">
-          <line x1="0" x2="100%" y1="1" y2="1" className="stroke-(--w-brass)" strokeWidth={1.5} strokeDasharray="6 5" />
-        </svg>
-        <div className="relative flex justify-between">
+        <JourneyChart
+          className="max-w-[40rem] pb-12 pt-6"
+          heading={intent !== null ? bearingTo(intent) : legHeading(i)}
+          lid={intent !== null ? "open" : "ajar"}
+          active={i}
+          reached={alt ? seen : i}
+          plot={alt ? "legs" : "full"}
+          cursed={reduce || seen >= BREAK_INDEX}
+          xInked={!alt || seen >= NOW_INDEX}
+          hunt
+          compassClassName="w-12 sm:w-14"
+          medallionClassName="w-8 sm:w-11"
+        >
           {journey.map((s, idx) => {
             const sel = idx === i;
-            const reached = idx <= i;
             return (
-              <button
-                key={s.marker}
-                type="button"
-                role="tab"
-                id={`journey-tab-${idx + 1}`}
-                aria-selected={sel}
-                aria-controls="journey-panel"
-                tabIndex={sel ? 0 : -1}
-                onClick={() => goto(idx)}
-                className="group flex min-h-11 min-w-11 flex-col items-center gap-2 px-1"
-              >
-                <span className="relative flex size-11 items-center justify-center">
-                  {idx === NOW_INDEX ? (
-                    <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4">
-                      <path d="M3 3 L17 17 M17 3 L3 17" className="stroke-(--w-brass)" strokeWidth={2.25} strokeLinecap="square" />
-                    </svg>
-                  ) : (
-                    <span
-                      className={cn(
-                        "size-3 rounded-full border-[1.5px] border-(--w-brass) transition-colors duration-(--dur-micro)",
-                        reached ? "bg-(--w-brass)" : "bg-bg",
-                        sel && "scale-125",
-                      )}
-                    />
-                  )}
-                  {idx === BREAK_INDEX ? (
-                    <span aria-hidden="true" className="absolute right-0.5 top-1 h-3.5 w-0.5 rotate-45 bg-kill" />
-                  ) : null}
-                </span>
-                <span
+              <Waypoint key={s.marker} index={idx} as="div">
+                <button
+                  type="button"
+                  role="tab"
+                  id={`journey-tab-${idx + 1}`}
+                  aria-selected={sel}
+                  aria-controls="journey-panel"
+                  tabIndex={sel ? 0 : -1}
+                  onClick={() => goto(idx)}
+                  onPointerEnter={() => setIntent(idx)}
+                  onPointerLeave={() => setIntent(null)}
+                  onFocus={() => setIntent(idx)}
+                  onBlur={() => setIntent(null)}
                   className={cn(
-                    "type-meta transition-colors duration-(--dur-micro)",
-                    sel ? "text-fg" : "text-fg-muted group-hover:text-fg",
+                    "flex min-h-11 min-w-11 items-center justify-center rounded-control px-1 type-meta transition-colors duration-(--dur-micro) motion-off:transition-none",
+                    sel ? "text-fg" : "text-fg-muted hover:text-fg",
                   )}
                 >
-                  {s.marker}
-                </span>
-              </button>
+                  <WaypointLabel index={idx} compact />
+                </button>
+              </Waypoint>
             );
           })}
+        </JourneyChart>
+      </div>
+
+      {/* the step's still + its caption */}
+      <div className="scene-caption-host relative lg:col-span-7 lg:col-start-6 lg:row-span-3 lg:row-start-1 lg:self-start">
+        <div className="relative aspect-video w-full overflow-hidden rounded-frame bg-(--world-deep)">
+          {stills.map((id, k) =>
+            k <= Math.max(seen, i) ? (
+              <div
+                key={id}
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-(--dur-preview) motion-off:transition-none",
+                  k === i ? "opacity-100" : "opacity-0",
+                )}
+              >
+                <MediaFrame
+                  media={id}
+                  layout="fill"
+                  sizes={saveData ? "360px" : "(min-width: 1024px) 55vw, 100vw"}
+                  loader={k === i}
+                  world="pirates"
+                />
+              </div>
+            ) : null,
+          )}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] hidden h-1/2 bg-linear-to-t from-(--world-deep)/85 to-transparent sm:block"
+          />
+        </div>
+        <div key={i} data-step-caption={i + 1}>
+          {captions[i]}
         </div>
       </div>
 
+      {/* the verbatim step */}
       <div
         id="journey-panel"
         role="tabpanel"
         aria-labelledby={`journey-tab-${i + 1}`}
-        className="mt-tier-block border-t border-rule pt-tier-group"
+        className="border-t border-rule pt-tier-group lg:col-span-5 lg:col-start-1"
       >
         <div className="flex items-center justify-between gap-4">
           <p className="type-meta text-fg-muted">
             <span className="tnum">{String(i + 1).padStart(2, "0")}</span>
+            <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+            <span>{cur.marker}</span>
             <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
             <span className="tnum">{`${i + 1} / ${n}`}</span>
           </p>
@@ -145,24 +191,19 @@ export function JourneyCarousel({ nowCaption }: { nowCaption?: ReactNode }) {
           </div>
         </div>
 
-        <div className="mt-tier-group grid gap-tier-group sm:grid-cols-[1fr_auto] sm:items-center">
-          <AnimatePresence mode="wait" custom={dir} initial={false}>
-            <motion.div
-              key={cur.marker}
-              initial={reduce ? false : { opacity: 0, x: dir * 32 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reduce ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, x: dir * -32 }}
-              transition={{ duration: reduce ? 0 : dur.base, ease }}
-            >
-              <h3 className="type-heading text-fg">{cur.title}</h3>
-              <p className="mt-tier-pair max-w-body type-body text-fg-muted">{cur.body}</p>
-              {i === NOW_INDEX && nowCaption ? <div className="mt-tier-group">{nowCaption}</div> : null}
-            </motion.div>
-          </AnimatePresence>
-          <div className="justify-self-start sm:justify-self-end">
-            <JackCompass heading={headingOf(i)} size={112} />
-          </div>
-        </div>
+        <AnimatePresence mode="wait" custom={dir} initial={false}>
+          <motion.div
+            key={cur.marker}
+            className="mt-tier-group"
+            initial={reduce ? false : { opacity: 0, x: dir * 32 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={reduce ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, x: dir * -32 }}
+            transition={{ duration: reduce ? 0 : dur.base, ease }}
+          >
+            <h3 className="type-heading text-fg">{cur.title}</h3>
+            <p className="mt-tier-pair max-w-body type-body text-fg-muted">{cur.body}</p>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
