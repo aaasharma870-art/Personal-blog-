@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
+import "./intro.css";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
@@ -12,6 +13,10 @@ import { CursorGlow } from "@/components/visuals/cursor-glow";
 import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
 import { worldFontVariables } from "@/lib/fonts";
+import { introModel } from "@/components/intro/intro-model";
+import { IntroHeadScript } from "@/components/intro/intro-head-script";
+import { IntroOverlay } from "@/components/intro/intro-overlay";
+import { IntroBridge } from "@/components/intro/intro-bridge";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,12 +104,26 @@ export default function RootLayout({
     ],
   };
 
+  // The prologue (SPEC v2 §5): null when film/prologue is off, a plate is
+  // unusable, or its copy may not render in this build — then neither the
+  // head script nor the overlay ships, so nothing can arm.
+  const intro = introModel();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${worldFontVariables} h-full antialiased`}
+      // the pre-paint head script adds `intro-armed` / `data-intro` here
+      suppressHydrationWarning
     >
+      {intro ? (
+        <head>
+          <IntroHeadScript />
+        </head>
+      ) : null}
       <body className="flex min-h-full flex-col">
+        {intro ? <IntroOverlay model={intro} /> : null}
+        {intro ? <IntroBridge /> : null}
         <MotionProvider>
           <ChromeGate>
             <CursorGlow />
