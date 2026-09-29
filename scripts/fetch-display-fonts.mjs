@@ -8,7 +8,10 @@
 //
 // Re-run after adding or changing a `lettering` entry, then commit
 // assets/fonts/film/** and update research/build/FONTS.md. Budget: all
-// display woff2 ≤ 24 KB total (SPEC §14) — the script fails above it.
+// display woff2 ≤ 56 KB total (RECOGNIZABILITY O-2; was 24 KB, SPEC §14,
+// before the captions scope) — the script fails above it.
+// Lettered QUOTES (`lettering[].quote`) take their glyphs from lib/quotes.ts
+// (text + excerptText), so the line never appears outside the registry.
 //
 // Source: the Google Fonts CSS2 API with `text=` (Google serves the subset
 // from the family's canonical OFL files, under the family's own name), and
@@ -17,10 +20,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { film } from "../lib/film.ts";
+import { quotes } from "../lib/quotes.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "assets", "fonts", "film");
-const BUDGET = 24 * 1024;
+const BUDGET = 56 * 1024;
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
 
@@ -38,6 +42,11 @@ for (const l of film.lettering) {
   if (!FACES[l.face]) throw new Error(`lettering "${l.id}": no FACES entry for "${l.face}"`);
   const set = byFace.get(l.face) ?? new Set();
   for (const ch of l.text) set.add(ch);
+  if (l.quote) {
+    const q = quotes[l.quote];
+    if (!q) throw new Error(`lettering "${l.id}": unknown quote "${l.quote}"`);
+    for (const ch of q.text + (q.excerptText ?? "")) set.add(ch);
+  }
   byFace.set(l.face, set);
 }
 

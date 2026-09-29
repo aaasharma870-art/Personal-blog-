@@ -32,12 +32,15 @@ import { useCard } from "@/components/sections/act-card/card-context";
  *            up to the light's reach.
  *   .82–.96  the light comes down onto the Line's end and becomes the last
  *            warm point (a flame sprite); the hall is lit.
- *   > .9     with MV-07: the hall swaps in on dur.preview (a state swap).
+ *   > .9     THE GREAT HALL (iconic-hall-alt; RECOGNIZABILITY S17: both
+ *            variants settle on the hall) swaps in on dur.preview (a state
+ *            swap) — "LUMOS — THE GREAT HALL LIGHTS UP • HARRY POTTER".
  * Every luminous pixel is a pre-rendered sprite (<image>, plus-lighter;
  * Law 1): 36 candles + 1 light + 1 fire + 1 flame (≤ 40, ignite G5); no
  * canvas, no DOM glow, no aqua beyond the one cool light. Static card (RM, Pause, < 1024 /
- * coarse, no JS, SSR): the lit hall — every candle lit, the Line inked, the
- * last warm point — or the MV-07 still. aria-hidden art.
+ * coarse, no JS, SSR): the Great Hall still — or, with no hall plate, the
+ * lit code hall (every candle lit, the Line inked, the last warm point).
+ * aria-hidden art.
  */
 
 /** The hall in Line space (the Line's 1000 × 400, padded for the candles). */
@@ -111,7 +114,7 @@ export function IgniteLumosFrame({ hall }: { hall: MediaId | null }) {
 
   if (hall) {
     return (
-      <div aria-hidden="true" className="absolute inset-0">
+      <div aria-hidden="true" data-frame="ignite-lumos" className="absolute inset-0">
         {live ? <Hall key="live" p={p} /> : null}
         <motion.div
           className="absolute inset-0"

@@ -250,16 +250,25 @@ export function headerLabelOf(
   film: Film,
 ): string {
   if (!activeId || !film.enabled) return "";
+  // RECOGNIZABILITY §4.4: the header names the FILM ("ACT II · 3 IDIOTS");
+  // the act title stays on the card and in the menu group.
+  const labelOf = (act: AnyAct): string => {
+    const n = actsInUse(sections, film).indexOf(act) + 1;
+    const work = film.worlds[act.world]?.work;
+    return `ACT ${roman(n)} · ${(work ? work.title : act.title.text).toUpperCase()}`;
+  };
   const card = actCardsOf(sections, film).find((c) => c.id === activeId);
-  if (card) return card.label;
+  if (card) {
+    const a = actSpecOf(film, card.act);
+    return a ? labelOf(a) : card.label;
+  }
   const s = sections.find((e) => e.id === activeId);
   if (!s || s.type === "hero") return "";
   if (s.type === "films") return "INTERMISSION";
   if (s.type === "credits") return "CREDITS";
   const act = actSpecOf(film, s.act);
   if (!act) return "";
-  const n = actsInUse(sections, film).indexOf(act) + 1;
-  return `ACT ${roman(n)} • ${act.title.text.toUpperCase()}`;
+  return labelOf(act);
 }
 
 export type WorkInUse = { world: World; title: string; years: string; kind: "film" | "game" };

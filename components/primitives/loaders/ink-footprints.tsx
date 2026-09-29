@@ -4,122 +4,168 @@ import { useId } from "react";
 import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
 import type { LoaderRendererProps } from "@/components/primitives/loader";
 import { cn } from "@/lib/utils";
-import { DrawPath, SIZE_CLASS, SIZE_PX, useTicker } from "@/components/primitives/loaders/kit";
-import { LINE, LINE_D, LINE_VIEWBOX } from "@/components/primitives/loaders/line";
+import { DrawPath, SIZE_CLASS, SIZE_PX, useTicker, type Pt } from "@/components/primitives/loaders/kit";
 
 /**
- * LD-HP ALT "Footprints" (hp; lib/variants.ts `loader-ink-light.motion`
- * alt). Harry Potter reveals — the default sends a light along the Line;
- * this one is the Marauder's Map's own tell: ink footprints walk the Line,
- * each step inking in as it lands and fading behind the walker, until the
- * feet stop together at the Line's end. No light, no candles: ink only.
+ * LD-HP ALT "The Marauder's Map" (hp; lib/variants.ts
+ * `loader-ink-light.motion` alt; M2 RECOGNIZABILITY S20, caption
+ * cap.loader.hp.alt "THE MARAUDER'S MAP"). Harry Potter reveals — the
+ * default lights candles; this one is the Map's own tell: a folded
+ * PARCHMENT tile, its creases showing, drawn in ink with a castle's rooms,
+ * a round tower and the corridors between them, and a pair of inked
+ * FOOTPRINTS walking the corridors, each step inking in as it lands and
+ * fading behind the walker, until the feet stop together in the far room.
  *
- *   determinate    a dotted ink path is drawn to `progress` (pathLength,
- *                  direct); step k (12 steps, alternating feet, spaced
- *                  along .04–.9 of the Line) lands when the path reaches
- *                  it — the newest three at full ink, the older ones faded
- *                  to 35 % (the map's fading trail).
- *   indeterminate  two steps pace in place at the Line's start (one foot,
- *                  then the other, every 0.5 s): someone is there, nothing
- *                  has advanced. Frozen when the shell's idle stop drops
+ *   determinate    a dotted ink path is drawn along the corridor to
+ *                  `progress` (pathLength, direct); step k (16, alternating
+ *                  feet) lands when the path reaches it — the newest three
+ *                  at full ink, older ones faded to 35 %.
+ *   indeterminate  two steps pace in place at the entrance (one foot, then
+ *                  the other, every 0.5 s): someone is there, nothing has
+ *                  advanced. Frozen when the shell's idle stop drops
  *                  `animate`.
  *   complete       the path drawn; every step faded; the feet side by side
- *                  at the end, at full ink. No flash.
+ *                  in the far room, at full ink. No flash.
  *   static         the same as complete.
- * Our own print shapes (a sole and a heel, never a traced map). Ink is
- * --w-ink-contour (8.94:1 on hp deep, L8); 0 sprites, 0 glow, 0 text.
+ * Our own floor plan and print shapes (never a traced prop map, no
+ * lettering: the Map's microtext lives only in the Map EGG, in HTML). Inks
+ * are the parchment's own (--paper, --paper-fg 12.6:1, --paper-muted);
+ * 0 sprites, 0 glow, 0 text (L6, L7); tokens only (L17).
  */
 
-const W = LINE_VIEWBOX.w;
-const H = LINE_VIEWBOX.h;
-const STEPS = 12;
-const OFFSET = 17;
+// — geometry (viewBox 0 0 160 104) —
+const SHEET = { x: 4, y: 4, w: 152, h: 96 };
+/** The walker's route along the corridors: entrance → great room → tower →
+ *  the far room. */
+const ROUTE: readonly Pt[] = [
+  [18, 84],
+  [62, 84],
+  [62, 31],
+  [108, 31],
+  [108, 72],
+  [140, 72],
+];
+const ROUTE_D = ROUTE.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join("");
+const SEGS = ROUTE.slice(1).map((b, i) => {
+  const a = ROUTE[i];
+  return { a, b, len: Math.hypot(b[0] - a[0], b[1] - a[1]), ang: (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI };
+});
+const TOTAL = SEGS.reduce((s, g) => s + g.len, 0);
+
+/** The point and heading at fraction f of the route (by length). */
+function routeAt(f: number): { x: number; y: number; a: number } {
+  let d = Math.min(1, Math.max(0, f)) * TOTAL;
+  for (const g of SEGS) {
+    if (d <= g.len) {
+      const t = g.len ? d / g.len : 0;
+      return { x: g.a[0] + (g.b[0] - g.a[0]) * t, y: g.a[1] + (g.b[1] - g.a[1]) * t, a: g.ang };
+    }
+    d -= g.len;
+  }
+  const last = SEGS[SEGS.length - 1];
+  return { x: last.b[0], y: last.b[1], a: last.ang };
+}
+
+/** Rooms (x, y, w, h) — the corridors break through their walls as doors. */
+const ROOMS = [
+  { x: 8, y: 74, w: 22, h: 20 },
+  { x: 46, y: 16, w: 30, h: 26 },
+  { x: 128, y: 60, w: 24, h: 24 },
+  { x: 80, y: 60, w: 18, h: 30 },
+];
+const TOWER = { x: 108, y: 31, r: 11 };
+/** Stair hatching in the great room, and a secret passage (dotted). */
+const STAIRS = Array.from({ length: 5 }, (_, i) => `M${50 + i * 2.6} 38V${33 - i * 0.2}`).join("");
+const SECRET = "M30 60C40 58 44 52 46 46M120 24C130 22 140 26 146 34";
+const CREASES = `M${SHEET.x + SHEET.w / 3} ${SHEET.y + 1}V${SHEET.y + SHEET.h - 1}M${SHEET.x + (2 * SHEET.w) / 3} ${SHEET.y + 1}V${SHEET.y + SHEET.h - 1}M${SHEET.x + 1} ${SHEET.y + SHEET.h / 2}H${SHEET.x + SHEET.w - 1}`;
+
+const STEPS = 16;
+const OFFSET = 2.6;
 /** A print, toe along +x, heel at the origin (sole + heel, filled ink). */
 const PRINT =
   "M13 -6.6C20 -9.4 34 -9.6 42 -6.2C48 -3.6 48 3.6 42 6.2C34 9.6 20 9.4 13 6.6C9 4.6 9 -4.6 13 -6.6Z" +
   "M0.4 -5C3.6 -7.4 8 -6.8 9 -3.4C9.8 -1 9.8 1 9 3.4C8 6.8 3.6 7.4 0.4 5C-2 3 -2 -3 0.4 -5Z";
 
 type Step = { x: number; y: number; a: number; at: number };
-
-/** Step k: its landing fraction, alternating left / right of the Line. */
 const WALK: Step[] = Array.from({ length: STEPS }, (_, k) => {
-  // steps land from .04 to .9 of the Line; the fold at its end is where the
-  // feet stop together (complete)
-  const at = 0.04 + (0.86 * k) / (STEPS - 1);
-  const q = LINE.at(at);
-  const a = LINE.angleAt(at);
+  const at = 0.03 + (0.9 * k) / (STEPS - 1);
+  const q = routeAt(at);
   const side = k % 2 ? 1 : -1;
-  const r = (a * Math.PI) / 180;
-  return { x: q.x - Math.sin(r) * OFFSET * side, y: q.y + Math.cos(r) * OFFSET * side, a, at };
+  const r = (q.a * Math.PI) / 180;
+  return { x: q.x - Math.sin(r) * OFFSET * side, y: q.y + Math.cos(r) * OFFSET * side, a: q.a, at };
 });
-
-/** The feet together at the Line's end (complete / static). */
+/** The feet together in the far room (complete / static). */
 const END = (() => {
-  const q = LINE.at(0.955);
-  const a = LINE.angleAt(0.93);
-  const r = (a * Math.PI) / 180;
-  return [-1, 1].map((side) => ({
-    x: q.x - Math.cos(r) * 24 - Math.sin(r) * 11 * side,
-    y: q.y - Math.sin(r) * 24 + Math.cos(r) * 11 * side,
-    a,
-  }));
+  const q = routeAt(1);
+  return [-1, 1].map((side) => ({ x: q.x + 2, y: q.y + 2.3 * side, a: 0 }));
 })();
 
-const printT = (s: { x: number; y: number; a: number }, scale = 1) =>
-  `translate(${s.x.toFixed(1)} ${s.y.toFixed(1)}) rotate(${s.a.toFixed(1)}) scale(${scale})`;
+const printT = (s: { x: number; y: number; a: number }, k: number) =>
+  `translate(${s.x.toFixed(2)} ${s.y.toFixed(2)}) rotate(${s.a.toFixed(1)}) scale(${k})`;
 
 export default function InkFootprintsLoader(props: LoaderRendererProps) {
   // one MotionValue source per mode (useTransform binds once): remount on mode
-  return <Footprints key={props.mode} {...props} />;
+  return <MapTile key={props.mode} {...props} />;
 }
 
-function Footprints({ mode, size, progress, animate: running }: LoaderRendererProps) {
-  const scale = SIZE_PX[size] / W;
+function MapTile({ mode, size, progress, animate: running }: LoaderRendererProps) {
+  const mini = size === "mini";
+  const scale = SIZE_PX[size] / 160;
   const sw = (px: number) => px / scale;
   const maskId = useId();
   const one = useMotionValue(1);
   const zero = useMotionValue(0);
   const walk = mode === "determinate" ? progress : mode === "indeterminate" ? zero : one;
   const done = mode === "complete" || mode === "static";
-  // mini draws bigger feet (the prints would vanish at 48 px)
-  const big = size === "mini" ? 1.8 : 1.25;
+  // print size in user units (a mini tile needs bigger feet)
+  const k = mini ? 0.2 : 0.11;
+  const corridor = mini ? 14 : 9;
 
-  // indeterminate: one foot, then the other, pacing at the start
+  // indeterminate: one foot, then the other, pacing at the entrance
   const tick = useTicker(mode === "indeterminate" && running, 500);
 
   return (
-    <span className={cn("relative block", SIZE_CLASS[size])}>
-      <svg
-        viewBox={`0 -60 ${W} ${H + 60}`}
-        aria-hidden="true"
-        focusable="false"
-        className="block h-auto w-full overflow-visible"
-        fill="none"
-      >
+    <span className={cn("relative block", SIZE_CLASS[size])} data-loader-art="marauders-map">
+      <svg viewBox="0 0 160 104" aria-hidden="true" focusable="false" className="block h-auto w-full overflow-visible" fill="none">
         <defs>
           <mask id={maskId} maskUnits="userSpaceOnUse">
-            <DrawPath d={LINE_D} progress={walk} stroke="white" strokeWidth={sw(4)} strokeLinecap="butt" />
+            <DrawPath d={ROUTE_D} progress={walk} stroke="white" strokeWidth={sw(6)} strokeLinecap="butt" />
           </mask>
         </defs>
-        {/* the corridor, faint; the walked path, a dotted ink line (= progress) */}
-        <path d={LINE_D} stroke="var(--w-ink-contour)" strokeOpacity={0.18} strokeWidth={sw(1)} strokeLinecap="round" />
+        {/* the folded parchment and its creases */}
+        <rect x={SHEET.x} y={SHEET.y} width={SHEET.w} height={SHEET.h} rx={1.5} fill="var(--paper)" stroke="var(--paper-edge-deep)" strokeWidth={sw(1)} />
+        <path d={CREASES} stroke="var(--paper-edge-deep)" strokeWidth={sw(0.8)} opacity={0.8} />
+        {/* the castle in ink: rooms, then the corridors cut doors through
+            them (an ink stroke with a parchment core = a double wall) */}
+        <g stroke="var(--paper-muted)" strokeLinejoin="miter">
+          {ROOMS.map((r, i) => (
+            <rect key={i} x={r.x} y={r.y} width={r.w} height={r.h} fill="var(--paper)" strokeWidth={sw(mini ? 1.4 : 1.1)} />
+          ))}
+          <circle cx={TOWER.x} cy={TOWER.y} r={TOWER.r} fill="var(--paper)" strokeWidth={sw(mini ? 1.4 : 1.1)} />
+          <path d={ROUTE_D} strokeWidth={corridor} strokeLinecap="square" />
+          <path d={ROUTE_D} stroke="var(--paper)" strokeWidth={corridor - sw(mini ? 1.2 : 2)} strokeLinecap="square" />
+          {mini ? null : (
+            <>
+              <circle cx={TOWER.x} cy={TOWER.y} r={TOWER.r - 3.2} strokeWidth={sw(0.6)} opacity={0.6} />
+              <path d={STAIRS} strokeWidth={sw(0.7)} />
+              <path d={SECRET} strokeWidth={sw(0.8)} strokeDasharray={`${sw(1.5)} ${sw(2.5)}`} opacity={0.75} />
+            </>
+          )}
+        </g>
+        {/* the walked path: a dotted ink line (= progress) */}
         <path
-          d={LINE_D}
-          stroke="var(--w-ink-contour)"
+          d={ROUTE_D}
+          stroke="var(--paper-fg)"
           strokeWidth={sw(1.2)}
           strokeLinecap="round"
-          strokeDasharray={`${sw(0.1)} ${sw(4)}`}
+          strokeDasharray={`${sw(0.1)} ${sw(3.5)}`}
           mask={`url(#${maskId})`}
         />
-        <g fill="var(--w-ink-contour)">
+        <g fill="var(--paper-fg)">
           {mode === "indeterminate"
-            ? WALK.slice(0, 2).map((s, k) => (
-                <path key={k} d={PRINT} transform={printT(s, big)} opacity={tick % 2 === k ? 1 : 0.2} />
-              ))
-            : WALK.map((s, k) => <Print key={k} step={s} walk={walk} done={done} big={big} />)}
-          {done
-            ? END.map((s, k) => <path key={`end${k}`} d={PRINT} transform={printT(s, big)} />)
-            : null}
+            ? WALK.slice(0, 2).map((s, i) => <path key={i} d={PRINT} transform={printT(s, k)} opacity={tick % 2 === i ? 1 : 0.25} />)
+            : WALK.map((s, i) => <Print key={i} step={s} walk={walk} done={done} k={k} />)}
+          {done ? END.map((s, i) => <path key={`end${i}`} d={PRINT} transform={printT(s, k)} />) : null}
         </g>
       </svg>
     </span>
@@ -128,12 +174,12 @@ function Footprints({ mode, size, progress, animate: running }: LoaderRendererPr
 
 /** One step: lands when the walk passes it, fades once three newer steps
  *  have landed (complete: every step faded, the end pair carries the ink). */
-function Print({ step, walk, done, big }: { step: Step; walk: MotionValue<number>; done: boolean; big: number }) {
+function Print({ step, walk, done, k }: { step: Step; walk: MotionValue<number>; done: boolean; k: number }) {
   const opacity = useTransform(walk, (v) => {
     if (v < step.at - 1e-6) return 0;
     if (done) return 0.35;
     const age = (v - step.at) * STEPS;
     return age < 2.5 ? 1 : age > 3.5 ? 0.35 : 1 - 0.65 * (age - 2.5);
   });
-  return <motion.path d={PRINT} transform={printT(step, big)} style={{ opacity }} />;
+  return <motion.path d={PRINT} transform={printT(step, k)} style={{ opacity }} />;
 }

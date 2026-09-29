@@ -1,3 +1,9 @@
+> **RESUME POINT (2026-09-29, 05:30 ET, handoff from Aryan's laptop).** The local session is STOPPED, so no other executor is active and you may start immediately.
+> - **Branch head:** `ad7f742` + docs.
+> - **Done:** M0, M1, M1.5, and most of M2-COMBINED (all media, the integrator, all 6 section builders, assembly).
+> - **Your next step:** `docs/build/AUTOPILOT.md` → **M2-COMBINED → "REMAINING" step 1**: eslint + build → blind + captioned captures → 3 blind judges + critic → fix → `M2-REPORT.md`. Then **M5 final QA** → `FINAL-REPORT.md`.
+> - Everything you need is in this repo. Paths in `docs/build/*` that start with `C:/Users/aaash/Desktop/Transcript/research/build/` map to `docs/build/`.
+
 # CONTINUE: autonomous build handoff (for any Claude Code session, local or cloud)
 
 **If you are Claude and the user said "continue", "go" or anything similar in this repo: this file is your task.** Aryan Sharma authorized a fully autonomous build of his personal site. Finish it without asking him anything, then report.

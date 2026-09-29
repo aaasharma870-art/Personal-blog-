@@ -791,3 +791,99 @@ Masters stay in `masters/`, and nothing was written to the repo.
 **Placement:**
 - All 46 M2 web files plus the two 72-frame sequences are in `media/accepted/`.
 - The repo's `public/` has no M2 file. Its only changes since M1.5 are the M1.5 alts, committed in a3e6516, and a code change to `public/intro/intro.js`. Nothing was written to the repo.
+
+
+---
+
+# Higgsfield media LOG: M2 iconic · 2026-09-29 03:52–04:03 ET · 140 cr
+
+**Scope:** eight new ICONIC plates, each with a DEFAULT and an ALT, for the recognizability rule:
+- Stranger test in about 3 seconds.
+- HTML captions name the FILM and the MOMENT.
+- The icons are accurate.
+
+**Credits and balance:**
+- The lane cap is 330 and the floor is 150; the balance was checked before every batch.
+- Balance went **674.5 → 534.5**, so the lane spent **140.0**. `transactions` reconciles this as 20 spends × 7.
+- One submission failed with 429 `rate_limit_reached`. It was not charged and was resubmitted.
+
+**Settings for every job:**
+- Model and output: `gpt_image_2_5`, 16:9, 4k, xhigh (7 each), giving 3840×2160 exact.
+- Prompts are text-only and name no film, character, studio or place (MEDIA-PLAN §1 hygiene).
+- The only references are our own job ids, used for the 4 cleanup edits.
+- The ledger is `LEDGER-m2iconic.md`. The prompts are `prompts/m2iconic/*.full.txt` (assembled by `prompts/m2iconic/build.py`). The masters are `masters/m2iconic/<name>/`. Check crops are in `crops/m2iconic/`.
+
+**Prompt recipe:**
+- **[A-iconic]:** original cinematic artwork, unmistakable and iconic, recreated as our own composition. Natural practical light, locked 35–50 mm camera. The lower-left quarter is slightly darker and calmer for a live caption. No interface or typography.
+- **Then:** a world line plus the subject paragraph.
+- **Then [X-iconic]:** excludes text, numbers, signage, logos, crests, emblems and badges; any person, figure, crew, rider, face, hand or silhouette, and any statue, carving or figurehead with a face; weapons, bottles and tobacco; lens flares and neon.
+- **Per plate, the subject paragraph (in visual terms only):**
+  - PEARL: a close three-quarter view of a black-hulled galleon with torn black sails, lit stern windows, lanterns, the moon, fog and an aqua wake; no flag, figurehead or crew.
+  - HALL: a gothic hall with four long tables and gold plates, a raised high table, and hundreds of floating candles without holders under a starry-sky ceiling; no banners or crests.
+  - EXPRESS: a crimson steam locomotive and carriages on a long, curving viaduct of many arches over a glen, with a highland loch and mist; no number, nameplate or crest.
+  - ICE: a tiered lecture theatre with a huge, completely blank green chalkboard on granite walls and a concrete-pergola corridor casting striped sun.
+  - DRONE: a hand-built quadcopter (aluminium and plywood, zip ties, tape, a taped battery, a bare PCB, a small camera) hovering in a granite and concrete-pergola college courtyard.
+  - CAMP: a camp at dusk among pines above a lake: a campfire with a tripod pot, A-frame and wall tents, a covered wagon, and three saddled horses hitched to a rail.
+  - WANTED: a shingle-roofed frontier notice board with five completely blank aged posters, nailed and torn, on a golden-hour false-front street.
+  - DEADEYE: a lone oak, a split-rail fence, a trail, a homestead and frozen birds, under a desaturated red-sepia grade with a heavy red vignette.
+- **Cleanup edits (EXPRESS, DRONE):** "Edit the supplied image. Keep it exactly as it is…" plus remove every emblem, monogram, crest, number, plate or label (the full text is in `*.edit.full.txt`).
+
+## Runs
+| Run | ET | Jobs | Cr | Notes |
+|---|---|---|---|---|
+| I1 | 03:53 | 11 (PEARL b, HALL ×2, EXPRESS ×2, ICE ×2, DRONE ×2, CAMP ×2) | 77 | PEARL a hit a 429 (no charge) |
+| I2 | 03:55 | 5 (PEARL a, WANTED ×2, DEADEYE ×2) | 35 | — |
+| I3 | 03:59 | 4 edits (EXPRESS ×2, DRONE ×2), refs = the I1 job ids | 28 | Removed pseudo-glyphs and emblems. EXPRESS default got a 0-credit OpenCV inpaint of 2 residual marks (tender oval, cab plate) |
+
+## Results per plate (DEFAULT / ALT, and why)
+| Plate | Film · moment (for the HTML caption) | DEFAULT (job) | ALT (job) | Why the default | Checks |
+|---|---|---|---|---|---|
+| PEARL | Pirates of the Caribbean · the Black Pearl | `iconic-pearl` (4273a1be) | `iconic-pearl-alt` (c2967ce4) | The full tattered black-sail silhouette reads instantly, and the plate has no ambiguous carving | No crew, flag, figurehead or skull, including at the 9× ghost gain. The ALT's stern finial is a carved urn or bird (≈1% of frame, no face at 600%). Lower-left p95 0.141 / 0.103 |
+| HALL | Harry Potter · the Great Hall | `iconic-hall` (1ef4355e) | `iconic-hall-alt` (0fd211fb) | Taller centre window, denser candles, darker lower-left (p95 0.088) | No people, banners or crests. High table only has chairs and candelabra |
+| EXPRESS | Harry Potter · the Hogwarts Express | `iconic-express` (4c065bde + retouch) | `iconic-express-alt` (5d84e0b7) | The curving many-arched viaduct is the iconic shape | Raw outputs FAILED on gold monograms and a pseudo-number cab plate; the edits removed them. The ALT's carriages keep ≤ 5 px non-legible gold handles or dots at 2560 |
+| ICE | 3 Idiots · the ICE lecture hall | `iconic-ice` (0e7a3d5c) | `iconic-ice-alt` (950f30c7) | Bigger board and a real lecturer's desk with chair | Board completely blank (inner SD 9.2 / 8.8). **Board bbox for the HTML text:** DEFAULT x 0.389–0.961, y 0.091–0.410; ALT x 0.398–1.0, y 0.178–0.473 (slight perspective) |
+| DRONE | 3 Idiots · Rancho's drone | `iconic-drone` (69cafb24) | `iconic-drone-alt` (07096f02) | Most "hand-built" read (plywood, tape, zip ties) in a granite and pergola courtyard | Raw outputs FAILED on PCB silkscreen pseudo-glyphs and a camera tag; the edits removed them. No hands or controller |
+| CAMP | Red Dead Redemption 2 · the gang's camp | `iconic-camp` (3c420eac) | `iconic-camp-alt` (37726d77) | Horses face camera; the lit wall tent and lake sunset feel like the overlook camp | Horses: 4 legs and 1 head each, no rider, plain tack (200% crops). No people, guns, bottles or lettering |
+| WANTED | Red Dead Redemption 2 · the WANTED poster | `iconic-wanted` (3af08f65) | `iconic-wanted-alt` (afe7b162) | Central poster square-on, more street context | Every poster blank at 100%. **Central poster bbox:** DEFAULT x 0.257–0.494, y 0.192–0.748; ALT x 0.245–0.468, y 0.206–0.756. No shop signs |
+| DEADEYE | Red Dead Redemption 2 · Dead Eye | `iconic-deadeye` (0a60fa27) | `iconic-deadeye-alt` (56c0a864) | The heavier desaturated red-sepia and vignette read as the slowed-time filter, not a sunset | No X marks, crosshairs or UI, so the code draws the X's. Lower-left p95 0.048 |
+
+**Legal / L2 (Claude, 09-29):** every DEFAULT and ALT was viewed at 1400 px, with 100–600% crops of every risk area:
+- the decks and rails, and the high table
+- the locomotive, tender and carriages
+- the board and ledge, and the PCB and camera
+- the horses and tents, the posters and street, and the homestead and birds
+
+Pearl, hall and camp were also run through the 9× ghost gain. **Result:** no person, face, hand, rider, legible text, logo, crest, flag marking or badge in any delivered file. Every scene is our own composition from a text prompt, with no film still passed as a reference. **Aryan's countersignature is pending.**
+
+**Caption-zone luminance** (lower-left quarter, linear p95; DEFAULT / ALT):
+
+| Plate | DEFAULT | ALT |
+|---|---|---|
+| pearl | 0.141 | 0.103 |
+| hall | 0.088 | 0.105 |
+| express | 0.088 | 0.098 |
+| ice | 0.319 | 0.477 |
+| drone | 0.453 | 0.307 |
+| camp | 0.044 | 0.031 |
+| wanted | 0.211 | 0.221 |
+| deadeye | 0.048 | 0.057 |
+
+ICE, DRONE and WANTED are daylit, so their captions need a scrim or a placement on dark areas. See flag 1.
+
+## Deliveries (web files only, in `accepted/`; nothing written to the repo)
+The encodes are sharp lanczos3 WebP (effort 6), with a centre crop that is a no-op because the source is exactly 16:9:
+- 2560×1440 at ≤ 450 KB (q 74–86)
+- 1280×720 at ≤ 160 KB (q 78–84)
+
+`<name>` is pearl, hall, express, ice, drone, camp, wanted or deadeye (8 × 4 = 32 files):
+- `iconic-<name>.webp` (2560 DEFAULT)
+- `iconic-<name>-1280.webp` (1280 DEFAULT)
+- `iconic-<name>-alt.webp` (2560 ALT)
+- `iconic-<name>-alt-1280.webp` (1280 ALT)
+
+## Open flags for Aryan / the integrator
+1. **Captions on daylit plates** (ICE, DRONE, WANTED) sit on bright ground. Lower-left p95 is 0.21–0.48. Use a bottom scrim or gradient, or put the caption on the board or poster itself, to keep AA.
+2. **The EXPRESS DEFAULT carries a 0-credit local retouch** (OpenCV Telea on 2 masks of ≤ 30 px on the 3840 master: the tender oval and the cab plate). It is invisible at 2560. Provenance is `4c065bde` + retouch.
+3. **The ICE and WANTED bboxes above** are for placing the HTML board text and the "WANTED" lettering. They are measured on the web files.
+4. **PEARL ALT** has an ornate stern finial (a carved urn or bird). It passed the face check but is the one ornament worth a second look.
+5. **Check L2:** Claude ✓ 09-29 on all 16 delivered plates; Aryan pending.

@@ -1,32 +1,40 @@
 import type { ReactNode } from "react";
-import { film, type Copy } from "@/lib/film";
+import { film, type CaptionKey, type Copy } from "@/lib/film";
 import { numberWord } from "@/lib/derive";
-import { resolveMedia, type MediaId } from "@/lib/media";
+import { isMediaId, markOf, resolveMedia, resolveVariant, type MediaId } from "@/lib/media";
 import {
   actCards,
   acts,
   bearingOf,
+  captionKeyFor,
+  captionOf,
   copyText,
   copyVisible,
   enabledSections,
   intensityOf,
   letteringFor,
   sectionById,
+  toneOf,
+  worldOf,
   type ActCardItem,
 } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
+import type { ToneId, WorldId } from "@/lib/worlds";
 import { FilmQuote } from "@/components/site/film-quote";
+import { FilmTitle, SceneCaption } from "@/components/primitives/scene-caption";
 import {
   IgniteLumosFrame,
   OpeningMapFrame,
   SeamChalkFrame,
   TintypeDeadEyeFrame,
 } from "@/components/sections/act-card/alt-frames";
+import type { CaptionCue } from "@/components/sections/act-card/card-captions";
 import { CardReveal } from "@/components/sections/act-card/card-reveal";
 import { CardShell } from "@/components/sections/act-card/card-shell";
 import { IgniteFrame } from "@/components/sections/act-card/frames/ignite";
 import { OpeningFrame, type OpeningRow } from "@/components/sections/act-card/frames/opening";
+import { OpeningPlateFrame } from "@/components/sections/act-card/frames/opening-plate";
 import { ReelFrame } from "@/components/sections/act-card/frames/reel";
 import { SeamFrame } from "@/components/sections/act-card/frames/seam";
 import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
@@ -35,23 +43,36 @@ import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
  * ActCardSection — renders one DERIVED act card (lib/derive.ts
  * `ActCardItem`: kind "act") as a letterboxed loading-reel interstitial
  * (SPEC v2 §8.2, §9.3; act-cards.BAR). A SERVER component: it resolves
- * everything that is data — the act title (and its world lettering), the
- * epigraph or TIP (a film line only through <FilmQuote>), the Meta credit
- * and reel mark, the world media, the opening program — and hands the
- * client CardShell + the transition's frame only plain props and server
- * markup. Choreography by `transition`:
+ * everything that is data — the FILM title (in its fan face), the act title
+ * (and its world lettering), the epigraph or TIP (a film line only through
+ * <FilmQuote>), the MOMENT captions, the Meta credit and reel mark, the
+ * world media for BOTH variants, the neighbouring grounds, the opening
+ * program — and hands the client CardShell + the transition's frame only
+ * plain props and server markup. Choreography by `transition`:
  *   opening (act 1) · seam (pirates>idiots, long) · tintype (idiots>rdr2,
  *   0 travel) · ignite (rdr2>hp or idiots>hp, long) · reel (unknown pair) ·
  *   title (same world).
+ *
+ * RECOGNIZABILITY (M2, binding; §4.3, §5 S03/S04/S07/S13/S17, §8): every card,
+ * DEFAULT and ALT, names its FILM prominently (the world's fan face at
+ * --text-title, above the frame), shows the film's most iconic imagery
+ * (iconic-pearl + a Jolly Roger; the ICE lecture hall; the Heartlands at
+ * golden hour / Dead Eye; the Great Hall) and names the MOMENT under the
+ * frame ("THE BLACK PEARL • PIRATES OF THE CARIBBEAN"). The world change
+ * into and out of every card is a dissolve (CardShell prev/next grounds,
+ * the hero feather, each frame's own morph).
+ *
  * Copy gates (SPEC §9.6): `proposed` strings render in dev / preview, and
  * in production only after sign-off; a gated act title falls back to its
- * numeral ("Act II") so no heading is ever empty.
+ * numeral ("Act II") so no heading is ever empty; a gated caption is simply
+ * absent (captionOf → null).
  *
  * Variants (lib/variants.ts, piece `card-<kind>.choreo`): every authored
  * transition hands CardShell its DEFAULT `frame` and its ALT `altFrame`
- * (lazy chunks, components/sections/act-card/alt-frames.tsx) with the same
- * media; the shell plays `item.variant` (or the ?variant=… preview). The
- * generic `reel` / `title` cards have no alternate.
+ * (lazy chunks, components/sections/act-card/alt-frames.tsx), each with its
+ * own plates (resolveVariant) and its own captions (captionKeyFor); the
+ * shell plays `item.variant` (or the ?variant=… preview). The generic
+ * `reel` / `title` cards have no alternate.
  */
 
 /** When each piece of the lower bar rises (card passage / pinned p). */
@@ -65,6 +86,18 @@ const REVEAL: Record<ActCardItem["transition"], { title: number; line: number }>
   flight: { title: 0.1, line: 0.5 },
 };
 
+/** When the film title rises: with the card, before the act title (it is
+ *  the first thing a stranger reads). */
+const FILM_AT: Record<ActCardItem["transition"], number> = {
+  opening: 0.02,
+  seam: 0,
+  tintype: 0.35,
+  ignite: 0.12,
+  reel: 0.05,
+  title: 0.05,
+  flight: 0.05,
+};
+
 const visible = (c: Copy | { text: string; status: string } | null | undefined) =>
   Boolean(c && copyVisible(c));
 
@@ -72,13 +105,21 @@ function titleOf(item: ActCardItem): string {
   return visible(item.titleCopy) ? item.title : `Act ${item.numeral}`;
 }
 
-
 /** `id` when it resolves to FILM media; never a legacy still (validator:
  *  a film world's media may not resolve to provenance "legacy"). null →
  *  the frame draws its code alternative. Exported for /lab/variants. */
 export function usable(id: MediaId | undefined): MediaId | null {
   const a = id ? resolveMedia(id) : null;
   return id && a && a.provenance.source !== "legacy" ? id : null;
+}
+
+/** The asset a variant of `id` renders (its registered ALT when usable),
+ *  as an id; null when `id` is not usable film media. */
+export function variantMedia(id: MediaId | undefined, v: Variant): MediaId | null {
+  const d = usable(id);
+  if (!d) return null;
+  const a = resolveVariant(d, v);
+  return a && a.provenance.source !== "legacy" ? a.id : d;
 }
 
 /** The program on the opening card: one row per act card in page order,
@@ -118,6 +159,67 @@ export function openingRows(): OpeningRow[] {
   return rows;
 }
 
+/* — Neighbouring grounds (the dissolve into / out of the card) ——————— */
+
+type Ground = { world: WorldId; tone: ToneId };
+
+/** The ground the reader leaves: the previous section's plane. The films
+ *  chapter ends on its LAST screen, whose ground is the last act's world
+ *  deep (RECOGNIZABILITY S12: screens in act order, each on its world deep). */
+function groundBefore(item: ActCardItem): Ground | null {
+  const i = enabledSections.findIndex((s) => s.id === item.before);
+  const prev = i > 0 ? enabledSections[i - 1] : null;
+  if (!prev) return null;
+  if (prev.type === "films") {
+    const last = acts[acts.length - 1];
+    return last ? { world: last.world, tone: "deep" } : { world: worldOf(prev), tone: toneOf(prev) };
+  }
+  return { world: worldOf(prev), tone: toneOf(prev) };
+}
+
+/** The ground the reader arrives on: the card's first section. */
+function groundAfter(item: ActCardItem): Ground | null {
+  const next = sectionById(item.before);
+  return next ? { world: worldOf(next), tone: toneOf(next) } : null;
+}
+
+/** The previous section's fire (plate anchor `fire`), in 0–1 of its plate:
+ *  where the ignite card's embers rise from (RECOGNIZABILITY S16/S17).
+ *  Exported for /lab/variants. */
+export function fireBefore(item: ActCardItem): readonly [number, number] | null {
+  const i = enabledSections.findIndex((s) => s.id === item.before);
+  const prev = i > 0 ? enabledSections[i - 1] : null;
+  const media = prev ? (prev.props as { media?: unknown }).media : undefined;
+  if (typeof media !== "string" || !isMediaId(media)) return null;
+  const a = resolveMedia(media);
+  return a ? markOf(a.id, "fire") : null;
+}
+
+/* — Captions ———————————————————————————————————————————————————————— */
+
+/** One MOMENT caption cue for CardCaptions, or null when the caption may
+ *  not render in this build. */
+function cue(
+  key: CaptionKey,
+  opts: { in?: readonly [number, number]; out?: readonly [number, number]; settled?: boolean } = {},
+): CaptionCue | null {
+  const c = captionOf(key);
+  if (!c) return null;
+  return {
+    key,
+    world: c.world,
+    node: <SceneCaption k={key} place="under" className="mt-0 sm:mt-0" />,
+    in: opts.in,
+    out: opts.out,
+    settled: opts.settled ?? true,
+  };
+}
+
+const cues = (...xs: (CaptionCue | null)[]): CaptionCue[] => xs.filter((x): x is CaptionCue => x !== null);
+
+/** The settled caption of a card for a variant ("cap.act-2" / ".alt"). */
+const settledKey = (base: CaptionKey, v: Variant) => captionKeyFor(base, v);
+
 export function ActCardSection({
   item,
   variant,
@@ -135,9 +237,26 @@ export function ActCardSection({
   const first = sectionById(item.before);
   const still = (first ? intensityOf(first) : film.intensity) !== "full";
 
+  // the FILM, named at a glance (RECOGNIZABILITY §4.3, O-1 / O-4): the
+  // world's work title in its fan face at --text-title, above the frame
+  const filmTitle =
+    item.to !== "house" && spec.work ? (
+      <p className="card-film text-[length:var(--text-title)] leading-[1.02] tracking-[0.03em] text-balance text-fg">
+        <CardReveal at={FILM_AT[kind]}>
+          <FilmTitle world={item.to} as="span" />
+        </CardReveal>
+      </p>
+    ) : null;
+
+  // the act h2 (lettered), smaller than the film title (§4.3)
   const face = kind === "opening" ? { lettered: false, upper: false } : letteringFor(item.lettering, title);
   const heading = (
-    <h2 id={titleId} className="type-title max-w-title text-fg">
+    // a COMPLETE step (the type-title family and leading at the §4.3 size;
+    // not type-title + an override, whose utility order is not guaranteed)
+    <h2
+      id={titleId}
+      className="max-w-title font-serif text-[length:clamp(1.75rem,2.9vw,3.1rem)] leading-[1.02] font-normal tracking-[-0.015em] text-balance text-fg"
+    >
       <CardReveal at={at.title}>
         <span className={cn(face.lettered && "lettered-title font-world-act", face.upper && "uppercase")}>
           {title}
@@ -180,8 +299,18 @@ export function ActCardSection({
 
   let frame: ReactNode;
   let altFrame: ReactNode = null;
+  let after: ReactNode = null;
+  let altAfter: ReactNode = null;
+  let captions: CaptionCue[] = [];
+  let altCaptions: CaptionCue[] = [];
   switch (kind) {
     case "opening": {
+      // S03/S04: the hero sea sinks into the deep (CardShell featherUp);
+      // the Black Pearl opens by aperture from its own horizon, a Jolly
+      // Roger at its stern; the program (h2 + rows + Jack's compass) below.
+      const pearl = spec.media.cardStill;
+      frame = <OpeningPlateFrame plate={variantMedia(pearl, "default")} />;
+      altFrame = <OpeningPlateFrame plate={variantMedia(pearl, "alt")} alt />;
       const h2Copy = copyText("opening.h2");
       // ONE heading node for both choreographies (same id, same text)
       const openingHeading = (
@@ -190,37 +319,74 @@ export function ActCardSection({
         </h2>
       );
       const rows = openingRows();
-      frame = <OpeningFrame heading={openingHeading} rows={rows} />;
-      altFrame = <OpeningMapFrame heading={openingHeading} rows={rows} />;
+      after = <OpeningFrame heading={openingHeading} rows={rows} />;
+      altAfter = <OpeningMapFrame heading={openingHeading} rows={rows} />;
+      captions = cues(cue(settledKey("cap.act-1", "default"), { in: [0.55, 0.8] }));
+      altCaptions = cues(cue(settledKey("cap.act-1", "alt"), { in: [0.55, 0.8] }));
       break;
     }
     case "seam": {
+      // S07 / T3: the storm (MV-04: no ship; the kraken under the foam) is
+      // wiped into the ICE lecture hall; the sea's horizon registers on the
+      // board's chalk ledge; FIG. 0 is chalked ON the board. ALT: a duster
+      // wipes the storm off iconic-ice-alt.
       const from = item.from ? film.worlds[item.from] : null;
-      const storm = usable(spec.media.reelStill) ?? usable(from?.media.plate) ?? usable(spec.media.cardStill);
-      // until the storm plate exists, its fallback gets the code storm grade
-      const graded = storm ? resolveMedia(storm)?.id !== spec.media.reelStill : false;
-      frame = storm ? (
-        <SeamFrame storm={storm} graded={graded} />
-      ) : (
-        <ReelFrame world={item.to} still={null} kind="title" />
+      const stormId = spec.media.reelStill ?? from?.media.plate;
+      const storm = variantMedia(stormId, "default");
+      const board = variantMedia(spec.media.cardStill, "default");
+      if (storm || board) {
+        frame = <SeamFrame storm={storm} board={board} graded={false} />;
+        altFrame = (
+          <SeamChalkFrame
+            storm={variantMedia(stormId, "alt")}
+            board={variantMedia(spec.media.cardStill, "alt")}
+            graded={false}
+          />
+        );
+      } else {
+        frame = <ReelFrame world={item.to} still={null} kind="title" />;
+      }
+      captions = cues(
+        cue("cap.act-2.out", { out: [0.1, 0.35], settled: false }),
+        cue(settledKey("cap.act-2", "default"), { in: [0.6, 0.8] }),
       );
-      altFrame = storm ? <SeamChalkFrame storm={storm} graded={graded} /> : null;
+      altCaptions = cues(
+        cue("cap.act-2.out", { out: [0.1, 0.35], settled: false }),
+        cue(settledKey("cap.act-2", "alt"), { in: [0.6, 0.8] }),
+      );
       break;
     }
     case "tintype": {
-      // no frontier plate yet (MV-10): the tintype develops into its code
-      // alternative, a golden-hour ground under the code low sun
-      const plate = usable(spec.media.cardStill) ?? usable(spec.media.plate);
+      // S13 / T7: a low sun sinks, the tintype DEVELOPS into the Heartlands
+      // (MV-10) and colours to golden hour. ALT: Dead Eye — the red-sepia
+      // frozen frontier (iconic-deadeye), four ember X marks locked on the
+      // act points; the settled ALT keeps the grade and the marks.
+      const plate = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
       frame = <TintypeFrame plate={plate} />;
-      altFrame = <TintypeDeadEyeFrame plate={plate} />;
+      const deadeye = variantMedia(spec.media.cardAltStill, "default") ?? variantMedia(spec.media.cardStill, "alt");
+      altFrame = <TintypeDeadEyeFrame plate={deadeye} />;
+      captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.82, 0.96] }));
+      altCaptions = cues(cue(settledKey("cap.act-3", "alt"), { in: [0.3, 0.45] }));
       break;
     }
     case "ignite": {
-      // no hall yet (MV-07): the ignition ends on its own final frame, the
-      // candles lit along the Line (ignite.BAR "MV-07 missing")
-      const hall = usable(spec.media.cardStill) ?? usable(spec.media.plate);
-      frame = <IgniteFrame hall={hall} />;
-      altFrame = <IgniteLumosFrame hall={hall} />;
+      // S17 / T10: embers rise from the camp's fire and become floating
+      // candles along the Line; the lit Line (MV-07) at p .7–.85, then the
+      // Great Hall (iconic-hall). ALT: one Lumos light sweeps the hall and
+      // lights it; it settles on iconic-hall-alt.
+      const hall = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
+      const mid = variantMedia(spec.media.cardMidStill, "default");
+      const fire = fireBefore(item);
+      frame = <IgniteFrame hall={hall} mid={mid} fire={fire} />;
+      altFrame = <IgniteLumosFrame hall={variantMedia(spec.media.cardStill, "alt") ?? hall} />;
+      captions = cues(
+        cue("cap.act-4.out", { out: [0.05, 0.3], settled: false }),
+        cue(settledKey("cap.act-4", "default"), { in: [0.85, 0.95] }),
+      );
+      altCaptions = cues(
+        cue("cap.act-4.out", { out: [0.05, 0.3], settled: false }),
+        cue(settledKey("cap.act-4", "alt"), { in: [0.85, 0.95] }),
+      );
       break;
     }
     default:
@@ -233,22 +399,34 @@ export function ActCardSection({
       );
   }
 
+  const prev = groundBefore(item);
+  const next = groundAfter(item);
+  const same = (g: Ground | null, w: WorldId) => g !== null && g.world === w && g.tone === "deep";
+
   return (
     <CardShell
       id={item.id}
       kind={kind}
-      world={kind === "opening" ? "house" : item.to}
+      world={item.to}
       motifWorld={item.to}
       long={item.long && !still}
       still={still}
       fromGround={kind === "ignite" ? item.from : null}
+      prevGround={kind === "opening" || same(prev, item.to) ? null : prev}
+      nextGround={same(next, item.to) ? null : next}
+      featherUp={kind === "opening"}
       upperLeft={upperLeft}
       upperRight={kind === "opening" ? undefined : item.reel}
+      film={filmTitle}
       frame={frame}
       altFrame={altFrame}
+      after={after}
+      altAfter={altAfter}
+      captions={captions}
+      altCaptions={altCaptions}
       variantChoice={item.variant}
       variant={variant}
-      frameShape={kind === "opening" ? "free" : "plate"}
+      layout={kind === "opening" ? "flow" : "letterbox"}
       lower={
         kind === "opening" ? undefined : (
           <>
@@ -257,7 +435,8 @@ export function ActCardSection({
           </>
         )
       }
-      // the opening program is itself real text and links: no summary twin
+      // the opening frame is the Pearl (aria-hidden): its summary names the
+      // program; the program itself is real text and links
       summary={kind === "opening" ? "" : item.summary}
       // the opening's course (compass → rows) is its progress element
       progress={kind !== "opening"}

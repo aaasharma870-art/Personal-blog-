@@ -88,9 +88,23 @@ export type WorldSpec = {
     plate?: MediaId;
     loop?: MediaId;
     mobile?: MediaId;
+    /** The incoming act card's SETTLED plate (M2: the iconic plate where one
+     *  exists — pirates iconic-pearl, idiots iconic-ice, hp iconic-hall). Its
+     *  ALT is resolveVariant(cardStill, "alt") unless `cardAltStill` says. */
     cardStill?: MediaId;
+    /** A plate shown mid-card before the settled one (hp: MV-07 lights-line
+     *  at p .7–.85, then iconic-hall; RECOGNIZABILITY S17). */
+    cardMidStill?: MediaId;
+    /** The ALT choreography's settled plate when it is a different asset,
+     *  not the alternate of `cardStill` (rdr2: iconic-deadeye; S13). */
+    cardAltStill?: MediaId;
+    /** The outgoing half of a seam card (idiots: MV-04, the storm). */
     reelStill?: MediaId;
+    /** The films chapter screen (SM-9). Its ALT is
+     *  resolveVariant(filmsStill, "alt") unless `filmsAltStill` says. */
     filmsStill?: MediaId;
+    /** hp: the films screen ALT is F-HP (the default is iconic-express; S12). */
+    filmsAltStill?: MediaId;
   };
   /** Films chapter: what this page borrowed (a site fact). */
   borrowed?: Copy;
@@ -141,10 +155,18 @@ export type EggSpec = {
   enabled: boolean;
 };
 
-export type LetteringSlot = "act-title" | "loader" | "egg";
+/** "caption" (M2, RECOGNIZABILITY O-1): scene captions, act-card and films
+ *  film titles, WANTED, and lettered film quotes. Only inside the display
+ *  scope while `film.fontScope.extended` is on (validator #10). */
+export type LetteringSlot = "act-title" | "loader" | "egg" | "caption";
 export type LetteringSpec = {
   id: string;
+  /** The exact string set in the face (the glyph subset is cut from it).
+   *  "" for a lettered QUOTE: its glyphs come from the quote registry, so
+   *  the line's text never appears outside lib/quotes.ts (lint #7). */
   text: string;
+  /** A registered line rendered through <FilmQuote rendition="lettered">. */
+  quote?: QuoteId;
   /** Font family name; lib/fonts.ts maps it to a CSS var. */
   face: string;
   /** A = self-hosted woff2 subset (OFL); B = outline-only SVG (personal /
@@ -159,13 +181,27 @@ export type LetteringSpec = {
 const lettering = [
   { id: "pc-crossing", text: "THE CROSSING", face: "Pirata One", mode: "A", slot: "act-title", shipped: true },
   { id: "3i-workshop", text: "The Workshop", face: "Kalam", mode: "A", slot: "act-title", shipped: true },
-  // Chinese Rocks (Typodermic free Desktop EULA): outline-only by licence
-  // (§2.2 fixed artwork only; §4.3 no website embedding). NOT shipped in M1:
-  // the licensee must be Aryan (he accepts the EULA), and the outline step
-  // is his call (FONTS.md). Falls back to Newsreader `title` (fixture L).
-  { id: "rd-frontier", text: "THE FRONTIER", face: "Chinese Rocks", mode: "B", slot: "act-title", shipped: false },
+  // M2 (RECOGNIZABILITY O-3; FONTS.md FT-2 option c): Rye (OFL; it carries a
+  // Reserved Font Name — we self-host Google's served subset, judged
+  // low-risk in FONTS.md) is the rdr2 world face. Chinese Rocks stays
+  // outline-only by its EULA and is not used; one line to reverse.
+  { id: "rd-frontier", text: "THE FRONTIER", face: "Rye", mode: "A", slot: "act-title", shipped: true },
   { id: "hp-light", text: "The Light", face: "IM Fell English", mode: "A", slot: "act-title", shipped: true },
   { id: "rd-deadeye", text: "DEAD EYE", face: "Rye", mode: "A", slot: "egg", shipped: true },
+  /* — M2 captions scope (O-1; slot "caption"). NEVER a logo face, lockup,
+       bevel, bolt-in-a-letter or stacked mark (O-1 guard, ICONS H2). — */
+  // the film titles (act cards at --text-title, films h3, credits O-6)
+  { id: "pc-film", text: "PIRATES OF THE CARIBBEAN", face: "Pirata One", mode: "A", slot: "caption", shipped: true },
+  { id: "3i-film", text: "3 IDIOTS", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  { id: "rd-film", text: "RED DEAD REDEMPTION 2", face: "Rye", mode: "A", slot: "caption", shipped: true },
+  { id: "hp-film", text: "HARRY POTTER", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
+  // the WANTED handbill word (S14, FT-1)
+  { id: "rd-wanted", text: "WANTED", face: "Rye", mode: "A", slot: "caption", shipped: true },
+  // lettered film quotes (<FilmQuote rendition="lettered">; text lives in lib/quotes.ts)
+  { id: "q-pc-1", text: "", quote: "Q-PC-1", face: "Pirata One", mode: "A", slot: "caption", shipped: true },
+  { id: "q-3i-2", text: "", quote: "Q-3I-2", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  { id: "q-3i-3", text: "", quote: "Q-3I-3", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  { id: "q-hp-2", text: "", quote: "Q-HP-2", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
 ] as const satisfies readonly LetteringSpec[];
 export type LetteringId = (typeof lettering)[number]["id"];
 
@@ -246,7 +282,7 @@ const pirates: WorldSpec = {
     loader: "course", dressing: plainDressing,
   },
   lettering: "pc-crossing",
-  media: { plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "MV-01", filmsStill: "F-PC" },
+  media: { plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "iconic-pearl", filmsStill: "F-PC" },
   borrowed: {
     text: "On this page it became the course line through the Journey and Jack's compass, which settles on each bearing.",
     status: "proposed",
@@ -265,7 +301,7 @@ const idiots: WorldSpec = {
     loader: "gauge", dressing: plainDressing,
   },
   lettering: "3i-workshop",
-  media: { plate: "MV-06", cardStill: "MV-06", reelStill: "MV-04", filmsStill: "F-3I" },
+  media: { plate: "MV-06", cardStill: "iconic-ice", reelStill: "MV-04", filmsStill: "F-3I" },
   borrowed: {
     text: "On this page it became the blueprints: every schematic in Act II draws the real system, and the chalk circles the caveat, never the number.",
     status: "proposed",
@@ -284,7 +320,10 @@ const rdr2: WorldSpec = {
     loader: "plate-trail", dressing: { notes: "frontier", index: "journal", quotes: "campfire" },
   },
   lettering: "rd-frontier",
-  media: { plate: "MV-10", mobile: "MV-10m", loop: "MV-11L", cardStill: "MV-10", filmsStill: "F-RD" },
+  media: {
+    plate: "MV-10", mobile: "MV-10m", loop: "MV-11L",
+    cardStill: "MV-10", cardAltStill: "iconic-deadeye", filmsStill: "F-RD",
+  },
   borrowed: {
     text: "On this page it became the journal and the fire: graphite that keeps the record, a plate that develops while you wait, and the campfire where the voices sit.",
     status: "proposed",
@@ -303,7 +342,11 @@ const hp: WorldSpec = {
     loader: "ink-light", dressing: { notes: "footprints", index: "parchment", quotes: "light" },
   },
   lettering: "hp-light",
-  media: { plate: "MV-07", loop: "MV-09", cardStill: "MV-07", filmsStill: "F-HP" },
+  media: {
+    plate: "MV-07", loop: "MV-09",
+    cardStill: "iconic-hall", cardMidStill: "MV-07",
+    filmsStill: "iconic-express", filmsAltStill: "F-HP",
+  },
   borrowed: {
     text: "On this page it became the light: the play screen, ink that draws itself, and the candles that come on in Act IV.",
     status: "proposed",
@@ -372,6 +415,57 @@ const copy = {
   "credits.end": { text: "To be continued.", status: "proposed" },
   "pause.tooltip.pause": { text: "Nox — pause motion", status: "proposed" },
   "pause.tooltip.resume": { text: "Lumos — resume motion", status: "proposed" },
+  /* — M2 eggs (components/eggs/**; SPEC §9.6): "egg.<key>", read through
+       components/eggs/egg-copy.ts. Proposed until Aryan signs. — */
+  /* eggs: palette commands */
+  "egg.cmd.map": { text: "Open the Marauder's Map", status: "proposed" },
+  "egg.cmd.map.keywords": { text: "i solemnly swear marauders map footprints hogwarts harry potter rooms", status: "proposed" },
+  "egg.cmd.obliviate": { text: "Obliviate — forget this visit", status: "proposed" },
+  "egg.cmd.parley": { text: "Parley — go to Contact", status: "proposed" },
+  "egg.cmd.aal": { text: "Aal izz well", status: "proposed" },
+  "egg.cmd.deadeye": { text: "Dead Eye (kill-list)", status: "proposed" },
+  "egg.cmd.deadeye.stop": { text: "Stop Dead Eye", status: "proposed" },
+  "egg.cmd.intro": { text: "Watch the intro again", status: "proposed" },
+  "egg.cmd.eggs.off": { text: "Turn off easter eggs", status: "proposed" },
+  "egg.cmd.eggs.on": { text: "Turn on easter eggs", status: "proposed" },
+  "egg.group.eggs": { text: "Easter eggs", status: "proposed" },
+  /* eggs: the Map dialog + the 404 */
+  "egg.map.sub": { text: "Every room is a section of this page, in order. The footprints are yours.", status: "proposed" },
+  "egg.map.you": { text: "You", status: "proposed" },
+  "egg.map.close": { text: "close the map", status: "proposed" },
+  "egg.map.empty": { text: "No footprints yet: scroll a little, then look again.", status: "proposed" },
+  "egg.404.title": { text: "You've wandered off the map.", status: "proposed" },
+  "egg.404.sub": { text: "This page isn't on the Map. Every room that is, is below.", status: "proposed" },
+  "egg.404.home": { text: "back to the opening", status: "proposed" },
+  "egg.404.alt.tip": { text: "This trail goes nowhere. Head back to camp.", status: "proposed" },
+  "egg.404.alt.home": { text: "Back to camp", status: "proposed" },
+  /* eggs: toasts */
+  "egg.toast.obliviate": { text: "Obliviate: this visit is forgotten. The intro will play again from the top.", status: "proposed" },
+  "egg.toast.lumos": { text: "Lumos — motion resumed.", status: "proposed" },
+  "egg.toast.lumos.os": { text: "Lumos: your system asks for reduced motion, so the page stays still.", status: "proposed" },
+  "egg.toast.nox": { text: "Nox — motion paused.", status: "proposed" },
+  "egg.toast.eggs.off": { text: "Easter eggs are off for this visit.", status: "proposed" },
+  "egg.toast.eggs.on": { text: "Easter eggs are on.", status: "proposed" },
+  "egg.toast.deadeye.none": { text: "Dead Eye needs the kill-list in view: scroll to it, then call it again.", status: "proposed" },
+  /* eggs: credits */
+  "egg.credits.seeker.role": { text: "Seeker", status: "proposed" },
+  "egg.credits.seeker.name": { text: "you", status: "proposed" },
+  "egg.snitch.label": { text: "Catch the snitch", status: "proposed" },
+  "egg.snitch.caught": { text: "Snitch caught", status: "proposed" },
+  /* — M2 systems: the space-pen wink (IC-3I-06; our own phrasing, not a
+       quote) and its footnote. The footnote is Claude's summary of the
+       pen history: verify it before ship (SPEC). — */
+  "systems.pencil.q": { text: "Why not just use a pencil?", status: "proposed" },
+  "systems.pencil.body": {
+    text: "The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+    status: "proposed",
+  },
+  "systems.pencil.footnote": {
+    text: "The famous version of the pen story, where one side spends millions on a space pen while the other simply uses a pencil, is a myth. Pencil tips snap and graphite dust conducts, a hazard in orbit; the pressurised pen was developed privately, and both programmes ended up buying it.",
+    status: "proposed",
+  },
+  /* — M2 principles: the Marauder's Map banner over the reader's step — */
+  "principles.you": { text: "YOU", status: "proposed" },
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 
@@ -385,6 +479,125 @@ const loglines = {
   ),
   "act-4": aryanDraft("What I believe about doing this work honestly, and where to find me.", LOGLINE_PROMPT),
 } as const satisfies Record<string, Copy>;
+
+/* — World display faces (the fan faces; FONTS.md). One per film world. — */
+export const worldFaces = {
+  pirates: "Pirata One",
+  idiots: "Kalam",
+  rdr2: "Rye",
+  hp: "IM Fell English",
+} as const satisfies Record<Exclude<WorldId, "house">, string>;
+
+/* — Scene captions (RECOGNIZABILITY RULE (b), §4, §6) ————————————————
+   Every film scene that imagery alone can't carry names FILM + MOMENT in
+   visible HTML: "THE LECTURE HALL AT ICE • 3 IDIOTS", set in the world's fan
+   face (O-1) by <SceneCaption k="cap.act-2"> (components/primitives/
+   scene-caption.tsx). A caption is a <p>, never a heading; it never sits
+   beside a metric, verdict or research label (H4), and `experiment` gets
+   none. Every moment is `proposed` until Aryan signs (copySignedOff); the
+   branch preview renders them. Keys ending ".alt" name the ALT variant's
+   imagery: pick with captionKeyFor(base, variant) (lib/sections.ts).
+   Accuracy (rule c): Port Royal / Isla de Muerta / the Aztec gold are Curse
+   of the Black Pearl (2003); the bottled Pearl is On Stranger Tides (2011);
+   ICE = the film's Imperial College of Engineering; the yellow scooter at
+   Pangong lake is 3 Idiots' final scene; the astronaut pen is Virus's pen,
+   kept for a worthy student. NOT used (unverified): "Virus's stopwatch". */
+export type CaptionWorld = Exclude<WorldId, "house">;
+/** bl / br: over the media's calm bottom corner (desktop ≥ 640, never over
+ *  moving media); under: below the frame; head: the section head. Under
+ *  640 px every placement renders as `under`. */
+export type CaptionPlace = "bl" | "br" | "under" | "head";
+export type SceneCaptionSpec = {
+  world: CaptionWorld;
+  /** The MOMENT, in caps (status "proposed"). Absent when `quote` is set. */
+  moment?: Copy;
+  /** A registered line used as the moment (lettered FilmQuote). */
+  quote?: QuoteId;
+  /** Append "• <FILM>" (default "auto": the world's work title in caps). */
+  film?: "auto" | false;
+  /** Which variant's imagery this names ("both" = either). */
+  variant: "default" | "alt" | "both";
+  /** Default placement (the component's `place` prop overrides). */
+  place: CaptionPlace;
+  /** Where it renders (the builder that owns it; review aid). */
+  where: string;
+  /** Narrates a visual only (the intro flight hand-off): aria-hidden. */
+  ariaHidden?: true;
+};
+const moment = (text: string): Copy => ({ text, status: "proposed" });
+
+const captions = {
+  /* prologue + hero (cards builder: components/intro/**) */
+  "cap.intro.play": { world: "hp", moment: moment("HOGWARTS, ACROSS THE BLACK LAKE"), variant: "both", place: "bl", where: "intro play screen, below Play; clears with the intro text" },
+  "cap.intro.flight.hp": { world: "hp", moment: moment("A BROOMSTICK OVER HOGWARTS"), variant: "both", place: "bl", where: "flight 0–2.5 s", ariaHidden: true },
+  "cap.intro.flight.pc": { world: "pirates", moment: moment("TOWARD THE BLACK PEARL"), variant: "both", place: "br", where: "flight 3.5 s → the landed hero +2.5 s, then fades for good", ariaHidden: true },
+  /* Act I · pirates */
+  "cap.act-1": { world: "pirates", moment: moment("THE BLACK PEARL"), variant: "default", place: "br", where: "opening card plate (iconic-pearl)" },
+  "cap.act-1.alt": { world: "pirates", moment: moment("THE CHART TO ISLA DE MUERTA"), variant: "alt", place: "br", where: "opening card plate (iconic-pearl-alt + the chart)" },
+  "cap.about": { world: "pirates", moment: moment("JACK’S COMPASS — IT POINTS TO WHAT YOU WANT MOST"), variant: "both", place: "head", where: "about head, opposite the h2" },
+  "cap.journey.1": { world: "pirates", moment: moment("PORT ROYAL HARBOUR AT NIGHT"), variant: "both", place: "bl", where: "journey media, step 1 (still frame only)" },
+  "cap.journey.2": { world: "pirates", moment: moment("THE FOG AROUND ISLA DE MUERTA"), variant: "both", place: "bl", where: "journey media, step 2" },
+  "cap.journey.3": { world: "pirates", moment: moment("THE CURSE OF THE AZTEC GOLD"), variant: "both", place: "bl", where: "journey media, step 3" },
+  "cap.journey.4": { world: "pirates", quote: "Q-PC-1", variant: "both", place: "bl", where: "journey media, step 4 (lettered Q-PC-1)" },
+  /* Card I→II + Act II · idiots */
+  "cap.act-2.out": { world: "pirates", moment: moment("THE KRAKEN’S STORM"), variant: "both", place: "br", where: "card I→II outgoing half, p .1–.35 (O-7)" },
+  "cap.act-2": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "default", place: "br", where: "card I→II settled (iconic-ice)" },
+  "cap.act-2.alt": { world: "idiots", moment: moment("THE ICE BOARD, WIPED CLEAN"), variant: "alt", place: "br", where: "card I→II settled (duster over iconic-ice-alt)" },
+  "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "bl", where: "the gauntlet board frame, lower-left" },
+  "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "under", where: "under the Trading_Algos chalkboard panel (never beside a metric)" },
+  "cap.optuna-screener": { world: "idiots", quote: "Q-3I-3", variant: "both", place: "under", where: "under the Optuna pipeline FIG (lettered Q-3I-3)" },
+  "cap.systems": { world: "idiots", moment: moment("THE HOMEMADE DRONE"), variant: "both", place: "bl", where: "systems band (iconic-drone); names no character" },
+  "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "head", where: "kill-list head, right of the h2 (O-5; never on a row)" },
+  /* Intermission · the films chapter (house plane, one world per screen) */
+  "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL AT ANCHOR"), variant: "both", place: "under", where: "films screen (F-PC)" },
+  "cap.films.idiots": { world: "idiots", moment: moment("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "films screen (F-3I)" },
+  "cap.films.rdr2": { world: "rdr2", moment: moment("THE HEARTLANDS AT DUSK"), variant: "both", place: "under", where: "films screen (F-RD)" },
+  "cap.films.hp": { world: "hp", moment: moment("THE HOGWARTS EXPRESS"), variant: "default", place: "under", where: "films screen (iconic-express)" },
+  "cap.films.hp.alt": { world: "hp", moment: moment("FLOATING CANDLES AND ENCHANTED INK"), variant: "alt", place: "under", where: "films screen (F-HP)" },
+  /* Card II→III + Act III · rdr2 */
+  "cap.act-3": { world: "rdr2", moment: moment("THE HEARTLANDS AT GOLDEN HOUR"), variant: "default", place: "br", where: "card II→III settled (MV-10)" },
+  "cap.act-3.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "br", where: "card II→III settled (iconic-deadeye + the X marks)" },
+  "cap.beyond": { world: "rdr2", moment: moment("THE HEARTLANDS"), variant: "both", place: "bl", where: "beyond band (MV-10 / MV-10m)" },
+  "cap.beyond.satchel": { world: "rdr2", moment: moment("WHAT’S IN THE SATCHEL"), variant: "both", place: "head", where: "Creative block head" },
+  "cap.beyond.handbill": { world: "rdr2", moment: moment("A WANTED POSTER"), variant: "both", place: "under", where: "under the notice board (iconic-wanted)" },
+  "cap.writing": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "both", place: "head", where: "writing, left page head (paper plane)" },
+  "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "br", where: "voices plate (iconic-camp)" },
+  "cap.voices.alt": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "alt", place: "under", where: "under the MV-11L loop (it moves)" },
+  /* Card III→IV + Act IV · hp */
+  "cap.act-4.out": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "both", place: "br", where: "card III→IV outgoing, p .05–.3" },
+  "cap.act-4": { world: "hp", moment: moment("THE GREAT HALL"), variant: "default", place: "br", where: "card III→IV settled, p > .85 (iconic-hall)" },
+  "cap.act-4.alt": { world: "hp", moment: moment("LUMOS — THE GREAT HALL LIGHTS UP"), variant: "alt", place: "br", where: "card III→IV settled (Lumos sweep)" },
+  "cap.principles": { world: "hp", moment: moment("THE MARAUDER’S MAP"), variant: "default", place: "head", where: "principles head, right of the h2 (parchment)" },
+  "cap.principles.alt": { world: "hp", moment: moment("LUMOS"), variant: "alt", place: "head", where: "principles head (candles alt)" },
+  "cap.contact": { world: "hp", moment: moment("A FLOATING CANDLE FROM THE GREAT HALL"), variant: "both", place: "head", where: "contact: head on desktop (the loop moves), under the plate on mobile" },
+  /* Route loaders (loaders-eggs-chrome; under the loader art) */
+  "cap.loader.pirates": { world: "pirates", moment: moment("JACK’S COMPASS"), variant: "default", place: "under", where: "route card, under the loader" },
+  "cap.loader.pirates.alt": { world: "pirates", moment: moment("THE BLACK PEARL IN A BOTTLE"), variant: "alt", place: "under", where: "route card, under the loader" },
+  "cap.loader.idiots": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "default", place: "under", where: "route card, under the loader" },
+  "cap.loader.idiots.alt": { world: "idiots", moment: moment("A DERIVATION ON THE ICE BOARD"), variant: "alt", place: "under", where: "route card, under the loader" },
+  "cap.loader.rdr2": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "default", place: "under", where: "route card, under the loader" },
+  "cap.loader.rdr2.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "under", where: "route card, under the loader" },
+  "cap.loader.hp": { world: "hp", moment: moment("THE FLOATING CANDLES"), variant: "default", place: "under", where: "route card, under the loader" },
+  "cap.loader.hp.alt": { world: "hp", moment: moment("THE MARAUDER’S MAP"), variant: "alt", place: "under", where: "route card, under the loader" },
+} as const satisfies Record<string, SceneCaptionSpec>;
+export type CaptionKey = keyof typeof captions;
+
+/** Every caption MOMENT as a lettering string (slot "caption", its world's
+ *  face), so scripts/fetch-display-fonts.mjs cuts their glyphs. Derived:
+ *  add a caption above and its lettering follows. */
+const captionLettering: readonly LetteringSpec[] = (() => {
+  const seen = new Set<string>();
+  const out: LetteringSpec[] = [];
+  for (const [key, c] of Object.entries(captions) as [CaptionKey, SceneCaptionSpec][]) {
+    if (!c.moment) continue;
+    const face = worldFaces[c.world];
+    const k = `${face}|${c.moment.text}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push({ id: `cap:${key}`, text: c.moment.text, face, mode: "A", slot: "caption", shipped: true });
+  }
+  return out;
+})();
 
 export const FAN_TRIBUTE_LINE = copy["credits.legal"].text;
 
@@ -405,8 +618,10 @@ export const film = {
   /** The page-wide variant (lib/variants.ts): what every section, card,
    *  loader and the intro play unless they choose otherwise. */
   defaultVariant: "default" as Variant,
-  /** FT-1: extend the display-font scope beyond act titles / loaders / eggs. */
-  fontScope: { extended: false },
+  /** FT-1 / RECOGNIZABILITY O-1: extend the display-font scope beyond act
+   *  titles / loaders / eggs to the "caption" slot (scene captions, film
+   *  titles, WANTED, lettered quotes). false = captions set in house type. */
+  fontScope: { extended: true as boolean },
   prologue: {
     enabled: true,
     world: "hp",
@@ -466,7 +681,13 @@ export const film = {
   longCards: ["pirates>idiots", "rdr2>hp", "idiots>hp"] as readonly string[],
   tips,
   copy,
-  lettering,
+  /** Static lettering (act titles, eggs, film titles, WANTED, lettered
+   *  quotes) + every caption moment (derived). */
+  lettering: [...lettering, ...captionLettering] as readonly LetteringSpec[],
+  /** The fan face of each film world (FONTS.md; lib/fonts.ts maps it). */
+  worldFaces,
+  /** Scene captions (MOMENT • FILM), keyed "cap.*" (RECOGNIZABILITY §6). */
+  captions: captions as Readonly<Record<CaptionKey, SceneCaptionSpec>>,
   eggs: {
     enabled: true,
     typed: true,

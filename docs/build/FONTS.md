@@ -1,4 +1,26 @@
-# FONTS — world display faces: licences, sources, what shipped (M1 integrator, 2026-09-28)
+# FONTS — world display faces: licences, sources, what shipped (M1 integrator, 2026-09-28; **M2 update 2026-09-29**)
+
+## 0. M2 update (integrator, 2026-09-29): the captions scope, Rye for rdr2
+
+RECOGNIZABILITY O-1…O-3 override the M1 scope below (the rule outranks subtlety):
+
+- **Scope extended (O-1).** `film.fontScope.extended = true` adds the lettering slot **`caption`**: scene captions (`MOMENT • FILM`, 45 derived strings), the four **film titles** (`PIRATES OF THE CARIBBEAN`, `3 IDIOTS`, `RED DEAD REDEMPTION 2`, `HARRY POTTER`), **`WANTED`**, and four **lettered quotes** (Q-PC-1, Q-3I-2, Q-3I-3, Q-HP-2; their glyphs come from `lib/quotes.ts`, so the line never appears outside the registry). **Guard:** these are OFL text faces, never a logo face or layout: no Mode C face, no bolt-in-a-P, no bevel/gradient type, no skull-and-swords, no stacked RED DEAD / REDEMPTION lockup.
+- **Where a face may appear now** (validator #10): the M1 slots below **plus** `components/primitives/scene-caption.tsx` and `components/primitives/world-face.ts`. Everyone else uses `<SceneCaption>`, `<FilmTitle>`, `<Lettered>` or `<FilmQuote rendition="lettered">`, which set a face **only on registered strings** (`lib/sections.ts` `letteredIn`); anything unregistered stays in house type. CSS: `.world-face-<world>` in `app/globals.css`.
+- **Rye is the rdr2 world face (O-3 = FT-2 option c).** `--font-world-rdr2` → Rye (`lib/fonts.ts` `fontWorldRdr2`, display swap, preload false). `rd-frontier` "THE FRONTIER" is now Rye, mode A, shipped. **Flag for Aryan:** Rye carries the Reserved Font Name "Rye"; we self-host Google's served subset (the RFN note below applies). Chinese Rocks stays unused (§2); options (a)/(b) remain one line away.
+- **Budget (O-2): 56 KB** (was 24 KB). Measured after `scripts/fetch-display-fonts.mjs` on 2026-09-29:
+
+| Face | woff2 | Glyphs |
+|---|---|---|
+| Pirata One | 2,720 B | ` .ABCDEFGHIJKLMNOPRSTUWYZabeghimnortwz—’…` |
+| Kalam | 7,608 B | ` ,-.3ABCDEGHIKLMNOPRSTUVWYacdefghiklmnoprstuwxy’` |
+| Rye | 9,480 B | ` 2ACDEFGHIJKLMNOPRSTUWY’` |
+| IM Fell English | 26,336 B | ` ,.ABCDEFGHIKLMNOPRSTUVWXYacdefghimnst—’` |
+| **Total** | **46,144 B** | budget 57,344 B |
+
+- All four stay `preload: false`, off the LCP path; a face downloads only when its world's text lays out. The credits' `TYPE` row: Rye is now a world face, not only the egg's.
+
+---
+
 
 Authority: SPEC v2 §9.7 (scope, modes), DESIGN v3 §2.1.1 (look, budget), ICONS §9 (catalogue). This file is the licence record the SPEC §12.5 #8 check and the credits' `TYPE` row rely on.
 

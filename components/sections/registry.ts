@@ -5,8 +5,12 @@ import { HeroSection } from "@/components/sections/hero/hero-section";
 import { CredibilitySection } from "@/components/sections/credibility-section";
 import { StorySection } from "@/components/sections/story-section";
 import { MediaBandSection } from "@/components/sections/media-band-section";
-import { pendingSection } from "@/components/sections/pending-section";
 import { Projects } from "@/components/site/projects";
+import { ChapterSection } from "@/components/sections/chapter/chapter-section";
+import { ExperimentSection } from "@/components/sections/experiment/experiment-section";
+import { LedgerSection } from "@/components/sections/ledger/ledger-section";
+import { FilmsSection } from "@/components/sections/films/films-section";
+import { CreditsSection } from "@/components/sections/credits/credits-section";
 import { Capabilities } from "@/components/site/capabilities";
 import { Principles } from "@/components/site/principles";
 import { Writing } from "@/components/site/writing";
@@ -23,23 +27,23 @@ export const registry = {
   hero: HeroSection,
   /* Act I + III: about (split), journey (voyage), beyond (notes). */
   story: StorySection,
-  /* Act II. The legacy gauntlet still renders the chapters, the demo and
-     the kill-list inside it (their own entries are M2 stubs). */
+  /* Act II: work (the gauntlet), the chapters, the experiment, systems,
+     the kill-list — each its own section since M2. */
   gauntlet: Projects,
-  chapter: pendingSection("chapter"),
-  experiment: pendingSection("experiment"),
+  chapter: ChapterSection,
+  experiment: ExperimentSection,
   matrix: Capabilities,
-  ledger: pendingSection("ledger"),
-  /* Intermission. */
-  films: pendingSection("films"),
+  ledger: LedgerSection,
+  /* Intermission: "Three films and a game" (SM-9). */
+  films: FilmsSection,
   /* Act III: writing (the journal), voices (the campfire). */
   index: Writing,
   quotes: Testimonials,
   /* Act IV. */
   principles: Principles,
   contact: Contact,
-  /* M1: the credits roll lives in the layout footer. */
-  credits: pendingSection("credits"),
+  /* The closing roll: the page <footer>, rendered after </main>. */
+  credits: CreditsSection,
   /* Retired D-3 layer (entries disabled; delete at the retirement pass). */
   credibility: CredibilitySection,
   mediaBand: MediaBandSection,

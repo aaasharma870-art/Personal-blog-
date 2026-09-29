@@ -1,18 +1,29 @@
 import { capabilities, featuredProjects } from "@/lib/content";
-import { Schematic } from "@/components/site/idiots-chalk";
-import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
+import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
-import { actCards, acts, enabledSections, worksInUse } from "@/lib/sections";
+import { SceneCaption } from "@/components/primitives/scene-caption";
+import { ChalkboardFrame } from "@/components/worlds/idiots/chalk";
+import { DroneBand } from "@/components/worlds/idiots/drone-band";
+import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
+import { BlueprintSchematic } from "@/components/worlds/idiots/schematic";
+import { actCards, acts, copyText, copyVisible, enabledSections, variantChoiceOf, worksInUse } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 /**
  * Systems — the capabilities matrix (Act II, idiots canvas; SPEC v2 §3 row 7,
- * SM-7 "same grammar"). A real matrix of rows (area · methods · tools ·
- * outputs; table rows are the one place rules are allowed) — the bento grid,
- * glow orbs, scan line and chip pills are retired. Beside it, FIG "How this
- * page is built": a TRUE schematic of the pipeline that renders this very
- * page, in the jugaad register; every count on it is computed from the live
- * manifest at build time. The graph grid thins here toward open air (3I-07).
+ * SM-7 "same grammar"; RECOGNIZABILITY S10).
+ *   1. The head band: Rancho's homemade drone in the college courtyard
+ *      (iconic-drone), captioned THE HOMEMADE DRONE • 3 IDIOTS; the h2
+ *      comes after it.
+ *   2. A real matrix of rows (area · methods · tools · outputs).
+ *   3. FIG "How this page is built": a TRUE schematic of the pipeline that
+ *      renders this very page, on the ICE board in the jugaad register;
+ *      every count is computed from the live manifest at build time. Under
+ *      it the space-pen wink (IC-3I-06, our own phrasing, not a quote):
+ *      "Why not just use a pencil?", the true no-WebGL note, and a footnote
+ *      that checks the film's legend. (Wording: verify before ship.)
+ * The graph grid thins here toward open air and keeps thinning through the
+ * kill-list to 0 at its last row (3I-07): this section takes it 6 % → 3 %.
  */
 const COLS = [
   ["Methods", "methods"],
@@ -22,15 +33,33 @@ const COLS = [
 
 export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   const titleId = `${entry.id}-title`;
-  const nodes = [
+  const chain = [
     { label: "lib/page.ts", note: `manifest • ${enabledSections.length} sections` },
     { label: "lib/film.ts", note: `${acts.length} acts • ${worksInUse.length} works` },
     { label: "lib/sections.ts", note: `derives ${actCards.length} act cards` },
     { label: "registry.ts", note: "type → component" },
     { label: "SectionFrame", note: "data-world × data-tone" },
   ];
+  const choice = variantChoiceOf(entry);
+  const pencilQ = copyText("systems.pencil.q");
+  const pencilBody = copyText("systems.pencil.body");
+  const pencilNote = copyText("systems.pencil.footnote");
   return (
-    <WorldSection entry={entry} labelledBy={titleId} ground groundClassName="world-ground--fade">
+    <IdiotsSection
+      entry={entry}
+      labelledBy={titleId}
+      grid
+      gridMask="linear-gradient(to bottom, black 0%, black 22%, color-mix(in srgb, black 50%, transparent) 100%)"
+    >
+      {entry.props.media ? (
+        <DroneBand
+          media={entry.props.media}
+          choice={choice}
+          caption={<SceneCaption k="cap.systems" place="bl" />}
+          className="mb-tier-block"
+        />
+      ) : null}
+
       <SectionHead
         id={titleId}
         number={number}
@@ -74,14 +103,31 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
         </div>
 
         <div className="lg:col-span-4">
-          {/* FIG numbering continues the chapters' FIG. 1…n (M1: they render in `work`) */}
-          <Schematic fig={`FIG. ${featuredProjects.length + 1} • How this page is built • ${nodes.length} stages`} nodes={nodes} />
-          <Meta
-            className="mt-tier-group"
-            fields={["Native scroll", "CSS + SVG first", "no WebGL"]}
-          />
+          {/* FIG numbering continues the chapters' FIG. 1…n */}
+          <ChalkboardFrame>
+            <BlueprintSchematic
+              compact
+              fig={`FIG. ${featuredProjects.length + 1} • How this page is built • ${chain.length} stages`}
+              spec={{ chain }}
+              choice={choice}
+              pieceKey="systems.fig"
+            />
+          </ChalkboardFrame>
+          <Meta className="mt-tier-group" fields={["Native scroll", "CSS + SVG first", "no WebGL"]} />
+          {/* IC-3I-06: the space-pen wink, in our own words (not a quote);
+              lib/film.ts copy "systems.pencil.*" (proposed) */}
+          {copyVisible(pencilQ) && copyVisible(pencilBody) ? (
+            <p className="mt-tier-group max-w-body type-small text-fg-muted">
+              <span className="text-fg">{pencilQ.text}</span> {pencilBody.text}
+            </p>
+          ) : null}
+          {copyVisible(pencilNote) ? (
+            <p className="mt-tier-pair max-w-body type-small text-fg-muted">
+              <span className="type-meta">Footnote</span> {pencilNote.text}
+            </p>
+          ) : null}
         </div>
       </div>
-    </WorldSection>
+    </IdiotsSection>
   );
 }

@@ -8,12 +8,14 @@ import { dur } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { DrawPath, SIZE_CLASS, SIZE_PX, useOneShot, useSvgAttr } from "@/components/primitives/loaders/kit";
 import { remap } from "@/components/primitives/loaders/line";
+import { tatteredSail } from "@/components/primitives/loaders/pearl";
 
 /**
- * LD-PC ALT "The ship in the bottle" (pirates; lib/variants.ts
- * `loader-course.motion` alt). The same verb as the compass — navigation,
- * committed — told by the other great Pirates object: a ship sealed in a
- * bottle. The old trick is honest by construction: the masts lie folded on
+ * LD-PC ALT "The Black Pearl in a bottle" (pirates; lib/variants.ts
+ * `loader-course.motion` alt; caption cap.loader.pirates.alt). The same
+ * verb as the compass — navigation, committed — told by the other great
+ * Pirates object: the Pearl sealed in a bottle (On Stranger Tides), her
+ * BLACK, TATTERED sails outlined in moonlight (RECOGNIZABILITY S20). The old trick is honest by construction: the masts lie folded on
  * the deck and are raised by a line pulled out through the neck, so the
  * line that has come out IS the work done.
  *
@@ -53,21 +55,15 @@ const CRADLES = "M30 88V83.5Q37 77.5 44 83.5V88M86 88V83.5Q93 77.5 100 83.5V88M2
 /** Rocking pivot (the cradles' saddle). */
 const PIVOT = { x: 65, y: 82 };
 
-type Mast = { x: number; y: number; h: number; w: number; from: number; to: number };
+type Mast = { x: number; y: number; h: number; w: number; from: number; to: number; seed: number };
 const MASTS: Mast[] = [
-  { x: 82, y: 58, h: 22, w: 12, from: 0, to: 1 / 3 },
-  { x: 64, y: 58, h: 26, w: 14, from: 1 / 3, to: 2 / 3 },
-  { x: 41, y: 53.5, h: 19, w: 10, from: 2 / 3, to: 1 },
+  { x: 82, y: 58, h: 22, w: 12, from: 0, to: 1 / 3, seed: 0 },
+  { x: 64, y: 58, h: 26, w: 14, from: 1 / 3, to: 2 / 3, seed: 1 },
+  { x: 41, y: 53.5, h: 19, w: 10, from: 2 / 3, to: 1, seed: 2 },
 ];
 /** A folded mast lies aft along the deck. */
 const DOWN = -84;
 
-/** A square sail bellied forward (toward the bow), between yards ya and yb. */
-function sail(w: number, ya: number, yb: number): string {
-  const h = w / 2;
-  const my = (ya + yb) / 2;
-  return `M${-h} ${ya}H${h}Q${h + 2.2} ${my} ${h} ${yb}H${-h}Q${-h + 2.2} ${my} ${-h} ${ya}Z`;
-}
 
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t) * (1 - t);
 
@@ -143,8 +139,8 @@ function Bottle({ mode, size, progress, animate: running }: LoaderRendererProps)
           {MASTS.map((m, i) => (
             <MastGroup key={i} mast={m} source={masts} sw={sw} />
           ))}
-          <path d={HULL} fill="var(--bg)" stroke="var(--w-brass)" strokeWidth={sw(1.25)} />
-          <path d={STERN} fill="var(--bg)" stroke="var(--w-brass)" strokeWidth={sw(1)} />
+          <path d={HULL} fill="var(--pir-deep)" stroke="var(--w-moon)" strokeWidth={sw(1.1)} />
+          <path d={STERN} fill="var(--pir-deep)" stroke="var(--w-moon)" strokeWidth={sw(1)} />
           <path d={BOWSPRIT} stroke="var(--w-brass)" strokeWidth={sw(1)} />
           <path d={LINE_IN} stroke="var(--w-brass)" strokeWidth={sw(0.6)} opacity={0.8} />
 
@@ -181,12 +177,14 @@ function MastGroup({ mast, source, sw }: { mast: Mast; source: MotionValue<numbe
   const yd = -h * 0.14;
   return (
     <g ref={ref} transform={t}>
+      {/* the Pearl's BLACK, TATTERED canvas (RECOGNIZABILITY S20), outlined
+          in moonlight so it reads on the dark glass */}
       <motion.path
-        d={`${sail(w, ya, yb)}${sail(w + 2, yc, yd)}`}
-        fill="var(--w-moon)"
-        fillOpacity={0.12}
+        d={`${tatteredSail(w, ya, yb, mast.seed)}${tatteredSail(w + 2, yc, yd, mast.seed + 3)}`}
+        fill="var(--pir-deep)"
+        fillOpacity={0.94}
         stroke="var(--w-moon)"
-        strokeWidth={sw(0.75)}
+        strokeWidth={sw(0.8)}
         style={{ opacity: canvas }}
       />
       <path
@@ -194,8 +192,8 @@ function MastGroup({ mast, source, sw }: { mast: Mast; source: MotionValue<numbe
         stroke="var(--w-brass)"
         strokeWidth={sw(1.1)}
       />
-      {/* a plain pennant at the truck (no device) */}
-      <path d={`M0 ${-h}L5.5 ${-h + 1.6}L0 ${-h + 3.2}`} stroke="var(--w-moon)" strokeWidth={sw(0.75)} />
+      {/* a plain black pennant at the truck (no device) */}
+      <path d={`M0 ${-h}L5.5 ${-h + 1.6}L0 ${-h + 3.2}Z`} fill="var(--pir-deep)" stroke="var(--w-moon)" strokeWidth={sw(0.75)} />
     </g>
   );
 }

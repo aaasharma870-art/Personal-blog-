@@ -21,10 +21,16 @@
    lettering string → re-run the script (else its glyphs fall back).
    Licences and sources: research/build/FONTS.md.
 
-   rdr2: Chinese Rocks (the SPEC's face) is outline-only by its Typodermic
-   Desktop EULA (no website embedding) and is NOT shipped in M1, so
-   --font-world-rdr2 is intentionally undefined → Newsreader. Rye (OFL) is
-   loaded for the Dead Eye egg header only (`--font-egg-rye`).
+   rdr2 (M2, RECOGNIZABILITY O-3 = FONTS.md FT-2 option c): Rye (OFL; it
+   has a Reserved Font Name — we self-host Google's served subset) is the
+   rdr2 world face: the act title, captions and WANTED (`--font-world-rdr2`).
+   Chinese Rocks stays outline-only by its EULA and is not used. The Dead Eye
+   egg header keeps its own `--font-egg-rye` binding (the same file).
+
+   M2 CAPTIONS SCOPE (O-1): with film.fontScope.extended the faces also set
+   the "caption" lettering slot — scene captions, film titles, WANTED and
+   lettered quotes — through components/primitives/scene-caption.tsx (the
+   .world-face-<world> classes in app/globals.css). Budget (O-2): ≤ 56 KB.
 
    preload: false → never on the LCP path; the browser fetches a face only
    when a glyph in it is laid out.
@@ -79,6 +85,17 @@ export const fontWorldHp = localFont({
   variable: "--font-world-hp",
 });
 
+/** rdr2 — Rye (OFL 1.1): "THE FRONTIER", the rdr2 captions, WANTED (M2). */
+export const fontWorldRdr2 = localFont({
+  weight: "400",
+  style: "normal",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  src: "../assets/fonts/film/rye/rye-subset.woff2",
+  variable: "--font-world-rdr2",
+});
+
 /** rdr2 egg — Rye (OFL 1.1): "DEAD EYE" (the Dead Eye toast header only). */
 export const fontEggRye = localFont({
   weight: "400",
@@ -95,6 +112,7 @@ export const worldFontVariables = [
   fontWorldPirates.variable,
   fontWorldIdiots.variable,
   fontWorldHp.variable,
+  fontWorldRdr2.variable,
   fontEggRye.variable,
 ].join(" ");
 
@@ -103,6 +121,6 @@ export const worldFontVar = {
   house: null,
   pirates: "--font-world-pirates",
   idiots: "--font-world-idiots",
-  rdr2: null, // Chinese Rocks: outline-only, not shipped (FONTS.md)
+  rdr2: "--font-world-rdr2", // Rye (M2, O-3)
   hp: "--font-world-hp",
 } as const;

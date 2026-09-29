@@ -1,93 +1,435 @@
-import { ArrowUpRight } from "lucide-react";
-import { featuredProjects, killList, site, survivors } from "@/lib/content";
-import { Meta } from "@/components/site/world-kit";
-import { cn } from "@/lib/utils";
+"use client";
 
-/**
- * The reckoning — the kill-list ledger (SPEC v2 SM-8 / D-6, M1 form; the
- * Lens Index is the ledger builder's M2 work). Rows are EQUALLY QUIET at
- * rest: the verdict WORD carries the meaning (SURVIVED / KILLED), ember is
- * reserved for KILLED, and a killed row takes its ember strike only while it
- * is the active row (hover or keyboard focus within). No chalk and no icons
- * here: the graveyard's power is austerity (the opt-in Dead Eye egg is M2).
- * Figures verbatim from content.ts and static (ratios never animate).
- * Server-rendered: no JS needed for anything on this ledger.
- */
-export function Ledger() {
-  const flagshipHref = featuredProjects[0]?.href ?? site.github;
-  const rows = [
-    ...survivors.map((s) => ({
-      kind: "survived" as const,
-      name: s.name,
-      detail: s.thesis,
-      evidence: s.evidence,
-      status: s.status,
-    })),
-    ...killList.map((k) => ({
-      kind: "killed" as const,
-      name: k.name,
-      detail: k.reason,
-      evidence: null,
-      status: null,
-    })),
-  ];
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FocusEvent, KeyboardEvent, PointerEvent } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { animate, motion, useMotionValue } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
+import { springFollow } from "@/lib/motion";
+import { useVariant } from "@/lib/use-variant";
+import type { VariantChoice } from "@/lib/variants";
+import { cn } from "@/lib/utils";
+import { Lens, type LensState } from "@/components/primitives/lens";
+import { MediaFrame } from "@/components/primitives/media-frame";
+import { LensFigure, type LensFigureKind, type LensRoute } from "@/components/sections/ledger/lens-figure";
+
+/* ============================================================================
+   THE RECKONING — the kill-list as a Lens Index (SPEC v2 SM-8, D-6;
+   lens-index.BAR v1 H1–H25 + v2 H26–H30; SM-17 host).
+   Every program Aryan tested sits at the same quiet weight: at rest every
+   row is ghost ink and every verdict WORD is present (meaning is in the
+   word, never the hue). The row on the reading line — focus > pointer >
+   the viewport's centre line — takes its hue: SURVIVED aqua, KILLED ember
+   (with its strike), EXCEPTION amber, a flagship its status in muted. No
+   chalk and no icons on the rows (austerity; the header carries the film).
+   Two choreographies (lib/variants.ts `kill-list.reckoning`):
+     default "lens-index"  ≥ 1024 the bracket travels (springFollow) down
+                           an empty lane to the active row, framing a CODE
+                           schematic of that row's real route (mono at
+                           rest, colour on focus); it opens once by
+                           aperture on the first activation.
+     alt     "index-bar"   the austere ruled ledger: no bracket, no figure;
+                           one index bar slides beside the active row.
+   Mobile < 1024: no lens (a Meta line, the title, the detail; the centre-
+   line row active). Reduced motion: the lens is open, every swap instant.
+   No JS: the idle frame, fully legible.
+   DEAD EYE (SM-17): the egg's runtime is components/eggs/dead-eye.ts (the
+   palette + the typed word, lazy on trigger). This ledger keeps its DOM
+   CONTRACT — each killed <li> carries data-verdict="killed", its recorded
+   reason data-reason and its name data-name — and, while the run marks the
+   section (`data-deadeye` on #kill-list), the lens figure takes the Dead
+   Eye plate as its media grade. At rest nothing of the egg renders.
+   ========================================================================== */
+
+export type LedgerRow = {
+  key: string;
+  kind: "flagship" | "survived" | "killed";
+  name: string;
+  detail: string;
+  evidence?: string;
+  /** EXCEPTION: the caveat sentence (never dimmer than --fg-muted). */
+  caveat?: string;
+  status?: string;
+  href?: string;
+  hrefLabel?: string;
+  hrefAria?: string;
+  figure: LensFigureKind;
+  route: LensRoute;
+  /** FIG caption for the lens (aria-hidden). */
+  figLabel: string;
+};
+
+type Nav = { centre: number | null; pointer: number | null; focus: number | null; last: number };
+type Geo = { top: number; h: number; mid: number };
+
+const pad = (n: number) => String(n).padStart(2, "0");
+const activeOf = (n: Nav) => n.focus ?? n.pointer ?? n.centre;
+const withLast = (n: Nav): Nav => {
+  const a = activeOf(n);
+  return a !== null && a !== n.last ? { ...n, last: a } : n;
+};
+
+function verdictOf(r: LedgerRow): { word: string | null; hue: string } {
+  if (r.kind === "killed") return { word: "Killed", hue: "text-kill" };
+  if (r.kind === "survived") return r.caveat ? { word: "Survived", hue: "text-fg" } : { word: "Survived", hue: "text-accent" };
+  return { word: null, hue: "text-fg-muted" };
+}
+
+export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choice: VariantChoice }) {
+  const reduced = useReducedMotion();
+  const variant = useVariant(choice, "kill-list.reckoning");
+  const lensOn = variant === "default";
+
+  const [nav, setNav] = useState<Nav>({ centre: null, pointer: null, focus: null, last: 0 });
+  const [roving, setRoving] = useState(0);
+  const [geo, setGeo] = useState<Geo[]>([]);
+  const [figH, setFigH] = useState(0);
+  const [lensState, setLensState] = useState<LensState>("open");
+  // Dead Eye is running on the section (components/eggs/dead-eye.ts)
+  const [graded, setGraded] = useState(false);
+
+  const listRef = useRef<HTMLDivElement>(null);
+  const olRef = useRef<HTMLOListElement>(null);
+  const liRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const figRef = useRef<HTMLDivElement>(null);
+  const laneRef = useRef<HTMLDivElement>(null);
+  const hostRef = useRef<HTMLElement | null>(null);
+  const lastPtr = useRef<{ x: number; y: number } | null>(null);
+  const placed = useRef<number | null>(null);
+
+  const active = activeOf(nav);
+  const lensRow = active ?? nav.last;
+
+  /** Any activation opens a closed lens (the first one only). */
+  const touch = useCallback((next: (n: Nav) => Nav) => {
+    setNav((n) => {
+      const m = withLast(next(n));
+      return m;
+    });
+    setLensState((s) => (s === "closed" ? "aperture" : s));
+  }, []);
+
+  // the host <section>: the grid mask's span is written on it, and the
+  // Dead Eye run marks it with data-deadeye (watched here, never at rest)
+  useEffect(() => {
+    const host = listRef.current?.closest("section") ?? null;
+    hostRef.current = host;
+    if (!host || typeof MutationObserver === "undefined") return;
+    const mo = new MutationObserver(() => setGraded(host.dataset.deadeye === "on"));
+    mo.observe(host, { attributes: true, attributeFilter: ["data-deadeye"] });
+    return () => mo.disconnect();
+  }, []);
+
+  // geometry: each row's top/height and its title's first-line centre,
+  // relative to the <ol>; re-measured on resize and font swaps
+  useEffect(() => {
+    const ol = olRef.current;
+    if (!ol || typeof ResizeObserver === "undefined") return;
+    const measure = () => {
+      const base = ol.getBoundingClientRect();
+      const next: Geo[] = rows.map((_, i) => {
+        const li = liRefs.current[i];
+        const btn = btnRefs.current[i];
+        if (!li || !btn) return { top: 0, h: 0, mid: 0 };
+        const lr = li.getBoundingClientRect();
+        const br = btn.getBoundingClientRect();
+        const lh = parseFloat(getComputedStyle(btn).lineHeight) || br.height;
+        return { top: lr.top - base.top, h: lr.height, mid: br.top - base.top + Math.min(lh, br.height) / 2 };
+      });
+      setGeo((g) => (g.length === next.length && g.every((x, i) => x.top === next[i]?.top && x.mid === next[i]?.mid && x.h === next[i]?.h) ? g : next));
+      // H26: the grid mask's span — half strength down to the first row,
+      // then thinning to 0 at the LAST row's top (a static mask per layout)
+      const host = hostRef.current;
+      if (host instanceof HTMLElement) {
+        const top = base.top - host.getBoundingClientRect().top;
+        host.style.setProperty("--ledger-grid-a", `${Math.round(top)}px`);
+        host.style.setProperty("--ledger-grid-b", `${Math.round(top + (next[next.length - 1]?.top ?? 0))}px`);
+      }
+      const fh = figRef.current?.getBoundingClientRect().height ?? 0;
+      setFigH((h) => (h === fh ? h : fh));
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(ol);
+    if (figRef.current) ro.observe(figRef.current);
+    document.fonts?.ready.then(measure).catch(() => {});
+    return () => ro.disconnect();
+  }, [rows]);
+
+  // the centre line: the <li> under the viewport's middle (contiguous rows)
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const hits = new Set<number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const i = Number((e.target as HTMLElement).dataset.row);
+          if (e.isIntersecting) hits.add(i);
+          else hits.delete(i);
+        }
+        const c = hits.size ? Math.min(...hits) : null;
+        setNav((n) => (n.centre === c ? n : withLast({ ...n, centre: c })));
+        if (c !== null) setLensState((s) => (s === "closed" ? "aperture" : s));
+      },
+      { rootMargin: "-50% 0px -50% 0px", threshold: 0 },
+    );
+    liRefs.current.forEach((li) => li && io.observe(li));
+    return () => io.disconnect();
+  }, [rows]);
+
+  // hover release: any scroll hands the lens back to the centre line
+  useEffect(() => {
+    const onScroll = () => setNav((n) => (n.pointer === null ? n : withLast({ ...n, pointer: null })));
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // arm the lens closed only when it mounted OFFSCREEN (never in front of
+  // the reader); the first activation opens it by aperture
+  useEffect(() => {
+    const lane = laneRef.current;
+    if (!lane || reduced || !lensOn || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => {
+      io.disconnect();
+      if (e && !e.isIntersecting && window.matchMedia("(min-width: 64rem)").matches) {
+        setLensState((s) => (s === "open" ? "closed" : s));
+      }
+    });
+    io.observe(lane);
+    return () => io.disconnect();
+  }, [reduced, lensOn]);
+
+  // the lens / index bar travel (springFollow; instant under reduced motion)
+  const ly = useMotionValue(0);
+  const by = useMotionValue(0);
+  const bh = useMotionValue(0);
+  useEffect(() => {
+    const g = geo[lensRow];
+    if (!g) return;
+    const targetLens = g.mid - figH / 2;
+    // only a change of ROW travels; a layout change (first measure, resize,
+    // a font swap) jumps, so nothing moves on its own
+    const travel = placed.current !== null && placed.current !== lensRow;
+    placed.current = lensRow;
+    if (reduced || !travel) {
+      ly.jump(targetLens);
+      by.jump(g.top);
+      bh.jump(g.h);
+      return;
+    }
+    const a = animate(ly, targetLens, { type: "spring", ...springFollow });
+    const b = animate(by, g.top, { type: "spring", ...springFollow });
+    bh.jump(g.h);
+    return () => {
+      a.stop();
+      b.stop();
+    };
+  }, [lensRow, geo, figH, reduced, ly, by, bh]);
+
+  /* — row events ———————————————————————————————————————————————— */
+  const onPointerMove = (i: number) => (e: PointerEvent<HTMLLIElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const p = lastPtr.current;
+    if (p && p.x === e.clientX && p.y === e.clientY) return; // a scroll under a still pointer
+    lastPtr.current = { x: e.clientX, y: e.clientY };
+    if (nav.pointer !== i) touch((n) => ({ ...n, pointer: i }));
+  };
+  const onFocus = (i: number) => (e: FocusEvent<HTMLButtonElement>) => {
+    setRoving(i);
+    if (e.currentTarget.matches(":focus-visible")) touch((n) => ({ ...n, focus: i }));
+  };
+  const onBlur = () => setNav((n) => (n.focus === null ? n : withLast({ ...n, focus: null })));
+  const onKey = (i: number) => (e: KeyboardEvent<HTMLButtonElement>) => {
+    const last = rows.length - 1;
+    const next =
+      e.key === "ArrowDown" ? Math.min(last, i + 1) : e.key === "ArrowUp" ? Math.max(0, i - 1) : e.key === "Home" ? 0 : e.key === "End" ? last : null;
+    if (next === null) return;
+    e.preventDefault();
+    const b = btnRefs.current[next];
+    if (!b) return;
+    b.focus({ preventScroll: true });
+    b.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+  };
+
+  const lensRowData = rows[lensRow] ?? rows[0];
 
   return (
-    <div id="kill-list" className="scroll-mt-24" aria-labelledby="kill-list-title">
-      <Meta fields={["The reckoning", `${survivors.length} survived the full process`]} />
-      <h3 id="kill-list-title" className="mt-tier-pair type-title text-fg">
-        The kill-list
-      </h3>
-      <p className="mt-tier-group max-w-body type-body text-fg-muted">
-        Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
-      </p>
-
-      <ol aria-label="Ledger: survivors and killed ideas" className="mt-tier-block border-t border-rule">
-        {rows.map((r, i) => (
-          <li
-            key={r.name}
-            className="group grid grid-cols-[2.5rem_1fr] gap-x-4 gap-y-1 border-b border-rule py-5 sm:grid-cols-[3rem_1fr_auto] sm:items-baseline"
-          >
-            <span className="tnum type-meta text-fg-ghost">{String(i + 1).padStart(2, "0")}</span>
-            <div className="min-w-0">
-              <p className="type-body text-fg">
-                <span className="relative">
-                  {r.name}
-                  {r.kind === "killed" ? (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-x-0 top-1/2 h-px origin-left scale-x-0 bg-kill transition-transform duration-(--dur-base) group-focus-within:scale-x-100 group-hover:scale-x-100"
-                    />
-                  ) : null}
-                </span>
-              </p>
-              <p className="mt-1 type-small text-fg-muted">{r.detail}</p>
-              {r.evidence ? <p className="tnum mt-1 type-small text-fg-muted">{r.evidence}</p> : null}
-            </div>
-            <div className="col-start-2 flex flex-wrap items-center gap-x-4 sm:col-start-3 sm:justify-end">
-              <span className={cn("type-meta", r.kind === "killed" ? "text-kill" : "text-fg")}>
-                {r.kind === "killed" ? "Killed" : "Survived"}
-              </span>
-              {r.status ? <span className="type-meta text-fg-muted">{r.status}</span> : null}
-              {r.kind === "killed" ? (
-                <a
-                  href={flagshipHref}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={`Post-mortem for ${r.name} on GitHub`}
-                  className="inline-flex min-h-11 items-center gap-1 type-meta text-fg-muted transition-colors hover:text-fg"
-                >
-                  Post-mortem
-                  <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
-                </a>
+    <div ref={listRef} className="relative mt-tier-block" data-ledger={lensOn ? "lens-index" : "index-bar"}>
+      <ol
+        ref={olRef}
+        aria-label="Ledger: flagships, survivors and killed ideas"
+        className={cn("relative", lensOn ? "border-t border-rule lg:border-t-0" : "border-t border-rule")}
+        onPointerLeave={() => setNav((n) => (n.pointer === null ? n : withLast({ ...n, pointer: null })))}
+      >
+        {rows.map((r, i) => {
+          const on = active === i;
+          const v = verdictOf(r);
+          const struck = r.kind === "killed" && on;
+          const meta = (
+            <>
+              {v.word ? (
+                <span className={cn("transition-colors duration-(--dur-micro)", on ? v.hue : "text-fg-ghost")}>{v.word}</span>
               ) : null}
-            </div>
-          </li>
-        ))}
+              {r.caveat ? (
+                <>
+                  <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+                  <span className="sr-only">, </span>
+                  <span className={cn("transition-colors duration-(--dur-micro)", on ? "text-exception" : "text-fg-ghost")}>Exception</span>
+                </>
+              ) : null}
+              {r.status ? (
+                <>
+                  {v.word ? (
+                    <>
+                      <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+                      <span className="sr-only">, </span>
+                    </>
+                  ) : null}
+                  <span className={cn("transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}>{r.status}</span>
+                </>
+              ) : null}
+            </>
+          );
+          return (
+            <li
+              key={r.key}
+              ref={(el) => {
+                liRefs.current[i] = el;
+              }}
+              data-row={i}
+              data-verdict={r.kind}
+              onPointerMove={onPointerMove(i)}
+              className={cn(
+                "grid grid-cols-[2.5rem_1fr] gap-x-4 gap-y-1 py-tier-group lg:grid-cols-12 lg:items-baseline lg:gap-x-6",
+                lensOn ? "border-b border-rule lg:border-b-0" : "border-b border-rule",
+              )}
+            >
+              <span className={cn("tnum type-meta transition-colors duration-(--dur-micro) lg:col-span-1", on ? "text-fg-muted" : "text-fg-ghost")}>{pad(i + 1)}</span>
+              <div className="min-w-0 lg:col-span-6">
+                {/* < 1024: the Meta line leads the row */}
+                <p className="mb-1 type-meta lg:hidden">{meta}</p>
+                <h3 className="type-heading">
+                  <button
+                    ref={(el) => {
+                      btnRefs.current[i] = el;
+                    }}
+                    type="button"
+                    tabIndex={i === roving ? 0 : -1}
+                    aria-current={on ? "true" : undefined}
+                    onFocus={onFocus(i)}
+                    onBlur={onBlur}
+                    onKeyDown={onKey(i)}
+                    onClick={() => {
+                      setRoving(i);
+                      touch((n) => ({ ...n, pointer: i }));
+                    }}
+                    className={cn(
+                      "relative min-h-11 text-left transition-colors duration-(--dur-micro)",
+                      on ? "text-fg" : "text-fg-ghost",
+                    )}
+                  >
+                    <span data-name="">{r.name}</span>
+                    {r.kind === "killed" ? (
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "absolute inset-x-0 top-1/2 h-px origin-left bg-kill transition-transform duration-(--dur-base)",
+                          struck ? "scale-x-100" : "scale-x-0",
+                        )}
+                      />
+                    ) : null}
+                  </button>
+                </h3>
+                <p
+                  className={cn("mt-1 max-w-[64ch] type-small transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}
+                  {...(r.kind === "killed" ? { "data-reason": "" } : {})}
+                >
+                  {r.detail}
+                </p>
+                {r.evidence ? (
+                  <p className={cn("tnum mt-1 max-w-[64ch] type-small transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}>
+                    {r.evidence}
+                  </p>
+                ) : null}
+                {/* the caveat is never dimmer than muted, in every state */}
+                {r.caveat ? <p className="mt-1 max-w-[64ch] type-small text-fg-muted">{r.caveat}</p> : null}
+              </div>
+              {/* cols 8–9: the lens lane, empty in every row */}
+              <div aria-hidden="true" className="hidden lg:col-span-2 lg:block" />
+              <div className="col-start-2 flex flex-wrap items-baseline gap-x-4 lg:col-span-3 lg:col-start-auto lg:justify-end">
+                <p className="hidden type-meta lg:block lg:text-right">{meta}</p>
+                {r.href ? (
+                  <a
+                    href={r.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={r.hrefAria}
+                    className="inline-flex min-h-11 items-center gap-1 type-meta text-fg-muted transition-colors hover:text-fg"
+                  >
+                    <span className="normal-case">{r.hrefLabel}</span>
+                    <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
+                  </a>
+                ) : null}
+              </div>
+            </li>
+          );
+        })}
       </ol>
-      <p className="mt-tier-group max-w-body type-small text-fg-muted">
-        Tuning to a backtest usually enlarges your future loss.
-      </p>
+
+      {/* ≥ 1024: the lane (cols 8–9, empty in every row). DEFAULT: ONE lens
+          — the bracket + the figure — travels to the active row. ALT: the
+          lane stays empty (only Dead Eye's plate uses it). */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden grid-cols-12 gap-x-6 lg:grid">
+        <div ref={laneRef} className="relative col-span-2 col-start-8">
+          <motion.div className="absolute inset-x-0 top-0" style={{ y: ly }}>
+            {lensOn ? (
+              <>
+                <Lens
+                  state={lensState}
+                  focus={active !== null}
+                  onSettled={(st) => {
+                    if (st === "open") setLensState("open");
+                  }}
+                  className="aspect-[4/3]"
+                >
+                  <div ref={figRef} className="relative size-full">
+                    <LensFigure kind={lensRowData?.figure ?? "ta"} route={lensRowData?.route ?? "all"} colour={active !== null} />
+                    {graded ? (
+                      <div className="absolute inset-0" data-dead-eye="media">
+                        <MediaFrame media="iconic-deadeye" layout="fill" sizes="12rem" loader={false} />
+                      </div>
+                    ) : null}
+                  </div>
+                </Lens>
+                <p className={cn("mt-3 type-meta transition-colors duration-(--dur-micro)", active !== null ? "text-fg-muted" : "text-fg-ghost")}>
+                  {lensRowData?.figLabel}
+                </p>
+              </>
+            ) : (
+              <div ref={figRef} className="relative aspect-[4/3] overflow-hidden">
+                {graded ? (
+                  <div className="absolute inset-0" data-dead-eye="media">
+                    <MediaFrame media="iconic-deadeye" layout="fill" sizes="12rem" loader={false} />
+                  </div>
+                ) : null}
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </div>
+
+      {!lensOn ? (
+        /* ALT: the index bar beside the active row */
+        <motion.div
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute -left-3 top-0 w-0.5 bg-fg-muted transition-opacity duration-(--dur-micro) sm:-left-4",
+            active !== null ? "opacity-100" : "opacity-0",
+          )}
+          style={{ y: by, height: bh }}
+        />
+      ) : null}
+
     </div>
   );
 }

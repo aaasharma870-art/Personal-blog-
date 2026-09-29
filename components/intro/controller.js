@@ -39,6 +39,14 @@
                        turns away on its right edge, washing to parchment
    Both sides share every rule: 0 rAF at rest, focus parity (hover = focus),
    one video, reduced motion / Pause end the prologue, the name clears first.
+
+   FLIGHT CAPTIONS (M2, RECOGNIZABILITY S02 / T1): #intro-caps, a sibling of
+   #intro rendered by intro-overlay.tsx, names the flight — HP for the first
+   2.5 s of a 6 s flight, a 1 s cross-dissolve, then Pirates through the
+   landing and 2.5 s over the landed hero (≥ 640), then a 600 ms fade; the
+   code flight runs the same timeline scaled to its length. WAAPI only (it
+   writes no attribute: the hydration contract). Skip / Esc / scroll / motion
+   off: gone at once; a scroll during the linger fades it in 200 ms.
    ========================================================================== */
 (function (w, d) {
   "use strict";
@@ -270,7 +278,7 @@
   /** 12 ring candles around the bracket (never over a text box, I18) plus
    *  the ambient sprites, placed by a fixed-seed PRNG (repeatable frames). */
   function layoutCandles() {
-    var cc = C.candle, texts = [], i, els = intro.querySelectorAll(".intro-meta,.intro-lines,.intro-play-face,.intro-skip");
+    var cc = C.candle, texts = [], i, els = intro.querySelectorAll(".intro-meta,.intro-lines,.intro-play-face,.intro-skip,.intro-cap");
     for (i = 0; i < els.length; i++) {
       var r = els[i].getBoundingClientRect();
       if (r.width && r.height) texts.push(box(r, 10));
@@ -528,6 +536,58 @@
     if (more && st !== "idle") kick();
   }
 
+  /* — the flight captions (S02 / T1) ———————————————————————————————— */
+  var capBox = null, capHp = null, capPc = null, capAnims = [], capTimer = 0, capOff = null;
+  function capsFind() {
+    capBox = d.getElementById("intro-caps");
+    capHp = d.getElementById("intro-cap-hp");
+    capPc = d.getElementById("intro-cap-pc");
+    return !!(capBox && capHp && capPc && capBox.animate);
+  }
+  function capsCancel(list) {
+    for (var i = 0; i < list.length; i++) try { list[i].cancel(); } catch { /* gone */ }
+  }
+  /** Stop the captions: at once (ms 0) or fading the box out over `ms`. */
+  function capsStop(ms) {
+    if (capTimer) { clearTimeout(capTimer); capTimer = 0; }
+    if (capOff) { var off = capOff; capOff = null; off(); }
+    var list = capAnims;
+    capAnims = [];
+    if (!list.length) return;
+    if (!ms || !capBox) return capsCancel(list);
+    var o = +w.getComputedStyle(capBox).opacity || 0, out = null;
+    try {
+      out = capBox.animate([{ visibility: "visible", opacity: o }, { visibility: "visible", opacity: 0 }],
+        { duration: ms, easing: curve(C.ease), fill: "forwards" });
+    } catch { /* no WAAPI */ }
+    if (!out) return capsCancel(list);
+    list.push(out);
+    out.onfinish = function () { capsCancel(list); };
+  }
+  /** The flight timeline over `ms` (the flight's own length). */
+  function capsPlay(ms) {
+    if (!(ms > 0) || !capsFind()) return;
+    capsStop(0);
+    var a = 2.5 / 6, b = 3.5 / 6, fi = M.min(a / 2, 300 / ms);
+    var o = { duration: ms, easing: "linear", fill: "forwards" };
+    try {
+      capAnims.push(capBox.animate([{ visibility: "visible", opacity: 0 }, { visibility: "visible", opacity: 1, offset: fi }, { visibility: "visible", opacity: 1 }], o));
+      capAnims.push(capHp.animate([{ opacity: 0 }, { opacity: 1, offset: fi }, { opacity: 1, offset: a }, { opacity: 0, offset: b }, { opacity: 0 }], o));
+      capAnims.push(capPc.animate([{ opacity: 0 }, { opacity: 0, offset: a }, { opacity: 1, offset: b }, { opacity: 1 }], o));
+    } catch { capsStop(0); }
+  }
+  /** Landed: the Pirates caption stays 2.5 s over the hero (≥ 640, where it
+   *  sits below the crest), then fades for good; any scroll fades it sooner. */
+  function capsLinger() {
+    if (!capAnims.length) return;
+    if (!(w.matchMedia && w.matchMedia("(min-width: 40rem)").matches)) return capsStop(C.t.base);
+    capTimer = setTimeout(function () { capTimer = 0; capsStop(600); }, 2500);
+    var early = function () { capsStop(200); };
+    var evs = ["wheel", "touchmove", "keydown"];
+    for (var i = 0; i < evs.length; i++) w.addEventListener(evs[i], early, { passive: true });
+    capOff = function () { for (var j = 0; j < evs.length; j++) w.removeEventListener(evs[j], early); };
+  }
+
   /* — S1 launch ————————————————————————————————————————————————————— */
   function launch() {
     if (st !== "armed") return;
@@ -690,6 +750,7 @@
       vPlaying = true;
       v.style.opacity = "1";
       showPlate = false; // the video's first frame IS the plate
+      capsPlay((v.duration > 0 ? M.min(v.duration, FL.dur) : FL.dur) * 1000);
       kick();
     };
     v.addEventListener("playing", function () {
@@ -788,6 +849,7 @@
       broom.style.opacity = "1";
     }
     later(dome, C.t.domeAt);
+    capsPlay(C.t.domeAt + (altLand ? C.t.fold : C.t.dome));
     kick();
   }
   function bz(P, t) {
@@ -1189,6 +1251,7 @@
     setState("leaving");
     mark("dismiss");
     ses("intro-seen", "1");
+    capsStop(80);
     killVideo();
     R.classList.add("intro-leaving"); // the hero opens on this class (hero-stage.tsx)
     anim(intro, [{ opacity: 1 }, { opacity: 0 }], C.t.base, C.ease, function () { finish(false, reason); });
@@ -1220,6 +1283,8 @@
     cands = []; trail = []; motes = null; patch = null; code = null; domeOn = false;
     ink = null; inked = false; foldAt = -1;
     tl = tlx = null; eimg = null; eimgOk = false;
+    if (played) capsLinger();
+    else capsStop(0);
     focusLanding();
     mark("end");
     try { w.dispatchEvent(new CustomEvent("intro:end", { detail: { played: played, reason: reason } })); } catch { /* old browsers */ }

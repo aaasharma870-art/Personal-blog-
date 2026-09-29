@@ -60,7 +60,9 @@ export function OpeningMapFrame({ heading, rows }: { heading: ReactNode; rows: O
   return (
     <div
       className={cn(
-        "grid size-full grid-cols-1 content-center items-center gap-tier-group py-4 sm:px-gutter",
+        // the program below the Pearl (CardShell `after`: the stage has the
+        // gutters); the lab still mounts it in a 2.39 box, so it fills one
+        "grid size-full grid-cols-1 content-center items-center gap-tier-group",
         "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-tier-block",
       )}
     >

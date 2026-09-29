@@ -4,7 +4,6 @@ import "./globals.css";
 import "./intro.css";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { Header } from "@/components/site/header";
-import { Footer } from "@/components/site/footer";
 import { SectionRail } from "@/components/site/section-rail";
 import { CommandPalette } from "@/components/site/command-palette";
 import { ChromeGate } from "@/components/site/chrome-gate";
@@ -135,12 +134,9 @@ export default function RootLayout({
           <ChromeGate>
             <Header />
           </ChromeGate>
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            {children}
-          </main>
-          <ChromeGate>
-            <Footer />
-          </ChromeGate>
+          {/* <main id="main"> is rendered by each route (app/page.tsx, which
+              also places the credits <footer> after it; app/lab/layout.tsx). */}
+          {children}
         </MotionProvider>
         <script
           type="application/ld+json"

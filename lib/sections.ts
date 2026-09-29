@@ -18,7 +18,16 @@ import {
   type World,
 } from "./page";
 import { site } from "./content";
-import { FAN_TRIBUTE_LINE, film, type CopyKey, type Intensity, type LetteringId } from "./film";
+import {
+  FAN_TRIBUTE_LINE,
+  film,
+  type CaptionKey,
+  type CaptionPlace,
+  type CaptionWorld,
+  type CopyKey,
+  type Intensity,
+  type LetteringId,
+} from "./film";
 import { quotes, type QuoteId } from "./quotes";
 import {
   effectiveVariant,
@@ -154,6 +163,92 @@ export function letteringFor(
   return { lettered: false, upper: false };
 }
 
+/* — Lettering in the fan faces (M2, RECOGNIZABILITY O-1) ————————————— */
+
+/** The film world whose face sets `face` ("Kalam" → "idiots"), or null. */
+function worldOfFace(face: string): CaptionWorld | null {
+  for (const [w, f] of Object.entries(film.worldFaces) as [CaptionWorld, string][]) if (f === face) return w;
+  return null;
+}
+
+/** Whether `text` may set in `world`'s fan face: a SHIPPED mode-A lettering
+ *  string in that face equals it exactly, or equals its caps (then set it
+ *  with text-transform: uppercase). Slot "caption" entries count only while
+ *  film.fontScope.extended is on. Anything unregistered stays house type:
+ *  the subsets hold ONLY the registered strings' glyphs. */
+export function letteredIn(world: CaptionWorld, text: string): { lettered: boolean; upper: boolean } {
+  const face = film.worldFaces[world];
+  for (const l of film.lettering) {
+    if (!l.shipped || l.mode !== "A" || l.face !== face || !l.text) continue;
+    if (l.slot === "caption" && !film.fontScope.extended) continue;
+    if (l.text === text) return { lettered: true, upper: false };
+    if (l.text === l.text.toUpperCase() && l.text === text.toUpperCase()) return { lettered: true, upper: true };
+  }
+  return { lettered: false, upper: false };
+}
+
+/** The world whose face letters quote `id` (a shipped lettering entry with
+ *  `quote: id`), or null → <FilmQuote rendition="lettered"> sets it in the
+ *  host's own type. */
+export function quoteLetteringWorld(id: QuoteId): CaptionWorld | null {
+  if (!film.enabled || !film.fontScope.extended) return null;
+  const l = film.lettering.find((x) => x.quote === id && x.shipped && x.mode === "A");
+  return l ? worldOfFace(l.face) : null;
+}
+
+/** The film title of a world in caps ("3 IDIOTS"), or null for house. */
+export function filmTitleOf(world: World): string | null {
+  const w = film.worlds[world].work;
+  return w ? w.title.toUpperCase() : null;
+}
+
+/* — Scene captions (M2, RECOGNIZABILITY §4, §6) ——————————————————————— */
+
+/** The caption key for a variant: `${base}.alt` when the ALT is rendering
+ *  and such a key exists, else `base` ("cap.act-2" + "alt" → "cap.act-2.alt"). */
+export function captionKeyFor(base: CaptionKey, variant: Variant): CaptionKey {
+  if (variant === "alt") {
+    const k = `${base}.alt`;
+    if (Object.prototype.hasOwnProperty.call(film.captions, k)) return k as CaptionKey;
+  }
+  return base;
+}
+
+export type ResolvedCaption = {
+  key: CaptionKey;
+  world: CaptionWorld;
+  /** The moment text (caps), or null when the moment is a quote. */
+  moment: string | null;
+  quote: QuoteId | null;
+  /** "3 IDIOTS", or null when the caption carries no film span. */
+  film: string | null;
+  place: CaptionPlace;
+  ariaHidden: boolean;
+};
+
+/** A caption ready to render, or null when it may not render in this build
+ *  (film layer off, its copy / quote not visible). Pure: SSR = client. */
+export function captionOf(key: CaptionKey): ResolvedCaption | null {
+  if (!film.enabled) return null;
+  const c = film.captions[key];
+  if (!c) return null;
+  if (c.moment && !copyVisible(c.moment)) return null;
+  if (c.quote) {
+    const q = quotes[c.quote];
+    if (!copyVisible({ text: q.text, status: q.status })) return null;
+  }
+  if (!c.moment && !c.quote) return null;
+  return {
+    key,
+    world: c.world,
+    moment: c.moment ? c.moment.text : null,
+    quote: c.quote ?? null,
+    film: c.film === false ? null : filmTitleOf(c.world),
+    place: c.place,
+    ariaHidden: Boolean(c.ariaHidden),
+  };
+}
+
 /** Whether a copy string may render in THIS build (SPEC §9.6, amended by
  *  Aryan's answer #2): never when empty; everything when `film.branchPreview`
  *  is on (this branch: dev AND plain production — it replaces the old
@@ -230,8 +325,9 @@ export const quotesInUse: readonly QuoteId[] = (Object.keys(quotes) as QuoteId[]
   return byId.has(host);
 });
 
-/** Everything the closing-credits roll needs (SPEC SM-13, ICONS §10). M1
- *  renders it in the layout footer (components/site/footer.tsx). */
+/** Everything the closing-credits roll needs (SPEC SM-13, ICONS §10). M2:
+ *  the `credits` manifest section renders it (components/sections/credits/
+ *  credits-section.tsx → components/site/footer.tsx), after <main>. */
 export const credits = {
   enabled: film.enabled,
   /** "Pirates of the Caribbean (2003–2017) · 3 Idiots (2009) · …" */
@@ -343,7 +439,7 @@ export type NavGroup = {
   id: string;
   /** "Act II · The Workshop" / "Intermission" … */
   label: string;
-  /** "after 3 Idiots" (house groups: null). */
+  /** null since M2: the film is named in `label` (RECOGNIZABILITY §4.4). */
   credit: string | null;
   /** The card anchor to jump to the act ("#act-2"), or null. */
   href: string | null;
@@ -371,8 +467,12 @@ export const navGroups: readonly NavGroup[] = (() => {
       const spec = act ? film.worlds[act.world] : undefined;
       cur = {
         id: gid,
+        // RECOGNIZABILITY §4.4: the film is named in the group header
+        // ("Act II — 3 Idiots · The Workshop"), so `credit` is dropped.
         label: card
-          ? `Act ${card.numeral} · ${card.title}`
+          ? spec?.work
+            ? `Act ${card.numeral} — ${spec.work.title} · ${card.title}`
+            : `Act ${card.numeral} · ${card.title}`
           : gid === "intermission"
             ? "Intermission"
             : gid === "credits"
@@ -380,7 +480,7 @@ export const navGroups: readonly NavGroup[] = (() => {
               : gid === "cold-open"
                 ? "Opening"
                 : "More",
-        credit: spec?.work ? `after ${spec.work.title}` : null,
+        credit: null,
         href: card ? `#${card.id}` : null,
         items: [],
       };

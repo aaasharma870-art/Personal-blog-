@@ -1,5 +1,7 @@
 import { Play } from "lucide-react";
+import { captionOf } from "@/lib/sections";
 import { FilmQuote } from "@/components/site/film-quote";
+import { SceneCaption } from "@/components/primitives/scene-caption";
 import { BROOM_SVG } from "./broom";
 import type { IntroModel } from "./intro-model";
 
@@ -27,13 +29,32 @@ import type { IntroModel } from "./intro-model";
      registry through FilmQuote.
    - Type: meta (title, credit line, Skip) + epigraph (the oath) + title
      (Play) — exactly three styles; the oath is the viewport's one italic and
-     the bracket its one aqua mark.
+     the bracket its one aqua mark. M2 (RECOGNIZABILITY O-1, S01) adds the
+     scene caption in the world's fan face: it outranks the style count.
+   - SCENE CAPTIONS (M2, RECOGNIZABILITY S01/S02, T1; server-rendered,
+     static markup the controller never writes to — WAAPI only):
+       play    "HOGWARTS, ACROSS THE BLACK LAKE • HARRY POTTER" in the dark
+               play zone (lower left; top left below 1024 / portrait). It is
+               part of the dialog's text: it fades with the text on Play
+               (.intro-fade) and clears in 80 ms on Skip / Esc / scroll.
+       flight  #intro-caps, a SIBLING of #intro (so it outlives the overlay):
+               "A BROOMSTICK OVER HOGWARTS • HARRY POTTER" for the first
+               2.5 s of the 6 s flight, a 1 s cross-dissolve, then "TOWARD
+               THE BLACK PEARL • PIRATES OF THE CARIBBEAN" through the
+               landing and 2.5 s over the landed hero (≥ 640), then a
+               600 ms fade, never to return. The code flight runs the same
+               timeline scaled to its length. aria-hidden (it narrates a
+               visual). Hidden by CSS until the controller animates it, so
+               no JS / reduced motion / Pause / ?skip / Skip never show it.
    ========================================================================== */
 
 export function IntroOverlay({ model }: { model: IntroModel }) {
   const json = JSON.stringify(model.config).replace(/</g, "\\u003c");
   const n = model.credits.length;
+  const playCap = captionOf("cap.intro.play");
+  const flightCaps = captionOf("cap.intro.flight.hp") && captionOf("cap.intro.flight.pc");
   return (
+    <>
     <div
       id="intro"
       role="dialog"
@@ -105,6 +126,25 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
         </button>
       </div>
 
+      {/* S01: the play screen names its moment and its film (rule (b)) */}
+      {playCap ? (
+        <div
+          data-world="hp"
+          data-tone="deep"
+          className={
+            // .intro-cap: the candles and the ink route keep off it (I18)
+            // portrait / < 1024: top left, under the Skip row, in the night
+            // sky left of the towers (the Play block owns the lower third);
+            // landscape ≥ 1024: the dark lake, lower left, under Play
+            "intro-cap intro-fade pointer-events-none absolute top-[calc(4.5rem+1svh)] left-(--spacing-gutter) max-w-[62%] " +
+            "lg:landscape:top-auto lg:landscape:bottom-[max(8svh,3rem)] lg:landscape:max-w-[42rem] " +
+            "[html.intro-leaving_&]:invisible [html.intro-leaving_&]:opacity-0"
+          }
+        >
+          <SceneCaption k="cap.intro.play" place="under" className="mt-0 sm:mt-0" />
+        </div>
+      ) : null}
+
       <p id="intro-desc" className="sr-only">
         {model.desc}
       </p>
@@ -125,5 +165,34 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
         dangerouslySetInnerHTML={{ __html: json }}
       />
     </div>
+
+    {/* S02 / T1: the flight's caption hand-off, HP → Pirates (the controller
+        animates it; hidden until then). Above the overlay and the header. */}
+    {flightCaps ? (
+      <div
+        id="intro-caps"
+        aria-hidden="true"
+        className="pointer-events-none invisible fixed inset-0 z-[81] opacity-0 print:hidden"
+      >
+        <span className="absolute inset-x-0 bottom-0 h-[40svh] bg-[linear-gradient(to_top,rgb(2_14_28/0.72),rgb(2_14_28/0.3)_55%,transparent)]" />
+        <div
+          id="intro-cap-hp"
+          data-world="hp"
+          data-tone="deep"
+          className="absolute right-(--spacing-gutter) bottom-[max(7svh,2.75rem)] left-(--spacing-gutter) opacity-0 sm:right-auto sm:max-w-[40rem]"
+        >
+          <SceneCaption k="cap.intro.flight.hp" place="under" className="mt-0 sm:mt-0" />
+        </div>
+        <div
+          id="intro-cap-pc"
+          data-world="pirates"
+          data-tone="deep"
+          className="absolute right-(--spacing-gutter) bottom-[max(7svh,2.75rem)] left-(--spacing-gutter) opacity-0 sm:left-auto sm:max-w-[40rem]"
+        >
+          <SceneCaption k="cap.intro.flight.pc" place="under" className="mt-0 sm:mt-0" />
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }

@@ -5,6 +5,8 @@ import { planeAttrs, worlds, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
 import { Loader } from "@/components/primitives/loader";
+import { FilmTitle } from "@/components/primitives/scene-caption";
+import { RouteCaption } from "@/components/primitives/loaders/route-caption";
 import { RouteStatus } from "@/components/primitives/loaders/route-status";
 
 /**
@@ -16,8 +18,13 @@ import { RouteStatus } from "@/components/primitives/loaders/route-status";
  * moving that section re-derives the loader (fixture J: `writing` → act-4
  * gives LD-HP; → act-2 the idiots gauge):
  *   world    worldOf(owner) → its loader kind (worlds[world].loader)
- *   title    the owner's act title in the world's lettering, above the loader
- *            (a loader route card is a display-face slot, SPEC §9.7)
+ *   title    M2 (RECOGNIZABILITY S20): the FILM title in the world's fan face
+ *            (28–32 px, <FilmTitle>) over the owner's act title in the
+ *            world's lettering (a loader route card is a display-face slot,
+ *            SPEC §9.7)
+ *   art      the world loader at `stage` size (240 px; S20 "≥ 200 px"), with
+ *            its MOMENT • FILM caption under it (RouteCaption: the variant
+ *            the loader actually draws; HTML, never inside the SVG)
  *   status   visible Meta text in role="status" (RouteStatus), after the
  *            400 ms show delay; the motif is indeterminate and idle-stops
  *   TIP      plate-trail (LD-RD) only: ONE of Aryan's own rules, chosen
@@ -73,7 +80,10 @@ export function RouteLoader({
         className,
       )}
     >
-      <div className="flex items-end sm:px-gutter sm:pb-4">
+      <div className="flex flex-col items-start justify-end gap-2 sm:px-gutter sm:pb-4">
+        {film.enabled && world !== "house" ? (
+          <FilmTitle world={world} className="text-[clamp(1.75rem,1.45rem+0.9vw,2rem)] leading-[1.05] tracking-[0.04em] text-fg" />
+        ) : null}
         {title ? (
           <p aria-hidden="true" className="type-title max-w-title">
             <span className={cn(face.lettered && "lettered-title font-world-act", face.upper && "uppercase")}>
@@ -83,7 +93,14 @@ export function RouteLoader({
         ) : null}
       </div>
       <div className="grid place-items-center sm:aspect-(--letterbox-ratio) sm:w-full">
-        <Loader world={world} size="route" delayMs={loaderTiming.showDelayMs} />
+        <div className="flex max-w-full flex-col items-center sm:px-gutter">
+          {/* the art's box is reserved (the tallest world art, LD-PC's
+              160:156), so nothing moves when it appears after the delay */}
+          <div className="grid aspect-[160/156] w-60 max-w-full place-items-center">
+            <Loader world={world} size="stage" delayMs={loaderTiming.showDelayMs} />
+          </div>
+          {film.enabled && world !== "house" ? <RouteCaption world={world} /> : null}
+        </div>
       </div>
       <div className="flex flex-col items-start gap-3 sm:px-gutter sm:pt-4">
         <RouteStatus status={status} stall={stall} className="type-meta text-fg-muted" />

@@ -4,15 +4,29 @@ import { footerLine, site } from "@/lib/content";
 import { film } from "@/lib/film";
 import { isUsable, mediaAssets, type MediaProvenance, type MediaStatus } from "@/lib/media";
 import { quotes, type QuoteId } from "@/lib/quotes";
-import { bookendWorld, copyVisible, credits, sectionById, topHref, worksInUse } from "@/lib/sections";
+import {
+  anchorId,
+  bookendWorld,
+  copyVisible,
+  credits,
+  enabledSections,
+  topHref,
+  worksInUse,
+  worldOf,
+} from "@/lib/sections";
+import type { SectionProps } from "@/components/sections/types";
 import { planeAttrs } from "@/lib/worlds";
 import { GithubMark } from "@/components/ui/icons";
 import { FilmQuote } from "@/components/site/film-quote";
 import { HallowsMark, TimeTurnerLink } from "@/components/site/hp-ink";
+import { Lettered } from "@/components/primitives/scene-caption";
+import { InkFold, SeekerRow, Snitch } from "@/components/eggs/snitch";
 
 /* ============================================================================
    CREDITS — the closing roll (SPEC v2 SM-13; ICONS §10), rendered as the page
-   <footer id="credits"> while the manifest's `credits` entry is a stub (M1).
+   <footer id="credits"> by the manifest's `credits` section (M2:
+   components/sections/credits/credits-section.tsx; app/page.tsx places it
+   after </main>).
    Native scroll IS the roll: no pin, no auto-scroll. Centred rows: the role
    in Meta at left, the name in body at right. Every row is DERIVED and
    factual — works from the enabled acts, lines from the quote registry
@@ -23,17 +37,28 @@ import { HallowsMark, TimeTurnerLink } from "@/components/site/hp-ink";
    prologue's HP bookend (Time-Turner, the Hallows end mark and the last
    line, Q-HP-2) only while the prologue is enabled.
    "GRADED" wording is never used (it could read as school grades).
+
+   M2 (loaders-eggs-chrome; RECOGNIZABILITY S19, T12, O-6):
+   - T12: the roll opens on the previous section's world deep (Act IV's hp
+     candle-night) and fades to house deep over 30vh — no hard edge.
+   - WORLDS BORROWED FROM sets each work title in its OWN fan face (O-6:
+     the credits are the one place all four worlds meet), via <Lettered>
+     (registered strings only; the years stay in house type).
+   - The Snitch (components/eggs/snitch.tsx) RESTS, visible, beside "↑ Back
+     to the opening" (catchable; it darts once per session); catching it
+     adds SEEKER — you. The Time-Turner is 24 px, the Hallows end mark 16 px.
+   - The last line, Q-HP-2, is LETTERED in IM Fell at the heading size, and
+     a short ink fold-line draws closed beneath it (the Map folding shut).
    ========================================================================== */
 
-/** Quote hosts that have no renderer yet in M1 (their lines must not be
- *  credited until they actually render): the eggs and the console line. */
+/** Quote hosts whose lines render only when someone triggers them (an egg's
+ *  toast, the devtools console): they are not on the page at rest, so the
+ *  roll does not list them (E13 "when they render on the page"); the
+ *  console line carries its own attribution in the same string. */
 const UNBUILT_HOST = (host: string) => host.startsWith("egg:") || host === "console";
 
 function linesQuoted(): { work: string; ids: QuoteId[] }[] {
   const ids = new Set<QuoteId>(credits.quotes.filter((id) => !UNBUILT_HOST(quotes[id].host)));
-  // M1: the chapters render INSIDE `work` (their entries are stubs), so the
-  // Optuna figure's caption line renders there.
-  if (film.enabled && sectionById("work") && !sectionById("optuna-screener")) ids.add("Q-3I-3");
   const visible = [...ids].filter((id) => copyVisible({ text: quotes[id].text, status: quotes[id].status }));
   // act order: the index of the work's world in worksInUse
   const rank = (id: QuoteId) => {
@@ -88,21 +113,33 @@ const Dot = () => (
   </span>
 );
 
-export function Footer() {
+export function Footer({ entry }: SectionProps<"credits">) {
   const year = new Date().getFullYear(); // the build year (static page)
   const on = credits.enabled;
   const lines = on ? linesQuoted() : [];
   const models = on ? imageryModels() : [];
   const faces = on ? shippedFaces() : [];
   const hp = bookendWorld === "hp";
+  // T12: the world the roll follows (Act IV's hp), faded into house deep
+  const i = enabledSections.indexOf(entry);
+  const prev = i > 0 ? enabledSections[i - 1] : undefined;
+  const fromWorld = on && prev ? worldOf(prev) : "house";
 
   return (
     <footer
-      id="credits"
+      id={anchorId(entry)}
       aria-labelledby="credits-title"
       {...planeAttrs("deep", "house")}
-      className="relative bg-bg py-section text-fg"
+      className="relative isolate bg-bg py-section text-fg"
     >
+      {fromWorld !== "house" ? (
+        <div
+          aria-hidden="true"
+          {...planeAttrs("deep", fromWorld)}
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30vh] bg-linear-to-b from-bg to-transparent"
+          data-seam="credits"
+        />
+      ) : null}
       <div className="mx-auto w-full max-w-page px-gutter">
         <h2 id="credits-title" className="text-center type-meta text-fg-muted">
           Credits
@@ -111,14 +148,20 @@ export function Footer() {
         <dl className="mx-auto mt-tier-block max-w-[56rem] border-b border-rule">
           <Row role="A personal research journal by">{site.name}</Row>
           <Row role="Research, systems & writing">{site.name}</Row>
-          {on && credits.worlds.length ? (
+          {on && worksInUse.length ? (
             <Row role="Worlds borrowed from">
-              {credits.worlds.map((w, i) => (
-                <span key={w}>
-                  {i > 0 ? <Dot /> : null}
-                  {w}
-                </span>
-              ))}
+              <span className="flex flex-col gap-2">
+                {worksInUse.map((w) => (
+                  <span key={w.world} className="block" data-credits-work={w.world}>
+                    {w.world === "house" ? (
+                      w.title
+                    ) : (
+                      <Lettered world={w.world} text={w.title} className="text-[1.375rem] leading-tight tracking-[0.03em]" />
+                    )}{" "}
+                    <span className="text-fg-muted">({w.years})</span>
+                  </span>
+                ))}
+              </span>
             </Row>
           ) : null}
           {lines.length ? (
@@ -154,6 +197,7 @@ export function Footer() {
               </>
             ) : null}
           </Row>
+          <SeekerRow />
         </dl>
 
         {on ? (
@@ -166,15 +210,21 @@ export function Footer() {
         <div className="mt-tier-block flex flex-col items-center gap-tier-pair text-center">
           <p className="max-w-lead type-small text-fg-muted">{footerLine}</p>
           {on && copyVisible(credits.end) ? <p className="type-body text-fg">{credits.end.text}</p> : null}
-          {hp ? (
-            <TimeTurnerLink href={topHref} className="type-small text-fg-muted transition-colors hover:text-fg">
-              ↑ Back to the opening
-            </TimeTurnerLink>
-          ) : (
-            <a href={topHref} className="inline-flex min-h-11 items-center type-small text-fg-muted transition-colors hover:text-fg">
-              ↑ Back to the opening
-            </a>
-          )}
+          <div className="flex items-center gap-2" data-credits-return="">
+            {hp ? (
+              <TimeTurnerLink
+                href={topHref}
+                className="type-small text-fg-muted transition-colors hover:text-fg [&_[data-motif=time-turner]]:size-6"
+              >
+                ↑ Back to the opening
+              </TimeTurnerLink>
+            ) : (
+              <a href={topHref} className="inline-flex min-h-11 items-center type-small text-fg-muted transition-colors hover:text-fg">
+                ↑ Back to the opening
+              </a>
+            )}
+            {hp ? <Snitch /> : null}
+          </div>
           <div className="flex items-center gap-2">
             <a
               href={site.github}
@@ -199,10 +249,13 @@ export function Footer() {
         </div>
 
         {on && credits.lastLine ? (
-          <p className="mt-tier-block text-center type-body text-fg">
-            <FilmQuote id={credits.lastLine} rendition="line" attribution="credits" />
-            {hp ? <HallowsMark className="ml-3 align-[-1px]" /> : null}
-          </p>
+          <div className="mt-tier-block flex flex-col items-center gap-3 text-center" data-credits-last="">
+            <p className="text-(length:--text-heading) leading-(--text-heading--line-height) text-fg">
+              <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
+              {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
+            </p>
+            {hp ? <InkFold /> : null}
+          </div>
         ) : null}
       </div>
     </footer>
