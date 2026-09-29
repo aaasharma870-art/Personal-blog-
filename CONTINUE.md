@@ -1,95 +1,39 @@
-> **RESUME POINT (2026-09-29, 05:30 ET, handoff from Aryan's laptop).** The local session is STOPPED, so no other executor is active and you may start immediately.
-> - **Branch head:** `ad7f742` + docs.
-> - **Done:** M0, M1, M1.5, and most of M2-COMBINED (all media, the integrator, all 6 section builders, assembly).
-> - **Your next step:** `docs/build/AUTOPILOT.md` → **M2-COMBINED → "REMAINING" step 1**: eslint + build → blind + captioned captures → 3 blind judges + critic → fix → `M2-REPORT.md`. Then **M5 final QA** → `FINAL-REPORT.md`.
-> - Everything you need is in this repo. Paths in `docs/build/*` that start with `C:/Users/aaash/Desktop/Transcript/research/build/` map to `docs/build/`.
+# CONTINUE: phase 2 — the info details
 
-# CONTINUE: autonomous build handoff (for any Claude Code session, local or cloud)
+**If you are Claude and Aryan says "continue", "go" or similar in this repo, this file is your brief.** Read it fully before touching anything.
 
-**If you are Claude and the user said "continue", "go" or anything similar in this repo: this file is your task.** Aryan Sharma authorized a fully autonomous build of his personal site. Finish it without asking him anything, then report.
+## Where things stand (2026-09-29)
+- **The site is built and on `main`.** "One Line, Four Lights": a single-page Next.js 16 / React 19 / Tailwind v4 / motion 12 portfolio in four film-lit acts (Pirates of the Caribbean · 3 Idiots · Red Dead Redemption 2 · Harry Potter) plus the Harry Potter intro. The autonomous build (P0 → M5) is finished; its record is `docs/build/FINAL-REPORT.md` (read §6–§8) and the old brief is `docs/build/CONTINUE-BUILD.md`.
+- **Everything was signed off AS-IS by Aryan on 2026-09-29** so the live site renders exactly like the branch: `film.copySignedOff: true`, `film.branchPreview: false`, the 9 drafted personal lines set to `confirmed` (their prompts + alternates kept for the rewrite), and every media plate's Check L2 countersigned (`aryan:2026-09-29`). `RELEASE=1 npm run check` passes.
+- **Not hosted yet** (Aryan: "not now"). When he wants it live: connect the GitHub repo to Vercel (import → framework Next.js → deploy `main`); no config file is needed.
+- Visual review of every frame: the contact sheet artifact (link in `docs/build/FINAL-REPORT.md`, "Post-M5 skills pass") and `docs/build/final-frames/index.html`.
 
-## 0. Golden rules (non-negotiable)
-- **Git:**
-  - Work ONLY on branch `design/three-films`. **Never touch, merge into or push `main`. Never force-push.**
-  - Before starting any step, run `git fetch origin && git pull --rebase origin design/three-films`.
-  - After every finished step, commit and then `git push origin design/three-films`.
-  - Commit messages end with a blank line and then `Co-Authored-By: Claude <noreply@anthropic.com>`.
-- **One executor at a time.** Read `docs/build/EXECUTOR.md`.
-  - If another executor's heartbeat is less than 30 minutes old, stop, and tell the user another session is active.
-  - Otherwise write your own heartbeat (executor name, UTC time, current step), commit it, push it, and refresh it after each step.
-- **Hard limits.** Aryan's personal blog uses real film/game iconography, **recreated by us**. Specifically:
-  - No actor faces or likenesses.
-  - No ripped stills, footage or official logo files.
-  - The "Fan tribute — not affiliated with Warner Bros., Disney, Vinod Chopra Films or Rockstar Games" credit stays.
-  - Research honesty is untouched: the Sharpe-2.0 rule, synthetic labels, caveats next to claims, and writing drafts stay non-link drafts.
-  - The exclusions in `docs/build/CONTENT-RULES.md` are absolute. The root `CLAUDE.md` is private and gitignored, so it may be absent; that file is its tracked summary.
-  - The one-liners stay `draft: true` for Aryan to rewrite.
-- **Accessibility and performance:**
-  - Reduced motion and the Pause toggle stop all motion.
-  - The intro overlay never gates content.
-  - No hydration errors.
-  - AA contrast.
-  - One `h1`, which is his name.
-  - One video decoder at a time.
-  - Mobile gets stills.
-- **Every step must stay green:** `npm run check`, `npx eslint .` and `npm run build`.
+## Rules (binding)
+- **Branches:** work on `design/three-films` (or a new branch off it). `main` is the release branch: merge into it only when Aryan asks AND `RELEASE=1 npm run check`, `npx eslint .` and `npm run build` are all green. Never force-push. Commit and push after every finished step.
+- **Content & honesty:** `docs/build/CONTENT-RULES.md` is absolute (no grades/GPA, attendance, family finances, hardship narratives, address/phone/family details, unverifiable claims; the Sharpe-2.0 rule; synthetic labels; caveats next to claims; writing drafts stay non-link DRAFT). **Never invent facts** — Aryan supplies them; Claude may only offer wording options built from facts already in `lib/content.ts`.
+- **Film layer:** keep every scene recognizable (captions stay: MOMENT • FILM); no actor likenesses, ripped stills or official logos; the fan-tribute credit stays.
+- **A11y/perf:** reduced motion + Pause stop everything; one h1; AA contrast; no hydration errors; mobile stills.
+- Next 16: check `node_modules/next/dist/docs` before Next-specific code.
 
-## 1. What this project is
-- **The site:** a single-page Next.js 16 / React 19 / Tailwind v4 / motion 12 portfolio called "One Line, Four Lights".
-- **Structure:** four acts, each lit by one world:
-  - Pirates of the Caribbean: the crossing
-  - 3 Idiots: the workshop
-  - Red Dead Redemption 2: the frontier
-  - Harry Potter: the light, plus the opening Play intro with the broom flight
-- **Driven by data:** a typed manifest drives it (`lib/page.ts` → `lib/sections.ts` / `lib/derive.ts` → `components/sections/registry.ts`).
-- **Media:** `lib/media.ts` with default and alt variants.
-- **Film copy:** `lib/film.ts`.
+## Phase 2 queue — the info details (Aryan leads; Claude drafts options, then edits)
+Tick each item here with a one-line outcome when done.
+- [ ] **1. The four "why this film matters to me" lines** — `lib/film.ts` → `reasons` (`pirates`, `idiots`, `rdr2`, `hp`). Each has the current text + 2 alternates + a prompt. Aryan rewrites in his own words (1–2 sentences each).
+- [ ] **2. The four act loglines** — `lib/film.ts` → `"act-1"…"act-4"` (under `aryanDraft(...)`).
+- [ ] **3. The WANTED poster's reward line** — `lib/film.ts` → `copy["beyond.handbill.reward"]` (or empty to drop the row).
+- [ ] **4. Review the page microcopy + captions** — every `status: "proposed"` string in `lib/film.ts` (captions `cap.*`, act titles, loaders, tips, eggs, credits) — about 110 strings. List them: `grep -n 'status: "proposed"' lib/film.ts`. Keep captions naming MOMENT • FILM.
+- [ ] **5. Verify the 5 community-sourced quotes** in the works — `lib/quotes.ts`: Q-PC-1, Q-PC-3, Q-3I-3, Q-RD-1, Q-RD-2 (fix wording or swap; then `status: "confirmed"`).
+- [ ] **6. The facts** — `lib/content.ts`: about/bio, journey steps, projects/chapters (numbers must stay honest and caveated), systems/capabilities, principles, testimonials, contact. Writing entries stay DRAFT non-links until the essays exist.
+- [ ] **7. Résumé** — the contact section shows "Résumé • coming soon" (`components/site/contact-finale.tsx`); add the real link/PDF when Aryan has one.
+- [ ] **8. Small warnings** — nav label "Trading_Algos" is 13 chars (> 12) in `lib/page.ts`; the unused `iconic-corridor` plate pair (use it or delete its entries + files).
+- [ ] **9. Optional polish follow-ups** — listed in `docs/build/FINAL-REPORT.md` → "Post-M5 skills pass" (header active-section store, hall-ceiling SSR dedupe, letterbox tokens …).
+- [ ] **10. Hosting** — when Aryan asks (see above).
 
-## 2. Read, in this order
-0. `docs/build/CONTENT-RULES.md`: content truth, exclusions and the honesty guardrail.
-1. `docs/build/AUTOPILOT.md`: **the queue, status and binding rules.** This includes Aryan's answers and the **RECOGNIZABILITY RULE**: every film scene must be blatantly obvious (blind stranger test), with a prominent film + moment caption where imagery alone can't pass, iconic accurate moments, and smooth transitions.
-2. `docs/build/SPEC.md` (v2), `docs/build/DESIGN.md`, `docs/build/ICONS.md`, `docs/build/rdr2/STUDY.md`, `docs/build/MEDIA-PLAN.md` and `docs/build/bars/*.BAR.md`.
-3. Reports: `docs/build/M1-REPORT.md`, `M15-REPORT.md`, `ONE-LINERS.md`, `RECOGNIZABILITY.md` and `media/M2-MEDIA-REPORT.md` (whichever exist).
-4. `docs/build/workflows/*.js`: the workflow scripts used locally.
-   - They hard-code Windows paths.
-   - **Map `C:/Users/aaash/Desktop/Transcript/research/build/X` → `docs/build/X`, and `C:/Users/aaash/Desktop/Transcript/personal-website` → the repo root.**
-   - Reuse their structure (integrator → parallel builders with disjoint file ownership → assembler → critic → fix), adapted to this environment.
+## How to change things safely
+1. Edit (`lib/content.ts` facts · `lib/film.ts` film copy/captions · `lib/quotes.ts` · `lib/page.ts` section order/nav · `lib/media.ts` media).
+2. `npm run check` then `RELEASE=1 npm run check` (must stay green: new copy you write with Aryan is `confirmed`; anything else he hasn't approved yet may be `proposed`, which fails RELEASE until signed).
+3. `npx eslint .` and `npm run build`.
+4. Visual changes: `npx next start -p 3161` then `node tools/capture/scenes.js http://localhost:3161 <outDir> --only=desktop,mobile,rm` and look at the frames. If imagery changes, re-run the blind test (`tools/capture/anon.mjs` + 3 judges + `tools/capture/score.mjs`).
+5. Commit, push `design/three-films`; merge to `main` when Aryan asks.
 
-## 3. Environment setup (cloud or fresh machine)
-**Cloud sessions:** `.claude/hooks/session-start.sh` (SessionStart hook, `.claude/settings.json`) already runs `npm ci` when `node_modules` is stale and exports `NODE_PATH` to the global Playwright, so `npm run check`, `npx eslint .`, `npm run build` and `node tools/capture/scenes.js` work at once. The manual steps below are for a local or fresh machine.
-**Next.js 16 has breaking changes:** check `node_modules/next/dist/docs` before writing Next-specific code.
-```bash
-npm ci
-(cd tools/capture && npm init -y >/dev/null && npm i --no-save playwright@1.58)   # capture harness deps
-npx playwright install --with-deps chromium   # for frame captures
-```
-- **Capture harness:** `tools/capture/browser.js` + `tools/capture/capture.js`. On Linux, the Windows priority and affinity calls are harmless no-ops. Use one browser at a time.
-- **Staged media** is in `docs/build/media-staged/`: accepted Higgsfield outputs not yet copied to `public/media/films` and registered in `lib/media.ts`. Register them as the queue says. `npm run check` errors on any unregistered file under `public/`.
-- **Higgsfield:**
-  - If Higgsfield MCP tools are available in your session, you may generate the plates that `docs/build/AUTOPILOT.md` and `RECOGNIZABILITY.md` call for: default + alt each, ≥ 150-credit reserve, logged in `docs/build/media/LOG.md`.
-  - If they aren't available, use existing assets plus code motifs and **prominent captions** to meet the recognizability rule, and list the missing plates in the final report.
-
-## 4. The loop
-1. Pull, then check the heartbeat (§0).
-2. Open `docs/build/AUTOPILOT.md`, find the **first unchecked queue item** and read its notes. If it says running or partially done, inspect `git log` and the files on disk, and **do not redo finished work**.
-3. Do the step, with parallel subagents or Workflows if available, otherwise sequentially.
-   - Quality loop: build → capture frames (1440, 390, reduced motion) → a critic pass that includes the **blind stranger test** on film scenes → fix.
-4. Run check, eslint and build until green.
-5. Commit, tick the item in `docs/build/AUTOPILOT.md` with a one-line outcome, refresh the heartbeat, and push.
-6. Repeat until the queue is empty.
-7. Then write `docs/build/FINAL-REPORT.md`, covering:
-   - how to run the site
-   - what changed
-   - credits spent
-   - DRAFT items for Aryan
-   - known issues
-   - what needs his sign-off before `main`
-
-   Commit and push it, then stop.
-
-## 5. Done means
-- Every queue item is ticked.
-- check, eslint and build are green.
-- Every film scene passes the blind stranger test, or carries an unmistakable caption.
-- `FINAL-REPORT.md` is pushed.
-- `main` is untouched.
+## Environment (cloud sessions)
+`.claude/hooks/session-start.sh` runs `npm ci` when needed and exposes the global Playwright, so check/eslint/build and the capture tools work at once. If a Higgsfield CDN download is blocked, the host `d8j0ntlcm91z4.cloudfront.net` must be allowed in the environment's network settings.

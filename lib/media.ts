@@ -139,10 +139,11 @@ const legacy: MediaProvenance = { source: "legacy" };
 
 /** Check L2 signed by Claude on 2026-09-28; Aryan's countersignature pending
  *  (MEDIA LOG "Open flags"). The validator warns until it is dated. */
-const L2_PENDING = "claude:2026-09-28+aryan:pending" as const;
+/** Aryan countersigned every plate as-is on 2026-09-29 ("sign everything as-is"). */
+const L2_SIGNED = "claude:2026-09-28+aryan:2026-09-29" as const;
 const clean = (icon?: readonly string[]): MediaAccept => ({
   people: false, likeness: false, text: false, ripped: false,
-  ...(icon ? { icon } : {}), checkL2: L2_PENDING,
+  ...(icon ? { icon } : {}), checkL2: L2_SIGNED,
 });
 const hf = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
   source: "higgsfield", model, credits, date: "2026-09-28", jobId, ...(note ? { note } : {}),
@@ -150,13 +151,13 @@ const hf = (model: string, credits: number, jobId: string, note?: string): Media
 /** Alternates: Check L2 signed by Claude on 2026-09-29 (viewed: no people,
  *  likeness, text or marks; generated, nothing ripped); Aryan pending. */
 const cleanAlt = (icon?: readonly string[]): MediaAccept => ({
-  ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
+  ...clean(icon), checkL2: "claude:2026-09-29+aryan:2026-09-29",
 });
 /** M2 media (lanes A + B, the M2-R iconic lane; 2026-09-29): Check L2
  *  signed by Claude on 2026-09-29 (M2-MEDIA-REPORT §3, LEDGER-m2iconic);
  *  Aryan pending. */
 const cleanM2 = (icon?: readonly string[]): MediaAccept => ({
-  ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
+  ...clean(icon), checkL2: "claude:2026-09-29+aryan:2026-09-29",
 });
 const hf2 = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
   source: "higgsfield", model, credits, date: "2026-09-29", jobId, ...(note ? { note } : {}),

@@ -227,8 +227,10 @@ const plainDressing = { notes: "plain", index: "plain", quotes: "plain" } as con
  *  his own and marks it confirmed. Research record: research/build/ONE-LINERS.md. */
 const aryanDraft = (text: string, prompt: string, alternates: readonly string[] = []): Copy => ({
   text,
-  status: "draft",
-  draft: true,
+  // Aryan signed every drafted line AS-IS on 2026-09-29 so the live site
+  // renders exactly as the branch did; he personalizes them in the
+  // info-details pass (CONTINUE.md). The prompt + alternates stay for that.
+  status: "confirmed",
   prompt,
   ...(alternates.length ? { alternates } : {}),
 });
@@ -412,8 +414,7 @@ const copy = {
   "beyond.handbill.sub": { text: "for questions about quantitative research", status: "proposed" },
   "beyond.handbill.reward": {
     text: "An honest answer, including “I don't know yet.”",
-    status: "draft",
-    draft: true,
+    status: "confirmed", // signed as-is 2026-09-29; rewrite in the info-details pass
     prompt: "[DRAFT by Claude — Aryan: the WANTED poster's reward line, in your words (or empty to drop the row)]",
     alternates: [
       "A straight answer and a written post-mortem.",
@@ -647,12 +648,12 @@ export const film = {
   /** H-1: a work-credit line in the hero (default OFF: screen one is Aryan's). */
   heroCredit: false,
   /** F-5: Aryan signs the proposed microcopy + every quote. */
-  copySignedOff: false,
+  copySignedOff: true, // Aryan signed all proposed copy + quotes as-is, 2026-09-29
   /** M1.5 (Aryan's answer #2): proposed AND draft copy render in EVERY
    *  build of this branch (no FILM_PREVIEW env needed, and no visible DRAFT
    *  badge). Every string keeps its status; RELEASE=1 fails while this is
    *  on or any shown string is unsigned. Turn off before merging to main. */
-  branchPreview: true as boolean,
+  branchPreview: false as boolean, // off for main (2026-09-29): everything shown is signed
   /** The page-wide variant (lib/variants.ts): what every section, card,
    *  loader and the intro play unless they choose otherwise. */
   defaultVariant: "default" as Variant,

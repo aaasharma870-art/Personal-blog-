@@ -146,6 +146,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
   - **(d) SMOOTH TRANSITIONS between every world pair.** No hard cuts. Act cards cross-dissolve or morph from the outgoing world into the incoming one.
 
 ## Log
+- 2026-09-29 ~18:50 UTC: M5 + post-M5 skills pass done; Aryan signed everything as-is; branchPreview off; merged to main (release gate green). Phase 2 (info details) queued in CONTINUE.md.
 - 19:40: autopilot armed. M1 running. Cron job 8f398485 (hourly :07, session-only, 7-day expiry). Keep-awake task btu6t3dvm (SetThreadExecutionState; stop it at the end). CPU watchdog bw2fdp95w.
 - 22:32: keep-awake and CPU-watchdog tasks had died, most likely when usage ran out. Relaunched as a DETACHED guard process: `research/keep-awake.ps1`, pid 43528 (relaunched 04:40 with a 72 h limit; originally 40192), logging to `keep-awake.log`, 36 h max, stopped by the `.stop-keep-awake` file. AC sleep set to never (was 20 min; Battery Guard only enforces DC values). Windows Update active hours moved to 20:00–14:00 (was 6:00–0:00), so updates can't auto-restart overnight. All three are RESTORED at the end (Tick protocol step 4).
 - 22:38: one-shot 3 AM reset kickoff cron ec6eb4ca (03:02, 2026-09-29) added alongside the hourly tick 8f398485. The full in-progress M1 snapshot (83 files, tracked and untracked) is pushed to origin `wip/m1-snapshot`; every waiting tick refreshes it.
