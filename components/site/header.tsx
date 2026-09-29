@@ -10,6 +10,8 @@ import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
 import {
   actCards,
+  anchors,
+  cardAnchors,
   copyText,
   copyVisible,
   headerLabel,
@@ -40,7 +42,7 @@ import { recordVisit } from "@/components/eggs/egg-bus";
    M2 (loaders-eggs-chrome; RECOGNIZABILITY §4.4): the label names the FILM
    across all four acts — "ACT I · PIRATES OF THE CARIBBEAN" … "ACT IV ·
    HARRY POTTER", "INTERMISSION" on the films chapter, "CREDITS" on the roll
-   (lib/derive.ts headerLabelOf) — and crossfades when it changes (static
+   (lib/derive.ts headerLabelOf) — and fades in when it changes (static
    under reduced motion / Pause); the ground follows the act's world (house
    is transparent: the intermission and credits wear house deep). The menu
    groups read "Act II — 3 Idiots · The Workshop". Still NO compass in the
@@ -56,6 +58,57 @@ function useMounted(): boolean {
     () => true,
     () => false,
   );
+}
+
+/* — The settled section (M2 fix, ART-DIRECTOR #15 "D20 header act label
+   missing") ———————————————————————————————————————————————————————
+   The shared observer (use-active-section.ts) only updates on an entry that
+   IS intersecting, so a long, fast scroll can leave it stale — a jump from
+   the credits back to #about landed with no act label, and a jump down to
+   the roll could still read INTERMISSION. Once scrolling settles (150 ms
+   after the last scroll event), the header re-reads the truth from the DOM:
+   the anchored section (or act card) spanning the observer's own reading
+   band (45–50 % of the viewport). A gap between sections keeps the
+   observer's value. */
+const PROBE_IDS: readonly string[] = [...anchors, ...cardAnchors, ...(sectionById("credits") ? [] : ["credits"])];
+const PROBE_SETTLE_MS = 150;
+
+function probeActive(): string | null {
+  const y = window.innerHeight * 0.475;
+  let hit: string | null = null;
+  for (const id of PROBE_IDS) {
+    const r = document.getElementById(id)?.getBoundingClientRect();
+    if (r && r.height > 0 && r.top <= y && r.bottom > y) hit = id;
+  }
+  return hit;
+}
+
+/** The active id for the header: the observer's live value while it moves,
+ *  the DOM probe once the scroll has settled after its last change. */
+function useHeaderActive(): string {
+  const observed = useActiveSection();
+  const observedRef = useRef(observed);
+  const [probe, setProbe] = useState<{ id: string | null; base: string }>({ id: null, base: "" });
+  useEffect(() => {
+    observedRef.current = observed;
+  }, [observed]);
+  useEffect(() => {
+    let t = 0;
+    const schedule = () => {
+      window.clearTimeout(t);
+      t = window.setTimeout(() => setProbe({ id: probeActive(), base: observedRef.current }), PROBE_SETTLE_MS);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
+  // a probe taken against the CURRENT observer value is newer than it
+  return probe.id !== null && probe.base === observed ? probe.id : observed;
 }
 
 /** The world whose plane the header wears for the active id. */
@@ -114,8 +167,9 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
 const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
 
 export function Header() {
-  const active = useActiveSection();
+  const active = useHeaderActive();
   const reduce = useReducedMotion();
+  const mounted = useMounted();
   const pathname = usePathname();
   // the page's anchors live on the home page: off it, prefix "/" (the 404)
   const base = pathname === "/" || pathname === null ? "" : "/";
@@ -201,18 +255,21 @@ export function Header() {
         <div className="flex min-w-0 items-center gap-4">
           <Logo base={base} />
           <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={label}
-                className="block truncate"
-                initial={reduce ? { opacity: 1 } : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? { opacity: 1 } : { opacity: 0, y: -4 }}
-                transition={{ duration: reduce ? 0 : dur.micro, ease }}
-              >
-                {label}
-              </motion.span>
-            </AnimatePresence>
+            {/* M2 fix (ART-DIRECTOR #15): a keyed fade-IN with no exit. The
+                old AnimatePresence mode="wait" swap could strand the label
+                mid-exchange on a fast multi-act scroll (an empty act label on
+                #about); now the newest label always mounts and always ends at
+                opacity 1. The hydration pass mounts it without animating
+                (server == client); static under reduced motion / Pause. */}
+            <motion.span
+              key={label}
+              className="block truncate"
+              initial={mounted && !reduce ? { opacity: 0, y: 4 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduce ? 0 : dur.micro, ease }}
+            >
+              {label}
+            </motion.span>
           </p>
         </div>
 

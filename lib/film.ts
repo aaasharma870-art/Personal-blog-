@@ -605,7 +605,8 @@ const captions = {
   /* Route loaders (loaders-eggs-chrome; under the loader art) */
   "cap.loader.pirates": { world: "pirates", moment: moment("JACK’S COMPASS"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.pirates.alt": { world: "pirates", moment: moment("THE BLACK PEARL IN A BOTTLE"), variant: "alt", place: "under", where: "route card, under the loader" },
-  "cap.loader.idiots": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "default", place: "under", where: "route card, under the loader" },
+  // M2 fix (BLIND-1 "generic gears"): the board now carries the drone and Virus's pen in chalk; the caption names them
+  "cap.loader.idiots": { world: "idiots", moment: moment("THE DRONE AND THE ASTRONAUT PEN"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.idiots.alt": { world: "idiots", moment: moment("A DERIVATION ON THE ICE BOARD"), variant: "alt", place: "under", where: "route card, under the loader" },
   "cap.loader.rdr2": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.rdr2.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "under", where: "route card, under the loader" },

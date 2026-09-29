@@ -55,7 +55,7 @@ import { worldLoaderAltRenderers, worldLoaderRenderers } from "@/components/prim
  */
 
 export type LoaderMode = "indeterminate" | "determinate" | "complete" | "static";
-/** mini 48 px · card 120 px · route 160 px · stage 240 px (the route
+/** mini 48 px · card 120 px · route 160 px · stage 288 px (the route
  *  card's art, RECOGNIZABILITY S20: "≥ 200 px"). */
 export type LoaderSize = "mini" | "card" | "route" | "stage";
 
@@ -82,7 +82,7 @@ function PlainLoader({ mode, size, progress, animate }: LoaderRendererProps) {
         size === "mini" && "w-(--loader-mini)",
         size === "card" && "w-(--loader-card)",
         size === "route" && "w-(--loader-route)",
-        size === "stage" && "w-60 max-w-full",
+        size === "stage" && "w-72 max-w-full",
       )}
     >
       {mode === "indeterminate" ? (

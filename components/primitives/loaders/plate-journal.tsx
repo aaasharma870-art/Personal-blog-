@@ -110,6 +110,25 @@ const RAYS: Pt[][] = [-160, -130, -100, -70, -40, -10, 20, 160].map((deg) => {
   return poly([SUN.x + 7.4 * Math.cos(a), SUN.y + 7.4 * Math.sin(a)], [SUN.x + 11 * Math.cos(a), SUN.y + 11 * Math.sin(a)]);
 });
 
+/** The cowboy hat (brim underside, brim top, the pinched crown) and the
+ *  horse's head (the front outline from the neck round the muzzle to the
+ *  forelock, the ears, the crest). */
+const BRIM_UNDER = smooth([[46.5, 55.2], [50, 58.6], [55, 60.4], [60, 60.8], [65, 60.4], [70, 58.6], [73.5, 55.2]], 4);
+const BRIM_TOP = smooth([[46.5, 55.2], [52, 57.4], [60, 58.2], [68, 57.4], [73.5, 55.2]], 4);
+const CROWN = smooth([[53.6, 57.6], [53.4, 52], [54.6, 48.2], [57, 47], [59, 48.4], [60, 47.9], [61, 48.4], [63, 47], [65.4, 48.2], [66.6, 52], [66.4, 57.6]], 3);
+const HORSE_FRONT = smooth([[125.5, 90.5], [122.5, 82], [119, 76.5], [113, 73.6], [107.5, 77.6], [102.5, 79.4], [99.6, 77.2], [99, 73.6], [100.6, 69.8], [104, 60], [107.6, 52], [111, 46.6], [113.2, 45]], 4);
+const EAR_1 = poly([113.2, 45], [115.8, 37.4], [118.4, 44]);
+const EAR_2 = poly([119.4, 43.2], [122.6, 36.6], [124.2, 43.4]);
+const HORSE_CREST = smooth([[124.2, 43.4], [129, 48], [134, 56], [138, 66], [140.4, 78], [141.4, 90.5]], 4);
+const polyD = (pts: readonly Pt[]) => pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`).join("") + "Z";
+/** Paper-filled silhouettes of the hat and the horse, laid over the land
+ *  strokes (the hills and horizon pass BEHIND them; paper on paper, so they
+ *  are invisible until something is drawn behind them). */
+const OCCLUDE = [
+  polyD([...BRIM_UNDER, [68, 57.4], [66.4, 57.6], ...[...CROWN].reverse(), [52, 57.4]]),
+  polyD([...HORSE_FRONT, ...EAR_1.slice(1), ...EAR_2, ...HORSE_CREST.slice(1), [141.4, 91], [125.5, 91]]),
+];
+
 /** The ICONIC strokes, in drawing order — the land, the sun, the pines, the
  *  fence, the hat, the horse. The indeterminate sketch parks right after
  *  them. */
@@ -138,35 +157,37 @@ const ICONIC: Pt[][] = [
   poly([61.6, 74], [76, 75.5]),
   // THE COWBOY HAT hung on the post: brim (curled up at both ends), the
   // pinched crown, its band
-  smooth([[46.5, 55.2], [50, 58.6], [55, 60.4], [60, 60.8], [65, 60.4], [70, 58.6], [73.5, 55.2]], 4),
-  smooth([[46.5, 55.2], [52, 57.4], [60, 58.2], [68, 57.4], [73.5, 55.2]], 4),
-  smooth([[53.6, 57.6], [53.4, 52], [54.6, 48.2], [57, 47], [59, 48.4], [60, 47.9], [61, 48.4], [63, 47], [65.4, 48.2], [66.6, 52], [66.4, 57.6]], 3),
+  BRIM_UNDER,
+  BRIM_TOP,
+  CROWN,
   cubicPts([53.6, 54.6], [57, 55.6], [63, 55.6], [66.4, 54.6], 8),
   // THE HORSE'S HEAD in profile, facing left: the neck front, throat, jaw,
   // chin and muzzle, up the face to the forelock; the two ears; the crest
   // and neck; the cheek, the eye, the nostril and mouth; the bridle; the mane
-  smooth([[125.5, 90.5], [122.5, 82], [119, 76.5], [113, 73.6], [107.5, 77.6], [102.5, 79.4], [99.6, 77.2], [99, 73.6], [100.6, 69.8], [104, 60], [107.6, 52], [111, 46.6], [113.2, 45]], 4),
-  poly([113.2, 45], [115.8, 37.4], [118.4, 44]),
-  poly([119.4, 43.2], [122.6, 36.6], [124.2, 43.4]),
-  smooth([[124.2, 43.4], [129, 48], [134, 56], [138, 66], [140.4, 78], [141.4, 90.5]], 4),
+  HORSE_FRONT,
+  EAR_1,
+  EAR_2,
+  HORSE_CREST,
   cubicPts([108.4, 59], [118, 56.6], [121.4, 70], [113.4, 73.6], 10),
   cubicPts([109.8, 52.4], [111.2, 50.8], [113.2, 50.8], [114.4, 52.2], 5),
   arcPts(102.8, 71.6, 1.3, 1.1, 200, 470, 8),
   poly([100.2, 76.6], [104, 77.2]),
-  poly([103.2, 63.4], [113.4, 67]),
-  poly([113.8, 47.8], [113.6, 67.2]),
+  // the forelock between the ears, and the mane down the crest
+  poly([118.6, 43.4], [116.4, 47.6]),
   ...[0, 1, 2, 3, 4].map((k) => poly([125 + k * 3, 45.5 + k * 5.2], [129.6 + k * 3, 49 + k * 5.6])),
 ];
 /** Then the trail, hatching and the birds (drawn after the park point). */
 const FINISH: Pt[][] = [
   trail,
   ...[0, 1, 2, 3].map((k) => poly([67 + k * 2.6, 45 + k * 1.6], [69.2 + k * 2.6, 49.6 + k * 1.6])),
-  ...[0, 1, 2, 3].map((k) => poly([122 + k * 2.6, 45 + k * 1.8], [124.4 + k * 2.6, 49.8 + k * 1.8])),
+  ...[0, 1, 2].map((k) => poly([88 + k * 2.6, 43.4 + k * 1.2], [90.2 + k * 2.6, 47.8 + k * 1.2])),
   ...[0, 1, 2].map((k) => poly([63 + k * 2.4, 84], [65.8 + k * 2.4, 81.4])),
   poly([34, 26], [37, 24], [39.5, 26.5], [42, 24], [45, 26]),
   poly([48, 20.5], [50.2, 19], [52, 20.8], [53.8, 19], [56, 20.5]),
 ];
 const PLAN: StrokePlan = planStrokes([...ICONIC, ...FINISH]);
+/** The occluders go in after the land (every stroke before the fence). */
+const LAND_N = ICONIC.findIndex((s) => s[0][0] === 43.2 && s[0][1] === 81);
 /** Indeterminate: the sketch parks here (the iconic subjects drawn). */
 const PARK = PLAN.strokes[ICONIC.length - 1].to;
 /** The journal's one red-pencil underline (complete / static). */
@@ -257,7 +278,15 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
             strokeWidth={sw(1)}
           />
           <g stroke="var(--paper-pencil)">
-            {PLAN.strokes.map((s, i) => (
+            {PLAN.strokes.slice(0, LAND_N).map((s, i) => (
+              <PlanStroke key={i} d={s.d} from={s.from} to={s.to} progress={ink} strokeWidth={sw(mini ? 0.7 : 1.05)} />
+            ))}
+          </g>
+          {OCCLUDE.map((d, i) => (
+            <path key={i} d={d} fill="var(--paper)" stroke="none" />
+          ))}
+          <g stroke="var(--paper-pencil)">
+            {PLAN.strokes.slice(LAND_N).map((s, i) => (
               <PlanStroke key={i} d={s.d} from={s.from} to={s.to} progress={ink} strokeWidth={sw(mini ? 0.7 : 1.05)} />
             ))}
           </g>

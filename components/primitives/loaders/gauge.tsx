@@ -14,7 +14,7 @@ import { ChalkBoard, SLATE } from "@/components/primitives/loaders/chalkboard";
  * RECOGNIZABILITY S20). M2: the loader is DRAWN IN CHALK ON A MINI ICE
  * CHALKBOARD (slate green, a wooden frame, a chalk ledge with a stub and a
  * duster: loaders/chalkboard.tsx), so blind it reads as the 3 Idiots
- * classroom; caption cap.loader.idiots "THE ICE CHALKBOARD".
+ * classroom; caption cap.loader.idiots "THE DRONE AND THE ASTRONAUT PEN".
  * M2 fix (BLIND-1: 0.40–0.45, "generic classroom gears"): the board now
  * carries the film's two props in chalk, big — THE HOMEMADE DRONE (a
  * top-down quadcopter: four rotor guards, a body, its camera), whose rotors
