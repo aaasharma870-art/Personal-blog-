@@ -374,7 +374,10 @@ export function HeroStage({
           frame={frame}
           origin={plate.focal[0]}
           onSettled={onSettled}
-          className="absolute inset-0"
+          // the Lens root is `relative` (cn() does not merge, so an
+          // `absolute inset-0` here lost to it and the box collapsed to 0 px
+          // tall); its parent is absolute inset-0, so fill it by size.
+          className="size-full"
         >
           <motion.div
             ref={plateRef}

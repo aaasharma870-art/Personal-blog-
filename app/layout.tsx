@@ -7,9 +7,6 @@ import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
 import { SectionRail } from "@/components/site/section-rail";
 import { CommandPalette } from "@/components/site/command-palette";
-import { ScrollProgress } from "@/components/visuals/scroll-progress";
-import { ScrollVelocity } from "@/components/visuals/scroll-velocity";
-import { CursorGlow } from "@/components/visuals/cursor-glow";
 import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
 import { worldFontVariables } from "@/lib/fonts";
@@ -126,9 +123,6 @@ export default function RootLayout({
         {intro ? <IntroBridge /> : null}
         <MotionProvider>
           <ChromeGate>
-            <CursorGlow />
-            <ScrollProgress />
-            <ScrollVelocity />
             <SectionRail />
             <CommandPalette />
           </ChromeGate>

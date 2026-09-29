@@ -8,6 +8,7 @@ import { Lens, useApertureOnce, type LensRect, type LensState } from "@/componen
 import { Loader, type LoaderMode } from "@/components/primitives/loader";
 import { MediaFrame, type MediaFrameState } from "@/components/primitives/media-frame";
 import type { MediaId } from "@/lib/media";
+import { planeAttrs, worlds } from "@/lib/worlds";
 
 /* /lab client demos. Workbench only — not product components. */
 
@@ -208,6 +209,60 @@ export function LoaderModesDemo() {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+const LOADER_WORLDS = ["pirates", "idiots", "rdr2", "hp"] as const;
+
+/** The four world renderers (M1), each on its world's deep plane, in every
+ *  mode at card size plus the mini size. One slider drives all of them. */
+export function WorldLoadersDemo() {
+  const [p, setP] = useState(0.4);
+  return (
+    <div className="flex flex-col gap-tier-group">
+      <label className="type-meta flex items-center gap-4 text-fg-muted">
+        PROGRESS
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={p}
+          onChange={(e) => setP(Number(e.target.value))}
+          className="min-h-11 w-48 accent-(--accent)"
+        />
+        <span className="tnum text-fg">{p.toFixed(2)}</span>
+      </label>
+      {LOADER_WORLDS.map((world) => (
+        <div
+          key={world}
+          {...planeAttrs("deep", world)}
+          data-lab-world-loaders={world}
+          className="flex flex-col gap-4 rounded-frame bg-bg p-4 text-fg"
+        >
+          <span className="type-meta text-fg-muted">
+            {world} • deep • {worlds[world].loader}
+          </span>
+          <ul className="grid gap-tier-group sm:grid-cols-2 lg:grid-cols-5">
+            {MODES.map((mode) => (
+              <li key={mode} className="flex flex-col gap-3">
+                <span className="type-meta text-fg-muted">{mode.toUpperCase()}</span>
+                <Loader
+                  world={world}
+                  mode={mode}
+                  size="card"
+                  progress={mode === "indeterminate" ? undefined : p}
+                />
+              </li>
+            ))}
+            <li className="flex flex-col gap-3">
+              <span className="type-meta text-fg-muted">MINI</span>
+              <Loader world={world} size="mini" progress={p} />
+            </li>
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }

@@ -67,7 +67,10 @@ export function RouteLoader({
       {...planeAttrs("deep", world)}
       className={cn(
         "flex min-h-svh flex-col justify-center gap-tier-group bg-bg px-gutter py-section text-fg",
-        "sm:grid sm:grid-rows-[1fr_auto_1fr] sm:gap-0 sm:px-0 sm:py-0",
+        // grid-cols-1 = minmax(0,1fr): without a definite column, the
+        // min-height-stretched auto row fed the aspect-ratio frame's width
+        // back into the implicit column (1728 px at 1440×900; overflow).
+        "sm:grid sm:grid-cols-1 sm:grid-rows-[1fr_auto_1fr] sm:gap-0 sm:px-0 sm:py-0",
         className,
       )}
     >

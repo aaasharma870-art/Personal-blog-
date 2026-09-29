@@ -13,7 +13,9 @@ import {
   MediaDemo,
   MotionReadout,
   RealLoadDemo,
+  WorldLoadersDemo,
 } from "./demos";
+import { RouteLoader } from "@/components/primitives/loaders/route-loader";
 
 /* /lab — the P1-early primitive workbench. Not linked, not in the sitemap
    (the sitemap derives from the page manifest), noindex, and rendered
@@ -160,6 +162,14 @@ export default function LabPage() {
         </LabSection>
 
         <LabSection
+          id="world-loaders"
+          title="World loaders"
+          note="The four world renderers registered in loaderRenderers (course, gauge, plate-trail, ink-light), each on its world's deep plane: every mode at card size, plus mini. Reduced motion renders static."
+        >
+          <WorldLoadersDemo />
+        </LabSection>
+
+        <LabSection
           id="strip"
           title="Native-scroll strip"
           note="Scroll-driven primitives on native scroll: masked rises (armed offscreen, played once), dome seams flattening over the first 60vh of each entry, the aperture once per session, and letterboxed act cards whose progress line follows the scroll."
@@ -232,6 +242,14 @@ export default function LabPage() {
         progress={1}
         summary="A title card with fixed, complete progress."
       />
+
+      {/* RouteLoader: the real route-load card, one per owning section's
+          world (status after 400 ms; the rdr2 card carries one TIP). */}
+      {(["about", "work", "writing", "principles"] as const).map((owner) => (
+        <div key={owner} id={`lab-route-${owner}`} data-lab-route-loader={owner}>
+          <RouteLoader owner={owner} status="Loading essay…" tipKey={`/lab/${owner}`} />
+        </div>
+      ))}
 
       <div {...planeAttrs("deep", "house")} className="grid h-[60vh] place-items-center bg-bg text-fg">
         <p className="type-meta text-fg-muted">End of strip</p>
