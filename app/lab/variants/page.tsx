@@ -45,7 +45,7 @@ function names(key: string): Record<Variant, string> {
   return { default: p?.default.name ?? "—", alt: p?.alt?.name ?? "not built" };
 }
 
-function LabSection({ id, title, note, children }: { id: string; title: string; note?: string; children: ReactNode }) {
+function LabSection({ id, title, note, children }: { id: string; title: string; note?: ReactNode; children: ReactNode }) {
   return (
     <section id={id} aria-labelledby={`${id}-h`} className="flex scroll-mt-4 flex-col gap-tier-group border-t border-rule py-tier-block">
       <div className="flex flex-col gap-2">
@@ -198,7 +198,13 @@ export default function VariantsLabPage() {
         <LabSection
           id="registry"
           title="Registry"
-          note="lib/variants.ts VARIANT_REGISTRY. The manifest picks a side per host (lib/page.ts, lib/film.ts); ?variant=… previews either side on the home page."
+          note={
+            <>
+              <code>lib/variants.ts</code> VARIANT_REGISTRY. The manifest picks a side per host (<code>lib/page.ts</code>,{" "}
+              <code>lib/film.ts</code>); <code className="whitespace-nowrap">?variant=…</code> previews either side on the
+              home page.
+            </>
+          }
         >
           <ul className="grid gap-x-tier-group gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
             {KEYS.map((k) => (

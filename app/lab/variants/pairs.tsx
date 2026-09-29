@@ -177,7 +177,7 @@ export function LabCardPair({
                   <div
                     className={
                       stack
-                        ? "relative overflow-hidden lg:aspect-(--letterbox-ratio)"
+                        ? "relative overflow-hidden px-4 sm:px-0 lg:aspect-(--letterbox-ratio)"
                         : "relative aspect-[3/2] overflow-hidden sm:aspect-(--letterbox-ratio)"
                     }
                   >
@@ -245,7 +245,7 @@ export function LabLoaderPair({ world, names }: { world: WorldId; names: Record<
         {SIDES.map((v) => (
           <figure key={v} className="flex min-w-0 flex-col gap-3" data-lab-loader={world} data-variant={v}>
             <SideLabel side={v} name={names[v]} />
-            <div className="flex min-h-40 flex-wrap items-end gap-6">
+            <div className="flex min-h-28 flex-wrap items-center gap-6">
               <Loader
                 key={waiting ? `wait-${waits}` : "run"}
                 world={world}
