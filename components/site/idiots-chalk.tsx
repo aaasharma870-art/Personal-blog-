@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { dur, easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { drawn, faded, useDrawPhase } from "@/components/site/world-motion";
+import { DRONE_LOCAL_D } from "@/components/sections/act-card/frames/board-fig";
 
 /* ============================================================================
    IDIOTS CHALK + BLUEPRINT — Act II "The Workshop" (SPEC v2 SM-6, SM-7;
@@ -27,9 +28,11 @@ function ChalkFilter({ id }: { id: string }) {
 }
 
 /** Measure an element's box (null until measured: SSR renders the static,
- *  scale-to-fit mark, which is also the no-JS / reduced-motion final state). */
+ *  scale-to-fit mark, which is also the no-JS / reduced-motion final state).
+ *  `room`: the px free on its narrower side up to the viewport's edge (the
+ *  page gutter on a phone), so a loop drawn round it can stay on screen. */
 function useBox(ref: React.RefObject<HTMLElement | null>) {
-  const [box, setBox] = useState<{ w: number; h: number } | null>(null);
+  const [box, setBox] = useState<{ w: number; h: number; room: number } | null>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof ResizeObserver === "undefined") return;
@@ -37,7 +40,9 @@ function useBox(ref: React.RefObject<HTMLElement | null>) {
       if (!e) return;
       const w = Math.round(e.contentRect.width);
       const h = Math.round(e.contentRect.height);
-      setBox((b) => (b && b.w === w && b.h === h ? b : { w, h }));
+      const r = el.getBoundingClientRect();
+      const room = Math.round(Math.min(r.left, document.documentElement.clientWidth - r.right));
+      setBox((b) => (b && b.w === w && b.h === h && b.room === room ? b : { w, h, room }));
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -46,11 +51,15 @@ function useBox(ref: React.RefObject<HTMLElement | null>) {
 }
 
 /** A hand-drawn loop (a superellipse, n = 6, that contains the box's corners)
- *  starting at ~10 o'clock and overshooting its start, as a chalk hand does. */
-export function loopPath(w: number, h: number): { d: string; vw: number; vh: number; ox: number; oy: number } {
-  const px = Math.min(18, 12 + 0.04 * w); // stays inside the page gutter at 320
+ *  starting at ~10 o'clock and overshooting its start, as a chalk hand does.
+ *  `room` (px beside the box, optional) caps how far the loop and its
+ *  outward drift (≤ 5.5 %) may reach sideways: at 320 the full margin put
+ *  the loop's sides off screen (M5). The n = 6 superellipse still clears
+ *  the box's corners at the capped width. */
+export function loopPath(w: number, h: number, room = Infinity): { d: string; vw: number; vh: number; ox: number; oy: number } {
+  const px = Math.min(18, 12 + 0.04 * w);
   const py = 8 + 0.18 * h;
-  const a = w / 2 + px;
+  const a = Math.min(w / 2 + px, (w / 2 + Math.max(4, room - 3)) / 1.056);
   const b = h / 2 + py;
   const vw = w + 2 * px + 8;
   const vh = h + 2 * py + 8;
@@ -91,36 +100,77 @@ export function RanchoCircle({
   const phase = useDrawPhase(ref, 0.6);
   const fid = useId().replace(/:/g, "");
   const Wrap = block ? "div" : "span";
-  const loop = box ? loopPath(box.w, box.h) : null;
+  const loop = box ? loopPath(box.w, box.h, box.room) : null;
   return (
     <Wrap ref={ref as React.RefObject<never>} className={cn("relative", block ? "block" : "inline-block", className)}>
       {children}
       {loop ? (
+        // The SVG box is the TEXT's own box (user units = CSS px); the loop
+        // is drawn outside it through overflow: visible. A box grown by the
+        // loop's margin widened the page by 1 px at 320 (M5 QA: the circle
+        // round the Trading_Algos caveat reached x = -1 … 321), and painted
+        // overflow of an SVG never adds to the scrollable width.
         <svg
           aria-hidden="true"
           focusable="false"
-          width={loop.vw}
-          height={loop.vh}
-          viewBox={`0 0 ${loop.vw} ${loop.vh}`}
-          className="pointer-events-none absolute overflow-visible"
-          style={{ left: -loop.ox, top: -loop.oy }}
+          className="pointer-events-none absolute inset-0 size-full overflow-visible"
           data-chalk="circle"
         >
           <defs>
             <ChalkFilter id={`chalk-${fid}`} />
           </defs>
-          <motion.path
-            d={loop.d}
-            fill="none"
-            className="stroke-(--w-chalk)"
-            strokeWidth={2}
-            strokeLinecap="round"
-            filter={`url(#chalk-${fid})`}
-            {...drawn(phase, { duration: dur.draw.short, delay: 0.2 })}
-          />
+          <g transform={`translate(${-loop.ox} ${-loop.oy})`}>
+            <motion.path
+              d={loop.d}
+              fill="none"
+              className="stroke-(--w-chalk)"
+              strokeWidth={2}
+              strokeLinecap="round"
+              filter={`url(#chalk-${fid})`}
+              {...drawn(phase, { duration: dur.draw.short, delay: 0.2 })}
+            />
+          </g>
         </svg>
       ) : null}
     </Wrap>
+  );
+}
+
+/**
+ * ChalkDrone (IC-3I-08, M5) — THE HOMEMADE DRONE as a chalk doodle beside a
+ * chapter's scene caption: the act-2 card's own top-down drawing (four rotor
+ * guards on an X frame, the body, its camera), drawn once when it enters,
+ * with a lighter offset twin for the chalk's grain. aria-hidden, unlabelled
+ * (the caption names the moment; the drone names no character and is never
+ * tied to Aryan's own drone work: RECOGNIZABILITY S10).
+ */
+export function ChalkDrone({ className }: { className?: string }) {
+  const ref = useRef<SVGSVGElement>(null);
+  const phase = useDrawPhase(ref, 0.5);
+  const fid = useId().replace(/:/g, "");
+  return (
+    <svg
+      ref={ref}
+      viewBox="-4 -6 108 92"
+      aria-hidden="true"
+      focusable="false"
+      className={cn("pointer-events-none h-auto overflow-visible", className)}
+      data-chalk="drone"
+    >
+      <defs>
+        <ChalkFilter id={`drone-${fid}`} />
+      </defs>
+      <g fill="none" className="stroke-(--w-chalk)" strokeLinecap="round" strokeLinejoin="round" filter={`url(#drone-${fid})`}>
+        <motion.path d={DRONE_LOCAL_D} strokeWidth={1.35} strokeOpacity={0.92} {...drawn(phase, { duration: dur.draw.med, delay: 0.15 })} />
+        <motion.path
+          d={DRONE_LOCAL_D}
+          transform="translate(0.7 -0.5)"
+          strokeWidth={0.6}
+          strokeOpacity={0.32}
+          {...drawn(phase, { duration: dur.draw.med, delay: 0.15 })}
+        />
+      </g>
+    </svg>
   );
 }
 

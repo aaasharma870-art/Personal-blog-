@@ -218,3 +218,29 @@ export const scrollBudget = {
   maxSignature: 5,
   maxScenes: 2,
 } as const;
+
+/**
+ * spanUnit — a scroll map whose input range covers ALL of 0 → 1 (M2 REPORT
+ * "What went wrong" #3; M5 audit). motion 12 hands a `useTransform(progress,
+ * at, to)` whose source is a `useScroll` progress straight to a scroll-
+ * driven WAAPI animation (a ScrollTimeline / ViewTimeline) for opacity,
+ * clipPath, filter and transform; keyframes that start after 0 or stop
+ * before 1 then get implicit end keyframes at the element's UNDERLYING
+ * value, so a fade mapped [.25, .55] → [1, 0] springs back to 1 after .55
+ * (and one mapped [.3, .6] → [0, 1] starts visible). Holding the edge
+ * values out to 0 and 1 makes the accelerated and the JS paths agree.
+ * Usage: `useTransform(progress, ...spanUnit([0.25, 0.55], [1, 0]))`.
+ */
+export function spanUnit<T>(at: readonly number[], to: readonly T[]): [number[], T[]] {
+  const a = [...at];
+  const t = [...to];
+  if (a.length && a[0] > 0) {
+    a.unshift(0);
+    t.unshift(t[0]);
+  }
+  if (a.length && a[a.length - 1] < 1) {
+    a.push(1);
+    t.push(t[t.length - 1]);
+  }
+  return [a, t];
+}

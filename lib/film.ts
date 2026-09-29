@@ -339,7 +339,12 @@ const rdr2: WorldSpec = {
   lettering: "rd-frontier",
   media: {
     plate: "MV-10", mobile: "MV-10m", loop: "MV-11L",
-    cardStill: "MV-10", cardAltStill: "iconic-deadeye", filmsStill: "F-RD",
+    cardStill: "MV-10", cardAltStill: "iconic-deadeye",
+    // films screen (M5, blind A45/D45: the lone horse at dusk read "a fairly
+    // generic western", RD .55): DEFAULT Dead Eye on the frozen frontier
+    // (the X marks lock on the birds: finales.tsx), ALT the gang's camp by
+    // the lake (voices' ALT plays MV-11, so no variant shows it twice)
+    filmsStill: "iconic-deadeye", filmsAltStill: "iconic-camp-alt",
   },
   borrowed: {
     text: "On this page it became the journal and the fire: graphite that keeps the record, a plate that develops while you wait, and the campfire where the voices sit.",
@@ -583,7 +588,8 @@ const captions = {
   // ART-DIRECTOR #9: F-PC's intact grey sails were not the Black Pearl)
   "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL BY MOONLIGHT"), variant: "both", place: "under", where: "films screen (iconic-pearl-alt; ALT iconic-pearl)" },
   "cap.films.idiots": { world: "idiots", moment: moment("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "films screen (F-3I)" },
-  "cap.films.rdr2": { world: "rdr2", moment: moment("THE HEARTLANDS AT DUSK"), variant: "both", place: "under", where: "films screen (F-RD)" },
+  "cap.films.rdr2": { world: "rdr2", moment: moment("DEAD EYE"), variant: "default", place: "under", where: "films screen (iconic-deadeye + the X marks on the birds)" },
+  "cap.films.rdr2.alt": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "alt", place: "under", where: "films screen ALT (iconic-camp-alt, a journal clipping)" },
   "cap.films.hp": { world: "hp", moment: moment("THE HOGWARTS EXPRESS"), variant: "default", place: "under", where: "films screen (iconic-express)" },
   "cap.films.hp.alt": { world: "hp", moment: moment("FLOATING CANDLES AND ENCHANTED INK"), variant: "alt", place: "under", where: "films screen (F-HP)" },
   /* Card II→III + Act III · rdr2 */

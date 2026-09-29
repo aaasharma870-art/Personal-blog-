@@ -37,6 +37,8 @@ const eslintConfig = defineConfig([
     ".claude/**",
     // Capture harness (CommonJS Node scripts for frame captures), not app code.
     "tools/**",
+    // Build-process evidence (QA probes, workflow scripts): removed before main.
+    "docs/build/**",
   ]),
 ]);
 

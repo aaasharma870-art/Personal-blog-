@@ -26,11 +26,16 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+// Not preloaded (M5, mobile LCP): the serif sets section titles and quotes,
+// never the first view (the hero is Geist + Geist Mono), and its two
+// preloads competed with the hero still on a slow connection. It still
+// swaps in when a section first uses it.
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: false,
 });
 
 const description =

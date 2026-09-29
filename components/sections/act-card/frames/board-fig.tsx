@@ -212,6 +212,11 @@ function poly(pts: [number, number][]): string {
   return pts.map(([x, y], i) => `${i ? "L" : "M"}${f1(x)} ${f1(y)}`).join("");
 }
 
+/** The same drone as ONE flat path in its local 100 × 80 box (for a chalk
+ *  doodle off the board: the Trading_Algos chapter head, M5). Declared after
+ *  `f1` / `poly`: it is built at module load. */
+export const DRONE_LOCAL_D = DRONE_LOCAL.map((pts) => poly(pts)).join("");
+
 /** The projected Line and its dimension furniture, cached per quad key. */
 const cache = new Map<string, { line: string; dims: string; angle: number }>();
 function figPaths(q: Q) {

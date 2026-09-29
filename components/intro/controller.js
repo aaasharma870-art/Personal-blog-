@@ -1019,7 +1019,8 @@
       function () { finish(true, "played"); });
     kick();
   }
-  /** M2 (ART-DIRECTOR #8): the turning page IS the Marauder's Map — its
+  /** M2 (ART-DIRECTOR #8): the turning page is a folded map (M5: inked as
+   *  the Pirates' sea chart, chartMarks) — its
    *  parchment reaches alpha ≥ .8 by p = .35 (before the page has turned
    *  far), folded in three panels (creases, the shaded middle panel) inside
    *  an inked border; the free (left) edge darkens into a soft shadow that
@@ -1044,12 +1045,61 @@
     g.addColorStop(1, "rgba(28,18,8," + (0.06 * p).toFixed(3) + ")");
     cx.fillStyle = g;
     cx.fillRect(0, 0, W, H);
+    chartMarks(a);
     var e = cx.createLinearGradient(0, 0, sw, 0); // the soft edge shadow
     e.addColorStop(0, "rgba(12,8,4," + (0.55 * a).toFixed(3) + ")");
     e.addColorStop(1, "rgba(12,8,4,0)");
     cx.fillStyle = e;
     cx.fillRect(0, 0, sw, H);
     if (p < 1) kick();
+  }
+  /** M5 (blind A00 mid, Pirates .50–.60: "a blank parchment panel"): the
+   *  folding page lands us at the Pearl, so it is inked as a SEA CHART on its
+   *  hinge-side panel (the part still in view as it turns edge-on) — a
+   *  compass rose, and a dotted course to a red X (Pirates' own "X marks the
+   *  spot"). Strokes and fills only: no lettering on the canvas. */
+  function chartMarks(a) {
+    if (a <= 0) return;
+    var i, r = M.max(28, M.min(W, H) * 0.11), rx = W * 0.83, ry = H * 0.34;
+    var ink = "rgba(58,36,14," + (0.78 * a).toFixed(3) + ")";
+    cx.strokeStyle = ink;
+    cx.lineWidth = 1.5;
+    cx.beginPath();
+    cx.arc(rx, ry, r, 0, 2 * PI);
+    cx.stroke();
+    cx.beginPath();
+    cx.arc(rx, ry, r * 0.8, 0, 2 * PI);
+    cx.stroke();
+    cx.fillStyle = "rgba(58,36,14," + (0.5 * a).toFixed(3) + ")";
+    function point(ang, len, half) {
+      var px = half * M.cos(ang + PI / 2), py = half * M.sin(ang + PI / 2);
+      cx.beginPath();
+      cx.moveTo(rx + px, ry + py);
+      cx.lineTo(rx + len * M.cos(ang), ry + len * M.sin(ang));
+      cx.lineTo(rx - px, ry - py);
+      cx.closePath();
+      cx.fill();
+      cx.stroke();
+    }
+    for (i = 0; i < 4; i++) point(-PI / 2 + (i * PI) / 2, r * 1.25, r * 0.13);
+    for (i = 0; i < 4; i++) point(-PI / 4 + (i * PI) / 2, r * 0.66, r * 0.09);
+    // the course: dotted, from the page's lower edge to the X
+    var x0 = W * 0.7, y0 = H * 0.94, xx = W * 0.9, xy = H * 0.7, k = M.max(9, r * 0.2);
+    cx.setLineDash([2, 7]);
+    cx.lineWidth = 2;
+    cx.beginPath();
+    cx.moveTo(x0, y0);
+    cx.bezierCurveTo(W * 0.78, H * 0.82, W * 0.8, H * 0.66, xx - k * 1.6, xy + k * 0.4);
+    cx.stroke();
+    cx.setLineDash([]);
+    cx.strokeStyle = "rgba(128,28,16," + (0.9 * a).toFixed(3) + ")";
+    cx.lineWidth = 3;
+    cx.beginPath();
+    cx.moveTo(xx - k, xy - k);
+    cx.lineTo(xx + k, xy + k);
+    cx.moveTo(xx + k, xy - k);
+    cx.lineTo(xx - k, xy + k);
+    cx.stroke();
   }
 
   /* — intro.play ALT "marauders-ink" ——————————————————————————————————— */

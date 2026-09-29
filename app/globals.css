@@ -320,7 +320,7 @@
   --seam-h: 10vh;
   --letterbox-ratio: 2.39;
   --loader-mini: 3rem;
-  --loader-card: 7.5rem;
+  --loader-card: 11rem; /* M5 (blind A80/D80 "thumbnails are tiny" at 120 px): 176 px */
   --loader-route: 13.5rem; /* ≥ 200 px (RECOGNIZABILITY S20; M2 fix round 3: 160 px read "tiny") */
 }
 @media (width < 64rem) {

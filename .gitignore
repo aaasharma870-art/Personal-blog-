@@ -70,3 +70,4 @@ next-env.d.ts
 /docs/build/final-frames/*.png
 /docs/build/m2-after2/*.png
 /docs/build/final-frames/qa/*.png
+/docs/build/final-frames/qa/supp/*.png

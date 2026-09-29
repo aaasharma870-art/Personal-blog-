@@ -10,19 +10,22 @@ import type { LoaderSize } from "@/components/primitives/loader";
  * loaders.BAR). Kept tiny: each world renderer is its own code-split chunk.
  */
 
-/** Rendered width of each loader size (the --loader-* tokens: 3 / 7.5 /
- *  10 rem; `stage` = the route CARD's art, 18 rem = the spacing scale's
+/** Rendered width of each loader size (the --loader-* tokens: 3 / 11 /
+ *  13.5 rem; `stage` = the route CARD's art, 18 rem = the spacing scale's
  *  w-72: RECOGNIZABILITY S20 "the loader art is ≥ 200 px"; M2 fix: 240 →
- *  288 px, so the route card's scene reads at a glance). */
-export const SIZE_PX: Record<LoaderSize, number> = { mini: 48, card: 120, route: 216, stage: 288 };
+ *  288 px, so the route card's scene reads at a glance). M5 (blind: "tiny
+ *  thumbnails"): card 120 → 176 px, and the stage grows to 26 rem (416 px)
+ *  ≥ 1280, where the route card's letterbox has the height for it (strokes
+ *  keep the 288 px scale there: a touch bolder, never thinner). */
+export const SIZE_PX: Record<LoaderSize, number> = { mini: 48, card: 176, route: 216, stage: 288 };
 
 /** CSS width class per size (tokens, never raw px: loaders L17). `stage`
  *  shrinks to the column below 18 rem (a 320 px phone keeps its gutters). */
 export const SIZE_CLASS: Record<LoaderSize, string> = {
   mini: "w-(--loader-mini)",
-  card: "w-(--loader-card)",
+  card: "w-(--loader-card) max-w-full",
   route: "w-(--loader-route)",
-  stage: "w-72 max-w-full",
+  stage: "w-72 max-w-full xl:w-[26rem]",
 };
 
 /**

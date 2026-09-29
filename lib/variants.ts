@@ -419,13 +419,13 @@ export const VARIANT_REGISTRY = {
   "films.screens": {
     default: {
       name: "clip-finales",
-      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course over the tattered-sail Pearl (iconic-pearl-alt), chalk-white blueprint gates + chalk circle, a graphite trail along the ridge to a kindling campfire, an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
-      media: ["iconic-pearl-alt", "F-3I", "F-RD", "iconic-express"],
+      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course over the tattered-sail Pearl (iconic-pearl-alt), chalk-white blueprint gates + chalk circle, DEAD EYE on the frozen frontier (iconic-deadeye: ember X marks lock on the five birds, then fire once), an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
+      media: ["iconic-pearl-alt", "F-3I", "iconic-deadeye", "iconic-express"],
     },
     alt: {
       name: "iris-marks",
-      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course across the moon path to an X before the Pearl's bow (iconic-pearl: the Act I card's other plate, so no variant repeats one), a chalk circle + tick round the scooter, a journal clipping, footprints on the enchanted paper (F-HP).",
-      media: ["F-3I-alt", "F-RD-alt"],
+      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course across the moon path to an X before the Pearl's bow (iconic-pearl: the Act I card's other plate, so no variant repeats one), a chalk circle + tick round the scooter, the gang's camp by the lake (iconic-camp-alt, from its fire) as a journal clipping, footprints on the enchanted paper (F-HP).",
+      media: ["F-3I-alt", "iconic-camp-alt"],
     },
     files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts"],
   },

@@ -15,14 +15,6 @@
   "at": 1.2
  },
  {
-  "frame": "D00-intro-flight-mid",
-  "world": "hp",
-  "moment": "SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates",
-  "mode": "CAPTION",
-  "variant": "default",
-  "at": 2.6
- },
- {
   "frame": "D00-intro-flight-late",
   "world": "pirates",
   "moment": "SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates",
@@ -53,146 +45,12 @@
   "at": 1.2
  },
  {
-  "frame": "A00-intro-flight-mid",
-  "world": "pirates",
-  "moment": "SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates",
-  "mode": "CAPTION",
-  "variant": "alt",
-  "at": 2.6
- },
- {
   "frame": "A00-intro-flight-late",
   "world": "pirates",
   "moment": "SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates",
   "mode": "CAPTION",
   "variant": "alt",
   "at": 4
- },
- {
-  "frame": "A00-intro-landed",
-  "world": "pirates",
-  "moment": "SM-1 landing → hero (hand-off caption)",
-  "mode": "TRANSITION",
-  "variant": "alt"
- },
- {
-  "frame": "D80-loader-card-pirates",
-  "world": "pirates",
-  "moment": "World loader, card size (pirates)",
-  "mode": "BLIND",
-  "variant": "default"
- },
- {
-  "frame": "D80-loader-card-idiots",
-  "world": "idiots",
-  "moment": "World loader, card size (idiots)",
-  "mode": "BLIND",
-  "variant": "default"
- },
- {
-  "frame": "D80-loader-card-rdr2",
-  "world": "rdr2",
-  "moment": "World loader, card size (rdr2)",
-  "mode": "BLIND",
-  "variant": "default"
- },
- {
-  "frame": "D80-loader-card-hp",
-  "world": "hp",
-  "moment": "World loader, card size (hp)",
-  "mode": "BLIND",
-  "variant": "default"
- },
- {
-  "frame": "D85-loader-route-about",
-  "world": "pirates",
-  "moment": "Route loader card (about)",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
-  "frame": "D85-loader-route-work",
-  "world": "idiots",
-  "moment": "Route loader card (work)",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
-  "frame": "D85-loader-route-writing",
-  "world": "rdr2",
-  "moment": "Route loader card (writing)",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
-  "frame": "D85-loader-route-principles",
-  "world": "hp",
-  "moment": "Route loader card (principles)",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
-  "frame": "A80-loader-card-pirates",
-  "world": "pirates",
-  "moment": "World loader, card size (pirates)",
-  "mode": "BLIND",
-  "variant": "alt"
- },
- {
-  "frame": "A80-loader-card-idiots",
-  "world": "idiots",
-  "moment": "World loader, card size (idiots)",
-  "mode": "BLIND",
-  "variant": "alt"
- },
- {
-  "frame": "A80-loader-card-rdr2",
-  "world": "rdr2",
-  "moment": "World loader, card size (rdr2)",
-  "mode": "BLIND",
-  "variant": "alt"
- },
- {
-  "frame": "A80-loader-card-hp",
-  "world": "hp",
-  "moment": "World loader, card size (hp)",
-  "mode": "BLIND",
-  "variant": "alt"
- },
- {
-  "frame": "A85-loader-route-about",
-  "world": "pirates",
-  "moment": "Route loader card (about)",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
-  "frame": "A85-loader-route-work",
-  "world": "idiots",
-  "moment": "Route loader card (work)",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
-  "frame": "A85-loader-route-writing",
-  "world": "rdr2",
-  "moment": "Route loader card (writing)",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
-  "frame": "A85-loader-route-principles",
-  "world": "hp",
-  "moment": "Route loader card (principles)",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
-  "frame": "D01-hero",
-  "world": "pirates",
-  "moment": "SM-2 hero: name at sea, the Black Pearl",
-  "mode": "BLIND",
-  "variant": "default"
  },
  {
   "frame": "D10-act-1-enter",
@@ -321,20 +179,6 @@
   "variant": "default"
  },
  {
-  "frame": "D26-trading-algos",
-  "world": "idiots",
-  "moment": "SM-7 chapter Trading_Algos",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
-  "frame": "D27-optuna-screener",
-  "world": "idiots",
-  "moment": "SM-7 chapter Optuna-Screener",
-  "mode": "CAPTION",
-  "variant": "default"
- },
- {
   "frame": "D28-experiment",
   "world": "idiots(no film styling)",
   "moment": "Experiment (BacktestDemo, synthetic; NO film styling)",
@@ -367,13 +211,6 @@
   "world": "rdr2",
   "moment": "SM-15 frontier golden-hour band",
   "mode": "BLIND",
-  "variant": "default"
- },
- {
-  "frame": "D33-beyond-satchel",
-  "world": "rdr2",
-  "moment": "SM-15 beyond: the satchel",
-  "mode": "CAPTION",
   "variant": "default"
  },
  {
@@ -454,25 +291,11 @@
   "variant": "default"
  },
  {
-  "frame": "D45-films-rdr2",
-  "world": "rdr2",
-  "moment": "SM-9 films chapter screen: rdr2",
-  "mode": "BLIND",
-  "variant": "default"
- },
- {
   "frame": "D46-films-hp",
   "world": "hp",
   "moment": "SM-9 films chapter screen: hp",
   "mode": "BLIND",
   "variant": "default"
- },
- {
-  "frame": "A01-hero",
-  "world": "pirates",
-  "moment": "SM-2 hero: name at sea, the Black Pearl",
-  "mode": "BLIND",
-  "variant": "alt"
  },
  {
   "frame": "A10-act-1-enter",
@@ -601,20 +424,6 @@
   "variant": "alt"
  },
  {
-  "frame": "A26-trading-algos",
-  "world": "idiots",
-  "moment": "SM-7 chapter Trading_Algos",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
-  "frame": "A27-optuna-screener",
-  "world": "idiots",
-  "moment": "SM-7 chapter Optuna-Screener",
-  "mode": "CAPTION",
-  "variant": "alt"
- },
- {
   "frame": "A28-experiment",
   "world": "idiots(no film styling)",
   "moment": "Experiment (BacktestDemo, synthetic; NO film styling)",
@@ -647,13 +456,6 @@
   "world": "rdr2",
   "moment": "SM-15 frontier golden-hour band",
   "mode": "BLIND",
-  "variant": "alt"
- },
- {
-  "frame": "A33-beyond-satchel",
-  "world": "rdr2",
-  "moment": "SM-15 beyond: the satchel",
-  "mode": "CAPTION",
   "variant": "alt"
  },
  {
@@ -734,13 +536,6 @@
   "variant": "alt"
  },
  {
-  "frame": "A45-films-rdr2",
-  "world": "rdr2",
-  "moment": "SM-9 films chapter screen: rdr2",
-  "mode": "BLIND",
-  "variant": "alt"
- },
- {
   "frame": "A46-films-hp",
   "world": "hp",
   "moment": "SM-9 films chapter screen: hp",
@@ -748,189 +543,9 @@
   "variant": "alt"
  },
  {
-  "frame": "m390-00-top",
-  "world": "pirates",
-  "moment": "top @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-01-act-1",
-  "world": "pirates",
-  "moment": "act-1 @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-02-about",
-  "world": "pirates",
-  "moment": "about @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-03-about-1013",
-  "world": "pirates",
-  "moment": "about @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-04-journey",
-  "world": "pirates",
-  "moment": "journey @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-05-act-2",
-  "world": "idiots",
-  "moment": "act-2 @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-06-work",
-  "world": "idiots",
-  "moment": "work @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-07-work-795",
-  "world": "idiots",
-  "moment": "work @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-08-trading-algos",
-  "world": "idiots",
-  "moment": "trading-algos @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-09-trading-algos-798",
-  "world": "idiots",
-  "moment": "trading-algos @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-10-optuna-screener",
-  "world": "idiots",
-  "moment": "optuna-screener @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-11-optuna-screener-2298",
-  "world": "idiots",
-  "moment": "optuna-screener @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-12-experiment",
-  "world": "idiots(no film styling)",
-  "moment": "experiment @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-13-systems",
-  "world": "idiots",
-  "moment": "systems @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-14-systems-1152",
-  "world": "idiots",
-  "moment": "systems @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-15-kill-list",
-  "world": "idiots",
-  "moment": "kill-list @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-16-kill-list-1223",
-  "world": "idiots",
-  "moment": "kill-list @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-17-films",
-  "world": "house (4 screens)",
-  "moment": "films @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-18-films-2067",
-  "world": "house (4 screens)",
-  "moment": "films @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-19-act-3",
-  "world": "rdr2",
-  "moment": "act-3 @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-20-beyond",
-  "world": "rdr2",
-  "moment": "beyond @ mobile",
-  "mode": "mobile"
- },
- {
   "frame": "m390-21-beyond-1818",
   "world": "rdr2",
   "moment": "beyond @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-22-writing",
-  "world": "rdr2",
-  "moment": "writing @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-23-writing-837",
-  "world": "rdr2",
-  "moment": "writing @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-24-voices",
-  "world": "rdr2",
-  "moment": "voices @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-25-act-4",
-  "world": "hp",
-  "moment": "act-4 @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-26-principles",
-  "world": "hp",
-  "moment": "principles @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-27-principles-889",
-  "world": "hp",
-  "moment": "principles @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-28-contact",
-  "world": "hp",
-  "moment": "contact @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-29-credits",
-  "world": "house",
-  "moment": "credits @ mobile",
-  "mode": "mobile"
- },
- {
-  "frame": "m390-30-credits-749",
-  "world": "house",
-  "moment": "credits @ mobile",
   "mode": "mobile"
  },
  {
@@ -1094,5 +709,396 @@
   "world": "house",
   "moment": "credits @ rm",
   "mode": "rm"
+ },
+ {
+  "frame": "D33-beyond-satchel",
+  "world": "rdr2",
+  "moment": "SM-15 beyond: the satchel",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D45-films-rdr2",
+  "world": "rdr2",
+  "moment": "SM-9 films chapter screen: rdr2",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "A33-beyond-satchel",
+  "world": "rdr2",
+  "moment": "SM-15 beyond: the satchel",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "A45-films-rdr2",
+  "world": "rdr2",
+  "moment": "SM-9 films chapter screen: rdr2",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "D80-loader-card-pirates",
+  "world": "pirates",
+  "moment": "World loader, card size (pirates)",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D80-loader-card-idiots",
+  "world": "idiots",
+  "moment": "World loader, card size (idiots)",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D80-loader-card-rdr2",
+  "world": "rdr2",
+  "moment": "World loader, card size (rdr2)",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D80-loader-card-hp",
+  "world": "hp",
+  "moment": "World loader, card size (hp)",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D85-loader-route-about",
+  "world": "pirates",
+  "moment": "Route loader card (about)",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D85-loader-route-work",
+  "world": "idiots",
+  "moment": "Route loader card (work)",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D85-loader-route-writing",
+  "world": "rdr2",
+  "moment": "Route loader card (writing)",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D85-loader-route-principles",
+  "world": "hp",
+  "moment": "Route loader card (principles)",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "A80-loader-card-pirates",
+  "world": "pirates",
+  "moment": "World loader, card size (pirates)",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "A80-loader-card-idiots",
+  "world": "idiots",
+  "moment": "World loader, card size (idiots)",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "A80-loader-card-rdr2",
+  "world": "rdr2",
+  "moment": "World loader, card size (rdr2)",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "A80-loader-card-hp",
+  "world": "hp",
+  "moment": "World loader, card size (hp)",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "A85-loader-route-about",
+  "world": "pirates",
+  "moment": "Route loader card (about)",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "A85-loader-route-work",
+  "world": "idiots",
+  "moment": "Route loader card (work)",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "A85-loader-route-writing",
+  "world": "rdr2",
+  "moment": "Route loader card (writing)",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "A85-loader-route-principles",
+  "world": "hp",
+  "moment": "Route loader card (principles)",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "D00-intro-flight-mid",
+  "world": "hp",
+  "moment": "SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates",
+  "mode": "CAPTION",
+  "variant": "default",
+  "at": 2.6
+ },
+ {
+  "frame": "A00-intro-flight-mid",
+  "world": "pirates",
+  "moment": "SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates",
+  "mode": "CAPTION",
+  "variant": "alt",
+  "at": 2.6
+ },
+ {
+  "frame": "A00-intro-landed",
+  "world": "pirates",
+  "moment": "SM-1 landing → hero (hand-off caption)",
+  "mode": "TRANSITION",
+  "variant": "alt"
+ },
+ {
+  "frame": "D01-hero",
+  "world": "pirates",
+  "moment": "SM-2 hero: name at sea, the Black Pearl",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "A01-hero",
+  "world": "pirates",
+  "moment": "SM-2 hero: name at sea, the Black Pearl",
+  "mode": "BLIND",
+  "variant": "alt"
+ },
+ {
+  "frame": "m390-00-top",
+  "world": "pirates",
+  "moment": "top @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-01-act-1",
+  "world": "pirates",
+  "moment": "act-1 @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-02-about",
+  "world": "pirates",
+  "moment": "about @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-03-about-1013",
+  "world": "pirates",
+  "moment": "about @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-04-journey",
+  "world": "pirates",
+  "moment": "journey @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-05-act-2",
+  "world": "idiots",
+  "moment": "act-2 @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-06-work",
+  "world": "idiots",
+  "moment": "work @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-07-work-795",
+  "world": "idiots",
+  "moment": "work @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-08-trading-algos",
+  "world": "idiots",
+  "moment": "trading-algos @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-09-trading-algos-798",
+  "world": "idiots",
+  "moment": "trading-algos @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-10-optuna-screener",
+  "world": "idiots",
+  "moment": "optuna-screener @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-11-optuna-screener-2298",
+  "world": "idiots",
+  "moment": "optuna-screener @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-12-experiment",
+  "world": "idiots(no film styling)",
+  "moment": "experiment @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-13-systems",
+  "world": "idiots",
+  "moment": "systems @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-14-systems-1152",
+  "world": "idiots",
+  "moment": "systems @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-15-kill-list",
+  "world": "idiots",
+  "moment": "kill-list @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-16-kill-list-1223",
+  "world": "idiots",
+  "moment": "kill-list @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-17-films",
+  "world": "house (4 screens)",
+  "moment": "films @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-18-films-2067",
+  "world": "house (4 screens)",
+  "moment": "films @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-19-act-3",
+  "world": "rdr2",
+  "moment": "act-3 @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-20-beyond",
+  "world": "rdr2",
+  "moment": "beyond @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-21-beyond-1824",
+  "world": "rdr2",
+  "moment": "beyond @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-22-writing",
+  "world": "rdr2",
+  "moment": "writing @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-23-writing-837",
+  "world": "rdr2",
+  "moment": "writing @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-24-voices",
+  "world": "rdr2",
+  "moment": "voices @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-25-act-4",
+  "world": "hp",
+  "moment": "act-4 @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-26-principles",
+  "world": "hp",
+  "moment": "principles @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-27-principles-889",
+  "world": "hp",
+  "moment": "principles @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-28-contact",
+  "world": "hp",
+  "moment": "contact @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-29-credits",
+  "world": "house",
+  "moment": "credits @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "m390-30-credits-749",
+  "world": "house",
+  "moment": "credits @ mobile",
+  "mode": "mobile"
+ },
+ {
+  "frame": "D26-trading-algos",
+  "world": "idiots",
+  "moment": "SM-7 chapter Trading_Algos",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D27-optuna-screener",
+  "world": "idiots",
+  "moment": "SM-7 chapter Optuna-Screener",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "A26-trading-algos",
+  "world": "idiots",
+  "moment": "SM-7 chapter Trading_Algos",
+  "mode": "CAPTION",
+  "variant": "alt"
+ },
+ {
+  "frame": "A27-optuna-screener",
+  "world": "idiots",
+  "moment": "SM-7 chapter Optuna-Screener",
+  "mode": "CAPTION",
+  "variant": "alt"
  }
 ]

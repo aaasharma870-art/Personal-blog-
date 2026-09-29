@@ -52,8 +52,9 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *              cover fit, kept ≥ 16 px right of the h1: H7). The one aqua.
  *   aperture   once per session, only when the intro did not play: pre-set
  *              before paint by the boot script (hero-boot.ts), opened on
- *              poster.decode() (desktop) or on the portrait's decode at ≥ 50 % in
- *              view (mobile), easeClip / dur.hero; decode failure or 1200 ms
+ *              poster.decode() (desktop ≥ 640 only: M5, the mobile portrait
+ *              is the LCP image and is never pre-clipped, so a phone shows it
+ *              open from first paint), easeClip / dur.hero; decode failure or 1200 ms
  *              → open (S1′). While the prologue is up the Lens waits CLOSED
  *              under the opaque overlay: Play (html.intro-launched) opens it
  *              instantly, so the flight lands on an open Lens (S0i, H25).
@@ -266,6 +267,9 @@ export function HeroStage({
       return () => window.clearTimeout(t);
     }
     if (!root.classList.contains("intro-armed")) return;
+    // < 640 the portrait still stays open under the prologue too: it is the
+    // page's LCP image, and a phone never runs an aperture (M5)
+    if (which === "mobile") return;
     if (
       hasRunThisSession(onceKey) ||
       shouldSkip("hero", parseSkipFlags(window.location.search)) ||
@@ -778,9 +782,15 @@ export function HeroStage({
             origin={mobile.focal[0]}
             onSettled={onSettled}
           >
-            <motion.div style={{ maskImage: gateMask, WebkitMaskImage: gateMask }}>
-              {/* the spyglass framing, static (mobile gets stills); the
-                  Lens clip and the section's overflow crop it */}
+            <motion.div
+              // the still's OWN box crops the zoom at every moment (M2 code
+              // review: during the bracket's opening the Lens clip is off and
+              // the 1.18× spyglass overhung the CTA and the section padding)
+              className="overflow-hidden"
+              style={{ maskImage: gateMask, WebkitMaskImage: gateMask }}
+            >
+              {/* the spyglass framing, static (mobile gets stills); this box
+                  crops it, the Lens clip on top */}
               <div
                 style={
                   mobile.zoom !== 1

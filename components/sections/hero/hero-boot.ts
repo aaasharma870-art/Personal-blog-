@@ -13,7 +13,10 @@ import { VARIANT_JS, type PrepaintVariants } from "@/components/intro/variant-sn
      the prologue is NOT armed (`html.intro-armed`: the flight lands on an
      open Lens) · the aperture has not run this session (lib/session.ts
      `once:<key>`) · no ?skip / ?skip=all / ?skip=hero · no #hash · no
-     Save-Data, not slow-2g/2g/3g.
+     Save-Data, not slow-2g/2g/3g · a viewport ≥ 640 px (M5: below it the
+     portrait still IS the page's LCP image, and a slit held until hydration
+     pushed mobile LCP to ~4 s on the skip / repeat path; phones get the
+     final, open still from first paint — mobile gets stills).
    Every storage read is in try/catch; a throw means "no aperture" (S2).
    The content is never gated: only the decorative plate is clipped, the h1
    and CTA are final from first paint, and a failsafe re-opens the plate if
@@ -44,7 +47,7 @@ const GATE_CSS =
   '[data-hero][data-aperture="gate"] [data-hero-lens]>[data-lens]>div:first-child{clip-path:inset(50% 0 50% 0)!important}' +
   '[data-hero][data-aperture="gate"] [data-hero-lens]>[data-lens]>div:last-child{visibility:hidden}';
 
-const SOURCE = `(function(C,V){try{var s=document.currentScript,e=s&&s.closest?s.closest("[data-hero]"):null;if(!e)return;var w=window,d=document,R=d.documentElement;if(R.classList.contains("intro-armed")||location.hash)return;if(w.matchMedia("(prefers-reduced-motion: reduce)").matches)return;var S=w.sessionStorage;if(S.getItem("motion")==="paused"||S.getItem(C.key)==="1")return;var q=new URLSearchParams(location.search);if(q.has("skip")){var v=q.getAll("skip").join(",").toLowerCase().split(",").filter(Boolean);if(!v.length||v.indexOf("all")>=0||v.indexOf("hero")>=0)return}var n=navigator.connection;if(n&&(n.saveData||/2g$|^3g$/.test(n.effectiveType||"")))return;var g=V(C.v,"hero.aperture")==="alt";if(g&&!d.getElementById("hero-gate-pre")){var t=d.createElement("style");t.id="hero-gate-pre";t.textContent=C.css;d.head.appendChild(t)}e.setAttribute("data-aperture",g?"gate":"pending");w.__heroApertureFailsafe=setTimeout(function(){var a=e.getAttribute("data-aperture");if(a==="pending"||a==="gate")e.removeAttribute("data-aperture")},C.failsafe)}catch(x){}})(__CFG__,${VARIANT_JS});`;
+const SOURCE = `(function(C,V){try{var s=document.currentScript,e=s&&s.closest?s.closest("[data-hero]"):null;if(!e)return;var w=window,d=document,R=d.documentElement;if(R.classList.contains("intro-armed")||location.hash)return;if(!w.matchMedia("(min-width: 40rem)").matches)return;if(w.matchMedia("(prefers-reduced-motion: reduce)").matches)return;var S=w.sessionStorage;if(S.getItem("motion")==="paused"||S.getItem(C.key)==="1")return;var q=new URLSearchParams(location.search);if(q.has("skip")){var v=q.getAll("skip").join(",").toLowerCase().split(",").filter(Boolean);if(!v.length||v.indexOf("all")>=0||v.indexOf("hero")>=0)return}var n=navigator.connection;if(n&&(n.saveData||/2g$|^3g$/.test(n.effectiveType||"")))return;var g=V(C.v,"hero.aperture")==="alt";if(g&&!d.getElementById("hero-gate-pre")){var t=d.createElement("style");t.id="hero-gate-pre";t.textContent=C.css;d.head.appendChild(t)}e.setAttribute("data-aperture",g?"gate":"pending");w.__heroApertureFailsafe=setTimeout(function(){var a=e.getAttribute("data-aperture");if(a==="pending"||a==="gate")e.removeAttribute("data-aperture")},C.failsafe)}catch(x){}})(__CFG__,${VARIANT_JS});`;
 
 /** The innerHTML of the hero's boot <div>: one inline script. `variants`
  *  carries hero.aperture's pre-paint data (prepaintVariants). */

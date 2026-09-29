@@ -203,6 +203,9 @@ export function MediaFrame({
           fill
           sizes={sizes}
           preload={priority}
+          // the LCP plate also outranks the early scripts and fonts (M5:
+          // mobile LCP; next/image's preload link carries it too)
+          fetchPriority={priority ? "high" : undefined}
           className={fitClass}
           style={objectPosition ? { objectPosition } : undefined}
           onLoad={() => setPosterLoaded(true)}

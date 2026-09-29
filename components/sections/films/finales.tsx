@@ -13,7 +13,7 @@ import { LINE, LINE_D, fitPath, fitPoint, measurePath, type Box } from "@/compon
 import { FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { EMBER_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
-import { filmMark } from "@/components/sections/films/plate-marks";
+import { DEAD_EYE_TARGETS, filmMark } from "@/components/sections/films/plate-marks";
 
 /* ============================================================================
    FILMS FINALES (SPEC SM-9 "finale", bar films-chapter §3; RECOGNIZABILITY
@@ -35,9 +35,14 @@ import { filmMark } from "@/components/sections/films/plate-marks";
      idiots   the gauntlet's gates (gauntlet.length, derived) draw on in
               chalk white (1 px board-dark halo) across the lake's sky; ONE
               chalk circle closes on the last gate.
-     rdr2     a dashed graphite map route follows the hill below its brow
-              to a campfire on its shoulder that kindles (a small ember
-              glow + 2 rising embers: 4 sprites).
+     rdr2     DEAD EYE (M5; the still is iconic-deadeye, the frozen
+              frontier in its red grade): "mark first, fire once" — an
+              ember X over a dark keyline locks on each bird held mid-air,
+              left → right, 160 ms apart; then all of them take their shot
+              AT ONCE (an ember point opens in every X). Settled / static:
+              the X's stay locked with their points (IC-RD-02; no reticle,
+              no weapon, no figure). The old graphite trail to a kindling
+              campfire (RdrTrail) stays for a plate without targets.
      hp       LD-HP complete: the ink Line draws while a cool light (the
               Lumos sprite) travels it (1.4 s), then ONE warm point lights at
               the Line's start — the point Card II→III sinks into its sun.
@@ -48,8 +53,9 @@ import { filmMark } from "@/components/sections/films/plate-marks";
               (iconic-pearl's `treasure` mark).
      idiots   one chalk circle closes around the yellow scooter, then a chalk
               tick (the idiots success mark).
-     rdr2     the still becomes a clipping in a journal: a pencil border and
-              four pencil photo-corners draw on (Arthur's journal grammar).
+     rdr2     the still (the gang's camp by the lake, iconic-camp-alt)
+              becomes a clipping in a journal: a pencil border and four
+              pencil photo-corners draw on (Arthur's journal grammar).
      hp       Marauder's-Map footprints walk across the enchanted paper to
               where the ink spreads from; ONE warm point lights at the walk's
               start (the same hand-off to Card II→III).
@@ -119,7 +125,7 @@ export function Finale({
   let body: ReactNode = null;
   if (world === "pirates") body = alt ? <PiratesChart mode={mode} W={W} stillId={stillId} /> : <PiratesCompass mode={mode} W={W} bearing={bearing} />;
   else if (world === "idiots") body = alt ? <IdiotsScooter mode={mode} W={W} stillId={stillId} /> : <IdiotsGates mode={mode} W={W} gates={gates} />;
-  else if (world === "rdr2") body = <RdrTrail mode={mode} W={W} />;
+  else if (world === "rdr2") body = DEAD_EYE_TARGETS[stillId] ? <RdrDeadEye mode={mode} W={W} stillId={stillId} /> : <RdrTrail mode={mode} W={W} />;
   else body = alt ? <HpMapWalk mode={mode} W={W} stillId={stillId} /> : <HpInkLight mode={mode} W={W} />;
   return (
     <PlateSvg aspect={aspect} className="films-finale">
@@ -354,6 +360,45 @@ function RdrTrail({ mode, W }: { mode: FinaleMode; W: number }) {
           <image href={EMBER_SPRITE} x={fire.x - 6 + (k ? 10 : -8)} y={fire.y - 30} width={12} height={12} />
         </motion.g>
       ))}
+    </g>
+  );
+}
+
+/** DEFAULT: Dead Eye on the frozen frontier — the marks lock on, one bird
+ *  at a time, then fire once. Plate space (1000 = the still's height);
+ *  pixel strokes (non-scaling) so the X keeps its weight at 3:2 on a phone. */
+function RdrDeadEye({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId: MediaId }) {
+  const targets = DEAD_EYE_TARGETS[stillId] ?? [];
+  const f = (v: number) => v.toFixed(1);
+  const R = 19; // the X's half-size: a bird is ~40 plate units across
+  const t0 = 0.5;
+  const step = 0.16;
+  const bite = 0.09; // each stroke of an X lands in 90 ms (the egg's timing)
+  const fireAt = t0 + (targets.length - 1) * step + 2 * bite + 0.4;
+  return (
+    <g data-finale="rdr2-deadeye" strokeLinecap="round">
+      {targets.map(([bx, by], k) => {
+        const x = bx * W;
+        const y = by * 1000;
+        const d1 = `M${f(x - R)} ${f(y - R)}L${f(x + R)} ${f(y + R)}`;
+        const d2 = `M${f(x + R)} ${f(y - R)}L${f(x - R)} ${f(y + R)}`;
+        const at = t0 + k * step;
+        return (
+          <g key={k}>
+            {/* a dark keyline under the ember, so the X reads on the red sky */}
+            <motion.path d={d1} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite)} />
+            <motion.path d={d2} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite)} />
+            <motion.path d={d1} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite)} />
+            <motion.path d={d2} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite)} />
+          </g>
+        );
+      })}
+      {/* fire once: every marked target takes its shot at the same moment */}
+      <motion.g {...appear(mode, fireAt, 1, 0.12)}>
+        {targets.map(([bx, by], k) => (
+          <circle key={k} cx={f(bx * W)} cy={f(by * 1000)} r={5.5} fill="var(--color-ember)" stroke="#140806" strokeWidth={2} vectorEffect="non-scaling-stroke" />
+        ))}
+      </motion.g>
     </g>
   );
 }

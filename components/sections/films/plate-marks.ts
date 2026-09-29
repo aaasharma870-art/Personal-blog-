@@ -40,6 +40,21 @@ export function filmMark(id: MediaId, name: string): Mark | null {
 export const FOCAL_MARK = {
   pirates: "lantern", // the Pearl's stern lantern
   idiots: "scooter",
-  rdr2: "horse",
+  rdr2: "fire", // the camp's fire (iconic-camp-alt, lib/media.ts marks)
   hp: "ink",
 } as const;
+
+/** DEAD EYE's targets on the frozen frontier: the five birds held mid-air
+ *  (0–1 of the plate, left → right). MEASURED on the accepted 2560 × 1440
+ *  file (sharp: dark blobs against a 61 px box mean, then a visual check,
+ *  2026-09-29, M5 fix round). All five sit inside the 2.39:1 band (y .13 –
+ *  .87) and the 3:2 crop (x .08 – .92). */
+export const DEAD_EYE_TARGETS: Partial<Record<MediaId, readonly Mark[]>> = {
+  "iconic-deadeye": [
+    [0.6908, 0.1691],
+    [0.7172, 0.3119],
+    [0.7614, 0.2273],
+    [0.798, 0.2526],
+    [0.8751, 0.3065],
+  ],
+};
