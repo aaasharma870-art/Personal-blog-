@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useRef } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
@@ -10,123 +10,63 @@ import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/ki
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { BoardFig } from "@/components/sections/act-card/frames/board-fig";
+import { boardQuad, onBoard, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
 import { registeredStorm, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
-import { PlateBox, plateOf } from "@/components/sections/act-card/plate";
+import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
 
 /**
  * Card I→II, ALT choreography "duster-erase" (lib/variants.ts
  * `card-seam.choreo` alt; SM-5, D-5 long #1; RECOGNIZABILITY S07 alt). The
- * DEFAULT cuts the storm away like ice; this one wipes it off a classroom
- * board: a chalk duster erases the storm (MV-04-alt) in five boustrophedon
- * strokes (left → right, then back), and the ICE lecture hall's green board
- * (iconic-ice-alt) was underneath all along — "THE ICE BOARD, WIPED CLEAN". One pinned driver p (direct,
- * no springs; everything reverses by position):
- *   0–.08    the storm plate, still (MV-04; until it exists, MV-01 in the
- *            code storm grade).
- *   .08–.78  the duster: five strokes, .14 of p each, top band first; the
- *            erased region is a clip whose ragged leading edge rides the
- *            duster, and the wiped bands keep a faint chalk-dust streak.
- *   .5–.9    FIG. 0, the Line, is written in CHALK on the board
- *            (frames/board-fig.tsx: registered to the plate's board quad);
- *            its label carries the path's TRUE length and control-point
- *            count (computed, never literal). LD-3I in chalk: the rack
- *            x = p·L, the gears exact.
- *   ≥ .95    Rancho's chalk circle round the gauge's end tick (re-arms only
- *            below .9), as in the default.
- * No aqua seam line in this variant (C10: 0 aqua marks at any p). The
- * clip and the duster exist only while live (the storm is mounted hidden,
- * as in the default, so it has decoded before the card goes live). Static card
- * (RM, Pause, no JS, < 1024 / coarse, SSR): the wiped board — the ICE
- * hall, chalk FIG. 0, the gauge complete with its circle, the dust streaks.
- * aria-hidden art; 0 tab stops.
+ * DEFAULT cuts the storm away like ice and chalks FIG. 0 on the board; this
+ * one WIPES the storm off a classroom board, and leaves the board clean —
+ * "THE ICE BOARD, WIPED CLEAN". One pinned driver p (direct, no springs;
+ * everything reverses by position):
+ *   0–.06    the storm plate (MV-04-alt), still.
+ *   .06–.66  ONE sweep, left → right: the storm's leading edge is a soft
+ *            DIAGONAL (a 110° linear mask, ~16 % of the frame feathered —
+ *            never a torn strip, M2 ART-DIRECTOR #7) and a chalk duster,
+ *            held at the edge's slant, rides it, scrubbing up and down
+ *            along it. The ICE lecture hall (iconic-ice-alt) was underneath
+ *            all along. At the middle (p .5) the hall and most of the board
+ *            are wiped, the storm still over the right quarter — both
+ *            worlds, the new one leading (ART-DIRECTOR #6).
+ *   ≥ .66    the board is WIPED CLEAN: only the duster's soft arcs of chalk
+ *            dust remain ON THE SLATE — drawn inside the board quad of the
+ *            plate (frames/board-fig.tsx), never across the walls or the
+ *            benches (the old full-frame streak pattern read as scanline
+ *            banding, ART-DIRECTOR #15). No FIG. 0 here: the caption says
+ *            the board is clean, so it is (ART-DIRECTOR #9).
+ * No aqua in this variant (C10: 0 aqua marks at any p). The sweep and the
+ * duster exist only while live (the storm is mounted hidden, as in the
+ * default, so it has decoded before the card goes live). Static card (RM,
+ * Pause, no JS, < 1024 / coarse, SSR): the wiped board — the ICE hall, the
+ * clean slate with its dust arcs. aria-hidden art; 0 tab stops.
+ *
+ * No `board` (the lab's old call, or the plate missing): the code blueprint
+ * with FIG. 0 in chalk and the chalk gauge (Rancho's circle at ≥ .95).
  */
 
 const VB = { w: 1000, h: 418 };
-const BANDS = 5;
-const BAND_H = VB.h / BANDS;
-const WIPE = { from: 0.08, per: 0.14 };
-const OVERSHOOT = 60;
+/** The sweep's window of p. */
+const SWEEP = { from: 0.06, to: 0.66 };
 
-/** The wavy boundary between band k−1 and band k (k = 1…4); 0 and 5 are
- *  the frame edges. Deterministic (hash), so SSR == client. */
-function boundaryY(k: number, x: number): number {
-  if (k <= 0) return -2;
-  if (k >= BANDS) return VB.h + 2;
-  return k * BAND_H + 3.2 * Math.sin(x * 0.019 + k * 1.7) + 2.2 * Math.sin(x * 0.053 + k);
-}
+/* — The feathered diagonal edge (CSS mask, geometry for 2.39:1: the sweep
+     runs only live, and live is ≥ 1024). A 110° gradient in a mask three
+     frames wide: at mask-position-x = px the edge's centre (t = .5) crosses
+     the frame's middle row at u = 1.5 − 2·px (frame widths); the 5 %
+     feather is ±.079 frame widths, the slant ±.076 top to bottom. px .83
+     keeps the whole frame under the storm, .17 has wiped all of it. — */
+const ANGLE = 110;
+const MASK = `linear-gradient(${ANGLE}deg, transparent 47.5%, #000 52.5%)`;
+const pxAt = (w: number) => 0.83 - 0.66 * w;
+/** The edge's x (frame widths) at frame row y (0–1) for mask position px. */
+const SLOPE = (Math.cos((ANGLE * Math.PI) / 180) / Math.sin((ANGLE * Math.PI) / 180)) * (VB.h / VB.w);
+const edgeX = (px: number, y: number) => 1.5 - 2 * px + SLOPE * (y - 0.5);
 
-/** Points along boundary k from x0 to x1 (either direction). */
-function along(k: number, x0: number, x1: number): string {
-  const n = Math.max(2, Math.ceil(Math.abs(x1 - x0) / 25));
-  const out: string[] = [];
-  for (let i = 0; i <= n; i++) {
-    const x = x0 + ((x1 - x0) * i) / n;
-    out.push(`${x.toFixed(1)} ${boundaryY(k, x).toFixed(1)}`);
-  }
-  return out.join("L");
-}
+/** The duster scrubs up and down the edge as it crosses (3 passes). */
+const scrubY = (w: number) => 0.5 + 0.32 * Math.sin(w * Math.PI * 6);
 
-/** The duster's ragged leading edge in band k at head x, top → bottom. */
-function edgePts(k: number, hx: number, dir: 1 | -1): [number, number][] {
-  const y0 = boundaryY(k, hx);
-  const y1 = boundaryY(k + 1, hx);
-  const pts: [number, number][] = [];
-  for (let i = 0; i <= 8; i++) {
-    const y = y0 + ((y1 - y0) * i) / 8;
-    const jitter = (hash01(i + k * 11, 5) - 0.5) * 16;
-    // the duster is held at a slant: the lower end trails
-    const slant = (y - (y0 + y1) / 2) * 0.18 * -dir;
-    pts.push([hx + jitter + slant, y]);
-  }
-  return pts;
-}
-
-type Wipe = { k: number; h: number; dir: 1 | -1; hx: number };
-
-function wipeAt(p: number): Wipe {
-  const t = (p - WIPE.from) / WIPE.per;
-  const k = Math.min(BANDS - 1, Math.max(0, Math.floor(t)));
-  const h = Math.min(1, Math.max(0, t - k));
-  const dir: 1 | -1 = k % 2 === 0 ? 1 : -1;
-  const span = VB.w + 2 * OVERSHOOT;
-  const hx = dir === 1 ? -OVERSHOOT + h * span : VB.w + OVERSHOOT - h * span;
-  return { k, h: t < 0 ? 0 : t >= BANDS ? 1 : h, dir, hx };
-}
-
-/** The region still under the storm (the clip of the storm layer). */
-function stormPath(p: number): string {
-  if (p <= WIPE.from) return `M-2 -2H${VB.w + 2}V${VB.h + 2}H-2Z`;
-  if (p >= WIPE.from + WIPE.per * BANDS) return "M0 0Z";
-  const { k, dir, hx } = wipeAt(p);
-  const E = edgePts(k, hx, dir);
-  const far = dir === 1 ? VB.w + 2 : -2;
-  // the current band, from the leading edge to the far side
-  const band = `M${E[0][0].toFixed(1)} ${E[0][1].toFixed(1)}L${along(k, E[0][0], far)}L${along(k + 1, far, E[8][0])}${E.slice()
-    .reverse()
-    .map(([x, y]) => `L${x.toFixed(1)} ${y.toFixed(1)}`)
-    .join("")}Z`;
-  // every band below it, whole
-  const below = k + 1 < BANDS ? `M-2 ${boundaryY(k + 1, -2).toFixed(1)}L${along(k + 1, -2, VB.w + 2)}L${VB.w + 2} ${VB.h + 2}H-2Z` : "";
-  return band + below;
-}
-
-/** The wiped region (where the chalk dust streaks lie). */
-function dustPath(p: number): string {
-  if (p <= WIPE.from) return "M0 0Z";
-  if (p >= WIPE.from + WIPE.per * BANDS) return `M-2 -2H${VB.w + 2}V${VB.h + 2}H-2Z`;
-  const { k, dir, hx } = wipeAt(p);
-  const E = edgePts(k, hx, dir);
-  const near = dir === 1 ? -2 : VB.w + 2;
-  const above = k > 0 ? `M-2 -2H${VB.w + 2}V${boundaryY(k, VB.w + 2).toFixed(1)}L${along(k, VB.w + 2, -2)}Z` : "";
-  const band = `M${E[0][0].toFixed(1)} ${E[0][1].toFixed(1)}L${along(k, E[0][0], near)}L${along(k + 1, near, E[8][0])}${E.slice()
-    .reverse()
-    .map(([x, y]) => `L${x.toFixed(1)} ${y.toFixed(1)}`)
-    .join("")}Z`;
-  return above + band;
-}
-
-/* — FIG. 0 geometry (the default's blueprint, the Line set in chalk) — */
+/* — FIG. 0 geometry for the code blueprint fallback (the Line in chalk) — */
 const W = LINE_VIEWBOX.w;
 const H = Math.round(W / 2.39);
 const DIM_Y = LINE_VIEWBOX.h - 24;
@@ -146,12 +86,13 @@ export function SeamChalkFrame({
 }) {
   const { p, live } = useCard();
   const reduced = useReducedMotion();
-  const ids = useId();
-  const clipId = `${ids}c`;
-  const dustId = `${ids}d`;
   const board = plateOf(boardId);
   const storm = registeredStorm(stormId, board);
 
+  const w = useTransform(p, (v) => remap(v, SWEEP.from, SWEEP.to));
+  const maskPos = useTransform(w, (x) => `${(pxAt(x) * 100).toFixed(3)}% 0%`);
+  // belt and braces: a finished sweep hides the storm outright
+  const stormOn = useTransform(w, (x) => (x >= 1 ? 0 : 1));
   const fig = useTransform(p, (v) => remap(v, 0.5, 0.9));
   const { circle, spin, one } = useRanchoCircle(p, live, reduced);
 
@@ -160,11 +101,11 @@ export function SeamChalkFrame({
   return (
     <div aria-hidden="true" data-frame="seam-chalk" className="absolute inset-0 overflow-hidden">
       {/* the board: the ICE lecture hall's green board (iconic-ice-alt),
-          with FIG. 0 written on it in chalk */}
+          wiped clean — the duster's dust arcs on the slate only */}
       {board ? (
         <PlateBox plate={board}>
           <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
-          <BoardFig plate={board} fig={live ? fig : one} rack={live ? p : one} spin={spin} circle={circle} live={live} />
+          <DustArcs plate={board} />
         </PlateBox>
       ) : (
         <div className="act-blueprint absolute inset-0">
@@ -200,29 +141,40 @@ export function SeamChalkFrame({
         </div>
       )}
 
-      {/* the chalk dust the duster leaves on the wiped bands */}
-      <DustLayer p={live ? p : one} id={dustId} />
-
-      {/* the storm, still under the duster's clip (mounted even while
-          static, hidden, so the plate is decoded before the card goes live) */}
-      {live ? <StormClip p={p} id={clipId} /> : null}
-      <div
+      {/* the storm, under the duster's feathered diagonal edge (mounted even
+          while static, hidden, so the plate is decoded before the card goes
+          live) */}
+      <motion.div
         className="absolute inset-0"
-        style={live ? { clipPath: `url(#${clipId})` } : { display: "none" }}
+        style={
+          live
+            ? {
+                opacity: stormOn,
+                maskImage: MASK,
+                WebkitMaskImage: MASK,
+                maskSize: "300% 100%",
+                WebkitMaskSize: "300% 100%",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: maskPos,
+                WebkitMaskPosition: maskPos,
+              }
+            : { display: "none" }
+        }
       >
         {storm ? (
           <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
             <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
           </PlateBox>
         ) : null}
-      </div>
-      {live ? <Duster p={p} /> : null}
+      </motion.div>
+      {live ? <Duster w={w} /> : null}
     </div>
   );
 }
 
 /** FIG. 0 in chalk: a firm stroke and a lighter offset twin (the grain of a
- *  chalk line, without a per-frame filter). */
+ *  chalk line, without a per-frame filter). The blueprint fallback only. */
 function ChalkLine({ progress }: { progress: MotionValue<number> }) {
   return (
     <g stroke="var(--w-chalk)">
@@ -234,59 +186,63 @@ function ChalkLine({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/** The storm layer's clip (objectBoundingBox; the path is in VB units). */
-function StormClip({ p, id }: { p: MotionValue<number>; id: string }) {
-  const ref = useRef<SVGPathElement>(null);
-  const d = useSvgAttr(ref, p, "d", stormPath);
-  return (
-    <svg width="0" height="0" focusable="false" className="absolute">
-      <defs>
-        <clipPath id={id} clipPathUnits="objectBoundingBox">
-          <path ref={ref} d={d} transform={`scale(${1 / VB.w} ${1 / VB.h})`} />
-        </clipPath>
-      </defs>
-    </svg>
-  );
+/* — The duster's dust on the wiped slate: three soft, broad arcs (the pad's
+     scrubbing path), in board-local (u, v) mapped onto the plate's board
+     quad — so they lie ON the slate at 3:2 and 2.39:1 alike, and nowhere
+     else. A smear, never a glow: chalk at ≤ 9 %, softened by a static blur. — */
+const ARCS = [0, 1, 2].map((k) => {
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 40; i++) {
+    const u = 0.03 + (0.94 * i) / 40;
+    const v = 0.22 + 0.28 * k + 0.09 * Math.sin(u * Math.PI * 3 + k * 1.3) + (hash01(i + 7 * k, 9) - 0.5) * 0.015;
+    pts.push([u, v]);
+  }
+  return { pts, o: 0.06 + 0.03 * hash01(k, 2) };
+});
+
+function arcPath(q: BoardQuad, pts: [number, number][]): string {
+  return pts
+    .map(([u, v], i) => {
+      const [x, y] = onBoard(q, u, v);
+      return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join("");
 }
 
-/** Chalk-dust streaks on the wiped region: a pattern of thin horizontal
- *  chalk strokes at low opacity (a smear, never a glow). */
-function DustLayer({ p, id }: { p: MotionValue<number>; id: string }) {
-  const ref = useRef<SVGPathElement>(null);
-  const d = useSvgAttr(ref, p, "d", dustPath);
+function DustArcs({ plate }: { plate: Plate }) {
+  const q = boardQuad(plate);
+  if (!q) return null;
+  // the pad's width: ~a fifth of the slate's height, in plate pixels
+  const slateH = (q.bl[1] - q.tl[1] + (q.br[1] - q.tr[1])) / 2;
   return (
     <svg
-      viewBox={`0 0 ${VB.w} ${VB.h}`}
+      viewBox={plateViewBox(plate)}
       preserveAspectRatio="none"
       focusable="false"
-      className="pointer-events-none absolute inset-0 size-full"
+      className="pointer-events-none absolute inset-0 size-full blur-[2px]"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <defs>
-        <pattern id={id} width={430} height={27} patternUnits="userSpaceOnUse">
-          <path
-            d="M0 4H96M128 3.4H300M340 4.6H430M34 11H150M196 10.4H262M300 11.6H404M0 18.6H58M92 19H236M268 18.2H330M60 24.4H170M232 25H390"
-            stroke="var(--w-chalk)"
-            strokeWidth={1.6}
-            fill="none"
-          />
-        </pattern>
-      </defs>
-      <path ref={ref} d={d} fill={`url(#${id})`} opacity={0.055} />
+      {ARCS.map((a, k) => (
+        <path key={k} d={arcPath(q, a.pts)} stroke="var(--w-chalk)" strokeOpacity={a.o} strokeWidth={slateH * 0.2} />
+      ))}
     </svg>
   );
 }
 
-/** The duster: a felt pad on a wooden back, riding the leading edge of the
- *  current stroke (only while a stroke is in progress). */
-function Duster({ p }: { p: MotionValue<number> }) {
+/** The duster: a felt pad on a wooden back, held at the edge's slant and
+ *  riding its centre line left → right (only while the sweep runs). */
+function Duster({ w }: { w: MotionValue<number> }) {
   const ref = useRef<SVGGElement>(null);
-  const place = (v: number) => {
-    const { k, dir, hx, h } = wipeAt(v);
-    const cy = (boundaryY(k, hx) + boundaryY(k + 1, hx)) / 2;
-    return `translate(${hx.toFixed(1)} ${cy.toFixed(1)}) rotate(${(8 * -dir).toFixed(1)}) scale(${dir} 1)${h <= 0 || h >= 1 ? " scale(0)" : ""}`;
+  const tilt = (Math.atan(-SLOPE * (VB.w / VB.h)) * 180) / Math.PI;
+  const place = (x: number) => {
+    const y = scrubY(x);
+    const u = edgeX(pxAt(x), y);
+    return `translate(${(u * VB.w).toFixed(1)} ${(y * VB.h).toFixed(1)}) rotate(${tilt.toFixed(2)})`;
   };
-  const t = useSvgAttr(ref, p, "transform", place);
-  const shown = useTransform(p, (v) => (v > WIPE.from && v < WIPE.from + WIPE.per * BANDS ? 1 : 0));
+  const t = useSvgAttr(ref, w, "transform", place);
+  const shown = useTransform(w, (x) => Math.min(remap(x, 0, 0.04), 1 - remap(x, 0.96, 1)));
   return (
     <motion.svg
       viewBox={`0 0 ${VB.w} ${VB.h}`}
@@ -296,8 +252,7 @@ function Duster({ p }: { p: MotionValue<number> }) {
       style={{ opacity: shown }}
     >
       <g ref={ref} transform={t}>
-        {/* felt pad (leading) and the wooden back (trailing); drawn for a
-            left → right stroke and mirrored for the return */}
+        {/* felt pad (leading, toward the storm) and the wooden back */}
         <rect x={-4} y={-40} width={14} height={80} rx={3} fill="var(--bg)" stroke="var(--w-chalk)" strokeOpacity={0.7} strokeWidth={1.2} />
         <rect x={-22} y={-36} width={18} height={72} rx={4} fill="var(--w-graphite)" fillOpacity={0.55} stroke="var(--w-graphite)" strokeWidth={1.2} />
         <path d="M-17 -26V26M-11 -26V26" stroke="var(--bg)" strokeOpacity={0.5} strokeWidth={1} />

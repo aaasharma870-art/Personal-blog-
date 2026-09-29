@@ -20,15 +20,24 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  * RECOGNIZABILITY title block (§4.3):
  *
  *   ≥ 640 px  the section is 100svh on the incoming world's DEEP ground — the
- *             ground IS the bars (no bar elements): 1fr · frame 2.39:1 · 1fr
- *             (602.5 px frame, 148.7 px bars at 1440×900).
+ *             ground IS the bars (no bar elements): upper bar · frame 2.39:1
+ *             · lower bar. The upper bar is never shorter than the header +
+ *             8rem and the lower never shorter than 8.5rem, so the film
+ *             title and the Meta always sit CLEAR of the fixed header (M2
+ *             ART-DIRECTOR #5); the frame is capped to what is left
+ *             (100svh − header − 17rem, still 2.39:1) and centred — full
+ *             bleed wherever it fits (--card-frame-w, app/globals.css), else
+ *             a centred picture window (1338 px at 1440×900, 908 at
+ *             1280×720) with the bars' text inset to its edges (--card-inset).
  *             Upper bar: Meta (act credit left, reel mark right) and, right
  *               above the frame, THE FILM TITLE in the world's fan face at
  *               --text-title ("3 IDIOTS"): the card is named at a glance.
  *             Lower bar, left: the act h2 (smaller than the film title) +
  *               ≤ 1 line + the world's progress line.
  *             Lower bar, right, under the frame's corner: the MOMENT
- *               caption(s) ("THE LECTURE HALL AT ICE • 3 IDIOTS").
+ *               caption ("THE LECTURE HALL AT ICE • 3 IDIOTS"); an OUTGOING
+ *               caption (slot "frame") sits over the frame's top-right
+ *               corner while live, so it is on screen as the card enters.
  *   < 640 px  letterbox off: a stacked static card (Meta → film → title →
  *             line → frame → caption), 0 travel.
  *   "flow"    (the opening card) the same bars and frame without the 100svh
@@ -100,7 +109,9 @@ type Props = {
   /** Content after the frame + bars (the opening program), per variant. */
   after?: ReactNode;
   altAfter?: ReactNode;
-  /** The MOMENT caption cues, per variant (card-captions.tsx). */
+  /** The MOMENT caption cues, per variant (card-captions.tsx). An ALT
+   *  without its own list (undefined) shows the default's; an explicit []
+   *  means the ALT sets its caption elsewhere (the opening chart). */
   captions?: readonly CaptionCue[];
   altCaptions?: readonly CaptionCue[];
   /** The manifest's variant choice for this card (`item.variant`). */
@@ -143,7 +154,7 @@ export function CardShell({
   after = null,
   altAfter = null,
   captions = [],
-  altCaptions = [],
+  altCaptions,
   variantChoice = null,
   variant: forced,
   layout = "letterbox",
@@ -200,7 +211,11 @@ export function CardShell({
 
   const state = useMemo(() => ({ p, live, long: pinned, variant }), [p, live, pinned, variant]);
   const titleId = `${id}-title`;
-  const cues = variant === "alt" && altCaptions.length ? altCaptions : captions;
+  const cues = variant === "alt" && altCaptions ? altCaptions : captions;
+  // an outgoing caption over the frame exists only while live (≥ 640, the
+  // choreography running); the static card shows the settled one alone
+  const frameCues = live ? cues.filter((c) => c.slot === "frame") : [];
+  const underCues = cues.filter((c) => c.slot !== "frame");
   const tail = variant === "alt" && altAfter != null ? altAfter : after;
   const flow = layout === "flow";
 
@@ -246,7 +261,10 @@ export function CardShell({
               "relative flex flex-col gap-tier-group px-gutter py-section",
               flow
                 ? "sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-0 sm:px-0 sm:pt-[calc(var(--header-h)+var(--spacing-tier-group))] sm:pb-0"
-                : "sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[1fr_auto_1fr] sm:gap-0 sm:px-0 sm:py-0",
+                : // the upper bar clears the fixed header (+ Meta + the film
+                  // title); the lower keeps the h2 + line; the frame (capped
+                  // in CSS: .act-card-letterbox) takes what is left
+                  "act-card-letterbox sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[minmax(calc(var(--header-h)+8rem),1fr)_auto_minmax(8.5rem,1fr)] sm:gap-0 sm:px-0 sm:py-0",
               travels && "act-card-stage",
             )}
           >
@@ -260,7 +278,12 @@ export function CardShell({
             ) : null}
 
             {/* upper bar: Meta, then the film title right above the frame */}
-            <div className="relative order-1 flex flex-col justify-end gap-2 sm:order-none sm:col-span-2 sm:row-start-1 sm:px-gutter sm:pb-4">
+            <div
+              className={cn(
+                "relative order-1 flex flex-col justify-end gap-2 sm:order-none sm:col-span-2 sm:row-start-1 sm:pb-4",
+                flow ? "sm:px-gutter" : "sm:px-(--card-inset)",
+              )}
+            >
               <div className="flex items-end justify-between gap-tier-group">
                 <p className="type-meta text-fg-muted">{upperLeft}</p>
                 {upperRight ? <p className="type-meta text-fg-muted">{upperRight}</p> : null}
@@ -271,15 +294,23 @@ export function CardShell({
             {/* the frame (2.39:1 letterbox ≥ 640; 3:2 plate or free below) */}
             <div
               className={cn(
-                "relative order-3 aspect-[3/2] overflow-hidden sm:order-none sm:col-span-2 sm:row-start-2 sm:w-full sm:aspect-(--letterbox-ratio)",
+                "relative order-3 aspect-[3/2] overflow-hidden sm:order-none sm:col-span-2 sm:row-start-2 sm:aspect-(--letterbox-ratio)",
+                flow ? "sm:w-full" : "sm:w-[min(100%,var(--card-frame-w))] sm:justify-self-center",
               )}
             >
               {variant === "alt" ? altFrame : frame}
+              {/* the OUTGOING caption, over the corner the old world leaves
+                  by (live, ≥ 640; its own world's deep scrim: CSS) */}
+              {frameCues.length ? (
+                <div className="card-cap-frame pointer-events-none absolute top-[max(1.5rem,8%)] right-[max(1.5rem,8%)] z-[2] hidden w-[min(46%,36rem)] sm:block">
+                  <CardCaptions cues={frameCues} align="end" />
+                </div>
+              ) : null}
             </div>
 
             {/* lower bar, left: the h2 + ≤ 1 line + the progress element */}
             {lower || progress || summary ? (
-              <div className="relative order-2 flex min-w-0 flex-col items-start gap-3 sm:order-none sm:col-start-1 sm:row-start-3 sm:px-gutter sm:pt-4">
+              <div className="relative order-2 flex min-w-0 flex-col items-start gap-3 sm:order-none sm:col-start-1 sm:row-start-3 sm:pt-4 sm:pr-6 sm:pl-(--card-inset)">
                 {lower}
                 {progress ? <ProgressLine world={motifWorld} /> : null}
                 {/* live: screen-reader only, so the bars keep the letterbox
@@ -290,17 +321,21 @@ export function CardShell({
               </div>
             ) : null}
 
-            {/* lower bar, right: the MOMENT caption under the frame's corner */}
-            {cues.length ? (
+            {/* lower bar, right: the MOMENT caption under the frame's corner
+                (a cell that never shrinks: the caption fills its first line,
+                ART-DIRECTOR #4) */}
+            {underCues.length ? (
               <div
                 className={cn(
-                  "relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:max-w-[min(46vw,38rem)] sm:justify-self-end sm:pt-4 sm:pr-gutter sm:pl-6",
+                  "relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end sm:pt-4 sm:pl-6",
                   // the opening has no lower-left block: the caption spans the
                   // row and hugs the frame's right corner
-                  flow ? "sm:col-span-2 sm:col-start-1" : "sm:col-start-2",
+                  flow
+                    ? "sm:col-span-2 sm:col-start-1 sm:w-[min(46vw,38rem)] sm:pr-gutter"
+                    : "act-card-cap sm:col-start-2 sm:pr-(--card-inset)",
                 )}
               >
-                <CardCaptions cues={cues} />
+                <CardCaptions cues={underCues} />
               </div>
             ) : null}
           </div>

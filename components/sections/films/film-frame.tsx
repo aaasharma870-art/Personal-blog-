@@ -18,7 +18,7 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  * FilmFrame — one films-chapter screen's picture (SPEC SM-9; bar
  * films-chapter §3; RECOGNIZABILITY S12): a letterboxed 2.39:1 still (3:2
  * below 640 px: letterbox off), its finale drawn over it once, and the
- * scene caption UNDER the frame ("THE BLACK PEARL AT ANCHOR • PIRATES OF THE
+ * scene caption UNDER the frame ("THE BLACK PEARL BY MOONLIGHT • PIRATES OF THE
  * CARIBBEAN": the F-3I / F-RD skies are too bright for a corner caption).
  *
  * Variant piece `films.screens` (lib/variants.ts):
@@ -66,6 +66,10 @@ export function FilmFrame({
   const asset = stillId ? resolveMedia(stillId) : null;
   const aspect = asset ? asset.width / asset.height : 21 / 9;
 
+  // The observer watches the UNCLIPPED box: IntersectionObserver clips its
+  // target by the target's own clip-path in Chromium, so observing the
+  // element that carries the closed iris (circle(0%): zero area) could leave
+  // the ALT screens armed — shut — forever (ART-DIRECTOR #1).
   const ref = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.5 });
   const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? "play" : "final";
@@ -78,36 +82,35 @@ export function FilmFrame({
 
   return (
     <div className={className} data-variant={variant}>
-      <motion.div
-        ref={ref}
-        className="relative aspect-[3/2] overflow-hidden bg-bg sm:aspect-[2.39/1]"
-        initial={false}
-        animate={{ clipPath: phase === "armed" ? closed : open }}
-        transition={phase === "entered" ? { duration: dur.hero, ease: easeClip } : { duration: 0 }}
-        data-films-frame={world}
-        data-finale-mode={mode}
-      >
-        {stillId ? (
-          <>
-            <MediaFrame
-              media={stillId}
-              layout="fill"
-              playOn="never"
-              world={world}
-              sizes="(min-width: 90rem) 1360px, 100vw"
-            />
-            <Finale
-              world={world}
-              variant={variant}
-              mode={mode}
-              aspect={aspect}
-              stillId={asset?.id ?? stillId}
-              bearing={bearing}
-              gates={gates}
-            />
-          </>
-        ) : null}
-      </motion.div>
+      <div ref={ref} className="relative aspect-[3/2] sm:aspect-[2.39/1]" data-films-frame={world} data-finale-mode={mode}>
+        <motion.div
+          className="absolute inset-0 overflow-hidden bg-bg"
+          initial={false}
+          animate={{ clipPath: phase === "armed" ? closed : open }}
+          transition={phase === "entered" ? { duration: dur.hero, ease: easeClip } : { duration: 0 }}
+        >
+          {stillId ? (
+            <>
+              <MediaFrame
+                media={stillId}
+                layout="fill"
+                playOn="never"
+                world={world}
+                sizes="(min-width: 90rem) 1360px, 100vw"
+              />
+              <Finale
+                world={world}
+                variant={variant}
+                mode={mode}
+                aspect={aspect}
+                stillId={asset?.id ?? stillId}
+                bearing={bearing}
+                gates={gates}
+              />
+            </>
+          ) : null}
+        </motion.div>
+      </div>
       <SceneCaption k={captionKeyFor(FILMS_CAPTION[world], variant)} place="under" />
     </div>
   );

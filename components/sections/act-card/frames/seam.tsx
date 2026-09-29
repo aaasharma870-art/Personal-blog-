@@ -32,21 +32,28 @@ import {
  *           foam). Its horizon is REGISTERED to the ICE board's chalk ledge
  *           (the crop puts MV-04 `horizon` on the ledge's mid-line), so the
  *           sea's horizon becomes the ledge.
- *   .15–.75 the IceCut: a ragged-diagonal mask wipes the storm into the ICE
+ *   .12–.66 the IceCut: a ragged-diagonal mask wipes the storm into the ICE
  *           lecture hall (iconic-ice: the huge blank green board, the tiered
  *           wooden benches, the pergola's striped sun), order rising from
  *           below; opposing parallax (outgoing −.4·p²·H, incoming
  *           +.4·(1−p)²·H); the teal foam DESATURATES to chalk white as the
- *           cut rises; chalk dust (≤ 24 specks) rides the cut; the 3 px aqua
- *           seam line rides it for .1 < p < .9 only (the viewport's one
- *           aqua). FIG. 0 — the Line — is CHALKED ON THE BOARD
- *           (frames/board-fig.tsx) with pathLength = remap(p, .2, .75),
- *           labelled with its TRUE length and control-point count. The
- *           chalk gauge (LD-3I): rack x = p·L, the gears exact.
+ *           cut rises. At the MIDDLE (p .5) the hall and most of the board
+ *           are up, FIG. 0 half-chalked, the storm still over the top
+ *           quarter — both worlds, the new one leading (M2 ART-DIRECTOR #6).
+ *           The cut is FEATHERED (~24 px, a blurred mask that sits just
+ *           above the edge, so nothing of the storm — no rain — shows below
+ *           it); a chalk-dust haze and ≤ 24 chalk specks ride it; the aqua
+ *           seam line rides it (a 1.5 px core in a soft glow) for .1 < p
+ *           < .66 only (the viewport's one aqua). FIG. 0 — the Line — is
+ *           CHALKED ON THE BOARD (frames/board-fig.tsx) with pathLength =
+ *           remap(p, .3, .8), labelled with its TRUE length and
+ *           control-point count. The chalk gauge (LD-3I): rack x = p·L,
+ *           the gears exact.
  *   ≥ .95   Rancho's chalk circle round the gauge's end tick.
- * Captions (CardShell, under the frame): "THE KRAKEN'S STORM • PIRATES OF
- * THE CARIBBEAN" fades out over p .1–.35; "THE LECTURE HALL AT ICE •
- * 3 IDIOTS" fades in over .6–.8.
+ * Captions (CardShell): "THE KRAKEN'S STORM • PIRATES OF THE CARIBBEAN"
+ * over the frame's top-right corner (where the storm leaves by) from the
+ * card's entry through the middle (p .5), gone by .58; "THE LECTURE HALL
+ * AT ICE • 3 IDIOTS" under the frame from .42, fully up at .5.
  * Static card (RM, Pause, no JS, < 1024 / coarse, SSR): the ICE hall with
  * FIG. 0 chalked on the board and the gauge complete with its circle.
  * aria-hidden art.
@@ -64,7 +71,10 @@ const DIM_X1 = 952;
 
 /* — The IceCut edge: a ragged diagonal in a 100 × 300 box (the mask image
      is three frames tall; the edge sits in the middle third). Deterministic
-     jitter (a hash, never Math.random: SSR == client). — */
+     jitter (a hash, never Math.random: SSR == client). The MASK is the
+     edge's fill lifted 1.6 units and blurred (σ ≈ 1 unit ≈ 6 px of a
+     560–600 px frame): a ~24 px feather that is fully opaque just below the
+     line, so the feather eats into the storm, never the hall. — */
 const EDGE_POINTS = (() => {
   const pts: [number, number][] = [];
   const n = 26;
@@ -80,24 +90,27 @@ const EDGE_POINTS = (() => {
 })();
 const EDGE_LINE = EDGE_POINTS.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`).join("");
 const EDGE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300' preserveAspectRatio='none'><path d='${EDGE_LINE}L100 300L0 300Z' fill='#fff'/></svg>`,
+  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300' preserveAspectRatio='none'><defs><filter id='f' x='-5%' y='-5%' width='110%' height='110%'><feGaussianBlur stdDeviation='0.25 1'/></filter></defs><path d='${EDGE_LINE}L100 300L0 300Z' transform='translate(0 -1.6)' fill='#fff' filter='url(#f)'/></svg>`,
 )}")`;
 /** mask-position-y (0–1) for the wipe fraction w (see the M1 note: c = .1
  *  puts all of the edge below the frame, c = .84 all of it above). */
 const cutAt = (w: number) => 0.1 + 0.74 * w;
+/** The wipe's window of p. */
+const CUT = { from: 0.12, to: 0.66 };
 
 /** Chalk dust along the cut: ≤ 24 specks at the edge (the edge box's
- *  units: x 0–100, y of 300), deterministic. */
-const DUST = Array.from({ length: 22 }, (_, k) => {
-  const f = (k + hash01(k, 3)) / 22;
+ *  units: x 0–100, y of 300), deterministic; most settle just BELOW the
+ *  line, on the board side. */
+const DUST = Array.from({ length: 24 }, (_, k) => {
+  const f = (k + hash01(k, 3)) / 24;
   const i = Math.min(EDGE_POINTS.length - 2, Math.floor(f * (EDGE_POINTS.length - 1)));
   const t = f * (EDGE_POINTS.length - 1) - i;
   const [x0, y0] = EDGE_POINTS[i];
   const [x1, y1] = EDGE_POINTS[i + 1];
   return {
     x: x0 + (x1 - x0) * t,
-    y: y0 + (y1 - y0) * t + (hash01(k, 7) - 0.62) * 3.2,
-    s: 2 + Math.round(hash01(k, 11) * 3),
+    y: y0 + (y1 - y0) * t + (hash01(k, 7) - 0.3) * 3.6,
+    s: 2 + Math.round(hash01(k, 11) * 4),
     o: 0.35 + 0.5 * hash01(k, 13),
   };
 });
@@ -134,15 +147,15 @@ export function SeamFrame({
   const open = useTransform(p, (v) => `inset(${(8 * (1 - remap(v, 0, 0.15))).toFixed(2)}%)`);
   const outY = useTransform(p, (v) => `${(-40 * v * v).toFixed(3)}%`);
   const inY = useTransform(p, (v) => `${(40 * (1 - v) * (1 - v)).toFixed(3)}%`);
-  const cut = useTransform(p, (v) => cutAt(remap(v, 0.15, 0.75)));
+  const cut = useTransform(p, (v) => cutAt(remap(v, CUT.from, CUT.to)));
   const maskY = useTransform(cut, (c) => `0% ${(c * 100).toFixed(3)}%`);
   // belt and braces: once the wipe is complete the incoming is unmasked
-  const mask = useTransform(p, (v) => (remap(v, 0.15, 0.75) >= 1 ? "none" : EDGE_MASK));
+  const mask = useTransform(p, (v) => (remap(v, CUT.from, CUT.to) >= 1 ? "none" : EDGE_MASK));
   const lineY = useTransform(cut, (c) => `${((-2 * c) / 3) * 100}%`);
-  const lineOn = useTransform(p, (v) => (v > 0.1 && v < 0.9 ? 1 : 0));
-  const dustOn = useTransform(p, (v) => Math.min(remap(v, 0.12, 0.2), 1 - remap(v, 0.7, 0.8)));
-  const grey = useTransform(p, (v) => 0.85 * remap(v, 0.15, 0.75));
-  const fig = useTransform(p, (v) => remap(v, 0.2, 0.75));
+  const lineOn = useTransform(p, (v) => (v > 0.1 && v < CUT.to ? 1 : 0));
+  const dustOn = useTransform(p, (v) => Math.min(remap(v, 0.1, 0.18), 1 - remap(v, CUT.to - 0.08, CUT.to)));
+  const grey = useTransform(p, (v) => 0.85 * remap(v, CUT.from, CUT.to));
+  const fig = useTransform(p, (v) => remap(v, 0.3, 0.8));
 
   const { circle, spin, one } = useRanchoCircle(p, live, reduced);
 
@@ -203,7 +216,8 @@ export function SeamFrame({
         </motion.div>
       </motion.div>
 
-      {/* the 3 px aqua seam line and the chalk dust, riding the cut */}
+      {/* the aqua seam line (a soft glow round a 1.5 px core), a chalk-dust
+          haze and the chalk specks, riding the cut — never a razor edge */}
       {live ? (
         <motion.div
           className="pointer-events-none absolute inset-x-0 top-0 h-[300%]"
@@ -213,11 +227,29 @@ export function SeamFrame({
             viewBox="0 0 100 300"
             preserveAspectRatio="none"
             focusable="false"
+            className="absolute inset-0 size-full blur-[5px]"
+            fill="none"
+            style={{ opacity: lineOn }}
+          >
+            <path
+              d={EDGE_LINE}
+              transform="translate(0 1.2)"
+              stroke="var(--w-chalk)"
+              strokeOpacity={0.24}
+              strokeWidth={20}
+              vectorEffect="non-scaling-stroke"
+            />
+            <path d={EDGE_LINE} stroke="var(--accent)" strokeOpacity={0.4} strokeWidth={6} vectorEffect="non-scaling-stroke" />
+          </motion.svg>
+          <motion.svg
+            viewBox="0 0 100 300"
+            preserveAspectRatio="none"
+            focusable="false"
             className="absolute inset-0 size-full"
             fill="none"
             style={{ opacity: lineOn }}
           >
-            <path d={EDGE_LINE} stroke="var(--accent)" strokeWidth={3} vectorEffect="non-scaling-stroke" />
+            <path d={EDGE_LINE} stroke="var(--accent)" strokeOpacity={0.85} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
           </motion.svg>
           <motion.div className="absolute inset-0" style={{ opacity: dustOn }}>
             {DUST.map((d, k) => (

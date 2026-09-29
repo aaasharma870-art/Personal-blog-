@@ -8,7 +8,7 @@ import { LINE, LINE_FIG, LINE_VIEWBOX } from "@/components/primitives/loaders/li
 import { anchor, anchorRect, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
 
 /**
- * FIG. 0 CHALKED ON THE ICE BOARD (Card I→II, both variants; RECOGNIZABILITY
+ * FIG. 0 CHALKED ON THE ICE BOARD (Card I→II, the DEFAULT; RECOGNIZABILITY
  * S07: "FIG. 0, the Line, is drawn in chalk on the board region, measured
  * from the plate, with the chalk gear gauge at its left end; Rancho's chalk
  * circle closes the end tick; the FIG labels stay HTML Meta").
@@ -29,6 +29,7 @@ import { anchor, anchorRect, plateViewBox, type Plate } from "@/components/secti
  */
 
 type Q = { tl: [number, number]; tr: [number, number]; bl: [number, number]; br: [number, number] };
+export type BoardQuad = Q;
 
 /** The slate quad in plate PIXELS, or null when the plate has no board. */
 export function boardQuad(p: Plate): Q | null {
@@ -47,7 +48,7 @@ export function boardQuad(p: Plate): Q | null {
 }
 
 /** Bilinear map of board-local (u, v) ∈ [0, 1]² onto the quad. */
-function onBoard(q: Q, u: number, v: number): [number, number] {
+export function onBoard(q: Q, u: number, v: number): [number, number] {
   const top = [q.tl[0] + (q.tr[0] - q.tl[0]) * u, q.tl[1] + (q.tr[1] - q.tl[1]) * u];
   const bot = [q.bl[0] + (q.br[0] - q.bl[0]) * u, q.bl[1] + (q.br[1] - q.bl[1]) * u];
   return [top[0] + (bot[0] - top[0]) * v, top[1] + (bot[1] - top[1]) * v];

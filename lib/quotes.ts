@@ -138,7 +138,7 @@ export const quotes = {
     verified: "COMMUNITY",
     status: "proposed",
     host: "optuna-screener",
-    guard: "Under the Optuna pipeline FIG.",
+    guard: "Chalked on the optuna-screener head board (machine-board.tsx), under the lettered question \"What is a machine?\", before the chapter's facts; never beside a metric (M2 finish; was under the pipeline FIG).",
   },
   "Q-RD-1": {
     text: "Be loyal to what matters.",

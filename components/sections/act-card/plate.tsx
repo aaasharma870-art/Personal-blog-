@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
  *
  * A card frame is 3:2 below 640 px and 2.39:1 from 640 (CardShell). A plate
  * shown `object-fit: cover` in it is cropped; everything a card draws ON a
- * plate (the Jolly Roger at the Pearl's stern, chalk FIG. 0 on the ICE
- * board, the Dead Eye marks) must land on the same pixels at both shapes.
+ * plate (chalk FIG. 0 on the ICE board, the Dead Eye marks, the camp's
+ * fire the embers rise from) must land on the same pixels at both shapes.
  * So instead of letting the <img> crop itself, <PlateBox> positions the
  * plate's WHOLE box (its own aspect, so cover = no crop) inside the frame
  * for both shapes (CSS vars, no JS), and the frame's overflow crops it.

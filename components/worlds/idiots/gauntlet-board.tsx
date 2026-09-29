@@ -25,7 +25,9 @@ import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "
        SYNTHETIC • ILLUSTRATIVE inside the same <figure>,
      - the quadcopter doodle (IC-3I-08), which lifts only on a Run that
        cleared every gate,
-     - the caption THE ICE CHALKBOARD • 3 IDIOTS at the board's lower left.
+     - the caption THE ICE CHALKBOARD • 3 IDIOTS UNDER the board (M2 finish:
+       no scrim over the board, its frame or the ledge; the board's black is
+       lifted to slate green and carries a half-erased ghost of chalk).
    Two choreographies (lib/variants.ts `work.board`):
      default "rail-run"      the board settles in two soft pats (aalIzzWell);
                              dots run a chalk rail through gate frames and
@@ -87,6 +89,18 @@ export function useGauntletRun(gates: number) {
 
   return { state, start };
 }
+
+/* — the board dressing (M2 finish, BLIND-1 D25) ————————————————————— */
+/** The board interior on MV-06 (both crops): left of the beam (fades 60 → 80 %
+ *  of the frame's width) and above the chalk ledge (fades 86 → 93 %). */
+const BOARD_MASK =
+  "linear-gradient(to right, #000 0 60%, transparent 80%), linear-gradient(to bottom, #000 0 86%, transparent 93%)";
+/** Half-erased chalk: two eraser swipes and a smudge, ≤ 7 % chalk. */
+const BOARD_GHOST = [
+  "radial-gradient(ellipse 24% 4.5% at 26% 85%, rgb(242 239 230 / 0.07), transparent 72%)",
+  "radial-gradient(ellipse 14% 3.5% at 47% 88%, rgb(242 239 230 / 0.05), transparent 72%)",
+  "radial-gradient(ellipse 11% 13% at 67% 66%, rgb(242 239 230 / 0.05), transparent 70%)",
+].join(", ");
 
 /* — geometry (viewBox units) ———————————————————————————————————————— */
 const VB = { w: 600, h: 190 };
@@ -358,7 +372,7 @@ export function GauntletBoard({
   variant: Variant;
   /** The board header: the lettered Q-3I-2 (server-rendered FilmQuote). */
   header?: ReactNode;
-  /** The scene caption (server-rendered SceneCaption, place "bl"). */
+  /** The scene caption (server-rendered SceneCaption, place "under"). */
   caption?: ReactNode;
   /** id of the SYNTHETIC • ILLUSTRATIVE label (the Run's description). */
   labelId: string;
@@ -376,16 +390,37 @@ export function GauntletBoard({
 
   return (
     <figure className={cn("scene-caption-host", className)} data-board={plate} data-choreo={choreo}>
-      {/* ≥ 640 the frame clips the caption's scrim to the board's corner;
-          below, the caption sits in flow under the plate */}
+      {/* the caption sits UNDER the board (M2 finish, BLIND-1 D25): no scrim
+          darkens the board, its wooden frame or the chalk ledge */}
       <SettleFrame entrance={alt ? "wipe" : "settle"} className="relative sm:overflow-hidden sm:rounded-frame">
         {/* the plate: 1:1 below 640 (the board's dark left side stays in
             frame), 16:9 above */}
         <div className="relative aspect-square overflow-hidden rounded-frame sm:aspect-video sm:rounded-none">
           <MediaFrame media={plate} layout="fill" sizes="(min-width: 64rem) 60vw, 100vw" />
+          {/* the board reads as the ICE chalkboard at a glance (D25): its
+              near-black interior (mean rgb 12/22/18) is lifted to slate green
+              by a screen blend, masked to the board left of the beam and
+              above the chalk ledge (worst board pixel after the lift: L .042,
+              so --fg-muted stays ≥ 4.99:1 and chalk ≥ 9:1) … */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 mix-blend-screen"
+            style={{
+              backgroundColor: "rgb(14 38 29)",
+              WebkitMaskImage: BOARD_MASK,
+              maskImage: BOARD_MASK,
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect",
+            }}
+          />
+          {/* … with the ghost of yesterday's lesson half-erased on it (kept
+              off the label zones: under the tally and in the open right) */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ backgroundImage: BOARD_GHOST }} />
 
         {/* the chalk layer over the board's even, dark left side */}
-        <div className="absolute left-[4%] top-[4%] flex h-[90%] w-[66%] flex-col sm:left-[3.5%] sm:top-[5%] sm:h-[73%] sm:w-[55%]">
+        {/* (< 640 it ends at 86 %: the labels stay on the board, above the
+            bright chalk ledge, so they keep their contrast) */}
+        <div className="absolute left-[4%] top-[4%] flex h-[82%] w-[66%] flex-col sm:left-[3.5%] sm:top-[5%] sm:h-[73%] sm:w-[55%]">
           {header ? <div className="shrink-0">{header}</div> : null}
           <div className="relative mt-[3%] flex min-h-0 flex-1 items-center">
             <div className="relative w-full">
@@ -425,23 +460,24 @@ export function GauntletBoard({
               </ChalkLoop>
             </p>
             <p id={labelId} className="mt-2 type-meta text-fg-muted">
-              Synthetic<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+              Synthetic<span aria-hidden="true" className="text-fg-muted">{" • "}</span>
               <span className="sr-only">, </span>illustrative
             </p>
           </div>
         </div>
 
-        {/* IC-3I-08: the quadcopter doodle, the board's lower right */}
+        {/* IC-3I-08: the quadcopter doodle on the open board, right of the
+            chalk (M2 finish: ≥ 14 % of the board's width, D25); unlabelled,
+            it lifts 8 px only on a Run that clears every gate */}
         {quadcopter ? (
           <ChalkQuadcopter
             liftKey={lifted}
-            className="pointer-events-none absolute left-[71%] top-[60%] w-[17%] sm:left-[59%] sm:top-[58%] sm:w-[9%]"
+            className="pointer-events-none absolute left-[73%] top-[57%] w-[22%] sm:left-[60%] sm:top-[19%] sm:w-[14.5%]"
           />
         ) : null}
         </div>
-
-        {caption}
       </SettleFrame>
+      {caption}
     </figure>
   );
 }

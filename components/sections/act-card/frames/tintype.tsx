@@ -26,27 +26,34 @@ import {
  * rdr2-act.BAR §A, RECOGNIZABILITY S13 / T7). RDR2's own signature is a
  * loading screen, so its card is one — "develop, don't load" (RD-P4).
  * Driven by the card's passage p (no pin); scrolling back reverses it.
- *   0–.3    the Intermission's warm point sinks and becomes a LOW SUN (a
+ * (p = .5 is the card's top at mid-viewport — the transition's MIDDLE,
+ * where both worlds must show: M2 ART-DIRECTOR #6 / BLIND-1 "act-3-enter".)
+ *   0–.22   the Intermission's warm point sinks and becomes a LOW SUN (a
  *           --w-dusk sprite: media, never DOM glow) that comes to rest ON
  *           THE PLATE'S OWN SUN (the plate's `sun` anchor); the Line is
  *           re-traced as a graphite trail across 6 hachure arcs,
- *           pathLength = remap(p, 0, .3).
- *   .3–.8   the frame darkens into a tintype plate (R-2: 6 px radius,
+ *           pathLength = remap(p, 0, .25).
+ *   .15–.7  the frame darkens into a tintype plate (R-2: 6 px radius,
  *           grayscale + .45 sepia, an inset darkening vignette) that
  *           DEVELOPS into the frontier: MV-10, the Heartlands at golden
  *           hour — a riderless horse, the river, the ridges under the low
  *           sun — through our own procedural ink-bleed mask whose threshold
- *           = remap(p, .3, .8) (never Lee Martin's sprite sheet). The sun
- *           sprite hands over to the photograph's sun as it develops.
- *   .8–.95  the plate is FIXED: the sepia lifts into golden-hour colour
+ *           = remap(p, .15, .7) (never Lee Martin's sprite sheet): at the
+ *           middle (p .5) two-thirds of the frontier is up, sepia just
+ *           warming to gold, the sinking sun still over it. The sun sprite
+ *           hands over to the photograph's sun as it develops (.4–.65); the
+ *           hachure arcs (pencil scaffolding) fade as the photograph takes
+ *           their place.
+ *   .38–.8  the plate FIXES: the sepia lifts into golden-hour colour
  *           (opacity only: the sepia print lies over the colour print), and
- *           the --w-bone plate border draws (.8–1).
+ *           the --w-bone plate border draws (.7–.95).
  * The settled / static card IS the Heartlands in colour — blind, a
  * stranger reads "RDR2's Heartlands" — and the Beyond band below is the
  * same plate (a declared reuse: T8, 0 cut).
  * The progress element is the lower bar's pencil line: no "loading", no %,
  * no status. Static card (RM, Pause, no JS, < 640, SSR): the developed
- * colour plate, the trail drawn, the border drawn. aria-hidden art.
+ * colour plate, the trail drawn, the border drawn (no hachures).
+ * aria-hidden art.
  *
  * MV-10 missing (`plate` null): the plate that develops is its MEDIA-PLAN
  * code alternative, a golden-hour frontier drawn in SVG gradients (sky haze
@@ -72,6 +79,9 @@ const HACHURES = Array.from({ length: 6 }, (_, k) => {
   const q = fitPoint(LINE.at((k + 0.55) / 6.3), TRAIL_BOX);
   return `M${(q.x - 26).toFixed(1)} ${(q.y + 20).toFixed(1)}q26 -15 52 0`;
 }).join("");
+/** The develop window (p): it starts as the sun reaches the horizon and is
+ *  two-thirds done at the transition's middle (p = .5). */
+const DEVELOP = { from: 0.15, to: 0.7 };
 /** The low sun with no plate (the code frontier): from above the horizon
  *  (the warm point) down to it, in frame fractions. */
 export const SUN = { x: 0.78, from: 0.12, to: 0.36, size: 0.075 };
@@ -111,16 +121,18 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
   const sun = sunInFrame(plate);
   const sunFrom = Math.max(-0.08, sun[1] - 0.24);
 
-  const trail = useTransform(p, (v) => remap(v, 0, 0.3));
-  const develop = useTransform(p, (v) => remap(v, 0.3, 0.8));
-  const border = useTransform(p, (v) => remap(v, 0.8, 1));
+  const trail = useTransform(p, (v) => remap(v, 0, 0.25));
+  const develop = useTransform(p, (v) => remap(v, DEVELOP.from, DEVELOP.to));
+  const border = useTransform(p, (v) => remap(v, 0.7, 0.95));
   // the sun sinks by transform (the wrapper is frame-sized, so % = frame)
-  const sunY = useTransform(p, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, 0.3)) * 100).toFixed(3)}%`);
+  const sunY = useTransform(p, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, 0.22)) * 100).toFixed(3)}%`);
   // …and hands over to the photograph's own sun as the plate develops
-  const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.55, 0.8) : 1));
+  const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.4, 0.65) : 1));
   const coverOpacity = useTransform(develop, (d) => (d >= 1 ? 0 : 1));
   // fixed: the sepia print lifts off the colour print
-  const sepia = useTransform(p, (v) => 1 - remap(v, 0.8, 0.95));
+  const sepia = useTransform(p, (v) => 1 - remap(v, 0.38, 0.8));
+  // the pencil scaffolding gives way to the photograph
+  const hachures = useTransform(p, (v) => 0.6 * (1 - remap(v, 0.35, 0.65)));
 
   return (
     <div aria-hidden="true" data-frame="tintype" className="absolute inset-0">
@@ -203,9 +215,15 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
         fill="none"
         strokeLinecap="round"
       >
-        <path d={HACHURES} stroke="var(--w-pencil)" strokeWidth={1} vectorEffect="non-scaling-stroke" opacity={0.6} />
         {live ? (
           <>
+            <motion.path
+              d={HACHURES}
+              stroke="var(--w-pencil)"
+              strokeWidth={1}
+              vectorEffect="non-scaling-stroke"
+              style={{ opacity: hachures }}
+            />
             <DrawPath d={TRAIL} progress={trail} stroke="var(--w-pencil)" strokeWidth={1.3} />
             <DrawPath d={BORDER_D} progress={border} stroke="var(--w-bone)" strokeWidth={0.9} />
           </>
