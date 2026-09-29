@@ -423,3 +423,14 @@ The build did keep the standing hard limits as rules of work:
 - the research-honesty guardrails: `experiment` has no film styling, and captions never sit beside a metric
 
 Keeping those rules is not an audit. Whether the result is acceptable is your call.
+
+## Post-M5 skills pass (2026-09-29, cloud session)
+- **Contact sheet (shareable):** https://claude.ai/artifact/332EBvDgmWczQpspZvBU7d — every final frame with its blind verdict, filterable by world / verdict / variant. Private to Aryan until shared from the page's Share menu. The same frames are committed in `docs/build/final-frames/`.
+- **code-review:** one finding (hero ALT "spyglass" overhanging its box on phones during the bracket opening) — fixed in `bc1072b`. Notes: `docs/build/m2-review/CODE-REVIEW.md`.
+- **security-review:** no findings (no new HTML/script sinks, no secrets, no PII, tooling local-only). Notes: `docs/build/m2-review/SECURITY-REVIEW.md`.
+- **simplify:** 22 behaviour-preserving cleanups in `36d6dab` (shared `spanUnit` scroll maps, one `hash01` / `smooth01` / mask-style helper, `CampLayer`, dead code removed: CardShell `featherUp`, the work-head stand-in path, `PenCase`, the unreachable RDR2/Pirates finale branches, dead `mini` / `wrapperClassName` / `blobs` params; a `--loader-stage` token; fewer re-renders in the journal loader, seam-chalk and header). **Pixel-verified:** 250 frames re-captured and diffed against a pre-cleanup baseline — 205 identical, every reduced-motion frame 0.000%, the 8 frames > 0.5% were ALT scroll-timing noise that differs between two captures of the same build; SSR HTML and layout boxes identical apart from one mask-declaration order and one generated filter id.
+- **Deliberately left as follow-ups:** move the header's settle-time re-probe into the shared active-section store; dedupe the hall-ceiling candle symbol / star tile in SSR HTML (~25–80 KB raw); `will-change` on the seam glow; act-card letterbox CSS tokens; plate-band `coverRect` via the act-card cover helpers; one shared "two soft pats" entrance helper.
+- **Unused generated media:** the `iconic-corridor` pair (ICE corridor, 14 credits) is registered and deployed but not rendered — the fix round swapped the work head to Virus's astronaut pen because the corridor read as generic architecture (0.40 blind). Keep it for a future scene or delete the two entries and files.
+
+## Heads-up: `main`
+`origin/main` already contains merges of this branch (PRs #2–#4) and of `wip/m2-snapshot` (PR #5). PR #5 carried two mid-edit backup snapshots, so `npm run check` fails on `main` today (a quote not rendered through `FilmQuote` in `contact-scene.tsx`). Merging the current `design/three-films` (which is green) into `main` fixes it. The `wip/m2-snapshot` branch was only ever a backup — please don't merge `wip/*` branches. This build never pushed to `main`.
