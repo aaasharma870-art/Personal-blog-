@@ -52,6 +52,11 @@ type ActCardProps = {
   label?: string;
   /** Upper-bar reel mark, e.g. "II / III". */
   reel?: string;
+  /** The FILM title block (M2, RECOGNIZABILITY §4.3): a server-rendered
+   *  <FilmTitle world as="span"> the caller passes (this client shell never
+   *  imports the film data); set above the frame at --text-title. The derived
+   *  cards use components/sections/act-card (CardShell), which always has it. */
+  film?: ReactNode;
   /** Text equivalent of the frame (sr-only; visible in the static card). */
   summary?: string;
   /** Fixed progress 0–1; omit to follow the card's scroll passage. */
@@ -72,6 +77,7 @@ export function ActCard({
   subtitle,
   label,
   reel,
+  film,
   summary,
   progress,
   children,
@@ -112,10 +118,17 @@ export function ActCard({
       )}
     >
       <WorldProvider world={world} tone="deep">
-        {/* upper bar: Meta only */}
-        <div className="flex items-end justify-between gap-tier-group sm:px-gutter sm:pb-4">
-          {label ? <p className="type-meta text-fg-muted">{label}</p> : <span />}
-          {reel ? <p className="type-meta text-fg-muted">{reel}</p> : null}
+        {/* upper bar: Meta, then the film title right above the frame */}
+        <div className="flex flex-col justify-end gap-2 sm:px-gutter sm:pb-4">
+          <div className="flex items-end justify-between gap-tier-group">
+            {label ? <p className="type-meta text-fg-muted">{label}</p> : <span />}
+            {reel ? <p className="type-meta text-fg-muted">{reel}</p> : null}
+          </div>
+          {film ? (
+            <p className="card-film text-[length:var(--text-title)] leading-[1.02] tracking-[0.03em] text-balance text-fg">
+              {film}
+            </p>
+          ) : null}
         </div>
 
         {/* frame */}

@@ -8,15 +8,21 @@ import dynamic from "next/dynamic";
  * server hands CardShell an `altFrame` element built from these wrappers,
  * but a chunk is fetched only when its frame actually renders — the page
  * that plays the defaults never downloads an alternate.
- *   opening  "chart-unfold"     a folded chart opens; a dotted trail climbs
- *                                to an X on Act I            (frames/opening-map)
- *   seam     "duster-erase"     a chalk duster wipes the storm off the board
- *                                stroke by stroke             (frames/seam-chalk)
- *   tintype  "dead-eye"         the plate takes the Dead Eye grade, marks lock
- *                                onto the four act points, then resolve at
- *                                once                         (frames/tintype-deadeye)
+ *   opening  "chart-unfold"     the Pearl ALT plate (iconic-pearl-alt) with
+ *                                its Jolly Roger; below it a folded chart
+ *                                opens and a dotted trail climbs to an X on
+ *                                Act I  (frames/opening-plate + opening-map)
+ *   seam     "duster-erase"     a chalk duster wipes the storm (MV-04-alt)
+ *                                off the ICE board (iconic-ice-alt) stroke by
+ *                                stroke; FIG. 0 chalked on it (frames/seam-chalk)
+ *   tintype  "dead-eye"         the frozen frontier (iconic-deadeye) takes
+ *                                the Dead Eye grade, ember X marks lock onto
+ *                                the four act points and STAY (frames/tintype-deadeye)
  *   ignite   "lumos-sweep"      one wand-tip light sweeps the hall and lights
- *                                the candles in its wake      (frames/ignite-lumos)
+ *                                the candles in its wake, then the Great Hall
+ *                                (iconic-hall-alt)            (frames/ignite-lumos)
+ * The opening's Pearl frame (frames/opening-plate) is shared by both sides
+ * (a static import: it is the card's first paint).
  * SSR renders them when the MANIFEST picks an alt (next/dynamic keeps SSR);
  * a ?variant=… preview mounts one after hydration.
  */

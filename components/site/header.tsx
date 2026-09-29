@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { useReducedMotion } from "@/lib/flags";
@@ -25,6 +26,7 @@ import { MotionToggle } from "@/components/primitives/motion-toggle";
 import { useMotionPreference } from "@/components/providers/motion-provider";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
 import { useActiveSection } from "@/components/site/use-active-section";
+import { recordVisit } from "@/components/eggs/egg-bus";
 
 /* ============================================================================
    HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
@@ -35,6 +37,16 @@ import { useActiveSection } from "@/components/site/use-active-section";
    ground that follows the active act's world (its deep plane) once the page
    has scrolled. The menu is grouped by act, with the work credits in the
    group headers (derived: lib/sections.ts navGroups).
+   M2 (loaders-eggs-chrome; RECOGNIZABILITY §4.4): the label names the FILM
+   across all four acts — "ACT I · PIRATES OF THE CARIBBEAN" … "ACT IV ·
+   HARRY POTTER", "INTERMISSION" on the films chapter, "CREDITS" on the roll
+   (lib/derive.ts headerLabelOf) — and crossfades when it changes (static
+   under reduced motion / Pause); the ground follows the act's world (house
+   is transparent: the intermission and credits wear house deep). The menu
+   groups read "Act II — 3 Idiots · The Workshop". Still NO compass in the
+   chrome (SPEC §9.5, DESIGN §11.5, ICONS IC-PC-02 "never in chrome").
+   Route-aware: off the home page (the 404) every link is /#id. The active
+   section is also the Map egg's footprint trail (sessionStorage: E6).
    ========================================================================== */
 
 /** true after hydration (server + hydration render = false). */
@@ -55,10 +67,10 @@ function worldForId(id: string): WorldId {
 }
 
 /** The [AS] logo: the bracket's chrome use (DESIGN §5.1 ⑤, not counted). */
-function Logo() {
+function Logo({ base }: { base: string }) {
   return (
     <a
-      href={topHref}
+      href={`${base}${topHref}`}
       aria-label={`${site.name} — back to the top`}
       className="group inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-control px-1"
     >
@@ -104,6 +116,9 @@ const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
 export function Header() {
   const active = useActiveSection();
   const reduce = useReducedMotion();
+  const pathname = usePathname();
+  // the page's anchors live on the home page: off it, prefix "/" (the 404)
+  const base = pathname === "/" || pathname === null ? "" : "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [cardsPresent, setCardsPresent] = useState<ReadonlySet<string>>(new Set());
@@ -113,6 +128,11 @@ export function Header() {
   const label = active === "credits" && !sectionById("credits") ? "CREDITS" : headerLabel(active);
   const world = worldForId(active);
   const workHref = hrefOfType("gauntlet");
+
+  // the visitor's own trail, for the Marauder's Map egg (never shown at rest)
+  useEffect(() => {
+    if (active && sectionById(active)) recordVisit(active);
+  }, [active]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -179,16 +199,27 @@ export function Header() {
     >
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
         <div className="flex min-w-0 items-center gap-4">
-          <Logo />
+          <Logo base={base} />
           <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
-            {label}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={label}
+                className="block truncate"
+                initial={reduce ? { opacity: 1 } : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? { opacity: 1 } : { opacity: 0, y: -4 }}
+                transition={{ duration: reduce ? 0 : dur.micro, ease }}
+              >
+                {label}
+              </motion.span>
+            </AnimatePresence>
           </p>
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2">
           {workHref ? (
             <a
-              href={workHref}
+              href={`${base}${workHref}`}
               aria-current={active === workHref.slice(1) ? "location" : undefined}
               className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
             >
@@ -248,7 +279,7 @@ export function Header() {
                       <p className="type-meta text-fg-muted">
                         {cardLink ? (
                           <a
-                            href={cardLink}
+                            href={`${base}${cardLink}`}
                             onClick={() => closeMenu(false)}
                             className="inline-flex min-h-11 items-center transition-colors hover:text-fg"
                           >
@@ -271,7 +302,7 @@ export function Header() {
                             return (
                               <li key={n.id}>
                                 <a
-                                  href={n.href}
+                                  href={`${base}${n.href}`}
                                   data-menu-first={n.id === FIRST_LINK_ID ? "" : undefined}
                                   onClick={() => closeMenu(false)}
                                   aria-current={active === n.id ? "location" : undefined}

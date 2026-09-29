@@ -2,13 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, CornerDownLeft, Hash, Mail, Pause, Play, Search } from "lucide-react";
+import { ArrowUpRight, CornerDownLeft, Hash, Mail, Pause, Play, Search, Sparkles } from "lucide-react";
+import { film } from "@/lib/film";
 import { useReducedMotion } from "@/lib/flags";
 import {
   actCards,
+  copyVisible,
   navGroups,
   paletteCommands,
+  sectionById,
   type PaletteAction,
   type PaletteIcon,
 } from "@/lib/sections";
@@ -17,6 +21,9 @@ import { dur, ease } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { GithubMark } from "@/components/ui/icons";
 import { useMotionPreference } from "@/components/providers/motion-provider";
+import { EggHost } from "@/components/eggs/egg-host";
+import { eggCopy, type EggCopyKey } from "@/components/eggs/egg-copy";
+import { eggEnabled, eggsSessionOff, triggerEgg, type EggId } from "@/components/eggs/egg-bus";
 
 /* ============================================================================
    COMMAND PALETTE (SPEC v2 §9.5, DESIGN v3 §9 chrome). ⌘K / Ctrl+K, or the
@@ -26,7 +33,15 @@ import { useMotionPreference } from "@/components/providers/motion-provider";
    then "Skip to Act …" jumps (only for act cards on the page), the Pause
    control (aliases: Nox / Lumos — the label stays literal, SPEC §9.4), and
    the links. Plane-aware tokens only (house canvas); the one accent is the
-   active option's mark. M2 adds the egg commands and "Turn off easter eggs".
+   active option's mark.
+   M2 (loaders-eggs-chrome): the EGG commands (SPEC §9.5, §10.3) in their own
+   group — the Marauder's Map, Obliviate, Parley, Aal izz well, Dead Eye
+   (fine pointer ≥ 64 rem only), "Watch the intro again" (when the prologue
+   can re-arm) and "Turn off / on easter eggs" (session); "Accio <room>"
+   finds the room (every token of the query must match: "accio work"); the
+   EggHost (components/eggs/egg-host.tsx: typed words, toasts, lazy egg
+   chunks) mounts here, so it lives wherever the chrome does. Jumps are
+   route-aware: off the home page (the 404) a room is /#id.
    ========================================================================== */
 
 type Cmd = {
@@ -70,9 +85,20 @@ export const OPEN_PALETTE_EVENT = "open-command-palette";
 const groupTitle = (g: (typeof navGroups)[number]) => (g.credit ? `${g.label} — ${g.credit}` : g.label);
 
 /** Snapshot of what the page holds, taken when the palette opens: which act
- *  cards exist, and which section each sub-anchor (e.g. #kill-list) lives in. */
-type PageSnapshot = { cards: ReadonlySet<string>; hostOf: ReadonlyMap<string, string> };
-const EMPTY: PageSnapshot = { cards: new Set(), hostOf: new Map() };
+ *  cards exist, which section each sub-anchor (e.g. #kill-list) lives in,
+ *  and what the eggs may offer right now. */
+type PageSnapshot = {
+  cards: ReadonlySet<string>;
+  hostOf: ReadonlyMap<string, string>;
+  /** Dead Eye: a fine pointer on a ≥ 64 rem viewport, and #kill-list here. */
+  deadEye: boolean;
+  /** The prologue can re-arm (window.__intro, motion allowed). */
+  intro: boolean;
+  eggsOff: boolean;
+};
+const EMPTY: PageSnapshot = { cards: new Set(), hostOf: new Map(), deadEye: false, intro: false, eggsOff: false };
+
+type IntroApi = { replay?: () => boolean };
 
 function snapshotPage(): PageSnapshot {
   const cards = new Set(actCards.map((c) => c.id).filter((id) => document.getElementById(id)));
@@ -82,12 +108,34 @@ function snapshotPage(): PageSnapshot {
     const host = document.getElementById(c.action.target)?.closest("[data-section]")?.getAttribute("data-section");
     if (host) hostOf.set(c.action.target, host);
   }
-  return { cards, hostOf };
+  const intro = (window as Window & { __intro?: IntroApi }).__intro;
+  return {
+    cards,
+    hostOf,
+    deadEye:
+      Boolean(document.getElementById("kill-list")) && window.matchMedia("(pointer: fine) and (min-width: 64rem)").matches,
+    intro: typeof intro?.replay === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    eggsOff: eggsSessionOff(),
+  };
+}
+
+/** An egg command's label, or null when its copy may not render here. */
+const eggText = (k: EggCopyKey): string | null => (copyVisible(eggCopy[k]) ? eggCopy[k].text : null);
+
+/** Every whitespace token of the query appears in the haystack ("accio work"). */
+function matches(hay: string, q: string): boolean {
+  const h = hay.toLowerCase();
+  return q
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((t) => h.includes(t));
 }
 
 export function CommandPalette() {
   const reduce = useReducedMotion();
   const { paused, setPaused } = useMotionPreference();
+  const pathname = usePathname();
+  const onHome = pathname === "/" || pathname === null;
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -95,14 +143,19 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const go = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el)
-      el.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-  }, []);
+  const go = useCallback(
+    (id: string) => {
+      const el = document.getElementById(id);
+      if (el)
+        el.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start",
+        });
+      // off the home page (the 404): the room lives on the home page
+      else if (!onHome && sectionById(id)) window.location.assign(`/#${id}`);
+    },
+    [onHome],
+  );
 
   const commands = useMemo<Cmd[]>(() => {
     const out: Cmd[] = [];
@@ -122,7 +175,8 @@ export function CommandPalette() {
           id: c.id,
           label: c.label,
           group: groupTitle(g),
-          keywords: c.keywords,
+          // "Accio <room>" (SPEC §10.3): the spell finds any room
+          keywords: `${c.keywords} accio`,
           icon: ICONS[c.icon],
           run: () => performAction(c.action, go),
         });
@@ -157,7 +211,39 @@ export function CommandPalette() {
       ),
       run: () => setPaused(!paused),
     });
-    // 4. links
+    // 4. the easter eggs (SPEC §10.3; labels stay literal, spells are
+    //    search aliases; nothing here is needed to read the page)
+    if (film.enabled && film.eggs.enabled) {
+      const group = eggText("group.eggs") ?? "Easter eggs";
+      const sparkle = <Sparkles className="size-4" strokeWidth={1.5} aria-hidden="true" />;
+      const egg = (id: string, k: EggCopyKey, keywords: string, run: () => void, on = true) => {
+        const label = eggText(k);
+        if (!label || !on) return;
+        out.push({ id: `egg-${id}`, label, group, keywords, icon: sparkle, run });
+      };
+      const fire = (id: EggId) => () => triggerEgg(id);
+      egg("map", "cmd.map", eggText("cmd.map.keywords") ?? "", fire("marauders-map"), eggEnabled("marauders-map"));
+      egg("obliviate", "cmd.obliviate", "obliviate forget reset clear visit memory", fire("accio-obliviate"), eggEnabled("accio-obliviate"));
+      egg("parley", "cmd.parley", "parley contact talk truce", fire("parley"), eggEnabled("parley") && Boolean(sectionById("contact")));
+      egg("aal", "cmd.aal", "aal all izz is well 3 idiots rancho calm", fire("aal-izz-well"), eggEnabled("aal-izz-well"));
+      egg("deadeye", "cmd.deadeye", "dead eye deadeye red dead kill-list killed mark", fire("dead-eye"), eggEnabled("dead-eye") && page.deadEye);
+      egg(
+        "intro",
+        "cmd.intro",
+        "intro prologue replay again hogwarts broom play",
+        () => {
+          (window as Window & { __intro?: IntroApi }).__intro?.replay?.();
+        },
+        page.intro,
+      );
+      egg(
+        page.eggsOff ? "eggs-on" : "eggs-off",
+        page.eggsOff ? "cmd.eggs.on" : "cmd.eggs.off",
+        "easter eggs off on disable enable quiet",
+        fire(page.eggsOff ? "eggs-on" : "eggs-off"),
+      );
+    }
+    // 5. links
     for (const c of paletteCommands) {
       if (c.action.kind === "scroll") continue;
       const action = c.action;
@@ -177,7 +263,7 @@ export function CommandPalette() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return commands;
-    return commands.filter((c) => `${c.label} ${c.keywords ?? ""} ${c.group}`.toLowerCase().includes(q));
+    return commands.filter((c) => matches(`${c.label} ${c.keywords ?? ""} ${c.group}`, q));
   }, [commands, query]);
 
   // open/close: ⌘K / Ctrl+K toggles; the custom event opens. Resets live
@@ -258,7 +344,9 @@ export function CommandPalette() {
   });
 
   return (
-    <AnimatePresence>
+    <>
+      <EggHost go={go} />
+      <AnimatePresence>
       {open ? (
         <motion.div
           {...planeAttrs("canvas", "house")}
@@ -301,7 +389,7 @@ export function CommandPalette() {
                 aria-controls="cmd-list"
                 aria-autocomplete="list"
                 aria-activedescendant={filtered[active] ? `cmd-${filtered[active].id}` : undefined}
-                placeholder="Jump to an act, a section, GitHub, email…"
+                placeholder="Jump to an act, a section, an easter egg, GitHub…"
                 className="min-h-14 w-full bg-transparent type-body text-fg placeholder:text-fg-muted focus:outline-none"
               />
               <kbd className="hidden shrink-0 type-meta text-fg-muted sm:block">Esc</kbd>
@@ -348,6 +436,7 @@ export function CommandPalette() {
           </motion.div>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   );
 }

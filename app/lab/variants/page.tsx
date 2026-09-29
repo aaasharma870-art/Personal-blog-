@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { film } from "@/lib/film";
-import { altOf, getMedia, mediaIds, resolveMedia, type MediaId } from "@/lib/media";
+import { altOf, getMedia, mediaIds, type MediaId } from "@/lib/media";
 import { actCards, copyText, copyVisible, enabledSections } from "@/lib/sections";
 import { hostOf, pieceSpec, VARIANT_REGISTRY, type Variant, type VariantKey, type VariantPiece } from "@/lib/variants";
 import { planeAttrs, worlds, type WorldId } from "@/lib/worlds";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { MotionToggle } from "@/components/primitives/motion-toggle";
-import { openingRows, usable } from "@/components/sections/act-card/act-card-section";
+import { fireBefore, openingRows, usable, variantMedia } from "@/components/sections/act-card/act-card-section";
 import {
   IgniteLumosFrame,
   OpeningMapFrame,
@@ -17,6 +17,7 @@ import {
 import { CardReveal } from "@/components/sections/act-card/card-reveal";
 import { IgniteFrame } from "@/components/sections/act-card/frames/ignite";
 import { OpeningFrame } from "@/components/sections/act-card/frames/opening";
+import { OpeningPlateFrame } from "@/components/sections/act-card/frames/opening-plate";
 import { SeamFrame } from "@/components/sections/act-card/frames/seam";
 import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
 import { MotionReadout } from "../demos";
@@ -119,34 +120,63 @@ function cardFrames(kind: (typeof CARD_KINDS)[number]): { world: WorldId; frames
           <CardReveal at={0.05}>{text}</CardReveal>
         </h4>
       );
+      // as ActCardSection: the Black Pearl plate (Jolly Roger at its stern)
+      // over the program
+      const pearl = spec.media.cardStill;
       return {
         world: "house",
         frames: {
-          default: <OpeningFrame heading={heading("default")} rows={rows} />,
-          alt: <OpeningMapFrame heading={heading("alt")} rows={rows} />,
+          default: (
+            <>
+              <OpeningPlateFrame plate={variantMedia(pearl, "default")} />
+              <OpeningFrame heading={heading("default")} rows={rows} />
+            </>
+          ),
+          alt: (
+            <>
+              <OpeningPlateFrame plate={variantMedia(pearl, "alt")} alt />
+              <OpeningMapFrame heading={heading("alt")} rows={rows} />
+            </>
+          ),
         },
       };
     }
     case "seam": {
+      // as ActCardSection: the storm wiped into the ICE lecture hall board
       const from = item.from ? film.worlds[item.from] : null;
-      const storm = usable(spec.media.reelStill) ?? usable(from?.media.plate) ?? usable(spec.media.cardStill);
-      if (!storm) return null;
-      const graded = resolveMedia(storm)?.id !== spec.media.reelStill;
+      const stormId = spec.media.reelStill ?? from?.media.plate;
+      const storm = variantMedia(stormId, "default");
+      const board = variantMedia(spec.media.cardStill, "default");
+      if (!storm && !board) return null;
       return {
         world: item.to,
         frames: {
-          default: <SeamFrame storm={storm} graded={graded} />,
-          alt: <SeamChalkFrame storm={storm} graded={graded} />,
+          default: <SeamFrame storm={storm} board={board} graded={false} />,
+          alt: (
+            <SeamChalkFrame
+              storm={variantMedia(stormId, "alt")}
+              board={variantMedia(spec.media.cardStill, "alt")}
+              graded={false}
+            />
+          ),
         },
       };
     }
     case "tintype": {
-      const plate = usable(spec.media.cardStill) ?? usable(spec.media.plate);
-      return { world: item.to, frames: { default: <TintypeFrame plate={plate} />, alt: <TintypeDeadEyeFrame plate={plate} /> } };
+      const plate = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
+      const deadeye = variantMedia(spec.media.cardAltStill, "default") ?? variantMedia(spec.media.cardStill, "alt");
+      return { world: item.to, frames: { default: <TintypeFrame plate={plate} />, alt: <TintypeDeadEyeFrame plate={deadeye} /> } };
     }
     case "ignite": {
-      const hall = usable(spec.media.cardStill) ?? usable(spec.media.plate);
-      return { world: item.to, frames: { default: <IgniteFrame hall={hall} />, alt: <IgniteLumosFrame hall={hall} /> } };
+      const hall = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
+      const mid = variantMedia(spec.media.cardMidStill, "default");
+      return {
+        world: item.to,
+        frames: {
+          default: <IgniteFrame hall={hall} mid={mid} fire={fireBefore(item)} />,
+          alt: <IgniteLumosFrame hall={variantMedia(spec.media.cardStill, "alt") ?? hall} />,
+        },
+      };
     }
   }
 }

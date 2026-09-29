@@ -415,6 +415,57 @@ const copy = {
   "credits.end": { text: "To be continued.", status: "proposed" },
   "pause.tooltip.pause": { text: "Nox — pause motion", status: "proposed" },
   "pause.tooltip.resume": { text: "Lumos — resume motion", status: "proposed" },
+  /* — M2 eggs (components/eggs/**; SPEC §9.6): "egg.<key>", read through
+       components/eggs/egg-copy.ts. Proposed until Aryan signs. — */
+  /* eggs: palette commands */
+  "egg.cmd.map": { text: "Open the Marauder's Map", status: "proposed" },
+  "egg.cmd.map.keywords": { text: "i solemnly swear marauders map footprints hogwarts harry potter rooms", status: "proposed" },
+  "egg.cmd.obliviate": { text: "Obliviate — forget this visit", status: "proposed" },
+  "egg.cmd.parley": { text: "Parley — go to Contact", status: "proposed" },
+  "egg.cmd.aal": { text: "Aal izz well", status: "proposed" },
+  "egg.cmd.deadeye": { text: "Dead Eye (kill-list)", status: "proposed" },
+  "egg.cmd.deadeye.stop": { text: "Stop Dead Eye", status: "proposed" },
+  "egg.cmd.intro": { text: "Watch the intro again", status: "proposed" },
+  "egg.cmd.eggs.off": { text: "Turn off easter eggs", status: "proposed" },
+  "egg.cmd.eggs.on": { text: "Turn on easter eggs", status: "proposed" },
+  "egg.group.eggs": { text: "Easter eggs", status: "proposed" },
+  /* eggs: the Map dialog + the 404 */
+  "egg.map.sub": { text: "Every room is a section of this page, in order. The footprints are yours.", status: "proposed" },
+  "egg.map.you": { text: "You", status: "proposed" },
+  "egg.map.close": { text: "close the map", status: "proposed" },
+  "egg.map.empty": { text: "No footprints yet: scroll a little, then look again.", status: "proposed" },
+  "egg.404.title": { text: "You've wandered off the map.", status: "proposed" },
+  "egg.404.sub": { text: "This page isn't on the Map. Every room that is, is below.", status: "proposed" },
+  "egg.404.home": { text: "back to the opening", status: "proposed" },
+  "egg.404.alt.tip": { text: "This trail goes nowhere. Head back to camp.", status: "proposed" },
+  "egg.404.alt.home": { text: "Back to camp", status: "proposed" },
+  /* eggs: toasts */
+  "egg.toast.obliviate": { text: "Obliviate: this visit is forgotten. The intro will play again from the top.", status: "proposed" },
+  "egg.toast.lumos": { text: "Lumos — motion resumed.", status: "proposed" },
+  "egg.toast.lumos.os": { text: "Lumos: your system asks for reduced motion, so the page stays still.", status: "proposed" },
+  "egg.toast.nox": { text: "Nox — motion paused.", status: "proposed" },
+  "egg.toast.eggs.off": { text: "Easter eggs are off for this visit.", status: "proposed" },
+  "egg.toast.eggs.on": { text: "Easter eggs are on.", status: "proposed" },
+  "egg.toast.deadeye.none": { text: "Dead Eye needs the kill-list in view: scroll to it, then call it again.", status: "proposed" },
+  /* eggs: credits */
+  "egg.credits.seeker.role": { text: "Seeker", status: "proposed" },
+  "egg.credits.seeker.name": { text: "you", status: "proposed" },
+  "egg.snitch.label": { text: "Catch the snitch", status: "proposed" },
+  "egg.snitch.caught": { text: "Snitch caught", status: "proposed" },
+  /* — M2 systems: the space-pen wink (IC-3I-06; our own phrasing, not a
+       quote) and its footnote. The footnote is Claude's summary of the
+       pen history: verify it before ship (SPEC). — */
+  "systems.pencil.q": { text: "Why not just use a pencil?", status: "proposed" },
+  "systems.pencil.body": {
+    text: "The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+    status: "proposed",
+  },
+  "systems.pencil.footnote": {
+    text: "The famous version of the pen story, where one side spends millions on a space pen while the other simply uses a pencil, is a myth. Pencil tips snap and graphite dust conducts, a hazard in orbit; the pressurised pen was developed privately, and both programmes ended up buying it.",
+    status: "proposed",
+  },
+  /* — M2 principles: the Marauder's Map banner over the reader's step — */
+  "principles.you": { text: "YOU", status: "proposed" },
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 

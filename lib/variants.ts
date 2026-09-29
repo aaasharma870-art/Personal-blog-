@@ -252,62 +252,226 @@ export const VARIANT_REGISTRY = {
 
   /* — World loaders (host "loader-<kind>"; components/primitives/loaders/**) — */
   "loader-course.motion": {
-    default: { name: "compass-course", note: "LD-PC: Jack's compass swings and settles on the bearing while the course line plots." },
+    default: { name: "compass-course", note: "LD-PC: Jack's compass (lid open on its star chart) swings and settles on the X while the Black Pearl heads a dashed brass course to it." },
     alt: {
       name: "ship-in-bottle",
-      note: "LD-PC alt: a ship in a bottle; the rigging line pulled out through the neck is the progress and the masts rise with it; the cork seats at completion (one glint).",
+      note: "LD-PC alt: the Black Pearl in a bottle (black hull, tattered black sails); the rigging line pulled out through the neck is the progress and the masts rise with it; the cork seats at completion (one glint).",
     },
-    files: ["components/primitives/loaders/course-loader.tsx", "components/primitives/loaders/compass.tsx", "components/primitives/loaders/course-bottle.tsx"],
+    files: ["components/primitives/loaders/course-loader.tsx", "components/primitives/loaders/compass.tsx", "components/primitives/loaders/course-bottle.tsx", "components/primitives/loaders/pearl.tsx", "components/primitives/loaders/route-caption.tsx"],
   },
   "loader-gauge.motion": {
-    default: { name: "honest-gauge", note: "LD-3I: an honest gauge whose needle reports the real progress (never a fake sweep)." },
+    default: { name: "honest-gauge", note: "LD-3I: an honest gauge chalked on a mini ICE chalkboard; its needle reports the real progress (never a fake sweep)." },
     alt: {
       name: "chalk-derivation",
       note: "LD-3I alt: a chalk derivation (f(x) = x² + 2x → f′(x) = 2x + 2 → x = −1) writes itself stroke by stroke, then sketches its curve; the answer is boxed at completion.",
     },
-    files: ["components/primitives/loaders/gauge.tsx", "components/primitives/loaders/gauge-chalk.tsx"],
+    files: ["components/primitives/loaders/gauge.tsx", "components/primitives/loaders/gauge-chalk.tsx", "components/primitives/loaders/chalkboard.tsx", "components/primitives/loaders/route-caption.tsx"],
   },
   "loader-plate-trail.motion": {
-    default: { name: "plate-trail", note: "LD-RD: a tintype plate develops while a graphite trail advances along the progress." },
-    alt: {
+    default: {
       name: "journal-sketch",
-      note: "LD-RD alt: a journal page; a pencil sketches the frontier (ridges, a pine, the trail, a campfire) stroke by stroke as the progress; one red-pencil underline at completion.",
+      note: "LD-RD: Arthur's journal (leather cover, strap, buckle); a pencil sketches the frontier (ridges, a pine, the trail, a campfire) stroke by stroke as the progress; one red-pencil underline at completion.",
     },
-    files: ["components/primitives/loaders/plate-trail.tsx", "components/primitives/loaders/plate-journal.tsx"],
+    alt: {
+      name: "dead-eye",
+      note: "LD-RD alt: the frontier in Dead Eye red-sepia silhouette (oak, fence, homestead, frozen birds); an ember X locks onto the trail at each quarter of the real progress, then one 120 ms bone flash. No reticle, no gun.",
+    },
+    files: ["components/primitives/loaders/plate-journal.tsx", "components/primitives/loaders/plate-deadeye.tsx", "components/primitives/loaders/route-caption.tsx"],
   },
   "loader-ink-light.motion": {
-    default: { name: "ink-light", note: "LD-HP: ink draws itself and a light brightens with the real progress." },
+    default: { name: "ink-light", note: "LD-HP: eight floating candles under a starry ceiling light one by one as the Lumos light passes with the real progress." },
     alt: {
       name: "footprints",
-      note: "LD-HP alt: Marauder's-Map footprints walk the Line with the progress, fading behind the walker, and stop together at its end (ink only, no light).",
+      note: "LD-HP alt: the Marauder's Map (folded parchment, ink rooms, a round tower): footprints walk the corridors with the progress and stop together at the end (ink only, no light).",
     },
-    files: ["components/primitives/loaders/ink-light.tsx", "components/primitives/loaders/ink-footprints.tsx"],
+    files: ["components/primitives/loaders/ink-light.tsx", "components/primitives/loaders/ink-footprints.tsx", "components/primitives/loaders/route-caption.tsx"],
   },
 
   /* — Signature sections (host = section id; M2 builds their moments) — */
+  "about.compass": {
+    default: {
+      name: "true-north",
+      note: "Jack's compass at the pillar hub, lid open: on entry it spins once and settles on pillar 1; hovering a pillar turns the red arrow to it and lights its bearing label in brass.",
+    },
+    alt: {
+      name: "taking-bearings",
+      note: "The compass arrives shut, the lid opens, and the arrow takes the four bearings in turn while brass bearing lines draw toward each pillar; then it settles on pillar 1.",
+    },
+    files: ["components/site/about-pillars.tsx", "components/worlds/pirates/jack-compass.tsx", "components/site/about.tsx"],
+  },
   "journey.voyage": {
-    default: { name: "voyage-chart", note: "The voyage chart and THE CROSSING cartouche; the course plots through the four waypoints." },
-    alt: null,
-    plan: "M2-A: the sticky sea sequence (MV-05a–d / JV) as the alt, or vice versa.",
-    files: ["components/site/journey-voyage.tsx"],
+    default: {
+      name: "sea-scrub",
+      note: "SM-4: scroll drives the JV frames (exactly MV-05a-d when each step is centred); Jack's compass settles on each leg's heading; the Aztec medallion's moonlight sweep runs once at The break.",
+      media: ["JV", "MV-05a", "MV-05b", "MV-05c", "MV-05d"],
+    },
+    alt: {
+      name: "sail-on-cue",
+      note: "SM-4: the sea holds on the active step and sails (JV-alt) to the next step's frame when a new step becomes active; the brass course plots leg by leg and the X inks itself at Now.",
+      media: ["JV-alt", "MV-05a-alt", "MV-05b-alt", "MV-05c-alt", "MV-05d"],
+    },
+    files: [
+      "components/site/journey.tsx",
+      "components/site/journey-experience.tsx",
+      "components/site/journey-voyage.tsx",
+      "components/site/journey-carousel.tsx",
+      "components/site/journey-stack.tsx",
+      "components/site/journey-chart.tsx",
+      "components/worlds/pirates/jack-compass.tsx",
+      "components/worlds/pirates/aztec-medallion.tsx",
+      "components/worlds/pirates/use-frame-sequence.ts",
+      "components/worlds/pirates/voyage-chart.ts",
+    ],
   },
   "work.board": {
-    default: { name: "blueprint-reskin", note: "The gauntlet on the blueprint board (M1 re-skin)." },
-    alt: null,
-    plan: "M2-A: the dawn-board gauntlet with its verb (SM-6).",
-    files: ["components/site/projects.tsx"],
+    default: {
+      name: "rail-run",
+      note: "SM-6: the gauntlet chalked on the ICE dawn board; it settles in two soft pats ('aal izz well') and the Run's dots travel a chalk rail through the 7 gates; Rancho's circle on the tally.",
+      media: ["MV-06"],
+    },
+    alt: {
+      name: "marking-sheet",
+      note: "SM-6: a duster wipes the board on and the Run fills in a chalk grading sheet (ticks, crosses, strike-throughs). MV-06-alt is parked (received), so it plays the DEFAULT board.",
+      media: ["MV-06-alt"],
+    },
+    files: ["components/site/projects.tsx", "components/site/gauntlet-tabs.tsx", "components/worlds/idiots/gauntlet-board.tsx", "components/worlds/idiots/chalk.tsx"],
+  },
+  "trading-algos.schematic": {
+    default: { name: "draw", note: "SM-7: the blueprint of the real pipeline inks itself inside an ICE chalkboard frame; the chalk circle goes around the caveat." },
+    alt: { name: "assemble", note: "SM-7: the blueprint's parts drop into place and are taped down on the chalkboard; same circle round the caveat." },
+    files: ["components/sections/chapter/chapter-section.tsx", "components/worlds/idiots/schematic.tsx"],
+  },
+  "optuna-screener.schematic": {
+    default: { name: "draw", note: "SM-7: the Optuna pipeline (with its v3 ensemble branch) inks itself on the chalkboard; the machine definition lettered in Kalam under it." },
+    alt: { name: "assemble", note: "SM-7: the pipeline's parts drop in and are taped down; same caption and caveat circle." },
+    files: ["components/sections/chapter/chapter-section.tsx", "components/worlds/idiots/schematic.tsx"],
+  },
+  "systems.fig": {
+    default: { name: "draw", note: "'How this page is built' inks itself on the chalkboard." },
+    alt: { name: "assemble", note: "'How this page is built': the parts drop in and are taped down on the chalkboard." },
+    files: ["components/site/capabilities.tsx", "components/worlds/idiots/schematic.tsx"],
+  },
+  "systems.band": {
+    default: {
+      name: "settle",
+      note: "A 21:9 band of Rancho's homemade drone over the college courtyard settles in (two soft pats), captioned THE HOMEMADE DRONE • 3 IDIOTS.",
+      media: ["iconic-drone"],
+    },
+    alt: {
+      name: "wipe",
+      note: "The alt drone plate (iconic-drone-alt) is wiped on; same caption.",
+      media: ["iconic-drone-alt"],
+    },
+    files: ["components/worlds/idiots/drone-band.tsx", "components/site/capabilities.tsx"],
   },
   "kill-list.reckoning": {
-    default: { name: "austere-ledger", note: "The reckoning (SM-8): equally quiet rows, the verdict word carries the meaning; ember strike only on the active killed row." },
-    alt: null,
-    plan: "M2 act2-idiots: the Lens Index ledger (SM-8) as one side and the austere rows as the other; the header's astronaut-pen motif + caption (O-5) in both. Dead Eye stays an opt-in egg, never a variant.",
-    files: ["components/sections/ledger/ledger-section.tsx", "components/site/ledger-reckoning.tsx"],
+    default: {
+      name: "lens-index",
+      note: "SM-8: equally quiet rows; the active row (focus > pointer > centre) takes its colour; the aqua bracket travels an empty column framing that row's real route; ember strike only on the active killed row; Virus's astronaut pen in the header.",
+    },
+    alt: {
+      name: "index-bar",
+      note: "SM-8: the plain ruled ledger with one sliding bar beside the active row. Dead Eye stays an opt-in egg, never a variant.",
+    },
+    files: ["components/sections/ledger/ledger-section.tsx", "components/sections/ledger/lens-figure.tsx", "components/site/ledger-reckoning.tsx"],
   },
-  "beyond.frontier": {
-    default: { name: "handbill-and-map", note: "The frontier handbill, the trail map and the code golden-hour band." },
-    alt: null,
-    plan: "M2-B: the RDR2 act moments (SM-15).",
-    files: ["components/site/rdr2-frontier.tsx", "components/site/beyond.tsx"],
+  "films.screens": {
+    default: {
+      name: "clip-finales",
+      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course, blueprint gates + chalk circle, a graphite trail to a kindling campfire, an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
+      media: ["F-PC", "F-3I", "F-RD", "iconic-express"],
+    },
+    alt: {
+      name: "iris-marks",
+      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course to an X, a chalk circle + tick round the scooter, a journal clipping, footprints on the enchanted paper (F-HP).",
+      media: ["F-PC-alt", "F-3I-alt", "F-RD-alt"],
+    },
+    files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts"],
+  },
+  "beyond.band": {
+    default: {
+      name: "ride-in",
+      note: "SM-15: MV-10 full-bleed (the Heartlands at golden hour) slowly zooms toward the low sun as you scroll; caption THE HEARTLANDS • RED DEAD REDEMPTION 2 in Rye.",
+      media: ["MV-10", "MV-10m"],
+    },
+    alt: {
+      name: "dead-eye-release",
+      note: "SM-15: the band arrives as the Dead Eye frontier (iconic-deadeye, red vignette) and releases into MV-10-alt as it comes into view; the caption hands over from DEAD EYE to THE HEARTLANDS.",
+      media: ["iconic-deadeye", "MV-10-alt", "MV-10m-alt"],
+    },
+    files: ["components/site/beyond.tsx", "components/worlds/rdr2/frontier-band.tsx", "components/worlds/rdr2/kit.tsx", "components/worlds/rdr2/rdr2.module.css"],
+  },
+  "beyond.handbill": {
+    default: {
+      name: "nailed-up",
+      note: "The HTML WANTED handbill (Rye) registered on iconic-wanted's central blank poster drops onto the board and two nails strike.",
+      media: ["iconic-wanted"],
+    },
+    alt: {
+      name: "pasted-and-stamped",
+      note: "On iconic-wanted-alt: the handbill is pasted down from the top, WANTED is stamped, then tacks.",
+      media: ["iconic-wanted-alt"],
+    },
+    files: ["components/worlds/rdr2/wanted-board.tsx", "components/site/beyond.tsx"],
+  },
+  "beyond.satchel": {
+    default: { name: "spill", note: "Arthur's leather satchel: the real kit (camera, sketchbook + charcoal, drone, running shoes) slides out of the bag." },
+    alt: { name: "inventory", note: "The kit sits in a ruled ledger with pencil ticks; the bag is drawn last, buckled." },
+    files: ["components/worlds/rdr2/satchel.tsx", "components/site/beyond.tsx"],
+  },
+  "writing.journal": {
+    default: { name: "sketch-at-rest", note: "SM-11: an Arthur-style journal spread; a full-page graphite sketch at rest; hovering an entry swaps the page to its vignette, each drawn once. Drafts stay non-link DRAFT." },
+    alt: { name: "leafing", note: "SM-11: scrolling turns the page to each entry's vignette as it crosses the reading line." },
+    files: ["components/site/writing.tsx", "components/worlds/rdr2/journal-spread.tsx", "components/worlds/rdr2/journal-sketches.ts"],
+  },
+  "voices.fire": {
+    default: {
+      name: "camp-at-dusk",
+      note: "SM-16: iconic-camp as a sticky full-bleed backdrop behind the quotes; night falls on the plate except a hole around the fire (marks.fire); caption THE GANG'S CAMP AT DUSK.",
+      media: ["iconic-camp"],
+    },
+    alt: {
+      name: "fireside-loop",
+      note: "SM-16: the MV-11 band with the MV-11L loop (desktop, one decoder) opens from a letterbox; each quote is read into firelight in turn; caption THE CAMPFIRE.",
+      media: ["MV-11", "MV-11L"],
+    },
+    files: ["components/site/testimonials.tsx", "components/worlds/rdr2/campfire-stage.tsx"],
+  },
+  "principles.map": {
+    default: {
+      name: "marauders-map",
+      note: "A parchment Marauder's Map unfolds; the five principles are ink rooms on one corridor; footprints walk it with the scroll under a YOU banner; HP-07 ribbons in ink.",
+    },
+    alt: {
+      name: "lumos-candles",
+      note: "Floating candles hang in the section's top padding; each principle's own candle lights with a Lumos spark as its row enters; silver-blue ribbons as the underline.",
+    },
+    files: ["components/site/principles.tsx", "components/site/principles-stage.tsx", "components/site/principles-map.tsx", "components/site/principles-lumos.tsx", "components/worlds/hp/floating-candle.tsx", "components/worlds/hp/footprints.tsx", "components/worlds/hp/sprites.ts"],
+  },
+  "contact.lastlight": {
+    default: {
+      name: "bracket-close",
+      note: "SM-12: a feathered window onto MV-08 (MV-09 loop on desktop); the bracket halves travel in and turn aqua on arrival round the [ A · flame · S ] monogram.",
+      media: ["MV-08", "MV-09"],
+    },
+    alt: {
+      name: "map-walk",
+      note: "SM-12: ink footprints walk out of the dark to the candle, then the bracket is inked closed (MV-09-alt loop).",
+      media: ["MV-08", "MV-09-alt"],
+    },
+    files: ["components/site/contact.tsx", "components/site/contact-scene.tsx", "components/site/contact-finale.tsx"],
+  },
+
+  /* — Eggs and the 404 (opt-in; not section hosts) — */
+  "egg-map.unfold": {
+    default: { name: "panels-swing", note: "The Marauder's Map egg: the outer panels swing open in 0.8 s (flat under reduced motion)." },
+    alt: { name: "centre-crease", note: "The Marauder's Map egg opens from its centre crease." },
+    files: ["components/eggs/marauders-map.tsx", "components/eggs/marauders-map-dialog.tsx", "components/eggs/egg-host.tsx"],
+  },
+  "404.page": {
+    default: { name: "marauders-map", note: "A server-rendered Marauder's Map of the site (works without JS) with 'Mischief managed' back to the top." },
+    alt: { name: "journal-tip", note: "Arthur's journal: 'TIP: This trail goes nowhere. Head back to camp.' plus the room links." },
+    files: ["app/not-found.tsx", "components/eggs/not-found-switch.tsx"],
   },
 } as const satisfies VariantRegistry;
 

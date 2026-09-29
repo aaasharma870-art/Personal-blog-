@@ -21,15 +21,22 @@ import { cn } from "@/lib/utils";
 
 type Plane = { tone: ToneId; world: WorldId };
 
+/** Section types whose last 30vh already crossfades into the page's deep
+ *  (the ledger's T5 fade, IdiotsSection `fadeOut`): a house-deep section
+ *  after one needs no dome (it would repaint the old plane over the fade). */
+const EXITS_TO_PAGE_DEEP: ReadonlySet<string> = new Set(["ledger"]);
+
 /** The plane the dome seam should paint at the top of `entry`, or null:
  *  - the item before it is an act card (the incoming world owns that cut);
- *  - it is the first item; or the two planes are identical. */
+ *  - it is the first item; or the two planes are identical;
+ *  - the previous section already fades into this house-deep plane. */
 export function seamFromFor(entry: SectionEntry): Plane | null {
   const i = pageItems.findIndex((it) => it.kind === "section" && it.entry.id === entry.id);
   if (i <= 0) return null;
   const prev = pageItems[i - 1];
   if (!prev || prev.kind !== "section") return null;
   if (prev.tone === toneOf(entry) && prev.world === worldOf(entry)) return null;
+  if (EXITS_TO_PAGE_DEEP.has(prev.entry.type) && worldOf(entry) === "house" && toneOf(entry) === "deep") return null;
   return { tone: prev.tone, world: prev.world };
 }
 

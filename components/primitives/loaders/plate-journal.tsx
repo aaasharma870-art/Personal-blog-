@@ -22,12 +22,15 @@ import {
 import { LINE, fitPoint, type Box } from "@/components/primitives/loaders/line";
 
 /**
- * LD-RD ALT "The journal page" (rdr2; lib/variants.ts
- * `loader-plate-trail.motion` alt). RDR2 reflects — the default develops a
- * tintype; this one keeps the journal: a page on which a pencil sketches
- * the frontier stroke by stroke (horizon, ridges, a pine, the trail — the
- * site's Line in graphite — a campfire, a low sun, two birds, hatching).
- * The sketch appearing IS the progress (RD-P1 kept by hand; RD-P4).
+ * LD-RD DEFAULT "Arthur's journal" (rdr2; M2 RECOGNIZABILITY S20 SWAP: the
+ * journal sketch passed the blind test as the ALT, so it is now the
+ * DEFAULT; the tintype plate is retired to plate-trail.tsx and the new ALT
+ * is Dead Eye, plate-deadeye.tsx; caption cap.loader.rdr2 "ARTHUR MORGAN'S
+ * JOURNAL"). RDR2 reflects: a leather-bound journal, strapped, open on a
+ * page where a pencil sketches the frontier stroke by stroke (horizon,
+ * ridges, a pine, the trail — the site's Line in graphite — a campfire, a
+ * low sun, two birds, hatching). The sketch appearing IS the progress
+ * (RD-P1 kept by hand; RD-P4).
  *
  *   determinate    the pencil has drawn exactly `progress` of the total
  *                  line (each stroke owns its share of the summed length, in
@@ -42,13 +45,19 @@ import { LINE, fitPoint, type Box } from "@/components/primitives/loaders/line";
  *                  down beside the page — no flash, no glow.
  *   static         the sketch, the underline, the pencil at rest.
  * Paper and pencil use the journal's own inks (--paper, --paper-pencil,
- * --paper-red; DESIGN v3 §1.3.2) and the pencil body the rdr2 decorative
- * inks (leather, bone). No person, rider, gun or logo (L21); no text (L7);
- * tokens only (L17). `mini` = the page and sketch, no pencil.
+ * --paper-red; DESIGN v3 §1.3.2); the cover, strap and pencil body the rdr2
+ * decorative inks (leather, bone, brass buckle). No person, rider, gun or
+ * logo (L21); no text (L7); tokens only (L17). `mini` = the cover, page and
+ * sketch, no pencil.
  */
 
 // — geometry (viewBox 0 0 160 100; the page is tilted −1.5° about its centre) —
 const PAGE = { x: 16, y: 9, w: 128, h: 82 };
+/** The leather cover (a little proud of the page) and the strap across its
+ *  fore-edge. */
+const COVER = { x: 9, y: 4, w: 146, h: 92 };
+const STRAP = { x: 147.5, w: 5 };
+const LEATHER_DARK = "color-mix(in oklab, var(--w-leather) 52%, var(--rd-deep))";
 const TILT = `rotate(-1.5 ${PAGE.x + PAGE.w / 2} ${PAGE.y + PAGE.h / 2})`;
 const TRAIL_BOX: Box = { x: 50, y: 66, w: 80, h: 16 };
 
@@ -140,6 +149,29 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
         strokeLinejoin="round"
       >
         <g transform={TILT}>
+          {/* the leather cover under the page, its stitching, and the stack
+              of pages showing at the fore-edge (a thick, used journal) */}
+          <rect x={COVER.x} y={COVER.y} width={COVER.w} height={COVER.h} rx={3.5} style={{ fill: LEATHER_DARK }} />
+          {mini ? null : (
+            <rect
+              x={COVER.x + 2.2}
+              y={COVER.y + 2.2}
+              width={COVER.w - 4.4}
+              height={COVER.h - 4.4}
+              rx={2.4}
+              fill="none"
+              stroke="var(--w-bone)"
+              strokeOpacity={0.4}
+              strokeWidth={sw(0.6)}
+              strokeDasharray={`${sw(2)} ${sw(1.6)}`}
+            />
+          )}
+          <path
+            d={`M${PAGE.x + 2} ${PAGE.y + PAGE.h + 1.6}H${PAGE.x + PAGE.w + 1.4}V${PAGE.y + 2}M${PAGE.x + 3} ${PAGE.y + PAGE.h + 3}H${PAGE.x + PAGE.w + 2.8}V${PAGE.y + 3.4}`}
+            fill="none"
+            stroke="var(--paper-edge-deep)"
+            strokeWidth={sw(0.8)}
+          />
           {/* the page (the journal's paper), with a deeper deckle edge */}
           <rect
             x={PAGE.x}
@@ -157,6 +189,20 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
             ))}
           </g>
           <DrawPath d={UNDERLINE} progress={finish} stroke="var(--paper-red)" strokeWidth={sw(mini ? 0.9 : 1.3)} />
+          {/* the strap round the cover, and its brass buckle */}
+          <rect x={STRAP.x} y={COVER.y - 1.6} width={STRAP.w} height={COVER.h + 3.2} rx={1} fill="var(--w-leather)" />
+          {mini ? null : (
+            <rect
+              x={STRAP.x - 1.4}
+              y={50 - 4.5}
+              width={STRAP.w + 2.8}
+              height={9}
+              rx={1}
+              fill="none"
+              stroke="var(--w-brass)"
+              strokeWidth={sw(1.2)}
+            />
+          )}
           {mini ? null : <Pencil progress={ink} finish={finish} lift={lift} />}
         </g>
       </svg>

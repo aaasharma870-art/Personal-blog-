@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
+import { useId, useRef } from "react";
+import { motion, useTransform, type MotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
-import { dur, easeDraw } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
@@ -11,30 +10,35 @@ import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/ki
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
+import { BoardFig } from "@/components/sections/act-card/frames/board-fig";
+import { registeredStorm, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
+import { PlateBox, plateOf } from "@/components/sections/act-card/plate";
 
 /**
  * Card I→II, ALT choreography "duster-erase" (lib/variants.ts
- * `card-seam.choreo` alt; SM-5, D-5 long #1). The DEFAULT cuts the storm
- * away like ice; this one wipes it off a classroom board: a chalk duster
- * erases the storm in five boustrophedon strokes (left → right, then back),
- * and the blueprint was underneath all along. One pinned driver p (direct,
+ * `card-seam.choreo` alt; SM-5, D-5 long #1; RECOGNIZABILITY S07 alt). The
+ * DEFAULT cuts the storm away like ice; this one wipes it off a classroom
+ * board: a chalk duster erases the storm (MV-04-alt) in five boustrophedon
+ * strokes (left → right, then back), and the ICE lecture hall's green board
+ * (iconic-ice-alt) was underneath all along — "THE ICE BOARD, WIPED CLEAN". One pinned driver p (direct,
  * no springs; everything reverses by position):
  *   0–.08    the storm plate, still (MV-04; until it exists, MV-01 in the
  *            code storm grade).
  *   .08–.78  the duster: five strokes, .14 of p each, top band first; the
  *            erased region is a clip whose ragged leading edge rides the
  *            duster, and the wiped bands keep a faint chalk-dust streak.
- *   .5–.9    FIG. 0, the Line, is written in CHALK over the blueprint (the
- *            default draws it in blueprint line); its label carries the
- *            path's TRUE length and control-point count (computed, never
- *            literal). LD-3I: the rack x = p·L, the gears exact.
+ *   .5–.9    FIG. 0, the Line, is written in CHALK on the board
+ *            (frames/board-fig.tsx: registered to the plate's board quad);
+ *            its label carries the path's TRUE length and control-point
+ *            count (computed, never literal). LD-3I in chalk: the rack
+ *            x = p·L, the gears exact.
  *   ≥ .95    Rancho's chalk circle round the gauge's end tick (re-arms only
  *            below .9), as in the default.
  * No aqua seam line in this variant (C10: 0 aqua marks at any p). The
  * clip and the duster exist only while live (the storm is mounted hidden,
  * as in the default, so it has decoded before the card goes live). Static card
- * (RM, Pause, no JS, < 1024 / coarse, SSR): the wiped board — blueprint,
- * chalk FIG. 0, the gauge complete with its circle, the dust streaks.
+ * (RM, Pause, no JS, < 1024 / coarse, SSR): the wiped board — the ICE
+ * hall, chalk FIG. 0, the gauge complete with its circle, the dust streaks.
  * aria-hidden art; 0 tab stops.
  */
 
@@ -129,73 +133,72 @@ const DIM_Y = LINE_VIEWBOX.h - 24;
 const DIM_X0 = 40;
 const DIM_X1 = 952;
 
-export function SeamChalkFrame({ storm, graded }: { storm: MediaId; graded: boolean }) {
+export function SeamChalkFrame({
+  storm: stormId,
+  board: boardId = null,
+  graded,
+}: {
+  storm: MediaId | null;
+  /** The ICE board the duster uncovers (iconic-ice-alt); null → the code
+   *  blueprint (the lab's old call). */
+  board?: MediaId | null;
+  graded: boolean;
+}) {
   const { p, live } = useCard();
   const reduced = useReducedMotion();
   const ids = useId();
   const clipId = `${ids}c`;
   const dustId = `${ids}d`;
+  const board = plateOf(boardId);
+  const storm = registeredStorm(stormId, board);
 
   const fig = useTransform(p, (v) => remap(v, 0.5, 0.9));
-  const one = useMotionValue(1);
-  const spin = useMotionValue(0);
-
-  // Rancho's circle at p ≥ .95 (state-driven; re-arms only below .9)
-  const circle = useMotionValue(1);
-  const [ringed, setRinged] = useState(() => p.get() >= 0.95);
-  useMotionValueEvent(p, "change", (v) => {
-    if (!ringed && v >= 0.95) setRinged(true);
-    else if (ringed && v < 0.9) setRinged(false);
-  });
-  useEffect(() => {
-    if (!live || reduced) {
-      circle.jump(1);
-      return;
-    }
-    if (!ringed) {
-      circle.jump(0);
-      return;
-    }
-    const c = animate(circle, 1, { duration: dur.draw.short, ease: easeDraw });
-    return () => c.stop();
-  }, [live, reduced, ringed, circle]);
+  const { circle, spin, one } = useRanchoCircle(p, live, reduced);
 
   const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
 
   return (
-    <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-      {/* the board: the blueprint, with FIG. 0 written in chalk */}
-      <div className="act-blueprint absolute inset-0">
-        <svg
-          viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
-          preserveAspectRatio="xMidYMid meet"
-          focusable="false"
-          className="absolute inset-0 size-full"
-          fill="none"
-          strokeLinecap="round"
-        >
-          <path
-            d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
-            stroke="var(--w-bp-line)"
-            strokeWidth={1}
-            vectorEffect="non-scaling-stroke"
-            strokeOpacity={0.7}
-            strokeLinecap="square"
-          />
-          <ChalkLine progress={live ? fig : one} />
-        </svg>
-        <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
-          <GaugeDrawing
-            // useTransform binds one source: remount when static ↔ live
-            key={live ? "live" : "static"}
-            progress={live ? p : one}
-            spin={spin}
-            circle={circle}
-            scale={1.5}
-          />
+    <div aria-hidden="true" data-frame="seam-chalk" className="absolute inset-0 overflow-hidden">
+      {/* the board: the ICE lecture hall's green board (iconic-ice-alt),
+          with FIG. 0 written on it in chalk */}
+      {board ? (
+        <PlateBox plate={board}>
+          <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
+          <BoardFig plate={board} fig={live ? fig : one} rack={live ? p : one} spin={spin} circle={circle} live={live} />
+        </PlateBox>
+      ) : (
+        <div className="act-blueprint absolute inset-0">
+          <svg
+            viewBox={`0 ${-(H - LINE_VIEWBOX.h) / 2} ${W} ${H}`}
+            preserveAspectRatio="xMidYMid meet"
+            focusable="false"
+            className="absolute inset-0 size-full"
+            fill="none"
+            strokeLinecap="round"
+          >
+            <path
+              d={`M${DIM_X0} ${DIM_Y}H${DIM_X1}M${DIM_X0} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X1} ${DIM_Y - 8}V${DIM_Y + 8}M${DIM_X0} 300V${DIM_Y - 12}M${DIM_X1} 214V${DIM_Y - 12}`}
+              stroke="var(--w-bp-line)"
+              strokeWidth={1}
+              vectorEffect="non-scaling-stroke"
+              strokeOpacity={0.7}
+              strokeLinecap="square"
+            />
+            <ChalkLine progress={live ? fig : one} />
+          </svg>
+          <div className="absolute bottom-[7%] left-gutter w-[clamp(9rem,22%,15rem)]">
+            <GaugeDrawing
+              // useTransform binds one source: remount when static ↔ live
+              key={live ? "live" : "static"}
+              progress={live ? p : one}
+              spin={spin}
+              circle={circle}
+              scale={1.5}
+            />
+          </div>
+          <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
         </div>
-        <p className="type-meta absolute top-[6%] left-gutter hidden text-fg sm:block">{figLabel}</p>
-      </div>
+      )}
 
       {/* the chalk dust the duster leaves on the wiped bands */}
       <DustLayer p={live ? p : one} id={dustId} />
@@ -204,10 +207,14 @@ export function SeamChalkFrame({ storm, graded }: { storm: MediaId; graded: bool
           static, hidden, so the plate is decoded before the card goes live) */}
       {live ? <StormClip p={p} id={clipId} /> : null}
       <div
-        className={cn("absolute inset-0", graded && "act-storm-grade")}
+        className="absolute inset-0"
         style={live ? { clipPath: `url(#${clipId})` } : { display: "none" }}
       >
-        <MediaFrame media={storm} layout="fill" playOn="never" sizes="100vw" />
+        {storm ? (
+          <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+            <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
+          </PlateBox>
+        ) : null}
       </div>
       {live ? <Duster p={p} /> : null}
     </div>
