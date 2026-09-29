@@ -90,7 +90,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
   - **REMAINING (cloud: do these next, in order):**
     1. Run `npx eslint .` and `npm run build`, and fix anything red.
     2. Start the site, then capture every film scene at 1440, captioned + BLIND (CSS hiding all text), with the `?variant=alt` act cards, the act-card transitions at 3 scroll points, and 390 + reduced-motion frames of each section. Use `tools/capture`, one browser.
-    3. Run 3 blind judges (guess the film + moment from the blind frames), plus 1 art-director / a11y / honesty critic.
+    3. Run 3 blind judges (guess the film + moment from the blind frames), plus 1 art-director / a11y critic. (NO legal or honesty audit: Aryan will review and fix that himself.)
     4. Fix round: every scene failing the stranger test (fewer than 2/3 correct), every jarring transition, and the critic's critical/major issues.
     5. Update `docs/build/RECOGNIZABILITY.md`, write `docs/build/M2-REPORT.md`, commit, push.
     6. Then **M5**.
@@ -105,7 +105,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
     7. Fix, then `build/M2-REPORT.md`.
 - [ ] **M5: final QA.**
   - A final blind stranger test on every scene; check, eslint and build pass.
-  - Anchors and links work; no overflow at 320/390/1024/1440; reduced motion, no-JS and media-blocked modes all work; LCP lab; legal and honesty audit; zero hydration errors.
+  - Anchors and links work; no overflow at 320/390/1024/1440; reduced motion, no-JS and media-blocked modes all work; LCP lab; zero hydration errors. (The legal/honesty audit was REMOVED at Aryan's request on 2026-09-29; he reviews that himself. Don't add legal/honesty findings or edits.)
   - Final contact sheet `build/final-frames/index.html`, plus `build/FINAL-REPORT.md`.
   - Then restore the machine settings, CronDelete, and stop.
 - (superseded for speed: M2-R, M2-A, M2-B, M3 and M4 are all folded into M2-COMBINED.)
@@ -158,3 +158,5 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
 - 04:40: guard relaunched with a 72 h limit (new pid 43528; old 40192 stopped). Windows Update active hours moved to 03:00–21:00 (restore to 6/0 at the end). The auto-reboot policy key needs admin, so it was not set; no reboot is pending. AC sleep is still never, hibernate is off, on AC at 100%.
 - 04:47: 'can't risk anything' hardening. The laptop uses Modern Standby with 'Network Disconnected', so sleep would kill the build. The guard now requests SYSTEM + DISPLAY (0x80000003), pid 21468. AC display timeout set to never. Added the user-level scheduled task 'Claude Build Guard Watchdog' (every 5 min for 3 days; relaunches the guard if it dies; stops on .stop-keep-awake). All of this is on the RESTORE list.
 - 05:30: **HANDOFF TO CLOUD** (Aryan at 92% usage). The local M2 workflow was stopped after the assembler commit `ad7f742` (pushed), and the local hourly cron was deleted. The next executor is claude.ai/code on branch `design/three-films`. Resume at M2-COMBINED 'REMAINING' step 1.
+- 05:35: machine RESTORED (AC sleep and display back to 20 min, active hours 6–0, guard stopped, watchdog task removed). Local executor finished for good; the cloud continues.
+- 05:50: at Aryan's request, the legal/honesty AUDIT was removed from the M2 critic and from M5. He will decide and fix those himself.
