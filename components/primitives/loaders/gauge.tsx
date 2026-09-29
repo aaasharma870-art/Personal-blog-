@@ -7,16 +7,23 @@ import { useReducedMotion } from "@/lib/flags";
 import { dur, easeDraw, loader as loaderTiming } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { DrawPath, SIZE_PX, useSvgAttr } from "@/components/primitives/loaders/kit";
-import { ChalkBoard } from "@/components/primitives/loaders/chalkboard";
+import { ChalkBoard, SLATE } from "@/components/primitives/loaders/chalkboard";
 
 /**
  * LD-3I "The honest gauge" (idiots; SPEC v2 §8, loaders.BAR L1;
  * RECOGNIZABILITY S20). M2: the loader is DRAWN IN CHALK ON A MINI ICE
  * CHALKBOARD (slate green, a wooden frame, a chalk ledge with a stub and a
  * duster: loaders/chalkboard.tsx), so blind it reads as the 3 Idiots
- * classroom; caption cap.loader.idiots "THE ICE CHALKBOARD". The mechanism
- * is unchanged — a gear train in the jugaad register (IC-3I-04: visible
- * bolts, a taped joint):
+ * classroom; caption cap.loader.idiots "THE ICE CHALKBOARD".
+ * M2 fix (BLIND-1: 0.40–0.45, "generic classroom gears"): the board now
+ * carries the film's two props in chalk, big — THE HOMEMADE DRONE (a
+ * top-down quadcopter: four rotor guards, a body, its camera), whose rotors
+ * are DRIVEN BY THE GEAR TRAIN (they turn exactly as the 12T turns, ×3), and
+ * VIRUS'S ASTRONAUT PEN (a fat space pen with its clip, ringed by an orbit,
+ * among chalk stars, a few ink drops floating off its nib: zero gravity).
+ * The gauge is secondary, bottom left; `mini` is the drone alone. The
+ * mechanism is unchanged — a gear train in the jugaad register (IC-3I-04:
+ * visible bolts, a taped joint):
  * a 12T drive gear and an 8T driven gear meshing at a TRUE 3:2, a pinion on
  * the 8T driving a rack pointer along a dimension line (0/end + 10 ticks).
  *
@@ -221,18 +228,168 @@ function Gauge({ mode, size, progress, animate: running }: LoaderRendererProps) 
   const parked = useMotionValue(0);
   const full = useMotionValue(1);
   const rackP = mode === "indeterminate" ? parked : mode === "determinate" ? progress : full;
+  // the drone's rotors: the 12T's own angle (the same kinematics as the
+  // gauge: rack x → θ8 → θ12, plus the idle spin), geared up ×3
+  const rotor = useTransform([rackP, spin], ([p, s]) => {
+    const x = Math.min(1, Math.max(0, p as number)) * GAUGE_L;
+    return 3 * (-(x / R_PINION) * (180 / Math.PI) * (8 / 12) + (s as number));
+  });
 
-  // the drawing fills the board's content box (80 % of its width; mini 62 %)
+  const scale = SIZE_PX[size] / 160;
+  if (mini) {
+    return (
+      <ChalkBoard size={size} content={SLATE_BOX}>
+        <BoardArt rotor={rotor} scale={scale} mini />
+      </ChalkBoard>
+    );
+  }
+  // the drone and the pen fill the slate; the gauge sits bottom left
   return (
-    <ChalkBoard size={size}>
-      <GaugeDrawing
-        progress={rackP}
-        spin={spin}
-        circle={circle}
-        mini={mini}
-        chalk
-        scale={(SIZE_PX[size] * (mini ? 0.62 : 0.8)) / (mini ? 58 : 160)}
-      />
+    <ChalkBoard size={size} content={SLATE_BOX}>
+      <span className="relative block">
+        <BoardArt rotor={rotor} scale={scale} />
+        <span className="absolute" style={GAUGE_BOX}>
+          <GaugeDrawing progress={rackP} spin={spin} circle={circle} chalk scale={(SIZE_PX[size] * GAUGE_FRAC) / 160} />
+        </span>
+      </span>
     </ChalkBoard>
+  );
+}
+
+/* — The board's two props (board coords: the slate is 8–152 × 8–90) — */
+
+/** The content box = the whole slate (fractions of the 160 × 112 board). */
+const SLATE_BOX = { left: "5%", top: `${(8 / 112) * 100}%`, width: "90%" } as const;
+/** The gauge, bottom left on the slate: board x 14–92, from y 56 (the box's
+ *  top is a fraction of the SLATE's height, 82). */
+const GAUGE_FRAC = 78 / 160;
+const GAUGE_BOX = {
+  left: `${((14 - 8) / 144) * 100}%`,
+  top: `${((56 - 8) / 82) * 100}%`,
+  width: `${(78 / 144) * 100}%`,
+} as const;
+
+/** The homemade drone, top-down: body centre, the four rotor hubs. */
+const DRONE = { x: 46, y: 32, dx: 19.5, dy: 14, guard: 8.8, blade: 7 };
+/** Mini: the drone alone, centred on the slate. */
+const DRONE_MINI = { x: 80, y: 47, dx: 24, dy: 17, guard: 11.5, blade: 9.4 };
+type DroneGeo = typeof DRONE;
+const hubsOf = (d: DroneGeo) =>
+  [
+    [-1, -1],
+    [1, -1],
+    [-1, 1],
+    [1, 1],
+  ].map(([sx, sy]) => ({ x: d.x + sx * d.dx, y: d.y + sy * d.dy, dir: sx * sy }));
+
+/** Virus's astronaut pen: drawn along +x (nib at the origin), placed at the
+ *  nib and turned up and to the right. */
+const PEN_AT = "translate(113 68) rotate(-58)";
+const PEN = {
+  body: "M7 -3.3H37Q39 -3.3 39 -1.6V1.6Q39 3.3 37 3.3H7Z",
+  cone: "M0 0L7 -3.3V3.3Z",
+  grip: "M9.5 -3.3V3.3M12 -3.3V3.3M14.5 -3.3V3.3",
+  clip: "M27 -3.3V-5.6H40.5Q42.4 -5.6 42.4 -3.8",
+  button: "M39 -1.8H43.6V1.8H39",
+};
+/** The orbit ringed round the pen's barrel, tilted across it (back half
+ *  first, then the pen occludes it, then the front half). */
+const ORBIT = { cx: 21, cy: 0, rx: 17, ry: 5, tilt: 68 };
+const orbitBack = `M${ORBIT.cx - ORBIT.rx} ${ORBIT.cy}A${ORBIT.rx} ${ORBIT.ry} 0 0 1 ${ORBIT.cx + ORBIT.rx} ${ORBIT.cy}`;
+const orbitFront = `M${ORBIT.cx + ORBIT.rx} ${ORBIT.cy}A${ORBIT.rx} ${ORBIT.ry} 0 0 1 ${ORBIT.cx - ORBIT.rx} ${ORBIT.cy}`;
+const ORBIT_T = `rotate(${ORBIT.tilt} ${ORBIT.cx} ${ORBIT.cy})`;
+/** Chalk stars round the pen (four-point), and ink drops floating off the nib. */
+const star = (x: number, y: number, s: number) =>
+  `M${x} ${y - s}V${y + s}M${x - s} ${y}H${x + s}M${x - s * 0.5} ${y - s * 0.5}L${x + s * 0.5} ${y + s * 0.5}M${x + s * 0.5} ${y - s * 0.5}L${x - s * 0.5} ${y + s * 0.5}`;
+const STARS = star(128, 17, 3) + star(147, 44, 2.4) + star(100, 26, 2.2) + star(141, 77, 1.8);
+const DROPS = [
+  { x: 105, y: 74, r: 1.3 },
+  { x: 100.5, y: 70.5, r: 0.9 },
+  { x: 108, y: 80, r: 0.8 },
+];
+
+function BoardArt({ rotor, scale, mini = false }: { rotor: MotionValue<number>; scale: number; mini?: boolean }) {
+  const roughId = useId();
+  const sw = (px: number) => px / scale;
+  const d = mini ? DRONE_MINI : DRONE;
+  const hubs = hubsOf(d);
+  const w = sw(mini ? 1.5 : 1.3);
+  return (
+    <svg
+      viewBox="8 8 144 82"
+      aria-hidden="true"
+      focusable="false"
+      className="block h-auto w-full overflow-visible"
+      fill="none"
+      stroke="var(--w-chalk)"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      data-board-art="drone-and-pen"
+    >
+      <defs>
+        {/* chalkRough: one static displacement (never boiled) */}
+        <filter id={roughId} x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={5} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={0.8} />
+        </filter>
+      </defs>
+      <g filter={`url(#${roughId})`}>
+        {/* THE DRONE: an X frame, four rotor guards, the body, its camera */}
+        <path d={`M${hubs[0].x} ${hubs[0].y}L${hubs[3].x} ${hubs[3].y}M${hubs[1].x} ${hubs[1].y}L${hubs[2].x} ${hubs[2].y}`} strokeWidth={w} />
+        {hubs.map((h, i) => (
+          <circle key={i} cx={h.x} cy={h.y} r={d.guard} strokeWidth={w} style={{ fill: SLATE }} />
+        ))}
+        {hubs.map((h, i) => (
+          <Rotor key={`r${i}`} x={h.x} y={h.y} len={d.blade} dir={h.dir} angle={rotor} width={w} />
+        ))}
+        <rect x={d.x - d.dx * 0.42} y={d.y - d.dy * 0.42} width={d.dx * 0.84} height={d.dy * 0.84} rx={2.6} strokeWidth={w} style={{ fill: SLATE }} />
+        <circle cx={d.x} cy={d.y + d.dy * 0.42 + 2.2} r={2.2} strokeWidth={w} style={{ fill: SLATE }} />
+        {mini ? null : (
+          <>
+            {/* THE ASTRONAUT PEN, ringed by its orbit */}
+            <g transform={PEN_AT}>
+              <path d={orbitBack} transform={ORBIT_T} strokeWidth={sw(1)} />
+              <path d={PEN.body} strokeWidth={w} style={{ fill: SLATE }} />
+              <path d={PEN.cone} strokeWidth={w} style={{ fill: SLATE }} />
+              <path d={PEN.grip} strokeWidth={sw(0.8)} />
+              <path d={PEN.clip} strokeWidth={w} />
+              <path d={PEN.button} strokeWidth={w} />
+              <path d={orbitFront} transform={ORBIT_T} strokeWidth={sw(1.2)} />
+            </g>
+            <path d={STARS} strokeWidth={sw(0.9)} />
+            {DROPS.map((q, i) => (
+              <circle key={`d${i}`} cx={q.x} cy={q.y} r={q.r} fill="var(--w-chalk)" stroke="none" />
+            ))}
+          </>
+        )}
+      </g>
+    </svg>
+  );
+}
+
+/** One two-blade propeller, turned by the gear train's angle (`dir` = the
+ *  rotor's sense: diagonal pairs counter-rotate, as a quadcopter's do). */
+function Rotor({
+  x,
+  y,
+  len,
+  dir,
+  angle,
+  width,
+}: {
+  x: number;
+  y: number;
+  len: number;
+  dir: number;
+  angle: MotionValue<number>;
+  width: number;
+}) {
+  const ref = useRef<SVGGElement>(null);
+  const t = useSvgAttr(ref, angle, "transform", (a) => `rotate(${(dir * a + 30).toFixed(2)} ${x} ${y})`);
+  return (
+    <g ref={ref} transform={t}>
+      <path d={`M${x - len} ${y}Q${x - len / 2} ${y - 1.6} ${x} ${y}Q${x + len / 2} ${y + 1.6} ${x + len} ${y}`} strokeWidth={width} />
+      <circle cx={x} cy={y} r={1.1} fill="var(--w-chalk)" stroke="none" />
+    </g>
   );
 }
