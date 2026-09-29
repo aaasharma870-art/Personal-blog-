@@ -56,6 +56,7 @@
    - Reuse their structure (integrator → parallel builders with disjoint file ownership → assembler → critic → fix), adapted to this environment.
 
 ## 3. Environment setup (cloud or fresh machine)
+**Cloud sessions:** `.claude/hooks/session-start.sh` (SessionStart hook, `.claude/settings.json`) already runs `npm ci` when `node_modules` is stale and exports `NODE_PATH` to the global Playwright, so `npm run check`, `npx eslint .`, `npm run build` and `node tools/capture/scenes.js` work at once. The manual steps below are for a local or fresh machine.
 **Next.js 16 has breaking changes:** check `node_modules/next/dist/docs` before writing Next-specific code.
 ```bash
 npm ci
