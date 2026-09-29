@@ -40,3 +40,19 @@
 - Lane: **140.0 / 330**, 190 unused.
 - Balance **534.5**, against a floor of 150 and the v2 floor of 250.
 - Regenerations used: none from scratch. The 4 edits are the "≤ 2 regens" allowance for EXPRESS and DRONE: one each per candidate.
+
+## M2 finish · 3 Idiots scenes (CORRIDOR, PEN) · 2026-09-29 13:04 UTC
+**Lane cap:** 70. **Floor:** 150. **Balance:** 534.5 → **506.5** (`balance`, checked before and after the batch). `transactions`: 4 spends × 7 at 13:04:09.9–13:04:12.7 UTC.
+**Model/params:** `gpt_image_2_5`, 16:9, 4k, xhigh (preflight 7), 3840×2160, text-only.
+
+| # | Time UTC | World | Asset | Batch | Refs (job ids) | Preflight | Charged | Lane spent | Balance after | Job id | Verdict | Reason / checks | Check L2 (Claude/Aryan) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| F1-0 | 09-29 13:04 | idiots | CORRIDOR a | F1 | — | 7 | 7 | 7 | 527.5 | f71ce666-7b28-42db-b714-761832ac572c | **unchecked** | Completed; the download was blocked (CDN 403 at the egress proxy), so it was not viewed | — |
+| F1-1 | 09-29 13:04 | idiots | CORRIDOR b | F1 | — | 7 | 7 | 14 | 520.5 | 14f08567-a7ea-4474-afda-050a12407aea | **unchecked** | As F1-0 | — |
+| F1-2 | 09-29 13:04 | idiots | PEN a | F1 | — | 7 | 7 | 21 | 513.5 | 8ad09fd8-3fc2-439e-9e14-b8c31c71a929 | **unchecked** | As F1-0 | — |
+| F1-3 | 09-29 13:04 | idiots | PEN b | F1 | — | 7 | 7 | 28 | 506.5 | d8c90c09-68a4-4a09-b7c9-782bd2577575 | **unchecked** | As F1-0 | — |
+
+**Running totals:**
+- Lane: **28.0 / 70**, 42 unused (enough for one regen or edit per plate after the checks).
+- Balance **506.5**, against a floor of 150 and the v2 floor of 250.
+- Program running total (MEDIA-PLAN v2): 665.5 + 28 = **693.5 / 950**.

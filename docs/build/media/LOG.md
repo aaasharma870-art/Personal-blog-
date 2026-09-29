@@ -887,3 +887,46 @@ The encodes are sharp lanczos3 WebP (effort 6), with a centre crop that is a no-
 3. **The ICE and WANTED bboxes above** are for placing the HTML board text and the "WANTED" lettering. They are measured on the web files.
 4. **PEARL ALT** has an ornate stern finial (a carved urn or bird). It passed the face check but is the one ornament worth a second look.
 5. **Check L2:** Claude ✓ 09-29 on all 16 delivered plates; Aryan pending.
+
+
+---
+
+# Higgsfield media LOG: M2 finish · 3 Idiots scenes (CORRIDOR, PEN) · 2026-09-29 13:04 UTC · 28 cr
+
+**Scope:** two more iconic 3 Idiots plates, each with a DEFAULT and an ALT (Aryan: "the ones we have aren't iconic enough"):
+- **CORRIDOR** → `iconic-corridor` / `iconic-corridor-alt`: the ICE campus corridors (IIM Bangalore look, IC-3I-09: no signage, nothing implying affiliation).
+- **PEN** → `iconic-pen` / `iconic-pen-alt`: Virus's astronaut pen in its case (IC-3I-06 / RECOGNIZABILITY O-5), with a stopwatch.
+
+**STATUS: GENERATED, NOT DELIVERED.** The four jobs completed, but this cloud session's egress proxy refuses CONNECT to the Higgsfield CDN (`d8j0ntlcm91z4.cloudfront.net`, 403 by organization policy). No candidate could be downloaded, viewed, checked or encoded, so **nothing was written to `public/`** and no verdict exists. The four ids stay registered in `lib/media.ts` as status **"planned"** (pre-registered in step 0; commit 4249438): `iconic-corridor` → fallback `iconic-ice`, `iconic-pen` → fallback `MV-06`, each ALT → its default. Builders may reference the ids now; they render the fallbacks until a session that can reach the CDN finishes the delivery below. No second batch was run: spending more credits on images nobody can check would be waste.
+
+**Credits and balance:** 534.5 → **506.5** (`balance`); the lane spent **28.0** (cap 70, floor 150). `transactions` reconciles this as 4 spends × 7 ("GPT Image 2.5 Flare") at 13:04:09.9–13:04:12.7 UTC.
+
+**Settings for every job:** `gpt_image_2_5` (served as "flare"), 16:9, 4k, xhigh (preflight `get_cost` = 7), output 3840×2160. Text-only prompts; no references. Count 2 per plate (identical prompts, two jobs each via `generate_image_batch`). Prompt files (gitignored): `media-src/m2finish/{A,X,corridor.subject,pen.subject,corridor.full,pen.full}.txt`.
+
+**Prompt recipe** (the M2 iconic recipe, with the calm zone moved to the LEFT 40% for these two):
+- **[A-iconic]:** "Original cinematic artwork, unmistakable and iconic, recreated as our own composition: photographic realism, natural practical light, a locked 35-50 mm camera at eye height, 16:9 frame. The LEFT 40% of the frame is darker and calmer (deeper shade, low detail, even tones) so a live caption can sit there. No interface, no typography."
+- **CORRIDOR subject:** "World: a celebrated Indian engineering college campus in Bangalore, built in the style of IIM Bangalore's architecture: rough-cut grey granite walls, exposed board-marked concrete, and long open-sided corridors roofed by concrete pergolas. Subject: a long, completely empty stone-and-exposed-concrete corridor of that campus in warm early-morning light. Square rough-cut granite columns march away in deep one-point perspective toward a bright, sunlit vanishing point just right of centre. Overhead, a concrete pergola of parallel slats casts bold stripes of golden sunlight and crisp shadow across the smooth stone floor and up the columns. On the right side, between the columns, a sunlit courtyard of tall green trees, lawn and bougainvillea is glimpsed. On the left, a continuous rough granite wall stays in cool shade, dark and calm. Quiet, contemplative, timeless; faint dust in the light beams. The walls and columns are completely bare: no notice boards, no posters, no plaques, no signs, no lettering."
+- **PEN subject:** "World: a strict senior professor's office in an old Indian engineering college, morning. Subject: an intimate still life on an old, dark, polished-wood professor's desk. Right of centre, a gleaming, finely engraved silver-and-gold ballpoint "space pen", an astronaut's pen, rests in an open polished wooden presentation case lined with deep-blue velvet, the hinged lid standing open behind it. The pen's engraving is abstract fine wave and guilloche lines only, with no letters or numbers. Beside the case, a vintage silver mechanical stopwatch lies on the desk; its plain white face shows only fine tick marks and two hands, with no numerals. Warm window light falls from the right, raking across the pen so its metal glints. Very shallow depth of field: behind, softly out of focus, a chalk-dusted college office - a wiped-clean green chalkboard with only soft grey chalk-dust smudges, a granite window frame with morning light. The LEFT 40% of the frame is the darker, calmer side: deep shadowed wood and soft dark background. Nothing else on the desk; no papers, no books, no hands."
+- **[X-iconic]:** "Exclusions (absolute): no text of any kind, no letters, no words, no numbers or numerals, no signage, no notices, no posters, no plaques, no labels, no logos, no crests, no emblems, no badges, no watermark. No person, no figure, no crowd, no face, no hand, no arm, no silhouette or shadow of a person, and no statue, bust, carving or portrait with a face. No weapons, no bottles, no tobacco. No lens flares, no neon, no chromatic aberration."
+
+## Runs
+| Run | UTC | Jobs | Cr | Notes |
+|---|---|---|---|---|
+| F1 | 13:04 | 4 (CORRIDOR ×2, PEN ×2) | 28 | All completed. Download blocked (CDN 403 at the egress proxy); no checks possible |
+
+## Results per plate
+| Plate | Film · moment (for the HTML caption) | Candidate a (job) | Candidate b (job) | DEFAULT / ALT | Checks |
+|---|---|---|---|---|---|
+| CORRIDOR | 3 Idiots · the ICE corridors | `f71ce666-7b28-42db-b714-761832ac572c` | `14f08567-a7ea-4474-afda-050a12407aea` | **not chosen** (unviewed) | **none run**: people, pseudo-glyphs, signage, left-40% calm and the vanishing point all still to check |
+| PEN | 3 Idiots · Virus's astronaut pen | `8ad09fd8-3fc2-439e-9e14-b8c31c71a929` | `d8c90c09-68a4-4a09-b7c9-782bd2577575` | **not chosen** (unviewed) | **none run**: hands, engraved pseudo-letters on the pen, stopwatch numerals, chalkboard marks and left-40% calm all still to check |
+
+## To finish the delivery (0 credits; any session that can reach the CDN)
+1. Download the 4 masters (`show_generation_by_ids` gives each job's `rawUrl`) into `media-src/m2finish/`.
+2. View each at 1400 px, plus 2–3 sharp crops at 100–300% (CORRIDOR: walls, column faces, the courtyard, the far end; PEN: the pen barrel, the case lining, the stopwatch dial, the blurred board). Reject for people or hands, pseudo-glyph text, signage, or a wrong subject. At most one regen or edit per plate (≤ 14 cr; 42 cr of the 70 cap remain).
+3. Pick the DEFAULT and the ALT per plate. Encode with sharp (lanczos3, effort 6): 2560×1440 q 74–86 ≤ 450 KB → `public/media/films/iconic-<corridor|pen>[-alt].webp`. The 1280×720 encodes (≤ 160 KB) stay out of `public/` unless `lib/media.ts` registers them: no iconic-* 1280 file is in `public/` today, and `npm run check` errors on unregistered files.
+4. In `lib/media.ts`, flip the four entries to `"accepted"`, with a measured `focal` (the corridor's vanishing point / the pen), `provenance: hf2(ICONIC, 7, "<job id>", "…")`, `accept: cleanM2(["IC-3I-09"])` (corridor) / `cleanM2(["IC-3I-06"])` (pen), keeping the planned fallbacks as the iconic-ice pattern does. Then log the verdicts here and in `LEDGER-m2iconic.md`.
+
+## Open flags
+1. **Egress:** `d8j0ntlcm91z4.cloudfront.net` is denied by the cloud proxy's organization policy. Aryan (or a local session) must fetch the four masters, or allow that host for this environment.
+2. **Captions:** until the plates land, `iconic-corridor` renders `iconic-ice` and `iconic-pen` renders `MV-06`. A caption naming the corridor or the pen over those fallbacks would name the wrong moment; builders should gate those captions on `resolveMedia(id)?.id === id` or keep them proposed-off.
+3. **Check L2:** not signed; no candidate has been viewed.

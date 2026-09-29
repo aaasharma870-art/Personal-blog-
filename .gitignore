@@ -58,3 +58,13 @@ next-env.d.ts
 
 # personal-use / desktop-licence font binaries (SPEC §9.7 mode B): never in git
 /design-src/fonts-personal/
+
+# capture harness deps + locks (tools/capture)
+/tools/capture/node_modules/
+/tools/capture/package.json
+/tools/capture/package-lock.json
+/tools/capture/.browser-locks/
+
+# capture frames (large PNGs; contact sheets reference them locally)
+/docs/build/m2-after/*.png
+/docs/build/final-frames/*.png

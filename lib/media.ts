@@ -888,6 +888,39 @@ export const mediaAssets = {
     accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
     variantOf: "iconic-ice", fallback: "iconic-ice", reduced: "poster",
   },
+  /* M2 finish (media agent, 2026-09-29): two more 3 Idiots plates,
+     pre-registered "planned" so builders can reference the ids; they resolve
+     to their fallbacks until the files land (LOG "M2 finish · 3 Idiots scenes").
+     Generated (candidates, UNCHECKED: the cloud egress proxy blocks the
+     Higgsfield CDN, so nothing could be downloaded or viewed): corridor
+     f71ce666 / 14f08567, pen 8ad09fd8 / d8c90c09. Stay "planned" until a
+     session that can fetch them checks, encodes and flips them. */
+  "iconic-corridor": {
+    kind: "image", status: "planned", src: "/media/films/iconic-corridor.webp",
+    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
+    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the ICE stone corridor, pergola stripes, left 40% calm" },
+    fallback: "iconic-ice", reduced: "poster",
+    variants: { alt: "iconic-corridor-alt" },
+  },
+  "iconic-corridor-alt": {
+    kind: "image", status: "planned", src: "/media/films/iconic-corridor-alt.webp",
+    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
+    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-corridor" },
+    variantOf: "iconic-corridor", fallback: "iconic-corridor", reduced: "poster",
+  },
+  "iconic-pen": {
+    kind: "image", status: "planned", src: "/media/films/iconic-pen.webp",
+    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
+    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the astronaut pen in its velvet case, left 40% calm" },
+    fallback: "MV-06", reduced: "poster",
+    variants: { alt: "iconic-pen-alt" },
+  },
+  "iconic-pen-alt": {
+    kind: "image", status: "planned", src: "/media/films/iconic-pen-alt.webp",
+    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
+    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-pen" },
+    variantOf: "iconic-pen", fallback: "iconic-pen", reduced: "poster",
+  },
   "iconic-drone": {
     kind: "image", status: "accepted", src: "/media/films/iconic-drone.webp",
     width: 2560, height: 1440, focal: [0.6, 0.47], alt: null,

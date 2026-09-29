@@ -35,6 +35,8 @@ const eslintConfig = defineConfig([
     // Local agent tooling (skills, stale worktrees): never part of the app,
     // excluded from git via .git/info/exclude.
     ".claude/**",
+    // Capture harness (CommonJS Node scripts for frame captures), not app code.
+    "tools/**",
   ]),
 ]);
 
