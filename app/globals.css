@@ -1007,3 +1007,105 @@ body {
     clip-path: inset(0 0 0 100%);
   }
 }
+
+/* === hero & cards ===========================================================
+   Owned by the hero + act-cards builder (components/sections/hero/**,
+   components/sections/act-card/**). Keep additions inside this block.
+   ========================================================================== */
+
+/* Hero — the Lens's clip layer fills the full-bleed plate box (its children
+   are absolutely positioned, so the layer would otherwise have no height). */
+[data-hero-lens="desktop"] > [data-lens] > div:first-child {
+  position: absolute;
+  inset: 0;
+}
+
+/* Hero — the aperture's PRE-PAINT state (hero-boot.ts; hero-lens.BAR S0):
+   both plates start as a slit at the focal x and the bracket halves wait.
+   The inline clip of the Lens takes over at hydration; a failsafe in the
+   boot script removes the attribute if the page never hydrates. */
+[data-hero][data-aperture="pending"] [data-hero-lens] > [data-lens] > div:first-child {
+  clip-path: inset(0 var(--hero-slit-r, 30%) 0 var(--hero-slit-l, 70%)) !important;
+}
+[data-hero][data-aperture="pending"] [data-hero-lens] > [data-lens] > div:last-child {
+  visibility: hidden;
+}
+
+/* Act cards — the pinned travel of the two long cards (seam, ignite; D-5
+   ≤ 60vh each), reserved in CSS so SSR already has it (CLS 0), and only
+   where it runs: ≥ 1024, a fine pointer, OS motion on. Elsewhere: 0 travel.
+   (A view that starts paused drops the attribute; a mid-session Pause keeps
+   the spacer so the page never reflows under the reader — CardShell.) */
+:root {
+  --act-card-travel: 58vh;
+}
+@media (min-width: 64rem) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-act-card-long] {
+    min-height: calc(100svh + var(--act-card-travel));
+  }
+  [data-act-card-long] .act-card-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+}
+
+/* Act cards — the opening card's row vignette: that act's Line material,
+   drawn on hover AND focus (a stroke draw-on; instant when motion is off). */
+.opening-vignette {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--dur-reveal) var(--ease-draw);
+}
+a:hover .opening-vignette,
+a:focus-visible .opening-vignette {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .opening-vignette {
+    transition: none;
+  }
+}
+html[data-motion="paused"] .opening-vignette {
+  transition: none;
+}
+
+/* Card I→II — the code "storm grade" on the hero sea until MV-04 exists,
+   and the blueprint ground (--bp-panel + a 24 px grid at 6%). */
+.act-storm-grade {
+  filter: grayscale(0.55) saturate(0.8) brightness(0.62) contrast(1.12);
+}
+.act-blueprint {
+  background-color: var(--bp-panel);
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--w-bp-line) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--w-bp-line) 6%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Card II→III — the tintype (STUDY R-2): 6 px radius, grayscale + .45
+   sepia, and an inset DARKENING vignette in the plane's own ground (edges
+   only; never light paint). */
+.act-tintype {
+  border-radius: 6px;
+}
+.act-tintype img {
+  filter: grayscale(1) sepia(0.45) contrast(1.04);
+}
+.act-tintype-vignette {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--bg) 62%, transparent),
+      transparent 16%,
+      transparent 84%,
+      color-mix(in oklab, var(--bg) 62%, transparent)
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--bg) 56%, transparent),
+      transparent 18%,
+      transparent 80%,
+      color-mix(in oklab, var(--bg) 66%, transparent)
+    );
+}
+/* === /hero & cards === */

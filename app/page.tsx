@@ -1,5 +1,6 @@
 import { SectionFrame } from "@/components/sections/SectionFrame";
 import { rendererFor } from "@/components/sections/registry";
+import { ActCardSection } from "@/components/sections/act-card/act-card-section";
 import { enabledSections, numberOf, pageItems } from "@/lib/sections";
 
 /** The home page is the manifest (lib/page.ts), rendered in the derived
@@ -8,13 +9,14 @@ import { enabledSections, numberOf, pageItems } from "@/lib/sections";
  *  before the first section of each act. Add, hide or reorder sections in
  *  lib/page.ts — not here.
  *
- *  M1 integrator: act items are derived but not rendered yet — the
- *  hero + act-cards builder renders them here with <ActCard> (SPEC §9.3). */
+ *  Act items render as letterboxed loading-reel interstitials
+ *  (components/sections/act-card: SPEC v2 §8.2, §9.3); each card owns its
+ *  plane (the incoming world's deep), so it needs no SectionFrame. */
 export default function Home() {
   return (
     <>
       {pageItems.map((item) => {
-        if (item.kind === "act") return null;
+        if (item.kind === "act") return <ActCardSection key={item.id} item={item} />;
         const i = enabledSections.indexOf(item.entry);
         const Section = rendererFor(item.entry.type);
         return (

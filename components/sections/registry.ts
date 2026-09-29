@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import type { SectionType } from "@/lib/page";
 import type { SectionProps } from "@/components/sections/types";
-import { Hero } from "@/components/site/hero";
+import { HeroSection } from "@/components/sections/hero/hero-section";
 import { CredibilitySection } from "@/components/sections/credibility-section";
 import { StorySection } from "@/components/sections/story-section";
 import { MediaBandSection } from "@/components/sections/media-band-section";
@@ -19,7 +19,8 @@ import { Contact } from "@/components/site/contact";
 type Renderers = { [K in SectionType]: ComponentType<SectionProps<K>> };
 
 export const registry = {
-  hero: Hero,
+  /* Cold open: the name at sea (SPEC v2 §6). */
+  hero: HeroSection,
   /* Act I + III: about (split), journey (voyage), beyond (notes). */
   story: StorySection,
   /* Act II. The legacy gauntlet still renders the chapters, the demo and

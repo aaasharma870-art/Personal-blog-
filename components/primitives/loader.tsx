@@ -15,6 +15,7 @@ import { loader as loaderTiming } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { worlds, type LoaderKind, type WorldId } from "@/lib/worlds";
 import { useWorld } from "@/components/primitives/world";
+import { worldLoaderRenderers } from "@/components/primitives/loaders";
 
 /**
  * Loader — the shell of the world loader system (SPEC §8, loaders.BAR).
@@ -88,9 +89,12 @@ function PlainLoader({ mode, size, progress, animate }: LoaderRendererProps) {
   );
 }
 
-/** Kind → renderer. Kinds missing here fall back to `plain`. */
+/** Kind → renderer. Kinds missing here fall back to `plain`. The world
+ *  motifs (course / gauge / plate-trail / ink-light) live in
+ *  components/primitives/loaders/, one code-split chunk per world. */
 export const loaderRenderers: Partial<Record<LoaderKind, ComponentType<LoaderRendererProps>>> = {
   plain: PlainLoader,
+  ...worldLoaderRenderers,
 };
 
 export function rendererFor(kind: LoaderKind): ComponentType<LoaderRendererProps> {
