@@ -92,10 +92,14 @@ const TOWER: Record<"IN-01" | "IN-01m", { x: number; top: number; base: number; 
  *  the mask-sweep landing reveals no seam). A clip without an entry flies
  *  with no trail and lands with a crossfade. */
 type TrailJson = { emitUntil: number; points: number[][] };
-const FLIGHTS: Partial<Record<MediaId, { trail: TrailJson; anchored: boolean }>> = {
+const FLIGHTS: Partial<Record<MediaId, { trail: TrailJson; anchored: boolean; cut?: number }>> = {
   "IN-02": { trail: trailDefault, anchored: true },
-  // the IN-02 batch runner-up: last frame SSIM 0.957 vs MV-01 (not tail-anchored)
-  "IN-02-alt": { trail: trailAlt, anchored: false },
+  // the IN-02 batch runner-up: last frame SSIM 0.957 vs MV-01 (not tail-anchored).
+  // cut 2.9 s (M2 critic 3 #8): the broom plunges into the crest at ~3.1 s
+  // in a rectangular foam burst with a hard right edge — the flight hands
+  // off to the hero BEFORE it, on its last clean frame (held under the
+  // landing)
+  "IN-02-alt": { trail: trailAlt, anchored: false, cut: 2.9 },
 };
 
 export type IntroFlight = {
@@ -106,6 +110,9 @@ export type IntroFlight = {
   anchored: boolean;
   /** The bristle-end path on the video clock, or null (no light trail). */
   trail: { emitUntil: number; points: number[][] } | null;
+  /** Hand off to the hero at this video time (s), holding that frame under
+   *  the landing; null = land on the clip's own end. */
+  cut: number | null;
 };
 
 export type IntroPlate = {
@@ -279,6 +286,7 @@ function flightOf(
     dur: Math.min(a.durationS ?? maxS, maxS + 0.2),
     anchored: Boolean(known?.anchored && heroStill && a.endsOn === heroStill),
     trail: known ? { emitUntil: known.trail.emitUntil, points: known.trail.points } : null,
+    cut: known?.cut ?? null,
   };
 }
 

@@ -159,16 +159,16 @@ export type ChapterAppendix = "origin" | "supporting";
 
 /** An Act II head plate (M2 finish; components/worlds/idiots/plate-band.tsx).
  *  `media` is the DEFAULT plate; the ALT plays the other side of its media
- *  pair (lib/media.ts `variants` / `variantOf`). `standInMedia`: what the
- *  head shows (and captions as itself) while `media` is still "planned". */
-export type HeadPlate = { media: MediaId; standInMedia?: MediaId };
+ *  pair (lib/media.ts `variants` / `variantOf`). */
+export type HeadPlate = { media: MediaId };
 
 /** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
  *  retired D-3 layer, kept only until the retirement pass deletes them. */
 export type SectionEntry =
   | Entry<"hero", HeroProps>
   | Entry<"story", StoryProps>
-  /** `head`: the full-bleed band above the h2 (M2 finish: iconic-corridor). */
+  /** `head`: the full-bleed band above the h2 (M2 fix round 3: Virus's
+   *  astronaut pen on his desk, iconic-pen-alt). */
   | Entry<"gauntlet", { board: MediaId; head?: HeadPlate }>
   /** `head`: the band at the chapter's head, before its facts (M2 finish:
    *  optuna-screener's lecture-hall board, IC-3I-05). */
@@ -270,9 +270,11 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Work", primary: true },
-    // head: THE CORRIDORS OF ICE (iconic-corridor, planned → the lecture
-    // hall stand-in, iconic-ice-alt, until the plate lands)
-    props: { board: "MV-06", head: { media: "iconic-corridor", standInMedia: "iconic-ice-alt" } },
+    // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
+    // "generic architecture"): Virus's astronaut pen on his desk — the
+    // OTHER pen plate from the kill-list's (platePick swaps sides per
+    // variant, so the two sections never show the same picture in one view)
+    props: { board: "MV-06", head: { media: "iconic-pen-alt" } },
   },
   {
     id: "trading-algos",
@@ -331,7 +333,7 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
-    // head: VIRUS'S ASTRONAUT PEN (iconic-pen; its code stand-in while planned)
+    // head: VIRUS'S ASTRONAUT PEN (iconic-pen; ALT iconic-pen-alt)
     props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
   },
 

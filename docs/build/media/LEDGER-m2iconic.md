@@ -56,3 +56,5 @@
 - Lane: **28.0 / 70**, 42 unused (enough for one regen or edit per plate after the checks).
 - Balance **506.5**, against a floor of 150 and the v2 floor of 250.
 - Program running total (MEDIA-PLAN v2): 665.5 + 28 = **693.5 / 950**.
+
+**M2 finish delivery (14:06 UTC):** F1-0…F1-3 fetched and checked — corridor 14f08567 = DEFAULT, f71ce666 = ALT; pen 8ad09fd8 = DEFAULT, d8c90c09 = ALT. 0 extra credits. Balance 506.5.

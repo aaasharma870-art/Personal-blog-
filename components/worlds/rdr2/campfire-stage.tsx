@@ -32,7 +32,8 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    down, night falls on it EXCEPT around the fire (a deep veil with a hole
    at the plate's measured `marks.fire`), so the fire is the last light
    when card III→IV's embers rise from the same mark (T10). Caption
-   cap.voices at the plate's bottom-right.
+   cap.voices in the section HEAD, under the h2 (ART-DIRECTOR #14: the camp
+   is named the moment the section opens, not at the sticky plate's foot).
    ALT "fireside-loop": a cutscene — the fire band (MV-11, whose 8 s loop
    MV-11L plays on desktop only while visible and the decoder is free) opens
    from a letterbox; the head and the lead quote sit in its dark left; the
@@ -109,7 +110,8 @@ export function CampfireStage({
   /** The lead figure (already read into firelight). */
   lead: ReactNode;
   rest: readonly Voice[];
-  /** cap.voices, place "br" (on the sticky plate, desktop). */
+  /** cap.voices, place "head": under the section head, desktop (the
+   *  mobile still carries `captionUnder`). */
   caption?: ReactNode;
   /** cap.voices, place "under" (under the mobile still). */
   captionUnder?: ReactNode;
@@ -197,6 +199,7 @@ export function CampfireStage({
     <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v}>
       <div className={s.campCopy}>
         {head}
+        {caption ? <div className={s.campHeadCaption}>{caption}</div> : null}
         <div className={s.campMobile}>
           <MediaFrame media={media} ratio={4 / 3} radius="frame" playOn="never" sizes="100vw" />
           {captionUnder}
@@ -206,7 +209,7 @@ export function CampfireStage({
       </div>
       {/* the camp, behind the quotes (z -1; after them in reading order) */}
       <div className={s.campBackdrop}>
-        <div ref={hostRef} className={cn(s.campSticky, "scene-caption-host")}>
+        <div ref={hostRef} className={s.campSticky}>
           <div ref={plateRef} className={s.campPlate}>
             <MediaFrame media={media} layout="fill" sizes="100vw" playOn="never" />
           </div>
@@ -221,7 +224,6 @@ export function CampfireStage({
               <motion.div className={s.duskVeil} aria-hidden="true" style={{ opacity: fadeUp }} />
             </>
           ) : null}
-          {caption}
         </div>
       </div>
     </div>

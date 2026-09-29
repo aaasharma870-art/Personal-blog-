@@ -68,18 +68,23 @@ const KIT: readonly Kit[] = [
   },
 ];
 
-/* The satchel, viewBox 0 0 200 170 (leather body, strap, flap, buckle). */
+/* The satchel, viewBox 0 -14 200 184 (M5, blind A33: the short handle arc
+   over a flared body read as a HANDBAG): a boxy leather body with a side
+   gusset, a LONG shoulder strap on two D-rings with its slider buckle, and
+   a deep front flap closed by TWO buckled straps (the saddlebag grammar). */
 const BAG = {
-  strap: "M34 74 C28 -10 172 -10 166 74 M44 74 C40 4 160 4 156 74",
-  body: "M26 74 L174 74 L168 156 Q166 164 158 164 L42 164 Q34 164 32 156 Z",
-  stitch: "M36 84 L164 84 M40 154 L160 154",
+  strap:
+    "M26 84 C4 40 20 -4 100 -8 C180 -4 196 40 174 84 M33 82 C15 44 30 4 100 1 C170 4 185 44 167 82 M140 10 h14 v10 h-14 Z",
+  body: "M30 74 L170 74 L170 150 Q170 162 158 162 L42 162 Q30 162 30 150 Z M30 80 L22 86 L22 148 Q22 158 32 161",
+  rings: "M24 84 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M168 84 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0",
+  stitch: "M36 84 L164 84 M38 154 L162 154",
   /** DEFAULT: the flap thrown back, open (the kit spills from the mouth). */
-  flapOpen: "M28 74 L20 50 Q100 34 180 50 L172 74",
-  /** ALT: the flap buckled shut over the body. */
-  flapShut: "M26 74 L174 74 L170 122 Q100 138 30 122 Z",
-  strapFront: "M100 130 L100 150",
-  buckle: "M90 120 h20 v14 h-20 Z M100 120 v14",
-  hatch: "M40 150 l10 -10 M52 150 l10 -10 M64 150 l10 -10 M136 150 l10 -10 M148 150 l10 -10",
+  flapOpen: "M30 74 L20 50 Q100 32 180 50 L170 74",
+  /** ALT: the flap buckled shut over the body, its edge stitched. */
+  flapShut: "M28 74 L172 74 L172 124 Q100 140 28 124 Z M36 120 Q100 134 164 120",
+  strapFront: "M70 128 L70 150 M130 128 L130 150",
+  buckle: "M61 118 h18 v13 h-18 Z M70 118 v13 M121 118 h18 v13 h-18 Z M130 118 v13",
+  hatch: "M40 150 l10 -10 M52 150 l10 -10 M150 150 l10 -10",
 } as const;
 
 /* A pencil tick (ALT ledger), viewBox 0 0 20 20. */
@@ -104,7 +109,7 @@ function fade(phase: EnterPhase, delay: number) {
 function Bag({ phase, shut, start, fid }: { phase: EnterPhase; shut: boolean; start: number; fid: string }) {
   return (
     <svg
-      viewBox="0 0 200 170"
+      viewBox="0 -14 200 184"
       aria-hidden="true"
       focusable="false"
       className="h-auto w-44 overflow-visible sm:w-52"
@@ -116,6 +121,7 @@ function Bag({ phase, shut, start, fid }: { phase: EnterPhase; shut: boolean; st
       <g filter={`url(#bag-${fid})`} fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
         <motion.path d={BAG.strap} strokeWidth={1.5} {...draw(phase, start, dur.draw.med)} />
         <motion.path d={BAG.body} strokeWidth={1.8} {...draw(phase, start + 0.2, dur.draw.med)} />
+        <motion.path d={BAG.rings} strokeWidth={1.3} {...draw(phase, start + 0.5, 0.3)} />
         <motion.path d={BAG.stitch} strokeWidth={1} strokeDasharray="3 4" {...fade(phase, start + 0.9)} />
         <motion.path d={BAG.hatch} strokeWidth={0.9} strokeOpacity={0.7} {...fade(phase, start + 1)} />
         {shut ? (

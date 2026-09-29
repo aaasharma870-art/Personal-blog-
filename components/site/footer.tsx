@@ -156,7 +156,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
                     {w.world === "house" ? (
                       w.title
                     ) : (
-                      <Lettered world={w.world} text={w.title} className="text-[1.375rem] leading-tight tracking-[0.03em]" />
+                      <Lettered world={w.world} text={w.title} glue className="text-[1.375rem] leading-tight tracking-[0.03em]" />
                     )}{" "}
                     <span className="text-fg-muted">({w.years})</span>
                   </span>

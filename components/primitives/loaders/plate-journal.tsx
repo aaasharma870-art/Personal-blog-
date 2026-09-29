@@ -27,19 +27,26 @@ import { LINE, fitPoint, type Box } from "@/components/primitives/loaders/line";
  * DEFAULT; the tintype plate is retired to plate-trail.tsx and the new ALT
  * is Dead Eye, plate-deadeye.tsx; caption cap.loader.rdr2 "ARTHUR MORGAN'S
  * JOURNAL"). RDR2 reflects: a leather-bound journal, strapped, open on a
- * page where a pencil sketches the frontier stroke by stroke (horizon,
- * ridges, a pine, the trail — the site's Line in graphite — a campfire, a
- * low sun, two birds, hatching). The sketch appearing IS the progress
- * (RD-P1 kept by hand; RD-P4).
+ * page where a pencil sketches the frontier stroke by stroke. M2 fix
+ * (BLIND-1: 0.50–0.55, "mountains, could be any sketchbook"): the page now
+ * carries unmistakable frontier subjects, big — rolling hills with a mesa
+ * and the SUN (rayed) going down over them, two pines, a split-rail fence
+ * whose post wears a COWBOY HAT, and a HORSE'S HEAD in profile (bridled; no
+ * rider, no person), then the trail (the site's Line in graphite), a little
+ * hatching and two birds. The sketch appearing IS the progress (RD-P1 kept
+ * by hand; RD-P4).
  *
  *   determinate    the pencil has drawn exactly `progress` of the total
  *                  line (each stroke owns its share of the summed length, in
  *                  drawing order: direct, no spring); its tip rides the
  *                  stroke being drawn. The sketch never "finishes" before
  *                  progress = 1.
- *   indeterminate  the page is blank; the pencil taps at the first stroke
- *                  every 0.6 s (working, visibly not progressing); frozen
- *                  when the shell's idle stop drops `animate`.
+ *   indeterminate  the sketch is PARKED MID-DRAW (never a blank page): the
+ *                  hills, sun, pines, the hat on its post and the horse are
+ *                  down; the trail, hatching and birds are not. The pencil
+ *                  taps at the head of the drawing every 0.6 s (working,
+ *                  visibly not progressing); frozen when the shell's idle
+ *                  stop drops `animate`.
  *   complete       the sketch is whole; the journal's ONE red-pencil
  *                  underline draws under it (0.5 s) and the pencil is laid
  *                  down beside the page — no flash, no glow.
@@ -59,46 +66,135 @@ const COVER = { x: 9, y: 4, w: 146, h: 92 };
 const STRAP = { x: 147.5, w: 5 };
 const LEATHER_DARK = "color-mix(in oklab, var(--w-leather) 52%, var(--rd-deep))";
 const TILT = `rotate(-1.5 ${PAGE.x + PAGE.w / 2} ${PAGE.y + PAGE.h / 2})`;
-const TRAIL_BOX: Box = { x: 50, y: 66, w: 80, h: 16 };
+/** The trail: the site's Line, small, on the ground between the post and
+ *  the horse. */
+const TRAIL_BOX: Box = { x: 64, y: 76, w: 32, h: 11 };
 
 const poly = (...p: Pt[]): Pt[] => p;
-const trail: Pt[] = Array.from({ length: 40 }, (_, i) => {
-  const q = fitPoint(LINE.at(i / 39), TRAIL_BOX);
+/** A smooth stroke through `pts` (Catmull-Rom, sampled; module scope, so
+ *  the server and the client agree). */
+function smooth(pts: readonly Pt[], n = 5): Pt[] {
+  const out: Pt[] = [pts[0]];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    for (let k = 1; k <= n; k++) {
+      const t = k / n;
+      const t2 = t * t;
+      const t3 = t2 * t;
+      const f = (a: number, b: number, c: number, d: number) =>
+        0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
+      out.push([f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1])]);
+    }
+  }
+  return out;
+}
+const trail: Pt[] = Array.from({ length: 30 }, (_, i) => {
+  const q = fitPoint(LINE.at(i / 29), TRAIL_BOX);
   return [q.x, q.y] as Pt;
 });
-const FIRE = fitPoint(LINE.at(1), TRAIL_BOX);
+const pine = (x: number, base: number, h: number): Pt[][] => {
+  const w = h * 0.36;
+  const y = (f: number) => base - h * f;
+  return [
+    poly([x, y(1)], [x - w * 0.45, y(0.66)], [x - w * 0.2, y(0.66)], [x - w * 0.75, y(0.33)], [x - w * 0.35, y(0.33)], [x - w, y(0.04)], [x + w, y(0.04)], [x + w * 0.35, y(0.33)], [x + w * 0.75, y(0.33)], [x + w * 0.2, y(0.66)], [x + w * 0.45, y(0.66)], [x, y(1)]),
+    poly([x, y(0.04)], [x + 0.2, base + 3]),
+  ];
+};
+/** The sun going down over the hills, and its rays (none below the ridge). */
+const SUN = { x: 80, y: 41, r: 5.2 };
+const RAYS: Pt[][] = [-160, -130, -100, -70, -40, -10, 20, 160].map((deg) => {
+  const a = (deg * Math.PI) / 180;
+  return poly([SUN.x + 7.4 * Math.cos(a), SUN.y + 7.4 * Math.sin(a)], [SUN.x + 11 * Math.cos(a), SUN.y + 11 * Math.sin(a)]);
+});
 
-const SKETCH: Pt[][] = [
-  // the horizon
-  cubicPts([24, 57], [54, 55.5], [98, 58.5], [136, 56.5], 16),
-  // the far ridge (left range, then right range)
-  poly([25, 57], [33, 48], [37, 51], [46, 36.5], [52, 44], [57, 40.5], [66, 53], [72, 49], [79, 56]),
-  poly([84, 56], [93, 45], [98, 48.5], [108, 33.5], [114, 41], [119, 37.5], [128, 49], [135, 53]),
-  // the near hill
-  cubicPts([24, 68], [52, 59], [86, 71], [136, 63], 16),
-  // a lone pine on the near hill (outline, then trunk)
-  poly([36, 49], [32.5, 55.5], [35, 55.5], [30.5, 61.5], [34, 61.5], [29, 68], [43, 68], [38, 61.5], [41.5, 61.5], [37, 55.5], [39.5, 55.5], [36, 49]),
-  poly([36, 68], [36.2, 73]),
-  // the trail: the site's Line, in graphite
-  trail,
-  // the campfire at the trail's end: two crossed logs, three licks
-  poly([FIRE.x - 5, FIRE.y + 1.5], [FIRE.x + 5, FIRE.y - 1]),
-  poly([FIRE.x - 5, FIRE.y - 1], [FIRE.x + 5, FIRE.y + 1.5]),
-  cubicPts([FIRE.x - 2.5, FIRE.y - 1], [FIRE.x - 4, FIRE.y - 5], [FIRE.x - 1, FIRE.y - 6], [FIRE.x - 1.5, FIRE.y - 9], 6),
-  cubicPts([FIRE.x, FIRE.y - 1], [FIRE.x + 2.5, FIRE.y - 6], [FIRE.x - 1, FIRE.y - 8], [FIRE.x + 0.8, FIRE.y - 12], 6),
-  cubicPts([FIRE.x + 2.5, FIRE.y - 1], [FIRE.x + 4, FIRE.y - 4], [FIRE.x + 2, FIRE.y - 6], [FIRE.x + 3, FIRE.y - 8], 6),
-  // the low sun between the ranges
-  arcPts(82, 44, 4.2, 4.2, 180, 540, 18),
-  // hatching on the shadow slopes
-  ...[0, 1, 2, 3].map((k) => poly([47 + k * 2.6, 40 + k * 2.2], [49.5 + k * 2.6, 44.5 + k * 2.2])),
-  ...[0, 1, 2, 3].map((k) => poly([109 + k * 2.6, 37 + k * 2.2], [111.5 + k * 2.6, 41.5 + k * 2.2])),
-  // two birds
-  poly([62, 24], [65, 22], [67.5, 24.5], [70, 22], [73, 24]),
-  poly([76, 19.5], [78.2, 18], [80, 19.8], [81.8, 18], [84, 19.5]),
+/** The cowboy hat (brim underside, brim top, the pinched crown) and the
+ *  horse's head (the front outline from the neck round the muzzle to the
+ *  forelock, the ears, the crest). */
+const BRIM_UNDER = smooth([[46.5, 55.2], [50, 58.6], [55, 60.4], [60, 60.8], [65, 60.4], [70, 58.6], [73.5, 55.2]], 4);
+const BRIM_TOP = smooth([[46.5, 55.2], [52, 57.4], [60, 58.2], [68, 57.4], [73.5, 55.2]], 4);
+const CROWN = smooth([[53.6, 57.6], [53.4, 52], [54.6, 48.2], [57, 47], [59, 48.4], [60, 47.9], [61, 48.4], [63, 47], [65.4, 48.2], [66.6, 52], [66.4, 57.6]], 3);
+const HORSE_FRONT = smooth([[125.5, 90.5], [122.5, 82], [119, 76.5], [113, 73.6], [107.5, 77.6], [102.5, 79.4], [99.6, 77.2], [99, 73.6], [100.6, 69.8], [104, 60], [107.6, 52], [111, 46.6], [113.2, 45]], 4);
+const EAR_1 = poly([113.2, 45], [115.8, 37.4], [118.4, 44]);
+const EAR_2 = poly([119.4, 43.2], [122.6, 36.6], [124.2, 43.4]);
+const HORSE_CREST = smooth([[124.2, 43.4], [129, 48], [134, 56], [138, 66], [140.4, 78], [141.4, 90.5]], 4);
+const polyD = (pts: readonly Pt[]) => pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`).join("") + "Z";
+/** Paper-filled silhouettes of the hat and the horse, laid over the land
+ *  strokes (the hills and horizon pass BEHIND them; paper on paper, so they
+ *  are invisible until something is drawn behind them). */
+const OCCLUDE = [
+  polyD([...BRIM_UNDER, [68, 57.4], [66.4, 57.6], ...[...CROWN].reverse(), [52, 57.4]]),
+  polyD([...HORSE_FRONT, ...EAR_1.slice(1), ...EAR_2, ...HORSE_CREST.slice(1), [141.4, 91], [125.5, 91]]),
 ];
-const PLAN: StrokePlan = planStrokes(SKETCH);
+
+/** The ICONIC strokes, in drawing order — the LAND (the hills, the sun, the
+ *  near ground, the pines), then the SUBJECTS (the fence, the hat, the
+ *  horse). The indeterminate sketch parks right after them. */
+const LAND: Pt[][] = [
+  // the far hills: a mesa on the left, two rolling hills with a dip for the sun
+  poly([22, 57], [26, 48.5], [37, 48], [40.5, 56]),
+  cubicPts([38, 57], [50, 41], [66, 43], [80, 53], 14),
+  cubicPts([77, 52], [94, 39], [118, 40], [138, 55], 14),
+  cubicPts([20, 58], [60, 55.5], [100, 58.5], [140, 56.5], 16),
+  // the sun, low between the hills, and its rays
+  arcPts(SUN.x, SUN.y, SUN.r, SUN.r, 180, 540, 18),
+  ...RAYS,
+  // the near ground
+  cubicPts([19, 70], [50, 66], [92, 72.5], [100, 70.5], 14),
+  // two pines on the left
+  ...pine(29, 70, 19),
+  ...pine(37.5, 69, 14),
+];
+const SUBJECTS: Pt[][] = [
+  // the split-rail fence: a short post, THE post, and the rails between
+  poly([43.2, 81], [43.5, 64]),
+  poly([45.8, 81], [45.6, 64]),
+  poly([58.4, 84], [58.8, 61.5]),
+  poly([61.6, 84], [61.3, 61.5]),
+  poly([45.8, 67], [58.4, 66]),
+  poly([45.8, 75], [58.4, 74]),
+  poly([61.6, 66], [76, 67.5]),
+  poly([61.6, 74], [76, 75.5]),
+  // THE COWBOY HAT hung on the post: brim (curled up at both ends), the
+  // pinched crown, its band
+  BRIM_UNDER,
+  BRIM_TOP,
+  CROWN,
+  cubicPts([53.6, 54.6], [57, 55.6], [63, 55.6], [66.4, 54.6], 8),
+  // THE HORSE'S HEAD in profile, facing left: the neck front, throat, jaw,
+  // chin and muzzle, up the face to the forelock; the two ears; the crest
+  // and neck; the cheek, the eye, the nostril and mouth; the bridle; the mane
+  HORSE_FRONT,
+  EAR_1,
+  EAR_2,
+  HORSE_CREST,
+  cubicPts([108.4, 59], [118, 56.6], [121.4, 70], [113.4, 73.6], 10),
+  cubicPts([109.8, 52.4], [111.2, 50.8], [113.2, 50.8], [114.4, 52.2], 5),
+  arcPts(102.8, 71.6, 1.3, 1.1, 200, 470, 8),
+  poly([100.2, 76.6], [104, 77.2]),
+  // the forelock between the ears, and the mane down the crest
+  poly([118.6, 43.4], [116.4, 47.6]),
+  ...[0, 1, 2, 3, 4].map((k) => poly([125 + k * 3, 45.5 + k * 5.2], [129.6 + k * 3, 49 + k * 5.6])),
+];
+const ICONIC: Pt[][] = [...LAND, ...SUBJECTS];
+/** Then the trail, hatching and the birds (drawn after the park point). */
+const FINISH: Pt[][] = [
+  trail,
+  ...[0, 1, 2, 3].map((k) => poly([67 + k * 2.6, 45 + k * 1.6], [69.2 + k * 2.6, 49.6 + k * 1.6])),
+  ...[0, 1, 2].map((k) => poly([88 + k * 2.6, 43.4 + k * 1.2], [90.2 + k * 2.6, 47.8 + k * 1.2])),
+  ...[0, 1, 2].map((k) => poly([63 + k * 2.4, 84], [65.8 + k * 2.4, 81.4])),
+  poly([34, 26], [37, 24], [39.5, 26.5], [42, 24], [45, 26]),
+  poly([48, 20.5], [50.2, 19], [52, 20.8], [53.8, 19], [56, 20.5]),
+];
+const PLAN: StrokePlan = planStrokes([...ICONIC, ...FINISH]);
+/** The occluders go in after the land (every stroke before the fence). */
+const LAND_N = LAND.length;
+/** Indeterminate: the sketch parks here (the iconic subjects drawn). */
+const PARK = PLAN.strokes[ICONIC.length - 1].to;
 /** The journal's one red-pencil underline (complete / static). */
-const UNDERLINE = "M34 84.5C60 83 96 84.8 126 83.2";
+const UNDERLINE = "M22 88.2C42 87.2 66 88.8 94 87.6";
 /** Where the pencil is laid down (page coords), and its angle there. */
 const REST = { x: 136, y: 96, a: -8 };
 const HOLD = -52;
@@ -114,9 +210,9 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
   const scale = SIZE_PX[size] / 160;
   const sw = (px: number) => px / scale;
 
-  const zero = useMotionValue(0);
+  const parked = useMotionValue(PARK);
   const one = useMotionValue(1);
-  const ink = mode === "determinate" ? progress : mode === "indeterminate" ? zero : one;
+  const ink = mode === "determinate" ? progress : mode === "indeterminate" ? parked : one;
 
   // complete: the underline draws and the pencil is laid down (0.5 s)
   const finish = useMotionValue(mode === "static" ? 1 : 0);
@@ -132,10 +228,6 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
     const c = animate(finish, 1, { duration: 0.5, ease: "easeOut" });
     return () => c.stop();
   }, [mode, reduced, finish]);
-
-  // indeterminate: the pencil taps at the first stroke (frozen when stopped)
-  const tick = useTicker(mode === "indeterminate" && running, 600);
-  const lift = mode === "indeterminate" && tick % 2 === 1 ? 2 : 0;
 
   return (
     <span className={cn("relative block", SIZE_CLASS[size])}>
@@ -184,8 +276,16 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
             strokeWidth={sw(1)}
           />
           <g stroke="var(--paper-pencil)">
-            {PLAN.strokes.map((s, i) => (
-              <PlanStroke key={i} d={s.d} from={s.from} to={s.to} progress={ink} strokeWidth={sw(mini ? 0.7 : 1)} />
+            {PLAN.strokes.slice(0, LAND_N).map((s, i) => (
+              <PlanStroke key={i} d={s.d} from={s.from} to={s.to} progress={ink} strokeWidth={sw(mini ? 0.7 : 1.05)} />
+            ))}
+          </g>
+          {OCCLUDE.map((d, i) => (
+            <path key={i} d={d} fill="var(--paper)" stroke="none" />
+          ))}
+          <g stroke="var(--paper-pencil)">
+            {PLAN.strokes.slice(LAND_N).map((s, i) => (
+              <PlanStroke key={i} d={s.d} from={s.from} to={s.to} progress={ink} strokeWidth={sw(mini ? 0.7 : 1.05)} />
             ))}
           </g>
           <DrawPath d={UNDERLINE} progress={finish} stroke="var(--paper-red)" strokeWidth={sw(mini ? 0.9 : 1.3)} />
@@ -203,7 +303,9 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
               strokeWidth={sw(1.2)}
             />
           )}
-          {mini ? null : <Pencil progress={ink} finish={finish} lift={lift} />}
+          {mini ? null : (
+            <Pencil progress={ink} finish={finish} indeterminate={mode === "indeterminate"} running={running} />
+          )}
         </g>
       </svg>
     </span>
@@ -211,8 +313,24 @@ function Journal({ mode, size, progress, animate: running }: LoaderRendererProps
 }
 
 /** The pencil: its graphite tip at the head of the drawing, laid down at
- *  completion. Local drawing: tip at the origin, the body along +x. */
-function Pencil({ progress, finish, lift }: { progress: MotionValue<number>; finish: MotionValue<number>; lift: number }) {
+ *  completion. Local drawing: tip at the origin, the body along +x. The
+ *  indeterminate tap lives here, so its ticks re-render the pencil only
+ *  (never the page's strokes). */
+function Pencil({
+  progress,
+  finish,
+  indeterminate,
+  running,
+}: {
+  progress: MotionValue<number>;
+  finish: MotionValue<number>;
+  indeterminate: boolean;
+  running: boolean;
+}) {
+  // indeterminate: the pencil taps at the head of the parked sketch (frozen
+  // when stopped)
+  const tick = useTicker(indeterminate && running, 600);
+  const lift = indeterminate && tick % 2 === 1 ? 2 : 0;
   const ref = useRef<SVGGElement>(null);
   const place = useTransform([progress, finish], ([v, f]) => {
     const tip = planPoint(PLAN, v as number);

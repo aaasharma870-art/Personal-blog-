@@ -13,7 +13,7 @@ import { useReducedMotion } from "@/lib/flags";
 import { Parallax } from "@/components/visuals/parallax";
 import { HeroBloom } from "@/components/visuals/hero-bloom";
 import { ScrollCue } from "@/components/visuals/scroll-cue";
-import { springSoft } from "@/lib/motion";
+import { spanUnit, springSoft } from "@/lib/motion";
 
 /**
  * HeroScene — the hero's motion engine (Spec §2, Signature Moment 1).
@@ -73,10 +73,11 @@ export function HeroScene({
     springSoft,
   );
   // Cue fades out early on scroll; stays fully lit under reduced motion.
+  // spanUnit: a direct scroll map on opacity runs as a scroll-driven WAAPI
+  // animation; a range that stops at .2 came back to 1 after it (M5 audit)
   const cueOpacity = useTransform(
     scrollYProgress,
-    [0, 0.2],
-    reduce ? [1, 1] : [1, 0],
+    ...spanUnit([0, 0.2], reduce ? [1, 1] : [1, 0]),
   );
 
   const bgXraw = useMotionValue(0);

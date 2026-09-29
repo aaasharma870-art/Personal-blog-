@@ -9,6 +9,7 @@ import { dur, easeClip, easeDraw } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import { maskIntersect, maskStyle } from "@/components/primitives/mask-style";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
@@ -79,8 +80,7 @@ const CROP = { x0: 0.6, x1: 1, y0: 0.2, y1: 0.72 } as const;
  *  on every side — no rectangular edge on hp deep or on the hall's ceiling
  *  around it. Full at the flame and the trail's last candles; the walk
  *  (ALT) comes out of the dark at the lower left. */
-const FEATHER_MASK = "radial-gradient(ellipse 52% 50% at 52% 50%, #000 52%, rgb(0 0 0 / 0.62) 76%, transparent 100%)";
-const FEATHER: CSSProperties = { maskImage: FEATHER_MASK, WebkitMaskImage: FEATHER_MASK };
+const FEATHER = maskStyle("radial-gradient(ellipse 52% 50% at 52% 50%, #000 52%, rgb(0 0 0 / 0.62) 76%, transparent 100%)");
 
 /* — the Great Hall around the last light (the ceiling, S19; ≥ lg around
      the plate, < lg a band above it). Field coordinates: % of a box from
@@ -99,12 +99,6 @@ const HALL_BAND = spotsIn(9, 91, { x0: 4, x1: 96, y0: 10, y1: 42 }, { w0: 6, w1:
 const LEFT_FADE =
   "linear-gradient(to right, transparent, rgb(0 0 0 / 0.04) 6%, rgb(0 0 0 / 0.16) 13%, rgb(0 0 0 / 0.38) 21%, rgb(0 0 0 / 0.68) 29%, rgb(0 0 0 / 0.9) 36%, #000 42%)";
 const X_FADE = "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)";
-const masked2 = (a: string, b: string): CSSProperties => ({
-  maskImage: `${a}, ${b}`,
-  WebkitMaskImage: `${a}, ${b}`,
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in",
-});
 
 /** The hall's night ceiling and its candles, behind and around the plate. */
 function HallField() {
@@ -124,17 +118,17 @@ function HallField() {
         />
         <CeilingClouds
           className="inset-x-0 top-[4%] h-[52%]"
-          style={masked2(LEFT_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")}
+          style={maskIntersect(LEFT_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")}
         />
         <StarField
           className="inset-x-0 top-0 h-[72%]"
-          style={masked2(LEFT_FADE, "linear-gradient(to bottom, transparent 4%, #000 14%, #000 58%, transparent)")}
+          style={maskIntersect(LEFT_FADE, "linear-gradient(to bottom, transparent 4%, #000 14%, #000 58%, transparent)")}
         />
         <CandleField spots={HALL} className="inset-0" />
       </div>
       <div aria-hidden="true" className="relative -mx-gutter h-32 sm:h-40 lg:hidden" data-motif="great-hall-ceiling">
         <NightSky className="inset-0" stops={[[0, "0%"], [0.85, "30%"], [0.6, "75%"], [0, "100%"]]} />
-        <StarField className="inset-0" style={masked2(X_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")} />
+        <StarField className="inset-0" style={maskIntersect(X_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")} />
         <CandleField spots={HALL_BAND} className="inset-x-gutter inset-y-0" />
       </div>
     </>
@@ -144,7 +138,7 @@ function HallField() {
 /* — T12: the last light's trail runs on down to the credits (≥ lg). From
      under the plate's flame to the section's bottom centre (the credits'
      head), fading: DEFAULT a dotted trail of ink points, the candles' trail
-     continuing as ink (the credits close it with the "Mischief managed."
+     continuing as ink (the credits close it with the Map's closing ink
      fold); ALT the Map's footprints walking on. Static (no motion). — */
 const TRAIL_N = 13;
 const TRAIL = Array.from({ length: TRAIL_N }, (_, i) => {
@@ -310,8 +304,7 @@ function LastLightPlate({
             height: "22%",
             backdropFilter: "brightness(1.2)",
             WebkitBackdropFilter: "brightness(1.2)",
-            maskImage: "radial-gradient(closest-side, #000 35%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(closest-side, #000 35%, transparent 100%)",
+            ...maskStyle("radial-gradient(closest-side, #000 35%, transparent 100%)"),
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 1, 1, 0] }}

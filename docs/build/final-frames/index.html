@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Contact Sheet</title>
+<style>
+:root{--bg:#0e0f11;--panel:#17191c;--line:#2a2d32;--ink:#e8e6e1;--muted:#a9adb3;--pass:#7ad19a;--fail:#ff8a7a;--na:#b8b8b8;--fx:#f3c969;--accent:#8fd3ff;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.top{padding:24px 16px 8px;max-width:1500px;margin:0 auto}
+h1{font-size:22px;margin:0 0 6px}
+.lede{color:var(--muted);max-width:980px;margin:0 0 12px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.stat b{display:block;font-size:18px}
+.stat span{color:var(--muted);font-size:12px}
+ul.worlds{margin:6px 0 12px;padding-left:18px;color:var(--muted)}
+ul.worlds b{color:var(--ink)}
+nav{position:sticky;top:0;z-index:2;background:rgba(14,15,17,.96);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px}
+nav a{color:var(--accent);text-decoration:none}
+nav a:hover,nav a:focus-visible{text-decoration:underline}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.filters button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font:inherit;font-size:12px;cursor:pointer}
+.filters button[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}
+main{max-width:1500px;margin:0 auto;padding:0 16px 48px}
+section{padding-top:16px;scroll-margin-top:76px}
+h2{font-size:16px;margin:16px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h2 .n{color:var(--muted);font-weight:400;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}
+.card{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.card.s-fail{border-color:#6b3a33}
+.card.s-fixed{box-shadow:inset 0 3px 0 var(--fx)}
+.card img{display:block;width:100%;height:auto;background:#000}
+figcaption{padding:8px 10px 10px}
+h3{font:600 13px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0 0 4px;word-break:break-word}
+.meta{margin:0 0 4px;display:flex;flex-wrap:wrap;gap:4px}
+.t{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 6px;color:var(--muted)}
+.mo{margin:0 0 6px;color:var(--muted);font-size:12.5px}
+.mo b{color:var(--ink)}
+.vd{margin:2px 0 4px}
+.v{font-weight:700;font-size:12px;padding:1px 8px;border-radius:4px}
+.v-pass{background:#173524;color:var(--pass)}
+.v-fail{background:#3a1d19;color:var(--fail)}
+.v-na,.v-none{background:#26282c;color:var(--na)}
+.wf{color:var(--fail);font-size:12px}
+.via{color:var(--muted);font-size:12px}
+ol.g{margin:4px 0;padding-left:0;list-style:none;font-size:12px}
+ol.g li{margin:2px 0}
+ol.g .c{font-family:ui-monospace,Menlo,monospace}
+ol.g .m{color:var(--muted)}
+.why{margin:4px 0 0;color:var(--muted);font-size:12px;font-style:italic}
+.fx,.rc{margin:6px 0 0;font-size:12px;color:var(--fx)}
+.rc{color:#d9c9a0}
+.hide{display:none}
+footer{max-width:1500px;margin:0 auto;padding:16px;color:var(--muted);font-size:12px}
+code{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<header class="top">
+<h1>One Line, Four Lights: final contact sheet (M5)</h1>
+<p class="lede">These are every frame of the final capture (<code>docs/build/m2-after2</code>, branch <code>design/three-films</code>), saved as small JPGs so the record opens anywhere. Desktop frames show the <b>captioned</b> version at 1440 px, downscaled to 640. Each film frame shows the <b>final blind stranger test</b>: 3 judges saw only the text-free <em>blind</em> version and guessed the film and the moment. A frame passes when at least 2 of the 3 judges named the intended film at a confidence of 0.6 or more. Frames with a yellow top edge were changed or re-captured in the M5 fix round (<code>bc1072b</code>) <b>after</b> the final test. Their thumbnail shows the new scene, but their verdict is for the old one.</p>
+<div class="stats">
+<div class="stat"><b>38/45</b><span>BLIND-mode frames pass</span></div>
+<div class="stat"><b>63/83</b><span>all frames with a film pass</span></div>
+<div class="stat"><b>3</b><span>wrong-film frames (all are outgoing "enter" frames)</span></div>
+<div class="stat"><b>15/53 → 25/43 → 35/44 → 38/45</b><span>BLIND trend: audit → #1 → #2 → final</span></div>
+<div class="stat"><b>25</b><span>frames fixed after the final test, not re-judged</span></div>
+</div>
+<ul class="worlds"><li><b>Pirates of the Caribbean</b>: BLIND 10/10, all modes 20/21</li><li><b>3 Idiots</b>: BLIND 9/10, all modes 13/18</li><li><b>Red Dead Redemption 2</b>: BLIND 9/13, all modes 15/23</li><li><b>Harry Potter</b>: BLIND 10/12, all modes 15/21</li></ul>
+<div class="filters" role="group" aria-label="Filter frames">
+<button type="button" data-f="all" aria-pressed="true">All</button>
+<button type="button" data-f="fail" aria-pressed="false">FAIL only</button>
+<button type="button" data-f="pass" aria-pressed="false">PASS only</button>
+<button type="button" data-f="fixed" aria-pressed="false">Changed after the final test</button>
+</div>
+</header>
+<nav aria-label="Sections"><a href="#prologue">Prologue</a><a href="#hero">Hero</a><a href="#act-1">Act I card</a><a href="#act-i">Act I</a><a href="#act-2">Card I → II</a><a href="#act-ii">Act II</a><a href="#films">Films chapter</a><a href="#act-3">Card II → III</a><a href="#act-iii">Act III</a><a href="#act-4">Card III → IV</a><a href="#act-iv">Act IV</a><a href="#credits">Credits (house)</a><a href="#loaders-card">World loaders, card size (/lab strip</a><a href="#loaders-route">World loaders, route size (/lab route cards)</a><a href="#m390">Mobile sweep, 390 px (re-captured after the fix round, not judged)</a><a href="#rm">Reduced motion, 1440 px (not judged)</a><a href="#qa">QA evidence</a></nav>
+<main>
+<section id="prologue"><h2>Prologue: the broom flight (Harry Potter → Pirates) <span class="n">10</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D00-intro-play.jpg"><img loading="lazy" decoding="async" src="D00-intro-play.jpg" width="640" height="400" alt="D00-intro-play: SM-1 play screen: Hogwarts, candles, broom"></a>
+<figcaption><h3>D00-intro-play</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-1 play screen: Hogwarts, candles, broom</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts at night across the Black Lake with floating candles and a broomstick</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Broomstick and floating candles over the Black Lake with Hogwarts</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts over the Black Lake at night with floating candles and a broomstick</span></li></ol><p class="why">“Hogwarts silhouette, floating candles and a broom are unmistakable” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A00-intro-play.jpg"><img loading="lazy" decoding="async" src="A00-intro-play.jpg" width="640" height="400" alt="A00-intro-play: SM-1 play screen: Hogwarts, candles, broom"></a>
+<figcaption><h3>A00-intro-play</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-1 play screen: Hogwarts, candles, broom</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D00-intro-play (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts at night across the Black Lake with floating candles and a broomstick</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Broomstick and floating candles over the Black Lake with Hogwarts</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts over the Black Lake at night with floating candles and a broomstick</span></li></ol><p class="why">“Hogwarts silhouette, floating candles and a broom are unmistakable” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D00-intro-flight-early.jpg"><img loading="lazy" decoding="async" src="D00-intro-flight-early.jpg" width="640" height="400" alt="D00-intro-flight-early: SM-1 broom flight (flight-early, flight t ≈ 1.2 s); hand-off HP→Pirates"></a>
+<figcaption><h3>D00-intro-flight-early</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-1 broom flight (flight-early, flight t ≈ 1.2 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.95</span> <span class="m">Broomstick flying toward Hogwarts castle at night</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Broomstick flying toward lit Hogwarts castle</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Broomstick flying toward Hogwarts castle above clouds at night</span></li></ol><p class="why">“Broomstick and lit Hogwarts spires are unmistakable” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A00-intro-flight-early.jpg"><img loading="lazy" decoding="async" src="A00-intro-flight-early.jpg" width="640" height="400" alt="A00-intro-flight-early: SM-1 broom flight (flight-early, flight t ≈ 1.2 s); hand-off HP→Pirates"></a>
+<figcaption><h3>A00-intro-flight-early</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-1 broom flight (flight-early, flight t ≈ 1.2 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.95</span> <span class="m">Broomstick flying toward Hogwarts above the clouds</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Broomstick flying toward Hogwarts above clouds</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Broomstick flying toward Hogwarts castle above clouds at night</span></li></ol><p class="why">“Broomstick and Hogwarts spires are unmistakable” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D00-intro-flight-mid.jpg"><img loading="lazy" decoding="async" src="D00-intro-flight-mid.jpg" width="640" height="400" alt="D00-intro-flight-mid: SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates"></a>
+<figcaption><h3>D00-intro-flight-mid</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Broomstick flying over a dark sea with a glowing wave</span></li><li><b>J2</b> Harry Potter <span class="c">0.50</span> <span class="m">Broomstick flying over stormy glowing sea (HP broom blended into Pirates sea)</span></li><li><b>J3</b> Harry Potter <span class="c">0.55</span> <span class="m">Broomstick flying over the dark sea with the glowing wave</span></li></ol><p class="why">“The broomstick is the clear subject (HP); the bioluminescent night sea is the Pirates world, so this is a mid-transition blend” — J1</p><p class="rc"><b>Re-captured after the final test, not re-judged.</b> Re-captured. This is the designed HP → Pirates hand-off, and both captions are on screen. It did not change.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A00-intro-flight-mid.jpg"><img loading="lazy" decoding="async" src="A00-intro-flight-mid.jpg" width="640" height="400" alt="A00-intro-flight-mid: SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates"></a>
+<figcaption><h3>A00-intro-flight-mid</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-1 broom flight (flight-mid, flight t ≈ 2.6 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Night sea with glowing wave while a parchment panel swings in from the right</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.50</span> <span class="m">Glowing storm sea with parchment panel sliding in (page-turn blend)</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.50</span> <span class="m">Glowing night sea with a parchment panel swinging in from the right</span></li></ol><p class="why">“Dominant image is the Pirates sea; incoming parchment panel suggests a blend toward a map/journal world” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The folding page is now inked as a sea chart (compass rose, dotted course, red X).</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D00-intro-flight-late.jpg"><img loading="lazy" decoding="async" src="D00-intro-flight-late.jpg" width="640" height="400" alt="D00-intro-flight-late: SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates"></a>
+<figcaption><h3>D00-intro-flight-late</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, distant ship with lantern</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing wave</span></li></ol><p class="why">“Stormy ocean with a tall-ship silhouette reads Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A00-intro-flight-late.jpg"><img loading="lazy" decoding="async" src="A00-intro-flight-late.jpg" width="640" height="400" alt="A00-intro-flight-late: SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates"></a>
+<figcaption><h3>A00-intro-flight-late</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-1 broom flight (flight-late, flight t ≈ 4 s); hand-off HP→Pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, lone tall ship with lantern on horizon</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing cursed wave</span></li></ol><p class="why">“Stormy ocean plus distant ship silhouette reads as Pirates; somewhat generic seascape” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D00-intro-landed.jpg"><img loading="lazy" decoding="async" src="D00-intro-landed.jpg" width="640" height="400" alt="D00-intro-landed: SM-1 landing → hero (hand-off caption)"></a>
+<figcaption><h3>D00-intro-landed</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-1 landing → hero (hand-off caption)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, distant ship</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing wave</span></li></ol><p class="why">“Stormy ocean with a tall-ship silhouette reads Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="A00-intro-landed.jpg"><img loading="lazy" decoding="async" src="A00-intro-landed.jpg" width="640" height="400" alt="A00-intro-landed: SM-1 landing → hero (hand-off caption)"></a>
+<figcaption><h3>A00-intro-landed</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-1 landing → hero (hand-off caption)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, distant ship</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing wave</span></li></ol><p class="why">“Stormy ocean with a tall-ship silhouette reads Pirates” — J1</p><p class="rc"><b>Re-captured after the final test, not re-judged.</b> Re-captured with the ALT intro fold change. The landing did not change.</p>
+</figcaption></figure>
+</div></section>
+<section id="hero"><h2>Hero: the Black Pearl (Pirates) <span class="n">2</span></h2><div class="grid"><figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D01-hero.jpg"><img loading="lazy" decoding="async" src="D01-hero.jpg" width="640" height="400" alt="D01-hero: SM-2 hero: name at sea, the Black Pearl"></a>
+<figcaption><h3>D01-hero</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-2 hero: name at sea, the Black Pearl</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, distant ship</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing wave</span></li></ol><p class="why">“Stormy ocean with a tall-ship silhouette reads Pirates” — J1</p><p class="rc"><b>Re-captured after the final test, not re-judged.</b> Re-captured after the hero code changes (fetchpriority, mobile spyglass crop). The desktop scene did not change.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="A01-hero.jpg"><img loading="lazy" decoding="async" src="A01-hero.jpg" width="640" height="400" alt="A01-hero: SM-2 hero: name at sea, the Black Pearl"></a>
+<figcaption><h3>A01-hero</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-2 hero: name at sea, the Black Pearl</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Night storm at sea, glowing wave, lone tall ship with lantern on horizon</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Stormy night sea with glowing wave and distant galleon</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Tall ship on the horizon of a stormy night sea with a glowing cursed wave</span></li></ol><p class="why">“Dark stormy ocean with a square-rigged ship silhouette reads as Pirates, though a night sea is somewhat generic” — J1</p><p class="rc"><b>Re-captured after the final test, not re-judged.</b> Re-captured after the hero code changes (fetchpriority, mobile spyglass crop). The desktop scene did not change.</p>
+</figcaption></figure>
+</div></section>
+<section id="act-1"><h2>Act I card: The Crossing (Pirates) <span class="n">6</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-1-enter.jpg"><img loading="lazy" decoding="async" src="D10-act-1-enter.jpg" width="640" height="400" alt="D10-act-1-enter: SM-3 opening card (Act I, Pirates) — enter"></a>
+<figcaption><h3>D10-act-1-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — enter</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Transition from glowing night sea to Black Pearl sails</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Dark sea scrolling into ghost ship with tattered sails</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Scrolling from the glowing night sea down to the Black Pearl's tattered sails</span></li></ol><p class="why">“Dark teal sea and shredded black sails are Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-1-enter.jpg"><img loading="lazy" decoding="async" src="A10-act-1-enter.jpg" width="640" height="400" alt="A10-act-1-enter: SM-3 opening card (Act I, Pirates) — enter"></a>
+<figcaption><h3>A10-act-1-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — enter</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Transition from glowing night sea (top) to Black Pearl sails (bottom)</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Dark sea scrolling into ghost ship with tattered sails</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Scrolling from the glowing night sea down to the Black Pearl's rigging</span></li></ol><p class="why">“Both halves are Pirates imagery: dark teal sea and shredded black sails” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-1-mid.jpg"><img loading="lazy" decoding="async" src="D10-act-1-mid.jpg" width="640" height="400" alt="D10-act-1-mid: SM-3 opening card (Act I, Pirates) — mid"></a>
+<figcaption><h3>D10-act-1-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl with tattered sails at night, Jack's compass and dotted trail below</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl-style ghost ship with Jack's compass below</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl with tattered sails in fog, Jack's compass below</span></li></ol><p class="why">“Ghostly ship with shredded black sails plus the hinged compass is unmistakably Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-1-mid.jpg"><img loading="lazy" decoding="async" src="A10-act-1-mid.jpg" width="640" height="400" alt="A10-act-1-mid: SM-3 opening card (Act I, Pirates) — mid"></a>
+<figcaption><h3>A10-act-1-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl at night above a gold-line treasure chart</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.85</span> <span class="m">Black Pearl ghost ship above an island treasure map</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl in fog above a gold-framed treasure chart</span></li></ol><p class="why">“Tattered-sailed ghost ship in fog is the Black Pearl” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-1-settled.jpg"><img loading="lazy" decoding="async" src="D10-act-1-settled.jpg" width="640" height="400" alt="D10-act-1-settled: SM-3 opening card (Act I, Pirates) — settled"></a>
+<figcaption><h3>D10-act-1-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Jack's compass with a dotted trail, sliver of ship hull and sea above</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.65</span> <span class="m">Jack's compass with dotted course below ship hull</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.65</span> <span class="m">Jack's compass with dotted route, sliver of ship hull and sea above</span></li></ol><p class="why">“Hinged octagonal compass with red needle reads as Jack's compass” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-1-settled.jpg"><img loading="lazy" decoding="async" src="A10-act-1-settled.jpg" width="640" height="400" alt="A10-act-1-settled: SM-3 opening card (Act I, Pirates) — settled"></a>
+<figcaption><h3>A10-act-1-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-3 opening card (Act I, Pirates) — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.85</span> <span class="m">Black Pearl hull above a gold treasure chart with island, dotted trail and X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.85</span> <span class="m">Black Pearl hull in fog above island treasure map</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.85</span> <span class="m">Black Pearl hull in fog above a gold treasure chart with X and compass rose</span></li></ol><p class="why">“Ghost-ship hull plus treasure island chart is Pirates” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-i"><h2>Act I: About and the Journey voyage (Pirates) <span class="n">8</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D20-about-120.jpg"><img loading="lazy" decoding="async" src="D20-about-120.jpg" width="640" height="400" alt="D20-about-120: Act I About (ship's log)"></a>
+<figcaption><h3>D20-about-120</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">Act I About (ship's log)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.65</span> <span class="m">Jack's compass on a navigational chart with rhumb lines</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Jack's compass open on nautical chart lines</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.55</span> <span class="m">Jack's compass alone on a dark nautical chart grid</span></li></ol><p class="why">“Hinged octagonal compass on a nautical chart reads Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A20-about-120.jpg"><img loading="lazy" decoding="async" src="A20-about-120.jpg" width="640" height="400" alt="A20-about-120: Act I About (ship's log)"></a>
+<figcaption><h3>A20-about-120</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">Act I About (ship's log)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D20-about-120 (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.65</span> <span class="m">Jack's compass on a navigational chart with rhumb lines</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Jack's compass open on nautical chart lines</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.55</span> <span class="m">Jack's compass alone on a dark nautical chart grid</span></li></ol><p class="why">“Hinged octagonal compass on a nautical chart reads Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D21-journey-step-1.jpg"><img loading="lazy" decoding="async" src="D21-journey-step-1.jpg" width="640" height="400" alt="D21-journey-step-1: SM-4 voyage step 1: harbour"></a>
+<figcaption><h3>D21-journey-step-1</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 1: harbour</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Moonlit harbor with tall ships; chart with Jack's compass, dashed route to X and Aztec coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Moonlit harbor with tall ships plus compass treasure route map</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Moonlit harbour of tall ships, compass-to-X treasure route with Aztec medallion</span></li></ol><p class="why">“Lantern-lit port of tall ships plus compass, treasure X and Aztec medallion is Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A21-journey-step-1.jpg"><img loading="lazy" decoding="async" src="A21-journey-step-1.jpg" width="640" height="400" alt="A21-journey-step-1: SM-4 voyage step 1: harbour"></a>
+<figcaption><h3>A21-journey-step-1</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 1: harbour</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D21-journey-step-1 (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Moonlit harbor with tall ships; chart with Jack's compass, dashed route to X and Aztec coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Moonlit harbor with tall ships plus compass treasure route map</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Moonlit harbour of tall ships, compass-to-X treasure route with Aztec medallion</span></li></ol><p class="why">“Lantern-lit port of tall ships plus compass, treasure X and Aztec medallion is Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D22-journey-step-3.jpg"><img loading="lazy" decoding="async" src="D22-journey-step-3.jpg" width="640" height="400" alt="D22-journey-step-3: SM-4 voyage step 3: the break"></a>
+<figcaption><h3>D22-journey-step-3</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 3: the break</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy sea card above a chart with Jack's compass, route to X and skull coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy sea with compass route to X and skull medallion</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy teal sea card above compass-to-X route with skull medallion</span></li></ol><p class="why">“Rough sea plus compass and treasure X read Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A22-journey-step-3.jpg"><img loading="lazy" decoding="async" src="A22-journey-step-3.jpg" width="640" height="400" alt="A22-journey-step-3: SM-4 voyage step 3: the break"></a>
+<figcaption><h3>A22-journey-step-3</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 3: the break</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D22-journey-step-3 (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy sea card above a chart with Jack's compass, route to X and skull coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy sea with compass route to X and skull medallion</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Stormy teal sea card above compass-to-X route with skull medallion</span></li></ol><p class="why">“Rough sea plus compass and treasure X read Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D23-journey-step-4.jpg"><img loading="lazy" decoding="async" src="D23-journey-step-4.jpg" width="640" height="400" alt="D23-journey-step-4: SM-4 voyage step 4: X marks the spot"></a>
+<figcaption><h3>D23-journey-step-4</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 4: X marks the spot</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Ship at sunset on the horizon with a glowing wake; chart with compass, route, skull coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Ship on sunset horizon with glowing wake, compass route map to X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Ship at sunset on the horizon with glowing wake, compass-to-X route with skull medallion</span></li></ol><p class="why">“Tall ship at sea plus compass, X and skull medallion read Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A23-journey-step-4.jpg"><img loading="lazy" decoding="async" src="A23-journey-step-4.jpg" width="640" height="400" alt="A23-journey-step-4: SM-4 voyage step 4: X marks the spot"></a>
+<figcaption><h3>A23-journey-step-4</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-4 voyage step 4: X marks the spot</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D23-journey-step-4 (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Ship at sunset on the horizon with a glowing wake; chart with compass, route, skull coin</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Ship on sunset horizon with glowing wake, compass route map to X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.80</span> <span class="m">Ship at sunset on the horizon with glowing wake, compass-to-X route with skull medallion</span></li></ol><p class="why">“Tall ship at sea plus compass, X and skull medallion read Pirates” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-2"><h2>Card I → II: storm → ICE lecture hall (Pirates → 3 Idiots) <span class="n">6</span></h2><div class="grid"><figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="D10-act-2-enter.jpg"><img loading="lazy" decoding="async" src="D10-act-2-enter.jpg" width="640" height="400" alt="D10-act-2-enter: SM-5 card I→II Pirates→3 Idiots — enter"></a>
+<figcaption><h3>D10-act-2-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="wf">3 wrong-film</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Treasure chart with compass and Aztec coin; glowing sea with ship spars below</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Compass treasure route with Aztec medallion, stormy sea below</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Compass-to-X treasure route with Aztec medallion above a glowing sea</span></li></ol><p class="why">“Compass, dashed route to X, Aztec medallion and teal sea are Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="A10-act-2-enter.jpg"><img loading="lazy" decoding="async" src="A10-act-2-enter.jpg" width="640" height="400" alt="A10-act-2-enter: SM-5 card I→II Pirates→3 Idiots — enter"></a>
+<figcaption><h3>A10-act-2-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="wf">3 wrong-film</span> <span class="via">judged once as D10-act-2-enter (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Treasure chart with compass and Aztec coin; glowing sea with ship spars below</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Compass treasure route with Aztec medallion, stormy sea below</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Compass-to-X treasure route with Aztec medallion above a glowing sea</span></li></ol><p class="why">“Compass, dashed route to X, Aztec medallion and teal sea are Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-2-mid.jpg"><img loading="lazy" decoding="async" src="D10-act-2-mid.jpg" width="640" height="400" alt="D10-act-2-mid: SM-5 card I→II Pirates→3 Idiots — mid"></a>
+<figcaption><h3>D10-act-2-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.70</span> <span class="m">ICE lecture hall with drone chalk drawing, glowing sea line creeping over the top</span></li><li><b>J2</b> 3 Idiots <span class="c">0.65</span> <span class="m">ICE lecture hall with drone on chalkboard, dark sea flooding in from top (blend)</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">ICE lecture hall with drone and bicycle chalk sketch, stormy sea sky dissolving in from above</span></li></ol><p class="why">“Tiered wooden benches, stone lecture hall and drone chalkboard read as ICE; teal wave edge suggests a blend from the Pirates sea” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-2-mid.jpg"><img loading="lazy" decoding="async" src="A10-act-2-mid.jpg" width="640" height="400" alt="A10-act-2-mid: SM-5 card I→II Pirates→3 Idiots — mid"></a>
+<figcaption><h3>A10-act-2-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.55</span> <span class="m">ICE lecture hall with drone chalkboard dissolving into a glowing stormy sea</span></li><li><b>J2</b> 3 Idiots <span class="c">0.60</span> <span class="m">Lecture hall with drone chalkboard dissolving into stormy sea (blend)</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">ICE lecture hall with drone chalk sketch, glowing sea waves washing in from the right</span></li></ol><p class="why">“Lecture hall and drone sketch dominate (3 Idiots); right side blends into the Pirates sea” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-2-settled.jpg"><img loading="lazy" decoding="async" src="D10-act-2-settled.jpg" width="640" height="400" alt="D10-act-2-settled: SM-5 card I→II Pirates→3 Idiots — settled"></a>
+<figcaption><h3>D10-act-2-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.75</span> <span class="m">ICE lecture hall with drone schematic on the chalkboard</span></li><li><b>J2</b> 3 Idiots <span class="c">0.70</span> <span class="m">ICE lecture hall with drone schematic on chalkboard</span></li><li><b>J3</b> 3 Idiots <span class="c">0.75</span> <span class="m">ICE lecture hall with chalk drawing of Rancho's drone</span></li></ol><p class="why">“Tiered wooden benches in a stone lecture hall with a quadcopter chalk sketch is ICE” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-2-settled.jpg"><img loading="lazy" decoding="async" src="A10-act-2-settled.jpg" width="640" height="400" alt="A10-act-2-settled: SM-5 card I→II Pirates→3 Idiots — settled"></a>
+<figcaption><h3>A10-act-2-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-5 card I→II Pirates→3 Idiots — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.75</span> <span class="m">ICE lecture hall with a quadcopter drone sketch on the chalkboard</span></li><li><b>J2</b> 3 Idiots <span class="c">0.70</span> <span class="m">ICE lecture hall with Rancho's drone drawn on chalkboard</span></li><li><b>J3</b> 3 Idiots <span class="c">0.75</span> <span class="m">ICE lecture hall with chalk drawing of Rancho's drone</span></li></ol><p class="why">“Stone lecture hall, wooden benches and drone chalk drawing are ICE” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-ii"><h2>Act II: Work, chapters, experiment, systems and the kill-list (3 Idiots) <span class="n">14</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D24-work.jpg"><img loading="lazy" decoding="async" src="D24-work.jpg" width="640" height="400" alt="D24-work: SM-6 work head band (top)"></a>
+<figcaption><h3>D24-work</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-6 work head band (top)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.65</span> <span class="m">Virus's astronaut pen in a velvet case beside a pocket watch, chalkboard behind</span></li><li><b>J2</b> 3 Idiots <span class="c">0.55</span> <span class="m">Virus's astronaut pen in velvet case with stopwatch by chalkboard</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Virus's astronaut pen in a velvet box with a stopwatch before a chalkboard</span></li></ol><p class="why">“Engraved pen in a presentation box in a classroom is the astronaut pen” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A24-work.jpg"><img loading="lazy" decoding="async" src="A24-work.jpg" width="640" height="400" alt="A24-work: SM-6 work head band (top)"></a>
+<figcaption><h3>A24-work</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-6 work head band (top)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.65</span> <span class="m">Virus's astronaut pen in a velvet case beside a pocket watch</span></li><li><b>J2</b> 3 Idiots <span class="c">0.55</span> <span class="m">Virus's astronaut pen in velvet box with stopwatch</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Virus's astronaut pen in a velvet box with a stopwatch</span></li></ol><p class="why">“Engraved pen in presentation box with stopwatch in a classroom is the astronaut pen” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D25-work-board.jpg"><img loading="lazy" decoding="async" src="D25-work-board.jpg" width="640" height="400" alt="D25-work-board: SM-6 gauntlet on the ICE dawn board (board, gates)"></a>
+<figcaption><h3>D25-work-board</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-6 gauntlet on the ICE dawn board (board, gates)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.60</span> <span class="m">Classroom chalkboard in sunlight with drone sketch and bar chart, one bar highlighted</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Chalkboard with bar chart and drone sketch by stone arched window</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Chalkboard with drone sketch and bar diagram in a sunlit stone classroom</span></li></ol><p class="why">“Chalkboard with a drone diagram suggests Rancho; stone arched window is less specific” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A25-work-board.jpg"><img loading="lazy" decoding="async" src="A25-work-board.jpg" width="640" height="400" alt="A25-work-board: SM-6 gauntlet on the ICE dawn board (board, gates)"></a>
+<figcaption><h3>A25-work-board</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-6 gauntlet on the ICE dawn board (board, gates)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D25-work-board (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.60</span> <span class="m">Classroom chalkboard in sunlight with drone sketch and bar chart, one bar highlighted</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Chalkboard with bar chart and drone sketch by stone arched window</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Chalkboard with drone sketch and bar diagram in a sunlit stone classroom</span></li></ol><p class="why">“Chalkboard with a drone diagram suggests Rancho; stone arched window is less specific” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D26-trading-algos.jpg"><img loading="lazy" decoding="async" src="D26-trading-algos.jpg" width="640" height="400" alt="D26-trading-algos: SM-7 chapter Trading_Algos"></a>
+<figcaption><h3>D26-trading-algos</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-7 chapter Trading_Algos</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.25</span> <span class="m">Framed blue board with a flowchart of connected boxes</span></li><li><b>J2</b> 3 Idiots <span class="c">0.20</span> <span class="m">Blueprint-style flow diagram on a framed board</span></li><li><b>J3</b> 3 Idiots <span class="c">0.25</span> <span class="m">Blueprint-style flowchart boards on a framed board</span></li></ol><p class="why">“A framed board diagram suggests a classroom, but it is a generic flowchart” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The Act II chalk drone now sits beside the caption (at 1024 px and wider).</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A26-trading-algos.jpg"><img loading="lazy" decoding="async" src="A26-trading-algos.jpg" width="640" height="400" alt="A26-trading-algos: SM-7 chapter Trading_Algos"></a>
+<figcaption><h3>A26-trading-algos</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-7 chapter Trading_Algos</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="via">judged once as D26-trading-algos (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.25</span> <span class="m">Framed blue board with a flowchart of connected boxes</span></li><li><b>J2</b> 3 Idiots <span class="c">0.20</span> <span class="m">Blueprint-style flow diagram on a framed board</span></li><li><b>J3</b> 3 Idiots <span class="c">0.25</span> <span class="m">Blueprint-style flowchart boards on a framed board</span></li></ol><p class="why">“A framed board diagram suggests a classroom, but it is a generic flowchart” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The Act II chalk drone now sits beside the caption (at 1024 px and wider).</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D27-optuna-screener.jpg"><img loading="lazy" decoding="async" src="D27-optuna-screener.jpg" width="640" height="400" alt="D27-optuna-screener: SM-7 chapter Optuna-Screener"></a>
+<figcaption><h3>D27-optuna-screener</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-7 chapter Optuna-Screener</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.55</span> <span class="m">ICE lecture hall with a nearly blank chalkboard</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Empty ICE lecture hall with blank chalkboard</span></li><li><b>J3</b> 3 Idiots <span class="c">0.45</span> <span class="m">Empty ICE lecture hall with blank chalkboard</span></li></ol><p class="why">“Stone lecture hall with tiered wooden benches reads as ICE, but no signature prop” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The chalk drone is drawn on the board’s free top-right.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A27-optuna-screener.jpg"><img loading="lazy" decoding="async" src="A27-optuna-screener.jpg" width="640" height="400" alt="A27-optuna-screener: SM-7 chapter Optuna-Screener"></a>
+<figcaption><h3>A27-optuna-screener</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-7 chapter Optuna-Screener</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.55</span> <span class="m">ICE lecture hall with an empty chalkboard and a circled blank note</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Empty ICE lecture hall with chalkboard and professor's desk</span></li><li><b>J3</b> 3 Idiots <span class="c">0.45</span> <span class="m">Empty ICE lecture hall with blank chalkboard</span></li></ol><p class="why">“Stone lecture hall with wooden benches reads as ICE, but no signature prop” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The chalk drone is drawn on the board’s free top-right.</p>
+</figcaption></figure>
+<figure class="card s-na" data-state="na" data-fixed="0">
+<a href="D28-experiment.jpg"><img loading="lazy" decoding="async" src="D28-experiment.jpg" width="640" height="400" alt="D28-experiment: Experiment (BacktestDemo, synthetic; NO film styling)"></a>
+<figcaption><h3>D28-experiment</h3>
+<p class="meta"><span class="t">NONE</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots(no film styling)</span></p>
+<p class="mo">Experiment (BacktestDemo, synthetic; NO film styling)</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> no film named <span class="c">0.10</span> <span class="m">Dark dashboard card with a rising teal line chart</span></li><li><b>J2</b> no film named <span class="c">0.10</span> <span class="m">Line chart on dark green card</span></li><li><b>J3</b> no film named <span class="c">0.10</span> <span class="m">Generic rising area chart on a dark panel</span></li></ol><p class="why">“Generic analytics chart with no themed imagery” — J1</p>
+</figcaption></figure>
+<figure class="card s-na" data-state="na" data-fixed="0">
+<a href="A28-experiment.jpg"><img loading="lazy" decoding="async" src="A28-experiment.jpg" width="640" height="400" alt="A28-experiment: Experiment (BacktestDemo, synthetic; NO film styling)"></a>
+<figcaption><h3>A28-experiment</h3>
+<p class="meta"><span class="t">NONE</span><span class="t">ALT</span><span class="t w-idiots">idiots(no film styling)</span></p>
+<p class="mo">Experiment (BacktestDemo, synthetic; NO film styling)</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> no film named <span class="c">0.10</span> <span class="m">Dark dashboard card with a rising teal line chart</span></li><li><b>J2</b> no film named <span class="c">0.10</span> <span class="m">Line chart on dark green card</span></li><li><b>J3</b> no film named <span class="c">0.10</span> <span class="m">Generic rising area chart on a dark panel</span></li></ol><p class="why">“Generic analytics chart with no themed imagery” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D29-systems.jpg"><img loading="lazy" decoding="async" src="D29-systems.jpg" width="640" height="400" alt="D29-systems: Systems FIG + drone band"></a>
+<figcaption><h3>D29-systems</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">Systems FIG + drone band</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.75</span> <span class="m">Rancho's homemade quadcopter drone hovering over a stone college courtyard</span></li><li><b>J2</b> 3 Idiots <span class="c">0.60</span> <span class="m">Rancho's homemade quadcopter flying across the college campus</span></li><li><b>J3</b> 3 Idiots <span class="c">0.75</span> <span class="m">Rancho's homemade quadcopter drone flying across the stone ICE campus</span></li></ol><p class="why">“Taped-together DIY drone at an Indian stone campus is the 3 Idiots drone scene” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A29-systems.jpg"><img loading="lazy" decoding="async" src="A29-systems.jpg" width="640" height="400" alt="A29-systems: Systems FIG + drone band"></a>
+<figcaption><h3>A29-systems</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">Systems FIG + drone band</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.75</span> <span class="m">Homemade quadcopter drone hovering in a college courtyard</span></li><li><b>J2</b> 3 Idiots <span class="c">0.60</span> <span class="m">Rancho's homemade drone flying over college campus</span></li><li><b>J3</b> 3 Idiots <span class="c">0.75</span> <span class="m">Rancho's homemade quadcopter flying over the ICE campus lawn</span></li></ol><p class="why">“Taped DIY drone over an Indian campus lawn is Rancho's drone” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D30-kill-list.jpg"><img loading="lazy" decoding="async" src="D30-kill-list.jpg" width="640" height="400" alt="D30-kill-list: SM-8 kill-list header cue"></a>
+<figcaption><h3>D30-kill-list</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-8 kill-list header cue</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.65</span> <span class="m">Virus's astronaut pen in a velvet case beside a pocket watch on a classroom desk</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Virus's astronaut pen in velvet box with stopwatch</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Virus's astronaut pen in a velvet box beside a stopwatch in a classroom</span></li></ol><p class="why">“Ornate pen in a presentation box plus stopwatch in a classroom is the astronaut pen” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A30-kill-list.jpg"><img loading="lazy" decoding="async" src="A30-kill-list.jpg" width="640" height="400" alt="A30-kill-list: SM-8 kill-list header cue"></a>
+<figcaption><h3>A30-kill-list</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-8 kill-list header cue</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D30-kill-list (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.65</span> <span class="m">Virus's astronaut pen in a velvet case beside a pocket watch on a classroom desk</span></li><li><b>J2</b> 3 Idiots <span class="c">0.45</span> <span class="m">Virus's astronaut pen in velvet box with stopwatch</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Virus's astronaut pen in a velvet box beside a stopwatch in a classroom</span></li></ol><p class="why">“Ornate pen in a presentation box plus stopwatch in a classroom is the astronaut pen” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="films"><h2>Films chapter: “Three films and a game” (house, four screens) <span class="n">8</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D43-films-pirates.jpg"><img loading="lazy" decoding="async" src="D43-films-pirates.jpg" width="640" height="400" alt="D43-films-pirates: SM-9 films chapter screen: pirates"></a>
+<figcaption><h3>D43-films-pirates</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-9 films chapter screen: pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.92</span> <span class="m">Black Pearl under the moon with Jack's compass overlaid</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl under the moon with Jack's compass callout</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl under the moon with Jack's compass callout</span></li></ol><p class="why">“Tattered black sails plus Jack's compass are unmistakable Pirates” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A43-films-pirates.jpg"><img loading="lazy" decoding="async" src="A43-films-pirates.jpg" width="640" height="400" alt="A43-films-pirates: SM-9 films chapter screen: pirates"></a>
+<figcaption><h3>A43-films-pirates</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">SM-9 films chapter screen: pirates</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl under the moon with a gold dotted trail to an X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl ghost ship with dotted course to X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.90</span> <span class="m">Black Pearl in moonlit fog with gold dotted route to an X</span></li></ol><p class="why">“Tattered-sail ghost ship plus treasure trail is the Black Pearl” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D44-films-idiots.jpg"><img loading="lazy" decoding="async" src="D44-films-idiots.jpg" width="640" height="400" alt="D44-films-idiots: SM-9 films chapter screen: idiots"></a>
+<figcaption><h3>D44-films-idiots</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-9 films chapter screen: idiots</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter parked on the shore of Pangong lake</span></li><li><b>J2</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter on the shore of Pangong lake</span></li><li><b>J3</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter on the pebbly shore of Pangong lake, doors diagram above</span></li></ol><p class="why">“Yellow scooter at a still blue high-altitude lake is the 3 Idiots finale” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A44-films-idiots.jpg"><img loading="lazy" decoding="async" src="A44-films-idiots.jpg" width="640" height="400" alt="A44-films-idiots: SM-9 films chapter screen: idiots"></a>
+<figcaption><h3>A44-films-idiots</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">SM-9 films chapter screen: idiots</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter circled with a check mark at Pangong lake at sunrise</span></li><li><b>J2</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter at Pangong lake, circled with check mark</span></li><li><b>J3</b> 3 Idiots <span class="c">0.85</span> <span class="m">Yellow scooter circled and ticked at Pangong lake at sunrise</span></li></ol><p class="why">“Yellow scooter by a mirror-still Ladakh lake is the 3 Idiots finale” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D45-films-rdr2.jpg"><img loading="lazy" decoding="async" src="D45-films-rdr2.jpg" width="640" height="400" alt="D45-films-rdr2: SM-9 films chapter screen: rdr2"></a>
+<figcaption><h3>D45-films-rdr2</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-9 films chapter screen: rdr2</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Saddled horse silhouetted on a ridge at golden-hour dusk, dashed GPS-style trail</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Saddled horse silhouetted on ridge at golden hour</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Lone saddled horse silhouetted on a ridge at dusk with a dashed trail line</span></li></ol><p class="why">“Lone horse on open grassland at sunset evokes the RDR2 frontier, but a sunset horse is fairly generic” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> New plate: the red-sky Dead Eye plate, ember X marks on the five birds. Caption DEAD EYE (proposed).</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A45-films-rdr2.jpg"><img loading="lazy" decoding="async" src="A45-films-rdr2.jpg" width="640" height="400" alt="A45-films-rdr2: SM-9 films chapter screen: rdr2"></a>
+<figcaption><h3>A45-films-rdr2</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-9 films chapter screen: rdr2</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Horse silhouetted on a ridge at golden-hour dusk, framed with deco corners</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Saddled horse on ridge at golden hour, framed corners</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Lone saddled horse silhouetted on a ridge at dusk inside ornate corner frame</span></li></ol><p class="why">“Lone saddled horse on prairie at sunset evokes RDR2 but is fairly generic” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> New plate: the gang’s camp by the lake as a journal clipping. Caption THE GANG’S CAMP AT DUSK (proposed).</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D46-films-hp.jpg"><img loading="lazy" decoding="async" src="D46-films-hp.jpg" width="640" height="400" alt="D46-films-hp: SM-9 films chapter screen: hp"></a>
+<figcaption><h3>D46-films-hp</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-9 films chapter screen: hp</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts Express crossing the Glenfinnan Viaduct</span></li><li><b>J2</b> Harry Potter <span class="c">0.95</span> <span class="m">Hogwarts Express crossing the Glenfinnan Viaduct</span></li><li><b>J3</b> Harry Potter <span class="c">0.90</span> <span class="m">Hogwarts Express crossing the Glenfinnan viaduct</span></li></ol><p class="why">“Red steam train on the curved stone viaduct in the Highlands is iconic HP” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A46-films-hp.jpg"><img loading="lazy" decoding="async" src="A46-films-hp.jpg" width="640" height="400" alt="A46-films-hp: SM-9 films chapter screen: hp"></a>
+<figcaption><h3>A46-films-hp</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-9 films chapter screen: hp</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.85</span> <span class="m">Floating candles, Gothic windows onto castle, parchment on floor with ink spreading and glowing footprints</span></li><li><b>J2</b> Harry Potter <span class="c">0.85</span> <span class="m">Marauder's Map on floor of candlelit hall, castle in window</span></li><li><b>J3</b> Harry Potter <span class="c">0.85</span> <span class="m">Floating candles in a Hogwarts hall, parchment map with footprints on the floor, castle in the windows</span></li></ol><p class="why">“Floating candles and a castle through arched windows plus footprints on parchment read as Hogwarts and the Marauder's Map” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-3"><h2>Card II → III: the tintype (→ Red Dead Redemption 2) <span class="n">6</span></h2><div class="grid"><figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="D10-act-3-enter.jpg"><img loading="lazy" decoding="async" src="D10-act-3-enter.jpg" width="640" height="400" alt="D10-act-3-enter: SM-14 card II→III → RDR2 tintype — enter"></a>
+<figcaption><h3>D10-act-3-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.40</span> <span class="m">Mostly dark page, sepia valley with tree and low sun rising into view</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.30</span> <span class="m">Sepia hills and sun under tree silhouette (mostly dark, scrolling in)</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.35</span> <span class="m">Sepia valley with tree and low sun emerging from darkness</span></li></ol><p class="why">“Sepia frontier valley hints at RDR2, but little is visible” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="A10-act-3-enter.jpg"><img loading="lazy" decoding="async" src="A10-act-3-enter.jpg" width="640" height="400" alt="A10-act-3-enter: SM-14 card II→III → RDR2 tintype — enter"></a>
+<figcaption><h3>A10-act-3-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Mostly black page, crimson sky with oak tree and circling vultures rising into view</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Blood-red frontier sky with oak tree and buzzards (partially scrolled in)</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Blood-red sky over mountains, lone oak and circling vultures (card entering from below)</span></li></ol><p class="why">“Blood-red western sky with vultures feels RDR2, but most of the frame is empty” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-3-mid.jpg"><img loading="lazy" decoding="async" src="D10-act-3-mid.jpg" width="640" height="400" alt="D10-act-3-mid: SM-14 card II→III → RDR2 tintype — mid"></a>
+<figcaption><h3>D10-act-3-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Golden-hour river valley, saddled horse grazing, lasso line</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour valley with grazing saddled horse (lasso-like line)</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley, grazing saddled horse, lasso line</span></li></ol><p class="why">“Frontier vista at golden hour with a saddled horse is very RDR2” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-3-mid.jpg"><img loading="lazy" decoding="async" src="A10-act-3-mid.jpg" width="640" height="400" alt="A10-act-3-mid: SM-14 card II→III → RDR2 tintype — mid"></a>
+<figcaption><h3>A10-act-3-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Crimson ranch at sunset with oak tree and vultures, Dead Eye X marks along a lasso line</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Dead Eye marks across red-sky frontier homestead</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Crimson-sky homestead with oak, fence and vultures; Dead Eye X marks along a lasso</span></li></ol><p class="why">“Red-filtered western homestead with painted-X targets mirrors RDR2's Dead Eye” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-3-settled.jpg"><img loading="lazy" decoding="async" src="D10-act-3-settled.jpg" width="640" height="400" alt="D10-act-3-settled: SM-14 card II→III → RDR2 tintype — settled"></a>
+<figcaption><h3>D10-act-3-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Golden-hour river valley, saddled horse grazing, lasso line across the grass</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour valley with river and grazing saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley, grazing saddled horse, lasso line</span></li></ol><p class="why">“Sweeping frontier vista at golden hour with a saddled horse and lasso is very RDR2” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-3-settled.jpg"><img loading="lazy" decoding="async" src="A10-act-3-settled.jpg" width="640" height="400" alt="A10-act-3-settled: SM-14 card II→III → RDR2 tintype — settled"></a>
+<figcaption><h3>A10-act-3-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-14 card II→III → RDR2 tintype — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Crimson ranch at sunset with oak tree and vultures, Dead Eye X marks along a lasso line</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Dead Eye marks across red-sky frontier homestead</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.85</span> <span class="m">Crimson-sky homestead with Dead Eye X marks along a lasso</span></li></ol><p class="why">“Red-tinted homestead with X targets is RDR2 Dead Eye” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-iii"><h2>Act III: Beyond, Writing and Voices (Red Dead Redemption 2) <span class="n">14</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D32-beyond.jpg"><img loading="lazy" decoding="async" src="D32-beyond.jpg" width="640" height="400" alt="D32-beyond: SM-15 frontier golden-hour band"></a>
+<figcaption><h3>D32-beyond</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 frontier golden-hour band</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley with a saddled horse grazing, full bleed</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour frontier valley with grazing saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley with grazing saddled horse (full-bleed)</span></li></ol><p class="why">“Warm frontier vista with a saddled horse evokes RDR2” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A32-beyond.jpg"><img loading="lazy" decoding="async" src="A32-beyond.jpg" width="640" height="400" alt="A32-beyond: SM-15 frontier golden-hour band"></a>
+<figcaption><h3>A32-beyond</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 frontier golden-hour band</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D32-beyond (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley with a saddled horse grazing, full bleed</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour frontier valley with grazing saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Golden-hour river valley with grazing saddled horse (full-bleed)</span></li></ol><p class="why">“Warm frontier vista with a saddled horse evokes RDR2” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D33-beyond-satchel.jpg"><img loading="lazy" decoding="async" src="D33-beyond-satchel.jpg" width="640" height="400" alt="D33-beyond-satchel: SM-15 beyond: the satchel"></a>
+<figcaption><h3>D33-beyond-satchel</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond: the satchel</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Sketched satchel with inventory icons (camera, journal, drone, boot) above the WANTED board</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Satchel inventory icons above wanted-poster board</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Satchel sketch with inventory icons above the WANTED board</span></li></ol><p class="why">“Satchel inventory and bounty board feel RDR2, though the icons are modern” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The satchel is redrawn as a shoulder satchel (long strap, two buckled straps).</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A33-beyond-satchel.jpg"><img loading="lazy" decoding="async" src="A33-beyond-satchel.jpg" width="640" height="400" alt="A33-beyond-satchel: SM-15 beyond: the satchel"></a>
+<figcaption><h3>A33-beyond-satchel</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond: the satchel</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Satchel with checked-off inventory slots (camera, journal, drone, boot) above WANTED posters</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Satchel with item icons, wanted-poster board below</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Satchel with ticked inventory slots above the posters board</span></li></ol><p class="why">“Satchel inventory UI and bounty board feel RDR2” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> The satchel is redrawn as a shoulder satchel (long strap, two buckled straps).</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D34-beyond-wanted.jpg"><img loading="lazy" decoding="async" src="D34-beyond-wanted.jpg" width="640" height="400" alt="D34-beyond-wanted: SM-15 beyond: the WANTED handbill"></a>
+<figcaption><h3>D34-beyond-wanted</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond: the WANTED handbill</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Wooden notice board with pinned aged WANTED posters</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Wanted posters nailed to a wooden board in a frontier town</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">WANTED poster pinned among weathered bills on a western town board</span></li></ol><p class="why">“Weathered frontier board with nailed parchment posters reads as an RDR2 bounty board” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A34-beyond-wanted.jpg"><img loading="lazy" decoding="async" src="A34-beyond-wanted.jpg" width="640" height="400" alt="A34-beyond-wanted: SM-15 beyond: the WANTED handbill"></a>
+<figcaption><h3>A34-beyond-wanted</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond: the WANTED handbill</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Wooden board with pinned WANTED posters</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Wanted posters nailed to wooden board</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">WANTED poster pinned among weathered bills on a wooden board</span></li></ol><p class="why">“Weathered frontier board with nailed parchment posters is RDR2 bounty board” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D35-beyond-2800.jpg"><img loading="lazy" decoding="async" src="D35-beyond-2800.jpg" width="640" height="400" alt="D35-beyond-2800: SM-15 beyond end"></a>
+<figcaption><h3>D35-beyond-2800</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond end</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Wooden board with pinned WANTED posters</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Wanted posters on wooden board in frontier town</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">WANTED poster pinned among weathered bills on a western noticeboard</span></li></ol><p class="why">“Weathered frontier notice board with nailed posters reads as RDR2 bounties” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A35-beyond-2800.jpg"><img loading="lazy" decoding="async" src="A35-beyond-2800.jpg" width="640" height="400" alt="A35-beyond-2800: SM-15 beyond end"></a>
+<figcaption><h3>A35-beyond-2800</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-15 beyond end</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Wooden board with pinned WANTED posters</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Wanted posters nailed to wooden board</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">WANTED poster pinned among weathered bills on a wooden board</span></li></ol><p class="why">“Frontier notice board with nailed posters reads as RDR2 bounties” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D36-writing.jpg"><img loading="lazy" decoding="async" src="D36-writing.jpg" width="640" height="400" alt="D36-writing: SM-11 Arthur's journal (writing)"></a>
+<figcaption><h3>D36-writing</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-11 Arthur's journal (writing)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Arthur's journal page with pencil sketch of mountains, lake, saddled horse and pines</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, pines, saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, saddled horse with rifle, pines</span></li></ol><p class="why">“Cream journal paper with hatched pencil sketch of a horse and frontier landscape is pure Arthur's journal” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A36-writing.jpg"><img loading="lazy" decoding="async" src="A36-writing.jpg" width="640" height="400" alt="A36-writing: SM-11 Arthur's journal (writing)"></a>
+<figcaption><h3>A36-writing</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-11 Arthur's journal (writing)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D36-writing (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Arthur's journal page with pencil sketch of mountains, lake, saddled horse and pines</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, pines, saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, saddled horse with rifle, pines</span></li></ol><p class="why">“Cream journal paper with hatched pencil sketch of a horse and frontier landscape is pure Arthur's journal” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D37-writing-1000.jpg"><img loading="lazy" decoding="async" src="D37-writing-1000.jpg" width="640" height="400" alt="D37-writing-1000: SM-11 journal pages"></a>
+<figcaption><h3>D37-writing-1000</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-11 journal pages</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Arthur's journal page with pencil sketch of mountains, lake, saddled horse</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Arthur's journal page: mountains, lake, pines, saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, saddled horse, pines</span></li></ol><p class="why">“Hatched pencil journal sketch of a horse in the wilderness is Arthur's journal” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A37-writing-1000.jpg"><img loading="lazy" decoding="async" src="A37-writing-1000.jpg" width="640" height="400" alt="A37-writing-1000: SM-11 journal pages"></a>
+<figcaption><h3>A37-writing-1000</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-11 journal pages</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D37-writing-1000 (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Arthur's journal page with pencil sketch of mountains, lake, saddled horse</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Arthur's journal page: mountains, lake, pines, saddled horse</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Arthur's journal spread: pencil sketch of mountains, lake, saddled horse, pines</span></li></ol><p class="why">“Hatched pencil journal sketch of a horse in the wilderness is Arthur's journal” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D31-voices.jpg"><img loading="lazy" decoding="async" src="D31-voices.jpg" width="640" height="400" alt="D31-voices: SM-16 by the fire (camp)"></a>
+<figcaption><h3>D31-voices</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-16 by the fire (camp)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Gang camp at dusk: canvas tents, campfire with cooking pot, covered wagon, mountains</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Gang camp at dusk: canvas tents, covered wagon, campfire with pot</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.80</span> <span class="m">Gang camp at dusk: canvas tents, campfire stew pot, covered wagon, mountains</span></li></ol><p class="why">“Canvas tents, campfire pot and chuck wagon among pines are pure RDR2 camp” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A31-voices.jpg"><img loading="lazy" decoding="async" src="A31-voices.jpg" width="640" height="400" alt="A31-voices: SM-16 by the fire (camp)"></a>
+<figcaption><h3>A31-voices</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">SM-16 by the fire (camp)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.65</span> <span class="m">Night campfire between two canvas tents under mountains</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Night campfire between canvas tents under mountains</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Night campfire between canvas tents under mountains</span></li></ol><p class="why">“Canvas tents around a campfire in the wilderness evoke RDR2 camp, though camping is generic” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-4"><h2>Card III → IV: embers → candles → the Great Hall (RDR2 → Harry Potter) <span class="n">6</span></h2><div class="grid"><figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="D10-act-4-enter.jpg"><img loading="lazy" decoding="async" src="D10-act-4-enter.jpg" width="640" height="400" alt="D10-act-4-enter: SM-10 card III→IV RDR2→HP ignite — enter"></a>
+<figcaption><h3>D10-act-4-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="wf">3 wrong-film</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.75</span> <span class="m">Campfire with cooking pot above, pine-lake camp with tents below (scroll transition)</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Campfire with cook pot and stumps, lakeside camp below</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.70</span> <span class="m">Campfire close-up above, lakeside camp with tents and wagon below</span></li></ol><p class="why">“Both halves show the frontier camp and campfire” — J1</p>
+</figcaption></figure>
+<figure class="card s-fail" data-state="fail" data-fixed="0">
+<a href="A10-act-4-enter.jpg"><img loading="lazy" decoding="async" src="A10-act-4-enter.jpg" width="640" height="400" alt="A10-act-4-enter: SM-10 card III→IV RDR2→HP ignite — enter"></a>
+<figcaption><h3>A10-act-4-enter</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — enter</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="wf">3 wrong-film</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.55</span> <span class="m">Mostly dark page, a pine-forest lake camp with covered wagon and tent at sunset rising in</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Camp with covered wagon and tent at sunset lake (mostly dark, scrolling in)</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Camp in pines by a lake at sunset with covered wagon and tent (mostly dark frame)</span></li></ol><p class="why">“Canvas tent and covered wagon among pines read as RDR2 camp, but only partly visible” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-4-mid.jpg"><img loading="lazy" decoding="async" src="D10-act-4-mid.jpg" width="640" height="400" alt="D10-act-4-mid: SM-10 card III→IV RDR2→HP ignite — mid"></a>
+<figcaption><h3>D10-act-4-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.90</span> <span class="m">Great Hall with a spell line lighting candles in sequence, faint tree overlay</span></li><li><b>J2</b> Harry Potter <span class="c">0.93</span> <span class="m">Great Hall floating candles with rising graph line (slight blend at left)</span></li><li><b>J3</b> Harry Potter <span class="c">0.90</span> <span class="m">Great Hall with floating candles lined up into a rising chart</span></li></ol><p class="why">“Great Hall with floating candles is iconic HP; faint foliage ghost hints at a blend” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-4-mid.jpg"><img loading="lazy" decoding="async" src="A10-act-4-mid.jpg" width="640" height="400" alt="A10-act-4-mid: SM-10 card III→IV RDR2→HP ignite — mid"></a>
+<figcaption><h3>A10-act-4-mid</h3>
+<p class="meta"><span class="t">TRANSITION</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — mid</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.93</span> <span class="m">Great Hall with floating candles and a wand spell streak</span></li><li><b>J2</b> Harry Potter <span class="c">0.95</span> <span class="m">Great Hall floating candles with wand trail</span></li><li><b>J3</b> Harry Potter <span class="c">0.90</span> <span class="m">Great Hall with floating candles and a wand-light trail</span></li></ol><p class="why">“Floating candles in the Great Hall plus a spell trail are iconic HP” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D10-act-4-settled.jpg"><img loading="lazy" decoding="async" src="D10-act-4-settled.jpg" width="640" height="400" alt="D10-act-4-settled: SM-10 card III→IV RDR2→HP ignite — settled"></a>
+<figcaption><h3>D10-act-4-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.97</span> <span class="m">The Great Hall with hundreds of floating candles under a night-sky ceiling</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Great Hall with floating candles under enchanted ceiling</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Great Hall with floating candles and enchanted night-sky ceiling</span></li></ol><p class="why">“Floating candles over house tables under an enchanted sky is iconic HP” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A10-act-4-settled.jpg"><img loading="lazy" decoding="async" src="A10-act-4-settled.jpg" width="640" height="400" alt="A10-act-4-settled: SM-10 card III→IV RDR2→HP ignite — settled"></a>
+<figcaption><h3>A10-act-4-settled</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-10 card III→IV RDR2→HP ignite — settled</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.97</span> <span class="m">The Great Hall with floating candles</span></li><li><b>J2</b> Harry Potter <span class="c">0.97</span> <span class="m">Great Hall with floating candles</span></li><li><b>J3</b> Harry Potter <span class="c">0.95</span> <span class="m">Great Hall with floating candles and enchanted night-sky ceiling</span></li></ol><p class="why">“Floating candles and long tables in a Gothic hall are iconic HP” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="act-iv"><h2>Act IV: Principles and Contact (Harry Potter) <span class="n">6</span></h2><div class="grid"><figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D38-principles.jpg"><img loading="lazy" decoding="async" src="D38-principles.jpg" width="640" height="400" alt="D38-principles: Principles (HP)"></a>
+<figcaption><h3>D38-principles</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Principles (HP)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.80</span> <span class="m">Marauder's Map top edge with title banner and wandering footprints</span></li><li><b>J2</b> Harry Potter <span class="c">0.85</span> <span class="m">Marauder's Map unfolded with footprints</span></li><li><b>J3</b> Harry Potter <span class="c">0.80</span> <span class="m">Marauder's Map unfolded with banner and wandering footprints</span></li></ol><p class="why">“Parchment map with ribbon banner, corner seals and footprints is the Marauder's Map” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A38-principles.jpg"><img loading="lazy" decoding="async" src="A38-principles.jpg" width="640" height="400" alt="A38-principles: Principles (HP)"></a>
+<figcaption><h3>A38-principles</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Principles (HP)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Starry sky filled with floating candles over a quill-like line</span></li><li><b>J2</b> Harry Potter <span class="c">0.80</span> <span class="m">Floating candles on starry night sky with broom icon</span></li><li><b>J3</b> Harry Potter <span class="c">0.60</span> <span class="m">Floating candles in a starry enchanted sky with wand-trail lines</span></li></ol><p class="why">“Floating candles against a night sky evoke the Great Hall ceiling” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D39-principles-1000.jpg"><img loading="lazy" decoding="async" src="D39-principles-1000.jpg" width="640" height="400" alt="D39-principles-1000: Principles lower"></a>
+<figcaption><h3>D39-principles-1000</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Principles lower</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.75</span> <span class="m">Marauder's Map close-up, corridors with walking footprints</span></li><li><b>J2</b> Harry Potter <span class="c">0.80</span> <span class="m">Marauder's Map parchment with moving footprints and corridors</span></li><li><b>J3</b> Harry Potter <span class="c">0.75</span> <span class="m">Marauder's Map close-up with footprints walking the corridors</span></li></ol><p class="why">“Folded parchment floor plan with moving inked footprints is the Marauder's Map” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A39-principles-1000.jpg"><img loading="lazy" decoding="async" src="A39-principles-1000.jpg" width="640" height="400" alt="A39-principles-1000: Principles lower"></a>
+<figcaption><h3>A39-principles-1000</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Principles lower</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Starry night sky with floating candles in rows, feathered-quill lines</span></li><li><b>J2</b> Harry Potter <span class="c">0.70</span> <span class="m">Floating candles and broomstick icons on starry night sky</span></li><li><b>J3</b> Harry Potter <span class="c">0.60</span> <span class="m">Floating candles against a starry enchanted ceiling with wand-trail lines</span></li></ol><p class="why">“Floating lit candles against a night sky evoke the Great Hall ceiling; otherwise sparse” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="D40-contact.jpg"><img loading="lazy" decoding="async" src="D40-contact.jpg" width="640" height="400" alt="D40-contact: SM-12 last light (contact)"></a>
+<figcaption><h3>D40-contact</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-12 last light (contact)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Floating candles in a starry dark sky, one candle targeted by brackets, dotted arc</span></li><li><b>J2</b> Harry Potter <span class="c">0.65</span> <span class="m">Floating candles in night sky with a targeting bracket on one candle</span></li><li><b>J3</b> Harry Potter <span class="c">0.55</span> <span class="m">Floating candles in a starry sky with one candle targeted, gold dotted arc</span></li></ol><p class="why">“Floating candles evoke Hogwarts; frame is mostly dark and abstract” — J1</p>
+</figcaption></figure>
+<figure class="card s-pass" data-state="pass" data-fixed="0">
+<a href="A40-contact.jpg"><img loading="lazy" decoding="async" src="A40-contact.jpg" width="640" height="400" alt="A40-contact: SM-12 last light (contact)"></a>
+<figcaption><h3>A40-contact</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">SM-12 last light (contact)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D40-contact (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Floating candles in a starry dark sky, one candle targeted by brackets, dotted arc</span></li><li><b>J2</b> Harry Potter <span class="c">0.65</span> <span class="m">Floating candles in night sky with a targeting bracket on one candle</span></li><li><b>J3</b> Harry Potter <span class="c">0.55</span> <span class="m">Floating candles in a starry sky with one candle targeted, gold dotted arc</span></li></ol><p class="why">“Floating candles evoke Hogwarts; frame is mostly dark and abstract” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="credits"><h2>Credits (house) <span class="n">4</span></h2><div class="grid"><figure class="card s-na" data-state="na" data-fixed="0">
+<a href="D41-credits.jpg"><img loading="lazy" decoding="async" src="D41-credits.jpg" width="640" height="400" alt="D41-credits: SM-13 credits roll"></a>
+<figcaption><h3>D41-credits</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-house">house</span></p>
+<p class="mo">SM-13 credits roll</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> no film named <span class="c">0.10</span> <span class="m">Blank dark page with a few horizontal rule lines</span></li><li><b>J2</b> no film named <span class="c">0.10</span> <span class="m">Near-empty dark page with ruled lines</span></li><li><b>J3</b> no film named <span class="c">0.10</span> <span class="m">Near-empty dark page with faint horizontal rules</span></li></ol><p class="why">“No imagery at all, just empty dark layout lines” — J1</p>
+</figcaption></figure>
+<figure class="card s-na" data-state="na" data-fixed="0">
+<a href="A41-credits.jpg"><img loading="lazy" decoding="async" src="A41-credits.jpg" width="640" height="400" alt="A41-credits: SM-13 credits roll"></a>
+<figcaption><h3>A41-credits</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-house">house</span></p>
+<p class="mo">SM-13 credits roll</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> no film named <span class="c">0.10</span> <span class="m">Blank dark page with a few horizontal rule lines</span></li><li><b>J2</b> no film named <span class="c">0.10</span> <span class="m">Near-empty dark page with ruled lines</span></li><li><b>J3</b> no film named <span class="c">0.10</span> <span class="m">Near-empty dark page with faint horizontal rules</span></li></ol><p class="why">“No imagery at all, just empty dark layout lines” — J1</p>
+</figcaption></figure>
+<figure class="card s-na" data-state="na" data-fixed="0">
+<a href="D42-credits-1000.jpg"><img loading="lazy" decoding="async" src="D42-credits-1000.jpg" width="640" height="400" alt="D42-credits-1000: SM-13 credits end (Mischief managed)"></a>
+<figcaption><h3>D42-credits-1000</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-house">house</span></p>
+<p class="mo">SM-13 credits end (Mischief managed)</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.50</span> <span class="m">Dark page with tiny gold Time-Turner, Golden Snitch and Deathly Hallows icons</span></li><li><b>J2</b> Harry Potter <span class="c">0.50</span> <span class="m">Tiny time-turner, golden snitch and Deathly Hallows icons on dark page</span></li><li><b>J3</b> Harry Potter <span class="c">0.40</span> <span class="m">Mostly empty dark page with tiny Time-Turner, Golden Snitch and Deathly Hallows icons</span></li></ol><p class="why">“Snitch and Hallows symbols are distinctly HP, but the icons are minute on a mostly empty frame” — J1</p>
+</figcaption></figure>
+<figure class="card s-na" data-state="na" data-fixed="0">
+<a href="A42-credits-1000.jpg"><img loading="lazy" decoding="async" src="A42-credits-1000.jpg" width="640" height="400" alt="A42-credits-1000: SM-13 credits end (Mischief managed)"></a>
+<figcaption><h3>A42-credits-1000</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-house">house</span></p>
+<p class="mo">SM-13 credits end (Mischief managed)</p>
+<div class="vd"><span class="v v-na">n/a (no film by design)</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.50</span> <span class="m">Dark page with tiny gold Time-Turner, Golden Snitch and Deathly Hallows icons</span></li><li><b>J2</b> Harry Potter <span class="c">0.50</span> <span class="m">Tiny time-turner, golden snitch and Deathly Hallows icons on dark page</span></li><li><b>J3</b> Harry Potter <span class="c">0.40</span> <span class="m">Mostly empty dark page with tiny Time-Turner, Golden Snitch and Deathly Hallows icons</span></li></ol><p class="why">“Snitch and Hallows symbols are distinctly HP, but the icons are minute on a mostly empty frame” — J1</p>
+</figcaption></figure>
+</div></section>
+<section id="loaders-card"><h2>World loaders, card size (/lab strip: indeterminate, determinate, complete, static, mini) <span class="n">8</span></h2><div class="grid"><figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D80-loader-card-hp.jpg"><img loading="lazy" decoding="async" src="D80-loader-card-hp.jpg" width="640" height="103" alt="D80-loader-card-hp: World loader, card size (hp)"></a>
+<figcaption><h3>D80-loader-card-hp</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">World loader, card size (hp)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.55</span> <span class="m">Strip of floating-candle thumbnails lit by a wand streak</span></li><li><b>J2</b> Harry Potter <span class="c">0.55</span> <span class="m">Strip of floating-candle cards with wand trails</span></li><li><b>J3</b> Harry Potter <span class="c">0.50</span> <span class="m">Strip of floating-candle thumbnails with a wand trail</span></li></ol><p class="why">“Floating candles and wand spark evoke HP, but thumbnails are tiny” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A80-loader-card-hp.jpg"><img loading="lazy" decoding="async" src="A80-loader-card-hp.jpg" width="640" height="102" alt="A80-loader-card-hp: World loader, card size (hp)"></a>
+<figcaption><h3>A80-loader-card-hp</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">World loader, card size (hp)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.40</span> <span class="m">Row of tiny parchment floor-plan cards with a banner and footprint trail (Marauder's Map)</span></li><li><b>J2</b> Harry Potter <span class="c">0.40</span> <span class="m">Strip of small parchment map thumbnails (Marauder's Map-like)</span></li><li><b>J3</b> Harry Potter <span class="c">0.35</span> <span class="m">Strip of tiny parchment floor-plan thumbnails, likely the Marauder's Map</span></li></ol><p class="why">“Parchment map with scroll banner and corridors hints at the Marauder's Map, but thumbnails are very small” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D80-loader-card-idiots.jpg"><img loading="lazy" decoding="async" src="D80-loader-card-idiots.jpg" width="640" height="107" alt="D80-loader-card-idiots: World loader, card size (idiots)"></a>
+<figcaption><h3>D80-loader-card-idiots</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">World loader, card size (idiots)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.55</span> <span class="m">Strip of small chalkboard thumbnails with drone, gears and astronaut pen</span></li><li><b>J2</b> 3 Idiots <span class="c">0.50</span> <span class="m">Strip of chalkboard cards with drone, gears, astronaut pen</span></li><li><b>J3</b> 3 Idiots <span class="c">0.55</span> <span class="m">Strip of chalkboard thumbnails with drone and astronaut pen</span></li></ol><p class="why">“Drone plus pen on chalkboards suggests 3 Idiots, but thumbnails are small” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A80-loader-card-idiots.jpg"><img loading="lazy" decoding="async" src="A80-loader-card-idiots.jpg" width="640" height="107" alt="A80-loader-card-idiots: World loader, card size (idiots)"></a>
+<figcaption><h3>A80-loader-card-idiots</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">World loader, card size (idiots)</p>
+<div class="vd"><span class="v v-fail">FAIL</span> <span class="via">judged once as D80-loader-card-idiots (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.55</span> <span class="m">Strip of small chalkboard thumbnails with drone, gears and astronaut pen</span></li><li><b>J2</b> 3 Idiots <span class="c">0.50</span> <span class="m">Strip of chalkboard cards with drone, gears, astronaut pen</span></li><li><b>J3</b> 3 Idiots <span class="c">0.55</span> <span class="m">Strip of chalkboard thumbnails with drone and astronaut pen</span></li></ol><p class="why">“Drone plus pen on chalkboards suggests 3 Idiots, but thumbnails are small” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D80-loader-card-pirates.jpg"><img loading="lazy" decoding="async" src="D80-loader-card-pirates.jpg" width="640" height="130" alt="D80-loader-card-pirates: World loader, card size (pirates)"></a>
+<figcaption><h3>D80-loader-card-pirates</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">World loader, card size (pirates)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of small Jack's-compass thumbnails with a ship sailing toward an X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of Jack's compass cards with ship sailing to X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of Jack's compass thumbnails with a ship sailing to an X</span></li></ol><p class="why">“Hinged compass with ship and treasure X reads Pirates, but icons are tiny” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="A80-loader-card-pirates.jpg"><img loading="lazy" decoding="async" src="A80-loader-card-pirates.jpg" width="640" height="100" alt="A80-loader-card-pirates: World loader, card size (pirates)"></a>
+<figcaption><h3>A80-loader-card-pirates</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">World loader, card size (pirates)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D80-loader-card-pirates (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of small Jack's-compass thumbnails with a ship sailing toward an X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of Jack's compass cards with ship sailing to X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.60</span> <span class="m">Strip of Jack's compass thumbnails with a ship sailing to an X</span></li></ol><p class="why">“Hinged compass with ship and treasure X reads Pirates, but icons are tiny” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="D80-loader-card-rdr2.jpg"><img loading="lazy" decoding="async" src="D80-loader-card-rdr2.jpg" width="640" height="100" alt="D80-loader-card-rdr2: World loader, card size (rdr2)"></a>
+<figcaption><h3>D80-loader-card-rdr2</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">World loader, card size (rdr2)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Strip of journal-sketch thumbnails: horse, hat on fence, sun</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Strip of journal sketch cards: fence, horse, sun, birds</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Strip of sketch cards: hat on fence, horse, sun</span></li></ol><p class="why">“Pencil western sketches suggest Arthur's journal, but tiny” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A80-loader-card-rdr2.jpg"><img loading="lazy" decoding="async" src="A80-loader-card-rdr2.jpg" width="640" height="100" alt="A80-loader-card-rdr2: World loader, card size (rdr2)"></a>
+<figcaption><h3>A80-loader-card-rdr2</h3>
+<p class="meta"><span class="t">BLIND</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">World loader, card size (rdr2)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Strip of small red-sky ranch thumbnails with Dead Eye X marks along a line</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.50</span> <span class="m">Strip of red-sky frontier cards with Dead Eye X marks</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.40</span> <span class="m">Strip of tiny red-sky frontier thumbnails with Dead Eye X marks on a line</span></li></ol><p class="why">“Red sunset, lone tree and birds with X targets suggest RDR2 Dead Eye, but thumbnails are tiny” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Card loader enlarged from 120 to 176 px; the motif is unchanged.</p>
+</figcaption></figure>
+</div></section>
+<section id="loaders-route"><h2>World loaders, route size (/lab route cards) <span class="n">8</span></h2><div class="grid"><figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D85-loader-route-about.jpg"><img loading="lazy" decoding="async" src="D85-loader-route-about.jpg" width="640" height="380" alt="D85-loader-route-about: Route loader card (about)"></a>
+<figcaption><h3>D85-loader-route-about</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">Route loader card (about)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Jack's compass with a ship sailing a dotted route to an X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Jack's compass pointing a ship toward X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Jack's compass with a ship sailing a dotted line to an X</span></li></ol><p class="why">“Hinged compass, galleon and treasure X are Pirates” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="A85-loader-route-about.jpg"><img loading="lazy" decoding="async" src="A85-loader-route-about.jpg" width="640" height="379" alt="A85-loader-route-about: Route loader card (about)"></a>
+<figcaption><h3>A85-loader-route-about</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">Route loader card (about)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D85-loader-route-about (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> Pirates of the Caribbean <span class="c">0.75</span> <span class="m">Jack's compass with a ship sailing a dotted route to an X</span></li><li><b>J2</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Jack's compass pointing a ship toward X</span></li><li><b>J3</b> Pirates of the Caribbean <span class="c">0.70</span> <span class="m">Jack's compass with a ship sailing a dotted line to an X</span></li></ol><p class="why">“Hinged compass, galleon and treasure X are Pirates” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D85-loader-route-principles.jpg"><img loading="lazy" decoding="async" src="D85-loader-route-principles.jpg" width="640" height="380" alt="D85-loader-route-principles: Route loader card (principles)"></a>
+<figcaption><h3>D85-loader-route-principles</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Route loader card (principles)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.60</span> <span class="m">Small card of floating candles being lit by a wand streak</span></li><li><b>J2</b> Harry Potter <span class="c">0.60</span> <span class="m">Floating candles card with wand swish</span></li><li><b>J3</b> Harry Potter <span class="c">0.55</span> <span class="m">Small card of floating candles under stars with a wand trail</span></li></ol><p class="why">“Floating candles with a wand spark evoke Hogwarts; icon-scale” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A85-loader-route-principles.jpg"><img loading="lazy" decoding="async" src="A85-loader-route-principles.jpg" width="640" height="379" alt="A85-loader-route-principles: Route loader card (principles)"></a>
+<figcaption><h3>A85-loader-route-principles</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-hp">hp</span></p>
+<p class="mo">Route loader card (principles)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Harry Potter <span class="c">0.50</span> <span class="m">Small Marauder's Map card with banner, corridors and footprints</span></li><li><b>J2</b> Harry Potter <span class="c">0.45</span> <span class="m">Small parchment floorplan with staircases and footprints (Marauder's Map)</span></li><li><b>J3</b> Harry Potter <span class="c">0.45</span> <span class="m">Small Marauder's Map card with corridors and a tiny figure</span></li></ol><p class="why">“Parchment floor plan with title banner hints Marauder's Map; small” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D85-loader-route-work.jpg"><img loading="lazy" decoding="async" src="D85-loader-route-work.jpg" width="640" height="380" alt="D85-loader-route-work: Route loader card (work)"></a>
+<figcaption><h3>D85-loader-route-work</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">Route loader card (work)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.60</span> <span class="m">Small chalkboard with Rancho's quadcopter drone and Virus's astronaut pen</span></li><li><b>J2</b> 3 Idiots <span class="c">0.55</span> <span class="m">Small chalkboard with drone sketch, gears and orbiting pen</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Chalkboard drawing of Rancho's drone and Virus's floating astronaut pen</span></li></ol><p class="why">“Drone sketch plus orbiting pen on a classroom chalkboard points to 3 Idiots; tiny icon-scale” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="A85-loader-route-work.jpg"><img loading="lazy" decoding="async" src="A85-loader-route-work.jpg" width="640" height="379" alt="A85-loader-route-work: Route loader card (work)"></a>
+<figcaption><h3>A85-loader-route-work</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">Route loader card (work)</p>
+<div class="vd"><span class="v v-pass">PASS</span> <span class="via">judged once as D85-loader-route-work (identical blind frame)</span></div>
+<ol class="g"><li><b>J1</b> 3 Idiots <span class="c">0.60</span> <span class="m">Small chalkboard with Rancho's quadcopter drone and Virus's astronaut pen</span></li><li><b>J2</b> 3 Idiots <span class="c">0.55</span> <span class="m">Small chalkboard with drone sketch, gears and orbiting pen</span></li><li><b>J3</b> 3 Idiots <span class="c">0.60</span> <span class="m">Chalkboard drawing of Rancho's drone and Virus's floating astronaut pen</span></li></ol><p class="why">“Drone sketch plus orbiting pen on a classroom chalkboard points to 3 Idiots; tiny icon-scale” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-pass s-fixed" data-state="pass" data-fixed="1">
+<a href="D85-loader-route-writing.jpg"><img loading="lazy" decoding="async" src="D85-loader-route-writing.jpg" width="640" height="380" alt="D85-loader-route-writing: Route loader card (writing)"></a>
+<figcaption><h3>D85-loader-route-writing</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">DEFAULT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">Route loader card (writing)</p>
+<div class="vd"><span class="v v-pass">PASS</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Small framed sketch of horse, cowboy hat on fence post, sun and pines with a pencil</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.65</span> <span class="m">Journal sketch of cowboy hat on fence post, horse, sun</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.60</span> <span class="m">Small pencil sketch card: cowboy hat on fence post, horse, sun, pines</span></li></ol><p class="why">“Pencil sketch of horse and cowboy hat evokes Arthur's journal; icon-scale” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+<figure class="card s-fail s-fixed" data-state="fail" data-fixed="1">
+<a href="A85-loader-route-writing.jpg"><img loading="lazy" decoding="async" src="A85-loader-route-writing.jpg" width="640" height="379" alt="A85-loader-route-writing: Route loader card (writing)"></a>
+<figcaption><h3>A85-loader-route-writing</h3>
+<p class="meta"><span class="t">CAPTION</span><span class="t">ALT</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">Route loader card (writing)</p>
+<div class="vd"><span class="v v-fail">FAIL</span></div>
+<ol class="g"><li><b>J1</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Small red-sky card with oak tree, fence, homestead and birds</span></li><li><b>J2</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Small red-sky frontier silhouette card (tree, fence, cabin, birds)</span></li><li><b>J3</b> Red Dead Redemption 2 <span class="c">0.45</span> <span class="m">Small red-sky homestead card with oak, fence and birds</span></li></ol><p class="why">“Red western sunset with homestead suggests RDR2, but it is a tiny icon” — J1</p><p class="fx"><b>Fixed after the final test, not re-judged.</b> Route-loader art enlarged from 288 to 416 px at 1280 px and wider; the motif is unchanged.</p>
+</figcaption></figure>
+</div></section>
+<section id="m390"><h2>Mobile sweep, 390 px (re-captured after the fix round, not judged) <span class="n">32</span></h2><div class="grid"><figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-00-top.jpg"><img loading="lazy" decoding="async" src="m390-00-top.jpg" width="390" height="844" alt="m390-00-top: top @ mobile"></a>
+<figcaption><h3>m390-00-top</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">top @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-01-act-1.jpg"><img loading="lazy" decoding="async" src="m390-01-act-1.jpg" width="390" height="844" alt="m390-01-act-1: act-1 @ mobile"></a>
+<figcaption><h3>m390-01-act-1</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">act-1 @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-02-about.jpg"><img loading="lazy" decoding="async" src="m390-02-about.jpg" width="390" height="844" alt="m390-02-about: about @ mobile"></a>
+<figcaption><h3>m390-02-about</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">about @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-03-about-1013.jpg"><img loading="lazy" decoding="async" src="m390-03-about-1013.jpg" width="390" height="844" alt="m390-03-about-1013: about @ mobile"></a>
+<figcaption><h3>m390-03-about-1013</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">about @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-04-journey.jpg"><img loading="lazy" decoding="async" src="m390-04-journey.jpg" width="390" height="844" alt="m390-04-journey: journey @ mobile"></a>
+<figcaption><h3>m390-04-journey</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">journey @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-05-act-2.jpg"><img loading="lazy" decoding="async" src="m390-05-act-2.jpg" width="390" height="844" alt="m390-05-act-2: act-2 @ mobile"></a>
+<figcaption><h3>m390-05-act-2</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">act-2 @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-06-work.jpg"><img loading="lazy" decoding="async" src="m390-06-work.jpg" width="390" height="844" alt="m390-06-work: work @ mobile"></a>
+<figcaption><h3>m390-06-work</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">work @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-07-work-795.jpg"><img loading="lazy" decoding="async" src="m390-07-work-795.jpg" width="390" height="844" alt="m390-07-work-795: work @ mobile"></a>
+<figcaption><h3>m390-07-work-795</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">work @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-08-trading-algos.jpg"><img loading="lazy" decoding="async" src="m390-08-trading-algos.jpg" width="390" height="844" alt="m390-08-trading-algos: trading-algos @ mobile"></a>
+<figcaption><h3>m390-08-trading-algos</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">trading-algos @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-09-trading-algos-798.jpg"><img loading="lazy" decoding="async" src="m390-09-trading-algos-798.jpg" width="390" height="844" alt="m390-09-trading-algos-798: trading-algos @ mobile"></a>
+<figcaption><h3>m390-09-trading-algos-798</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">trading-algos @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-10-optuna-screener.jpg"><img loading="lazy" decoding="async" src="m390-10-optuna-screener.jpg" width="390" height="844" alt="m390-10-optuna-screener: optuna-screener @ mobile"></a>
+<figcaption><h3>m390-10-optuna-screener</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">optuna-screener @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-11-optuna-screener-2298.jpg"><img loading="lazy" decoding="async" src="m390-11-optuna-screener-2298.jpg" width="390" height="844" alt="m390-11-optuna-screener-2298: optuna-screener @ mobile"></a>
+<figcaption><h3>m390-11-optuna-screener-2298</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">optuna-screener @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-12-experiment.jpg"><img loading="lazy" decoding="async" src="m390-12-experiment.jpg" width="390" height="844" alt="m390-12-experiment: experiment @ mobile"></a>
+<figcaption><h3>m390-12-experiment</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots(no film styling)</span></p>
+<p class="mo">experiment @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-13-systems.jpg"><img loading="lazy" decoding="async" src="m390-13-systems.jpg" width="390" height="844" alt="m390-13-systems: systems @ mobile"></a>
+<figcaption><h3>m390-13-systems</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">systems @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-14-systems-1152.jpg"><img loading="lazy" decoding="async" src="m390-14-systems-1152.jpg" width="390" height="844" alt="m390-14-systems-1152: systems @ mobile"></a>
+<figcaption><h3>m390-14-systems-1152</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">systems @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-15-kill-list.jpg"><img loading="lazy" decoding="async" src="m390-15-kill-list.jpg" width="390" height="844" alt="m390-15-kill-list: kill-list @ mobile"></a>
+<figcaption><h3>m390-15-kill-list</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">kill-list @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-16-kill-list-1223.jpg"><img loading="lazy" decoding="async" src="m390-16-kill-list-1223.jpg" width="390" height="844" alt="m390-16-kill-list-1223: kill-list @ mobile"></a>
+<figcaption><h3>m390-16-kill-list-1223</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">kill-list @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-17-films.jpg"><img loading="lazy" decoding="async" src="m390-17-films.jpg" width="390" height="844" alt="m390-17-films: films @ mobile"></a>
+<figcaption><h3>m390-17-films</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-house">house (4 screens)</span></p>
+<p class="mo">films @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-18-films-2067.jpg"><img loading="lazy" decoding="async" src="m390-18-films-2067.jpg" width="390" height="844" alt="m390-18-films-2067: films @ mobile"></a>
+<figcaption><h3>m390-18-films-2067</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-house">house (4 screens)</span></p>
+<p class="mo">films @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-19-act-3.jpg"><img loading="lazy" decoding="async" src="m390-19-act-3.jpg" width="390" height="844" alt="m390-19-act-3: act-3 @ mobile"></a>
+<figcaption><h3>m390-19-act-3</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">act-3 @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-20-beyond.jpg"><img loading="lazy" decoding="async" src="m390-20-beyond.jpg" width="390" height="844" alt="m390-20-beyond: beyond @ mobile"></a>
+<figcaption><h3>m390-20-beyond</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">beyond @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-21-beyond-1818.jpg"><img loading="lazy" decoding="async" src="m390-21-beyond-1818.jpg" width="390" height="844" alt="m390-21-beyond-1818: beyond @ mobile"></a>
+<figcaption><h3>m390-21-beyond-1818</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">beyond @ mobile</p>
+
+<p class="rc">Stale frame from the earlier sweep. Superseded by m390-21-beyond-1824.</p>
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-21-beyond-1824.jpg"><img loading="lazy" decoding="async" src="m390-21-beyond-1824.jpg" width="390" height="844" alt="m390-21-beyond-1824: beyond @ mobile"></a>
+<figcaption><h3>m390-21-beyond-1824</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">beyond @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-22-writing.jpg"><img loading="lazy" decoding="async" src="m390-22-writing.jpg" width="390" height="844" alt="m390-22-writing: writing @ mobile"></a>
+<figcaption><h3>m390-22-writing</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">writing @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-23-writing-837.jpg"><img loading="lazy" decoding="async" src="m390-23-writing-837.jpg" width="390" height="844" alt="m390-23-writing-837: writing @ mobile"></a>
+<figcaption><h3>m390-23-writing-837</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">writing @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-24-voices.jpg"><img loading="lazy" decoding="async" src="m390-24-voices.jpg" width="390" height="844" alt="m390-24-voices: voices @ mobile"></a>
+<figcaption><h3>m390-24-voices</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">voices @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-25-act-4.jpg"><img loading="lazy" decoding="async" src="m390-25-act-4.jpg" width="390" height="844" alt="m390-25-act-4: act-4 @ mobile"></a>
+<figcaption><h3>m390-25-act-4</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-hp">hp</span></p>
+<p class="mo">act-4 @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-26-principles.jpg"><img loading="lazy" decoding="async" src="m390-26-principles.jpg" width="390" height="844" alt="m390-26-principles: principles @ mobile"></a>
+<figcaption><h3>m390-26-principles</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-hp">hp</span></p>
+<p class="mo">principles @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-27-principles-889.jpg"><img loading="lazy" decoding="async" src="m390-27-principles-889.jpg" width="390" height="844" alt="m390-27-principles-889: principles @ mobile"></a>
+<figcaption><h3>m390-27-principles-889</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-hp">hp</span></p>
+<p class="mo">principles @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-28-contact.jpg"><img loading="lazy" decoding="async" src="m390-28-contact.jpg" width="390" height="844" alt="m390-28-contact: contact @ mobile"></a>
+<figcaption><h3>m390-28-contact</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-hp">hp</span></p>
+<p class="mo">contact @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-29-credits.jpg"><img loading="lazy" decoding="async" src="m390-29-credits.jpg" width="390" height="844" alt="m390-29-credits: credits @ mobile"></a>
+<figcaption><h3>m390-29-credits</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-house">house</span></p>
+<p class="mo">credits @ mobile</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="m390-30-credits-749.jpg"><img loading="lazy" decoding="async" src="m390-30-credits-749.jpg" width="390" height="844" alt="m390-30-credits-749: credits @ mobile"></a>
+<figcaption><h3>m390-30-credits-749</h3>
+<p class="meta"><span class="t">mobile</span><span class="t w-house">house</span></p>
+<p class="mo">credits @ mobile</p>
+
+
+</figcaption></figure>
+</div></section>
+<section id="rm"><h2>Reduced motion, 1440 px (not judged) <span class="n">27</span></h2><div class="grid"><figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-00-top.jpg"><img loading="lazy" decoding="async" src="rm-00-top.jpg" width="640" height="400" alt="rm-00-top: top @ rm"></a>
+<figcaption><h3>rm-00-top</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">top @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-01-act-1.jpg"><img loading="lazy" decoding="async" src="rm-01-act-1.jpg" width="640" height="400" alt="rm-01-act-1: act-1 @ rm"></a>
+<figcaption><h3>rm-01-act-1</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">act-1 @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-02-about.jpg"><img loading="lazy" decoding="async" src="rm-02-about.jpg" width="640" height="400" alt="rm-02-about: about @ rm"></a>
+<figcaption><h3>rm-02-about</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">about @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-03-journey.jpg"><img loading="lazy" decoding="async" src="rm-03-journey.jpg" width="640" height="400" alt="rm-03-journey: journey @ rm"></a>
+<figcaption><h3>rm-03-journey</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-pirates">pirates</span></p>
+<p class="mo">journey @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-04-act-2.jpg"><img loading="lazy" decoding="async" src="rm-04-act-2.jpg" width="640" height="400" alt="rm-04-act-2: act-2 @ rm"></a>
+<figcaption><h3>rm-04-act-2</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">act-2 @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-05-work.jpg"><img loading="lazy" decoding="async" src="rm-05-work.jpg" width="640" height="400" alt="rm-05-work: work @ rm"></a>
+<figcaption><h3>rm-05-work</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">work @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-06-work-696.jpg"><img loading="lazy" decoding="async" src="rm-06-work-696.jpg" width="640" height="400" alt="rm-06-work-696: work @ rm"></a>
+<figcaption><h3>rm-06-work-696</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">work @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-07-trading-algos.jpg"><img loading="lazy" decoding="async" src="rm-07-trading-algos.jpg" width="640" height="400" alt="rm-07-trading-algos: trading-algos @ rm"></a>
+<figcaption><h3>rm-07-trading-algos</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">trading-algos @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-08-optuna-screener.jpg"><img loading="lazy" decoding="async" src="rm-08-optuna-screener.jpg" width="640" height="400" alt="rm-08-optuna-screener: optuna-screener @ rm"></a>
+<figcaption><h3>rm-08-optuna-screener</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">optuna-screener @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-09-optuna-screener-1396.jpg"><img loading="lazy" decoding="async" src="rm-09-optuna-screener-1396.jpg" width="640" height="400" alt="rm-09-optuna-screener-1396: optuna-screener @ rm"></a>
+<figcaption><h3>rm-09-optuna-screener-1396</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">optuna-screener @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-10-experiment.jpg"><img loading="lazy" decoding="async" src="rm-10-experiment.jpg" width="640" height="400" alt="rm-10-experiment: experiment @ rm"></a>
+<figcaption><h3>rm-10-experiment</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots(no film styling)</span></p>
+<p class="mo">experiment @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-11-systems.jpg"><img loading="lazy" decoding="async" src="rm-11-systems.jpg" width="640" height="400" alt="rm-11-systems: systems @ rm"></a>
+<figcaption><h3>rm-11-systems</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">systems @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-12-kill-list.jpg"><img loading="lazy" decoding="async" src="rm-12-kill-list.jpg" width="640" height="400" alt="rm-12-kill-list: kill-list @ rm"></a>
+<figcaption><h3>rm-12-kill-list</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">kill-list @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-13-kill-list-611.jpg"><img loading="lazy" decoding="async" src="rm-13-kill-list-611.jpg" width="640" height="400" alt="rm-13-kill-list-611: kill-list @ rm"></a>
+<figcaption><h3>rm-13-kill-list-611</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-idiots">idiots</span></p>
+<p class="mo">kill-list @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-14-films.jpg"><img loading="lazy" decoding="async" src="rm-14-films.jpg" width="640" height="400" alt="rm-14-films: films @ rm"></a>
+<figcaption><h3>rm-14-films</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-house">house (4 screens)</span></p>
+<p class="mo">films @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-15-films-2234.jpg"><img loading="lazy" decoding="async" src="rm-15-films-2234.jpg" width="640" height="400" alt="rm-15-films-2234: films @ rm"></a>
+<figcaption><h3>rm-15-films-2234</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-house">house (4 screens)</span></p>
+<p class="mo">films @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-16-act-3.jpg"><img loading="lazy" decoding="async" src="rm-16-act-3.jpg" width="640" height="400" alt="rm-16-act-3: act-3 @ rm"></a>
+<figcaption><h3>rm-16-act-3</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">act-3 @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-17-beyond.jpg"><img loading="lazy" decoding="async" src="rm-17-beyond.jpg" width="640" height="400" alt="rm-17-beyond: beyond @ rm"></a>
+<figcaption><h3>rm-17-beyond</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">beyond @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-18-beyond-1424.jpg"><img loading="lazy" decoding="async" src="rm-18-beyond-1424.jpg" width="640" height="400" alt="rm-18-beyond-1424: beyond @ rm"></a>
+<figcaption><h3>rm-18-beyond-1424</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">beyond @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-19-writing.jpg"><img loading="lazy" decoding="async" src="rm-19-writing.jpg" width="640" height="400" alt="rm-19-writing: writing @ rm"></a>
+<figcaption><h3>rm-19-writing</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">writing @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-20-writing-876.jpg"><img loading="lazy" decoding="async" src="rm-20-writing-876.jpg" width="640" height="400" alt="rm-20-writing-876: writing @ rm"></a>
+<figcaption><h3>rm-20-writing-876</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">writing @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-21-voices.jpg"><img loading="lazy" decoding="async" src="rm-21-voices.jpg" width="640" height="400" alt="rm-21-voices: voices @ rm"></a>
+<figcaption><h3>rm-21-voices</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-rdr2">rdr2</span></p>
+<p class="mo">voices @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-22-act-4.jpg"><img loading="lazy" decoding="async" src="rm-22-act-4.jpg" width="640" height="400" alt="rm-22-act-4: act-4 @ rm"></a>
+<figcaption><h3>rm-22-act-4</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-hp">hp</span></p>
+<p class="mo">act-4 @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-23-principles.jpg"><img loading="lazy" decoding="async" src="rm-23-principles.jpg" width="640" height="400" alt="rm-23-principles: principles @ rm"></a>
+<figcaption><h3>rm-23-principles</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-hp">hp</span></p>
+<p class="mo">principles @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-24-principles-714.jpg"><img loading="lazy" decoding="async" src="rm-24-principles-714.jpg" width="640" height="400" alt="rm-24-principles-714: principles @ rm"></a>
+<figcaption><h3>rm-24-principles-714</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-hp">hp</span></p>
+<p class="mo">principles @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-25-contact.jpg"><img loading="lazy" decoding="async" src="rm-25-contact.jpg" width="640" height="400" alt="rm-25-contact: contact @ rm"></a>
+<figcaption><h3>rm-25-contact</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-hp">hp</span></p>
+<p class="mo">contact @ rm</p>
+
+
+</figcaption></figure>
+<figure class="card s-none" data-state="none" data-fixed="0">
+<a href="rm-26-credits.jpg"><img loading="lazy" decoding="async" src="rm-26-credits.jpg" width="640" height="400" alt="rm-26-credits: credits @ rm"></a>
+<figcaption><h3>rm-26-credits</h3>
+<p class="meta"><span class="t">rm</span><span class="t w-house">house</span></p>
+<p class="mo">credits @ rm</p>
+
+
+</figcaption></figure>
+</div></section>
+
+<section id="qa"><h2>QA evidence (M5): no-JS, media-blocked, contrast <span class="n">44</span></h2>
+<p class="mo">The raw probe data is in <a href="qa/qa-m5fix.json" style="color:var(--accent)">qa/qa-m5fix.json</a> (the final qa.js run), <a href="qa/qa.json" style="color:var(--accent)">qa/qa.json</a> (the pre-fix run) and <code>qa/supp/qa2-*.json</code> (LCP detail, axe, motion and decoder counters, and the no-JS, media-blocked and overflow re-shots). The screenshots are converted to 640 px JPGs.</p>
+<div class="grid"><figure class="card s-qa"><a href="qa/nojs-beyond.jpg"><img loading="lazy" decoding="async" src="qa/nojs-beyond.jpg" width="640" height="400" alt="qa.js no-JS shot, 1440: nojs-beyond.jpg"></a><figcaption><h3>qa/nojs-beyond.jpg</h3><p class="mo"><b>qa.js no-JS shot, 1440.</b> Torn by the page’s smooth scroll: qa.js shoots 200–600 ms after scrollIntoView. A tool problem, not a site bug; see the instant-scroll re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nojs-contact.jpg"><img loading="lazy" decoding="async" src="qa/nojs-contact.jpg" width="640" height="400" alt="qa.js no-JS shot, 1440: nojs-contact.jpg"></a><figcaption><h3>qa/nojs-contact.jpg</h3><p class="mo"><b>qa.js no-JS shot, 1440.</b> Torn by the page’s smooth scroll: qa.js shoots 200–600 ms after scrollIntoView. A tool problem, not a site bug; see the instant-scroll re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nojs-films.jpg"><img loading="lazy" decoding="async" src="qa/nojs-films.jpg" width="640" height="400" alt="qa.js no-JS shot, 1440: nojs-films.jpg"></a><figcaption><h3>qa/nojs-films.jpg</h3><p class="mo"><b>qa.js no-JS shot, 1440.</b> Torn by the page’s smooth scroll: qa.js shoots 200–600 ms after scrollIntoView. A tool problem, not a site bug; see the instant-scroll re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nojs-top.jpg"><img loading="lazy" decoding="async" src="qa/nojs-top.jpg" width="640" height="400" alt="qa.js no-JS shot, 1440: nojs-top.jpg"></a><figcaption><h3>qa/nojs-top.jpg</h3><p class="mo"><b>qa.js no-JS shot, 1440.</b> Torn by the page’s smooth scroll: qa.js shoots 200–600 ms after scrollIntoView. A tool problem, not a site bug; see the instant-scroll re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nojs-work.jpg"><img loading="lazy" decoding="async" src="qa/nojs-work.jpg" width="640" height="400" alt="qa.js no-JS shot, 1440: nojs-work.jpg"></a><figcaption><h3>qa/nojs-work.jpg</h3><p class="mo"><b>qa.js no-JS shot, 1440.</b> Torn by the page’s smooth scroll: qa.js shoots 200–600 ms after scrollIntoView. A tool problem, not a site bug; see the instant-scroll re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nomedia-act-2.jpg"><img loading="lazy" decoding="async" src="qa/nomedia-act-2.jpg" width="640" height="400" alt="qa.js media-blocked shot, 1440: nomedia-act-2.jpg"></a><figcaption><h3>qa/nomedia-act-2.jpg</h3><p class="mo"><b>qa.js media-blocked shot, 1440.</b> Torn by smooth scroll (tool problem); see the re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nomedia-act-4.jpg"><img loading="lazy" decoding="async" src="qa/nomedia-act-4.jpg" width="640" height="400" alt="qa.js media-blocked shot, 1440: nomedia-act-4.jpg"></a><figcaption><h3>qa/nomedia-act-4.jpg</h3><p class="mo"><b>qa.js media-blocked shot, 1440.</b> Torn by smooth scroll (tool problem); see the re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nomedia-films.jpg"><img loading="lazy" decoding="async" src="qa/nomedia-films.jpg" width="640" height="400" alt="qa.js media-blocked shot, 1440: nomedia-films.jpg"></a><figcaption><h3>qa/nomedia-films.jpg</h3><p class="mo"><b>qa.js media-blocked shot, 1440.</b> Torn by smooth scroll (tool problem); see the re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/nomedia-top.jpg"><img loading="lazy" decoding="async" src="qa/nomedia-top.jpg" width="640" height="400" alt="qa.js media-blocked shot, 1440: nomedia-top.jpg"></a><figcaption><h3>qa/nomedia-top.jpg</h3><p class="mo"><b>qa.js media-blocked shot, 1440.</b> Torn by smooth scroll (tool problem); see the re-shots below.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-about.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-about.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-about.jpg"></a><figcaption><h3>qa/supp/nojs1440-about.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-beyond.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-beyond.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-beyond.jpg"></a><figcaption><h3>qa/supp/nojs1440-beyond.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-contact.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-contact.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-contact.jpg"></a><figcaption><h3>qa/supp/nojs1440-contact.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-credits.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-credits.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-credits.jpg"></a><figcaption><h3>qa/supp/nojs1440-credits.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-films.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-films.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-films.jpg"></a><figcaption><h3>qa/supp/nojs1440-films.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-journey.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-journey.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-journey.jpg"></a><figcaption><h3>qa/supp/nojs1440-journey.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-kill-list.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-kill-list.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-kill-list.jpg"></a><figcaption><h3>qa/supp/nojs1440-kill-list.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-principles.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-principles.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-principles.jpg"></a><figcaption><h3>qa/supp/nojs1440-principles.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-top.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-top.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-top.jpg"></a><figcaption><h3>qa/supp/nojs1440-top.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-voices.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-voices.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-voices.jpg"></a><figcaption><h3>qa/supp/nojs1440-voices.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs1440-work.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs1440-work.jpg" width="640" height="400" alt="No-JS re-shot, 1440 (instant scroll): nojs1440-work.jpg"></a><figcaption><h3>qa/supp/nojs1440-work.jpg</h3><p class="mo"><b>No-JS re-shot, 1440 (instant scroll).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-about.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-about.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-about.jpg"></a><figcaption><h3>qa/supp/nojs390-about.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-beyond.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-beyond.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-beyond.jpg"></a><figcaption><h3>qa/supp/nojs390-beyond.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-contact.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-contact.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-contact.jpg"></a><figcaption><h3>qa/supp/nojs390-contact.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-credits.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-credits.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-credits.jpg"></a><figcaption><h3>qa/supp/nojs390-credits.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-films.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-films.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-films.jpg"></a><figcaption><h3>qa/supp/nojs390-films.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-journey.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-journey.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-journey.jpg"></a><figcaption><h3>qa/supp/nojs390-journey.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-kill-list.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-kill-list.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-kill-list.jpg"></a><figcaption><h3>qa/supp/nojs390-kill-list.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-principles.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-principles.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-principles.jpg"></a><figcaption><h3>qa/supp/nojs390-principles.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-top.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-top.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-top.jpg"></a><figcaption><h3>qa/supp/nojs390-top.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-voices.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-voices.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-voices.jpg"></a><figcaption><h3>qa/supp/nojs390-voices.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nojs390-work.jpg"><img loading="lazy" decoding="async" src="qa/supp/nojs390-work.jpg" width="640" height="1385" alt="No-JS re-shot, 390 (2x DPR): nojs390-work.jpg"></a><figcaption><h3>qa/supp/nojs390-work.jpg</h3><p class="mo"><b>No-JS re-shot, 390 (2x DPR).</b> Section renders with its text; the intro is hidden.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-act-1.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-act-1.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-act-1.jpg"></a><figcaption><h3>qa/supp/nomedia-act-1.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-act-2.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-act-2.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-act-2.jpg"></a><figcaption><h3>qa/supp/nomedia-act-2.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-act-3.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-act-3.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-act-3.jpg"></a><figcaption><h3>qa/supp/nomedia-act-3.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-act-4.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-act-4.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-act-4.jpg"></a><figcaption><h3>qa/supp/nomedia-act-4.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-beyond.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-beyond.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-beyond.jpg"></a><figcaption><h3>qa/supp/nomedia-beyond.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-contact.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-contact.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-contact.jpg"></a><figcaption><h3>qa/supp/nomedia-contact.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-films.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-films.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-films.jpg"></a><figcaption><h3>qa/supp/nomedia-films.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-journey.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-journey.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-journey.jpg"></a><figcaption><h3>qa/supp/nomedia-journey.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-top.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-top.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-top.jpg"></a><figcaption><h3>qa/supp/nomedia-top.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/nomedia-work.jpg"><img loading="lazy" decoding="async" src="qa/supp/nomedia-work.jpg" width="640" height="400" alt="Media-blocked re-shot, 1440: nomedia-work.jpg"></a><figcaption><h3>qa/supp/nomedia-work.jpg</h3><p class="mo"><b>Media-blocked re-shot, 1440.</b> Images and video aborted; the section and its caption still render.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/principles-nojs.jpg"><img loading="lazy" decoding="async" src="qa/supp/principles-nojs.jpg" width="640" height="400" alt="Principles, axe contrast evidence: principles-nojs.jpg"></a><figcaption><h3>qa/supp/principles-nojs.jpg</h3><p class="mo"><b>Principles, axe contrast evidence.</b> The text sits on the parchment map layer, which axe cannot see. axe reports #5a4632 on #0f0c09; the QA runner’s own estimate from this screenshot is at least 6.5:1. That estimate was not measured with a tool.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/principles-normal.jpg"><img loading="lazy" decoding="async" src="qa/supp/principles-normal.jpg" width="640" height="400" alt="Principles, axe contrast evidence: principles-normal.jpg"></a><figcaption><h3>qa/supp/principles-normal.jpg</h3><p class="mo"><b>Principles, axe contrast evidence.</b> The text sits on the parchment map layer, which axe cannot see. axe reports #5a4632 on #0f0c09; the QA runner’s own estimate from this screenshot is at least 6.5:1. That estimate was not measured with a tool.</p></figcaption></figure>
+<figure class="card s-qa"><a href="qa/supp/principles-rm.jpg"><img loading="lazy" decoding="async" src="qa/supp/principles-rm.jpg" width="640" height="400" alt="Principles, axe contrast evidence: principles-rm.jpg"></a><figcaption><h3>qa/supp/principles-rm.jpg</h3><p class="mo"><b>Principles, axe contrast evidence.</b> The text sits on the parchment map layer, which axe cannot see. axe reports #5a4632 on #0f0c09; the QA runner’s own estimate from this screenshot is at least 6.5:1. That estimate was not measured with a tool.</p></figcaption></figure></div></section>
+</main>
+<footer>Generated 2026-09-29 17:52 UTC from <code>docs/build/m2-after2/manifest.json</code> and <code>docs/build/m2-review/FINAL-scores.json</code> (key <code>FINAL-judge-key.json</code>, verdicts <code>FINAL-verdicts-j1..3.json</code>). The table version is in <code>docs/build/m2-review/BLIND-FINAL.md</code>. The full-size PNGs are gitignored and exist only where the capture ran.</footer>
+<script>
+(function(){var bs=document.querySelectorAll('.filters button');function set(f){bs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.f===f))});document.querySelectorAll('main .card').forEach(function(c){var s=c.dataset.state,x=c.dataset.fixed==='1';var show=f==='all'||(f==='fail'&&s==='fail')||(f==='pass'&&s==='pass')||(f==='fixed'&&x);c.classList.toggle('hide',!show)});document.querySelectorAll('main section').forEach(function(s){var any=s.querySelector('.card:not(.hide)');s.classList.toggle('hide',!any)})}bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.f)})})})();
+</script>
+</body>
+</html>

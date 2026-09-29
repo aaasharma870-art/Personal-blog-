@@ -139,10 +139,11 @@ const legacy: MediaProvenance = { source: "legacy" };
 
 /** Check L2 signed by Claude on 2026-09-28; Aryan's countersignature pending
  *  (MEDIA LOG "Open flags"). The validator warns until it is dated. */
-const L2_PENDING = "claude:2026-09-28+aryan:pending" as const;
+/** Aryan countersigned every plate as-is on 2026-09-29 ("sign everything as-is"). */
+const L2_SIGNED = "claude:2026-09-28+aryan:2026-09-29" as const;
 const clean = (icon?: readonly string[]): MediaAccept => ({
   people: false, likeness: false, text: false, ripped: false,
-  ...(icon ? { icon } : {}), checkL2: L2_PENDING,
+  ...(icon ? { icon } : {}), checkL2: L2_SIGNED,
 });
 const hf = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
   source: "higgsfield", model, credits, date: "2026-09-28", jobId, ...(note ? { note } : {}),
@@ -150,13 +151,13 @@ const hf = (model: string, credits: number, jobId: string, note?: string): Media
 /** Alternates: Check L2 signed by Claude on 2026-09-29 (viewed: no people,
  *  likeness, text or marks; generated, nothing ripped); Aryan pending. */
 const cleanAlt = (icon?: readonly string[]): MediaAccept => ({
-  ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
+  ...clean(icon), checkL2: "claude:2026-09-29+aryan:2026-09-29",
 });
 /** M2 media (lanes A + B, the M2-R iconic lane; 2026-09-29): Check L2
  *  signed by Claude on 2026-09-29 (M2-MEDIA-REPORT §3, LEDGER-m2iconic);
  *  Aryan pending. */
 const cleanM2 = (icon?: readonly string[]): MediaAccept => ({
-  ...clean(icon), checkL2: "claude:2026-09-29+aryan:pending",
+  ...clean(icon), checkL2: "claude:2026-09-29+aryan:2026-09-29",
 });
 const hf2 = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
   source: "higgsfield", model, credits, date: "2026-09-29", jobId, ...(note ? { note } : {}),
@@ -352,6 +353,10 @@ export const mediaAssets = {
     width: 2560, height: 1440, focal: [0.7, 0.5],
     focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 },
     marks: { lantern: [0.893, 0.419], horizon: [0, 0.426] },
+    // M2 fix (ART-DIRECTOR #3): the Black Pearl's silhouette (mast tips →
+    // hull, the stern lantern), measured on the 2560 px web file. The hero
+    // Lens frames focalBox (the crest) ∪ pearl; the ALT spyglass frames it.
+    rects: { pearl: { x0: 0.862, x1: 0.896, y0: 0.375, y1: 0.428 } },
     alt: null,
     provenance: hf("gpt_image_2_5 16:9 4k xhigh", 7, "548e5fc0-1d27-4024-bbf4-98e85e018e0e",
       "the Act I anchor; crest aqua from x 0.485, bright body 0.60-0.96; name zone x 9-46% p95 0.0079; the Pearl's stern lantern is the one warm pixel"),
@@ -362,6 +367,7 @@ export const mediaAssets = {
   "MV-02": {
     kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile.webp",
     width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    rects: { pearl: { x0: 0.758, x1: 0.81, y0: 0.31, y1: 0.347 } }, // M2 fix: the Pearl (ART-DIRECTOR #3)
     provenance: hf("gpt_image_2_5 4:5 2k high", 2.75, "10b81664-5614-4298-9601-17ae26c50073",
       "hero mobile 4:5; crest xp02 0.268 / xp98 0.939; ship + lantern kept"),
     accept: clean(["IC-PC-01", "IC-PC-08"]),
@@ -448,6 +454,7 @@ export const mediaAssets = {
     // M2-MEDIA-REPORT §6.6 and RECOGNIZABILITY S03. Lantern not re-measured.
     kind: "image", status: "accepted", src: "/media/films/hero-sea-mobile-alt2.webp",
     width: 1280, height: 1600, focal: [0.6, 0.5], alt: null,
+    rects: { pearl: { x0: 0.754, x1: 0.805, y0: 0.343, y1: 0.378 } }, // M2 fix: the Pearl (the ALT spyglass)
     provenance: hf2("gpt_image_2_5 4:5 2k high (ref MV-01)", 2.75, "37eb75b2-d3b1-48c5-97df-787555f63abd",
       "MV-02 alt2 (extra run; the nbp runner-ups were rejects): crest xp02 0.306 / xp98 0.924; top 8% p95 0.0070; bottom 22% p95 0.0023; ship clean at 2.5x"),
     accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
@@ -888,37 +895,46 @@ export const mediaAssets = {
     accept: cleanM2(["IC-3I-01", "IC-3I-09"]),
     variantOf: "iconic-ice", fallback: "iconic-ice", reduced: "poster",
   },
-  /* M2 finish (media agent, 2026-09-29): two more 3 Idiots plates,
-     pre-registered "planned" so builders can reference the ids; they resolve
-     to their fallbacks until the files land (LOG "M2 finish · 3 Idiots scenes").
-     Generated (candidates, UNCHECKED: the cloud egress proxy blocks the
-     Higgsfield CDN, so nothing could be downloaded or viewed): corridor
-     f71ce666 / 14f08567, pen 8ad09fd8 / d8c90c09. Stay "planned" until a
-     session that can fetch them checks, encodes and flips them. */
+  /* M2 finish (2026-09-29): two more 3 Idiots plates (LOG "M2 finish · 3
+     Idiots scenes"). Generated 13:04 UTC (4 × 7 cr); fetched, viewed and
+     checked at 14:06 UTC once the environment allowed the Higgsfield CDN:
+     no people / hands / faces, no signage, no legible text or pseudo-glyphs
+     (full-res crops of the stopwatch dials = tick marks only; the pen's
+     engraving = abstract waves). DEFAULT = the better of each pair. */
   "iconic-corridor": {
-    kind: "image", status: "planned", src: "/media/films/iconic-corridor.webp",
-    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the ICE stone corridor, pergola stripes, left 40% calm" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-corridor.webp",
+    width: 2560, height: 1440, focal: [0.46, 0.51], alt: null,
+    provenance: hf2(ICONIC, 7, "14f08567-a7ea-4474-afda-050a12407aea",
+      "S08 work head: the ICE stone corridor — rough granite wall (the calm dark left ~40%), massive square columns in long perspective, a concrete pergola casting bold striped morning sun, a bougainvillea courtyard; no people, no signage. focal = the vanishing point"),
+    accept: cleanM2(["IC-3I-09"]),
     fallback: "iconic-ice", reduced: "poster",
     variants: { alt: "iconic-corridor-alt" },
   },
   "iconic-corridor-alt": {
-    kind: "image", status: "planned", src: "/media/films/iconic-corridor-alt.webp",
-    width: 2560, height: 1440, focal: [0.62, 0.5], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-corridor" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-corridor-alt.webp",
+    width: 2560, height: 1440, focal: [0.51, 0.51], alt: null,
+    provenance: hf2(ICONIC, 7, "f71ce666-7b28-42db-b714-761832ac572c",
+      "ALT: the same corridor, a longer and narrower run with finer pergola slats and more floor stripes; the courtyard trees brighter; no people, no signage"),
+    accept: cleanM2(["IC-3I-09"]),
     variantOf: "iconic-corridor", fallback: "iconic-corridor", reduced: "poster",
   },
   "iconic-pen": {
-    kind: "image", status: "planned", src: "/media/films/iconic-pen.webp",
-    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): the astronaut pen in its velvet case, left 40% calm" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen.webp",
+    width: 2560, height: 1440, focal: [0.65, 0.6], alt: null,
+    marks: { pen: [0.65, 0.6] },
+    provenance: hf2(ICONIC, 7, "8ad09fd8-3fc2-439e-9e14-b8c31c71a929",
+      "S11 kill-list head: Virus's astronaut pen (silver with abstract engraving, gold trim) in an open velvet-lined wooden case on a professor's desk, a silver stopwatch beside it (dial ticks only, no numerals), an ICE chalkboard behind; calm dark left ~40%; no people or text"),
+    accept: cleanM2(["IC-3I-01"]),
     fallback: "MV-06", reduced: "poster",
     variants: { alt: "iconic-pen-alt" },
   },
   "iconic-pen-alt": {
-    kind: "image", status: "planned", src: "/media/films/iconic-pen-alt.webp",
-    width: 2560, height: 1440, focal: [0.66, 0.55], alt: null,
-    provenance: { source: "higgsfield", model: ICONIC, note: "planned (M2 finish): ALT of iconic-pen" },
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen-alt.webp",
+    width: 2560, height: 1440, focal: [0.67, 0.59], alt: null,
+    marks: { pen: [0.67, 0.59] },
+    provenance: hf2(ICONIC, 7, "d8c90c09-68a4-4a09-b7c9-782bd2577575",
+      "ALT: a larger case and pen, the stopwatch in the foreground right, the board darker; dial ticks only, no numerals; no people or text"),
+    accept: cleanM2(["IC-3I-01"]),
     variantOf: "iconic-pen", fallback: "iconic-pen", reduced: "poster",
   },
   "iconic-drone": {
@@ -1071,6 +1087,12 @@ export function isUsable(status: MediaStatus): boolean {
   return status === "accepted" || status === "integrated";
 }
 
+/** Whether `id` is itself usable (accepted / integrated), not a fallback:
+ *  the same as `resolveMedia(id)?.id === id`, without the walk. */
+export function isOwnUsable(id: MediaId): boolean {
+  return isUsable(getMedia(id).status);
+}
+
 /** The raw manifest entry for `id` (no fallback walk). */
 export function getMedia(id: MediaId): MediaAsset {
   return { id, ...(mediaAssets[id] as MediaDef) } as MediaAsset;
@@ -1135,8 +1157,7 @@ export function defaultOf(id: MediaId): MediaId | null {
 export function resolveVariant(id: MediaId, variant: Variant): MediaAsset | null {
   if (variant === "alt") {
     const alt = altOf(id);
-    const a = alt ? resolveMedia(alt) : null;
-    if (a && a.id === alt) return a;
+    if (alt && isOwnUsable(alt)) return getMedia(alt);
   }
   return resolveMedia(id);
 }
@@ -1145,8 +1166,7 @@ export function resolveVariant(id: MediaId, variant: Variant): MediaAsset | null
  *  resolution and the alternate's (null when none is registered/usable). */
 export function variantPair(id: MediaId): { default: MediaAsset | null; alt: MediaAsset | null } {
   const alt = altOf(id);
-  const a = alt ? resolveMedia(alt) : null;
-  return { default: resolveMedia(id), alt: a && a.id === alt ? a : null };
+  return { default: resolveMedia(id), alt: alt && isOwnUsable(alt) ? getMedia(alt) : null };
 }
 
 /** True when `video` starts or ends on the still `plate` (its poster or its

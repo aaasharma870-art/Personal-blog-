@@ -13,10 +13,13 @@ import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
 import { loopPath } from "@/components/site/idiots-chalk";
+import { drawn } from "@/components/site/world-motion";
 import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import type { EnterPhase } from "@/components/primitives/use-enter-once";
 import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk";
 import { PlateBand, coverRect, headPlateOf } from "@/components/worlds/idiots/plate-band";
+import { BoardDrone, boardQuad } from "@/components/sections/act-card/frames/board-fig";
+import { PlateBox, plateOf, type Plate } from "@/components/sections/act-card/plate";
 
 /* ============================================================================
    WHAT IS A MACHINE? — the optuna-screener chapter's head band (ICONS
@@ -33,6 +36,12 @@ import { PlateBand, coverRect, headPlateOf } from "@/components/worlds/idiots/pl
              line writes on (once).
      ALT     "rancho-circle": both lines are already written; then Rancho's
              chalk circle (IC-3I-02) draws round the words that answer it.
+   THE HOMEMADE DRONE (M5, blind D27/A27: "a stone lecture hall … without
+   the drone sketch it is a generic classroom", 3I .45–.55): the film's
+   quadcopter, top-down in chalk (the act-2 card's own drawing, BoardDrone),
+   on the board's free upper right, clear of both lines (≥ 640; below it
+   the board is too small beside the question). DEFAULT: it chalks itself
+   in first, as the band enters; ALT: already drawn.
    The caption WHAT IS A MACHINE? • 3 IDIOTS sits on the benches' calm lower
    left. It is the section HEAD: it comes before the chapter's facts and
    never sits beside a metric (H4). < 640 the plate is 4:3, the question stays
@@ -102,16 +111,62 @@ function ChalkWrite({
   );
 }
 
-/** pathLength for a chalk stroke that draws once at `delay` (or is drawn). */
-function strokeProps(phase: EnterPhase, draw: boolean, delay: number, duration: number) {
-  return {
-    initial: false as const,
-    animate: { pathLength: draw && phase === "armed" ? 0 : 1 },
-    transition: draw && phase === "entered" ? { duration, ease: easeDraw, delay } : { duration: 0 },
-  };
+type Box = { x: number; y: number; w: number; h: number };
+
+/** The band's frame: 4:3 below 640, 21:9 from 640 (PlateBand "band"). */
+const BAND_ASPECT = { base: 4 / 3, sm: 21 / 9 };
+/** The drone's rows on the slate (board-local v): above the answer line
+ *  (it starts at v .48) and clear of the ALT's circle round its phrase. */
+const DRONE_V = { v0: 0.06, v1: 0.42 };
+/** Its drawn aspect (w / h): the 100 × 80 drawing a little foreshortened,
+ *  as a sketch on a board seen from the benches, so it can be wider in the
+ *  slate's free top-right than the rows alone allow. */
+const DRONE_ASPECT = 1.45;
+/** Its right edge (board-local u), in from the frame. */
+const DRONE_U1 = 0.97;
+
+/** The drone's board-local box: DRONE_V tall, as wide as the drawing's
+ *  DRONE_ASPECT needs ON THIS PLATE (the slate's size differs per plate),
+ *  right-aligned. null when the plate has no measured board. */
+function droneBoxOf(plate: Plate): { u0: number; u1: number; v0: number; v1: number } | null {
+  const q = boardQuad(plate);
+  if (!q) return null;
+  const u = DRONE_U1 - 0.08;
+  const top = q.tl[1] + (q.tr[1] - q.tl[1]) * u;
+  const bot = q.bl[1] + (q.br[1] - q.bl[1]) * u;
+  const hPx = (bot - top) * (DRONE_V.v1 - DRONE_V.v0);
+  const span = (hPx * DRONE_ASPECT) / (q.tr[0] - q.tl[0]);
+  return { u0: DRONE_U1 - span, u1: DRONE_U1, ...DRONE_V };
 }
 
-type Box = { x: number; y: number; w: number; h: number };
+/** THE HOMEMADE DRONE on the lecture-hall board: chalks in once when the
+ *  band enters (`draw`), or is simply drawn (ALT, static, reduced motion). */
+function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; draw: boolean }) {
+  const plate = plateOf(id);
+  const progress = useMotionValue(1);
+  const live = draw && phase !== "static";
+  useLayoutEffect(() => {
+    if (!live) {
+      progress.jump(1);
+      return;
+    }
+    if (phase === "armed") {
+      progress.jump(0);
+      return;
+    }
+    const a = animate(progress, 1, { duration: 1.1, delay: 0.1, ease: easeDraw });
+    return () => a.stop();
+  }, [live, phase, progress]);
+  const box = plate ? droneBoxOf(plate) : null;
+  if (!plate || !box) return null;
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden sm:block" data-board-art="machine-drone">
+      <PlateBox plate={plate} aspect={BAND_ASPECT}>
+        <BoardDrone plate={plate} box={box} draw={progress} live={live} />
+      </PlateBox>
+    </div>
+  );
+}
 
 /** Rancho's circle round CIRCLED inside the host's <q>: measured with a
  *  Range (the line renders only through <FilmQuote>, so the phrase is never
@@ -166,28 +221,31 @@ function PhraseCircle({ host, phase, on }: { host: RefObject<HTMLElement | null>
   if (!on || !box) return null;
   const loop = loopPath(box.w, box.h);
   return (
+    // the SVG box is the phrase's own box; the loop overflows it visibly
+    // (a box grown by the loop's margin can widen a phone's page: M5 QA)
     <svg
       aria-hidden="true"
       focusable="false"
-      width={loop.vw}
-      height={loop.vh}
-      viewBox={`0 0 ${loop.vw} ${loop.vh}`}
+      width={box.w}
+      height={box.h}
       className="pointer-events-none absolute overflow-visible"
-      style={{ left: box.x - loop.ox, top: box.y - loop.oy }}
+      style={{ left: box.x, top: box.y }}
       data-chalk="circle"
     >
       <defs>
         <ChalkFilter id={fid} />
       </defs>
-      <motion.path
-        d={loop.d}
-        fill="none"
-        className="stroke-(--w-chalk)"
-        strokeWidth={2.4}
-        strokeLinecap="round"
-        filter={`url(#${fid})`}
-        {...strokeProps(phase, true, 0.45, dur.draw.med)}
-      />
+      <g transform={`translate(${-loop.ox} ${-loop.oy})`}>
+        <motion.path
+          d={loop.d}
+          fill="none"
+          className="stroke-(--w-chalk)"
+          strokeWidth={2.4}
+          strokeLinecap="round"
+          filter={`url(#${fid})`}
+          {...drawn(phase, { delay: 0.45, duration: dur.draw.med })}
+        />
+      </g>
     </svg>
   );
 }
@@ -209,10 +267,9 @@ export function MachineBoard({
 }) {
   const variant = useVariant(choice, pieceKey);
   const alt = variant === "alt";
-  const pick = headPlateOf(spec, variant);
+  const id = headPlateOf(spec, variant);
   const answerRef = useRef<HTMLDivElement>(null);
   const fid = useSvgId("machine-u");
-  const id: MediaId | null = pick?.id ?? null;
   const rect = id ? rectOf(id, "boardRect") : null;
   const circleOn = alt && quotes["Q-3I-3"].text.includes(CIRCLED);
 
@@ -251,44 +308,47 @@ export function MachineBoard({
         caption={<SceneCaption k={captionKey} place="bl" />}
         overlay={(phase) =>
           rect ? (
-            // the question, chalked on the board (aria-hidden: the caption
-            // names the same moment for assistive tech)
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute top-(--mq-t) left-(--mq-l) w-(--mq-w) sm:top-(--mq-t-lg) sm:left-(--mq-l-lg) sm:w-(--mq-w-lg)"
-            >
-              <span className="relative inline-block pb-[0.28em]">
-                <ChalkWrite phase={phase} write={!alt} delay={0.25} duration={0.95}>
-                  <Lettered
-                    world="idiots"
-                    text={QUESTION}
-                    className="block text-[length:5.6cqw] leading-[1.05] tracking-[0.01em] text-(--w-chalk) sm:text-[length:3.4cqw]"
-                  />
-                </ChalkWrite>
-                <svg
-                  viewBox="0 0 200 10"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                  focusable="false"
-                  className="absolute inset-x-0 bottom-0 h-[0.3em] w-full overflow-visible"
-                >
-                  <defs>
-                    <ChalkFilter id={fid} />
-                  </defs>
-                  <motion.path
-                    d="M3 6 C55 3.5 120 7.5 197 4.5"
-                    fill="none"
-                    className="stroke-(--w-chalk)"
-                    strokeOpacity={0.9}
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                    filter={`url(#${fid})`}
-                    {...strokeProps(phase, !alt, 1.1, dur.draw.short)}
-                  />
-                </svg>
-              </span>
-            </div>
+            <>
+              <MachineDrone id={id} phase={phase} draw={!alt} />
+              {/* the question, chalked on the board (aria-hidden: the caption
+                  names the same moment for assistive tech) */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute top-(--mq-t) left-(--mq-l) w-(--mq-w) sm:top-(--mq-t-lg) sm:left-(--mq-l-lg) sm:w-(--mq-w-lg)"
+              >
+                <span className="relative inline-block pb-[0.28em]">
+                  <ChalkWrite phase={phase} write={!alt} delay={0.25} duration={0.95}>
+                    <Lettered
+                      world="idiots"
+                      text={QUESTION}
+                      className="block text-[length:5.6cqw] leading-[1.05] tracking-[0.01em] text-(--w-chalk) sm:text-[length:3.4cqw]"
+                    />
+                  </ChalkWrite>
+                  <svg
+                    viewBox="0 0 200 10"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    focusable="false"
+                    className="absolute inset-x-0 bottom-0 h-[0.3em] w-full overflow-visible"
+                  >
+                    <defs>
+                      <ChalkFilter id={fid} />
+                    </defs>
+                    <motion.path
+                      d="M3 6 C55 3.5 120 7.5 197 4.5"
+                      fill="none"
+                      className="stroke-(--w-chalk)"
+                      strokeOpacity={0.9}
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                      filter={`url(#${fid})`}
+                      {...drawn(alt ? "static" : phase, { delay: 1.1, duration: dur.draw.short })}
+                    />
+                  </svg>
+                </span>
+              </div>
+            </>
           ) : null
         }
         after={(phase) => (

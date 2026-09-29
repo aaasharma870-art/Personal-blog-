@@ -55,8 +55,8 @@ import { worldLoaderAltRenderers, worldLoaderRenderers } from "@/components/prim
  */
 
 export type LoaderMode = "indeterminate" | "determinate" | "complete" | "static";
-/** mini 48 px · card 120 px · route 160 px · stage 240 px (the route
- *  card's art, RECOGNIZABILITY S20: "≥ 200 px"). */
+/** mini 48 px · card 176 px · route 216 px · stage 288 px, 416 px ≥ 1280
+ *  (the route card's art, RECOGNIZABILITY S20: "≥ 200 px"; M5 sizes). */
 export type LoaderSize = "mini" | "card" | "route" | "stage";
 
 /** What every world renderer receives. `progress` is always a MotionValue
@@ -80,9 +80,9 @@ function PlainLoader({ mode, size, progress, animate }: LoaderRendererProps) {
       className={cn(
         "relative block h-0.5 overflow-hidden bg-rule",
         size === "mini" && "w-(--loader-mini)",
-        size === "card" && "w-(--loader-card)",
+        size === "card" && "w-(--loader-card) max-w-full",
         size === "route" && "w-(--loader-route)",
-        size === "stage" && "w-60 max-w-full",
+        size === "stage" && "w-(--loader-stage) max-w-full",
       )}
     >
       {mode === "indeterminate" ? (

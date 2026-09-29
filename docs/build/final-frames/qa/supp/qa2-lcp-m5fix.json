@@ -1,0 +1,393 @@
+{
+ "lcp": {
+  "mobileIntro": [
+   {
+    "lcp": [
+     {
+      "t": 1332,
+      "rt": 1332,
+      "lt": 1210,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 19,
+    "dcl": 3287,
+    "load": 4613,
+    "fcp": 1332,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 192,
+      "end": 371,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 193,
+      "end": 1141,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1317,
+      "end": 4516,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 373,
+    "cssKB": 29
+   },
+   {
+    "lcp": [
+     {
+      "t": 2020,
+      "rt": 2020,
+      "lt": 1681,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 11,
+    "dcl": 3293,
+    "load": 4613,
+    "fcp": 1700,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 185,
+      "end": 604,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 185,
+      "end": 1353,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1676,
+      "end": 4533,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 373,
+    "cssKB": 29
+   },
+   {
+    "lcp": [
+     {
+      "t": 1500,
+      "rt": 1500,
+      "lt": 1259,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 11,
+    "dcl": 3221,
+    "load": 4613,
+    "fcp": 1500,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 183,
+      "end": 364,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 183,
+      "end": 1138,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1485,
+      "end": 4517,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 373,
+    "cssKB": 29
+   },
+   {
+    "lcp": [
+     {
+      "t": 1940,
+      "rt": 1940,
+      "lt": 1608,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 12,
+    "dcl": 3169,
+    "load": 4654,
+    "fcp": 1616,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 207,
+      "end": 615,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 208,
+      "end": 1378,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1602,
+      "end": 4563,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 373,
+    "cssKB": 29
+   },
+   {
+    "lcp": [
+     {
+      "t": 1612,
+      "rt": 1612,
+      "lt": 1569,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 10,
+    "dcl": 3242,
+    "load": 4625,
+    "fcp": 1584,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 192,
+      "end": 373,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 193,
+      "end": 1466,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1566,
+      "end": 4541,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 373,
+    "cssKB": 29
+   }
+  ],
+  "mobileSkip": [
+   {
+    "lcp": [
+     {
+      "t": 1612,
+      "rt": 1612,
+      "lt": 1549,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 12,
+    "dcl": 3163,
+    "load": 4540,
+    "fcp": 1560,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 186,
+      "end": 619,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 186,
+      "end": 1488,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1546,
+      "end": 4398,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 360,
+    "cssKB": 29
+   },
+   {
+    "lcp": [
+     {
+      "t": 2004,
+      "rt": 2004,
+      "lt": 1660,
+      "el": "IMG.object-cover",
+      "url": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "size": 89604
+     }
+    ],
+    "ttfb": 11,
+    "dcl": 3062,
+    "load": 4548,
+    "fcp": 1676,
+    "heroImg": {
+     "loading": "auto",
+     "fetchpriority": "high",
+     "sizes": "(max-width: 639px) 1vw, 100vw",
+     "current": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+     "decoding": "async"
+    },
+    "res": [
+     {
+      "n": "alhost:3161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=16&q=75",
+      "start": 186,
+      "end": 597,
+      "kb": 1,
+      "prio": ""
+     },
+     {
+      "n": "161/_next/image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+      "start": 186,
+      "end": 1361,
+      "kb": 34,
+      "prio": ""
+     },
+     {
+      "n": "t:3161/_next/image?url=%2Fmedia%2Ffilms%2Ficonic-pearl.webp&w=828&q=75",
+      "start": 1655,
+      "end": 4383,
+      "kb": 27,
+      "prio": ""
+     }
+    ],
+    "preloads": [
+     "font:/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2:auto",
+     "font:/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2:auto",
+     "image:image?url=%2Fmedia%2Ffilms%2Fhero-sea.webp&w=2048&q=75 2048w:high",
+     "image:rl=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=2048&q=75 2048w:high",
+     "script:http://localhost:3161/_next/static/chunks/2zjueh7t2vecu.js:low"
+    ],
+    "jsKB": 360,
+    "cssKB": 29
+   }
+  ]
+ }
+}

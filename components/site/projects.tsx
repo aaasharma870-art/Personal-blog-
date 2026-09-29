@@ -26,13 +26,14 @@ import type { SectionProps } from "@/components/sections/types";
    board's lower left. ≤ 3 chalk marks: the underline + the tally circle.
    T4 (board → board): the act card's deep fades into this canvas over the
    first 30vh. The graph grid thins toward open air (3I-07).
-   HEAD (M2 finish, BLIND-1 D24): before the h2, a full-bleed 21:9 band (4:3
-   below 640) of the ICE campus — the long stone corridor under striped
-   pergola sunlight (iconic-corridor; the lecture hall stands in while that
-   plate is planned) — captioned THE CORRIDORS OF ICE • 3 IDIOTS on its calm
-   left. Variants (`work.head`): default slow-settle, alt light-sweep (the
-   pergola's bars of light rake across as it comes up). The board's caption
-   now sits UNDER the board, so nothing darkens its frame or chalk ledge.
+   HEAD (M2 finish, BLIND-1 D24; M2 fix round 3, blind D24/A24): before the
+   h2, a full-bleed 21:9 band (4:3 below 640) of Virus's astronaut pen in
+   its open case on his desk (iconic-pen-alt; the ALT plays iconic-pen, the
+   kill-list's inset the other side of the pair) — captioned THE ASTRONAUT
+   PEN ON VIRUS'S DESK • 3 IDIOTS on its calm left. Variants (`work.head`):
+   default slow-settle, alt light-sweep (bars of warm light rake across as
+   it comes up). The board's caption now sits UNDER the board, so nothing
+   darkens its frame or chalk ledge.
    Variants (lib/variants.ts `work.board`): default "rail-run" (the board
    settles in two soft pats, hand on heart), alt "marking-sheet" (a duster
    wipes the board on; the Run marks a chalk grading sheet).
@@ -70,7 +71,6 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
             choice={choice}
             pieceKey="work.head"
             captionKey="cap.work.head"
-            standInCaptionKey="cap.work.head.standin"
             className="mb-tier-block"
           />
         ) : null

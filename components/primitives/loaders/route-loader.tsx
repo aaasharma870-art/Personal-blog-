@@ -22,7 +22,7 @@ import { RouteStatus } from "@/components/primitives/loaders/route-status";
  *            (28–32 px, <FilmTitle>) over the owner's act title in the
  *            world's lettering (a loader route card is a display-face slot,
  *            SPEC §9.7)
- *   art      the world loader at `stage` size (240 px; S20 "≥ 200 px"), with
+ *   art      the world loader at `stage` size (288 px, 416 px ≥ 1280; S20 "≥ 200 px"), with
  *            its MOMENT • FILM caption under it (RouteCaption: the variant
  *            the loader actually draws; HTML, never inside the SVG)
  *   status   visible Meta text in role="status" (RouteStatus), after the
@@ -96,7 +96,7 @@ export function RouteLoader({
         <div className="flex max-w-full flex-col items-center sm:px-gutter">
           {/* the art's box is reserved (the tallest world art, LD-PC's
               160:156), so nothing moves when it appears after the delay */}
-          <div className="grid aspect-[160/156] w-60 max-w-full place-items-center">
+          <div className="grid aspect-[160/156] w-(--loader-stage) max-w-full place-items-center">
             <Loader world={world} size="stage" delayMs={loaderTiming.showDelayMs} />
           </div>
           {film.enabled && world !== "house" ? <RouteCaption world={world} /> : null}

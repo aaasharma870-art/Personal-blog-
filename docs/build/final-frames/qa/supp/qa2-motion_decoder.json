@@ -1,0 +1,885 @@
+{
+ "motion": {
+  "control": [
+   {
+    "id": "top",
+    "rafPerSec": 35,
+    "styleMutPerSec": 33,
+    "topMutating": [
+     [
+      ".:g:transform",
+      33
+     ]
+    ],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 4,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::hero-cap relative z-10 hidden sm:block",
+     "Animation::pointer-events-none absolute inset-0 bg-bg",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-1",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "about",
+    "rafPerSec": 62,
+    "styleMutPerSec": 124,
+    "topMutating": [
+     [
+      ".:g:transform",
+      124
+     ]
+    ],
+    "canvases": 1,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "journey",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 1,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-2",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 1,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "work",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "experiment",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "kill-list",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "films",
+    "rafPerSec": 60,
+    "styleMutPerSec": 96,
+    "topMutating": [
+     [
+      ".:path:opacity",
+      60
+     ],
+     [
+      ".:g:transform",
+      36
+     ]
+    ],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-3",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "beyond",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "voices",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 1,
+    "canvasChanged": 0,
+    "running": 2,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-4",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 1,
+    "canvasChanged": 0,
+    "running": 1,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "principles",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 1,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "contact",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 1,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "credits",
+    "rafPerSec": 60,
+    "styleMutPerSec": 120,
+    "topMutating": [
+     [
+      ".:g:style",
+      60
+     ],
+     [
+      ".relative inline-flex size-11 shrink-0 it:BUTTON:style",
+      60
+     ]
+    ],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 1,
+    "infinite": 0,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0"
+    ],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   }
+  ],
+  "controlErrors": [],
+  "reduced": [
+   {
+    "id": "top",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-1",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "about",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "journey",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-2",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "work",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "experiment",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "kill-list",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "films",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-3",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "beyond",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "voices",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-4",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "principles",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "contact",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "credits",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   }
+  ],
+  "reducedErrors": [],
+  "pausePressed": "true",
+  "htmlDataMotion": "paused",
+  "pause": [
+   {
+    "id": "top",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-1",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "about",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "journey",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-2",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "work",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "experiment",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "kill-list",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "films",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-3",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "beyond",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "voices",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "act-4",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "principles",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "contact",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   },
+   {
+    "id": "credits",
+    "rafPerSec": 0,
+    "styleMutPerSec": 0,
+    "topMutating": [],
+    "canvases": 0,
+    "canvasChanged": 0,
+    "running": 0,
+    "infinite": 0,
+    "sample": [],
+    "videos": 0,
+    "playing": 0,
+    "videoSrcs": []
+   }
+  ],
+  "pauseErrors": []
+ },
+ "decoder": {
+  "d1440": {
+   "max": 0,
+   "playedSrcs": [],
+   "allVideos": []
+  },
+  "m390": {
+   "max": 0,
+   "playedSrcs": [],
+   "allVideos": []
+  },
+  "introTimeline": [
+   {
+    "t": 1213,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 2022,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 2826,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 3630,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 4439,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 5242,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 6046,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 6849,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 7653,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   },
+   {
+    "t": 8457,
+    "intro": true,
+    "videos": 1,
+    "playing": 0,
+    "canvases": 1,
+    "scrollY": 0,
+    "htmlCls": "geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__variable newsreader_dccbc19-module__XM85IG__",
+    "bodyOv": "hidden auto",
+    "mainInert": true
+   }
+  ]
+ }
+}

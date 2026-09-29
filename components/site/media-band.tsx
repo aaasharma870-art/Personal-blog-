@@ -12,7 +12,7 @@ import { useReducedMotion } from "@/lib/flags";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionSeam } from "@/components/ui/section-seam";
 import { AmbientBackground } from "@/components/visuals/ambient-background";
-import { springSoft } from "@/lib/motion";
+import { spanUnit, springSoft } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /** Coarse-vs-fine pointer, SSR-safe (mirrors ambient-background's media-query hook). */
@@ -65,7 +65,9 @@ function ConvergingWord({
   // converges to full ink #e6edf3 (~16:1, AA/AAA) — the state a reader actually
   // reads — and the accessible sentence is always exposed via the parent's
   // aria-label plus the reduced-motion / coarse-pointer plain-string fallback.
-  const opacity = useTransform(progress, [from, to], [0.3, 1]);
+  // spanUnit: the opacity map is scroll-accelerated (a ViewTimeline), so it
+  // must span 0 → 1 or the word re-brightens outside its window (M5 audit)
+  const opacity = useTransform(progress, ...spanUnit([from, to], [0.3, 1]));
   const y = useTransform(progress, [from, to], [convergenceJitter(index), 0]);
   return (
     <>

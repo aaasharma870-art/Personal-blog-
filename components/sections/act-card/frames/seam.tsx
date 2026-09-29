@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01 } from "@/components/primitives/loaders/kit";
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
-import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
+import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
 import { BoardFig, boardQuad } from "@/components/sections/act-card/frames/board-fig";
 import {
@@ -97,6 +97,9 @@ const EDGE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
 const cutAt = (w: number) => 0.1 + 0.74 * w;
 /** The wipe's window of p. */
 const CUT = { from: 0.12, to: 0.66 };
+/** How far (frame heights) the storm is lifted at p 0 (≤ .19: the plate's
+ *  box still covers the frame under the 8 % opening inset). */
+const STORM_ENTRY = 0.18;
 
 /** Chalk dust along the cut: ≤ 24 specks at the edge (the edge box's
  *  units: x 0–100, y of 300), deterministic; most settle just BELOW the
@@ -145,7 +148,11 @@ export function SeamFrame({
   const storm = registeredStorm(stormId, board);
 
   const open = useTransform(p, (v) => `inset(${(8 * (1 - remap(v, 0, 0.15))).toFixed(2)}%)`);
-  const outY = useTransform(p, (v) => `${(-40 * v * v).toFixed(3)}%`);
+  // the storm ENTERS tilted up (its glowing crest in the frame's top half,
+  // where the card is first seen with the outgoing caption over it) and
+  // settles onto its registration (horizon on the ledge) by the time the
+  // cut starts (M2 critic 3 #3: at p 0 the top half was only night sky)
+  const outY = useTransform(p, (v) => `${(-100 * STORM_ENTRY * (1 - smooth01(remap(v, 0, CUT.from))) - 40 * v * v).toFixed(3)}%`);
   const inY = useTransform(p, (v) => `${(40 * (1 - v) * (1 - v)).toFixed(3)}%`);
   const cut = useTransform(p, (v) => cutAt(remap(v, CUT.from, CUT.to)));
   const maskY = useTransform(cut, (c) => `0% ${(c * 100).toFixed(3)}%`);

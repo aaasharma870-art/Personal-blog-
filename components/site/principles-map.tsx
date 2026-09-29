@@ -87,7 +87,7 @@ const STEPS: readonly StepDef[] = (() => {
       at,
       kind: "hall",
       top: `${(at * 100).toFixed(2)}%`,
-      left: `calc(${HALL_MID} ${side === "left" ? "-" : "+"} 5.5px)`,
+      left: `calc(${HALL_MID} ${side === "left" ? "-" : "+"} 5px)`,
       rot: 180,
       side,
     };
@@ -130,7 +130,7 @@ const PANELS: readonly CSSProperties[] = [
 ].map((g) => ({ backgroundColor: PAPER, backgroundImage: `${GRAIN}, ${g}` }));
 
 const vCrease = (at: string) =>
-  `linear-gradient(to right, transparent calc(${at} - 1px), ${DARK(0.2)} calc(${at} - 1px) ${at}, ${LIGHT(0.55)} ${at} calc(${at} + 1px), transparent calc(${at} + 1px))`;
+  `linear-gradient(to right, transparent calc(${at} - 26px), ${DARK(0.045)} calc(${at} - 1px), ${DARK(0.26)} calc(${at} - 1px) ${at}, ${LIGHT(0.6)} ${at} calc(${at} + 1px), ${LIGHT(0.16)} calc(${at} + 2px), transparent calc(${at} + 34px))`;
 const hCrease = (at: string) =>
   `linear-gradient(to bottom, transparent calc(${at} - 22px), ${DARK(0.035)} calc(${at} - 1px), ${DARK(0.16)} calc(${at} - 1px) ${at}, ${LIGHT(0.5)} ${at} calc(${at} + 1px), ${LIGHT(0.14)} calc(${at} + 2px), transparent calc(${at} + 30px))`;
 const burn = (to: string) =>
@@ -173,7 +173,7 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       data-map-phase={phase}
       className={cn(
         "relative isolate text-fg",
-        "[--burn:1.125rem] [--hall-w:3.5rem] [--wall-l:0.75rem] [--wall-r:2.75rem]",
+        "[--burn:1.125rem] [--hall-w:2.75rem] [--wall-l:0.5rem] [--wall-r:2.25rem]",
         "sm:[--burn:1.75rem] sm:[--hall-w:5.5rem] sm:[--wall-l:1.5rem] sm:[--wall-r:4rem]",
       )}
     >
@@ -211,10 +211,10 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       {/* the ink and the words arrive once the sheet lies flat */}
       <motion.div className="relative" initial={false} animate={{ opacity: folded ? 0 : 1 }} transition={arrive(0.35)}>
         <SheetFrame />
-        <div className="relative px-3 pb-6 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
+        <div className="relative px-2 pb-6 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
           <TitleRow />
           {/* the head is the Map's first room: the hall the corridor leaves from */}
-          <div className="relative mt-6 px-4 py-7 sm:mt-8 sm:px-8 sm:py-9">
+          <div className="relative mt-6 px-3 py-7 sm:mt-8 sm:px-8 sm:py-9">
             <HallWalls />
             <HeadTrail />
             <div className="relative">{head}</div>
@@ -369,7 +369,7 @@ function MapRoom({
       </div>
 
       {/* the room */}
-      <div className="relative px-4 py-8 sm:px-8 sm:py-10">
+      <div className="relative px-3 py-8 sm:px-8 sm:py-10">
         <RoomWalls seed={index} className="stroke-(--world-line) opacity-85" />
         <RoomWalls
           seed={index}
@@ -382,7 +382,7 @@ function MapRoom({
         <div className="relative grid grid-cols-1 gap-tier-pair sm:grid-cols-12 sm:gap-x-6">
           <Meta className="sm:col-span-2" fields={[p.n]} />
           <div className="sm:col-span-7">
-            <h3 className="type-title text-fg">{p.title}</h3>
+            <h3 className="type-title text-fg max-sm:hyphens-auto max-sm:[overflow-wrap:break-word]">{p.title}</h3>
             {ribbons ? <PatronusRibbons className="mt-tier-pair" /> : null}
             <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>
           </div>

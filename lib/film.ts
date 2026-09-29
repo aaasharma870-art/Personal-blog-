@@ -208,6 +208,12 @@ const lettering = [
   // registered line: the answer is Q-3I-3, lettered through <FilmQuote>)
   { id: "3i-machine-q", text: "What is a machine?", face: "Kalam", mode: "A", slot: "caption", shipped: true },
   { id: "q-hp-2", text: "", quote: "Q-HP-2", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
+  // the films chapter's four lines, lettered in their world faces (ART-DIRECTOR #11: the most
+  // famous lines on the page were 10 px mono); attribution stays in Meta beside each
+  { id: "q-pc-2", text: "", quote: "Q-PC-2", face: "Pirata One", mode: "A", slot: "caption", shipped: true },
+  { id: "q-3i-1", text: "", quote: "Q-3I-1", face: "Kalam", mode: "A", slot: "caption", shipped: true },
+  { id: "q-rd-1", text: "", quote: "Q-RD-1", face: "Rye", mode: "A", slot: "caption", shipped: true },
+  { id: "q-hp-4", text: "", quote: "Q-HP-4", face: "IM Fell English", mode: "A", slot: "caption", shipped: true },
 ] as const satisfies readonly LetteringSpec[];
 export type LetteringId = (typeof lettering)[number]["id"];
 
@@ -221,8 +227,10 @@ const plainDressing = { notes: "plain", index: "plain", quotes: "plain" } as con
  *  his own and marks it confirmed. Research record: research/build/ONE-LINERS.md. */
 const aryanDraft = (text: string, prompt: string, alternates: readonly string[] = []): Copy => ({
   text,
-  status: "draft",
-  draft: true,
+  // Aryan signed every drafted line AS-IS on 2026-09-29 so the live site
+  // renders exactly as the branch did; he personalizes them in the
+  // info-details pass (CONTINUE.md). The prompt + alternates stay for that.
+  status: "confirmed",
   prompt,
   ...(alternates.length ? { alternates } : {}),
 });
@@ -288,7 +296,12 @@ const pirates: WorldSpec = {
     loader: "course", dressing: plainDressing,
   },
   lettering: "pc-crossing",
-  media: { plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "iconic-pearl", filmsStill: "F-PC" },
+  // films screen (ART-DIRECTOR #9): the tattered-sail Pearl, CROSSED with the Act I card so no
+  // variant shows the same plate twice (card: iconic-pearl / ALT -alt; films: -alt / ALT iconic-pearl)
+  media: {
+    plate: "MV-01", loop: "MV-03", mobile: "MV-02", cardStill: "iconic-pearl",
+    filmsStill: "iconic-pearl-alt", filmsAltStill: "iconic-pearl",
+  },
   borrowed: {
     text: "On this page it became the course line through the Journey and Jack's compass, which settles on each bearing.",
     status: "proposed",
@@ -328,7 +341,12 @@ const rdr2: WorldSpec = {
   lettering: "rd-frontier",
   media: {
     plate: "MV-10", mobile: "MV-10m", loop: "MV-11L",
-    cardStill: "MV-10", cardAltStill: "iconic-deadeye", filmsStill: "F-RD",
+    cardStill: "MV-10", cardAltStill: "iconic-deadeye",
+    // films screen (M5, blind A45/D45: the lone horse at dusk read "a fairly
+    // generic western", RD .55): DEFAULT Dead Eye on the frozen frontier
+    // (the X marks lock on the birds: finales.tsx), ALT the gang's camp by
+    // the lake (voices' ALT plays MV-11, so no variant shows it twice)
+    filmsStill: "iconic-deadeye", filmsAltStill: "iconic-camp-alt",
   },
   borrowed: {
     text: "On this page it became the journal and the fire: graphite that keeps the record, a plate that develops while you wait, and the campfire where the voices sit.",
@@ -396,8 +414,7 @@ const copy = {
   "beyond.handbill.sub": { text: "for questions about quantitative research", status: "proposed" },
   "beyond.handbill.reward": {
     text: "An honest answer, including “I don't know yet.”",
-    status: "draft",
-    draft: true,
+    status: "confirmed", // signed as-is 2026-09-29; rewrite in the info-details pass
     prompt: "[DRAFT by Claude — Aryan: the WANTED poster's reward line, in your words (or empty to drop the row)]",
     alternates: [
       "A straight answer and a written post-mortem.",
@@ -506,7 +523,8 @@ export const worldFaces = {
    branch preview renders them. Keys ending ".alt" name the ALT variant's
    imagery: pick with captionKeyFor(base, variant) (lib/sections.ts).
    Accuracy (rule c): Port Royal / Isla de Muerta / the Aztec gold are Curse
-   of the Black Pearl (2003); the bottled Pearl is On Stranger Tides (2011);
+   of the Black Pearl (2003); Calypso's storm (the maelstrom battle) is At
+   World's End (2007); the bottled Pearl is On Stranger Tides (2011);
    ICE = the film's Imperial College of Engineering; the yellow scooter at
    Pangong lake is 3 Idiots' final scene; the astronaut pen is Virus's pen,
    kept for a worthy student. NOT used (unverified): "Virus's stopwatch". */
@@ -538,44 +556,50 @@ const captions = {
   /* prologue + hero (cards builder: components/intro/**) */
   "cap.intro.play": { world: "hp", moment: moment("HOGWARTS, ACROSS THE BLACK LAKE"), variant: "both", place: "bl", where: "intro play screen, below Play; clears with the intro text" },
   "cap.intro.flight.hp": { world: "hp", moment: moment("A BROOMSTICK OVER HOGWARTS"), variant: "both", place: "bl", where: "flight 0–2.5 s", ariaHidden: true },
-  "cap.intro.flight.pc": { world: "pirates", moment: moment("TOWARD THE BLACK PEARL"), variant: "both", place: "br", where: "flight 3.5 s → the landed hero +2.5 s, then fades for good", ariaHidden: true },
+  "cap.intro.flight.pc": { world: "pirates", moment: moment("TOWARD THE BLACK PEARL"), variant: "both", place: "br", where: "flight 3.5 s → the landed hero +2.5 s, then crossfades in place into cap.hero", ariaHidden: true },
+  // M2 fix (ART-DIRECTOR #3): the hero names its plate for good (T1: the flight caption hands off to it in place)
+  "cap.hero": { world: "pirates", moment: moment("THE BLACK PEARL ON THE HORIZON"), variant: "both", place: "br", where: "hero, bottom-right over the calm dark water on its own scrim (≥ 640; never over the crest); under the portrait still < 640" },
   /* Act I · pirates */
   "cap.act-1": { world: "pirates", moment: moment("THE BLACK PEARL"), variant: "default", place: "br", where: "opening card plate (iconic-pearl)" },
   "cap.act-1.alt": { world: "pirates", moment: moment("THE CHART TO ISLA DE MUERTA"), variant: "alt", place: "br", where: "opening card plate (iconic-pearl-alt + the chart)" },
   "cap.about": { world: "pirates", moment: moment("JACK’S COMPASS — IT POINTS TO WHAT YOU WANT MOST"), variant: "both", place: "head", where: "about head, opposite the h2" },
   "cap.journey.1": { world: "pirates", moment: moment("PORT ROYAL HARBOUR AT NIGHT"), variant: "both", place: "bl", where: "journey media, step 1 (still frame only)" },
   "cap.journey.2": { world: "pirates", moment: moment("THE FOG AROUND ISLA DE MUERTA"), variant: "both", place: "bl", where: "journey media, step 2" },
-  "cap.journey.3": { world: "pirates", moment: moment("THE CURSE OF THE AZTEC GOLD"), variant: "both", place: "bl", where: "journey media, step 3" },
+  // step 3 shows a squall with no ship and no gold (MV-05c / -alt), so it names the storm it shows
+  // (ART-DIRECTOR #9: "the curse of the Aztec gold" promised a medallion the frame never had)
+  "cap.journey.3": { world: "pirates", moment: moment("CALYPSO’S STORM"), variant: "both", place: "bl", where: "journey media, step 3 (the squall)" },
   "cap.journey.4": { world: "pirates", quote: "Q-PC-1", variant: "both", place: "bl", where: "journey media, step 4 (lettered Q-PC-1)" },
   /* Card I→II + Act II · idiots */
   "cap.act-2.out": { world: "pirates", moment: moment("THE KRAKEN’S STORM"), variant: "both", place: "br", where: "card I→II outgoing half, p .1–.35 (O-7)" },
   "cap.act-2": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "default", place: "br", where: "card I→II settled (iconic-ice)" },
-  "cap.act-2.alt": { world: "idiots", moment: moment("THE ICE BOARD, WIPED CLEAN"), variant: "alt", place: "br", where: "card I→II settled (duster over iconic-ice-alt)" },
+  "cap.act-2.alt": { world: "idiots", moment: moment("THE HOMEMADE DRONE, CHALKED AT ICE"), variant: "alt", place: "br", where: "card I→II settled (the duster wipes the storm off iconic-ice-alt; the drone in chalk under it)" },
   // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
-  "cap.work.head": { world: "idiots", moment: moment("THE CORRIDORS OF ICE"), variant: "both", place: "bl", where: "work head band, calm left (iconic-corridor / -alt)" },
-  "cap.work.head.standin": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "both", place: "bl", where: "work head band while iconic-corridor is planned (stand-in iconic-ice-alt / iconic-ice)" },
+  "cap.work.head": { world: "idiots", moment: moment("THE ASTRONAUT PEN ON VIRUS’S DESK"), variant: "both", place: "bl", where: "work head band, calm dark left (iconic-pen-alt; ALT iconic-pen)" },
   // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
   "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
-  "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "under", where: "under the Trading_Algos chalkboard panel (never beside a metric)" },
+  "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "head", where: "above the Trading_Algos chalkboard panel, naming it as it enters (never beside a metric)" },
   // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself
   "cap.optuna-screener": { world: "idiots", moment: moment("WHAT IS A MACHINE?"), variant: "both", place: "bl", where: "optuna-screener head band (iconic-ice-alt / iconic-ice), before the chapter's facts" },
   "cap.systems": { world: "idiots", moment: moment("THE HOMEMADE DRONE"), variant: "both", place: "bl", where: "systems band (iconic-drone); names no character" },
-  // M2 finish: under the header inset (iconic-pen, or its PenCase stand-in)
+  // M2 finish: under the header inset (iconic-pen; ALT iconic-pen-alt)
   "cap.kill-list": { world: "idiots", moment: moment("VIRUS’S ASTRONAUT PEN"), variant: "both", place: "under", where: "kill-list header inset, under the plate (O-5; never on a row)" },
   /* Intermission · the films chapter (house plane, one world per screen) */
-  "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL AT ANCHOR"), variant: "both", place: "under", where: "films screen (F-PC)" },
+  // the films screen shows the TATTERED-sail Pearl under the moon (iconic-pearl-alt / iconic-pearl,
+  // ART-DIRECTOR #9: F-PC's intact grey sails were not the Black Pearl)
+  "cap.films.pirates": { world: "pirates", moment: moment("THE BLACK PEARL BY MOONLIGHT"), variant: "both", place: "under", where: "films screen (iconic-pearl-alt; ALT iconic-pearl)" },
   "cap.films.idiots": { world: "idiots", moment: moment("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "films screen (F-3I)" },
-  "cap.films.rdr2": { world: "rdr2", moment: moment("THE HEARTLANDS AT DUSK"), variant: "both", place: "under", where: "films screen (F-RD)" },
+  "cap.films.rdr2": { world: "rdr2", moment: moment("DEAD EYE"), variant: "default", place: "under", where: "films screen (iconic-deadeye + the X marks on the birds)" },
+  "cap.films.rdr2.alt": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "alt", place: "under", where: "films screen ALT (iconic-camp-alt, a journal clipping)" },
   "cap.films.hp": { world: "hp", moment: moment("THE HOGWARTS EXPRESS"), variant: "default", place: "under", where: "films screen (iconic-express)" },
   "cap.films.hp.alt": { world: "hp", moment: moment("FLOATING CANDLES AND ENCHANTED INK"), variant: "alt", place: "under", where: "films screen (F-HP)" },
   /* Card II→III + Act III · rdr2 */
-  "cap.act-3": { world: "rdr2", moment: moment("THE HEARTLANDS AT GOLDEN HOUR"), variant: "default", place: "br", where: "card II→III settled (MV-10)" },
+  "cap.act-3": { world: "rdr2", moment: moment("GOLDEN HOUR IN THE HEARTLANDS"), variant: "default", place: "br", where: "card II→III settled (MV-10)" },
   "cap.act-3.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "br", where: "card II→III settled (iconic-deadeye + the X marks)" },
   "cap.beyond": { world: "rdr2", moment: moment("THE HEARTLANDS"), variant: "both", place: "bl", where: "beyond band (MV-10 / MV-10m)" },
   "cap.beyond.satchel": { world: "rdr2", moment: moment("WHAT’S IN THE SATCHEL"), variant: "both", place: "head", where: "Creative block head" },
   "cap.beyond.handbill": { world: "rdr2", moment: moment("A WANTED POSTER"), variant: "both", place: "under", where: "under the notice board (iconic-wanted)" },
   "cap.writing": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "both", place: "head", where: "writing, left page head (paper plane)" },
-  "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "br", where: "voices plate (iconic-camp)" },
+  "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "head", where: "voices head, under the h2 (iconic-camp behind; ART-DIRECTOR #14)" },
   "cap.voices.alt": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "alt", place: "under", where: "under the MV-11L loop (it moves)" },
   /* Card III→IV + Act IV · hp */
   "cap.act-4.out": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "both", place: "br", where: "card III→IV outgoing, p .05–.3" },
@@ -587,7 +611,8 @@ const captions = {
   /* Route loaders (loaders-eggs-chrome; under the loader art) */
   "cap.loader.pirates": { world: "pirates", moment: moment("JACK’S COMPASS"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.pirates.alt": { world: "pirates", moment: moment("THE BLACK PEARL IN A BOTTLE"), variant: "alt", place: "under", where: "route card, under the loader" },
-  "cap.loader.idiots": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "default", place: "under", where: "route card, under the loader" },
+  // M2 fix (BLIND-1 "generic gears"): the board now carries the drone and Virus's pen in chalk; the caption names them
+  "cap.loader.idiots": { world: "idiots", moment: moment("THE DRONE AND THE ASTRONAUT PEN"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.idiots.alt": { world: "idiots", moment: moment("A DERIVATION ON THE ICE BOARD"), variant: "alt", place: "under", where: "route card, under the loader" },
   "cap.loader.rdr2": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "default", place: "under", where: "route card, under the loader" },
   "cap.loader.rdr2.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "under", where: "route card, under the loader" },
@@ -623,12 +648,12 @@ export const film = {
   /** H-1: a work-credit line in the hero (default OFF: screen one is Aryan's). */
   heroCredit: false,
   /** F-5: Aryan signs the proposed microcopy + every quote. */
-  copySignedOff: false,
+  copySignedOff: true, // Aryan signed all proposed copy + quotes as-is, 2026-09-29
   /** M1.5 (Aryan's answer #2): proposed AND draft copy render in EVERY
    *  build of this branch (no FILM_PREVIEW env needed, and no visible DRAFT
    *  badge). Every string keeps its status; RELEASE=1 fails while this is
    *  on or any shown string is unsigned. Turn off before merging to main. */
-  branchPreview: true as boolean,
+  branchPreview: false as boolean, // off for main (2026-09-29): everything shown is signed
   /** The page-wide variant (lib/variants.ts): what every section, card,
    *  loader and the intro play unless they choose otherwise. */
   defaultVariant: "default" as Variant,

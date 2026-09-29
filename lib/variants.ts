@@ -158,12 +158,12 @@ export const VARIANT_REGISTRY = {
   "hero.plate": {
     default: {
       name: "pearl-at-night",
-      note: "MV-01 / MV-02: the night sea, the aqua crest, the Black Pearl with its one warm lantern.",
+      note: "MV-01 / MV-02: the night sea, the aqua crest, the Black Pearl with its one warm lantern; the Lens frames the crest AND the Pearl (focalBox ∪ rects.pearl).",
       media: ["MV-01", "MV-02"],
     },
     alt: {
       name: "moonlit-pearl",
-      note: "M2: MV-01 has no acceptable alt (MV-01-alt is parked as a reject, status received), so desktop plays the DEFAULT plate; mobile plays MV-02-alt (alt2, 37eb75b2). The variant differs in choreography (RECOGNIZABILITY S03).",
+      note: "M2: MV-01 has no acceptable alt (MV-01-alt is parked as a reject, status received), so desktop plays the DEFAULT plate; mobile plays MV-02-alt (alt2, 37eb75b2). M2 fix (ART-DIRECTOR #15): the 'spyglass' framing — the plate pushes in x1.18 about the Pearl (after the flight lands; static under RM / Pause / mobile) and the Lens frames the ship alone.",
       media: ["MV-01-alt", "MV-02-alt"],
     },
     files: ["components/sections/hero/hero-section.tsx", "components/sections/hero/hero-stage.tsx", "components/sections/hero/hero-boot.ts"],
@@ -340,13 +340,13 @@ export const VARIANT_REGISTRY = {
   "work.head": {
     default: {
       name: "slow-settle",
-      note: "A full-bleed 21:9 band (4:3 < 640) of the ICE stone corridor under pergola stripes fades up while settling from 1.07x, captioned THE CORRIDORS OF ICE • 3 IDIOTS. While iconic-corridor is planned it shows the lecture hall (iconic-ice-alt) as THE LECTURE HALL AT ICE.",
-      media: ["iconic-corridor"],
+      note: "A full-bleed 21:9 band (4:3 < 640) of Virus's astronaut pen in its open case on his desk (iconic-pen-alt; the kill-list shows the other pen plate) fades up while settling from 1.07x, captioned THE ASTRONAUT PEN ON VIRUS'S DESK • 3 IDIOTS. (M2 fix round 3: the ICE corridor alone read as generic architecture, blind 3I .40.)",
+      media: ["iconic-pen-alt"],
     },
     alt: {
       name: "light-sweep",
-      note: "The plate comes up from shadow as bars of pergola light rake across it once; same caption (stand-in: iconic-ice).",
-      media: ["iconic-corridor-alt"],
+      note: "The plate (iconic-pen, the kill-list's ALT side) comes up from shadow as one bar of light rakes across it; same caption.",
+      media: ["iconic-pen"],
     },
     files: ["components/worlds/idiots/plate-band.tsx", "components/site/projects.tsx", "components/worlds/idiots/idiots-section.tsx"],
   },
@@ -419,13 +419,13 @@ export const VARIANT_REGISTRY = {
   "films.screens": {
     default: {
       name: "clip-finales",
-      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course, blueprint gates + chalk circle, a graphite trail to a kindling campfire, an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
-      media: ["F-PC", "F-3I", "F-RD", "iconic-express"],
+      note: "SM-9: each of the four letterboxed screens opens from inset(8%), then its finale draws: Jack's compass + brass course over the tattered-sail Pearl (iconic-pearl-alt), chalk-white blueprint gates + chalk circle, DEAD EYE on the frozen frontier (iconic-deadeye: ember X marks lock on the five birds, then fire once), an ink line with a Lumos light on the Hogwarts Express (one warm point for the hand-off).",
+      media: ["iconic-pearl-alt", "F-3I", "iconic-deadeye", "iconic-express"],
     },
     alt: {
       name: "iris-marks",
-      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course to an X, a chalk circle + tick round the scooter, a journal clipping, footprints on the enchanted paper (F-HP).",
-      media: ["F-PC-alt", "F-3I-alt", "F-RD-alt"],
+      note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course across the moon path to an X before the Pearl's bow (iconic-pearl: the Act I card's other plate, so no variant repeats one), a chalk circle + tick round the scooter, the gang's camp by the lake (iconic-camp-alt, from its fire) as a journal clipping, footprints on the enchanted paper (F-HP).",
+      media: ["F-3I-alt", "iconic-camp-alt"],
     },
     files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts"],
   },

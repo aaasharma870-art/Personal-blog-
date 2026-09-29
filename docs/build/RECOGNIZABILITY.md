@@ -657,3 +657,82 @@ Nothing else is requested: every other scene's gap is closed by code motifs and 
 - The board-dawn ALT's evenness (S08).
 - `iconic-express` recreates a famous landmark angle (L2 #4 "subject, not the shot": the media lane decides).
 - Every caption string is `proposed` until he signs (`copySignedOff`).
+
+---
+
+## 11. Final re-test (M2 fix round, 2026-09-29)
+
+**Sources:**
+- Blind re-test #2 (`m2-review/BLIND-2.md`) of the first `m2-after2` capture at `daac296`, with 3 judges and 84 frames.
+- Critic round 2 (`m2-review/CRITIC-2.md`).
+- The fix round `d4a2cd8`, which re-captured `m2-after2` in place (164 frames) but was **not re-judged**.
+
+**How to read the Result column:** it is the last *judged* result. Where the fix round then changed the scene and re-captured it, the column also says **"fixed after re-test, not re-judged"**. Any improvement from that fix round is an expectation only; the next measurement is the M5 blind test.
+
+**Scores:** each is J1/J2/J3 confidence for the intended film. PASS means at least 2 of 3 judges were at ≥ 0.6.
+
+**Overall:**
+- BLIND-mode frames: **35 / 44 pass**. The audit found 15/53 (all frames), and re-test #1 found 25/43.
+- By world (BLIND mode): Pirates 10/10, Harry Potter 11/12, RDR2 9/12, 3 Idiots 5/10.
+- Wrong-film frames: 8 under the scorer of the time. Under the corrected scorer they drop to 2, both enter frames that legitimately show the outgoing world.
+
+| Scene | Frames (round 2) | Mode | Final blind result | PASS/FAIL | Remaining gaps |
+|---|---|---|---|---|---|
+| S01 Prologue play screen | D00-intro-play (A00 judged as identical) | BLIND | HP .95/.95/.95 | **PASS** | None. |
+| S02 Prologue flight | D/A00-intro-flight-early/mid/late, -landed | CAPTION | early: HP .50–.55 (D), PC .45–.50 (A). mid/late: PC .55–.65. landed: PC .55–.65. **Invalid measurement:** the blind shots were ~2 s late. Harness fixed after re-test, not re-judged. | **Unmeasured** (FAIL on record) | Needs a valid blind + captioned re-test. The early beat's broom-over-sea is a genuine blend; the caption carries it. |
+| S03 Hero | D01, A01 | BLIND | PC .60/.65/.55, both variants | **PASS** (marginal) | Default bracket re-centred on the Pearl; caption dimming and the ghost caption are fixed. Fixed after re-test, not re-judged. The ship was **not** enlarged (still about 35 px). |
+| S04 Act I opening card | D/A10-act-1-enter/mid/settled | BLIND + TRANSITION | enter .80; mid .85–.90; settled D .65–.75, A .80–.85 | **PASS** (both variants, all 3 points) | None. |
+| S05 About | D20-about-120 | CAPTION | PC .60/.55/.65; 0 wrong-film | **PASS** | Compass 144 px, caption under it on mobile. Fixed after re-test, not re-judged. |
+| S06 Journey, the voyage | D21, D22, D23 (A judged as identical) | BLIND | PC .70–.85 | **PASS** | Step 3 caption retitled "CALYPSO'S STORM" (proposed). |
+| S07 Card I→II Storm → ICE | D10-act-2-enter/mid/settled, A10-act-2-mid/settled | BLIND + TRANSITION | enter PC .70–.75 (the outgoing world); mid 3I .50–.55; settled 3I .55–.60 | **FAIL** (settled, both variants) | "A generic classroom." Rancho's homemade drone is now chalked large on the board (alt: the duster wipe reveals it, caption "THE HOMEMADE DRONE, CHALKED AT ICE", proposed). The storm enters with its crest lit. Fixed after re-test, not re-judged. **Open:** the alt enter frame's top is still dark (weak crest on the alt storm plate). |
+| S08 Gauntlet on the ICE board | D25-work-700 | BLIND | ?? .10/.05/.00: a **capture miss** (stale scroll offset, no board in frame). Re-test #1 on the board: 3I .50/.55/.55. | **FAIL** (unmeasured this round) | Re-captured as D25/A25-work-board, not re-judged. On re-test #1's evidence the board is marginal. |
+| S09 Chapters | D26 Trading_Algos; D/A27 Optuna | CAPTION | D26 ?? .25/.15, 3I .30. D27 3I .55/.55/.60. 0 wrong-film on both. | **FAIL** by the ≥ 0.6 scorer; the §10 CAPTION blind guard is met | D26's caption was off-screen when the board entered; it now sits above the board. Fixed after re-test, not re-judged. Whether the captioned frames are "unmistakable" has not been judged. |
+| S10 Systems (drone band) | D29, A29 | BLIND | 3I .70–.75, both variants | **PASS** | Its hard scrim edge (critic 2 #1) is fixed. |
+| S11 Kill-list | D30 (A30 judged as identical) | CAPTION | 3I .70/.55/.70, reading the pen plate as "Virus's pen" | **PASS** | A30 ≈ D30 (the alts barely differ). Not fixed. |
+| S12 Films chapter (4 screens) | D/A43–46 | BLIND | PC .85–.92; 3I .85–.90; RD .60–.65; HP .80–.95 | **PASS** (8/8) | The RDR2 screen is marginal ("fairly generic western"). Finale strokes are cleaned up (fixed after re-test, not re-judged). |
+| S13 Card II→III tintype | D/A10-act-3-enter/mid/settled | BLIND + TRANSITION | enter RD .40 (D), .55–.60 (A), mostly black. mid and settled RD .70–.85. | **PASS** (settled, both variants); enter FAIL | The develop is now even and tied to in-view progress, and the blobs are gone. Fixed after re-test, not re-judged. **Open:** no pinned stage (the validator caps pinned stages at 2), so mid == settled and the develop is not seen. The enter frame stays dark. |
+| S14 Beyond | band D32; satchel D33-beyond-950; WANTED D34-beyond-1900, D/A35 | BLIND (band, WANTED); CAPTION (satchel) | band RD .70–.75. WANTED board (D/A35) RD .55–.70. D34 ?? .00–.20 and D33 RD .40–.45 were **capture misses** (stale offsets). | Band **PASS**; WANTED **PASS** (via D/A35); satchel **unmeasured** | Re-aimed as D/A33-beyond-satchel and D/A34-beyond-wanted. The band now opens closer than the Act III plate. Fixed after re-test, not re-judged. |
+| S15 Writing, the journal | D36, D37 | BLIND | head .55/.60/.55; lower page .70/.65/.75 | **FAIL** (head) / PASS (pages) | The journal sketch page now opens beside the heading in the first view. Fixed after re-test, not re-judged. |
+| S16 Voices, by the fire | D31, A31 | BLIND | D .80–.85; A .65–.70 | **PASS** | None. |
+| S17 Card III→IV ignite | D/A10-act-4-enter/mid/settled | BLIND + TRANSITION | settled HP .95–.97 (both). D enter RD .75–.85 (the outgoing camp, correct). D mid HP .45–.55. A enter ?? .10–.25 (black). A mid HP .85–.90. | **PASS** (settled); D mid and A enter FAIL | The Great Hall now leads at the middle, and alt Act IV starts on the lit camp. Fixed after re-test, not re-judged. |
+| S18 Principles | D/A38, D/A39 | BLIND | D .75–.85 (Marauder's Map); A .55–.80 (Lumos ceiling) | **PASS** (both variants) | None. Up from .25–.30 in the audit. |
+| S19 Contact + credits | D40; D41, D42 | BLIND (contact); CAPTION (credits) | contact HP .70–.75. Credits text-only: D42 HP .30–.55 (Snitch and Hallows are small). | Contact **PASS**; credits n/a | D40 was captured while its heading was still animating in. Credits are text by design. |
+| S20 World loaders | D80 ×4, A80 hp/rdr2; D85 ×4, A85 principles/writing | BLIND (card); CAPTION (route) | D80: PC .70–.75, 3I .50–.75, RD .50–.60, HP .65–.75. A80 hp .45–.50, A80 rdr2 .55–.60. D85 all .60–.85. A85 principles .40–.55, A85 writing .50. | Default card **PASS** (4/4); alt card hp/rdr2 **FAIL**; default route PASS; alt route hp/rdr2 FAIL (0 wrong-film) | Route loaders are now 216 px (were 160). Fixed after re-test, not re-judged. **Not fixed:** A80 card-size alts; at ~120 px there is no room for detail. |
+| S21 Work head band (new; was the ICE corridor) | D24, A24 | BLIND | corridor 3I .40/.40/.40, "generic architecture" | **FAIL** | The corridor was replaced by Virus's astronaut pen on his desk (`iconic-pen-alt`), captioned "THE ASTRONAUT PEN ON VIRUS'S DESK" (proposed). Replaced after re-test, not re-judged. `iconic-corridor` and `-alt` stay registered but are now unused. |
+| S22 Optuna head "What is a machine?" (new) | D27, A27 | CAPTION | 3I .55/.55/.60 (D), .55 ×3 (A); 0 wrong-film | **FAIL** by the scorer; §10 CAPTION blind guard met | The plate (lecture hall) reads as a generic classroom; the caption "WHAT IS A MACHINE?" carries it. Its hard scrim edge (critic 2 #1) is fixed. |
+| S23 Kill-list astronaut pen (new plate for S11) | D30 | CAPTION | 3I .70/.55/.70 | **PASS** | The alt barely differs (A30 ≈ D30). |
+
+**What still blocks "every scene passes":**
+1. **3 Idiots.** The lecture hall (S07, and S22's plate) sits at 0.50–0.60. The chalked drone and the pen band are the bets, and both are unjudged.
+2. **Transition enter frames** are dark on S13 and on the alt S07/S17.
+3. **Act III has no visible develop.**
+4. **Alt card loaders** (HP, RDR2) are too small to carry detail.
+5. **The intro beats have never been validly measured.**
+
+All five go to M5's final blind test.
+
+## 12. M5 final blind test (2026-09-29, 16:27–16:51 UTC)
+
+**Full results:** `m2-review/BLIND-FINAL.md`, plus the contact sheet `final-frames/index.html`. It judged the post-fix `m2-after2` frames at `d4a2cd8`, with 3 judges on 86 blind frames.
+
+**Results:**
+- **BLIND-mode frames: 38 / 45.** Earlier runs: audit 15/53, re-test #1 25/43, re-test #2 35/44.
+- By world: Pirates 10/10, 3 Idiots 9/10 (was 5/10), RDR2 9/13, Harry Potter 10/12.
+- All frames with a film: 63/83.
+- Wrong-film frames: 3, all outgoing-world "enter" frames.
+- Every CAPTION frame has 0 wrong-film guesses.
+
+**Still failing when judged:**
+- the RDR2 films screen, both variants (0.55)
+- the card-size loaders: default hp, idiots and rdr2; alt hp and rdr2 (0.35–0.55)
+- the Trading_Algos and Optuna chapter heads, which carry captions (0.20–0.55)
+- the alt satchel and the alt HP/RDR2 route loaders, which carry captions
+- the two intro mid hand-off beats, which carry captions
+- the Act III enter frames, and the Act II/IV enter frames that show the outgoing world
+
+**Fixed afterwards in `bc1072b`, not re-judged:**
+- The RDR2 films screen: Dead Eye plate (default) and the gang's camp at dusk (alt).
+- Chalk drones on the two chapter heads.
+- The satchel, redrawn.
+- The loaders, enlarged.
+- The intro ALT fold, inked as a sea chart.

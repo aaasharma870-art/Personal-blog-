@@ -35,10 +35,11 @@ import {
  *                  (every stroke owns its share of the summed length, in
  *                  writing order: a direct map, no spring). The chalk tip
  *                  rides the head of the stroke being written.
- *   indeterminate  nothing is written: the chalk taps the board at the start
- *                  of the first line every 0.6 s (working, visibly not
+ *   indeterminate  PARKED MID-DERIVATION (never a blank board at rest, M2):
+ *                  the first line f(x) = x² + 2x is written and the chalk
+ *                  taps at its end every 0.6 s (working, visibly not
  *                  progressing); frozen when the shell's idle stop drops
- *                  `animate`.
+ *                  `animate`. `mini` parks with the axes drawn.
  *   complete       every stroke drawn; the answer is boxed in chalk
  *                  (easeDraw over dur.draw.short) — no flash.
  *   static         all drawn, the box drawn.
@@ -125,6 +126,9 @@ const SKETCH: Pt[][] = [
 
 const PLAN: StrokePlan = planStrokes([...L1.strokes, ...L2.strokes, ...L3.strokes, ...SKETCH]);
 const PLAN_MINI: StrokePlan = planStrokes(SKETCH);
+/** Indeterminate parks here: the first line written (mini: the axes). */
+const PARK = PLAN.strokes[L1.strokes.length - 1].to;
+const PARK_MINI = PLAN_MINI.strokes[1].to;
 /** The answer's box (x = −1): four hand strokes with small overshoots. */
 const ANSWER = (() => {
   const x0 = X_EQ - PAD - GLYPHS.x.w * G - 3;
@@ -156,9 +160,9 @@ function Derivation({ mode, size, progress, animate: running }: LoaderRendererPr
   const sw = (px: number) => px / scale;
   const filterId = useId();
 
-  const zero = useMotionValue(0);
+  const parked = useMotionValue(mini ? PARK_MINI : PARK);
   const one = useMotionValue(1);
-  const ink = mode === "determinate" ? progress : mode === "indeterminate" ? zero : one;
+  const ink = mode === "determinate" ? progress : mode === "indeterminate" ? parked : one;
 
   // the box round the answer: drawn at complete (motion on), present at static / RM
   const box = useMotionValue(mode === "static" ? 1 : 0);
@@ -175,7 +179,7 @@ function Derivation({ mode, size, progress, animate: running }: LoaderRendererPr
     return () => c.stop();
   }, [mode, reduced, box]);
 
-  // indeterminate: the chalk taps at the first stroke's start (frozen when stopped)
+  // indeterminate: the chalk taps at the end of the parked line (frozen when stopped)
   const tick = useTicker(mode === "indeterminate" && running, 600);
   const tipOn = mode === "determinate" ? true : mode === "indeterminate" ? tick % 2 === 0 : false;
 

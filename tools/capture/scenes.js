@@ -73,10 +73,16 @@ async function imagesReady(page, timeout = 12000) {
   await sleep(350);
 }
 
-async function shoot(page, name, meta, { blind = true, clip } = {}) {
+async function shoot(page, name, meta, { blind = true, clip, only } = {}) {
   if (NAMES && !NAMES.has(name.split('.')[0])) return;
   await imagesReady(page);
   const o = clip ? { clip } : {};
+  // `only`: one kind per call (the intro's two synchronised passes)
+  if (only) {
+    await page.screenshot({ path: path.join(OUT, `${name}.${only}.png`), ...o }).catch(e => console.error(name, e.message));
+    if (only === 'captioned') { manifest.push({ frame: name, ...meta }); console.log('shot', name); }
+    return;
+  }
   await page.screenshot({ path: path.join(OUT, `${name}.captioned.png`), ...o }).catch(e => console.error(name, e.message));
   if (blind) {
     const h = await page.addStyleTag({ content: BLIND_CSS });
@@ -113,6 +119,13 @@ async function desktop(browser, variant) {
   // Hero
   await scrollToY(page, 0, 2000);
   await shoot(page, `${P('01')}-hero`, { world: 'pirates', moment: 'SM-2 hero: name at sea, the Black Pearl', mode: 'BLIND', variant });
+  // every act card fits the viewport (a taller card's sticky stage is
+  // pushed under the fixed header at the end of its travel: critic 3 #2)
+  checks.cardFit = checks.cardFit || {};
+  checks.cardFit[V ? 'alt' : 'default'] = await page.evaluate(() => [...document.querySelectorAll('[data-act-card]:not([data-act-card="opening"])')].map(c => {
+    const g = c.querySelector('.act-card-letterbox') || c;
+    return { id: c.id, h: Math.round(g.getBoundingClientRect().height), vh: innerHeight, fits: g.getBoundingClientRect().height <= innerHeight + 1 };
+  }));
   // Act cards at 3 scroll points each
   for (const [card, moment] of [['act-1', 'SM-3 opening card (Act I, Pirates)'], ['act-2', 'SM-5 card I→II Pirates→3 Idiots'], ['act-3', 'SM-14 card II→III → RDR2 tintype'], ['act-4', 'SM-10 card III→IV RDR2→HP ignite']]) {
     const r = await rectOf(page, '#' + card); if (!r) continue;
@@ -128,8 +141,9 @@ async function desktop(browser, variant) {
     ['#journey-step-1', -150, 'SM-4 voyage step 1: harbour', 'BLIND'],
     ['#journey-step-3', -150, 'SM-4 voyage step 3: the break', 'BLIND'],
     ['#journey-step-4', -150, 'SM-4 voyage step 4: X marks the spot', 'BLIND'],
-    ['work', 0, 'SM-6 gauntlet on the ICE dawn board (top)', 'BLIND'],
-    ['work', 700, 'SM-6 gauntlet (board, gates)', 'BLIND'],
+    ['work', 0, 'SM-6 work head band (top)', 'BLIND'],
+    // an ELEMENT target (the layout moved: the board is ~1500 px down now)
+    ['work', { sel: '#work figure[data-board]', tag: 'board', lead: 140 }, 'SM-6 gauntlet on the ICE dawn board (board, gates)', 'BLIND'],
     ['trading-algos', 0, 'SM-7 chapter Trading_Algos', 'CAPTION'],
     ['optuna-screener', 0, 'SM-7 chapter Optuna-Screener', 'CAPTION'],
     ['experiment', 0, 'Experiment (BacktestDemo, synthetic; NO film styling)', 'NONE'],
@@ -137,8 +151,8 @@ async function desktop(browser, variant) {
     ['kill-list', 0, 'SM-8 kill-list header cue', 'CAPTION'],
     ['voices', 0, 'SM-16 by the fire (camp)', 'BLIND'],
     ['beyond', 0, 'SM-15 frontier golden-hour band', 'BLIND'],
-    ['beyond', 950, 'SM-15 beyond mid (satchel)', 'CAPTION'],
-    ['beyond', 1900, 'SM-15 beyond (handbill / WANTED)', 'BLIND'],
+    ['beyond', { sel: '#beyond [data-motif="satchel"]', tag: 'satchel', lead: 160 }, 'SM-15 beyond: the satchel', 'CAPTION'],
+    ['beyond', { sel: '#beyond [data-piece="beyond.handbill"]', tag: 'wanted', lead: 100 }, 'SM-15 beyond: the WANTED handbill', 'BLIND'],
     ['beyond', 2800, 'SM-15 beyond end', 'CAPTION'],
     ['writing', 0, 'SM-11 Arthur\'s journal (writing)', 'BLIND'],
     ['writing', 1000, 'SM-11 journal pages', 'BLIND'],
@@ -150,10 +164,19 @@ async function desktop(browser, variant) {
   ];
   let i = 20;
   for (const [id, off, moment, mode] of plan) {
-    const sel = id.startsWith('#') ? id : '#' + id;
-    const r = await at(sel, off, 1800); if (!r) { console.error('missing', sel); continue; }
     const key = id.replace('#', '');
-    await shoot(page, `${P(String(i++))}-${key}${off > 0 ? '-' + off : ''}`, { world: WORLD[key.replace(/-step-\d/, '')] || 'pirates', moment, mode, variant });
+    let r;
+    if (typeof off === 'object') {
+      // an element target: its top `lead` px below the header
+      r = await rectOf(page, off.sel);
+      if (r) await scrollToY(page, r.top - 68 - off.lead, 1800);
+    } else {
+      const sel = id.startsWith('#') ? id : '#' + id;
+      r = await at(sel, off, 1800);
+    }
+    if (!r) { console.error('missing', id, off); i++; continue; }
+    const suffix = typeof off === 'object' ? '-' + off.tag : off > 0 ? '-' + off : '';
+    await shoot(page, `${P(String(i++))}-${key}${suffix}`, { world: WORLD[key.replace(/-step-\d/, '')] || 'pirates', moment, mode, variant });
   }
   // Films chapter: one frame per screen
   const arts = await page.evaluate(() => [...document.querySelectorAll('#films article[data-films-world]')].map(a => { const r = a.getBoundingClientRect(); return { w: a.dataset.filmsWorld, top: r.top + scrollY, h: r.height }; }));
@@ -166,18 +189,48 @@ async function desktop(browser, variant) {
 
 async function intro(browser, variant) {
   const V = variant === 'alt';
-  const { ctx, page } = await newPage(browser, { width: 1440, height: 900 });
-  await go(page, `/?intro=1${V ? '&variant=alt' : ''}`, 2600);
   const P = V ? 'A' : 'D';
-  await shoot(page, `${P}00-intro-play`, { world: 'hp', moment: 'SM-1 play screen: Hogwarts, candles, broom', mode: 'BLIND', variant });
-  await page.click('#intro-play').catch(e => console.error('play', e.message));
-  for (const [dt, k] of [[1500, 'flight-early'], [1200, 'flight-mid'], [1200, 'flight-late']]) {
-    await sleep(dt);
-    await shoot(page, `${P}00-intro-${k}`, { world: 'hp→pirates', moment: `SM-1 broom flight (${k}); hand-off HP→Pirates`, mode: 'CAPTION', variant });
+  // Two passes on the SAME timeline, one screenshot per beat: captioned, then
+  // blind (text hidden from the start). Shooting both kinds back to back let
+  // the video run on ~2 s between them, so the blind frame showed a later
+  // moment than its captioned twin (M2 fix round 3). Each beat's world is
+  // the flight caption on screen at that instant (hp, pirates, or both
+  // during the cross-dissolve) — the hand-off is HP→Pirates by design.
+  const worlds = {};
+  for (const kind of ['captioned', 'blind']) {
+    const { ctx, page } = await newPage(browser, { width: 1440, height: 900 });
+    await go(page, `/?intro=1${V ? '&variant=alt' : ''}`, 2600);
+    if (kind === 'blind') { await page.addStyleTag({ content: BLIND_CSS }); await sleep(120); }
+    await shoot(page, `${P}00-intro-play`, { world: 'hp', moment: 'SM-1 play screen: Hogwarts, candles, broom', mode: 'BLIND', variant }, { only: kind });
+    await page.click('#intro-play').catch(e => console.error('play', e.message));
+    const t0 = Date.now();
+    // beats on the FLIGHT'S OWN CLOCK (the video's currentTime), so both
+    // passes shoot the same moment whatever the clip's load time (a fresh
+    // load starts ~1 s later than a cached one); a clip held at its cut, or
+    // an intro already gone, releases the wait
+    for (const [at, k] of [[1.2, 'flight-early'], [2.6, 'flight-mid'], [4.0, 'flight-late'], [0, 'landed']]) {
+      if (k === 'landed') await sleep(Math.max(0, 11000 - (Date.now() - t0)));
+      else await page.waitForFunction((t) => {
+        const v = document.querySelector('#intro video');
+        if (!document.getElementById('intro') || !v) return true;
+        return v.currentTime >= t || (v.paused && v.currentTime > 0.5) || v.ended;
+      }, at, { timeout: 15000, polling: 16 }).catch(() => console.error('beat timeout', k));
+      const w = await page.evaluate(() => {
+        const o = id => { const e = document.getElementById(id); return e ? +getComputedStyle(e).opacity * +getComputedStyle(e.parentElement || e).opacity : 0; };
+        const hp = o('intro-cap-hp'), pc = o('intro-cap-pc');
+        const on = document.documentElement.className.match(/intro-(launched|landing|fold)/) && document.getElementById('intro');
+        if (!on) return 'pirates';
+        return hp > 0.5 && pc > 0.5 ? 'hp→pirates' : hp > 0.5 ? 'hp' : pc > 0.5 ? 'pirates' : hp >= pc ? 'hp→pirates' : 'pirates';
+      }).catch(() => 'hp→pirates');
+      const name = `${P}00-intro-${k}`;
+      if (kind === 'captioned') worlds[name] = k === 'landed' ? 'pirates' : w;
+      const meta = k === 'landed'
+        ? { world: 'pirates', moment: 'SM-1 landing → hero (hand-off caption)', mode: 'TRANSITION', variant }
+        : { world: worlds[name] || w, moment: `SM-1 broom flight (${k}, flight t ≈ ${at} s); hand-off HP→Pirates`, mode: 'CAPTION', variant, at };
+      await shoot(page, name, meta, { only: kind });
+    }
+    await ctx.close();
   }
-  await sleep(6000);
-  await shoot(page, `${P}00-intro-landed`, { world: 'pirates', moment: 'SM-1 landing → hero (hand-off caption)', mode: 'TRANSITION', variant });
-  await ctx.close();
 }
 
 async function loaders(browser, variant) {
@@ -214,8 +267,17 @@ async function sweep(browser, kind) {
     const pts = r.h > size.height * 2.2 ? [0, Math.round((r.h - size.height) / 2)] : [0];
     for (const off of pts) {
       await scrollToY(page, r.top + off, mobile ? 1200 : 900);
+      // content above can still grow as it mounts (lazy sections, images):
+      // re-measure and land again until the section sits where intended
+      // (m390 contact was shot blank and "credits" showed contact)
+      for (let k = 0; k < 3; k++) {
+        const again = await rectOf(page, '#' + id);
+        if (!again || Math.abs(again.top + off - (await page.evaluate(() => scrollY))) < 8) break;
+        await scrollToY(page, again.top + off, 900);
+      }
       const name = `${tag}-${String(i++).padStart(2, '0')}-${id}${off ? '-' + off : ''}`;
       await imagesReady(page);
+      await sleep(800); // late-mounting sections
       await page.screenshot({ path: path.join(OUT, `${name}.png`) }).catch(() => {});
       manifest.push({ frame: name, world: WORLD[id], moment: `${id} @ ${kind}`, mode: kind });
       console.log('shot', name);

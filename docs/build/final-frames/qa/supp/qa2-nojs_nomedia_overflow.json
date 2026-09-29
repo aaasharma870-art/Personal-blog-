@@ -1,0 +1,188 @@
+{
+ "nojs1440": {
+  "introExists": true,
+  "introVisible": false,
+  "captions": 33,
+  "captionsHidden": [
+   "HOGWARTS, ACROSS THE BLACK LAKE• , HARRY POTTER",
+   "A BROOMSTICK OVER HOGWARTS• , HARRY POTTER",
+   "TOWARD THE BLACK PEARL• , PIRATES OF THE CARIBBEAN",
+   "THE BLACK PEARL ON THE HORIZON• , PIRATES OF THE C",
+   "JACK’S COMPASS — IT POINTS TO WHAT YOU WANT MOST• ",
+   "THE GANG’S CAMP AT DUSK• , RED DEAD REDEMPTION 2"
+  ],
+  "hiddenLeafText": {
+   "top": {
+    "n": 2,
+    "sample": [
+     "THE HORIZON",
+     "PIRATES OF THE CARIBBEAN"
+    ]
+   },
+   "about": {
+    "n": 2,
+    "sample": [
+     "WANT MOST",
+     "PIRATES OF THE CARIBBEAN"
+    ]
+   },
+   "work": {
+    "n": 17,
+    "sample": [
+     "01",
+     "Pre-registration",
+     "02",
+     "A blind holdout, spent once"
+    ]
+   },
+   "trading-algos": {
+    "n": 10,
+    "sample": [
+     "Pre-registration",
+     "committed before any run",
+     "LEAN backtest",
+     "signal T close • fill T+1 open"
+    ]
+   },
+   "optuna-screener": {
+    "n": 14,
+    "sample": [
+     "Strategy file / discovery",
+     "entry_fn • exit_fn",
+     "Indicators",
+     "computed per strategy"
+    ]
+   },
+   "kill-list": {
+    "n": 14,
+    "sample": [
+     "Flagship · active",
+     "Flagship · 161 files",
+     "Survived",
+     "Exception"
+    ]
+   },
+   "voices": {
+    "n": 2,
+    "sample": [
+     "AT DUSK",
+     "RED DEAD REDEMPTION 2"
+    ]
+   }
+  },
+  "imgs": 27,
+  "imgsNoSrc": 0,
+  "bodyOverflow": "hidden auto",
+  "htmlOverflow": "visible"
+ },
+ "nojs390": {
+  "introExists": true,
+  "introVisible": false,
+  "captions": 33,
+  "captionsHidden": [
+   "HOGWARTS, ACROSS THE BLACK LAKE• , HARRY POTTER",
+   "A BROOMSTICK OVER HOGWARTS• , HARRY POTTER",
+   "TOWARD THE BLACK PEARL• , PIRATES OF THE CARIBBEAN",
+   "THE BLACK PEARL ON THE HORIZON• , PIRATES OF THE C",
+   "JACK’S COMPASS — IT POINTS TO WHAT YOU WANT MOST• ",
+   "THE GANG’S CAMP AT DUSK• , RED DEAD REDEMPTION 2"
+  ],
+  "hiddenLeafText": {
+   "top": {
+    "n": 2,
+    "sample": [
+     "THE HORIZON",
+     "PIRATES OF THE CARIBBEAN"
+    ]
+   },
+   "about": {
+    "n": 2,
+    "sample": [
+     "WANT MOST",
+     "PIRATES OF THE CARIBBEAN"
+    ]
+   },
+   "work": {
+    "n": 17,
+    "sample": [
+     "01",
+     "Pre-registration",
+     "02",
+     "A blind holdout, spent once"
+    ]
+   },
+   "trading-algos": {
+    "n": 10,
+    "sample": [
+     "Pre-registration",
+     "committed before any run",
+     "LEAN backtest",
+     "signal T close • fill T+1 open"
+    ]
+   },
+   "optuna-screener": {
+    "n": 14,
+    "sample": [
+     "Strategy file / discovery",
+     "entry_fn • exit_fn",
+     "Indicators",
+     "computed per strategy"
+    ]
+   },
+   "kill-list": {
+    "n": 14,
+    "sample": [
+     "Flagship · active",
+     "Flagship · 161 files",
+     "Survived",
+     "Exception"
+    ]
+   },
+   "beyond": {
+    "n": 1,
+    "sample": [
+     "ILLUSTRATIVE MAP"
+    ]
+   },
+   "voices": {
+    "n": 2,
+    "sample": [
+     "AT DUSK",
+     "RED DEAD REDEMPTION 2"
+    ]
+   }
+  },
+  "imgs": 27,
+  "imgsNoSrc": 0,
+  "bodyOverflow": "hidden auto",
+  "htmlOverflow": "visible"
+ },
+ "nomedia": {
+  "brokenImgs": 27,
+  "imgs": 31,
+  "videos": 0,
+  "captions": 35,
+  "blockedRequests": 100,
+  "pageErrors": []
+ },
+ "overflow": {
+  "320": {
+   "scrollWidth": 321,
+   "bodyScrollWidth": 321,
+   "clientWidth": 320,
+   "htmlOvX": "visible",
+   "bodyOvX": "hidden",
+   "unclippedNonSvg": [],
+   "scrollXAfterScrollBy": 0
+  },
+  "390": {
+   "scrollWidth": 390,
+   "bodyScrollWidth": 390,
+   "clientWidth": 390,
+   "htmlOvX": "visible",
+   "bodyOvX": "hidden",
+   "unclippedNonSvg": [],
+   "scrollXAfterScrollBy": 0
+  }
+ }
+}

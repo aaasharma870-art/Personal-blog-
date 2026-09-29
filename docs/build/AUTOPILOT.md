@@ -79,7 +79,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
   - Write the one-liners (see "Aryan's answers").
   - Then commit and push.
 - [x] **M2-media ∥:** DONE at about 00:55. All assets have a default and an alt, STAGED in `build/media/accepted` (report: `build/media/M2-MEDIA-REPORT.md`, ledgers `LEDGER-laneA.md` and `LEDGER-laneB.md`). Spent 321 credits; balance 674.5. Flags for Aryan are in the report. The M1.5 alts for MV-02 and MV-03 were rejected, and passing replacements `*-alt2.*` are staged; M3 decides whether to swap them. (finished) `wf_31e15ab2-fef`, script `build/m2-media.js`. Output is STAGED in `build/media/accepted` ONLY, because `npm run check` errors on unregistered public files. **M3 must copy the staged files into `public/media/films` and register them in `lib/media.ts`.** (every asset keeps a default AND an alt, runner-up first) every remaining MEDIA-PLAN asset in plan order, including the RDR2 world plates, act-card and scene media, the films/game chapter reels, and the writing covers. Accepted files go to `public/media/films/`, registered in `lib/media.ts` with provenance. Cap it so the reserve stays ≥ 150.
-- [ ] **M2-COMBINED** (for speed; replaces M2-R + M2-A + M2-B + M3 + M4). Launched 03:30 as `wf_b15d4c6e-f32`; STOPPED at 05:30 for the cloud handoff.
+- [x] **M2-COMBINED** (for speed; replaces M2-R + M2-A + M2-B + M3 + M4). **DONE 2026-09-29 16:25 UTC by the cloud session, code head `d4a2cd8`.** Blind BLIND-mode frames 35/44 (was 25/43, audit 15/53); the fix round after the re-test is not re-judged yet (M5 does that). check, eslint and build are green. Report: `docs/build/M2-REPORT.md`; final per-scene table: `RECOGNIZABILITY.md` §11. Launched 03:30 as `wf_b15d4c6e-f32`; stopped at 05:30 for the cloud handoff.
   - **DONE and pushed:**
     - blind audit (`m2-audit`)
     - iconic media (8 plates, default + alt)
@@ -103,7 +103,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
     5. Assembler.
     6. Blind re-test ×3 + critic.
     7. Fix, then `build/M2-REPORT.md`.
-- [ ] **M5: final QA.**
+- [x] **M5: final QA.** **DONE 2026-09-29 17:58 UTC by the cloud session; code head `bc1072b`, report and contact sheet in the "M5 done" commit.** Final blind test: 38/45 BLIND, 63/83 all (`m2-review/BLIND-FINAL.md`). QA: every criterion passes after the fix round (mobile LCP about 1.3–2.0 s, 0 overflow at 320–1440, reduced motion and Pause static, 0 hydration errors). Fixes after the test are not re-judged. Report: `docs/build/FINAL-REPORT.md`; contact sheet: `docs/build/final-frames/index.html`. The machine settings were already restored at 05:35 ET, and there is no cloud cron to delete.
   - A final blind stranger test on every scene; check, eslint and build pass.
   - Anchors and links work; no overflow at 320/390/1024/1440; reduced motion, no-JS and media-blocked modes all work; LCP lab; zero hydration errors. (The legal/honesty audit was REMOVED at Aryan's request on 2026-09-29; he reviews that himself. Don't add legal/honesty findings or edits.)
   - Final contact sheet `build/final-frames/index.html`, plus `build/FINAL-REPORT.md`.
@@ -146,6 +146,7 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
   - **(d) SMOOTH TRANSITIONS between every world pair.** No hard cuts. Act cards cross-dissolve or morph from the outgoing world into the incoming one.
 
 ## Log
+- 2026-09-29 ~18:50 UTC: M5 + post-M5 skills pass done; Aryan signed everything as-is; branchPreview off; merged to main (release gate green). Phase 2 (info details) queued in CONTINUE.md.
 - 19:40: autopilot armed. M1 running. Cron job 8f398485 (hourly :07, session-only, 7-day expiry). Keep-awake task btu6t3dvm (SetThreadExecutionState; stop it at the end). CPU watchdog bw2fdp95w.
 - 22:32: keep-awake and CPU-watchdog tasks had died, most likely when usage ran out. Relaunched as a DETACHED guard process: `research/keep-awake.ps1`, pid 43528 (relaunched 04:40 with a 72 h limit; originally 40192), logging to `keep-awake.log`, 36 h max, stopped by the `.stop-keep-awake` file. AC sleep set to never (was 20 min; Battery Guard only enforces DC values). Windows Update active hours moved to 20:00–14:00 (was 6:00–0:00), so updates can't auto-restart overnight. All three are RESTORED at the end (Tick protocol step 4).
 - 22:38: one-shot 3 AM reset kickoff cron ec6eb4ca (03:02, 2026-09-29) added alongside the hourly tick 8f398485. The full in-progress M1 snapshot (83 files, tracked and untracked) is pushed to origin `wip/m1-snapshot`; every waiting tick refreshes it.
@@ -160,3 +161,15 @@ Aryan authorized a fully autonomous build overnight: "finish this build fully au
 - 05:30: **HANDOFF TO CLOUD** (Aryan at 92% usage). The local M2 workflow was stopped after the assembler commit `ad7f742` (pushed), and the local hourly cron was deleted. The next executor is claude.ai/code on branch `design/three-films`. Resume at M2-COMBINED 'REMAINING' step 1.
 - 05:35: machine RESTORED (AC sleep and display back to 20 min, active hours 6–0, guard stopped, watchdog task removed). Local executor finished for good; the cloud continues.
 - 05:50: at Aryan's request, the legal/honesty AUDIT was removed from the M2 critic and from M5. He will decide and fix those himself.
+- 16:24 UTC (cloud, `session_01GFF9jaKCW8HAdt3ibcSBE7`, which took over at 12:35 UTC): **M2-COMBINED finished.** The steps: eslint/build → `m2-after` capture → blind re-test #1 (25/43) + critic 1 → CORRIDOR + PEN plates (28 cr; balance 506.5) → fix round 1 (5 builders) → `m2-after2` → blind re-test #2 (35/44) + critic 2 → fix round 2 `d4a2cd8` → report. A container restart at ~14:30 UTC lost only fix round 1's final integration check, which was re-run by hand and passed. Aryan lifted the Higgsfield CDN egress block, so the paid CORRIDOR/PEN masters landed at 14:06 UTC. A GitHub credential 503 briefly held `c0587f5` unpushed. Next: **M5**, starting with a blind re-test of the post-fix `m2-after2` frames.
+- 16:27–17:43 UTC (cloud, `session_01GFF9jaKCW8HAdt3ibcSBE7`): **M5.**
+  - The security-review skill found nothing (`56fb908`).
+  - Final blind test: 3 judges on 86 frames of the post-fix `m2-after2` at `d4a2cd8`. BLIND **38/45** (Pirates 10/10, 3 Idiots 9/10, RDR2 9/13, HP 10/12); all frames with a film 63/83; 3 wrong-film frames, all outgoing enter frames.
+  - QA runner (`qa.js` + `qa2.js`) found 3 real failures: mobile LCP (2552 ms median), the skip-path LCP (about 4.2 s) and a 1 px overflow at 320. It also found axe contrast false positives in `#principles`.
+  - Fix round `bc1072b`: LCP fetchpriority and the pre-paint slit ≥ 640 px; the 320 chalk circle; the films RDR2 screen becomes Dead Eye / the camp; 3 Idiots chalk drones; bigger loaders; the intro ALT sea chart; the satchel; code review (a) and (b). The `qa.js` re-run passes every probe. 0 credits.
+- 17:58 UTC: **M5 DONE, queue empty.**
+  - Contact sheet `final-frames/index.html`: 165 frames plus the QA evidence, as committed JPGs.
+  - `m2-review/BLIND-FINAL.md` and the `FINAL-*` verdict files, and `FINAL-REPORT.md`.
+  - Credits: 693.5 spent in total; balance 506.5, confirmed live.
+  - Found at the end: `origin/main` already holds PRs #2–#5, including the WIP snapshots, and fails `npm run check` (#7, `contact-scene.tsx`). Flagged in FINAL-REPORT §7.1. `main` was not touched.
+  - Executor released: NONE.

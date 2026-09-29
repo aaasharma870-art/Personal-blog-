@@ -18,7 +18,8 @@ import { SIZE_CLASS } from "@/components/primitives/loaders/kit";
  *
  * viewBox 0 0 160 112: frame 2–158 × 2–96, slate 8–152 × 8–90, ledge 96–103.
  */
-const SLATE = "color-mix(in oklab, color-mix(in oklab, var(--paper-accent) 40%, var(--w-sage)) 34%, var(--idi-deep))";
+/** The slate (exported: a drawing on the board can occlude with it). */
+export const SLATE = "color-mix(in oklab, color-mix(in oklab, var(--paper-accent) 40%, var(--w-sage)) 34%, var(--idi-deep))";
 const WOOD = "color-mix(in oklab, var(--w-leather) 58%, var(--idi-deep))";
 const WOOD_LIGHT = "color-mix(in oklab, var(--w-leather) 72%, var(--idi-deep))";
 const GRAIN = "color-mix(in oklab, var(--w-leather) 34%, var(--idi-deep))";

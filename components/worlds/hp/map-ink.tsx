@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
+import { hash01 } from "@/components/worlds/hp/sprites";
 
 /* ============================================================================
    MAP INK — the Marauder's-Map drawing kit (IC-HP-05 / IC-HP-06 grammar),
@@ -14,12 +15,6 @@ import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
    `currentColor`. Pure (no hooks): server- and client-safe, deterministic
    (integer hash), aria-hidden throughout. Nothing here glows (Law 1).
    ========================================================================== */
-
-/** Deterministic 0–1 hash (integer math: server and client agree). */
-export function hash01(i: number, salt: number): number {
-  const x = (Math.imul(i + 1, 2654435761) ^ Math.imul(salt + 11, 40503)) >>> 0;
-  return (x % 10007) / 10007;
-}
 
 const f1 = (n: number) => n.toFixed(1);
 

@@ -1,0 +1,58 @@
+{
+ "axe": {
+  "390": {
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 6,
+     "nodes": [
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      ".xl\\:flex-row > header > .type-lead.max-w-lead.mt-tier-group :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 15.0pt (20px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 16.5pt (22px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment > .whitespace-nowrap :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 16.5pt (22px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__film :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 16.5pt (22px), font weight: normal). Expected contrast ratio of 4.5:1"
+     ]
+    }
+   ],
+   "incompleteContrast": 125
+  },
+  "1440": {
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 7,
+     "nodes": [
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "#principles-title > .-mb-\\[0\\.15em\\].pb-\\[0\\.15em\\].overflow-hidden > .block :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 64.8pt (86.4px), font weight: normal). Expected contrast ratio of 3:1",
+      ".xl\\:flex-row > header > .type-lead.max-w-lead.mt-tier-group :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 15.0pt (20px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 22.8pt (30.4px), font weight: normal). Expected contrast ratio of 3:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment > .whitespace-nowrap :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 22.8pt (30.4px), font weight: normal). Expected contrast ratio of 3:1"
+     ]
+    }
+   ],
+   "incompleteContrast": 236
+  },
+  "1440-rm": {
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "n": 7,
+     "nodes": [
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      ".xl\\:flex-row > header > p:nth-child(1) > span:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "#principles-title > .-mb-\\[0\\.15em\\].pb-\\[0\\.15em\\].overflow-hidden > .block :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 64.8pt (86.4px), font weight: normal). Expected contrast ratio of 3:1",
+      ".xl\\:flex-row > header > .type-lead.max-w-lead.mt-tier-group :: Fix any of the following: Element has insufficient color contrast of 2.18 (foreground color: #5a4632, background color: #0f0c09, font size: 15.0pt (20px), font weight: normal). Expected contrast ratio of 4.5:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 22.8pt (30.4px), font weight: normal). Expected contrast ratio of 3:1",
+      "p[data-caption=\"cap.principles\"] > .world-face-hp.scene-caption__moment > .whitespace-nowrap :: Fix any of the following: Element has insufficient color contrast of 1.27 (foreground color: #2e2318, background color: #0f0c09, font size: 22.8pt (30.4px), font weight: normal). Expected contrast ratio of 3:1"
+     ]
+    }
+   ],
+   "incompleteContrast": 253
+  }
+ }
+}

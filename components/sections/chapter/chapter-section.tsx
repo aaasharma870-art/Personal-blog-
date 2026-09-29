@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { MetricTile } from "@/components/site/metric-tile";
-import { RanchoCircle } from "@/components/site/idiots-chalk";
+import { ChalkDrone, RanchoCircle } from "@/components/site/idiots-chalk";
 import { Meta } from "@/components/site/world-kit";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { ChalkboardFrame } from "@/components/worlds/idiots/chalk";
@@ -132,6 +132,20 @@ function ChapterBody({
       {/* the ICE board: the real system as a Rancho-style blueprint */}
       {s ? (
         <Rise className="mt-tier-block">
+          {/* the board is NAMED as it comes into view — above it, not under
+              it a screen later (M2 fix round 3, blind D26: the chapter's
+              first view showed the board with no film cue); never beside a
+              metric. A chapter with a `head` is named by its head band. */}
+          {entry.props.head ? null : (
+            <div className="relative">
+              <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
+              {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
+                  D26 3I .20–.25: "a generic diagram"). ≥ 1024 only, where the
+                  claim grid leaves the right column clear above the board;
+                  it rises into that gap, so the board never moves. */}
+              <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
+            </div>
+          )}
           <ChalkboardFrame>
             <BlueprintSchematic
               fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
@@ -140,8 +154,7 @@ function ChapterBody({
               pieceKey={`${entry.id}.schematic`}
             />
           </ChalkboardFrame>
-          {/* the pipeline's film cue is its head band (MachineBoard) */}
-          {isOptuna ? null : <SceneCaption k="cap.trading-algos" place="under" className="mt-tier-group" />}
+          {/* (the pipeline's film cue is its head band, MachineBoard) */}
         </Rise>
       ) : null}
 
@@ -286,9 +299,10 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
   const appendix = entry.props.appendix ?? [];
   return (
     <IdiotsSection entry={entry} labelledBy={titleId} className="scroll-mt-24">
-      {/* the machine board is the pipeline's scene (IC-3I-05); another
-          chapter's `head` would need its own scene + caption */}
-      {entry.props.head && p.id === "optuna-screener" ? (
+      {/* the chapter head is the pipeline's machine board (IC-3I-05; only
+          optuna-screener sets `head`): another chapter's `head` would need
+          its own scene + caption */}
+      {entry.props.head ? (
         <MachineBoard
           spec={entry.props.head}
           choice={variantChoiceOf(entry)}

@@ -26,8 +26,10 @@ import type { SectionProps } from "@/components/sections/types";
  *     and "THE HEARTLANDS • RED DEAD REDEMPTION 2" under them
  *     (components/worlds/rdr2/frontier-band; DEFAULT ride-in, ALT
  *     dead-eye-release).
- *   - Athletics: the ILLUSTRATIVE trail map whose fog lifts as you read,
- *     and the running-shoe prints (desktop).
+ *   - Athletics: the running-shoe prints under the h3, and a wide
+ *     ILLUSTRATIVE frontier map (hachured range, pines, river and lake, a
+ *     dashed trail to a tent, a compass rose; no text) under the facts,
+ *     whose fog lifts as you read (desktop).
  *   - Creative: the leather satchel and his real kit, captioned "WHAT'S IN
  *     THE SATCHEL" (DEFAULT spill, ALT inventory).
  *   - The end: a WANTED poster nailed over the blank poster of the notice-
@@ -162,8 +164,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
                 </h3>
                 {athletics ? (
                   <div className="mt-tier-group hidden max-w-[24rem] lg:block">
-                    <TrailMap />
-                    <ShoePrints className="mt-tier-group" />
+                    <ShoePrints />
                   </div>
                 ) : null}
               </div>
@@ -176,6 +177,10 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
                     </div>
                   ))}
                 </dl>
+                {/* the frontier map runs the full width of the facts' column
+                    (ART-DIRECTOR #15: a small box in the left column left
+                    the right two thirds empty) */}
+                {athletics ? <TrailMap className="mt-tier-block hidden lg:block" /> : null}
                 {creative ? (
                   <Satchel
                     choice={choice}

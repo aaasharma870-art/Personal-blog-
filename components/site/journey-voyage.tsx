@@ -246,7 +246,16 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
       if (k < 1) raf = requestAnimationFrame(step);
       else setSailing(false);
     });
-    return () => cancelAnimationFrame(raf);
+    // ART-DIRECTOR #2: the ALT captions never came back at rest. A sail can
+    // end without its last frame (cancelled by the next cue, throttled rAF in
+    // a background tab), so the sea is declared at rest after the sail's own
+    // duration + 100 ms whatever happened to the loop, and the caption
+    // returns on the held beat.
+    const rest = window.setTimeout(() => setSailing(false), duration + 100);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(rest);
+    };
   }, [beat, live, variant]);
 
   const onWaypoint = (e: MouseEvent<HTMLAnchorElement>, j: number) => {
@@ -260,7 +269,10 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     document.getElementById(`journey-step-${j + 1}-title`)?.focus({ preventScroll: true });
   };
 
-  const showCaption = !live || (variant === "default" ? !moving : !sailing);
+  // At rest the caption shows: the stills path (frames not decoded yet, or
+  // the section out of range) never moves; the scrub hides it only while
+  // scrolling, the sail only while sailing.
+  const showCaption = !seq.ready || !live || (variant === "default" ? !moving : !sailing);
   const heading = intent !== null ? bearingTo(intent) : legHeading(active);
   const alt = variant === "alt";
 

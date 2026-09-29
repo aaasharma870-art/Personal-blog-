@@ -1,7 +1,8 @@
 import { writing } from "@/lib/content";
 import { slot, variantChoiceOf } from "@/lib/sections";
 import { cn } from "@/lib/utils";
-import { Meta, WorldSection } from "@/components/site/world-kit";
+import { planeAttrs } from "@/lib/worlds";
+import { Meta, WorldSection, recedeInto } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { JournalVignette, NibTitle } from "@/components/site/rdr2-graphite";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -20,11 +21,17 @@ import type { SectionProps } from "@/components/sections/types";
  *   - "ARTHUR MORGAN'S JOURNAL • RED DEAD REDEMPTION 2" in Rye heads the left
  *     page, above ENTRY I (its rule and film span in pencil, so the page
  *     keeps exactly one red mark).
- *   - ≥ 1024 a two-page spread (leather edge + gutter, CSS in the world-
- *     skins block): the entries on the left page; on the right page a full-
- *     page graphite frontier sketch at rest, swapped for each entry's
- *     vignette (components/worlds/rdr2/journal-spread: DEFAULT sketch-at-
- *     rest, pointer-driven; ALT leafing, scroll-driven page turns).
+ *   - ≥ 1024 a two-page spread (a soft gutter down the centre, CSS in the
+ *     world-skins block; the 6 px leather edges at the viewport's sides
+ *     are gone: they read as orange bug bars, ART-DIRECTOR #15): the
+ *     entries on the left page; on the right page a full-page graphite
+ *     frontier sketch at rest, swapped for each entry's vignette
+ *     (components/worlds/rdr2/journal-spread: DEFAULT sketch-at-rest,
+ *     pointer-driven; ALT leafing, scroll-driven page turns).
+ *   - T9: when the next section is this world's deep (Voices, the camp),
+ *     the page RECEDES INTO DUSK at its foot — an empty 18vh + the bottom
+ *     padding fade paper → deep, and Voices drops its paper dome
+ *     (world-kit recedeInto), so the camp fades up out of the same dark.
  *   - Entries are VERBATIM content.ts, Meta `ENTRY I … V`, a static DRAFT
  *     field; drafts are not links (0 focusables).
  * Under RD-1 option B (the entry moved to an hp act) the same section
@@ -36,28 +43,35 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 export function Writing({ entry, number }: SectionProps<"index">) {
   const titleId = `${entry.id}-title`;
   const journal = slot(entry, "dressing").index === "journal";
+  const dusk = recedeInto(entry);
+  // the section head; in the journal it opens the LEFT page (beside the
+  // sketch), otherwise it spans the column
+  const head = (inSpread: boolean) => (
+    <header className={cn("max-w-[56rem]", !inSpread && "lg:max-w-[calc(50%-var(--spacing-gutter))]")}>
+      <Meta fields={[number, entry.nav?.label ?? "Writing"]} />
+      <NibTitle id={titleId} className="mt-tier-group max-w-title type-title text-fg">
+        Thinking in public, soon.
+      </NibTitle>
+      <p className="mt-tier-block max-w-lead type-lead text-fg-muted">
+        Short essays in progress — written for people who don&rsquo;t trade, about how I try not to fool myself.
+      </p>
+    </header>
+  );
   return (
     <WorldSection
       entry={entry}
       labelledBy={titleId}
-      className={cn(journal && "journal-spread")}
+      className={cn(dusk && "overflow-x-clip")}
       containerClassName={cn(journal && "journal-gutter")}
     >
-      <header className="max-w-[56rem] lg:max-w-[calc(50%-var(--spacing-gutter))]">
-        <Meta fields={[number, entry.nav?.label ?? "Writing"]} />
-        <NibTitle id={titleId} className="mt-tier-group max-w-title type-title text-fg">
-          Thinking in public, soon.
-        </NibTitle>
-        <p className="mt-tier-block max-w-lead type-lead text-fg-muted">
-          Short essays in progress — written for people who don&rsquo;t trade, about how I try not to fool myself.
-        </p>
-      </header>
+      {journal ? null : head(false)}
 
       {journal ? (
         <JournalSpread
           entries={writing.map(({ title, angle, tag }) => ({ title, angle, tag }))}
           choice={variantChoiceOf(entry)}
           caption={<SceneCaption k="cap.writing" place="head" />}
+          head={head(true)}
         />
       ) : (
         <ol aria-label="Entries" className="mt-tier-block border-t border-rule">
@@ -84,6 +98,19 @@ export function Writing({ entry, number }: SectionProps<"index">) {
       <p className="mt-tier-group type-small text-fg-muted">
         Drafts in progress — published essays will appear here.
       </p>
+
+      {dusk ? (
+        <>
+          {/* room for the dusk: no text ever sits under the fade */}
+          <div aria-hidden="true" className="h-[18vh]" />
+          <div
+            aria-hidden="true"
+            data-dusk=""
+            {...planeAttrs(dusk.tone, dusk.world)}
+            className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent,#000_85%)]"
+          />
+        </>
+      ) : null}
     </WorldSection>
   );
 }

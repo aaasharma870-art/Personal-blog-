@@ -1,8 +1,15 @@
+import { useId } from "react";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
-import { FloatingCandle } from "@/components/worlds/hp/floating-candle";
-import { hash01 } from "@/components/worlds/hp/map-ink";
-import { CEILING_CLOUDS, CEILING_NIGHT, STAR_TILE, STAR_TILE_SIZE } from "@/components/worlds/hp/sprites";
+import {
+  CANDLE_LIT_SPRITE,
+  CANDLE_SPRITE_SIZE,
+  CEILING_CLOUDS,
+  CEILING_NIGHT,
+  STAR_TILE,
+  STAR_TILE_SIZE,
+  hash01,
+} from "@/components/worlds/hp/sprites";
 
 /* ============================================================================
    THE ENCHANTED CEILING (IC-HP-03 at section scale) — the Great Hall's
@@ -14,7 +21,7 @@ import { CEILING_CLOUDS, CEILING_NIGHT, STAR_TILE, STAR_TILE_SIZE } from "@/comp
    All light is pre-rendered images (the candle sprites, the star and cloud
    SVG images: Law 1); the night blue is a dark ground, not a light. Static
    (no bob, no twinkle): reduced motion / Pause / no JS need no special
-   case. Pure (no hooks), deterministic: server- and client-safe.
+   case. Deterministic (useId only): server- and client-safe.
    aria-hidden, pointer-events none. Hosts place the layers and keep them
    OFF text (candles) or dim under it (stars ≤ 22 %).
    ========================================================================== */
@@ -60,7 +67,9 @@ export function spotsIn(
   return out.sort((a, b) => a.w - b.w);
 }
 
-/** A field of lit floating candles (absolute; the host sizes the box). */
+/** A field of lit floating candles (absolute; the host sizes the box). The
+ *  lit sprite (IC-HP-03, worlds/hp/sprites) is declared ONCE per field as
+ *  an SVG symbol and every candle <use>s it: one image, many candles. */
 export function CandleField({
   spots,
   className,
@@ -70,16 +79,29 @@ export function CandleField({
   className?: string;
   style?: CSSProperties;
 }) {
+  const sym = `hp-candle-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const { w: SW, h: SH } = CANDLE_SPRITE_SIZE;
   return (
     <div aria-hidden="true" className={cn("pointer-events-none absolute", className)} style={style} data-motif="candle-field">
+      <svg width="0" height="0" focusable="false" className="absolute size-0 overflow-hidden">
+        <symbol id={sym} viewBox={`0 0 ${SW} ${SH}`}>
+          <image href={CANDLE_LIT_SPRITE} width={SW} height={SH} />
+        </symbol>
+      </svg>
       {spots.map((c, i) => (
-        <span
+        <svg
           key={i}
-          className={cn("absolute -translate-x-1/2", c.at ? AT[c.at] : "block")}
+          viewBox={`0 0 ${SW} ${SH}`}
+          width={c.w}
+          height={c.w * 3}
+          focusable="false"
+          className={cn("absolute -translate-x-1/2 overflow-visible", c.at ? AT[c.at] : "block")}
           style={{ left: `${c.x.toFixed(2)}%`, top: `${c.y.toFixed(2)}%`, opacity: c.o }}
+          data-motif="floating-candle"
+          data-lit=""
         >
-          <FloatingCandle lit width={c.w} />
-        </span>
+          <use href={`#${sym}`} />
+        </svg>
       ))}
     </div>
   );
