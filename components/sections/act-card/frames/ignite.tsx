@@ -169,15 +169,19 @@ export function IgniteFrame({
   );
 }
 
-/** The camp sinks into the hp deep over this window of p. */
-export const CAMP_OUT = { from: 0.3, to: 0.6 };
+/** The camp sinks into the hp deep over this window of p (still ~.4 at the
+ *  middle: both worlds, the hall leading). */
+export const CAMP_OUT = { from: 0.3, to: 0.62 };
 /** The camp's ember glow holds until ≈ .45 and is out by .5. */
 export const EMBER_OUT = { from: 0.4, to: 0.5 };
 /** The Great Hall: up to a third from p .35 (behind the candles, the camp
  *  still in the frame: both worlds at the middle), then the whole frame
  *  over .78–.9. Shared with the ALT (frames/ignite-lumos.tsx). */
 export function hallAt(v: number): number {
-  return 0.35 * remap(v, 0.35, 0.55) + 0.65 * remap(v, 0.78, 0.9);
+  // M2 critic 3 / blind D10-act-4-mid (hp .45–.55): at the middle the hall
+  // must LEAD (the caption rule: the mid frame's dominant world is the
+  // incoming one) — .6 by p .5 over the fading camp, then the whole frame
+  return 0.6 * remap(v, 0.3, 0.5) + 0.4 * remap(v, 0.72, 0.88);
 }
 
 /** Measured fires (0–1 of the plate) for plates without a `fire` mark

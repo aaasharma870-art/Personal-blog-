@@ -29,10 +29,12 @@ export function About({ entry, number }: SectionProps<"story">) {
           title="A builder of quantitative systems."
           className="lg:col-span-7"
         />
+        {/* ≥ lg: opposite the h2; below lg it sits under the compass,
+            which leads the pillars (AboutPillars) */}
         <SceneCaption
           k="cap.about"
           place="head"
-          className="lg:col-span-5 lg:justify-self-end lg:pb-3 lg:text-right lg:before:left-auto lg:before:right-0"
+          className="hidden lg:col-span-5 lg:block lg:justify-self-end lg:pb-3 lg:text-right lg:before:left-auto lg:before:right-0"
         />
       </div>
       <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
@@ -40,7 +42,7 @@ export function About({ entry, number }: SectionProps<"story">) {
           <AboutBio />
         </div>
         <div className="lg:col-span-7">
-          <AboutPillars choice={variantChoiceOf(entry)} />
+          <AboutPillars choice={variantChoiceOf(entry)} caption={<SceneCaption k="cap.about" place="under" className="mt-0" />} />
         </div>
       </div>
     </WorldSection>

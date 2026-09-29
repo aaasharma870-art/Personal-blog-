@@ -10,8 +10,8 @@ import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/ki
 import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { boardQuad, onBoard, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
-import { registeredStorm, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
+import { BoardDrone, boardQuad, onBoard, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
+import { registeredStorm, smooth01, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
 import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
 
 /**
@@ -30,12 +30,13 @@ import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sectio
  *            all along. At the middle (p .5) the hall and most of the board
  *            are wiped, the storm still over the right quarter — both
  *            worlds, the new one leading (ART-DIRECTOR #6).
- *   ≥ .66    the board is WIPED CLEAN: only the duster's soft arcs of chalk
- *            dust remain ON THE SLATE — drawn inside the board quad of the
- *            plate (frames/board-fig.tsx), never across the walls or the
- *            benches (the old full-frame streak pattern read as scanline
- *            banding, ART-DIRECTOR #15). No FIG. 0 here: the caption says
- *            the board is clean, so it is (ART-DIRECTOR #9).
+ *   ≥ .66    the storm is WIPED OFF the board, and under it is THE
+ *            HOMEMADE DRONE, chalked big in the middle of the slate (M2
+ *            critic 3 / blind: the bare hall scored 3I .55), among the
+ *            duster's soft arcs of chalk dust — all drawn inside the board
+ *            quad of the plate (frames/board-fig.tsx), never across the walls
+ *            or the benches (ART-DIRECTOR #15). No FIG. 0 here; the caption
+ *            names what is on the board (cap.act-2.alt, ART-DIRECTOR #9).
  * No aqua in this variant (C10: 0 aqua marks at any p). The sweep and the
  * duster exist only while live (the storm is mounted hidden, as in the
  * default, so it has decoded before the card goes live). Static card (RM,
@@ -49,6 +50,9 @@ import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sectio
 const VB = { w: 1000, h: 418 };
 /** The sweep's window of p. */
 const SWEEP = { from: 0.06, to: 0.66 };
+/** The drone, centred on the ALT board's visible slate (board-local u / v;
+ *  u-width chosen so the sketch keeps its own aspect on this quad). */
+const DRONE_ALT = { u0: 0.37, u1: 0.63, v0: 0.06, v1: 0.95 };
 
 /* — The feathered diagonal edge (CSS mask, geometry for 2.39:1: the sweep
      runs only live, and live is ≥ 1024). A 110° gradient in a mask three
@@ -90,6 +94,10 @@ export function SeamChalkFrame({
   const storm = registeredStorm(stormId, board);
 
   const w = useTransform(p, (v) => remap(v, SWEEP.from, SWEEP.to));
+  // the storm enters tilted up (its crest in the frame's top half, under the
+  // outgoing caption) and settles onto its registration as the sweep starts
+  // (M2 critic 3 #3); ≤ .11 keeps its box over the whole frame (no inset here)
+  const stormY = useTransform(p, (v) => `${(-11 * (1 - smooth01(remap(v, 0, 0.1)))).toFixed(3)}%`);
   const maskPos = useTransform(w, (x) => `${(pxAt(x) * 100).toFixed(3)}% 0%`);
   // belt and braces: a finished sweep hides the storm outright
   const stormOn = useTransform(w, (x) => (x >= 1 ? 0 : 1));
@@ -106,6 +114,7 @@ export function SeamChalkFrame({
         <PlateBox plate={board}>
           <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
           <DustArcs plate={board} />
+          <BoardDrone plate={board} box={DRONE_ALT} live={false} />
         </PlateBox>
       ) : (
         <div className="act-blueprint absolute inset-0">
@@ -163,9 +172,11 @@ export function SeamChalkFrame({
         }
       >
         {storm ? (
-          <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
-            <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
-          </PlateBox>
+          <motion.div className="absolute inset-0" style={live ? { y: stormY } : undefined}>
+            <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+              <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
+            </PlateBox>
+          </motion.div>
         ) : null}
       </motion.div>
       {live ? <Duster w={w} /> : null}

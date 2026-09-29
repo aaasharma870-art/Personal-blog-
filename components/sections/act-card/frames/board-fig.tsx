@@ -54,12 +54,146 @@ export function onBoard(q: Q, u: number, v: number): [number, number] {
   return [top[0] + (bot[0] - top[0]) * v, top[1] + (bot[1] - top[1]) * v];
 }
 
-/** Where the FIG sits on the slate (board-local u / v; the ledge is v = 1). */
-const FIG = { u0: 0.24, u1: 0.95, v0: 0.12, v1: 0.8 };
+/** Where the FIG sits on the slate (board-local u / v; the ledge is v = 1).
+ *  M2 critic 3 / blind (the lecture hall alone scored 3I .55, "a generic
+ *  classroom"): the left third of the slate now carries THE HOMEMADE DRONE
+ *  in chalk (the film's prop, IC-3I-08; no character named), big, and
+ *  FIG. 0 with its gauge moves right. */
+const FIG = { u0: 0.5, u1: 0.97, v0: 0.2, v1: 0.8 };
 /** The gauge's box on the slate (the FIG's left end, bottom-left). */
-const GAUGE = { u0: 0.04, u1: 0.22, v0: 0.56, v1: 0.93 };
-/** The label (FIG. 0 • …) at the slate's top-left. */
-const LABEL = { u: 0.04, v: 0.07 };
+const GAUGE = { u0: 0.37, u1: 0.5, v0: 0.6, v1: 0.95 };
+/** The label (FIG. 0 • …) above the FIG. */
+const LABEL = { u: 0.37, v: 0.07 };
+/** The drone sketch's box on the slate (the DEFAULT board). */
+export const DRONE_ON_BOARD = { u0: 0.02, u1: 0.34, v0: 0.06, v1: 0.95 };
+
+/* — THE HOMEMADE DRONE in chalk, top-down (the loaders' LD-3I drawing at
+     slate scale): an X frame, four rotor guards with two-blade props and
+     spin ticks, the body, its camera. Local units: 100 × 80, mapped onto a
+     board-local box and then bilinearly onto the slate quad (sampled, so
+     circles stay on the board's perspective). — */
+type Box = { u0: number; u1: number; v0: number; v1: number };
+const DRONE_HUBS: [number, number][] = [
+  [21, 17],
+  [79, 17],
+  [21, 63],
+  [79, 63],
+];
+function droneLocalPolys(): [number, number][][] {
+  const out: [number, number][][] = [];
+  const ring = (cx: number, cy: number, r: number, a0 = 0, a1 = 360, n = 36): [number, number][] =>
+    Array.from({ length: n + 1 }, (_, i) => {
+      const a = ((a0 + ((a1 - a0) * i) / n) * Math.PI) / 180;
+      return [cx + r * Math.cos(a), cy + r * 0.92 * Math.sin(a)];
+    });
+  // the X frame (hub to hub, through the body)
+  out.push([DRONE_HUBS[0], DRONE_HUBS[3]], [DRONE_HUBS[1], DRONE_HUBS[2]]);
+  DRONE_HUBS.forEach(([x, y], i) => {
+    out.push(ring(x, y, 15)); // the rotor guard
+    const a = ((28 + 47 * i) * Math.PI) / 180;
+    const dx = 11.5 * Math.cos(a);
+    const dy = 11.5 * Math.sin(a) * 0.92;
+    out.push([
+      [x - dx, y - dy],
+      [x + dx, y + dy],
+    ]); // the two-blade prop
+    out.push(ring(x, y, 1.8, 0, 360, 10)); // the motor
+    // two spin ticks outside the guard (the props are turning)
+    const s = i % 2 ? -1 : 1;
+    out.push(ring(x, y, 18.5, 200 + 90 * i, 200 + 90 * i + 38 * s, 8));
+    out.push(ring(x, y, 18.5, 20 + 90 * i, 20 + 90 * i + 38 * s, 8));
+  });
+  // the body (a rounded box) and its camera
+  const bx = 50;
+  const by = 40;
+  const body: [number, number][] = [];
+  const hw = 13;
+  const hh = 9;
+  const r = 3;
+  const corner = (cx: number, cy: number, from: number) =>
+    Array.from({ length: 5 }, (_, i) => {
+      const a = ((from + 22.5 * i) * Math.PI) / 180;
+      return [cx + r * Math.cos(a), cy + r * Math.sin(a)] as [number, number];
+    });
+  body.push(
+    ...corner(bx + hw - r, by - hh + r, -90),
+    ...corner(bx + hw - r, by + hh - r, 0),
+    ...corner(bx - hw + r, by + hh - r, 90),
+    ...corner(bx - hw + r, by - hh + r, 180),
+  );
+  body.push(body[0]);
+  out.push(body);
+  out.push([
+    [bx - 7, by - 3],
+    [bx + 7, by - 3],
+  ]); // the flight board's edge
+  out.push(ring(bx, by + hh + 4.5, 3.6, 0, 360, 16)); // the camera
+  return out;
+}
+const DRONE_LOCAL = droneLocalPolys();
+
+/** The drone sketch as one path in plate pixels, inside `box` on the quad. */
+function dronePath(q: Q, box: Box): string {
+  return DRONE_LOCAL.map((pts) =>
+    poly(
+      pts.map(([x, y]) =>
+        onBoard(q, box.u0 + (box.u1 - box.u0) * (x / 100), box.v0 + (box.v1 - box.v0) * (y / 80)),
+      ),
+    ),
+  ).join("");
+}
+
+/** THE HOMEMADE DRONE chalked on the ICE board (both card variants). `draw`
+ *  0–1 chalks it in (live); static → drawn, non-scaling strokes. */
+export function BoardDrone({
+  plate,
+  box = DRONE_ON_BOARD,
+  draw,
+  live,
+}: {
+  plate: Plate;
+  box?: Box;
+  draw?: MotionValue<number>;
+  live: boolean;
+}) {
+  const q = boardQuad(plate);
+  if (!q) return null;
+  const d = dronePath(q, box);
+  const chalk = plate.asset.width * 0.0021;
+  return (
+    <svg
+      viewBox={plateViewBox(plate)}
+      preserveAspectRatio="none"
+      focusable="false"
+      className="pointer-events-none absolute inset-0 size-full"
+      fill="none"
+      stroke="var(--w-chalk)"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      data-board-art="drone"
+    >
+      {live && draw ? (
+        <>
+          <DrawPath d={d} progress={draw} strokeWidth={chalk} strokeOpacity={0.92} />
+          <g transform={`translate(${f1(chalk * 0.55)} ${f1(-chalk * 0.4)})`}>
+            <DrawPath d={d} progress={draw} strokeWidth={chalk * 0.45} strokeOpacity={0.32} />
+          </g>
+        </>
+      ) : (
+        <>
+          <path d={d} strokeWidth={2.4} strokeOpacity={0.92} vectorEffect="non-scaling-stroke" />
+          <path
+            d={d}
+            transform={`translate(${f1(chalk * 0.55)} ${f1(-chalk * 0.4)})`}
+            strokeWidth={1}
+            strokeOpacity={0.32}
+            vectorEffect="non-scaling-stroke"
+          />
+        </>
+      )}
+    </svg>
+  );
+}
 /** The dimension line under the Line (Line space). */
 const DIM_Y = LINE_VIEWBOX.h - 24;
 const DIM_X0 = 40;
@@ -140,6 +274,8 @@ export function BoardFig({
 
   return (
     <>
+      {/* THE HOMEMADE DRONE, chalked in with the FIG (left third) */}
+      <BoardDrone plate={plate} draw={fig} live={live} />
       <svg
         viewBox={plateViewBox(plate)}
         preserveAspectRatio="none"

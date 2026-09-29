@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import type { VariantChoice } from "@/lib/variants";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { Rise } from "@/components/site/world-motion";
+import type { ReactNode } from "react";
 import { JackCompass, type CompassLid } from "@/components/worlds/pirates/jack-compass";
 
 /* ============================================================================
@@ -48,7 +49,14 @@ const RAYS = HEADINGS.map((deg) => {
   return { line: `M${p(66)} L${p(104)}`, dot: p(104).split(" ").map(Number) as [number, number] };
 });
 
-export function AboutPillars({ choice }: { choice: VariantChoice }) {
+export function AboutPillars({
+  choice,
+  caption = null,
+}: {
+  choice: VariantChoice;
+  /** cap.about (server-rendered), shown under the compass below lg. */
+  caption?: ReactNode;
+}) {
   const variant = useVariant(choice, "about.compass");
   const reduced = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
@@ -130,9 +138,14 @@ export function AboutPillars({ choice }: { choice: VariantChoice }) {
         {/* the CASE centre on the cross: the lid rises above it
             (-63.89 % = CASE_CENTER of the compass box, 92 / 144) */}
         <div className="lg:absolute lg:left-0 lg:top-0 lg:-translate-x-1/2 lg:-translate-y-[63.89%]">
-          <JackCompass heading={heading} lid={lid} huntOnEnter={!alt} className="w-24 lg:w-[120px]" />
+          {/* ≥ 140 px (M2 critic 3 #11: at 75–120 px the caption named a
+              compass too small to find) */}
+          <JackCompass heading={heading} lid={lid} huntOnEnter={!alt} className="w-36" />
         </div>
       </div>
+      {/* below lg the compass leads the list, so its caption sits right
+          UNDER it (the head's copy of it is lg only) */}
+      {caption ? <div className="mb-tier-block lg:hidden">{caption}</div> : null}
       <ol
         ref={listRef}
         aria-label="Four operating pillars"

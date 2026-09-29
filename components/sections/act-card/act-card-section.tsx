@@ -193,18 +193,18 @@ export function fireBefore(item: ActCardItem): readonly [number, number] | null 
   return a ? markOf(a.id, "fire") : null;
 }
 
-/** The previous section's still plate as that variant shows it (Voices:
- *  `media` = iconic-camp; its ALT view shows `altMedia` = MV-11, else the
- *  plate's registered alt) — the OUTGOING picture the ignite card holds
- *  while its embers rise (T10, ART-DIRECTOR #6). null → no camp plate. */
+/** The previous section's LIT camp plate for that variant (Voices: `media`
+ *  = iconic-camp, its registered alt iconic-camp-alt) — the OUTGOING
+ *  picture the ignite card holds while its embers rise (T10, ART-DIRECTOR
+ *  #6). Both variants start on the lit camp (M2 critic 3 #3: the ALT used
+ *  Voices' night plate MV-11, whose upper half is black, so the card entered
+ *  on an empty frame with "THE CAMPFIRE" over nothing). null → no camp. */
 function campBefore(item: ActCardItem, v: Variant): MediaId | null {
   const i = enabledSections.findIndex((s) => s.id === item.before);
   const prev = i > 0 ? enabledSections[i - 1] : null;
-  const props = prev ? (prev.props as { media?: unknown; altMedia?: unknown }) : null;
-  const pick = (m: unknown) => (typeof m === "string" && isMediaId(m) ? m : null);
-  const media = pick(props?.media);
-  const alt = v === "alt" ? pick(props?.altMedia) : null;
-  const id = alt ? usable(alt) : variantMedia(media ?? undefined, v);
+  const props = prev ? (prev.props as { media?: unknown }) : null;
+  const media = typeof props?.media === "string" && isMediaId(props.media) ? props.media : null;
+  const id = variantMedia(media ?? undefined, v);
   return id && resolveMedia(id)?.kind === "image" ? id : null;
 }
 
@@ -405,8 +405,8 @@ export function ActCardSection({
       frame = <TintypeFrame plate={plate} />;
       const deadeye = variantMedia(spec.media.cardAltStill, "default") ?? variantMedia(spec.media.cardStill, "alt");
       altFrame = <TintypeDeadEyeFrame plate={deadeye} />;
-      // the plate develops over p .15–.7: its caption comes up with it
-      captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.4, 0.55] }));
+      // the plate develops over p .25–.82: its caption comes up with it
+      captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.5, 0.66] }));
       altCaptions = cues(cue(settledKey("cap.act-3", "alt"), { in: [0.3, 0.45] }));
       break;
     }
@@ -454,7 +454,8 @@ export function ActCardSection({
       fromGround={kind === "ignite" ? item.from : null}
       prevGround={kind === "opening" || same(prev, item.to) ? null : prev}
       nextGround={same(next, item.to) ? null : next}
-      featherUp={kind === "opening"}
+      // the hero draws its own feather now, under cap.hero (hero-stage.tsx)
+      featherUp={false}
       upperLeft={upperLeft}
       upperRight={kind === "opening" ? undefined : item.reel}
       film={filmTitle}

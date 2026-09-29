@@ -132,6 +132,11 @@ function ChapterBody({
       {/* the ICE board: the real system as a Rancho-style blueprint */}
       {s ? (
         <Rise className="mt-tier-block">
+          {/* the board is NAMED as it comes into view — above it, not under
+              it a screen later (M2 fix round 3, blind D26: the chapter's
+              first view showed the board with no film cue); never beside a
+              metric */}
+          {isOptuna ? null : <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />}
           <ChalkboardFrame>
             <BlueprintSchematic
               fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
@@ -140,8 +145,7 @@ function ChapterBody({
               pieceKey={`${entry.id}.schematic`}
             />
           </ChalkboardFrame>
-          {/* the pipeline's film cue is its head band (MachineBoard) */}
-          {isOptuna ? null : <SceneCaption k="cap.trading-algos" place="under" className="mt-tier-group" />}
+          {/* (the pipeline's film cue is its head band, MachineBoard) */}
         </Rise>
       ) : null}
 

@@ -566,13 +566,13 @@ const captions = {
   /* Card I→II + Act II · idiots */
   "cap.act-2.out": { world: "pirates", moment: moment("THE KRAKEN’S STORM"), variant: "both", place: "br", where: "card I→II outgoing half, p .1–.35 (O-7)" },
   "cap.act-2": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "default", place: "br", where: "card I→II settled (iconic-ice)" },
-  "cap.act-2.alt": { world: "idiots", moment: moment("THE ICE BOARD, WIPED CLEAN"), variant: "alt", place: "br", where: "card I→II settled (duster over iconic-ice-alt)" },
+  "cap.act-2.alt": { world: "idiots", moment: moment("THE HOMEMADE DRONE, CHALKED AT ICE"), variant: "alt", place: "br", where: "card I→II settled (the duster wipes the storm off iconic-ice-alt; the drone in chalk under it)" },
   // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
-  "cap.work.head": { world: "idiots", moment: moment("THE CORRIDORS OF ICE"), variant: "both", place: "bl", where: "work head band, calm left (iconic-corridor / -alt)" },
+  "cap.work.head": { world: "idiots", moment: moment("THE ASTRONAUT PEN ON VIRUS’S DESK"), variant: "both", place: "bl", where: "work head band, calm dark left (iconic-pen-alt; ALT iconic-pen)" },
   "cap.work.head.standin": { world: "idiots", moment: moment("THE LECTURE HALL AT ICE"), variant: "both", place: "bl", where: "work head band while iconic-corridor is planned (stand-in iconic-ice-alt / iconic-ice)" },
   // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
   "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
-  "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "under", where: "under the Trading_Algos chalkboard panel (never beside a metric)" },
+  "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "head", where: "above the Trading_Algos chalkboard panel, naming it as it enters (never beside a metric)" },
   // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself
   "cap.optuna-screener": { world: "idiots", moment: moment("WHAT IS A MACHINE?"), variant: "both", place: "bl", where: "optuna-screener head band (iconic-ice-alt / iconic-ice), before the chapter's facts" },
   "cap.systems": { world: "idiots", moment: moment("THE HOMEMADE DRONE"), variant: "both", place: "bl", where: "systems band (iconic-drone); names no character" },
@@ -587,7 +587,7 @@ const captions = {
   "cap.films.hp": { world: "hp", moment: moment("THE HOGWARTS EXPRESS"), variant: "default", place: "under", where: "films screen (iconic-express)" },
   "cap.films.hp.alt": { world: "hp", moment: moment("FLOATING CANDLES AND ENCHANTED INK"), variant: "alt", place: "under", where: "films screen (F-HP)" },
   /* Card II→III + Act III · rdr2 */
-  "cap.act-3": { world: "rdr2", moment: moment("THE HEARTLANDS AT GOLDEN HOUR"), variant: "default", place: "br", where: "card II→III settled (MV-10)" },
+  "cap.act-3": { world: "rdr2", moment: moment("GOLDEN HOUR IN THE HEARTLANDS"), variant: "default", place: "br", where: "card II→III settled (MV-10)" },
   "cap.act-3.alt": { world: "rdr2", moment: moment("DEAD EYE"), variant: "alt", place: "br", where: "card II→III settled (iconic-deadeye + the X marks)" },
   "cap.beyond": { world: "rdr2", moment: moment("THE HEARTLANDS"), variant: "both", place: "bl", where: "beyond band (MV-10 / MV-10m)" },
   "cap.beyond.satchel": { world: "rdr2", moment: moment("WHAT’S IN THE SATCHEL"), variant: "both", place: "head", where: "Creative block head" },

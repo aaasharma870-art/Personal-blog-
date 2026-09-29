@@ -270,9 +270,11 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Work", primary: true },
-    // head: THE CORRIDORS OF ICE (iconic-corridor, planned → the lecture
-    // hall stand-in, iconic-ice-alt, until the plate lands)
-    props: { board: "MV-06", head: { media: "iconic-corridor", standInMedia: "iconic-ice-alt" } },
+    // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
+    // "generic architecture"): Virus's astronaut pen on his desk — the
+    // OTHER pen plate from the kill-list's (platePick swaps sides per
+    // variant, so the two sections never show the same picture in one view)
+    props: { board: "MV-06", head: { media: "iconic-pen-alt" } },
   },
   {
     id: "trading-algos",

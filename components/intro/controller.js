@@ -764,7 +764,10 @@
       vPlaying = true;
       v.style.opacity = "1";
       showPlate = false; // the video's first frame IS the plate
-      capsPlay((v.duration > 0 ? M.min(v.duration, FL.dur) : FL.dur) * 1000);
+      // the captions run on the flight's own length (to its cut + landing)
+      var len = v.duration > 0 ? M.min(v.duration, FL.dur) : FL.dur;
+      if (FL.cut > 0) len = M.min(len, FL.cut + (altLand ? C.t.fold : C.t.landing) / 1000);
+      capsPlay(len * 1000);
       kick();
     };
     v.addEventListener("playing", function () {
@@ -808,7 +811,13 @@
     var v = video;
     if (!vPlaying || !v) return;
     var vd = v.duration > 0 ? v.duration : FL.dur;
-    if (v.currentTime >= vd - (altLand ? C.t.fold : C.t.landing) / 1000) landing();
+    // a clip with a `cut` hands off there (IN-02-alt: before the splash-down)
+    var at = FL.cut > 0 ? M.min(FL.cut, vd) : vd - (altLand ? C.t.fold : C.t.landing) / 1000;
+    if (v.currentTime >= at) landing();
+  }
+  /** At a cut, the clip holds its last clean frame under the landing. */
+  function holdCut() {
+    if (FL && FL.cut > 0 && video) try { video.pause(); } catch { /* gone */ }
   }
 
   /** S3: the left → right mask dissolve; the name zone clears first (I14).
@@ -817,6 +826,7 @@
   function landing() {
     if (st !== "flight") return;
     setState("landing");
+    holdCut();
     if (altLand) return fold();
     mark("landing");
     R.classList.add("intro-landing", "intro-sweep");

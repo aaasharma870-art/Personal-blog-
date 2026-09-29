@@ -120,13 +120,19 @@ const GATE_CLOSED = "linear-gradient(transparent, transparent)";
 const PUSH_S = 2.2;
 /** Pointer shift cap (px) and the scroll-out map (hero-lens.BAR S4). */
 const SHIFT_PX = 6;
+// Every map spans the WHOLE 0–1 range: motion hands an opacity map straight
+// to a scroll-driven WAAPI animation (a ViewTimeline), and keyframes that
+// stop short of offset 1 get an implicit last keyframe at the UNDERLYING
+// value — so a caption mapped [.25, .55] → [1, 0] came BACK up after .55
+// (the ~15 % "ghost" over the Act I card, M2 critic 3 #10; probed: .29 at
+// exit .5 with [.1, .3]).
 const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", { at: number[]; to: number[] }> = {
-  scale: { at: [0, 0.2, 0.7], to: [1, 1.03, 1.08] },
-  mediaY: { at: [0.2, 0.7], to: [0, -24] },
-  textY: { at: [0.2, 0.7], to: [0, -16] },
-  darken: { at: [0.7, 1], to: [0, 1] },
+  scale: { at: [0, 0.2, 0.7, 1], to: [1, 1.03, 1.08, 1.08] },
+  mediaY: { at: [0, 0.2, 0.7, 1], to: [0, 0, -24, -24] },
+  textY: { at: [0, 0.2, 0.7, 1], to: [0, 0, -16, -16] },
+  darken: { at: [0, 0.7, 1], to: [0, 0, 1] },
   // cap.hero leaves before the Act I card's film title arrives below it
-  caption: { at: [0.25, 0.55], to: [1, 0] },
+  caption: { at: [0, 0.1, 0.3, 1], to: [1, 1, 0, 0] },
 };
 
 export type HeroPlate = {
@@ -725,6 +731,11 @@ export function HeroStage({
             ) : null}
           </motion.div>
         </Lens>
+        {/* the hero sea sinks into the Act I card's deep over its last 18vh
+            (the same plane): drawn HERE, under the text column and cap.hero,
+            so the feather never dims the caption (M2 critic 3 #5 — it used to
+            be painted by the card, over the whole hero stack) */}
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[18vh] bg-[linear-gradient(to_bottom,transparent,var(--bg))]" />
       </div>
 
       {/* — The text column (server-rendered; the h1 never animates) — */}

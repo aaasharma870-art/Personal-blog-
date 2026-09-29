@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -234,11 +235,17 @@ export function JournalSpread({
   entries,
   choice,
   caption,
+  head,
 }: {
   entries: readonly JournalEntry[];
   choice: VariantChoice;
   /** cap.writing (place "head"), server-rendered: on the left page above ENTRY I. */
   caption?: ReactNode;
+  /** The section head (Meta + h2 + lead), set at the top of the LEFT page so
+   *  the right page — the frontier sketch — opens beside it, in the
+   *  section's first view (M2 fix round 3, blind D36: the sketch sat a
+   *  screen lower, the first view was blank paper). */
+  head?: ReactNode;
 }) {
   const v = useVariant(choice, RD_PIECES.journal);
   const reduced = useReducedMotion();
@@ -273,11 +280,12 @@ export function JournalSpread({
 
   return (
     <div
-      className="mt-tier-block lg:grid lg:grid-cols-2 lg:gap-x-[calc(var(--spacing-gutter)*2)]"
+      className={cn("lg:grid lg:grid-cols-2 lg:gap-x-[calc(var(--spacing-gutter)*2)]", !head && "mt-tier-block")}
       data-piece={RD_PIECES.journal}
       data-variant={v}
     >
       <div className="min-w-0">
+        {head ? <div className="mb-tier-block">{head}</div> : null}
         {caption ? <div className={s.journalCaption}>{caption}</div> : null}
         <ol
           ref={listRef}

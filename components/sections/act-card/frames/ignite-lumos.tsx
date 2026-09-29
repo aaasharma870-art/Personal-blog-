@@ -23,8 +23,9 @@ import { FRAME_ASPECT, PlateBox, plateOf } from "@/components/sections/act-card/
  * on a desktop fine pointer; everything a pure function of p, reversible
  * and pixel-identical on return):
  *   0–.6     THE CAMP holds, as in the default (M2 ART-DIRECTOR #6): the
- *            Voices ALT's own plate (MV-11, the campfire under the stars)
- *            fills the frame and sinks into the hp deep over .3–.6, its
+ *            lit camp (iconic-camp-alt: tents, horses, the fire — M2 critic
+ *            3 #3; MV-11's black upper half left the entering card empty)
+ *            fills the frame and sinks into the hp deep over .3–.62, its
  *            fire glowing until ≈ .45; the rd → hp ground crossfade
  *            (CardShell `fromGround`); the hall's candles appear unlit
  *            (faint ink tapers). (No camp plate: a code campfire at the

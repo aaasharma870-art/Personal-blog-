@@ -7,14 +7,18 @@ const man = JSON.parse(fs.readFileSync(MANF, 'utf8'));
 const byFrame = Object.fromEntries(man.map(m => [m.frame, m]));
 const J = [1, 2, 3].map(i => { try { return JSON.parse(fs.readFileSync(`${VPRE}${i}.json`, 'utf8')); } catch { return []; } });
 const norm = f => /harry/i.test(f) ? 'hp' : /pirat/i.test(f) ? 'pirates' : /idiot/i.test(f) ? 'idiots' : /red dead|rdr/i.test(f) ? 'rdr2' : '??';
-const intended = w => w.startsWith('hp→') ? 'hp' : w.startsWith('house') ? null : w.startsWith('idiots') ? 'idiots' : w;
+// 'idiots(no film styling)' (the experiment) carries NO film by rule H4: n/a.
+// A hand-off beat ('hp→pirates', the flight's cross-dissolve) is intended as
+// BOTH films: a verdict naming either is correct, neither is "wrong-film".
+const intended = w => w.includes('no film styling') ? null : w === 'hp→pirates' ? 'hp|pirates' : w.startsWith('house') ? null : w.startsWith('idiots') ? 'idiots' : w;
+const matches = (f, want) => want.split('|').includes(f);
 const rows = [];
 for (const [jid, frame] of Object.entries(key)) {
   const m = byFrame[frame] || {};
   const want = intended(m.world || '');
   const vs = J.map(j => j.find(v => v.frame === jid));
-  const ok = vs.filter(v => v && norm(v.film) === want && v.confidence >= 0.6).length;
-  const wrong = vs.filter(v => v && norm(v.film) !== '??' && norm(v.film) !== want && v.confidence >= 0.5).length;
+  const ok = want ? vs.filter(v => v && matches(norm(v.film), want) && v.confidence >= 0.6).length : 0;
+  const wrong = want ? vs.filter(v => v && norm(v.film) !== '??' && !matches(norm(v.film), want) && v.confidence >= 0.5).length : 0;
   rows.push({ jid, frame, world: m.world, mode: m.mode, moment: m.moment, want, ok, wrong, pass: want ? ok >= 2 : null,
     v: vs.map(v => v ? `${norm(v.film)} ${(+v.confidence).toFixed(2)}` : '—'), why: vs[0]?.why || '' });
 }

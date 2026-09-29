@@ -53,10 +53,8 @@ import { PlateBox, plateOf } from "@/components/sections/act-card/plate";
 
 const { VB, PLATE, TRAIL_BOX } = TINTYPE;
 const TRAIL = fitPath(LINE_D, TRAIL_BOX);
-const HACHURES = Array.from({ length: 6 }, (_, k) => {
-  const q = fitPoint(LINE.at((k + 0.55) / 6.3), TRAIL_BOX);
-  return `M${(q.x - 26).toFixed(1)} ${(q.y + 20).toFixed(1)}q26 -15 52 0`;
-}).join("");
+// (no hachure arcs: on the red plate they floated as grey scribbles — M2
+// critic 3 #6; the Line, the ticks and the marks carry the frame)
 
 /** The four act points on the Line (I–IV) and their lock windows. */
 const ACTS = [0.14, 0.38, 0.62, 0.86].map((f, k) => {
@@ -141,7 +139,6 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
         fill="none"
         strokeLinecap="round"
       >
-        <path d={HACHURES} stroke="var(--w-pencil)" strokeWidth={1} vectorEffect="non-scaling-stroke" opacity={0.6} />
         <DrawPath d={TRAIL} progress={trail} stroke="var(--w-bone)" strokeOpacity={0.8} strokeWidth={1.3} />
         {ACTS.map((a, k) => (
           <ActMark key={k} act={a} p={p} trail={trail} />

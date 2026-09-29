@@ -1,12 +1,11 @@
 "use client";
 
-import { useId, useRef } from "react";
-import { motion, useTransform, type MotionValue } from "motion/react";
+import { useId } from "react";
+import { motion, useTransform } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { DrawPath, useSvgAttr } from "@/components/primitives/loaders/kit";
+import { DrawPath } from "@/components/primitives/loaders/kit";
 import { LINE, LINE_D, fitPath, fitPoint, remap, type Box as LineBox } from "@/components/primitives/loaders/line";
-import { useDevelopNoise } from "@/components/primitives/loaders/noise";
 import { SUN_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
 import {
@@ -33,18 +32,17 @@ import {
  *           THE PLATE'S OWN SUN (the plate's `sun` anchor); the Line is
  *           re-traced as a graphite trail across 6 hachure arcs,
  *           pathLength = remap(p, 0, .25).
- *   .15–.7  the frame darkens into a tintype plate (R-2: 6 px radius,
- *           grayscale + .45 sepia, an inset darkening vignette) that
- *           DEVELOPS into the frontier: MV-10, the Heartlands at golden
- *           hour — a riderless horse, the river, the ridges under the low
- *           sun — through our own procedural ink-bleed mask whose threshold
- *           = remap(p, .15, .7) (never Lee Martin's sprite sheet): at the
- *           middle (p .5) two-thirds of the frontier is up, sepia just
- *           warming to gold, the sinking sun still over it. The sun sprite
- *           hands over to the photograph's sun as it develops (.4–.65); the
- *           hachure arcs (pencil scaffolding) fade as the photograph takes
- *           their place.
- *   .38–.8  the plate FIXES: the sepia lifts into golden-hour colour
+ *   .25–.82 the frame is a tintype plate (R-2: 6 px radius, grayscale +
+ *           .45 sepia, an inset darkening vignette) that DEVELOPS into the
+ *           frontier: MV-10, the Heartlands at golden hour — a riderless
+ *           horse, the river, the ridges under the low sun. The plate is a
+ *           LATENT print under an rd-deep cover that clears evenly (M2
+ *           critic 3 #4: the old procedural ink-bleed blobs read as dirt;
+ *           never Lee Martin's sprite sheet), while the frame comes into
+ *           view. The sun sprite hands over to the photograph's sun as it
+ *           develops (.45–.72); the hachure arcs (pencil scaffolding) fade
+ *           as the photograph takes their place.
+ *   .45–.88 the plate FIXES: the sepia lifts into golden-hour colour
  *           (opacity only: the sepia print lies over the colour print), and
  *           the --w-bone plate border draws (.7–.95).
  * The settled / static card IS the Heartlands in colour — blind, a
@@ -79,9 +77,15 @@ const HACHURES = Array.from({ length: 6 }, (_, k) => {
   const q = fitPoint(LINE.at((k + 0.55) / 6.3), TRAIL_BOX);
   return `M${(q.x - 26).toFixed(1)} ${(q.y + 20).toFixed(1)}q26 -15 52 0`;
 }).join("");
-/** The develop window (p): it starts as the sun reaches the horizon and is
- *  two-thirds done at the transition's middle (p = .5). */
-const DEVELOP = { from: 0.15, to: 0.7 };
+/** The develop window (p): it runs while the FRAME comes into view — the
+ *  frame's top enters at p ≈ .22 and it is whole on screen from p ≈ .84 —
+ *  so the reader watches it develop (M2 critic 3 #4: at .15–.7 most of it
+ *  played below the fold). Act III stays a 0-travel card: the pinned-card
+ *  budget is spent (validator #3, SPEC D-5: ≤ 2 long cards). */
+const DEVELOP = { from: 0.25, to: 0.82 };
+/** The undeveloped plate is a LATENT image under the cover (never solid
+ *  black): the cover's opacity where the plate has not developed yet. */
+const LATENT_COVER = 0.8;
 /** The low sun with no plate (the code frontier): from above the horizon
  *  (the warm point) down to it, in frame fractions. */
 export const SUN = { x: 0.78, from: 0.12, to: 0.36, size: 0.075 };
@@ -97,12 +101,6 @@ export function sunInFrame(plate: Plate | null): Pos {
   return [(PLATE.x + q[0] * PLATE.w) / VB.w, (PLATE.y + q[1] * PLATE.h) / VB.h];
 }
 
-/** feColorMatrix mapping grey noise to "NOT yet developed" (white) for a
- *  developed fraction ≈ q (the inverse of noise.ts thresholdMatrix). */
-function undevelopedMatrix(q: number): string {
-  const c = (7 - 7 * Math.min(1, Math.max(0, q))).toFixed(3);
-  return `-6 0 0 0 ${c} 0 -6 0 0 ${c} 0 0 -6 0 ${c} 0 0 0 1 0`;
-}
 
 const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
 export const PLATE_STYLE = {
@@ -116,23 +114,25 @@ export const BORDER_D = `M${PLATE.x + PLATE.r} ${PLATE.y}H${PLATE.x + PLATE.w - 
 export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
   const { p, live } = useCard();
   const ids = useId();
-  const noise = useDevelopNoise(64, 26);
   const plate = plateOf(id);
   const sun = sunInFrame(plate);
   const sunFrom = Math.max(-0.08, sun[1] - 0.24);
 
   const trail = useTransform(p, (v) => remap(v, 0, 0.25));
   const develop = useTransform(p, (v) => remap(v, DEVELOP.from, DEVELOP.to));
-  const border = useTransform(p, (v) => remap(v, 0.7, 0.95));
+  const border = useTransform(p, (v) => remap(v, 0.78, 0.97));
   // the sun sinks by transform (the wrapper is frame-sized, so % = frame)
   const sunY = useTransform(p, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, 0.22)) * 100).toFixed(3)}%`);
   // …and hands over to the photograph's own sun as the plate develops
-  const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.4, 0.65) : 1));
-  const coverOpacity = useTransform(develop, (d) => (d >= 1 ? 0 : 1));
+  const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.45, 0.72) : 1));
+  const cover = useTransform(develop, (d) => LATENT_COVER * (1 - d * d * (3 - 2 * d)));
   // fixed: the sepia print lifts off the colour print
-  const sepia = useTransform(p, (v) => 1 - remap(v, 0.38, 0.8));
+  const sepia = useTransform(p, (v) => 1 - remap(v, 0.45, 0.88));
   // the pencil scaffolding gives way to the photograph
-  const hachures = useTransform(p, (v) => 0.6 * (1 - remap(v, 0.35, 0.65)));
+  const hachures = useTransform(p, (v) => 0.6 * (1 - remap(v, 0.3, 0.55)));
+  // the graphite trail recedes once the print is fixed: a faint thread on
+  // the grass, not a bright swoosh across it (M2 critic 3 #6)
+  const trailOpacity = useTransform(p, (v) => 1 - 0.72 * remap(v, 0.6, 0.9));
 
   return (
     <div aria-hidden="true" data-frame="tintype" className="absolute inset-0">
@@ -157,35 +157,11 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
         </motion.div>
       ) : null}
       <div className="absolute overflow-hidden rounded-[6px]" style={PLATE_STYLE}>
-        {/* not yet developed: an rd-deep cover with holes where the plate has
-            developed (our procedural ink-bleed mask; live only) */}
-        {live && noise ? (
-          <motion.svg
-            viewBox={`0 0 ${PLATE.w} ${PLATE.h}`}
-            preserveAspectRatio="none"
-            focusable="false"
-            className="absolute inset-0 size-full"
-            style={{ opacity: coverOpacity }}
-          >
-            <defs>
-              <filter id={`${ids}f`} x="0" y="0" width="1" height="1" colorInterpolationFilters="sRGB">
-                <Matrix q={develop} />
-              </filter>
-              <mask id={`${ids}m`} maskUnits="userSpaceOnUse" x="0" y="0" width={PLATE.w} height={PLATE.h}>
-                <image
-                  href={noise}
-                  x="0"
-                  y="0"
-                  width={PLATE.w}
-                  height={PLATE.h}
-                  preserveAspectRatio="none"
-                  filter={`url(#${ids}f)`}
-                />
-              </mask>
-            </defs>
-            <rect width={PLATE.w} height={PLATE.h} fill="var(--bg)" mask={`url(#${ids}m)`} />
-          </motion.svg>
-        ) : null}
+        {/* not yet developed: the plate is a LATENT print under an rd-deep
+            cover that clears as it develops — evenly, never a few solid blobs
+            that read as dirt (M2 critic 3 #4; the procedural ink-bleed mask
+            was retired). Live only. */}
+        {live ? <motion.div className="absolute inset-0 bg-bg" style={{ opacity: cover }} /> : null}
         <span className="act-tintype-vignette pointer-events-none absolute inset-0 opacity-70" />
       </div>
 
@@ -224,12 +200,14 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
               vectorEffect="non-scaling-stroke"
               style={{ opacity: hachures }}
             />
-            <DrawPath d={TRAIL} progress={trail} stroke="var(--w-pencil)" strokeWidth={1.3} />
+            <motion.g style={{ opacity: trailOpacity }}>
+              <DrawPath d={TRAIL} progress={trail} stroke="var(--w-pencil)" strokeWidth={1.3} />
+            </motion.g>
             <DrawPath d={BORDER_D} progress={border} stroke="var(--w-bone)" strokeWidth={0.9} />
           </>
         ) : (
           <>
-            <path d={TRAIL} stroke="var(--w-pencil)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" />
+            <path d={TRAIL} stroke="var(--w-pencil)" strokeOpacity={0.28} strokeWidth={1.3} vectorEffect="non-scaling-stroke" />
             <rect
               x={PLATE.x}
               y={PLATE.y}
@@ -310,9 +288,3 @@ export function FrontierGround({ id }: { id: string }) {
   );
 }
 
-/** The develop threshold, written to the filter per frame (no re-render). */
-function Matrix({ q }: { q: MotionValue<number> }) {
-  const ref = useRef<SVGFEColorMatrixElement>(null);
-  const initial = useSvgAttr(ref, q, "values", undevelopedMatrix);
-  return <feColorMatrix ref={ref} type="matrix" values={initial} />;
-}

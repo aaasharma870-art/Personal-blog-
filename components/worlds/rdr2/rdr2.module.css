@@ -44,8 +44,9 @@
 .bandLayer {
   position: absolute;
   inset: 0;
-  /* the push rides toward the low sun (MV-10 focal .78/.45) */
-  transform-origin: 78% 45%;
+  /* the push rides in toward the river and the horse under the low sun
+     (M2 critic 3 #9: the band opens closer than the card's plate) */
+  transform-origin: 70% 56%;
 }
 /* RD-P5 dark foreground: a deep feather under the head (left 55%), the
    card's deep at the top edge, the rd canvas at the bottom edge. */

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { JacksCompass } from "@/components/primitives/loaders/compass";
 import { LINE, LINE_D, fitPath, fitPoint, measurePath, type Box } from "@/components/primitives/loaders/line";
 import { FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
-import { EMBER_SPRITE, FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE } from "@/components/primitives/loaders/sprites-rd";
+import { EMBER_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
 import { filmMark } from "@/components/sections/films/plate-marks";
 
@@ -36,8 +36,8 @@ import { filmMark } from "@/components/sections/films/plate-marks";
               chalk white (1 px board-dark halo) across the lake's sky; ONE
               chalk circle closes on the last gate.
      rdr2     a dashed graphite map route follows the hill below its brow
-              to a campfire on its shoulder that kindles (3 fire frames +
-              2 embers: 5 sprites).
+              to a campfire on its shoulder that kindles (a small ember
+              glow + 2 rising embers: 4 sprites).
      hp       LD-HP complete: the ink Line draws while a cool light (the
               Lumos sprite) travels it (1.4 s), then ONE warm point lights at
               the Line's start — the point Card II→III sinks into its sun.
@@ -86,7 +86,9 @@ function PlateSvg({ aspect, children, className }: { aspect: number; children: R
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
       focusable="false"
-      className={cn("pointer-events-none absolute inset-0 size-full overflow-visible", className)}
+      // clipped to the frame: nothing a finale draws may run off the plate
+      // into the page (M2 critic 3 #6: the compass course ended below it)
+      className={cn("pointer-events-none absolute inset-0 size-full overflow-hidden", className)}
       fill="none"
     >
       {children}
@@ -216,12 +218,14 @@ function PiratesChart({ mode, W, stillId }: { mode: FinaleMode; W: number; still
 
 /* — 3 IDIOTS ——————————————————————————————————————————————————————————— */
 
-/** A blueprint gate: two posts, an overhanging lintel, a tie beam, a finial. */
+/** A chalk gate: two posts and a flush crossbar — a validation HURDLE, not
+ *  a shrine gate (the overhanging lintel + tie beam + finial read as a row
+ *  of torii on the sky, M2 critic 3 #6). */
 function gatePath(x: number, base: number, w: number, h: number): string {
   const l = x - w / 2;
   const r = x + w / 2;
   const t = base - h;
-  return `M${l} ${base} L${l} ${t} M${r} ${base} L${r} ${t} M${l - 8} ${t} L${r + 8} ${t} M${l} ${t + 16} L${r} ${t + 16} M${x} ${t} L${x} ${t - 12}`;
+  return `M${l} ${base} L${l} ${t} L${r} ${t} L${r} ${base}`;
 }
 
 /** A hand-drawn chalk loop that overshoots its start (Rancho's circle). */
@@ -278,10 +282,10 @@ function IdiotsGates({ mode, W, gates }: { mode: FinaleMode; W: number; gates: n
   // (width + 2) so they hold on the bright sky and on the lake alike.
   return (
     <g data-finale="idiots-gates" data-gates={n}>
-      <ChalkStroke d={`M${x0 - 44} ${base} L${x1 + 44} ${base}`} mode={mode} delay={0.45} duration={dur.draw.long} width={1.4} halo={2} haloOpacity={0.55} linecap="square" />
+      <ChalkStroke d={`M${x0 - 44} ${base} L${x1 + 44} ${base}`} mode={mode} delay={0.45} duration={dur.draw.long} width={2} halo={1} haloOpacity={0.35} linecap="square" />
       {xs.map((x, k) => (
         <g key={k} data-gate={k + 1}>
-          <ChalkStroke d={gatePath(x, base, gw, gh)} mode={mode} delay={0.6 + k * 0.14} duration={0.6} width={1.8} halo={2} haloOpacity={0.7} linecap="square" />
+          <ChalkStroke d={gatePath(x, base, gw, gh * 0.72)} mode={mode} delay={0.6 + k * 0.14} duration={0.6} width={2.4} halo={1} haloOpacity={0.35} linecap="square" />
         </g>
       ))}
       <ChalkStroke d={chalkLoop(xs[n - 1], base - gh / 2 - 4, 66, 72)} mode={mode} delay={circleAt} duration={dur.draw.short} />
@@ -326,34 +330,20 @@ function RdrTrail({ mode, W }: { mode: FinaleMode; W: number }) {
   });
   const step = dur.draw.med / DASHES;
   const t0 = 0.45 + dur.draw.med + 0.1;
-  const fw = 58;
-  const fh = 86;
-  const frames = [FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE];
+  // the kindle: a small ember glow SITTING on the hill's shoulder, once —
+  // the old 58 × 86 flame frames read as a glowing vertical smear at card
+  // scale (M2 critic 3 #6)
+  const glow = 30;
+  const core = 12;
   return (
     <g data-finale="rdr2-trail" strokeLinecap="round">
       {dashes.map((d, k) => (
         <motion.path key={k} d={d} stroke="var(--w-pencil)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" {...appear(mode, 0.45 + k * step, 1, 0.12)} />
       ))}
-      {/* the kindle: three flame frames, once, settling on the last */}
-      {frames.map((src, k) => {
-        const last = k === frames.length - 1;
-        return (
-          <motion.g
-            key={k}
-            initial={false}
-            animate={{ opacity: mode === "hidden" ? 0 : last ? 1 : mode === "play" ? [0, 1, 0] : 0 }}
-            transition={
-              mode === "play"
-                ? last
-                  ? { duration: 0.12, delay: t0 + k * 0.16 }
-                  : { duration: 0.34, times: [0, 0.35, 1], delay: t0 + k * 0.16 }
-                : { duration: 0 }
-            }
-          >
-            <image href={src} x={fire.x - fw / 2} y={fire.y - fh + 8} width={fw} height={fh} />
-          </motion.g>
-        );
-      })}
+      <motion.g {...appear(mode, t0, 1, dur.base)}>
+        <image href={EMBER_SPRITE} x={fire.x - glow / 2} y={fire.y - glow / 2 - 2} width={glow} height={glow} />
+        <image href={EMBER_SPRITE} x={fire.x - core / 2} y={fire.y - core / 2 - 2} width={core} height={core} />
+      </motion.g>
       {[0, 1].map((k) => (
         <motion.g
           key={`e${k}`}
@@ -361,7 +351,7 @@ function RdrTrail({ mode, W }: { mode: FinaleMode; W: number }) {
           animate={mode === "play" ? { opacity: [0, 1, 0], y: [0, -40 - k * 22] } : { opacity: 0, y: 0 }}
           transition={mode === "play" ? { duration: 1.3, delay: t0 + 0.3 + k * 0.25, ease } : { duration: 0 }}
         >
-          <image href={EMBER_SPRITE} x={fire.x - 10 + (k ? 14 : -10)} y={fire.y - fh} width={20} height={20} />
+          <image href={EMBER_SPRITE} x={fire.x - 6 + (k ? 10 : -8)} y={fire.y - 30} width={12} height={12} />
         </motion.g>
       ))}
     </g>
@@ -440,8 +430,17 @@ function HpInkLight({ mode, W }: { mode: FinaleMode; W: number }) {
   const warmAt = 0.55 + 1.4;
   return (
     <g data-finale="hp-ink-light" strokeLinecap="round">
-      <motion.path d={d} stroke="var(--w-ink-contour)" strokeOpacity={0.35} strokeWidth={1.2} vectorEffect="non-scaling-stroke" {...appear(mode, 0.4)} />
-      <motion.path d={d} stroke="var(--w-ink-contour)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" style={{ pathLength: p }} />
+      {/* the ink Line is drawn by the light and then SINKS back into the
+          page — at rest only the warm point stays (a gold line left lying on
+          the forest read as a stray squiggle, M2 critic 3 #6) */}
+      <motion.g
+        initial={false}
+        animate={{ opacity: mode === "play" ? [1, 1, 0] : 0 }}
+        transition={mode === "play" ? { duration: warmAt + 0.9, times: [0, 0.75, 1] } : { duration: 0 }}
+      >
+        <motion.path d={d} stroke="var(--w-ink-contour)" strokeOpacity={0.35} strokeWidth={1.2} vectorEffect="non-scaling-stroke" />
+        <motion.path d={d} stroke="var(--w-ink-contour)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" style={{ pathLength: p }} />
+      </motion.g>
       <motion.g style={{ x: lx, y: ly, opacity: lightOpacity }}>
         <image href={LUMOS_SPRITE} width={L} height={L} />
       </motion.g>

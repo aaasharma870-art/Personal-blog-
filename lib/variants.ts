@@ -340,13 +340,13 @@ export const VARIANT_REGISTRY = {
   "work.head": {
     default: {
       name: "slow-settle",
-      note: "A full-bleed 21:9 band (4:3 < 640) of the ICE stone corridor under pergola stripes fades up while settling from 1.07x, captioned THE CORRIDORS OF ICE • 3 IDIOTS. While iconic-corridor is planned it shows the lecture hall (iconic-ice-alt) as THE LECTURE HALL AT ICE.",
-      media: ["iconic-corridor"],
+      note: "A full-bleed 21:9 band (4:3 < 640) of Virus's astronaut pen in its open case on his desk (iconic-pen-alt; the kill-list shows the other pen plate) fades up while settling from 1.07x, captioned THE ASTRONAUT PEN ON VIRUS'S DESK • 3 IDIOTS. (M2 fix round 3: the ICE corridor alone read as generic architecture, blind 3I .40.)",
+      media: ["iconic-pen-alt"],
     },
     alt: {
       name: "light-sweep",
-      note: "The plate comes up from shadow as bars of pergola light rake across it once; same caption (stand-in: iconic-ice).",
-      media: ["iconic-corridor-alt"],
+      note: "The plate (iconic-pen, the kill-list's ALT side) comes up from shadow as one bar of light rakes across it; same caption.",
+      media: ["iconic-pen"],
     },
     files: ["components/worlds/idiots/plate-band.tsx", "components/site/projects.tsx", "components/worlds/idiots/idiots-section.tsx"],
   },

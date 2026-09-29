@@ -84,6 +84,9 @@ import {
  *  around the ship (plate fractions). ≤ 1.2 keeps the crest's bright body
  *  right of the name (MV-01 name zone) and the loop near its native size. */
 const SPYGLASS = { zoom: 1.18, pad: [0.012, 0.018] } as const;
+/** DEFAULT framing: the crest kept within this half-width (plate fraction)
+ *  of the Pearl's centre. */
+const NEAR_SHIP = 0.1;
 
 /** Crest band around the focal point when a plate has no measured
  *  `focalBox` (half-width, half-height in plate fractions). */
@@ -109,7 +112,22 @@ function plateOf(
   const pearl = asset.rects?.pearl ?? null;
   const spy = variant === "alt" && pearl !== null;
   const wide = pearl ? unionBox(crest, pearl) : crest;
-  const box = spy ? padBox(pearl, SPYGLASS.pad[0], SPYGLASS.pad[1]) : wide;
+  // DEFAULT (M2 critic 3 #5): the bracket is centred on the SHIP — the Pearl
+  // and the stretch of crest under it — not the whole crest with the Pearl
+  // pinned in its corner (that read as "a teal wave"). ×1, no push-in: the
+  // ALT keeps the tight spyglass bracket and the zoom.
+  const nearShip = pearl
+    ? unionBox(
+        {
+          x0: Math.max(crest.x0, boxCentre(pearl)[0] - NEAR_SHIP),
+          x1: Math.min(Math.max(crest.x1, pearl.x1), boxCentre(pearl)[0] + NEAR_SHIP),
+          y0: crest.y0,
+          y1: crest.y1,
+        },
+        padBox(pearl, SPYGLASS.pad[0], SPYGLASS.pad[1]),
+      )
+    : crest;
+  const box = spy ? padBox(pearl, SPYGLASS.pad[0], SPYGLASS.pad[1]) : nearShip;
   const loopFor = (v: Variant): MediaId | null => {
     const l = loop ? resolveVariant(loop, v) : null;
     return l && l.kind === "video" && registeredTo(l, asset.id) ? l.id : null;

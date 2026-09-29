@@ -321,7 +321,7 @@
   --letterbox-ratio: 2.39;
   --loader-mini: 3rem;
   --loader-card: 7.5rem;
-  --loader-route: 10rem;
+  --loader-route: 13.5rem; /* ≥ 200 px (RECOGNIZABILITY S20; M2 fix round 3: 160 px read "tiny") */
 }
 @media (width < 64rem) {
   :root {
@@ -1057,11 +1057,15 @@ body {
 }
 @media (min-width: 40rem) {
   .act-card-letterbox {
-    --card-frame-w: min(100vw, calc((100svh - var(--header-h) - 17rem) * var(--letterbox-ratio)));
+    /* 18.5rem = the upper bar's 8rem + the lower bar's measured content
+       (≤ 10.5rem live at 1280–1920: h2 + line + progress, or a 3-line
+       caption), so a card is never taller than 100svh (M2 critic 3 #2:
+       at 17rem the sticky stage was pushed ~56 px under the header) */
+    --card-frame-w: min(100vw, calc((100svh - var(--header-h) - 18.5rem) * var(--letterbox-ratio)));
     --card-inset: max(var(--spacing-gutter), calc((100vw - var(--card-frame-w)) / 2));
   }
   .act-card-letterbox .act-card-cap {
-    width: calc(min(var(--card-frame-w) * 0.46, 34rem) + var(--card-inset) + 1.5rem);
+    width: calc(min(var(--card-frame-w) * 0.56, 44rem) + var(--card-inset) + 1.5rem);
   }
 }
 
@@ -1197,6 +1201,13 @@ html[data-motion="paused"] .opening-vignette {
    the world's deep ground under the glyph box (probe with tools/contrast.mjs:
    ≥ 4.5:1 on the worst pixel, the ALT plate included). */
 .scene-caption-host { position: relative; }
+/* the scrim's feather runs past the glyph box (240 px): the host clips it
+   sideways, so it never widens the page (1440 reduced-motion overflowed by
+   85 px at the journey stack, M2 fix round 3); vertical overflow stays
+   visible (chalk marks above a board) */
+@media (min-width: 40rem) {
+  .scene-caption-host { overflow-x: clip; }
+}
 @media (min-width: 40rem) {
   /* the film's name never breaks ("RED / DEAD REDEMPTION 2"): the only break
      is the space after the "•" (ART-DIRECTOR #4) */
@@ -1216,15 +1227,40 @@ html[data-motion="paused"] .opening-vignette {
   .scene-caption[data-place="bl"] { left: var(--cap-inset); }
   .scene-caption[data-place="br"] { right: var(--cap-inset); text-align: right; }
   .scene-caption[data-place="br"]::before { left: auto; right: 0; }
+  /* the scrim is solid under the whole glyph box and FEATHERS on its open
+     sides — up (the vertical gradient) and inward across the plate (a
+     160 px horizontal mask) — so it never ends in a hard vertical edge on a
+     bright plate (M2 critic 3 #1); its outer sides sit on the media edge */
   .scene-caption[data-place="bl"]::after,
   .scene-caption[data-place="br"]::after {
     content: "";
     position: absolute;
-    inset: -56px -24px -24px -24px;
+    inset: -80px -240px -24px -24px;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(to top, var(--world-deep) 0 40%, transparent 100%);
+    background: linear-gradient(
+      to top,
+      var(--world-deep) 0 42%,
+      color-mix(in oklab, var(--world-deep) 72%, transparent) 60%,
+      color-mix(in oklab, var(--world-deep) 30%, transparent) 80%,
+      transparent 100%
+    );
+    /* an EASED 240 px feather (a linear ramp read as an edge where the solid
+       part stopped: the eye sees the knee, not the slope) */
+    -webkit-mask-image: var(--cap-feather-l);
+    mask-image: var(--cap-feather-l);
   }
+  .scene-caption[data-place="br"]::after {
+    inset: -80px -24px -24px -240px;
+    -webkit-mask-image: var(--cap-feather-r);
+    mask-image: var(--cap-feather-r);
+  }
+}
+/* the scrims' eased horizontal feathers (bl fades to its right, br and the
+   act cards' outgoing caption to their left) */
+:root {
+  --cap-feather-l: linear-gradient(to left, transparent 0, rgb(0 0 0 / 0.16) 48px, rgb(0 0 0 / 0.42) 104px, rgb(0 0 0 / 0.72) 160px, rgb(0 0 0 / 0.92) 208px, #000 240px);
+  --cap-feather-r: linear-gradient(to right, transparent 0, rgb(0 0 0 / 0.16) 48px, rgb(0 0 0 / 0.42) 104px, rgb(0 0 0 / 0.72) 160px, rgb(0 0 0 / 0.92) 208px, #000 240px);
 }
 /* act cards: the OUTGOING caption over the frame's top-right corner
    (card-shell.tsx `.card-cap-frame`; live and ≥ 640 only). Right-aligned,
@@ -1234,15 +1270,31 @@ html[data-motion="paused"] .opening-vignette {
 .card-cap-frame { isolation: isolate; }
 .card-cap-frame .scene-caption[data-place] { margin-top: 0; text-align: right; }
 .card-cap-frame .scene-caption::before { left: auto; right: 0; }
+/* M2 critic 3 #1: the scrim runs PAST the frame's top and right edges (the
+   frame's overflow clips it there, so those sides are the plate's own
+   edge — no unscrimmed strip at the right, no edge at the top) and feathers
+   over 160 px to the left and 72 px below, so it never shows a vertical
+   edge on a bright plate */
+.card-cap-frame .scene-caption[data-place] {
+  /* the scrim hugs the GLYPHS, not the 46 % box (a box-wide scrim darkened
+     the outgoing plate's whole top-right, the tents under THE CAMPFIRE) */
+  width: fit-content;
+  margin-left: auto;
+}
 .card-cap-frame .scene-caption::after {
   content: "";
   position: absolute;
-  inset: -72px -48px -64px -104px;
+  inset: -160px -320px -80px -260px;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(to bottom, var(--world-deep) 0 calc(100% - 64px), transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 88px);
-  mask-image: linear-gradient(to right, transparent, #000 88px);
+  background: linear-gradient(
+    to bottom,
+    var(--world-deep) 0 calc(100% - 80px),
+    color-mix(in oklab, var(--world-deep) 55%, transparent) calc(100% - 44px),
+    transparent
+  );
+  -webkit-mask-image: var(--cap-feather-r);
+  mask-image: var(--cap-feather-r);
 }
 /* under (and every placement below 640 px): in flow, below the frame */
 .scene-caption[data-place="under"] { margin-top: var(--spacing-tier-pair); }

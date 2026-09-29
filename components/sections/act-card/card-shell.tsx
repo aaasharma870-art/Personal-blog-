@@ -264,7 +264,10 @@ export function CardShell({
                 : // the upper bar clears the fixed header (+ Meta + the film
                   // title); the lower keeps the h2 + line; the frame (capped
                   // in CSS: .act-card-letterbox) takes what is left
-                  "act-card-letterbox sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[minmax(calc(var(--header-h)+8rem),1fr)_auto_minmax(8.5rem,1fr)] sm:gap-0 sm:px-0 sm:py-0",
+                  // the lower row is `auto` (not 1fr): two 1fr rows under a
+                  // min-height resolve to the LARGER minimum each (196 px),
+                  // which made every card 952 px at 1440×900 (critic 3 #2)
+                  "act-card-letterbox sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[minmax(calc(var(--header-h)+8rem),1fr)_auto_minmax(8.5rem,auto)] sm:gap-0 sm:px-0 sm:py-0",
               travels && "act-card-stage",
             )}
           >
@@ -286,7 +289,7 @@ export function CardShell({
             >
               <div className="flex items-end justify-between gap-tier-group">
                 <p className="type-meta text-fg-muted">{upperLeft}</p>
-                {upperRight ? <p className="type-meta text-fg-muted">{upperRight}</p> : null}
+                {upperRight ? <p className="type-meta whitespace-nowrap text-fg-muted">{upperRight}</p> : null}
               </div>
               {film}
             </div>

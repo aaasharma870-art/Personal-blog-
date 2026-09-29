@@ -44,6 +44,19 @@ export function Writing({ entry, number }: SectionProps<"index">) {
   const titleId = `${entry.id}-title`;
   const journal = slot(entry, "dressing").index === "journal";
   const dusk = recedeInto(entry);
+  // the section head; in the journal it opens the LEFT page (beside the
+  // sketch), otherwise it spans the column
+  const head = (inSpread: boolean) => (
+    <header className={cn("max-w-[56rem]", !inSpread && "lg:max-w-[calc(50%-var(--spacing-gutter))]")}>
+      <Meta fields={[number, entry.nav?.label ?? "Writing"]} />
+      <NibTitle id={titleId} className="mt-tier-group max-w-title type-title text-fg">
+        Thinking in public, soon.
+      </NibTitle>
+      <p className="mt-tier-block max-w-lead type-lead text-fg-muted">
+        Short essays in progress — written for people who don&rsquo;t trade, about how I try not to fool myself.
+      </p>
+    </header>
+  );
   return (
     <WorldSection
       entry={entry}
@@ -51,21 +64,14 @@ export function Writing({ entry, number }: SectionProps<"index">) {
       className={cn(dusk && "overflow-x-clip")}
       containerClassName={cn(journal && "journal-gutter")}
     >
-      <header className="max-w-[56rem] lg:max-w-[calc(50%-var(--spacing-gutter))]">
-        <Meta fields={[number, entry.nav?.label ?? "Writing"]} />
-        <NibTitle id={titleId} className="mt-tier-group max-w-title type-title text-fg">
-          Thinking in public, soon.
-        </NibTitle>
-        <p className="mt-tier-block max-w-lead type-lead text-fg-muted">
-          Short essays in progress — written for people who don&rsquo;t trade, about how I try not to fool myself.
-        </p>
-      </header>
+      {journal ? null : head(false)}
 
       {journal ? (
         <JournalSpread
           entries={writing.map(({ title, angle, tag }) => ({ title, angle, tag }))}
           choice={variantChoiceOf(entry)}
           caption={<SceneCaption k="cap.writing" place="head" />}
+          head={head(true)}
         />
       ) : (
         <ol aria-label="Entries" className="mt-tier-block border-t border-rule">

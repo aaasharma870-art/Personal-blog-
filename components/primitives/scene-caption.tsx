@@ -48,12 +48,15 @@ export function Lettered({
   as: T = "span",
   className,
   id,
+  glue = false,
 }: {
   world: CaptionWorld;
   text: string;
   as?: Tag;
   className?: string;
   id?: string;
+  /** Keep the last two words on one line (credits: "REDEMPTION 2"). */
+  glue?: boolean;
 }) {
   const face = letteredIn(world, text);
   return (
@@ -62,7 +65,7 @@ export function Lettered({
       className={cn(face.lettered && worldFaceClass(world), face.upper && "uppercase", className)}
       data-lettered={face.lettered ? world : undefined}
     >
-      {text}
+      {glue ? <GluedTail text={text} /> : text}
     </T>
   );
 }
@@ -131,7 +134,9 @@ export function SceneCaption({
       {c.quote ? (
         <FilmQuote id={c.quote} rendition="lettered" attribution="speaker" className="scene-caption__moment scene-caption__quote" />
       ) : (
-        <span className={cn("scene-caption__moment", face.lettered && worldFaceClass(c.world))}>{c.moment}</span>
+        <span className={cn("scene-caption__moment", face.lettered && worldFaceClass(c.world))}>
+          <GluedTail text={c.moment ?? ""} />
+        </span>
       )}
       {c.film ? (
         <>
@@ -147,5 +152,20 @@ export function SceneCaption({
       ) : null}
       {children}
     </p>
+  );
+}
+
+/** The moment with its LAST TWO WORDS kept on one line, so a wrapped caption
+ *  never strands one word of a name ("THE GREAT / HALL", "PANGONG / LAKE";
+ *  M2 critic 3 #7). Same text content (a plain space inside a nowrap span):
+ *  no new glyphs, identical for screen readers. */
+function GluedTail({ text }: { text: string }) {
+  const words = text.split(" ");
+  if (words.length < 3) return <span className="whitespace-nowrap">{text}</span>;
+  const tail = words.slice(-2).join(" ");
+  return (
+    <>
+      {words.slice(0, -2).join(" ")} <span className="whitespace-nowrap">{tail}</span>
+    </>
   );
 }
