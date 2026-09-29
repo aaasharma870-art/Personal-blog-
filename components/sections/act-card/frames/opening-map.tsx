@@ -6,6 +6,7 @@ import { motion, useMotionValueEvent, useTransform } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 import { remap } from "@/components/primitives/loaders/line";
+import { CardReveal } from "@/components/sections/act-card/card-reveal";
 import { useCard } from "@/components/sections/act-card/card-context";
 import { Vignette, type OpeningRow } from "@/components/sections/act-card/frames/opening";
 
@@ -30,13 +31,26 @@ import { Vignette, type OpeningRow } from "@/components/sections/act-card/frames
  * Pause, < 640): the chart open, the trail drawn, every waypoint lit, the X
  * on Act I. The chart art is aria-hidden; the rows are the only tab stops.
  * House plane, no display face, no aqua; the X is brass (C8, C10).
+ * `caption` (the card's ALT moment caption, "THE CHART TO ISLA DE MUERTA •
+ * PIRATES OF THE CARIBBEAN") is set directly UNDER the chart box — the
+ * thing it names (M2 ART-DIRECTOR #9) — and rises once the chart has
+ * opened; static (SSR, RM, Pause, no JS): shown.
  */
 
 const TRAIL = { from: 0.3, to: 0.9 };
 /** A dotted leg in a 32 px gutter, stretched to the row's height. */
 const LEGS = ["M16 100C29 74 3 28 16 0", "M16 100C3 74 29 28 16 0"];
 
-export function OpeningMapFrame({ heading, rows }: { heading: ReactNode; rows: OpeningRow[] }) {
+export function OpeningMapFrame({
+  heading,
+  rows,
+  caption = null,
+}: {
+  heading: ReactNode;
+  rows: OpeningRow[];
+  /** The ALT moment caption (server-rendered <SceneCaption>), under the chart. */
+  caption?: ReactNode;
+}) {
   const { p, live } = useCard();
   const reduced = useReducedMotion();
   const [aim, setAim] = useState<number | null>(null);
@@ -67,56 +81,63 @@ export function OpeningMapFrame({ heading, rows }: { heading: ReactNode; rows: O
       )}
     >
       {heading}
-      <div className="relative">
-        {/* the chart (decorative; ≥ 640) */}
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden sm:block"
-          style={live ? { clipPath: clip } : undefined}
-        >
-          {/* border colours inline: an unlayered `* { border-color }` in
-              app/globals.css outranks every Tailwind border-colour utility */}
-          <div
-            // no fill: the row vignettes cut their dashes with --bg
-            className="absolute inset-0 border-[1.5px]"
-            style={{ borderColor: "var(--w-brass)" }}
-          />
-          <div
-            className="absolute inset-1.5 border"
-            style={{ borderColor: "color-mix(in oklab, var(--w-brass) 45%, transparent)" }}
-          />
-          {/* the folds: full creases only where no text runs (east of the
-              program); where they would cross the rows, fold marks at the
-              neatline instead (no rule under text) */}
-          <span className="absolute top-1.5 left-1/3 h-3 w-px bg-(--w-brass)/40" />
-          <span className="absolute bottom-1.5 left-1/3 h-3 w-px bg-(--w-brass)/40" />
-          <span className="absolute inset-y-1.5 left-2/3 w-px bg-(--w-brass)/15" />
-          <span className="absolute top-1/2 left-1.5 h-px w-3 bg-(--w-brass)/40" />
-          <span className="absolute top-1/2 right-1.5 left-2/3 h-px bg-(--w-brass)/12" />
-          {live ? (
-            <>
-              <motion.span className="absolute inset-y-0 left-0 w-1/3 bg-bg" style={{ opacity: shade }} />
-              <motion.span className="absolute inset-y-0 right-0 w-1/3 bg-bg" style={{ opacity: shade }} />
-            </>
-          ) : null}
-          <Island className="absolute top-[16%] right-[9%] hidden w-[30%] lg:block" />
-          <Rose className="absolute right-3 bottom-3 size-11" />
-        </motion.div>
-
-        <ol className="relative flex flex-col justify-center px-3 py-5 sm:px-6">
-          {rows.map((row, k) => (
-            <MapRow
-              key={row.key}
-              row={row}
-              index={k}
-              count={n}
-              aimed={aim === k}
-              x={k === 0 && (!live || marked)}
-              instant={!live || reduced}
-              onAim={(on) => setAim(on ? k : null)}
+      <div>
+        <div className="relative">
+          {/* the chart (decorative; ≥ 640) */}
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 hidden sm:block"
+            style={live ? { clipPath: clip } : undefined}
+          >
+            {/* border colours inline: an unlayered `* { border-color }` in
+                app/globals.css outranks every Tailwind border-colour utility */}
+            <div
+              // no fill: the row vignettes cut their dashes with --bg
+              className="absolute inset-0 border-[1.5px]"
+              style={{ borderColor: "var(--w-brass)" }}
             />
-          ))}
-        </ol>
+            <div
+              className="absolute inset-1.5 border"
+              style={{ borderColor: "color-mix(in oklab, var(--w-brass) 45%, transparent)" }}
+            />
+            {/* the folds: full creases only where no text runs (east of the
+                program); where they would cross the rows, fold marks at the
+                neatline instead (no rule under text) */}
+            <span className="absolute top-1.5 left-1/3 h-3 w-px bg-(--w-brass)/40" />
+            <span className="absolute bottom-1.5 left-1/3 h-3 w-px bg-(--w-brass)/40" />
+            <span className="absolute inset-y-1.5 left-2/3 w-px bg-(--w-brass)/15" />
+            <span className="absolute top-1/2 left-1.5 h-px w-3 bg-(--w-brass)/40" />
+            <span className="absolute top-1/2 right-1.5 left-2/3 h-px bg-(--w-brass)/12" />
+            {live ? (
+              <>
+                <motion.span className="absolute inset-y-0 left-0 w-1/3 bg-bg" style={{ opacity: shade }} />
+                <motion.span className="absolute inset-y-0 right-0 w-1/3 bg-bg" style={{ opacity: shade }} />
+              </>
+            ) : null}
+            <Island className="absolute top-[16%] right-[9%] hidden w-[30%] lg:block" />
+            <Rose className="absolute right-3 bottom-3 size-11" />
+          </motion.div>
+
+          <ol className="relative flex flex-col justify-center px-3 py-5 sm:px-6">
+            {rows.map((row, k) => (
+              <MapRow
+                key={row.key}
+                row={row}
+                index={k}
+                count={n}
+                aimed={aim === k}
+                x={k === 0 && (!live || marked)}
+                instant={!live || reduced}
+                onAim={(on) => setAim(on ? k : null)}
+              />
+            ))}
+          </ol>
+        </div>
+        {caption ? (
+          <CardReveal as="div" at={0.3}>
+            {caption}
+          </CardReveal>
+        ) : null}
       </div>
     </div>
   );

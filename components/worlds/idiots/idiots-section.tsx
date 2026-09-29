@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
      - `fadeOut`   T5: this plane crossfades into the page's deep over the
                    last 30vh (idiots canvas → the intermission's deep);
      - `layers`    anything else (e.g. an egg's grade, portalled at run time).
+   `lead` renders full-bleed (outside the page container) at the top of the
+   content: the work section's head band (M2 finish).
    Nothing here names a world: moved to another act, the grid is whatever
    that world's .world-ground paints (none for most), and the fades read the
    world's own --world-deep.
@@ -33,6 +35,7 @@ export function IdiotsSection({
   fadeIn = false,
   fadeOut = false,
   layers,
+  lead,
   style,
 }: {
   entry: SectionEntry;
@@ -45,6 +48,8 @@ export function IdiotsSection({
   fadeIn?: boolean;
   fadeOut?: boolean;
   layers?: ReactNode;
+  /** Full-bleed content before the page container (a head band). */
+  lead?: ReactNode;
   style?: CSSProperties;
 }) {
   const from = seamFromFor(entry);
@@ -77,6 +82,7 @@ export function IdiotsSection({
         />
       ) : null}
       {layers}
+      {lead ? <div className="relative">{lead}</div> : null}
       <div className={cn("relative mx-auto w-full max-w-page px-gutter", containerClassName)}>{children}</div>
     </section>
   );

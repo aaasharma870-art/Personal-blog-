@@ -12,10 +12,10 @@ RECOGNIZABILITY O-1…O-3 override the M1 scope below (the rule outranks subtlet
 | Face | woff2 | Glyphs |
 |---|---|---|
 | Pirata One | 2,720 B | ` .ABCDEFGHIJKLMNOPRSTUWYZabeghimnortwz—’…` |
-| Kalam | 7,608 B | ` ,-.3ABCDEGHIKLMNOPRSTUVWYacdefghiklmnoprstuwxy’` |
+| Kalam | 7,772 B | ` ,-.3?ABCDEFGHIKLMNOPRSTUVWYacdefghiklmnoprstuwxy’` (M2 finish: + `?` for `3i-machine-q` "What is a machine?") |
 | Rye | 9,480 B | ` 2ACDEFGHIJKLMNOPRSTUWY’` |
 | IM Fell English | 26,336 B | ` ,.ABCDEFGHIKLMNOPRSTUVWXYacdefghimnst—’` |
-| **Total** | **46,144 B** | budget 57,344 B |
+| **Total** | **46,308 B** | budget 57,344 B |
 
 - All four stay `preload: false`, off the LCP path; a face downloads only when its world's text lays out. The credits' `TYPE` row: Rye is now a world face, not only the egg's.
 
