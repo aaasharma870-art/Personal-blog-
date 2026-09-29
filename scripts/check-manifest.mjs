@@ -13,14 +13,20 @@
 //   9 hygiene (title / description / OG: no work titles)     10 lettering scope + display-face allow-list
 //   11 H3 fan-tribute line                                   12 confirmed tips vs content.ts
 //   14 prologue / CTA / egg hosts resolve
+// plus M1.5 VARIANTS (Aryan's answer: a DEFAULT and an ALT of every animation
+// and video): media `variants.alt` <-> `variantOf` pairs; every intro / hero /
+// signature-or-scene section / derived card / world loader in use registers
+// DEFAULT + ALT pieces in lib/variants.ts; manifest choices name real pieces
+// and never pick an ALT that is not built;
 // plus the cheap adaptability fixtures (A, D, E, F, G, I, J) run through the
 // SAME derivation code the page uses (lib/derive.ts).
 // Not automated yet: travel budgets (no travel data in the manifest yet) and
 // #13 handbill fields (no handbill data yet).
 //
 // Errors fail the run (exit 1); warnings are printed only. `RELEASE=1`
-// promotes the production-only gates (#6 copy sign-off, #8 Aryan's Check L2,
-// #11 the credits line rendered) from warnings to errors.
+// promotes the production-only gates (#6 copy sign-off + film.branchPreview
+// off, #8 Aryan's Check L2, #11 the credits line rendered, every missing
+// variant ALT) from warnings to errors.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,6 +43,7 @@ import { FAN_TRIBUTE_LINE, film } from "../lib/film.ts";
 import { OUT_LINES, quotes } from "../lib/quotes.ts";
 import * as content from "../lib/content.ts";
 import { actCardsOf, actRunsOf, actsInUse, pageItemsOf, worldOfIn } from "../lib/derive.ts";
+import { VARIANT_REGISTRY, hostOf, isVariant, pieceOf } from "../lib/variants.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RELEASE = process.env.RELEASE === "1";
@@ -143,6 +150,42 @@ for (const [id, a] of Object.entries(mediaAssets)) {
     if (!(0 <= b.x0 && b.x0 < b.x1 && b.x1 <= 1 && 0 <= b.y0 && b.y0 < b.y1 && b.y1 <= 1)) err(`media "${id}": focalBox out of 0-1 order`);
   }
 }
+
+/* — Media variants (M1.5): default.variants.alt <-> alt.variantOf ———— */
+const mediaNoAlt = { video: [], image: [] };
+for (const [id, a] of Object.entries(mediaAssets)) {
+  const alt = a.variants?.alt;
+  if (alt !== undefined) {
+    if (!mediaIds.has(alt)) err(`media "${id}": variants.alt "${alt}" is not a MediaId`);
+    else {
+      const b = mediaAssets[alt];
+      if (alt === id) err(`media "${id}": variants.alt points at itself`);
+      if (b.kind !== a.kind) err(`media "${id}": variants.alt "${alt}" is a ${b.kind}, not a ${a.kind}`);
+      if (b.variantOf !== id) err(`media "${id}": its alternate "${alt}" must say variantOf: "${id}"`);
+      if (b.variants) err(`media "${alt}": an alternate cannot have alternates of its own (no chains)`);
+      if (USABLE.has(a.status) && !USABLE.has(b.status)) warn(`media "${id}": its alternate "${alt}" is ${b.status} (resolveVariant plays the default)`);
+      // an alternate clip cuts from / to the default's plates or their alternates
+      if (a.kind === "video") {
+        for (const k of ["poster", "endsOn"]) {
+          if (b[k] && a[k] && b[k] !== a[k] && mediaAssets[a[k]]?.variants?.alt !== b[k]) {
+            warn(`media "${alt}": ${k} "${b[k]}" is neither the default's "${a[k]}" nor its alternate`);
+          }
+        }
+      }
+    }
+  }
+  if (a.variantOf !== undefined) {
+    if (a.variants) err(`media "${id}": an alternate (variantOf) cannot also be a default (variants)`);
+    if (!mediaIds.has(a.variantOf)) err(`media "${id}": variantOf "${a.variantOf}" is not a MediaId`);
+    else if (mediaAssets[a.variantOf].variants?.alt !== id) err(`media "${id}": variantOf "${a.variantOf}", which does not name it in variants.alt`);
+  }
+  // every accepted FILM clip / plate has an alternate (Aryan's answer #2)
+  if (a.provenance.source === "higgsfield" && USABLE.has(a.status) && !a.variantOf && !a.variants) {
+    (a.kind === "video" ? mediaNoAlt.video : mediaNoAlt.image).push(id);
+  }
+}
+if (mediaNoAlt.video.length) gate(`variants: film video(s) with no alternate: ${mediaNoAlt.video.join(", ")}`);
+if (mediaNoAlt.image.length) warn(`variants: film still(s) with no alternate (fine for derived plates): ${mediaNoAlt.image.join(", ")}`);
 
 /* — #8 H2 file checks ————————————————————————————————————————————— */
 {
@@ -287,6 +330,91 @@ const cards = actCardsOf(enabled, film);
   const signature = enabled.filter((s) => s.motion === "signature").map((s) => s.id);
   if (film.enabled && film.prologue.enabled) signature.unshift("(prologue)");
   if (signature.length > MAX_SIGNATURE) err(`#4 ${signature.length} signature moments (max ${MAX_SIGNATURE}): ${signature.join(", ")}`);
+}
+
+/* — Variants (M1.5): registry + manifest choices ———————————————————— */
+const variantStats = { hosts: 0, pieces: 0, alts: 0 };
+{
+  const keys = Object.keys(VARIANT_REGISTRY);
+  const keysOf = (host) => keys.filter((k) => hostOf(k) === host);
+  for (const k of keys) {
+    if (!/^[a-z0-9-]+\.[a-z0-9-]+$/.test(k)) err(`variants: registry key "${k}" must be "<host>.<piece>" (lowercase slugs)`);
+    const p = VARIANT_REGISTRY[k];
+    for (const side of ["default", "alt"]) {
+      const impl = p[side];
+      if (!impl) continue;
+      if (!impl.name?.trim() || !impl.note?.trim()) err(`variants: ${k}.${side} needs a name and a note`);
+      for (const m of impl.media ?? []) if (!mediaIds.has(m)) err(`variants: ${k}.${side} plays unknown media "${m}"`);
+    }
+    if (!p.default) err(`variants: ${k} has no DEFAULT`);
+    if (p.alt && p.default && p.alt.name === p.default.name) err(`variants: ${k}: the ALT must be a different choreography (same name "${p.alt.name}" as the DEFAULT)`);
+    if (p.alt?.media && p.default?.media) {
+      for (const m of p.alt.media) {
+        if (!p.default.media.includes(m) && mediaIds.has(m) && !mediaAssets[m].variantOf) warn(`variants: ${k}.alt plays "${m}", which is not a registered media alternate (variantOf)`);
+      }
+    }
+  }
+  // the hosts in use that must ship a DEFAULT and an ALT
+  const required = new Map();
+  if (film.enabled && film.prologue.enabled) required.set("intro", "the prologue");
+  for (const s of enabled) {
+    if (s.type === "hero") required.set("hero", "the hero");
+    else if (s.motion === "signature" || s.motion === "scene") required.set(s.id, `${s.motion} section`);
+  }
+  for (const c of cards) required.set(`card-${c.transition}`, `card ${c.id}`);
+  const loaderWorlds = new Set(actsInUse(enabled, film).map((a) => a.world));
+  if (film.enabled && film.prologue.enabled) loaderWorlds.add(film.prologue.world);
+  for (const w of loaderWorlds) {
+    const kind = film.worlds[w]?.slots.loader;
+    if (kind && kind !== "plain") required.set(`loader-${kind}`, `the ${w} loader`);
+  }
+  const noPieces = [];
+  const noAlt = [];
+  for (const [host, why] of required) {
+    const ks = keysOf(host);
+    if (!ks.length) noPieces.push(`${host} (${why})`);
+    for (const k of ks) {
+      if (VARIANT_REGISTRY[k].alt) variantStats.alts++;
+      else noAlt.push(k);
+    }
+    variantStats.pieces += ks.length;
+  }
+  variantStats.hosts = required.size;
+  if (noPieces.length) gate(`variants: ${noPieces.length} host(s) register no pieces in lib/variants.ts: ${noPieces.join(", ")}`);
+  if (noAlt.length) gate(`variants: ${noAlt.length} piece(s) still need an ALT: ${noAlt.join(", ")}`);
+
+  // manifest choices: real variants, real pieces, never an unbuilt ALT
+  const checkChoice = (choice, host, where) => {
+    if (choice == null) return;
+    const pickAlt = (k, how) => {
+      if (VARIANT_REGISTRY[k] && !VARIANT_REGISTRY[k].alt) err(`variants: ${where} ${how} "alt" for ${k}, which has no ALT built (it would silently play the default)`);
+    };
+    if (typeof choice === "string") {
+      if (!isVariant(choice)) err(`variants: ${where} "${choice}" is not "default" | "alt"`);
+      else if (choice === "alt") for (const k of keysOf(host)) pickAlt(k, "picks");
+      return;
+    }
+    for (const [piece, v] of Object.entries(choice)) {
+      if (!isVariant(v)) err(`variants: ${where}.${piece} "${v}" is not "default" | "alt"`);
+      if (piece !== "*" && !(`${host}.${piece}` in VARIANT_REGISTRY)) warn(`variants: ${where} names piece "${piece}", which is not registered under host "${host}"`);
+      if (v === "alt") {
+        const ks = piece === "*" ? keysOf(host).filter((k) => !(pieceOf(k) in choice)) : [`${host}.${piece}`];
+        for (const k of ks) pickAlt(k, "picks");
+      }
+    }
+  };
+  if (!isVariant(film.defaultVariant)) err(`variants: film.defaultVariant "${film.defaultVariant}" is not "default" | "alt"`);
+  else if (film.defaultVariant === "alt") {
+    const unbuilt = keys.filter((k) => !VARIANT_REGISTRY[k].alt);
+    if (unbuilt.length) warn(`variants: film.defaultVariant is "alt" but ${unbuilt.length} piece(s) have no ALT and play their default`);
+  }
+  checkChoice(film.prologue.variant, "intro", "film.prologue.variant");
+  for (const s of page) checkChoice(s.variant, s.type === "hero" ? "hero" : s.id, `"${s.id}".variant`);
+  for (const a of film.acts) {
+    const card = cards.find((c) => c.act === a.id);
+    if (card) checkChoice(a.variant, `card-${card.transition}`, `film.acts ${a.id}.variant`);
+  }
+  for (const [w, spec] of Object.entries(film.worlds)) checkChoice(spec.loaderVariant, `loader-${spec.slots.loader}`, `film.worlds.${w}.loaderVariant`);
 }
 
 /* — Required anchors ——————————————————————————————————————————————— */
@@ -459,12 +587,18 @@ const aa = { cells: 0, min: Infinity, minAt: "" };
   }
 }
 
-/* — #6 copy statuses (release gate) —————————————————————————————— */
+/* — #6 copy statuses (release gate) ——————————————————————————————
+   film.branchPreview (Aryan's answer #2) renders proposed AND draft copy in
+   every build of the branch. The strings keep their statuses, so RELEASE=1
+   fails while the preview is on or any shown string is unsigned. */
+const copyStats = { drafts: 0, proposed: 0, quotes: 0 };
 {
   const proposed = [];
   const drafts = [];
   const visit = (c, where) => {
     if (!c || typeof c !== "object" || !("status" in c)) return;
+    if (c.text && (c.draft === true) !== (c.status === "draft")) err(`#6 ${where}: \`draft: true\` must go with status "draft" (and back)`);
+    if (c.alternates && c.status === "confirmed") warn(`${where}: confirmed copy still carries draft alternates`);
     if (c.status === "draft" && c.text) drafts.push(where);
     if (c.status === "proposed" && c.text && !film.copySignedOff) proposed.push(where);
   };
@@ -480,9 +614,13 @@ const aa = { cells: 0, min: Infinity, minAt: "" };
   }
   film.tips.forEach((t, i) => visit(t, `tip #${i + 1}`));
   const qProposed = Object.entries(quotes).filter(([, q]) => q.status === "proposed" && !film.copySignedOff).map(([id]) => id);
-  if (drafts.length) gate(`#6 ${drafts.length} draft string(s) with text would render: ${drafts.join(", ")}`);
+  Object.assign(copyStats, { drafts: drafts.length, proposed: proposed.length, quotes: qProposed.length });
+  if (film.branchPreview) gate(`#6 film.branchPreview is ON: proposed and draft copy render in every build (turn it off before main)`);
+  if (drafts.length) {
+    gate(`#6 ${drafts.length} draft string(s) with text${film.branchPreview ? " RENDER on this branch" : " would render"} until Aryan rewrites and confirms them: ${drafts.join(", ")}`);
+  }
   if (proposed.length || qProposed.length) {
-    gate(`#6 ${proposed.length} proposed string(s) + ${qProposed.length} quote(s) await Aryan's sign-off (film.copySignedOff)`);
+    gate(`#6 ${proposed.length} proposed string(s) + ${qProposed.length} quote(s)${film.branchPreview ? " render on this branch and" : ""} await Aryan's sign-off (film.copySignedOff)`);
   }
 }
 
@@ -617,6 +755,10 @@ console.log(
   `  acts: ${cards.map((c) => `${c.id} ${c.transition}${c.long ? "(long)" : ""} ${c.from ?? "—"}→${c.to} "${c.title}"`).join(" | ")}`,
 );
 console.log(`  AA: ${aa.cells} cells, tightest text cell ${aa.min.toFixed(2)} (${aa.minAt}); fixtures: ${fixtures.join(", ")}`);
+console.log(
+  `  variants: ${variantStats.hosts} hosts in use, ${variantStats.pieces} pieces, ${variantStats.alts} with an ALT; ` +
+    `copy: branchPreview ${film.branchPreview ? "ON" : "off"}, ${copyStats.drafts} drafts + ${copyStats.proposed} proposed + ${copyStats.quotes} quotes unsigned`,
+);
 for (const w of warnings) console.warn(`  warn  ${w}`);
 for (const e of errors) console.error(`  error ${e}`);
 if (errors.length) {

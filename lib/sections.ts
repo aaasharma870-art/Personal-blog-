@@ -21,6 +21,11 @@ import { site } from "./content";
 import { FAN_TRIBUTE_LINE, film, type CopyKey, type Intensity, type LetteringId } from "./film";
 import { quotes, type QuoteId } from "./quotes";
 import {
+  effectiveVariant,
+  type Variant,
+  type VariantChoice,
+} from "./variants";
+import {
   actCardsOf,
   actRunsOf,
   actSpecOf,
@@ -125,17 +130,12 @@ export const worksInUse: readonly WorkInUse[] = worksInUseOf(enabledSections, fi
 export const worksWords: string = worksPhrase(worksInUse);
 
 /** Page copy with its derived tokens filled ({acts}, {works}, {n} …). The
- *  STATUS travels with it: callers must hide `draft` and gate `proposed`
- *  (copyVisible). */
+ *  STATUS travels with it: callers gate it with copyVisible(). */
 export function copyText(key: CopyKey, extra: Record<string, string | number> = {}) {
   const c = film.copy[key];
   return { ...c, text: fillCopy(c.text, enabledSections, film, extra) };
 }
 
-/** Whether a copy string may render in THIS build (SPEC §9.6): drafts only
- *  outside production and only when non-empty; proposed copy in
- *  production only after Aryan's sign-off. (The validator enforces the same
- *  rule at build time; this is the runtime guard.) */
 /** How an act title sets in its world lettering (SPEC §9.7): only when the
  *  face ships and its glyph subset holds EXACTLY this string. The subsets
  *  are cut from `film.lettering[].text` case-sensitively, so an all-caps
@@ -154,12 +154,48 @@ export function letteringFor(
   return { lettered: false, upper: false };
 }
 
+/** Whether a copy string may render in THIS build (SPEC §9.6, amended by
+ *  Aryan's answer #2): never when empty; everything when `film.branchPreview`
+ *  is on (this branch: dev AND plain production — it replaces the old
+ *  FILM_PREVIEW env, which a client bundle could not see); otherwise drafts
+ *  outside production only, and proposed copy in production only after
+ *  Aryan's sign-off. Data only (no env reads in the preview path), so the
+ *  server and client agree. The validator's release gate (RELEASE=1) is
+ *  what keeps unsigned strings off main. */
 export function copyVisible(c: { text: string; status: string }): boolean {
   if (!c.text) return false;
-  const prod = process.env.NODE_ENV === "production" && process.env.FILM_PREVIEW !== "1";
+  if (film.branchPreview) return true;
+  const prod = process.env.NODE_ENV === "production";
   if (c.status === "draft") return !prod;
   if (c.status === "proposed") return !prod || film.copySignedOff;
   return true;
+}
+
+/* — Variants (lib/variants.ts) ———————————————————————————————————————— */
+
+/** A section's variant choice (entry.variant ?? film.defaultVariant). */
+export function variantChoiceOf(entry: SectionEntry): VariantChoice {
+  return entry.variant ?? film.defaultVariant;
+}
+
+/** A section's registry host: "hero" for the hero, else its id. */
+export function variantHostOf(entry: SectionEntry): string {
+  return entry.type === "hero" ? "hero" : entry.id;
+}
+
+/** The intro's variant choice (film.prologue.variant ?? film.defaultVariant). */
+export const introVariant: VariantChoice = film.prologue.variant ?? film.defaultVariant;
+
+/** A world's loader variant choice (registry host "loader-<kind>"). */
+export function loaderVariantOf(world: World): VariantChoice {
+  return film.worlds[world].loaderVariant ?? film.defaultVariant;
+}
+
+/** The MANIFEST's variant for one piece — for server components and SSR
+ *  (no URL). Client components that must honour ?variant=… use
+ *  useVariant() (lib/use-variant.ts) with the same choice + key. */
+export function manifestVariant(choice: VariantChoice | null | undefined, key: string): Variant {
+  return effectiveVariant(choice, key, "", film.defaultVariant);
 }
 
 /** Nav-enabled sections of a world ("Seen here in", films chapter). */

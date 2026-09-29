@@ -11,10 +11,10 @@
    markup and NO head script ship, so nothing can arm):
      film.enabled && film.prologue.enabled,
      both play-screen plates resolve to a usable image,
-     every overlay string may render in this build (SPEC §9.6: `proposed`
-     copy and quotes render in dev and FILM_PREVIEW=1 builds, and in
-     production only after Aryan's sign-off — the intro is never shipped
-     half-worded).
+     every overlay string may render in this build (SPEC §9.6 via
+     copyVisible: on this branch `film.branchPreview` shows `proposed` copy
+     and quotes in every build; with it off, in dev only until Aryan's
+     sign-off — the intro is never shipped half-worded).
    ========================================================================== */
 
 import { film } from "@/lib/film";

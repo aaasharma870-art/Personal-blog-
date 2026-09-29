@@ -11,6 +11,7 @@
 import type { SectionEntry, Tone, World } from "./page";
 import type { ActSpec, Copy, LetteringId, TransitionKind, WorldSpec, film as FilmData } from "./film";
 import type { QuoteId } from "./quotes";
+import type { VariantChoice } from "./variants";
 
 type Film = typeof FilmData;
 type AnyAct = Film["acts"][number];
@@ -116,6 +117,11 @@ export type ActCardItem = {
   epigraph: Epigraph | null;
   /** A TIP (SPEC §8.3), shown instead of an epigraph (card III). */
   tip: Copy | null;
+  /** The act's logline (a Claude draft for Aryan; gate with copyVisible). */
+  logline: Copy | null;
+  /** The card's choreography variant: `acts[].variant` ?? film.defaultVariant
+   *  (registry host "card-<transition>", piece "choreo"; lib/variants.ts). */
+  variant: VariantChoice;
   lettering: LetteringId | null;
   /** Text equivalent of the frame (sr-only; visible on the static card). */
   summary: string;
@@ -128,6 +134,8 @@ export type SectionItem = {
   entry: SectionEntry;
   world: World;
   tone: Tone;
+  /** entry.variant ?? film.defaultVariant (lib/variants.ts). */
+  variant: VariantChoice;
 };
 
 export type PageItem = SectionItem | ActCardItem;
@@ -204,6 +212,8 @@ export function actCardsOf(sections: readonly SectionEntry[], film: Film): ActCa
       credit,
       epigraph,
       tip,
+      logline: a.logline ?? null,
+      variant: a.variant ?? film.defaultVariant,
       lettering: spec?.lettering ?? null,
       summary,
       before: firstSection.id,
@@ -225,6 +235,7 @@ export function pageItemsOf(sections: readonly SectionEntry[], film: Film): Page
       entry,
       world: worldOfIn(entry, sections, film),
       tone: toneOfEntry(entry),
+      variant: entry.variant ?? film.defaultVariant,
     });
   }
   return items;

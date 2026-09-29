@@ -14,19 +14,32 @@
    `acts` below (lib/sections.ts). Reorder or remove an act here and in the
    manifest, run `npm run check`, and nothing else needs editing.
 
-   Copy statuses (SPEC §9.6):
+   Copy statuses (SPEC §9.6, amended by Aryan's answer #2, 2026-09-28):
      confirmed = Aryan's existing words (content.ts / REPO): renders everywhere.
-     proposed  = new microcopy about THE PAGE and every quote: dev + preview;
-                 production fails until `copySignedOff` (or per-string).
+     proposed  = new microcopy about THE PAGE and every quote.
      draft     = anything about ARYAN (why a work matters, loglines, the
-                 handbill reward): only a prompt here, never a phrasing; the
-                 text stays "" until he writes it; production fails if one
-                 would render.
+                 handbill reward). Claude DRAFTED these for him to rewrite
+                 (`draft: true`, `alternates` to pick from); they render as
+                 normal copy, with no visible badge.
+   Where they render: `film.branchPreview` (true on design/three-films) shows
+   proposed AND draft copy in every build, dev and plain production alike.
+   With it off, drafts render in dev only and proposed copy in production
+   only after `copySignedOff`. EITHER WAY `RELEASE=1 npm run check` fails
+   while branchPreview is on or any shown string is unsigned (a draft with
+   text, or proposed copy without sign-off): a merge to main needs Aryan.
+   Writing-entry DRAFT labels (content.ts `writing`) are separate and stay
+   visible: those essays really are unwritten.
+
+   Variants (lib/variants.ts): `defaultVariant` is the page-wide default;
+   `acts[].variant` picks each derived card's choreography,
+   `prologue.variant` the intro's, `worlds.<w>.loaderVariant` the world
+   loader's. Values: "default" | "alt" | { <piece>: "alt", "*": "default" }.
    ========================================================================== */
 
 import type { LoaderKind, WorldId } from "./worlds";
 import type { MediaId } from "./media";
 import type { QuoteId } from "./quotes";
+import type { Variant, VariantChoice } from "./variants";
 
 export type Intensity = "whisper" | "grade" | "full";
 export type CopyStatus = "confirmed" | "proposed" | "draft";
@@ -35,8 +48,14 @@ export type Copy = {
   status: CopyStatus;
   /** content.ts path ("gauntlet[0].body", "site.principleCapsule") or "REPO". */
   source?: string;
-  /** draft only: what Aryan is asked to write (never a sample phrasing). */
+  /** draft only: what Aryan is asked to write or rewrite. */
   prompt?: string;
+  /** draft only: marks a line Claude drafted FOR Aryan (he rewrites it
+   *  before main). The validator keeps it equal to `status === "draft"`
+   *  whenever the text is non-empty. */
+  draft?: true;
+  /** Other drafts to pick from (never rendered). */
+  alternates?: readonly string[];
 };
 export type TransitionKind = "flight" | "seam" | "tintype" | "ignite" | "reel" | "title" | "opening";
 export type WorkKind = "film" | "game";
@@ -77,8 +96,11 @@ export type WorldSpec = {
   borrowed?: Copy;
   /** Films chapter: one attributed line (quote registry). */
   line?: QuoteId;
-  /** Films chapter: Aryan's own reason. Starts `draft` with text "". */
+  /** Films chapter: why this work matters to Aryan. A Claude draft
+   *  (`draft: true`) until he rewrites it. */
   reason?: Copy;
+  /** This world's loader variant (default: film.defaultVariant). */
+  loaderVariant?: VariantChoice;
 };
 
 export type ActSpec = {
@@ -90,6 +112,8 @@ export type ActSpec = {
   epigraph?: Copy | QuoteId;
   /** 1-based index into `film.tips` (SPEC §8.3 numbering). */
   tip?: number;
+  /** The derived card's choreography variant (default: film.defaultVariant). */
+  variant?: VariantChoice;
 };
 
 export type PrologueSpec = {
@@ -103,6 +127,9 @@ export type PrologueSpec = {
   /** Section id the flight lands on (must be the hero). */
   landsOn: string;
   maxFlightS: number;
+  /** The intro's variant: one for every piece, or per piece (play, flight,
+   *  codeflight, landing). Default: film.defaultVariant. */
+  variant?: VariantChoice;
 };
 
 export type EggSpec = {
@@ -145,12 +172,59 @@ export type LetteringId = (typeof lettering)[number]["id"];
 /* — Worlds ——————————————————————————————————————————————————————————— */
 const plainDressing = { notes: "plain", index: "plain", quotes: "plain" } as const;
 
-const draftReason: Copy = {
-  text: "",
+/** A line Claude drafted for ARYAN to rewrite (Aryan's answer #2: "write
+ *  emotionally impactful one-liners … that he will personally rewrite").
+ *  Tied only to facts in lib/content.ts; no invented events, ages, dates or
+ *  places. Renders normally on the branch; blocks RELEASE=1 until he makes it
+ *  his own and marks it confirmed. Research record: research/build/ONE-LINERS.md. */
+const aryanDraft = (text: string, prompt: string, alternates: readonly string[] = []): Copy => ({
+  text,
   status: "draft",
-  prompt:
-    "[DRAFT — Aryan: what you took from this film or game, 1–2 sentences in your own words. Prompts: what do you remember first? Where does it show up in how you work? Leave empty to ship this screen without a reason.]",
-};
+  draft: true,
+  prompt,
+  ...(alternates.length ? { alternates } : {}),
+});
+
+const REASON_PROMPT =
+  "[DRAFT by Claude — Aryan: rewrite in your own words (1–2 sentences): why this film or game matters to you. Pick an alternate, edit one, or write your own; set status \"confirmed\" when it is yours.]";
+
+/** Films chapter reasons (SM-9 renders them; M2). Guards from lib/quotes.ts
+ *  hold: nothing about family near Q-HP-4 / Q-RD-1, no return or Sharpe
+ *  figure near Q-PC-2. */
+const reasons = {
+  pirates: aryanDraft(
+    "My first strategies were a compass that pointed wherever I wanted it to. The real crossing began when I stopped steering by what I hoped and started steering by data I had never seen.",
+    REASON_PROMPT,
+    [
+      "A course is something you keep correcting, not something you declare once. That is how chart patterns on TradingView became a pipeline that tells me when I'm wrong.",
+      "Everyone in it is sailing toward something they can't prove is there. I still am; I've just learned to test the map before I trust it.",
+    ],
+  ),
+  idiots: aryanDraft(
+    "It made curiosity feel like a discipline instead of a distraction. Nobody assigned me a validation pipeline; I built one because I needed to know why my own ideas kept breaking.",
+    REASON_PROMPT,
+    [
+      "It is about learning something because you need to understand it, not to look like you do. Everything I have built on my own started exactly that way.",
+      "It taught me that the honest explanation beats the impressive answer. So on this page the chalk circles the caveat, never the number.",
+    ],
+  ),
+  rdr2: aryanDraft(
+    "Its hero keeps a journal of what really happened, not what he wished had. My kill-list is that journal: every idea that didn't survive, written down honestly, so the next one starts wiser.",
+    REASON_PROMPT,
+    [
+      "It moves slowly on purpose: long rides, quiet camps, nothing rushed. That is the patience distance running taught me, and the same patience a holdout asks for.",
+      "Most of the frontier is waiting and watching the light change. That is what photography is to me, and on the good days it is what research is too.",
+    ],
+  ),
+  hp: aryanDraft(
+    "Even its magic has rules, and the wonder is in finding them. That is what markets still feel like to me: rules under the noise, and the honest work of proving which ones are real.",
+    REASON_PROMPT,
+    [
+      "Its bravest moments are about telling the truth when a lie would be easier. That is the whole job in research: say what the data shows, especially when it isn't what I hoped.",
+      "It taught me that wonder and rigor aren't opposites. I still feel it when a pre-registered test comes back and the answer is real, whichever way it went.",
+    ],
+  ),
+} as const satisfies Record<Exclude<WorldId, "house">, Copy>;
 
 const house: WorldSpec = {
   id: "house",
@@ -178,7 +252,8 @@ const pirates: WorldSpec = {
     status: "proposed",
   },
   line: "Q-PC-2",
-  reason: draftReason,
+  reason: reasons.pirates,
+  loaderVariant: "default",
 };
 
 const idiots: WorldSpec = {
@@ -196,7 +271,8 @@ const idiots: WorldSpec = {
     status: "proposed",
   },
   line: "Q-3I-1",
-  reason: draftReason,
+  reason: reasons.idiots,
+  loaderVariant: "default",
 };
 
 const rdr2: WorldSpec = {
@@ -214,7 +290,8 @@ const rdr2: WorldSpec = {
     status: "proposed",
   },
   line: "Q-RD-1",
-  reason: draftReason,
+  reason: reasons.rdr2,
+  loaderVariant: "default",
 };
 
 const hp: WorldSpec = {
@@ -232,7 +309,8 @@ const hp: WorldSpec = {
     status: "proposed",
   },
   line: "Q-HP-4",
-  reason: draftReason,
+  reason: reasons.hp,
+  loaderVariant: "default",
 };
 
 /* — Tips (SPEC §8.3): Aryan's own rules, verbatim, or marked proposed ——— */
@@ -268,9 +346,14 @@ const copy = {
   },
   "beyond.handbill.sub": { text: "for questions about quantitative research", status: "proposed" },
   "beyond.handbill.reward": {
-    text: "",
+    text: "An honest answer, including “I don't know yet.”",
     status: "draft",
-    prompt: "[DRAFT — Aryan: a reward line in your words, or leave empty]",
+    draft: true,
+    prompt: "[DRAFT by Claude — Aryan: the WANTED poster's reward line, in your words (or empty to drop the row)]",
+    alternates: [
+      "A straight answer and a written post-mortem.",
+      "A good question back, and the data to test it.",
+    ],
   },
   "beyond.map.caption": { text: "ILLUSTRATIVE MAP", status: "proposed" },
   "beyond.photo.caption": { text: "Photograph: Aryan Sharma", status: "proposed" },
@@ -292,11 +375,16 @@ const copy = {
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 
-const actLogline: Copy = {
-  text: "",
-  status: "draft",
-  prompt: "[DRAFT — Aryan: one line, in your words, on what this act is about. Optional.]",
-};
+const LOGLINE_PROMPT = "[DRAFT by Claude — Aryan: one line, in your words, on what this act is about. Optional.]";
+const loglines = {
+  "act-1": aryanDraft("Where I started, and the course I've been correcting ever since.", LOGLINE_PROMPT),
+  "act-2": aryanDraft("What I build, how I try to break it, and what didn't survive.", LOGLINE_PROMPT),
+  "act-3": aryanDraft(
+    "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
+    LOGLINE_PROMPT,
+  ),
+  "act-4": aryanDraft("What I believe about doing this work honestly, and where to find me.", LOGLINE_PROMPT),
+} as const satisfies Record<string, Copy>;
 
 export const FAN_TRIBUTE_LINE = copy["credits.legal"].text;
 
@@ -309,6 +397,14 @@ export const film = {
   heroCredit: false,
   /** F-5: Aryan signs the proposed microcopy + every quote. */
   copySignedOff: false,
+  /** M1.5 (Aryan's answer #2): proposed AND draft copy render in EVERY
+   *  build of this branch (no FILM_PREVIEW env needed, and no visible DRAFT
+   *  badge). Every string keeps its status; RELEASE=1 fails while this is
+   *  on or any shown string is unsigned. Turn off before merging to main. */
+  branchPreview: true as boolean,
+  /** The page-wide variant (lib/variants.ts): what every section, card,
+   *  loader and the intro play unless they choose otherwise. */
+  defaultVariant: "default" as Variant,
   /** FT-1: extend the display-font scope beyond act titles / loaders / eggs. */
   fontScope: { extended: false },
   prologue: {
@@ -320,19 +416,41 @@ export const film = {
     trail: "intro-trail",
     landsOn: "top",
     maxFlightS: 6.0,
+    variant: "default",
   } satisfies PrologueSpec,
   worlds: { house, pirates, idiots, rdr2, hp } satisfies Record<WorldId, WorldSpec>,
   acts: [
-    { id: "act-1", world: "pirates", title: { text: "The Crossing", status: "proposed" }, logline: actLogline },
+    {
+      id: "act-1",
+      world: "pirates",
+      title: { text: "The Crossing", status: "proposed" },
+      logline: loglines["act-1"],
+      variant: "default",
+    },
     {
       id: "act-2",
       world: "idiots",
       title: { text: "The Workshop", status: "proposed" },
-      logline: actLogline,
+      logline: loglines["act-2"],
       epigraph: { text: "Treat every backtest as guilty until proven innocent.", status: "confirmed", source: "REPO" },
+      variant: "default",
     },
-    { id: "act-3", world: "rdr2", title: { text: "The Frontier", status: "proposed" }, logline: actLogline, tip: 2 },
-    { id: "act-4", world: "hp", title: { text: "The Light", status: "proposed" }, logline: actLogline, epigraph: "Q-HP-3" },
+    {
+      id: "act-3",
+      world: "rdr2",
+      title: { text: "The Frontier", status: "proposed" },
+      logline: loglines["act-3"],
+      tip: 2,
+      variant: "default",
+    },
+    {
+      id: "act-4",
+      world: "hp",
+      title: { text: "The Light", status: "proposed" },
+      logline: loglines["act-4"],
+      epigraph: "Q-HP-3",
+      variant: "default",
+    },
   ] as const satisfies readonly ActSpec[],
   /** "prev>next" world pair → card choreography. `house` is transparent. */
   transitions: {

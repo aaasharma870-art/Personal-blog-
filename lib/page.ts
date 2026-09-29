@@ -26,6 +26,7 @@
 import type { MediaId } from "./media";
 import type { ToneId, WorldId } from "./worlds";
 import type { ActId, Intensity } from "./film";
+import type { VariantChoice } from "./variants";
 
 /** Ground plane a section sits on (DESIGN v3 §1.3.4). SectionFrame emits it
  *  as `data-tone`; it selects --bg / --surface-* / --fg … from the world. */
@@ -90,6 +91,13 @@ type Base<T extends string, P> = {
   density?: Density;
   /** "signature" ≤ 6 page-wide; "scene" + derived long cards ≤ 2. */
   motion?: MotionLevel;
+  /** Which choreography / clip variant the section plays (lib/variants.ts):
+   *  "default" | "alt", or per piece ({ aperture: "alt", "*": "default" }).
+   *  Default: film.defaultVariant. Every signature / scene section (and the
+   *  hero) must register a DEFAULT and an ALT in VARIANT_REGISTRY under its
+   *  host ("hero" for the hero, else its id). Not to be confused with
+   *  `props.variant` of a story (its structural layout). */
+  variant?: VariantChoice;
   props: P;
 };
 
@@ -182,6 +190,7 @@ export const page: readonly SectionEntry[] = [
     act: null,
     tone: "deep",
     motion: "signature",
+    variant: "default",
     props: {
       cta: { label: "View the quant portfolio ↓", to: "work" },
       media: "MV-01",
@@ -209,6 +218,7 @@ export const page: readonly SectionEntry[] = [
     act: "act-1",
     numbered: true,
     motion: "signature",
+    variant: "default",
     nav: { label: "Journey", primary: true },
     props: {
       variant: "voyage",
@@ -237,6 +247,7 @@ export const page: readonly SectionEntry[] = [
     act: "act-2",
     numbered: true,
     motion: "signature",
+    variant: "default",
     nav: { label: "Work", primary: true },
     props: { board: "MV-06" },
   },
@@ -316,6 +327,7 @@ export const page: readonly SectionEntry[] = [
     act: "act-3",
     numbered: true,
     motion: "signature",
+    variant: "default",
     nav: { label: "Beyond", primary: true },
     props: {
       variant: "notes",
