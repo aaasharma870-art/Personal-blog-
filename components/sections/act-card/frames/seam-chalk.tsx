@@ -98,7 +98,11 @@ export function SeamChalkFrame({
   // outgoing caption) and settles onto its registration as the sweep starts
   // (M2 critic 3 #3); ≤ .11 keeps its box over the whole frame (no inset here)
   const stormY = useTransform(p, (v) => `${(-11 * (1 - smooth01(remap(v, 0, 0.1)))).toFixed(3)}%`);
-  const maskPos = useTransform(w, (x) => `${(pxAt(x) * 100).toFixed(3)}% 0%`);
+  // the masked layer is three frames wide with its mask fixed, and slides
+  // left by 2·px frames (a composited transform, never a mask-position
+  // re-draw); the storm inside is counter-moved, so only the edge travels
+  const maskX = useTransform(w, (x) => `${((-2 * pxAt(x)) / 3) * 100}%`);
+  const stormX = useTransform(w, (x) => `${(200 * pxAt(x)).toFixed(3)}%`);
   // belt and braces: a finished sweep hides the storm outright
   const stormOn = useTransform(w, (x) => (x >= 1 ? 0 : 1));
 
@@ -120,25 +124,27 @@ export function SeamChalkFrame({
           while static, hidden, so the plate is decoded before the card goes
           live) */}
       <motion.div
-        className="absolute inset-0"
+        className={live ? "absolute inset-y-0 left-0 w-[300%] will-change-transform" : "absolute inset-0"}
         style={
           live
             ? {
+                x: maskX,
                 opacity: stormOn,
                 maskImage: MASK,
                 WebkitMaskImage: MASK,
-                maskSize: "300% 100%",
-                WebkitMaskSize: "300% 100%",
+                maskSize: "100% 100%",
+                WebkitMaskSize: "100% 100%",
                 maskRepeat: "no-repeat",
                 WebkitMaskRepeat: "no-repeat",
-                maskPosition: maskPos,
-                WebkitMaskPosition: maskPos,
               }
             : { display: "none" }
         }
       >
         {storm ? (
-          <motion.div className="absolute inset-0" style={live ? { y: stormY } : undefined}>
+          <motion.div
+            className={live ? "absolute inset-y-0 left-0 w-1/3 will-change-transform" : "absolute inset-0"}
+            style={live ? { x: stormX, y: stormY } : undefined}
+          >
             <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
               <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
             </PlateBox>
@@ -273,7 +279,7 @@ function Duster({ w }: { w: MotionValue<number> }) {
       viewBox={`0 0 ${VB.w} ${VB.h}`}
       preserveAspectRatio="none"
       focusable="false"
-      className="pointer-events-none absolute inset-0 size-full"
+      className="pointer-events-none absolute inset-0 size-full will-change-[opacity]"
       style={{ opacity: shown }}
     >
       <g ref={ref} transform={t}>

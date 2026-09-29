@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { SectionFrame } from "@/components/sections/SectionFrame";
 import { rendererFor } from "@/components/sections/registry";
 import { ActCardSection } from "@/components/sections/act-card/act-card-section";
@@ -29,15 +29,30 @@ function renderItem(item: PageItem): ReactNode {
   );
 }
 
+/** Every item but the hero hydrates in its own Suspense boundary (nothing
+ *  here suspends: the server HTML is the same, plus boundary comments). The
+ *  root's first render then covers the hero only, and each section
+ *  hydrates as its own interruptible task — a click on Play (or anything
+ *  else) never waits behind the whole page's hydration. */
+function hydrateApart(item: PageItem): ReactNode {
+  if (item.kind === "section" && item.entry.type === "hero") return renderItem(item);
+  const key = item.kind === "act" ? item.id : item.entry.id;
+  return (
+    <Suspense key={key} fallback={null}>
+      {renderItem(item)}
+    </Suspense>
+  );
+}
+
 const isCredits = (item: PageItem) => item.kind === "section" && item.entry.type === "credits";
 
 export default function Home() {
   return (
     <>
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
-        {pageItems.filter((item) => !isCredits(item)).map(renderItem)}
+        {pageItems.filter((item) => !isCredits(item)).map(hydrateApart)}
       </main>
-      {pageItems.filter(isCredits).map(renderItem)}
+      {pageItems.filter(isCredits).map(hydrateApart)}
     </>
   );
 }

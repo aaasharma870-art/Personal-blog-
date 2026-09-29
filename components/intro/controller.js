@@ -71,7 +71,7 @@
   var hover = false, kfocus = false, gat = 0, gFrom = 0, gTo = 0, gAt = -1;
   var armAt = 0, launchAt = 0, awakeUntil = 0, clock = 0, last = 0;
   var par = [0, 0], parTo = [0, 0];
-  var raf = 0, timers = [], offs = [], inertEls = [], favs = null;
+  var raf = 0, timers = [], offs = [], inertEls = [], favs = null, owned = [];
   var modality = "", hiddenAt = 0, touch = null, loaderAt = -1, loader = null;
   var code = null, patch = null, domeOn = false;
   var E, ED;
@@ -130,6 +130,9 @@
   function anim(el, frames, ms, ease, done) {
     var a = null;
     try { a = el.animate(frames, { duration: ms, easing: curve(ease), fill: "forwards" }); } catch { /* no WAAPI */ }
+    // kept, so finish() cancels exactly these (no getAnimations(): that
+    // forces a whole-document style recalc right after the class flip)
+    if (a) owned.push(a);
     if (done) {
       if (a) a.onfinish = done;
       later(done, ms + 150); // fallback (hidden tab, no WAAPI); done() is idempotent
@@ -588,7 +591,7 @@
     if (!capAnims.length) return;
     if (!(w.matchMedia && w.matchMedia("(min-width: 40rem)").matches)) return capsStop(C.t.base);
     R.classList.add("intro-caps-linger");
-    capTimer = setTimeout(function () { capTimer = 0; capsStop(600); }, 2500);
+    capTimer = setTimeout(function () { capTimer = 0; capsStop(260); }, 2500); // then the hero's, in sequence (intro.css)
     var early = function () { capsStop(200); };
     var evs = ["wheel", "touchmove", "keydown"];
     for (var i = 0; i < evs.length; i++) w.addEventListener(evs[i], early, { passive: true });
@@ -1362,14 +1365,13 @@
     for (i = 0; i < offs.length; i++) offs[i]();
     offs = [];
     bolt(false);
-    killVideo();
+    if (video) try { video.pause(); } catch { /* gone */ } // unloaded after the hand-off frame
     ses("intro-seen", "1");
     setInert(false);
     for (i = 0; i < CLASSES.length; i++) R.classList.remove(CLASSES[i]);
     R.setAttribute("data-intro", played ? "played" : "skipped");
-    [intro, lensL, lensR].forEach(function (el) {
-      if (el && el.getAnimations) el.getAnimations().forEach(function (a) { a.cancel(); });
-    });
+    for (i = 0; i < owned.length; i++) try { owned[i].cancel(); } catch { /* gone */ }
+    owned = [];
     if (cv && cv.parentNode) cv.parentNode.removeChild(cv);
     cv = cx = null;
     if (broom) { broom.style.transform = ""; broom.style.opacity = ""; }
@@ -1378,9 +1380,11 @@
     tl = tlx = null; eimg = null; eimgOk = false;
     if (played) capsLinger();
     else capsStop(0);
-    focusLanding();
     mark("end");
     try { w.dispatchEvent(new CustomEvent("intro:end", { detail: { played: played, reason: reason } })); } catch { /* old browsers */ }
+    // focus (forces layout) after the hand-off frame has painted, in its own task
+    var after = function () { setTimeout(function () { killVideo(); focusLanding(); }, 0); };
+    if (w.requestAnimationFrame) w.requestAnimationFrame(after); else after();
   }
 
   function h1() {

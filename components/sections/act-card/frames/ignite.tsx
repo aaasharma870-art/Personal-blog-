@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
+import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { LINE, LINE_D, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
@@ -133,7 +134,7 @@ export function IgniteFrame({
 
   const plated = Boolean(hall || mid);
   // with no plate to hand over to, the canvas keeps its final frame
-  const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.8, 0.9) : 1));
+  const canvasOpacity = useTransform(p, (v) => (plated ? 1 - remap(v, 0.78, 0.94) : 1));
   const showCanvas = live && near && (!done || !plated);
   const hallOpacity = useTransform(p, hallAt);
   // MV-07 stands in for the hall only when the hall is missing
@@ -143,18 +144,18 @@ export function IgniteFrame({
     <div ref={hostRef} aria-hidden="true" data-frame="ignite" className="absolute inset-0">
       {live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null}
       {mid && !hall ? (
-        <motion.div className="absolute inset-0" style={live ? { opacity: midOpacity } : undefined}>
+        <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: midOpacity } : undefined}>
           <MediaFrame media={mid} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
       ) : null}
       {hall ? (
-        <motion.div className="absolute inset-0" style={live ? { opacity: hallOpacity } : undefined}>
+        <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: hallOpacity } : undefined}>
           <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
       ) : null}
       {!plated && (!live || !near) ? <StaticIgnition /> : null}
       {showCanvas ? (
-        <motion.div className="absolute inset-0" style={{ opacity: canvasOpacity }}>
+        <motion.div className="absolute inset-0 will-change-[opacity]" style={{ opacity: canvasOpacity }}>
           <IgniteCanvas p={p} fire={fireAt} />
         </motion.div>
       ) : null}
@@ -171,7 +172,7 @@ const CAMP_OUT = { from: 0.3, to: 0.62 };
 export function CampLayer({ plate, p }: { plate: Plate; p: MotionValue<number> }) {
   const opacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
   return (
-    <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity }}>
+    <motion.div className="absolute inset-0 overflow-hidden will-change-[opacity]" style={{ opacity }}>
       <PlateBox plate={plate}>
         <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
       </PlateBox>
@@ -183,12 +184,14 @@ export function CampLayer({ plate, p }: { plate: Plate; p: MotionValue<number> }
 export const EMBER_OUT = { from: 0.4, to: 0.5 };
 /** The Great Hall: up to a third from p .35 (behind the candles, the camp
  *  still in the frame: both worlds at the middle), then the whole frame
- *  over .78–.9. Shared with the ALT (frames/ignite-lumos.tsx). */
+ *  over .68–.92 (centred where it was, .8, but wide enough — ~125 px of
+ *  the 58vh travel, not ~84 px — that one wheel notch never cuts the camp
+ *  straight to the hall). Shared with the ALT (frames/ignite-lumos.tsx). */
 export function hallAt(v: number): number {
   // M2 critic 3 / blind D10-act-4-mid (hp .45–.55): at the middle the hall
   // must LEAD (the caption rule: the mid frame's dominant world is the
   // incoming one) — .6 by p .5 over the fading camp, then the whole frame
-  return 0.6 * remap(v, 0.3, 0.5) + 0.4 * remap(v, 0.72, 0.88);
+  return 0.6 * remap(v, 0.3, 0.5) + 0.4 * remap(v, 0.68, 0.92);
 }
 
 /** Measured fires (0–1 of the plate) for plates without a `fire` mark

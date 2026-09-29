@@ -263,7 +263,7 @@ export function CardShell({
               <motion.div
                 aria-hidden="true"
                 {...planeAttrs("deep", fromGround)}
-                className="pointer-events-none absolute inset-0 bg-bg"
+                className="pointer-events-none absolute inset-0 bg-bg will-change-[opacity]"
                 style={{ opacity: fromOpacity }}
               />
             ) : null}
