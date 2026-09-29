@@ -117,6 +117,6 @@ The WANTED handbill in Beyond reads "for questions about quantitative research".
 ## 4. Checklist for Aryan (merge to main)
 
 - [ ] Rewrite or confirm the 4 reasons, 4 loglines and 1 reward (9 drafts).
-- [ ] Sign the 27 proposed strings and 12 quotes (`film.copySignedOff`, or per string).
+- [ ] Sign the proposed strings (111 at the end of M5) and the 12 quotes (`film.copySignedOff`, or per string).
 - [ ] Set `film.branchPreview = false`.
 - [ ] Run `RELEASE=1 npm run check` and confirm it is green.

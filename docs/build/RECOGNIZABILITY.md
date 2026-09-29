@@ -710,3 +710,29 @@ Nothing else is requested: every other scene's gap is closed by code motifs and 
 5. **The intro beats have never been validly measured.**
 
 All five go to M5's final blind test.
+
+## 12. M5 final blind test (2026-09-29, 16:27–16:51 UTC)
+
+**Full results:** `m2-review/BLIND-FINAL.md`, plus the contact sheet `final-frames/index.html`. It judged the post-fix `m2-after2` frames at `d4a2cd8`, with 3 judges on 86 blind frames.
+
+**Results:**
+- **BLIND-mode frames: 38 / 45.** Earlier runs: audit 15/53, re-test #1 25/43, re-test #2 35/44.
+- By world: Pirates 10/10, 3 Idiots 9/10 (was 5/10), RDR2 9/13, Harry Potter 10/12.
+- All frames with a film: 63/83.
+- Wrong-film frames: 3, all outgoing-world "enter" frames.
+- Every CAPTION frame has 0 wrong-film guesses.
+
+**Still failing when judged:**
+- the RDR2 films screen, both variants (0.55)
+- the card-size loaders: default hp, idiots and rdr2; alt hp and rdr2 (0.35–0.55)
+- the Trading_Algos and Optuna chapter heads, which carry captions (0.20–0.55)
+- the alt satchel and the alt HP/RDR2 route loaders, which carry captions
+- the two intro mid hand-off beats, which carry captions
+- the Act III enter frames, and the Act II/IV enter frames that show the outgoing world
+
+**Fixed afterwards in `bc1072b`, not re-judged:**
+- The RDR2 films screen: Dead Eye plate (default) and the gang's camp at dusk (alt).
+- Chalk drones on the two chapter heads.
+- The satchel, redrawn.
+- The loaders, enlarged.
+- The intro ALT fold, inked as a sea chart.
