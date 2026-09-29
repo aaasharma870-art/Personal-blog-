@@ -64,3 +64,7 @@ next-env.d.ts
 /tools/capture/package.json
 /tools/capture/package-lock.json
 /tools/capture/.browser-locks/
+
+# capture frames (large PNGs; contact sheets reference them locally)
+/docs/build/m2-after/*.png
+/docs/build/final-frames/*.png
