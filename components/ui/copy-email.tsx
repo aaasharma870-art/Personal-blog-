@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { Check, Mail } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { ease } from "@/lib/motion";
 
 /**

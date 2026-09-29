@@ -4,11 +4,11 @@ import { useRef, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { springSoft } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 

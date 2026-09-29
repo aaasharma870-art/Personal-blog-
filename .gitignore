@@ -55,3 +55,6 @@ next-env.d.ts
 
 # design specs / build plans (AI process) — kept out of the public repo
 /docs/superpowers/
+
+# personal-use / desktop-licence font binaries (SPEC §9.7 mode B): never in git
+/design-src/fonts-personal/

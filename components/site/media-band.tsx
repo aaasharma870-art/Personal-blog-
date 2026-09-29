@@ -4,11 +4,11 @@ import { useRef, useSyncExternalStore } from "react";
 import type { MouseEvent } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionSeam } from "@/components/ui/section-seam";
 import { AmbientBackground } from "@/components/visuals/ambient-background";

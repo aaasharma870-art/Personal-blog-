@@ -1,165 +1,87 @@
-import { Section } from "@/components/ui/section";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Reveal, RevealItem } from "@/components/ui/reveal";
-import { AmbientBackground } from "@/components/visuals/ambient-background";
-import { ScanLine } from "@/components/visuals/scan-line";
-import { capabilities } from "@/lib/content";
-import { cn } from "@/lib/utils";
-import { Microscope, Activity, Cpu, ShieldCheck, Languages } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { capabilities, featuredProjects } from "@/lib/content";
+import { Schematic } from "@/components/site/idiots-chalk";
+import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
+import { Rise } from "@/components/site/world-motion";
+import { actCards, acts, enabledSections, worksInUse } from "@/lib/sections";
+import type { SectionProps } from "@/components/sections/types";
 
 /**
- * Split a delimited spec string ("a, b · c") into trimmed, non-empty chips.
- * Paren-aware: commas/dots INSIDE parentheses are not delimiters, so a value like
- * "…Mandarin (6 yrs, advanced)" yields one clean chip, not "Mandarin (6 yrs" +
- * "advanced)". Only top-level "," and "·" split.
+ * Systems — the capabilities matrix (Act II, idiots canvas; SPEC v2 §3 row 7,
+ * SM-7 "same grammar"). A real matrix of rows (area · methods · tools ·
+ * outputs; table rows are the one place rules are allowed) — the bento grid,
+ * glow orbs, scan line and chip pills are retired. Beside it, FIG "How this
+ * page is built": a TRUE schematic of the pipeline that renders this very
+ * page, in the jugaad register; every count on it is computed from the live
+ * manifest at build time. The graph grid thins here toward open air (3I-07).
  */
-function toChips(value: string): string[] {
-  const chips: string[] = [];
-  let depth = 0;
-  let current = "";
-  for (const ch of value) {
-    if (ch === "(") depth += 1;
-    else if (ch === ")") depth = Math.max(0, depth - 1);
-    if ((ch === "," || ch === "·") && depth === 0) {
-      chips.push(current);
-      current = "";
-    } else {
-      current += ch;
-    }
-  }
-  chips.push(current);
-  return chips.map((t) => t.trim()).filter((t) => t.length > 0);
-}
+const COLS = [
+  ["Methods", "methods"],
+  ["Tools", "tools"],
+  ["Outputs", "outputs"],
+] as const;
 
-/** One lucide glyph per capability row, in data order (aria-hidden, aqua). */
-const ICONS: LucideIcon[] = [Microscope, Activity, Cpu, ShieldCheck, Languages];
-
-/** Asymmetric bento spans: cell 0 is the large hero cell. */
-const SPANS: string[] = [
-  "sm:col-span-2 lg:col-span-2 lg:row-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "sm:col-span-2 lg:col-span-2",
-];
-
-function Chips({ label, value }: { label: string; value: string }) {
-  const chips = toChips(value);
+export function Capabilities({ entry, number }: SectionProps<"matrix">) {
+  const titleId = `${entry.id}-title`;
+  const nodes = [
+    { label: "lib/page.ts", note: `manifest • ${enabledSections.length} sections` },
+    { label: "lib/film.ts", note: `${acts.length} acts • ${worksInUse.length} works` },
+    { label: "lib/sections.ts", note: `derives ${actCards.length} act cards` },
+    { label: "registry.ts", note: "type → component" },
+    { label: "SectionFrame", note: "data-world × data-tone" },
+  ];
   return (
-    <div>
-      <span className="eyebrow mb-2 block text-muted">{label}</span>
-      <ul className="flex flex-wrap gap-1.5">
-        {chips.map((chip) => (
-          <li
-            key={chip}
-            className="rounded-full border border-line bg-surface/60 px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wider text-stone"
-          >
-            {chip}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export function Capabilities() {
-  return (
-    <Section
-      id="systems"
-      seam
-      rhythm="tight"
-      backdrop={
-        <AmbientBackground
-          image="/media/still-blueprint.png"
-          opacity={0.24}
-          overlayClassName="bg-gradient-to-b from-canvas/82 via-canvas/86 to-canvas/92"
-        />
-      }
-    >
-      <SectionHeading
-        index="04"
-        eyebrow="Systems · Capabilities"
+    <WorldSection entry={entry} labelledBy={titleId} ground groundClassName="world-ground--fade">
+      <SectionHead
+        id={titleId}
+        number={number}
+        label={entry.nav?.label ?? "Systems"}
         title="What I can actually do."
         intro="A working map, not a skills cloud: the methods I rely on, the tools behind them, and what they are meant to produce."
-        variant="right"
       />
 
-      {/* Monospace schema header (decorative, honest label, aria-hidden). */}
-      <div
-        aria-hidden="true"
-        className="mt-10 flex items-center justify-between border-b border-line pb-3 font-mono text-[0.7rem] uppercase tracking-wider text-muted"
-      >
-        <span>area · methods · tools · outputs</span>
-        <span className="hidden sm:inline">capabilities.schema</span>
-      </div>
-
-      <Reveal
-        stagger
-        role="list"
-        ariaLabel="Capabilities matrix"
-        className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:auto-rows-fr"
-      >
-        {capabilities.map((c, i) => {
-          const Icon = ICONS[i] ?? Microscope;
-          const isHero = i === 0;
-          return (
-            <RevealItem
-              key={c.area}
-              role="listitem"
-              className={cn(
-                "relative flex flex-col gap-4 overflow-hidden rounded-lg border border-line bg-surface/70 p-5 shadow-[inset_0_1px_0_0_rgba(230,237,243,0.05),0_16px_36px_-18px_rgba(0,0,0,0.7)] sm:p-6",
-                SPANS[i] ?? "",
-                isHero && "bg-elevated/70",
-              )}
-            >
-              {/* Hero cell carries the site's single amber accent (a corner glow). */}
-              {isHero ? (
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-10 -top-10 size-32 rounded-full bg-[radial-gradient(circle,rgba(244,183,64,0.12),transparent_70%)]"
-                />
-              ) : (
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-[radial-gradient(circle,rgba(45,212,191,0.08),transparent_70%)]"
-                />
-              )}
-
-              {isHero ? <ScanLine /> : null}
-
-              <div className="relative flex items-center justify-between">
-                <span className="font-mono text-[0.7rem] uppercase tracking-wider text-muted">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <Icon
-                  aria-hidden="true"
-                  strokeWidth={1.5}
-                  className="size-5 text-aqua"
-                />
-              </div>
-
-              <h3
-                className={cn(
-                  "relative font-serif font-medium text-ink",
-                  isHero ? "text-2xl" : "text-xl",
-                )}
+      <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
+        <div className="lg:col-span-8">
+          {/* column heads (desktop); every cell also carries its own label */}
+          <div
+            aria-hidden="true"
+            className="hidden border-b border-rule pb-tier-pair lg:grid lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
+          >
+            <span className="type-meta text-fg-muted">Area</span>
+            {COLS.map(([label]) => (
+              <span key={label} className="type-meta text-fg-muted">
+                {label}
+              </span>
+            ))}
+          </div>
+          <ol aria-label="Capabilities matrix" className="border-t border-rule lg:border-t-0">
+            {capabilities.map((c, i) => (
+              <Rise
+                as="li"
+                key={c.area}
+                delay={i * 0.04}
+                className="grid grid-cols-1 gap-3 border-b border-rule py-tier-group lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
               >
-                {c.area}
-              </h3>
+                <h3 className="type-heading text-fg lg:text-[length:var(--text-lead)] lg:leading-[1.45]">{c.area}</h3>
+                {COLS.map(([label, key]) => (
+                  <dl key={key}>
+                    <dt className="type-meta text-fg-muted lg:sr-only">{label}</dt>
+                    <dd className="mt-1 type-small text-fg-muted lg:mt-0">{c[key]}</dd>
+                  </dl>
+                ))}
+              </Rise>
+            ))}
+          </ol>
+        </div>
 
-              <p className="relative text-sm leading-relaxed text-stone">
-                {c.methods}
-              </p>
-
-              <div className="relative mt-auto flex flex-col gap-4">
-                <Chips label="Tools" value={c.tools} />
-                <Chips label="Outputs" value={c.outputs} />
-              </div>
-            </RevealItem>
-          );
-        })}
-      </Reveal>
-    </Section>
+        <div className="lg:col-span-4">
+          {/* FIG numbering continues the chapters' FIG. 1…n (M1: they render in `work`) */}
+          <Schematic fig={`FIG. ${featuredProjects.length + 1} • How this page is built • ${nodes.length} stages`} nodes={nodes} />
+          <Meta
+            className="mt-tier-group"
+            fields={["Native scroll", "CSS + SVG first", "no WebGL"]}
+          />
+        </div>
+      </div>
+    </WorldSection>
   );
 }

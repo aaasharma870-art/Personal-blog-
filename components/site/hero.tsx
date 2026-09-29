@@ -9,10 +9,16 @@ import { Magnetic } from "@/components/ui/magnetic";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 import { GithubMark } from "@/components/ui/icons";
 import { microTags, site } from "@/lib/content";
+import { anchorId, hrefOfType } from "@/lib/sections";
+import type { SectionProps } from "@/components/sections/types";
 
-export function Hero() {
+export function Hero({ entry }: SectionProps<"hero">) {
+  // CTA targets come from the manifest; a CTA hides if its section is hidden.
+  const workHref = hrefOfType("gauntlet");
+  const contactHref = hrefOfType("contact");
   return (
     <HeroScene
+      id={anchorId(entry)}
       media={
         <AmbientBackground
           image="/media/hero-volsurface.webp"
@@ -64,15 +70,17 @@ export function Hero() {
 
         <RevealItem>
           <div className="mt-7 flex flex-wrap items-center gap-3">
-            <Magnetic strength={0.22}>
-              <a
-                href="#work"
-                className="glow-accent group inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 text-sm font-medium text-canvas transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-gold-bright hover:shadow-[0_0_0_1px_rgba(94,234,212,0.5),0_16px_50px_-12px_rgba(45,212,191,0.7)]"
-              >
-                View the quant portfolio
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            </Magnetic>
+            {workHref ? (
+              <Magnetic strength={0.22}>
+                <a
+                  href={workHref}
+                  className="glow-accent group inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 text-sm font-medium text-canvas transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-gold-bright hover:shadow-[0_0_0_1px_rgba(94,234,212,0.5),0_16px_50px_-12px_rgba(45,212,191,0.7)]"
+                >
+                  View the quant portfolio
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </Magnetic>
+            ) : null}
             <Magnetic strength={0.3}>
               <a
                 href={site.github}
@@ -84,12 +92,14 @@ export function Hero() {
                 GitHub
               </a>
             </Magnetic>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-2 py-3 text-sm text-stone underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-gold/60"
-            >
-              Get in touch
-            </a>
+            {contactHref ? (
+              <a
+                href={contactHref}
+                className="inline-flex items-center gap-2 px-2 py-3 text-sm text-stone underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-gold/60"
+              >
+                Get in touch
+              </a>
+            ) : null}
           </div>
         </RevealItem>
 

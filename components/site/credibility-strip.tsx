@@ -5,12 +5,12 @@ import {
   motion,
   useAnimationFrame,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
   useVelocity,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { ease } from "@/lib/motion";
 import { credibility } from "@/lib/content";
 

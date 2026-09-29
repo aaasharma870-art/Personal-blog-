@@ -5,11 +5,11 @@ import type { MouseEvent, ReactNode } from "react";
 import {
   motion,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
+import { useReducedMotion } from "@/lib/flags";
 import { Parallax } from "@/components/visuals/parallax";
 import { HeroBloom } from "@/components/visuals/hero-bloom";
 import { ScrollCue } from "@/components/visuals/scroll-cue";
@@ -25,12 +25,15 @@ import { springSoft } from "@/lib/motion";
  * scroll-driven, beginning only after load).
  */
 export function HeroScene({
+  id,
   media,
   lattice,
   panel,
   panelCaption,
   children,
 }: {
+  /** The section's #anchor (from the page manifest; none when `anchor: false`). */
+  id?: string;
   media: ReactNode;
   lattice: ReactNode;
   panel: ReactNode;
@@ -106,7 +109,7 @@ export function HeroScene({
 
   return (
     <section
-      id="top"
+      id={id}
       ref={sectionRef}
       onMouseMove={onPointerMove}
       onMouseLeave={onPointerLeave}
