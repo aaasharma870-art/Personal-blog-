@@ -56,7 +56,7 @@ import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
  * RECOGNIZABILITY (M2, binding; §4.3, §5 S03/S04/S07/S13/S17, §8): every card,
  * DEFAULT and ALT, names its FILM prominently (the world's fan face at
  * --text-title, above the frame), shows the film's most iconic imagery
- * (iconic-pearl + a Jolly Roger; the ICE lecture hall; the Heartlands at
+ * (iconic-pearl; the ICE lecture hall; the Heartlands at
  * golden hour / Dead Eye; the Great Hall) and names the MOMENT under the
  * frame ("THE BLACK PEARL • PIRATES OF THE CARIBBEAN"). The world change
  * into and out of every card is a dissolve (CardShell prev/next grounds,
@@ -79,7 +79,7 @@ import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
 const REVEAL: Record<ActCardItem["transition"], { title: number; line: number }> = {
   opening: { title: 0.05, line: 0.5 },
   seam: { title: 0.05, line: 0.75 },
-  tintype: { title: 0.8, line: 0.85 },
+  tintype: { title: 0.66, line: 0.74 },
   ignite: { title: 0.25, line: 0.6 },
   reel: { title: 0.1, line: 0.5 },
   title: { title: 0.1, line: 0.5 },
@@ -163,17 +163,15 @@ export function openingRows(): OpeningRow[] {
 
 type Ground = { world: WorldId; tone: ToneId };
 
-/** The ground the reader leaves: the previous section's plane. The films
- *  chapter ends on its LAST screen, whose ground is the last act's world
- *  deep (RECOGNIZABILITY S12: screens in act order, each on its world deep). */
+/** The ground the reader leaves: the previous section's plane — the films
+ *  chapter included: its last screen's bottom 24vh returns to the chapter's
+ *  own house deep (film-screen.tsx T6), so the tintype card's top dissolves
+ *  FROM house deep (T7; painting the last act's deep here left a band where
+ *  the house blue-black met it, D10-act-3-enter). */
 function groundBefore(item: ActCardItem): Ground | null {
   const i = enabledSections.findIndex((s) => s.id === item.before);
   const prev = i > 0 ? enabledSections[i - 1] : null;
   if (!prev) return null;
-  if (prev.type === "films") {
-    const last = acts[acts.length - 1];
-    return last ? { world: last.world, tone: "deep" } : { world: worldOf(prev), tone: toneOf(prev) };
-  }
   return { world: worldOf(prev), tone: toneOf(prev) };
 }
 
@@ -195,13 +193,33 @@ export function fireBefore(item: ActCardItem): readonly [number, number] | null 
   return a ? markOf(a.id, "fire") : null;
 }
 
+/** The previous section's still plate as that variant shows it (Voices:
+ *  `media` = iconic-camp; its ALT view shows `altMedia` = MV-11, else the
+ *  plate's registered alt) — the OUTGOING picture the ignite card holds
+ *  while its embers rise (T10, ART-DIRECTOR #6). null → no camp plate. */
+function campBefore(item: ActCardItem, v: Variant): MediaId | null {
+  const i = enabledSections.findIndex((s) => s.id === item.before);
+  const prev = i > 0 ? enabledSections[i - 1] : null;
+  const props = prev ? (prev.props as { media?: unknown; altMedia?: unknown }) : null;
+  const pick = (m: unknown) => (typeof m === "string" && isMediaId(m) ? m : null);
+  const media = pick(props?.media);
+  const alt = v === "alt" ? pick(props?.altMedia) : null;
+  const id = alt ? usable(alt) : variantMedia(media ?? undefined, v);
+  return id && resolveMedia(id)?.kind === "image" ? id : null;
+}
+
 /* — Captions ———————————————————————————————————————————————————————— */
 
 /** One MOMENT caption cue for CardCaptions, or null when the caption may
  *  not render in this build. */
 function cue(
   key: CaptionKey,
-  opts: { in?: readonly [number, number]; out?: readonly [number, number]; settled?: boolean } = {},
+  opts: {
+    in?: readonly [number, number];
+    out?: readonly [number, number];
+    settled?: boolean;
+    slot?: CaptionCue["slot"];
+  } = {},
 ): CaptionCue | null {
   const c = captionOf(key);
   if (!c) return null;
@@ -212,8 +230,20 @@ function cue(
     in: opts.in,
     out: opts.out,
     settled: opts.settled ?? true,
+    slot: opts.slot,
   };
 }
+
+/** The OUTGOING caption of a transition: over the frame's top-right corner
+ *  — on screen as the card enters, and beside the part of the picture the
+ *  old world still holds — through the whole first half of the morph,
+ *  still up at its middle (p .5), gone by .58 (ART-DIRECTOR #6: enter and
+ *  mid frames carry it). */
+const OUT = { out: [0.5, 0.58], settled: false, slot: "frame" } as const;
+/** The incoming caption of a long card, under the frame: in as the
+ *  incoming world takes over, fully up at the transition's middle (p .5) —
+ *  so the mid frame names BOTH worlds, each beside its half. */
+const IN_BY_MID = [0.42, 0.5] as const;
 
 const cues = (...xs: (CaptionCue | null)[]): CaptionCue[] => xs.filter((x): x is CaptionCue => x !== null);
 
@@ -302,12 +332,13 @@ export function ActCardSection({
   let after: ReactNode = null;
   let altAfter: ReactNode = null;
   let captions: CaptionCue[] = [];
-  let altCaptions: CaptionCue[] = [];
+  let altCaptions: CaptionCue[] | undefined;
   switch (kind) {
     case "opening": {
       // S03/S04: the hero sea sinks into the deep (CardShell featherUp);
-      // the Black Pearl opens by aperture from its own horizon, a Jolly
-      // Roger at its stern; the program (h2 + rows + Jack's compass) below.
+      // the Black Pearl opens by aperture from its own horizon, its top
+      // feathered into the deep; the program (h2 + rows + Jack's compass)
+      // below.
       const pearl = spec.media.cardStill;
       frame = <OpeningPlateFrame plate={variantMedia(pearl, "default")} />;
       altFrame = <OpeningPlateFrame plate={variantMedia(pearl, "alt")} alt />;
@@ -320,9 +351,18 @@ export function ActCardSection({
       );
       const rows = openingRows();
       after = <OpeningFrame heading={openingHeading} rows={rows} />;
-      altAfter = <OpeningMapFrame heading={openingHeading} rows={rows} />;
+      // the ALT's caption names the CHART, so it sits under the chart box
+      // (ART-DIRECTOR #9), not under the Pearl: the shell gets none
+      const chartKey = settledKey("cap.act-1", "alt");
+      altAfter = (
+        <OpeningMapFrame
+          heading={openingHeading}
+          rows={rows}
+          caption={captionOf(chartKey) ? <SceneCaption k={chartKey} place="under" /> : null}
+        />
+      );
       captions = cues(cue(settledKey("cap.act-1", "default"), { in: [0.55, 0.8] }));
-      altCaptions = cues(cue(settledKey("cap.act-1", "alt"), { in: [0.55, 0.8] }));
+      altCaptions = [];
       break;
     }
     case "seam": {
@@ -347,12 +387,12 @@ export function ActCardSection({
         frame = <ReelFrame world={item.to} still={null} kind="title" />;
       }
       captions = cues(
-        cue("cap.act-2.out", { out: [0.1, 0.35], settled: false }),
-        cue(settledKey("cap.act-2", "default"), { in: [0.6, 0.8] }),
+        cue("cap.act-2.out", OUT),
+        cue(settledKey("cap.act-2", "default"), { in: IN_BY_MID }),
       );
       altCaptions = cues(
-        cue("cap.act-2.out", { out: [0.1, 0.35], settled: false }),
-        cue(settledKey("cap.act-2", "alt"), { in: [0.6, 0.8] }),
+        cue("cap.act-2.out", OUT),
+        cue(settledKey("cap.act-2", "alt"), { in: IN_BY_MID }),
       );
       break;
     }
@@ -365,7 +405,8 @@ export function ActCardSection({
       frame = <TintypeFrame plate={plate} />;
       const deadeye = variantMedia(spec.media.cardAltStill, "default") ?? variantMedia(spec.media.cardStill, "alt");
       altFrame = <TintypeDeadEyeFrame plate={deadeye} />;
-      captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.82, 0.96] }));
+      // the plate develops over p .15–.7: its caption comes up with it
+      captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.4, 0.55] }));
       altCaptions = cues(cue(settledKey("cap.act-3", "alt"), { in: [0.3, 0.45] }));
       break;
     }
@@ -374,19 +415,18 @@ export function ActCardSection({
       // candles along the Line; the lit Line (MV-07) at p .7–.85, then the
       // Great Hall (iconic-hall). ALT: one Lumos light sweeps the hall and
       // lights it; it settles on iconic-hall-alt.
+      // Both worlds at mid (ART-DIRECTOR #6): the camp (Voices' own plate)
+      // holds with its ember glow until p ≈ .45 while the Great Hall comes
+      // up to a third from p ≈ .35, then takes the frame.
       const hall = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
       const mid = variantMedia(spec.media.cardMidStill, "default");
       const fire = fireBefore(item);
-      frame = <IgniteFrame hall={hall} mid={mid} fire={fire} />;
-      altFrame = <IgniteLumosFrame hall={variantMedia(spec.media.cardStill, "alt") ?? hall} />;
-      captions = cues(
-        cue("cap.act-4.out", { out: [0.05, 0.3], settled: false }),
-        cue(settledKey("cap.act-4", "default"), { in: [0.85, 0.95] }),
+      frame = <IgniteFrame hall={hall} mid={mid} fire={fire} camp={campBefore(item, "default")} />;
+      altFrame = (
+        <IgniteLumosFrame hall={variantMedia(spec.media.cardStill, "alt") ?? hall} camp={campBefore(item, "alt")} />
       );
-      altCaptions = cues(
-        cue("cap.act-4.out", { out: [0.05, 0.3], settled: false }),
-        cue(settledKey("cap.act-4", "alt"), { in: [0.85, 0.95] }),
-      );
+      captions = cues(cue("cap.act-4.out", OUT), cue(settledKey("cap.act-4", "default"), { in: IN_BY_MID }));
+      altCaptions = cues(cue("cap.act-4.out", OUT), cue(settledKey("cap.act-4", "alt"), { in: IN_BY_MID }));
       break;
     }
     default:

@@ -47,7 +47,7 @@ function useBox(ref: React.RefObject<HTMLElement | null>) {
 
 /** A hand-drawn loop (a superellipse, n = 6, that contains the box's corners)
  *  starting at ~10 o'clock and overshooting its start, as a chalk hand does. */
-function loopPath(w: number, h: number): { d: string; vw: number; vh: number; ox: number; oy: number } {
+export function loopPath(w: number, h: number): { d: string; vw: number; vh: number; ox: number; oy: number } {
   const px = Math.min(18, 12 + 0.04 * w); // stays inside the page gutter at 320
   const py = 8 + 0.18 * h;
   const a = w / 2 + px;

@@ -157,17 +157,27 @@ export type StoryProps =
  *  §5 "order the index by strength"). */
 export type ChapterAppendix = "origin" | "supporting";
 
+/** An Act II head plate (M2 finish; components/worlds/idiots/plate-band.tsx).
+ *  `media` is the DEFAULT plate; the ALT plays the other side of its media
+ *  pair (lib/media.ts `variants` / `variantOf`). `standInMedia`: what the
+ *  head shows (and captions as itself) while `media` is still "planned". */
+export type HeadPlate = { media: MediaId; standInMedia?: MediaId };
+
 /** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
  *  retired D-3 layer, kept only until the retirement pass deletes them. */
 export type SectionEntry =
   | Entry<"hero", HeroProps>
   | Entry<"story", StoryProps>
-  | Entry<"gauntlet", { board: MediaId }>
-  | Entry<"chapter", { projectId: string; cover: CodeRef; appendix?: readonly ChapterAppendix[] }>
+  /** `head`: the full-bleed band above the h2 (M2 finish: iconic-corridor). */
+  | Entry<"gauntlet", { board: MediaId; head?: HeadPlate }>
+  /** `head`: the band at the chapter's head, before its facts (M2 finish:
+   *  optuna-screener's lecture-hall board, IC-3I-05). */
+  | Entry<"chapter", { projectId: string; cover: CodeRef; appendix?: readonly ChapterAppendix[]; head?: HeadPlate }>
   | Entry<"experiment", { demo: "backtest" }>
   /** `media`: the 21:9 band at the section head (M2: iconic-drone, S10). */
   | Entry<"matrix", { source: "capabilities"; media?: MediaId }>
-  | Entry<"ledger", { include: ("flagships" | "survivors" | "killed")[] }>
+  /** `head`: the header inset beside the h2 (M2 finish: iconic-pen, O-5). */
+  | Entry<"ledger", { include: ("flagships" | "survivors" | "killed")[]; head?: HeadPlate }>
   | Entry<"films", { order: "acts" }>
   | Entry<"index", { source: "writing"; preview: "vignette" | "filmstrip" | "inline" }>
   /** `media`: the DEFAULT plate (M2: iconic-camp); `altMedia` + `loop`: the
@@ -260,7 +270,9 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Work", primary: true },
-    props: { board: "MV-06" },
+    // head: THE CORRIDORS OF ICE (iconic-corridor, planned → the lecture
+    // hall stand-in, iconic-ice-alt, until the plate lands)
+    props: { board: "MV-06", head: { media: "iconic-corridor", standInMedia: "iconic-ice-alt" } },
   },
   {
     id: "trading-algos",
@@ -280,6 +292,8 @@ export const page: readonly SectionEntry[] = [
       projectId: "optuna-screener",
       cover: "code:schematic-optuna",
       appendix: ["origin", "supporting"],
+      // head: WHAT IS A MACHINE? (the lecture-hall board; ALT iconic-ice)
+      head: { media: "iconic-ice-alt" },
     },
   },
   {
@@ -317,7 +331,8 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
-    props: { include: ["flagships", "survivors", "killed"] },
+    // head: VIRUS'S ASTRONAUT PEN (iconic-pen; its code stand-in while planned)
+    props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
   },
 
   /* ══ INTERMISSION · house ══ (act null) */

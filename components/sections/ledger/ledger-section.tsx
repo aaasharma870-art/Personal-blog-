@@ -2,8 +2,8 @@ import { LedgerIndex, type LedgerRow } from "@/components/site/ledger-reckoning"
 import { Meta } from "@/components/site/world-kit";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
 import { SceneCaption } from "@/components/primitives/scene-caption";
-import { AstronautPen } from "@/components/worlds/idiots/chalk";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
+import { PenInset } from "@/components/worlds/idiots/plate-band";
 import { featuredProjects, killList, survivors } from "@/lib/content";
 import { variantChoiceOf } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
@@ -13,8 +13,12 @@ import type { SectionProps } from "@/components/sections/types";
    Act II · idiots canvas; RECOGNIZABILITY S11, O-5, T5; SM-17 host).
    HEADER (the film cue lives here only, O-5): Virus's astronaut pen (the
    pen kept for the one student who proves worthy — here, only the three
-   survivors did) by the "3 SURVIVED THE FULL PROCESS" Meta, and the
-   caption VIRUS'S ASTRONAUT PEN • 3 IDIOTS opposite the h2.
+   survivors did) as a large inset beside the h2 (M2 finish, ART-DIRECTOR
+   #9: the 56 px doodle read as a sled): the iconic-pen plate, the pen in
+   its open velvet case — or its code stand-in, PenCase, while that plate is
+   planned — ≥ 45 % of the content width at 1440, with the caption VIRUS'S
+   ASTRONAUT PEN • 3 IDIOTS under it (never beside the Meta count, never on
+   a row). Variants (`kill-list.head`): default pats, alt lid-lift.
    ROWS (components/site/ledger-reckoning.tsx): the Lens Index, equally
    quiet at rest; no chalk, no icons (D-6, H27).
    GROUND: the Act II graph grid (≤ 6 %) arrives here at half strength from
@@ -100,21 +104,28 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
       gridMask="linear-gradient(to bottom, color-mix(in srgb, black 50%, transparent) 0%, color-mix(in srgb, black 50%, transparent) var(--ledger-grid-a, 25%), transparent var(--ledger-grid-b, 88%))"
       fadeOut
     >
-      <header className="flex flex-col gap-tier-group lg:flex-row lg:items-end lg:justify-between lg:gap-x-6">
-        <div className="min-w-0">
-          <div className="flex items-center gap-4">
-            <AstronautPen className="shrink-0" />
-            <Meta fields={[number, "The reckoning", `${survivors.length} survived the full process`]} />
-          </div>
+      <header className="grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:items-start lg:gap-x-6">
+        <div className="min-w-0 lg:col-span-6 lg:pt-tier-group">
+          <Meta fields={[number, "The reckoning", `${survivors.length} survived the full process`]} />
           <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg">
             The kill-list
           </MaskReveal>
+          <p className="mt-tier-group max-w-body type-body text-fg-muted">
+            Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
+          </p>
         </div>
-        <SceneCaption k="cap.kill-list" place="head" className="lg:shrink-0 lg:pb-2" />
+        {entry.props.head ? (
+          <PenInset
+            spec={entry.props.head}
+            choice={variantChoiceOf(entry)}
+            pieceKey="kill-list.head"
+            captionKey="cap.kill-list"
+            className="lg:col-span-6"
+          />
+        ) : (
+          <SceneCaption k="cap.kill-list" place="head" className="lg:col-span-6 lg:self-end lg:pb-2" />
+        )}
       </header>
-      <p className="mt-tier-group max-w-body type-body text-fg-muted">
-        Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
-      </p>
 
       <LedgerIndex rows={rows} choice={variantChoiceOf(entry)} />
 

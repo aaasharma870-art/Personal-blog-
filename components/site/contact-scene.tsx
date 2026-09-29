@@ -13,7 +13,15 @@ import { MediaFrame } from "@/components/primitives/media-frame";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
 import { ContactFinale } from "@/components/site/contact-finale";
-import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
+import { Footprint, PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
+import {
+  CandleField,
+  CeilingClouds,
+  NightSky,
+  StarField,
+  spotsIn,
+  type CandleSpot,
+} from "@/components/worlds/hp/hall-ceiling";
 
 /* ============================================================================
    CONTACT SCENE — the last light's plate, the bracket over the flame, the
@@ -22,8 +30,10 @@ import { PrintAt, walkBetween } from "@/components/worlds/hp/footprints";
    THE PLATE is a feathered WINDOW onto MV-08 (the default plate; both
    loops, MV-09 and MV-09-alt, start and end on it): the box shows the
    plate's right part (CROP) — the last candles of the trail and the one
-   floating candle — its left edge and top/bottom dissolving into hp deep
-   (a mask, never a scrim over text; no text ever sits on it). The loop
+   floating candle — every edge dissolving into the dark (a radial mask,
+   never a scrim over text; no text ever sits on it). Around it, the Great
+   Hall's enchanted ceiling (HallField) and, under it, the caption; below
+   the column the trail runs on to the credits (LastLightTrail, T12). The loop
    plays in the same box (MediaFrame: desktop + fine pointer only, in view,
    holding the one DecoderLock; reduced motion / Pause / Save-Data = the
    poster, 0 video bytes).
@@ -65,16 +75,114 @@ function flameOf(plate: MediaId): readonly [number, number] {
  *  candle (≈ 19 × 105 px in a 500 px window), with its calm surround. */
 const CROP = { x0: 0.6, x1: 1, y0: 0.2, y1: 0.72 } as const;
 
-/** Left edge dissolves into the dark (the trail comes out of it); top and
- *  bottom feather too, so the window has no edge on hp deep. */
-const FEATHER: CSSProperties = {
-  maskImage:
-    "linear-gradient(to right, transparent 0%, #000 30%), linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%)",
-  WebkitMaskImage:
-    "linear-gradient(to right, transparent 0%, #000 30%), linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%)",
+/** A radial feather (ART-DIRECTOR #13): the window dissolves into the dark
+ *  on every side — no rectangular edge on hp deep or on the hall's ceiling
+ *  around it. Full at the flame and the trail's last candles; the walk
+ *  (ALT) comes out of the dark at the lower left. */
+const FEATHER_MASK = "radial-gradient(ellipse 52% 50% at 52% 50%, #000 52%, rgb(0 0 0 / 0.62) 76%, transparent 100%)";
+const FEATHER: CSSProperties = { maskImage: FEATHER_MASK, WebkitMaskImage: FEATHER_MASK };
+
+/* — the Great Hall around the last light (the ceiling, S19; ≥ lg around
+     the plate, < lg a band above it). Field coordinates: % of a box from
+     28 % of the column's width left of it to the page edge, one viewport
+     tall, centred on the column (= the section's middle). The plate's core
+     (x ≥ 22 %, y 27–82 %: the window and its caption) stays clear. — */
+const HALL: readonly CandleSpot[] = [
+  ...spotsIn(12, 81, { x0: 26, x1: 98, y0: 9, y1: 17 }, { w0: 5, w1: 8, o0: 0.4, o1: 0.62 }),
+  ...spotsIn(8, 83, { x0: 28, x1: 97, y0: 13, y1: 21 }, { w0: 9, w1: 13, o0: 0.62, o1: 0.85 }),
+  ...spotsIn(4, 85, { x0: 36, x1: 96, y0: 16, y1: 21 }, { w0: 15, w1: 19, o0: 0.88, o1: 1 }),
+  ...spotsIn(5, 87, { x0: 6, x1: 20, y0: 30, y1: 60 }, { w0: 7, w1: 12, o0: 0.6, o1: 0.85 }),
+].sort((a, b) => a.w - b.w);
+/** The band above the plate below lg (phones, tablets). */
+const HALL_BAND = spotsIn(9, 91, { x0: 4, x1: 96, y0: 10, y1: 42 }, { w0: 6, w1: 16, o0: 0.5, o1: 1 });
+const LEFT_FADE = "linear-gradient(to right, transparent, #000 30%)";
+const X_FADE = "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)";
+const masked2 = (a: string, b: string): CSSProperties => ({
+  maskImage: `${a}, ${b}`,
+  WebkitMaskImage: `${a}, ${b}`,
   maskComposite: "intersect",
   WebkitMaskComposite: "source-in",
-};
+});
+
+/** The hall's night ceiling and its candles, behind and around the plate. */
+function HallField() {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -z-10 hidden lg:block"
+        style={{ left: "-28%", right: 0, top: "calc(50% - 50svh)", height: "100svh" }}
+        data-motif="great-hall-ceiling"
+      >
+        <NightSky
+          className="inset-0"
+          stops={[[0, "0%"], [0.9, "12%"], [0.72, "40%"], [0.3, "62%"], [0, "80%"]]}
+          style={{ maskImage: LEFT_FADE, WebkitMaskImage: LEFT_FADE }}
+        />
+        <CeilingClouds
+          className="inset-x-0 top-[4%] h-[52%]"
+          style={masked2(LEFT_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")}
+        />
+        <StarField
+          className="inset-x-0 top-0 h-[72%]"
+          style={masked2(LEFT_FADE, "linear-gradient(to bottom, transparent 4%, #000 14%, #000 58%, transparent)")}
+        />
+        <CandleField spots={HALL} className="inset-0" />
+      </div>
+      <div aria-hidden="true" className="relative -mx-gutter h-32 sm:h-40 lg:hidden" data-motif="great-hall-ceiling">
+        <NightSky className="inset-0" stops={[[0, "0%"], [0.85, "30%"], [0.6, "75%"], [0, "100%"]]} style={{ maskImage: X_FADE, WebkitMaskImage: X_FADE }} />
+        <StarField className="inset-0" style={masked2(X_FADE, "linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent)")} />
+        <CandleField spots={HALL_BAND} className="inset-x-gutter inset-y-0" />
+      </div>
+    </>
+  );
+}
+
+/* — T12: the last light's trail runs on down to the credits (≥ lg). From
+     under the plate's flame to the section's bottom centre (the credits'
+     head), fading: DEFAULT a dotted trail of ink points, the candles' trail
+     continuing as ink (the credits close it with the "Mischief managed."
+     fold); ALT the Map's footprints walking on. Static (no motion). — */
+const TRAIL_N = 13;
+const TRAIL = Array.from({ length: TRAIL_N }, (_, i) => {
+  const t = (i + 0.5) / TRAIL_N;
+  const e = Math.pow(t, 2.2);
+  const x = 79 - 71 * e;
+  // heading in px for a ≈ 800 × 270 box: dx/dt, dy/dt
+  const dx = -0.71 * 2.2 * Math.pow(t, 1.2) * 800;
+  const dy = 270;
+  return { x, y: t * 100, o: 0.62 - 0.4 * t, deg: (Math.atan2(dy, dx) * 180) / Math.PI + 90 };
+});
+
+function LastLightTrail({ variant }: { variant: Variant }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute top-full hidden lg:block"
+      style={{ left: "-60%", right: 0, height: "calc(50svh - 50%)" }}
+      data-motif="last-light-trail"
+      data-variant={variant}
+    >
+      {TRAIL.map((p, i) =>
+        variant === "alt" ? (
+          <span
+            key={i}
+            className="absolute"
+            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o, transform: `translate(-50%, -50%) rotate(${p.deg.toFixed(1)}deg)` }}
+          >
+            <Footprint side={i % 2 ? "right" : "left"} size={12} fill="var(--w-ink-contour)" />
+          </span>
+        ) : (
+          <span
+            key={i}
+            className="absolute size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o }}
+          />
+        ),
+      )}
+    </div>
+  );
+}
 
 export function ContactScene({
   choice,
@@ -121,7 +229,8 @@ export function ContactScene({
         {text}
         <ContactFinale email={email} github={github} onCopied={onCopied} />
       </div>
-      <div className="lg:col-span-4 lg:col-start-9 lg:mr-[calc(-1*var(--spacing-gutter))]">
+      <div className="relative lg:col-span-4 lg:col-start-9 lg:mr-[calc(-1*var(--spacing-gutter))]">
+        <HallField />
         <LastLightPlate
           loopId={loopId}
           plateId={plateId}
@@ -129,7 +238,9 @@ export function ContactScene({
           flare={flare}
           initials={initials}
         />
-        <SceneCaption k="cap.contact" place="under" className="lg:hidden" />
+        {/* the caption belongs to the plate, under it (never stacked on the h2) */}
+        <SceneCaption k="cap.contact" place="under" className="lg:pr-gutter" />
+        <LastLightTrail variant={variant} />
       </div>
     </div>
   );

@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
-import { dur, ease } from "@/lib/motion";
+import { useMemo, useRef } from "react";
+import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/kit";
@@ -10,6 +9,8 @@ import { LINE, LINE_D, measurePath, remap } from "@/components/primitives/loader
 import { CANDLE_SPRITE, FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { FIRE0_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
+import { CAMP_OUT, EMBER_OUT, fireInFrame, hallAt } from "@/components/sections/act-card/frames/ignite";
+import { FRAME_ASPECT, PlateBox, plateOf } from "@/components/sections/act-card/plate";
 
 /**
  * Card III→IV, ALT choreography "lumos-sweep" (lib/variants.ts
@@ -21,20 +22,27 @@ import { useCard } from "@/components/sections/act-card/card-context";
  * passes catches, in the order it passes them. One pinned driver p (≤ 60vh
  * on a desktop fine pointer; everything a pure function of p, reversible
  * and pixel-identical on return):
- *   0–.12    the rd → hp ground crossfade (CardShell `fromGround`); the
- *            campfire at the Line's start burns down and goes out, while the
- *            hall's candles appear unlit (faint ink tapers).
- *   .1–.2    Lumos: the light is struck where the fire was (one warm family
- *            at a time: the fire is out before the first candle catches).
+ *   0–.6     THE CAMP holds, as in the default (M2 ART-DIRECTOR #6): the
+ *            Voices ALT's own plate (MV-11, the campfire under the stars)
+ *            fills the frame and sinks into the hp deep over .3–.6, its
+ *            fire glowing until ≈ .45; the rd → hp ground crossfade
+ *            (CardShell `fromGround`); the hall's candles appear unlit
+ *            (faint ink tapers). (No camp plate: a code campfire at the
+ *            Line's start burns down and is out by .12.)
+ *   .1–.2    Lumos: the light is struck AT THE CAMP'S FIRE and carried to
+ *            the Line's start.
  *   .2–.82   the sweep: the light runs a flourish across the hall; a candle
  *            catches as the light's reach passes it (a ramp, never a pop),
  *            a short ink tail follows the light, and the Line below is inked
  *            up to the light's reach.
+ *   .35–.55  THE GREAT HALL (iconic-hall-alt) comes up to a third behind the
+ *            sweep: at the middle (p .5) the camp is going, the hall
+ *            arriving, the light between them — both worlds.
  *   .82–.96  the light comes down onto the Line's end and becomes the last
  *            warm point (a flame sprite); the hall is lit.
- *   > .9     THE GREAT HALL (iconic-hall-alt; RECOGNIZABILITY S17: both
- *            variants settle on the hall) swaps in on dur.preview (a state
- *            swap) — "LUMOS — THE GREAT HALL LIGHTS UP • HARRY POTTER".
+ *   .78–.94  the hall takes the frame (RECOGNIZABILITY S17: both variants
+ *            settle on the hall) as the drawn hall fades — "LUMOS — THE
+ *            GREAT HALL LIGHTS UP • HARRY POTTER". Opacity scrubs of p only.
  * Every luminous pixel is a pre-rendered sprite (<image>, plus-lighter;
  * Law 1): 36 candles + 1 light + 1 fire + 1 flame (≤ 40, ignite G5); no
  * canvas, no DOM glow, no aqua beyond the one cool light. Static card (RM, Pause, < 1024 /
@@ -103,50 +111,90 @@ const FIRE_AT = LINE.at(0);
 const END_AT = LINE.at(1);
 const LIGHT = 34;
 
-export function IgniteLumosFrame({ hall }: { hall: MediaId | null }) {
+/** A 2.39:1 frame point (0–1) in the hall's viewBox (xMidYMid meet). */
+function frameToHall([fx, fy]: readonly [number, number]): { x: number; y: number } {
+  const a = FRAME_ASPECT.sm;
+  if (a >= VB.w / VB.h) {
+    const w = a * VB.h; // the frame's width in viewBox units
+    return { x: VB.x + fx * w - (w - VB.w) / 2, y: VB.y + fy * VB.h };
+  }
+  const h = VB.w / a;
+  return { x: VB.x + fx * VB.w, y: VB.y + fy * h - (h - VB.h) / 2 };
+}
+
+export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; camp?: MediaId | null }) {
   const { p, live } = useCard();
   const one = useMotionValue(1);
-  const [hallOn, setHallOn] = useState(() => p.get() > 0.9);
-  useMotionValueEvent(p, "change", (v) => {
-    const on = v > 0.9;
-    if (on !== hallOn) setHallOn(on);
-  });
+  const campPlate = plateOf(camp);
+  // the camp's fire in the hall's coordinates (null → the Line's start)
+  const fire = useMemo(() => {
+    const c = plateOf(camp);
+    const f = c ? fireInFrame(c) : null;
+    return f ? frameToHall(f) : null;
+  }, [camp]);
+  const campOpacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
+  const hallOpacity = useTransform(p, hallAt);
+  const drawnOpacity = useTransform(p, (v) => 1 - remap(v, 0.84, 0.94));
+
+  const campLayer =
+    live && campPlate ? (
+      <motion.div className="absolute inset-0 overflow-hidden" style={{ opacity: campOpacity }}>
+        <PlateBox plate={campPlate}>
+          <MediaFrame media={campPlate.asset.id} layout="fill" playOn="never" sizes="100vw" />
+        </PlateBox>
+      </motion.div>
+    ) : null;
 
   if (hall) {
     return (
       <div aria-hidden="true" data-frame="ignite-lumos" className="absolute inset-0">
-        {live ? <Hall key="live" p={p} /> : null}
-        <motion.div
-          className="absolute inset-0"
-          initial={false}
-          animate={{ opacity: !live || hallOn ? 1 : 0 }}
-          transition={live ? { duration: dur.preview, ease } : { duration: 0 }}
-        >
+        {campLayer}
+        <motion.div className="absolute inset-0" style={live ? { opacity: hallOpacity } : undefined}>
           <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
+        {/* the drawn hall (candles, the light) over the photograph until the
+            hall takes the frame */}
+        {live ? (
+          <motion.div className="absolute inset-0" style={{ opacity: drawnOpacity }}>
+            <Hall key="live" p={p} fire={fire} />
+          </motion.div>
+        ) : null}
       </div>
     );
   }
   return (
     <div aria-hidden="true" className="absolute inset-0">
+      {campLayer}
       {/* no hall yet (MV-07): the sweep ends on its own final frame */}
-      <Hall key={live ? "live" : "static"} p={live ? p : one} />
+      <Hall key={live ? "live" : "static"} p={live ? p : one} fire={live ? fire : null} />
     </div>
   );
 }
 
-function Hall({ p }: { p: MotionValue<number> }) {
+const smooth = (t: number) => t * t * (3 - 2 * t);
+
+function Hall({ p, fire: campFire }: { p: MotionValue<number>; fire: { x: number; y: number } | null }) {
   const u = useTransform(p, (v) => remap(v, SWEEP_T.from, SWEEP_T.to));
   const reach = useTransform(u, reachAt);
   const ink = useTransform(u, inkAt);
   const tapers = useTransform(p, (v) => remap(v, 0, 0.15));
-  const fire = useTransform(p, (v) => 1 - remap(v, 0.04, 0.12));
+  const fireAt = campFire ?? FIRE_AT;
+  // the camp's glow holds with its picture; the code fire goes out early
+  const fire = useTransform(p, (v) =>
+    campFire ? 1 - remap(v, EMBER_OUT.from, EMBER_OUT.to) : 1 - remap(v, 0.04, 0.12),
+  );
   const lightOn = useTransform(p, (v) => Math.min(remap(v, 0.1, 0.18), 1 - remap(v, 0.9, 0.96)));
   const last = useTransform(p, (v) => remap(v, 0.9, 0.96));
-  // the light: at the fire until the sweep starts, then along the flourish
+  // the light: struck at the fire, carried to the flourish's start (.12–.2),
+  // then along the flourish
   const lightRef = useRef<SVGImageElement>(null);
-  const lightT = useSvgAttr(lightRef, u, "transform", (t) => {
-    const q = SWEEP.at(t);
+  const start = SWEEP.at(0);
+  const lightT = useSvgAttr(lightRef, p, "transform", (v) => {
+    let q = SWEEP.at(remap(v, SWEEP_T.from, SWEEP_T.to));
+    if (v < SWEEP_T.from) {
+      const k = smooth(remap(v, 0.12, SWEEP_T.from));
+      q = { x: fireAt.x + (start.x - fireAt.x) * k, y: fireAt.y + (start.y - fireAt.y) * k };
+    }
     return `translate(${(q.x - LIGHT / 2).toFixed(1)} ${(q.y - LIGHT / 2).toFixed(1)})`;
   });
   // a short ink tail behind the light (the flourish, [u − .07, u])
@@ -187,8 +235,8 @@ function Hall({ p }: { p: MotionValue<number> }) {
         ))}
         <motion.image
           href={FIRE0_SPRITE}
-          x={FIRE_AT.x - 11}
-          y={FIRE_AT.y - 29}
+          x={fireAt.x - 11}
+          y={fireAt.y - 29}
           width={22}
           height={33}
           preserveAspectRatio="none"

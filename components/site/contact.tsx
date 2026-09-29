@@ -1,7 +1,6 @@
 import { site } from "@/lib/content";
 import { variantChoiceOf } from "@/lib/sections";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
-import { SceneCaption } from "@/components/primitives/scene-caption";
 import { ContactScene } from "@/components/site/contact-scene";
 import { Meta, WorldSection } from "@/components/site/world-kit";
 import type { SectionProps } from "@/components/sections/types";
@@ -21,13 +20,19 @@ import type { SectionProps } from "@/components/sections/types";
  * flame answer once (a 120 ms masked brightness flare inside the plate).
  *
  * The plate never sits under text (the invitation and the controls own the
- * left columns; the plate is its own feathered window at right, and below
- * the controls on mobile), so every glyph keeps the section's AA tokens.
- * Caption: A FLOATING CANDLE FROM THE GREAT HALL • HARRY POTTER — at the
- * head on desktop (the loop moves), under the plate on mobile.
+ * left columns; the plate is its own radially feathered window at right,
+ * and below the controls on mobile), so every glyph keeps the section's AA
+ * tokens. Around it, MORE OF THE GREAT HALL: the enchanted ceiling's night
+ * blue, clouds and stars, and a field of floating candles receding into it
+ * (code sprites; ≥ lg around the plate, a band above it below lg).
+ * Caption: A FLOATING CANDLE FROM THE GREAT HALL • HARRY POTTER — UNDER
+ * the plate at every width (ART-DIRECTOR #13: never stacked on the h2; the
+ * loop moves, so never on it).
  *
  * T12: the section's last 30vh deepens from hp deep to the house deep of
- * the credits (a background gradient), so the roll begins without an edge.
+ * the credits (a background gradient), so the roll begins without an edge,
+ * and the last light's trail runs on down to the credits' head (dots;
+ * ALT: the Map's footprints) — the credits close it with the ink fold.
  * Variant piece `contact.lastlight` (DEFAULT "bracket-close", ALT
  * "map-walk"): see contact-scene.tsx. Copy is unchanged (the invitation;
  * the lede keeps its "junior" wording, bar D13, pending Aryan).
@@ -50,9 +55,6 @@ export function Contact({ entry }: SectionProps<"contact">) {
         text={
           <>
             <Meta fields={[entry.nav?.label ?? "Contact"]} />
-            <div className="mt-tier-group hidden lg:block">
-              <SceneCaption k="cap.contact" place="head" />
-            </div>
             <MaskReveal
               as="h2"
               id={titleId}

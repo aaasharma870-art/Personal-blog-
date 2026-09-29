@@ -1050,6 +1050,25 @@ body {
   }
 }
 
+/* Act cards — the letterbox geometry (≥ 640; CardShell, M2 ART-DIRECTOR #5):
+   the upper bar is ≥ header + 8rem and the lower ≥ 8.5rem (grid rows), so
+   the FRAME may be at most 100svh − header − 17rem tall at 2.39:1 — full
+   bleed where that fits, else a centred window. The bars' text insets to
+   the frame's edges (never less than the gutter); the caption cell under the
+   frame's right corner has a fixed share of the frame (it never shrinks). */
+[data-act-card] {
+  --card-inset: var(--spacing-gutter);
+}
+@media (min-width: 40rem) {
+  .act-card-letterbox {
+    --card-frame-w: min(100vw, calc((100svh - var(--header-h) - 17rem) * var(--letterbox-ratio)));
+    --card-inset: max(var(--spacing-gutter), calc((100vw - var(--card-frame-w)) / 2));
+  }
+  .act-card-letterbox .act-card-cap {
+    width: calc(min(var(--card-frame-w) * 0.46, 34rem) + var(--card-inset) + 1.5rem);
+  }
+}
+
 /* Act cards — the opening card's row vignette: that act's Line material,
    drawn on hover AND focus (a stroke draw-on; instant when motion is off). */
 .opening-vignette {
@@ -1145,7 +1164,11 @@ html[data-motion="paused"] .opening-vignette {
   line-height: 1.1;
   letter-spacing: 0.04em;
   color: var(--fg);
+  /* pretty, not balance: the first line fills (balance halved short
+     captions into two stubby lines, ART-DIRECTOR #4); balance is only the
+     fallback where pretty is unsupported */
   text-wrap: balance;
+  text-wrap: pretty;
 }
 .scene-caption::before {
   content: "";
@@ -1174,16 +1197,23 @@ html[data-motion="paused"] .opening-vignette {
    ≥ 4.5:1 on the worst pixel, the ALT plate included). */
 .scene-caption-host { position: relative; }
 @media (min-width: 40rem) {
+  /* the film's name never breaks ("RED / DEAD REDEMPTION 2"): the only break
+     is the space after the "•" (ART-DIRECTOR #4) */
+  .scene-caption__film { white-space: nowrap; }
   .scene-caption[data-place="bl"],
   .scene-caption[data-place="br"] {
+    /* the corner inset: 24 px inside the media, but never outside the page
+       gutter when the host is full bleed (the host's own side margin is
+       (100vw − 100%) / 2; ART-DIRECTOR #14b) */
+    --cap-inset: max(24px, calc(var(--spacing-gutter) - (100vw - 100%) / 2));
     position: absolute;
     bottom: 24px;
     z-index: 2;
-    max-width: min(40rem, calc(100% - 48px));
+    max-width: min(40rem, calc(100% - 2 * var(--cap-inset)));
     isolation: isolate;
   }
-  .scene-caption[data-place="bl"] { left: 24px; }
-  .scene-caption[data-place="br"] { right: 24px; text-align: right; }
+  .scene-caption[data-place="bl"] { left: var(--cap-inset); }
+  .scene-caption[data-place="br"] { right: var(--cap-inset); text-align: right; }
   .scene-caption[data-place="br"]::before { left: auto; right: 0; }
   .scene-caption[data-place="bl"]::after,
   .scene-caption[data-place="br"]::after {
@@ -1194,6 +1224,24 @@ html[data-motion="paused"] .opening-vignette {
     pointer-events: none;
     background: linear-gradient(to top, var(--world-deep) 0 40%, transparent 100%);
   }
+}
+/* act cards: the OUTGOING caption over the frame's top-right corner
+   (card-shell.tsx `.card-cap-frame`; live and ≥ 640 only). Right-aligned,
+   the museum rule at the right, on a scrim of ITS OWN world's deep (the
+   cue's plane) that is solid under the whole glyph box and feathers out to
+   the left and below — AA on the outgoing plate. */
+.card-cap-frame { isolation: isolate; }
+.card-cap-frame .scene-caption[data-place] { margin-top: 0; text-align: right; }
+.card-cap-frame .scene-caption::before { left: auto; right: 0; }
+.card-cap-frame .scene-caption::after {
+  content: "";
+  position: absolute;
+  inset: -72px -48px -64px -104px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--world-deep) 0 calc(100% - 64px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 88px);
+  mask-image: linear-gradient(to right, transparent, #000 88px);
 }
 /* under (and every placement below 640 px): in flow, below the frame */
 .scene-caption[data-place="under"] { margin-top: var(--spacing-tier-pair); }
