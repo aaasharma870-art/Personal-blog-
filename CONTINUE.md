@@ -37,7 +37,7 @@
 3. **Then the phone version** (the mobile cut: a lighter but still moving version). This is its own phase, after the info.
 
 ### Phase 3 queue (tick each with a one-line outcome; commit and push after every step)
-- [ ] **P3-0. Measure (the open points are ANSWERED; do not ask again).**
+- [x] **P3-0. Measure (the open points are ANSWERED; do not ask again).** DONE 2026-09-30 (cloud): headless 1440x900 baseline in `docs/build/motion-strips/p3-before/` (summary.md + strips). intro 29.5 fps, p95 117 ms, 4 pops, CLS 0, play-screen worst frame 895 ms (hydration wait); desktop scroll 15.2 fps, p95 317 ms, 27 pops, CLS 0. Worst sections (raster-bound, software GPU): work 3.2 fps, principles 3.3, journey 3.5, kill-list 3.9, writing 5.0, voices 5.2. No real-laptop Chrome recording yet (optional; ask Aryan).
   - **Aryan's answers (2026-09-30):**
     - (a) The choppiness is on the **laptop browser**.
     - (b) The hero name takes the **Pirates lettering**. It stays the one `h1` and must stay legible: test it at 1440 and 1024.
