@@ -1,0 +1,157 @@
+{
+  "proposedMediaId": "SEQ-HALL",
+  "kind": "P3 scroll-scrubbed push-in sequence #3 (ignite card star (b), p .50-1) + its end still (staged, not registered)",
+  "plate": "public/media/films/iconic-hall.webp",
+  "plateJob": "1ef4355e-d82b-4513-a273-1cbdebbd8755",
+  "job": "1cdc1d90-0ad3-45b3-901c-d1933b0b5443",
+  "model": "kling3_0 pro 16:9, 5 s, sound off, start_image = the plate job only (no end image), cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836",
+  "credits": 8.75,
+  "generateLog": "docs/build/media/p3/B8.md",
+  "checkLog": "docs/build/media/p3/B9.md#2-seq-post-processing",
+  "prompt": "One slow, steady, continuous dolly-in along the tables toward the high table: the camera glides straight forward down the central aisle at a constant speed from the first frame to the last, never stopping, turning, tilting or shaking, and stays level so the starry ceiling stays in view at the top of the frame. The long tables, gold plates, high table and tall central window stay perfectly still; no new light sources. One uninterrupted shot. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "master": "media-src/p3/masters/SEQ-HALL-1cdc1d90.mp4 (13893745 bytes, 1920x1080, 24 fps, 121 frames, 5.042 s, 0 audio)",
+  "files": {
+    "sequence": "seq-hall/000.webp ... seq-hall/071.webp",
+    "endStill": "seq-hall-end.webp"
+  },
+  "tool": "node tools/media/loop.mjs sequence media-src/p3/masters/SEQ-HALL-1cdc1d90.mp4 docs/build/media-staged/p3/accepted/seq-hall --frames=72 --width=1280 --quality=50; then 000.webp re-encoded at q80 from the same 1280 lanczos frame (sharp, effort 6); end still = master frame 120 (the last) at its native 1920x1080 (the master allows no 2560), sharp webp q80 effort 6",
+  "sequence": {
+    "frames": 72,
+    "width": 1280,
+    "height": 720,
+    "sourceFrames": 121,
+    "sourceIndices": "round(i*120/71), i=0..71 (0,2,3,5,7,8 ... 117,118,120)",
+    "quality": "q50 for 001-071, q80 for 000 (the registration frame)",
+    "bytes": 3655680,
+    "maxFrameBytes": 83944
+  },
+  "endStill": {
+    "file": "seq-hall-end.webp",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 144498,
+    "quality": 80,
+    "sourceFrame": 120,
+    "ssimVsMasterFrame120": 0.9767,
+    "ssimVs071": 0.97
+  },
+  "checks": {
+    "firstVsPlate": {
+      "value": 0.9676,
+      "limit": 0.95,
+      "pass": true,
+      "method": "ffmpeg ssim All, yuv420p, both scaled to 960x540 (the loop.mjs convention)",
+      "note": "q50 for frame 000 read 0.945 (fails), q75 0.961, q80 0.968, the lossless 1280 frame 0.985, the master frame 0.9852 (B8 0.9863): this detailed plate (hundreds of candles and stars) is SSIM-sensitive to WebP quality, so the registration frame is encoded at q80"
+    },
+    "smoothProgression": {
+      "scaleVsFrame0Every8": [
+        [
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          8,
+          1.0115,
+          0.06
+        ],
+        [
+          16,
+          1.0242,
+          -0.03
+        ],
+        [
+          24,
+          1.0252,
+          0.0
+        ],
+        [
+          32,
+          1.037,
+          0.03
+        ],
+        [
+          40,
+          1.0417,
+          -0.07
+        ],
+        [
+          48,
+          1.0543,
+          -0.0
+        ],
+        [
+          56,
+          1.0706,
+          -0.16
+        ],
+        [
+          64,
+          1.0716,
+          0.11
+        ]
+      ],
+      "reads": "steady, near-linear push to 1.07x about the aisle (B8 on the master: 1.026 / 1.038 / 1.050 / 1.073 at source frames 30/60/90/120), rotation <= 0.16 deg, no stops or reversals beyond ORB noise",
+      "consecutiveGraySsim960": {
+        "min": 0.8402,
+        "minAt": 65,
+        "median": 0.8872
+      },
+      "lumaSeries": {
+        "first": 32.89,
+        "last": 34.21,
+        "min": 32.89,
+        "max": 34.8,
+        "maxStep": 0.15,
+        "signChanges": 35
+      },
+      "masterPerFrameLumaMaxStep": 0.12
+    },
+    "flash": "master per-frame mean luma 34.1 -> 35.9 -> 35.4, max single-frame step 0.12 (no flash frames); loop.mjs check on the master (B8): 0 flashes/s whole and tiles",
+    "audio": "master 0 audio streams; stills carry none",
+    "l2": "1280 frames 000/018/036/053/071 full + high-table crops at 200% (frames 000/036/071) + bench crops at 150% (071): empty high-backed chairs and candelabra at the high table, empty benches with plates and goblets, the starry ceiling in view at the top in every frame (S17), the tall window unchanged; no people, figures, faces, hands, text, letters, symbols or logos; no new light sources beyond the floating candles"
+  },
+  "masterCheckB8": {
+    "firstVsPlate": 0.9863,
+    "consecutive": {
+      "min": 0.9497,
+      "minAt": 119,
+      "p05": 0.9507,
+      "median": 0.9623
+    },
+    "flash": {
+      "wholeMaxPerSecond": 0,
+      "wholeTransitions": 0,
+      "tilesMaxPerSecond": 0,
+      "worstTile": 0,
+      "redShareMax": 1e-05
+    },
+    "audioStreams": 0
+  },
+  "flags": [
+    "SIZE: 3.66 MB for the 72 frames (q50; q75 = 5.07 MB) vs the spec 12.2 budget of <= 1.6 MB per sequence. Not reachable at 72 x 1280 on this plate without visible loss (q30 = 2.73 MB; hqdn3d denoise saves < 5 %; 960 w q50 = 2.56 MB). Options for the assembler / Aryan: accept 3.66 MB (desktop only, fetched within one viewport); or 36 frames (every other frame, ~1.8 MB; the 1.07x push moves ~1.3 px per step at the frame edge, so 36 steps still read smooth over 495 px of scroll); or 960 w.",
+    "The push is small (1.07x), less than the code ALT crane (1.089 -> 1.25). If the title mask needs more travel, the component can add a code scale on top of the sequence (0 credits).",
+    "The end still is 1920 w (the Kling master is 1920x1080), not 2560."
+  ],
+  "manifestProposal": {
+    "kind": "sequence",
+    "dir": "/media/films/seq-hall/",
+    "frames": 72,
+    "width": 1280,
+    "height": 720,
+    "poster": "iconic-hall.webp (frame 000 registers to it at 0.968)",
+    "endsOn": "seq-hall-end.webp",
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code crane-up on L02 (spec 6.2 #3)",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "provenance": "hf(kling3_0 pro 5 s, start 1ef4355e only, 8.75 cr, job 1cdc1d90, notes: loop.mjs sequence 72 x 1280 q50, frame 000 q80; end still = frame 120 at 1920 q80)",
+    "endStillRow": {
+      "kind": "image",
+      "src": "/media/films/seq-hall-end.webp",
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "verdict": "PASS (DEFAULT for push-in #3), with the size flag."
+}
