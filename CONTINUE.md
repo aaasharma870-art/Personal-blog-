@@ -31,11 +31,18 @@
 - **Film layer:** no actor likenesses, ripped stills, official logos or ripped audio. Fonts must have web-embedding licences (log them in `docs/build/FONTS.md`).
 - **Git:** work on `design/three-films`. Merge to `main` only when Aryan asks and `RELEASE=1 npm run check`, `npx eslint .` and `npm run build` pass.
 
+**ORDER OF WORK (Aryan, 2026-09-30, binding):**
+1. **Laptop browser version FIRST.** All of Phase 3 is built and judged at desktop widths (1440 and 1024). Do not spend time on phone layouts during Phase 3; just don't break them. Phones keep today's behaviour until step 3.
+2. **Then the info** (the Phase 2 queue below).
+3. **Then the phone version** (the mobile cut: a lighter but still moving version). This is its own phase, after the info.
+
 ### Phase 3 queue (tick each with a one-line outcome; commit and push after every step)
-- [ ] **P3-0. Settle the open points with Aryan (ask once, briefly), then measure.**
-  - Ask: (a) where he saw the choppiness (laptop, phone, browser); (b) whether the hero name stays in Geist or takes the Pirates face; (c) whether he wants any cut toy back as an egg (cannon, scratch-off map, visitor WANTED poster).
-  - Then record a baseline with `tools/capture/motion.js`, and ask him for a real-device Chrome performance recording if he can make one.
-  - If he says "just go", use these defaults: Geist name; no extra eggs; treat both laptop and phone as choppy.
+- [ ] **P3-0. Measure (the open points are ANSWERED; do not ask again).**
+  - **Aryan's answers (2026-09-30):**
+    - (a) The choppiness is on the **laptop browser**.
+    - (b) The hero name takes the **Pirates lettering**. It stays the one `h1` and must stay legible: test it at 1440 and 1024.
+    - (c) No cut toys come back. He likes the eggs as triaged: **12 eggs, 3 per world**.
+  - Record a desktop baseline with `tools/capture/motion.js` (`intro` and `desktop` runs). If Aryan is around, ask him for a real Chrome performance recording from his laptop. It is optional; don't block on it.
 - [ ] **P3-1. Spec and plan.** Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
   - Include a beat map of the whole page: one star per screen, no dead screen over 100vh.
   - Include the list of 12 eggs (3 per world), one toy per act, and the loop list (about 25 plates).
@@ -52,7 +59,7 @@
 - [ ] **P3-7. Words.** Titles arriving in character, the one-liners as subtitles, and the rationed kinetic words (caps in IDEAS O.2).
 - [ ] **P3-8. Game layer.** One toy per act (drone flight and the Dead Eye target game are the two real games). The 12-egg hunt with a header counter and a 12/12 reward. Post-credits scene.
 - [ ] **P3-9. Sound.** An ambient bed per world plus egg and transition effects. Muted by default, with a toggle, and tied to Pause.
-- [ ] **P3-10. Director's cut autoplay, DVD chapter select, the "Skip to the research" fast lane, and the mobile cut.**
+- [ ] **P3-10. Director's cut autoplay, DVD chapter select, and the "Skip to the research" fast lane.** Desktop only. The mobile cut is NOT part of Phase 3; it comes after the info (see ORDER OF WORK).
 - [ ] **P3-11. Critic loop** (up to 3 rounds).
   - Capture frames and motion runs.
   - Judges: one-star-per-screen; a "would you keep scrolling?" panel; the blind stranger test; smoothness (`motion.js` before and after, plus a real device if available).
@@ -72,7 +79,7 @@
 - **A11y/perf:** reduced motion + Pause stop everything; one h1; AA contrast; no hydration errors; mobile stills.
 - Next 16: check `node_modules/next/dist/docs` before Next-specific code.
 
-## Phase 2 queue — the info details (AFTER Phase 3, or whenever Aryan asks) (Aryan leads; Claude drafts options, then edits)
+## Phase 2 queue — the info details (step 2: AFTER the Phase 3 laptop version; the phone version comes after this) (Aryan leads; Claude drafts options, then edits)
 Tick each item here with a one-line outcome when done.
 - [ ] **1. The four "why this film matters to me" lines** — `lib/film.ts` → `reasons` (`pirates`, `idiots`, `rdr2`, `hp`). Each has the current text + 2 alternates + a prompt. Aryan rewrites in his own words (1–2 sentences each).
 - [ ] **2. The four act loglines** — `lib/film.ts` → `"act-1"…"act-4"` (under `aryanDraft(...)`).
@@ -98,3 +105,7 @@ Tick each item here with a one-line outcome when done.
 
 ## Environment (cloud sessions)
 `.claude/hooks/session-start.sh` runs `npm ci` when needed and exposes the global Playwright, so check/eslint/build and the capture tools work at once. If a Higgsfield CDN download is blocked, the host `d8j0ntlcm91z4.cloudfront.net` must be allowed in the environment's network settings.
+
+## Phase 4 — the phone version (step 3: AFTER Phase 3 and the info)
+- [ ] **P4-1.** Design and build the mobile cut: a lighter but still moving version of the Phase 3 experience. Touch-native scroll, fewer loops, stills where needed, toys and eggs adapted to touch, sound toggle. Judge at 390 and 320 widths and on a real phone if Aryan can test.
+- [ ] **P4-2.** Mobile critic loop + QA (overflow, LCP on a throttled phone profile, reduced motion), then a report.

@@ -267,3 +267,16 @@ Aryan liked every idea but fears "too much". He delegated the cut to Claude with
 
 ## O.4 THE RULE: one star per screen
 At any scroll position, exactly ONE thing is dramatic: a camera move, a transition, a toy, or a title arriving. Everything else on screen is still and quiet. The critic loop checks this on every captured frame, alongside the blind stranger test and a "would you keep scrolling?" judge.
+
+---
+
+# P. Aryan's answers and the order of work (2026-09-30, binding)
+
+- **Where it is choppy:** the laptop browser.
+- **Hero name:** Pirates lettering (this resolves the open point in section I). It stays the one `h1` and must stay legible.
+- **Eggs and toys:** no cut toys come back. He likes the eggs as triaged in section O: 12 eggs, 3 per world.
+- **Order of work:**
+  1. The **laptop browser version** first. Phase 3 is desktop only.
+  2. Then **the info** (Phase 2 in `CONTINUE.md`).
+  3. Then the **phone version** (Phase 4 in `CONTINUE.md`).
+- This changes section O.1: "a lighter moving mobile cut" moves out of Phase 3 into Phase 4. During Phase 3, phones keep today's behaviour and must not break.
