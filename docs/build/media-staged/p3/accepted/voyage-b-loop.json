@@ -1,0 +1,309 @@
+{
+  "proposedMediaId": "L19",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "MV-05b",
+  "plate": "public/media/films/voyage-b.webp",
+  "plateJob": "57a84723-17e6-4bb8-8314-543e3cd92acd",
+  "job": "b82deba3-2b61-4cf6-88db-eb5ff2784802",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Thick fog drifts slowly right to left and thins and thickens; the moonlit sea swells gently. The soft horizon stays level and the moon stays where it is. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L19-voyage-b.prompt.txt",
+  "generateLog": "docs/build/media/p3/B5.md",
+  "checkLog": "docs/build/media/p3/B5.md#check-step",
+  "master": "media-src/p3/masters/L19-voyage-b-b82deba3.mp4 (Kling original, 5236417 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "voyage-b-loop.mp4",
+    "webm": "voyage-b-loop.webm",
+    "poster": "voyage-b-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 1280366,
+    "webm": 554227,
+    "poster": 35424
+  },
+  "tier": "S",
+  "tierNote": "tier S (stage, 1080p) per the M-CHECK brief; the map listed L19 as T3 I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L19-voyage-b-b82deba3.mp4 docs/build/media-staged/p3/accepted/voyage-b-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=26",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 26,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 80,
+    "crfNote": "dark fog plate: WebM CRF 26 (tools.md dark-plate rule); fog and moon halo at 6x high-pass gain show no contour banding on either codec"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 0.9999,
+    "consecutive": {
+      "min": 0.9925,
+      "minAt": 58,
+      "p05": 0.9931,
+      "median": 0.9969
+    },
+    "joinMinusMedian": 0.003,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "horizon band x0-1 y.40-.50 (map: the horizon (~.45) stays soft and level)"
+    ],
+    "light": [
+      "moon x.47-.55 y.02-.13 (prompt: the moon stays where it is)",
+      "moonlit sea x.30-.90 y.60-.95 (informative: sea swell / glint density, not a light source)",
+      "fog sky x0-1 y0-.40"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 5236417,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9912,
+      "lastVsPlate": 0.9903,
+      "join": 0.9952,
+      "joinRgb": 0.9855,
+      "joinPercentile": 0.3472,
+      "consecutiveMin": 0.9925,
+      "consecutiveMinAt": 58,
+      "consecutiveMedian": 0.997,
+      "staticMaxMeanAbsDelta": {
+        "horizon band x0-1 y.40-.50 (map: the horizon (~.45) stays soft and level)": 0.49
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.11,
+      "light": [
+        {
+          "zone": "moon x.47-.55 y.02-.13 (prompt: the moon stays where it is)",
+          "meanLuma": 138.79,
+          "ptpPct": 0.51,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "moonlit sea x.30-.90 y.60-.95 (informative: sea swell / glint density, not a light source)",
+          "meanLuma": 18.39,
+          "ptpPct": 15.82,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "fog sky x0-1 y0-.40",
+          "meanLuma": 61.99,
+          "ptpPct": 0.86,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ],
+      "phaseShiftPx": [
+        0.066,
+        0.025
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 1280366,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.99,
+      "lastVsPlate": 0.9902,
+      "join": 0.9941,
+      "joinRgb": 0.9842,
+      "joinPercentile": 0.0769,
+      "consecutiveMin": 0.9933,
+      "consecutiveMinAt": 58,
+      "consecutiveMedian": 0.9969,
+      "staticMaxMeanAbsDelta": {
+        "horizon band x0-1 y.40-.50 (map: the horizon (~.45) stays soft and level)": 0.53
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.2,
+      "light": [
+        {
+          "zone": "moon x.47-.55 y.02-.13 (prompt: the moon stays where it is)",
+          "meanLuma": 138.71,
+          "ptpPct": 0.46,
+          "reversalsPerS": 0,
+          "dominantHz": 0.83
+        },
+        {
+          "zone": "moonlit sea x.30-.90 y.60-.95 (informative: sea swell / glint density, not a light source)",
+          "meanLuma": 18.44,
+          "ptpPct": 15.92,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "fog sky x0-1 y0-.40",
+          "meanLuma": 61.95,
+          "ptpPct": 0.77,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ],
+      "phaseShiftPx": [
+        0.022,
+        0.014
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 554227,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.991,
+      "lastVsPlate": 0.9911,
+      "join": 0.9999,
+      "joinRgb": 0.9999,
+      "joinPercentile": 0.9507,
+      "consecutiveMin": 0.9917,
+      "consecutiveMinAt": 59,
+      "consecutiveMedian": 0.9973,
+      "staticMaxMeanAbsDelta": {
+        "horizon band x0-1 y.40-.50 (map: the horizon (~.45) stays soft and level)": 0.32
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.22,
+      "light": [
+        {
+          "zone": "moon x.47-.55 y.02-.13 (prompt: the moon stays where it is)",
+          "meanLuma": 138.65,
+          "ptpPct": 0.47,
+          "reversalsPerS": 0,
+          "dominantHz": 0.83
+        },
+        {
+          "zone": "moonlit sea x.30-.90 y.60-.95 (informative: sea swell / glint density, not a light source)",
+          "meanLuma": 18.44,
+          "ptpPct": 15.68,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "fog sky x0-1 y0-.40",
+          "meanLuma": 61.83,
+          "ptpPct": 0.59,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ],
+      "phaseShiftPx": [
+        0.035,
+        0.012
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    }
+  },
+  "lightNote": "pass.light reads false only because the informative sea zone was passed as --light: its mean luma is 16.4-19.2 (near-black) and dims once over the loop (frame 0 -> 86 -> back), ptp 2.8/255 = 15.9 % of a very dark mean, 0.17 reversals/s, 0.17 Hz. It is the swell/glint density of the sea, not a glow or flicker; whole-frame luma range 2.2 %, 0 flashes. Per-16x16-block flicker over the sea: max 0.5 reversals/s (limit 4).",
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx(master)": {
+      "fogUpper": {
+        "p99": 0.17,
+        "p999": 0.2816
+      },
+      "fogHorizon": {
+        "p99": 3.0683,
+        "p999": 9.3771
+      },
+      "sea": {
+        "p99": 58.3759,
+        "p999": 74.6083
+      },
+      "moon": {
+        "p99": 0.4208,
+        "p999": 0.5003
+      },
+      "whole": {
+        "p99": 52.1656,
+        "p999": 72.4095
+      }
+    },
+    "reads": "the sea carries the loop: the swells visibly roll and re-form (100% crops at frames 0/12/24/48/72/108). The fog drifts only low on the horizon (p99.9 9.4 px); the upper fog and the moon hold (0.28 / 0.50 px). Horizon band 0.53 / 0.32/255."
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame + 100% crops of the moon, fog and horizon, and 100% sea crops at 2.2x gain; final WebM frames 0/25/50/75/100% + crops: no ship, figures, faces, hands, text or new objects appear in the fog or on the sea; the moon keeps its place and shape; 0 flashes/s, red share 0.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.55 (horizon to foreground sea) on both codecs: continuous, no seam at the tick; wrap strips continuous. 6x high-pass gain: no banding.",
+  "flags": [
+    "The requested fog drift is weak in the upper sky; the motion is the rolling sea plus a little horizon fog. Journey fog beat: play only when the scrub is at rest (map).",
+    "MP4 1.28 MB (S target <= 1.6 MB; sea <= 2.5 MB), WebM 0.55 MB. Serve the WebM first."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/voyage-b-loop.mp4",
+    "webm": "/media/films/voyage-b-loop.webm",
+    "poster": "MV-05b plate (voyage-b.webp)",
+    "endsOn": "voyage-b.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code:plate-camera",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "loopPoster": "voyage-b-loop-poster.webp (frame 0 of the loop, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: horizon band 0.53 / 0.32/255 (MP4 / WebM), moon zone ptp 0.5 %; 0 flashes, silent; registration 0.990-0.991; lossless join 1.0000 (pct 1), MP4 0.9941 (true), WebM 0.9999; consecutive min 0.9933 / 0.9917; bytes 1.28 MB / 0.55 MB. Flag: fog drift weak, the sea carries the motion"
+}

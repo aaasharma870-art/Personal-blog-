@@ -269,5 +269,11 @@
     "why": "Same failure mode as B1 L03/L04: \"extremely restrained\" + \"every moving element completes exactly one slow, even cycle\" + a pinned end frame let Kling satisfy the loop by freezing the steam. Name the steam as the one clearly visible, continuous motion.",
     "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion in the steam, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Thick white steam keeps pouring from the engine's chimney for the whole clip, rolling and billowing upward and drifting slowly back over the train in soft, visible puffs that thin out as they trail away; low mist drifts slowly across the far hillsides; the loch's surface shimmers with faint ripples. The locomotive and carriages stay exactly in place on the viaduct and do not move forward; the viaduct, hills and sky stay still; the carriages, tender and cab stay plain with no lettering, numbers or emblems. One uninterrupted shot; the steam keeps moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
     "accept": "steam flow p99.9 >= ~3-4 px across the plume on most frames; engine mark (.86, .58) and the carriages tracked <= 2 px (train in place); carriages/tender/cab plain at 200% on 0/25/50/75/100%; no flashes; seam residual K=12 (K=24 if the plume makes the raw join < 0.98); train bodies <= 1/255 (hold-out below the steam line if needed)"
-  }
+  },
+  "contingencyB9": {
+    "batch": "B9",
+    "decision": "not retaken: the one rank-7 contingency went to L22 films-idiots (same host rank). Reasons: the HP screen already has a living media ALT (L23 films-hp, cinemagraph) while the 3 Idiots screen had none; this file's retake recipe (Kling start = end, \"gentle but clearly visible\" wording) returned near-stills on all three B8 jobs (L03r, L04r, L07). No second retake exists for L13 under the plan.",
+    "finalVerdict": "FAIL (first take, not retaken). The code ALT (depth + camera) is the HP films screen DEFAULT; L23 (films-hp-loop) is its living media ALT. Flag for Aryan."
+  },
+  "finalVerdict": "FAIL (first take, not retaken). The code ALT (depth + camera) is the HP films screen DEFAULT; L23 (films-hp-loop) is its living media ALT. Flag for Aryan."
 }

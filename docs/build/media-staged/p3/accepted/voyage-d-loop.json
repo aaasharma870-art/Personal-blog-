@@ -1,0 +1,313 @@
+{
+  "proposedMediaId": "L20",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "MV-05d",
+  "plate": "public/media/films/voyage-d.webp",
+  "plateJob": "f73d3e86-05ea-424c-a04d-53544952cbe1",
+  "job": "f487f6dc-7405-4b3c-8296-4bfa96dbd1b1",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. First light brightens and eases very slightly; small waves glint; the distant ship's silhouette rocks a hair. The ship stays on the horizon with no crew, flag or lettering; the horizon stays level. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L20-voyage-d.prompt.txt",
+  "generateLog": "docs/build/media/p3/B5.md",
+  "checkLog": "docs/build/media/p3/B5.md#check-step",
+  "master": "media-src/p3/masters/L20-voyage-d-f487f6dc.mp4 (Kling original, 3827850 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "voyage-d-loop.mp4",
+    "webm": "voyage-d-loop.webm",
+    "poster": "voyage-d-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 1149764,
+    "webm": 282615,
+    "poster": 96060
+  },
+  "tier": "S",
+  "tierNote": "tier S (stage, 1080p) per the M-CHECK brief; the map listed L20 as T3 I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L20-voyage-d-f487f6dc.mp4 docs/build/media-staged/p3/accepted/voyage-d-loop --k=12 --tier=S --method=residual --crf-mp4=22 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 22,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 80,
+    "crfNote": "S defaults for a detailed sea plate; the dawn sky and horizon glow at 4x high-pass gain show no contour banding"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 0.9999,
+    "consecutive": {
+      "min": 0.998,
+      "minAt": 1,
+      "p05": 0.9988,
+      "median": 0.9997
+    },
+    "joinMinusMedian": 0.0003,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "ship x.755-.785 y.385-.425 (informative: the prompt asks the silhouette to rock a hair; the rule here is \"stays on the horizon\", tracked below)"
+    ],
+    "light": [
+      "first-light glow x.68-.80 y.36-.43",
+      "sky x0-1 y0-.40",
+      "sea + glowing wake x.35-.97 y.45-1"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 3827850,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9852,
+      "lastVsPlate": 0.9842,
+      "join": 0.9951,
+      "joinRgb": 0.9843,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.998,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "ship x.755-.785 y.385-.425 (informative: the prompt asks the silhouette to rock a hair; the rule here is \"stays on the horizon\", tracked below)": 2.28
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.19,
+      "light": [
+        {
+          "zone": "first-light glow x.68-.80 y.36-.43",
+          "meanLuma": 169.58,
+          "ptpPct": 0.51,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sky x0-1 y0-.40",
+          "meanLuma": 61.81,
+          "ptpPct": 0.42,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sea + glowing wake x.35-.97 y.45-1",
+          "meanLuma": 33.08,
+          "ptpPct": 2.79,
+          "reversalsPerS": 0,
+          "dominantHz": 0.33
+        }
+      ],
+      "phaseShiftPx": [
+        0.011,
+        -0.002
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 1149764,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9836,
+      "lastVsPlate": 0.9838,
+      "join": 0.9946,
+      "joinRgb": 0.9844,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9981,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9996,
+      "staticMaxMeanAbsDelta": {
+        "ship x.755-.785 y.385-.425 (informative: the prompt asks the silhouette to rock a hair; the rule here is \"stays on the horizon\", tracked below)": 2.11
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.11,
+      "light": [
+        {
+          "zone": "first-light glow x.68-.80 y.36-.43",
+          "meanLuma": 169.52,
+          "ptpPct": 0.47,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sky x0-1 y0-.40",
+          "meanLuma": 61.8,
+          "ptpPct": 0.34,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sea + glowing wake x.35-.97 y.45-1",
+          "meanLuma": 33.12,
+          "ptpPct": 2.75,
+          "reversalsPerS": 0,
+          "dominantHz": 0.33
+        }
+      ],
+      "phaseShiftPx": [
+        0.002,
+        -0.002
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 282615,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.9836,
+      "lastVsPlate": 0.9836,
+      "join": 0.9999,
+      "joinRgb": 0.9999,
+      "joinPercentile": 0.6549,
+      "consecutiveMin": 0.9986,
+      "consecutiveMinAt": 135,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "ship x.755-.785 y.385-.425 (informative: the prompt asks the silhouette to rock a hair; the rule here is \"stays on the horizon\", tracked below)": 2.05
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.14,
+      "light": [
+        {
+          "zone": "first-light glow x.68-.80 y.36-.43",
+          "meanLuma": 169.49,
+          "ptpPct": 0.45,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sky x0-1 y0-.40",
+          "meanLuma": 61.86,
+          "ptpPct": 0.13,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "zone": "sea + glowing wake x.35-.97 y.45-1",
+          "meanLuma": 33.17,
+          "ptpPct": 2.77,
+          "reversalsPerS": 0,
+          "dominantHz": 0.33
+        }
+      ],
+      "phaseShiftPx": [
+        -0.002,
+        -0.006
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "anchors": {
+    "ship": "dark-silhouette centroid (luma < 60 in x1440-1510 y400-455, 1920 px) over all 145 master frames: cx 1479.46-1480.28, cy 442.33-443.10 (<= 0.8 px), area 343-413 px (re-render of the sail edges); 56-px patch phase shift <= 0.08 px",
+    "horizon": "strongest bright-to-dark row gradient over x.05-.60, sub-pixel: y 453.43-453.51 px (0.4199 of the height; the marks say 0.419) on every master frame: level and still",
+    "shipZoneNote": "the ship zone reads 2.28 (master) / 2.11 (MP4) / 2.05 (WebM) /255 because it holds the requested \"rocks a hair\" re-render of the sails and the glinting water under the hull; a tight hull-and-sails rect reads 2.51 on the master. The silhouette stays on the horizon, so this is recorded, not failed."
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx(master)": {
+      "clouds": {
+        "p99": 0.3206,
+        "p999": 0.4326
+      },
+      "ship": {
+        "p99": 0.2395,
+        "p999": 0.2523
+      },
+      "trail": {
+        "p99": 1.3365,
+        "p999": 2.0488
+      },
+      "seaLeft": {
+        "p99": 0.9609,
+        "p999": 1.0448
+      },
+      "whole": {
+        "p99": 1.1698,
+        "p999": 1.7001
+      }
+    },
+    "reads": "the glowing wake shimmers: its glints change (16x9 tile max mean |dY| 14/255 over the wake; per-16x16-block flicker max 0.5 reversals/s). Clouds, ship and first light are near-still (clouds 0.43 px, sky luma 0.3-0.4 %, first-light glow 0.5 %)."
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame + 200% ship crops; final WebM frames 0/25/50/75/100% + 300% ship crops: a three-masted silhouette with lit ports only, no crew, figures, flag, pennant symbol or lettering, the same shape as the plate on every sampled frame; no new objects on the sea; 0 flashes/s, red share 0.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.75 (the wake) on both codecs: continuous, no seam; wrap strips continuous.",
+  "flags": [
+    "Subtle: the motion is the wake glint shimmer; \"first light brightens\" and the ship rocking are not perceptible.",
+    "MP4 pass.join = \"codec\" (0.9946); lossless 1.0000, WebM 0.9999. Serve the WebM first."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/voyage-d-loop.mp4",
+    "webm": "/media/films/voyage-d-loop.webm",
+    "poster": "MV-05d plate (voyage-d.webp)",
+    "endsOn": "voyage-d.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code:plate-camera",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "loopPoster": "voyage-d-loop-poster.webp (frame 0 of the loop, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: ship on the horizon (centroid <= 0.8 px, horizon row fixed at 0.4199), no crew/flag/lettering; 0 flashes, silent; registration 0.984; lossless join 1.0000, WebM 0.9999; consecutive min 0.9981 / 0.9986; bytes 1.15 MB / 0.28 MB. Flag: subtle (wake glints only)"
+}

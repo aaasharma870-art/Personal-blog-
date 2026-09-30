@@ -1,302 +1,541 @@
 {
-  "proposedMediaId": "L04",
-  "sourceMediaId": "MV-10",
-  "plate": "public/media/films/frontier-dusk.webp",
-  "plateJob": "32281e86-6f1d-4db7-8bb5-73eb276e6618 (2k master; the 2560x1440 web still was uploaded as media 3a486a0a-f3cb-41b8-bdb8-a183221b9c63)",
-  "job": "939a9de8-f2fd-4710-b527-3e4cf278b9de",
-  "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the uploaded web still, media 3a486a0a); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
-  "credits": 14,
-  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Tall grass and the oak's leaves sway in a warm breeze; the river glints; a soft heat haze shimmers low on the horizon; the riderless horse flicks its tail and mane once. The horse keeps four legs and one head and does not walk; the sun disc and the dark left side stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
-  "master": "media-src/p3/masters/L04-frontier-dusk-939a9de8.mp4 (kept; 4310075 bytes, 193 frames)",
-  "tier": "S",
-  "verdict": "FAIL",
-  "reason": "Motion not delivered: the loop is a near-still. The grass, the oak's leaves, the river glint, the heat haze and the horse's tail/mane barely move. Measured on the lossless seam: optical-flow displacement vs frame 0, max over the loop, foreground grass p99.9 0.43 px, sunlit oak-canopy edge 1.4 px, river 0.45 px, horse 0.50 px (whole frame p99.9 2.8 px, 0.03% of pixels > 4 px); river light zone ptp 1.0-1.1%. The horse at 400% on frames 0/24/.../168 is the same pose apart from a hair of tail. A viewer would not see the breeze or the tail flick.",
-  "hardLimits": "all pass: the horse keeps 4 legs + 1 head, no rider, does not walk (tracked <= 0.13 px); no people/figures/text/logos; sun disc still (tracked <= 0.12 px; sun light ptp <= 1%); left 45% x y 25-75% static 0.12 (WebM) / 0.40 (MP4) /255; 0 flashes/s, red share 1e-5; 0 audio streams",
-  "checks": {
-    "master": {
-      "bytes": 4310075,
-      "frames": 193,
-      "durationS": 8.042,
-      "firstVsPlate": 0.9876,
-      "lastVsPlate": 0.9877,
-      "join": 0.9948,
-      "joinRgb": 0.9794,
-      "joinPercentile": 0,
-      "consecutiveMin": 0.9979,
-      "consecutiveMedian": 0.9998,
-      "static": [
-        {
-          "rect": [
-            0,
-            0.25,
-            0.45,
-            0.75
-          ],
-          "maxMeanAbsDeltaVsFirst": 0.35
-        },
-        {
-          "rect": [
-            0.79,
-            0.19,
-            0.835,
-            0.25
-          ],
-          "maxMeanAbsDeltaVsFirst": 1.91
-        }
-      ],
-      "flashPerS": {
-        "whole": 0,
-        "tiles": 0
-      },
-      "redShareMax": 1e-05,
-      "lumaRangePct": 0.93,
-      "light": [
-        {
-          "rect": [
-            0.8,
-            0.2,
-            0.825,
-            0.24
-          ],
-          "ptpPct": 0.87,
-          "reversalsPerS": 0,
-          "dominantHz": 0.37
-        },
-        {
-          "rect": [
-            0.48,
-            0.38,
-            0.8,
-            0.5
-          ],
-          "ptpPct": 1.14,
-          "reversalsPerS": 0,
-          "dominantHz": 0.12
-        }
-      ],
-      "phaseShiftPx": [
-        0.006,
-        0.027
-      ],
-      "audioStreams": 0,
-      "pass": {
-        "registration": true,
-        "join": "codec",
-        "smooth": true,
-        "static": false,
-        "flash": true,
-        "light": true,
-        "silent": true
-      }
+ "proposedMediaId": "L04",
+ "sourceMediaId": "MV-10",
+ "plate": "public/media/films/frontier-dusk.webp",
+ "plateJob": "32281e86-6f1d-4db7-8bb5-73eb276e6618 (2k master; the 2560x1440 web still was uploaded as media 3a486a0a-f3cb-41b8-bdb8-a183221b9c63)",
+ "job": "939a9de8-f2fd-4710-b527-3e4cf278b9de",
+ "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the uploaded web still, media 3a486a0a); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+ "credits": 14,
+ "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Tall grass and the oak's leaves sway in a warm breeze; the river glints; a soft heat haze shimmers low on the horizon; the riderless horse flicks its tail and mane once. The horse keeps four legs and one head and does not walk; the sun disc and the dark left side stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+ "master": "media-src/p3/masters/L04-frontier-dusk-939a9de8.mp4 (kept; 4310075 bytes, 193 frames)",
+ "tier": "S",
+ "verdict": "FAIL",
+ "reason": "Motion not delivered: the loop is a near-still. The grass, the oak's leaves, the river glint, the heat haze and the horse's tail/mane barely move. Measured on the lossless seam: optical-flow displacement vs frame 0, max over the loop, foreground grass p99.9 0.43 px, sunlit oak-canopy edge 1.4 px, river 0.45 px, horse 0.50 px (whole frame p99.9 2.8 px, 0.03% of pixels > 4 px); river light zone ptp 1.0-1.1%. The horse at 400% on frames 0/24/.../168 is the same pose apart from a hair of tail. A viewer would not see the breeze or the tail flick.",
+ "hardLimits": "all pass: the horse keeps 4 legs + 1 head, no rider, does not walk (tracked <= 0.13 px); no people/figures/text/logos; sun disc still (tracked <= 0.12 px; sun light ptp <= 1%); left 45% x y 25-75% static 0.12 (WebM) / 0.40 (MP4) /255; 0 flashes/s, red share 1e-5; 0 audio streams",
+ "checks": {
+  "master": {
+   "bytes": 4310075,
+   "frames": 193,
+   "durationS": 8.042,
+   "firstVsPlate": 0.9876,
+   "lastVsPlate": 0.9877,
+   "join": 0.9948,
+   "joinRgb": 0.9794,
+   "joinPercentile": 0,
+   "consecutiveMin": 0.9979,
+   "consecutiveMedian": 0.9998,
+   "static": [
+    {
+     "rect": [
+      0,
+      0.25,
+      0.45,
+      0.75
+     ],
+     "maxMeanAbsDeltaVsFirst": 0.35
     },
-    "seamLossless": {
-      "join": 0.9993,
-      "joinRgb": 0.9987,
-      "consecutive": {
-        "min": 0.9979,
-        "minAt": 1,
-        "p05": 0.9989,
-        "median": 0.9998
-      },
-      "joinMinusMedian": -0.0005,
-      "joinPercentile": 0.2158,
-      "pass": {
-        "join": true,
-        "smooth": true
-      }
-    },
-    "encodedForTheCheck": {
-      "mp4": {
-        "bytes": 918281,
-        "frames": 192,
-        "durationS": 8,
-        "firstVsPlate": 0.9847,
-        "lastVsPlate": 0.9863,
-        "join": 0.9946,
-        "joinRgb": 0.9821,
-        "joinPercentile": 0,
-        "consecutiveMin": 0.9983,
-        "consecutiveMedian": 0.9997,
-        "static": [
-          {
-            "rect": [
-              0,
-              0.25,
-              0.45,
-              0.75
-            ],
-            "maxMeanAbsDeltaVsFirst": 0.4
-          },
-          {
-            "rect": [
-              0.79,
-              0.19,
-              0.835,
-              0.25
-            ],
-            "maxMeanAbsDeltaVsFirst": 1.92
-          }
-        ],
-        "flashPerS": {
-          "whole": 0,
-          "tiles": 0
-        },
-        "redShareMax": 1e-05,
-        "lumaRangePct": 1,
-        "light": [
-          {
-            "rect": [
-              0.8,
-              0.2,
-              0.825,
-              0.24
-            ],
-            "ptpPct": 0.9,
-            "reversalsPerS": 0,
-            "dominantHz": 0.25
-          },
-          {
-            "rect": [
-              0.48,
-              0.38,
-              0.8,
-              0.5
-            ],
-            "ptpPct": 1.1,
-            "reversalsPerS": 0,
-            "dominantHz": 0.13
-          }
-        ],
-        "phaseShiftPx": [
-          0.003,
-          0.026
-        ],
-        "audioStreams": 0,
-        "pass": {
-          "registration": true,
-          "join": "codec",
-          "smooth": true,
-          "static": false,
-          "flash": true,
-          "light": true,
-          "silent": true
-        }
-      },
-      "webm": {
-        "bytes": 311203,
-        "frames": 192,
-        "durationS": 8,
-        "firstVsPlate": 0.9848,
-        "lastVsPlate": 0.9848,
-        "join": 0.9998,
-        "joinRgb": 0.9994,
-        "joinPercentile": 0.1263,
-        "consecutiveMin": 0.9992,
-        "consecutiveMedian": 1,
-        "static": [
-          {
-            "rect": [
-              0,
-              0.25,
-              0.45,
-              0.75
-            ],
-            "maxMeanAbsDeltaVsFirst": 0.12
-          },
-          {
-            "rect": [
-              0.79,
-              0.19,
-              0.835,
-              0.25
-            ],
-            "maxMeanAbsDeltaVsFirst": 1.99
-          }
-        ],
-        "flashPerS": {
-          "whole": 0,
-          "tiles": 0
-        },
-        "redShareMax": 1e-05,
-        "lumaRangePct": 0.85,
-        "light": [
-          {
-            "rect": [
-              0.8,
-              0.2,
-              0.825,
-              0.24
-            ],
-            "ptpPct": 1,
-            "reversalsPerS": 0,
-            "dominantHz": 0.5
-          },
-          {
-            "rect": [
-              0.48,
-              0.38,
-              0.8,
-              0.5
-            ],
-            "ptpPct": 0.99,
-            "reversalsPerS": 0,
-            "dominantHz": 0.13
-          }
-        ],
-        "phaseShiftPx": [
-          0,
-          0.029
-        ],
-        "audioStreams": 0,
-        "pass": {
-          "registration": true,
-          "join": true,
-          "smooth": true,
-          "static": false,
-          "flash": true,
-          "light": true,
-          "silent": true
-        }
-      },
-      "tool": "seam --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=28 (scratch only, not staged; MP4 0.92 MB, WebM 0.31 MB, poster 88974 bytes)"
-    },
-    "motionFlowPx": {
-      "horse": {
-        "p99": 0.47,
-        "p999": 0.5,
-        "gt2": 0.0,
-        "gt4": 0.0
-      },
-      "oakEdge": {
-        "p99": 1.06,
-        "p999": 1.42,
-        "gt2": 0.0,
-        "gt4": 0.0
-      },
-      "grassFg": {
-        "p99": 0.35,
-        "p999": 0.43,
-        "gt2": 0.0,
-        "gt4": 0.0
-      },
-      "river": {
-        "p99": 0.34,
-        "p999": 0.45,
-        "gt2": 0.0,
-        "gt4": 0.0
-      },
-      "whole": {
-        "p99": 1.38,
-        "p999": 2.76,
-        "gt2": 0.003,
-        "gt4": 0.0003
-      }
+    {
+     "rect": [
+      0.79,
+      0.19,
+      0.835,
+      0.25
+     ],
+     "maxMeanAbsDeltaVsFirst": 1.91
     }
+   ],
+   "flashPerS": {
+    "whole": 0,
+    "tiles": 0
+   },
+   "redShareMax": 1e-05,
+   "lumaRangePct": 0.93,
+   "light": [
+    {
+     "rect": [
+      0.8,
+      0.2,
+      0.825,
+      0.24
+     ],
+     "ptpPct": 0.87,
+     "reversalsPerS": 0,
+     "dominantHz": 0.37
+    },
+    {
+     "rect": [
+      0.48,
+      0.38,
+      0.8,
+      0.5
+     ],
+     "ptpPct": 1.14,
+     "reversalsPerS": 0,
+     "dominantHz": 0.12
+    }
+   ],
+   "phaseShiftPx": [
+    0.006,
+    0.027
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
   },
-  "retake": {
-    "model": "kling3_0 pro 16:9 8 s, sound off, start_image = end_image = the uploaded 2560x1440 web still (media 3a486a0a, reusable) (14 credits); decline the 'IN THE DARK' preset intercept (24bae836) as in B1",
-    "why": "Same failure mode as L03: 'extremely restrained' + 'one slow, even cycle' + a pinned end frame gave a still. Name one clearly visible primary motion (the breeze in the grass) and ask for it continuously.",
-    "prompt": "Animate the supplied image with gentle but clearly visible, continuous natural motion, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. A warm evening breeze moves steadily through the scene: the tall golden grass on the slope sways in slow, visible waves, and the sunlit leaves along the right edge of the oak's canopy rustle and sway; the river's surface glints and shimmers; a faint heat haze shimmers low over the far valley. The riderless saddled horse keeps grazing on the same spot, swishing its tail slowly from side to side and flicking its mane once. The horse keeps four legs and one head and does not walk or turn; the sun disc, the mountains, the sky and the dark left side of the frame (the shadowed oak and hillside) stay still. One uninterrupted shot; the grass and the leaves keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, lens flares, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
-    "accept": "grass/leaf flow p99.9 >= ~3-4 px in the sunlit field; left 45% x y 25-75% <= 1/255; sun disc tracked <= 1 px; horse 4 legs / 1 head at 200-400% on 0/25/50/75/100% and does not walk; seam residual K=12 if the raw join >= 0.98."
+  "seamLossless": {
+   "join": 0.9993,
+   "joinRgb": 0.9987,
+   "consecutive": {
+    "min": 0.9979,
+    "minAt": 1,
+    "p05": 0.9989,
+    "median": 0.9998
+   },
+   "joinMinusMedian": -0.0005,
+   "joinPercentile": 0.2158,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "encodedForTheCheck": {
+   "mp4": {
+    "bytes": 918281,
+    "frames": 192,
+    "durationS": 8,
+    "firstVsPlate": 0.9847,
+    "lastVsPlate": 0.9863,
+    "join": 0.9946,
+    "joinRgb": 0.9821,
+    "joinPercentile": 0,
+    "consecutiveMin": 0.9983,
+    "consecutiveMedian": 0.9997,
+    "static": [
+     {
+      "rect": [
+       0,
+       0.25,
+       0.45,
+       0.75
+      ],
+      "maxMeanAbsDeltaVsFirst": 0.4
+     },
+     {
+      "rect": [
+       0.79,
+       0.19,
+       0.835,
+       0.25
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.92
+     }
+    ],
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 1e-05,
+    "lumaRangePct": 1,
+    "light": [
+     {
+      "rect": [
+       0.8,
+       0.2,
+       0.825,
+       0.24
+      ],
+      "ptpPct": 0.9,
+      "reversalsPerS": 0,
+      "dominantHz": 0.25
+     },
+     {
+      "rect": [
+       0.48,
+       0.38,
+       0.8,
+       0.5
+      ],
+      "ptpPct": 1.1,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     }
+    ],
+    "phaseShiftPx": [
+     0.003,
+     0.026
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": "codec",
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "webm": {
+    "bytes": 311203,
+    "frames": 192,
+    "durationS": 8,
+    "firstVsPlate": 0.9848,
+    "lastVsPlate": 0.9848,
+    "join": 0.9998,
+    "joinRgb": 0.9994,
+    "joinPercentile": 0.1263,
+    "consecutiveMin": 0.9992,
+    "consecutiveMedian": 1,
+    "static": [
+     {
+      "rect": [
+       0,
+       0.25,
+       0.45,
+       0.75
+      ],
+      "maxMeanAbsDeltaVsFirst": 0.12
+     },
+     {
+      "rect": [
+       0.79,
+       0.19,
+       0.835,
+       0.25
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.99
+     }
+    ],
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 1e-05,
+    "lumaRangePct": 0.85,
+    "light": [
+     {
+      "rect": [
+       0.8,
+       0.2,
+       0.825,
+       0.24
+      ],
+      "ptpPct": 1,
+      "reversalsPerS": 0,
+      "dominantHz": 0.5
+     },
+     {
+      "rect": [
+       0.48,
+       0.38,
+       0.8,
+       0.5
+      ],
+      "ptpPct": 0.99,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     }
+    ],
+    "phaseShiftPx": [
+     0,
+     0.029
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": true,
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "tool": "seam --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=28 (scratch only, not staged; MP4 0.92 MB, WebM 0.31 MB, poster 88974 bytes)"
+  },
+  "motionFlowPx": {
+   "horse": {
+    "p99": 0.47,
+    "p999": 0.5,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "oakEdge": {
+    "p99": 1.06,
+    "p999": 1.42,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "grassFg": {
+    "p99": 0.35,
+    "p999": 0.43,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "river": {
+    "p99": 0.34,
+    "p999": 0.45,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "whole": {
+    "p99": 1.38,
+    "p999": 2.76,
+    "gt2": 0.003,
+    "gt4": 0.0003
+   }
   }
+ },
+ "retake": {
+  "model": "kling3_0 pro 16:9 8 s, sound off, start_image = end_image = the uploaded 2560x1440 web still (media 3a486a0a, reusable) (14 credits); decline the 'IN THE DARK' preset intercept (24bae836) as in B1",
+  "why": "Same failure mode as L03: 'extremely restrained' + 'one slow, even cycle' + a pinned end frame gave a still. Name one clearly visible primary motion (the breeze in the grass) and ask for it continuously.",
+  "prompt": "Animate the supplied image with gentle but clearly visible, continuous natural motion, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. A warm evening breeze moves steadily through the scene: the tall golden grass on the slope sways in slow, visible waves, and the sunlit leaves along the right edge of the oak's canopy rustle and sway; the river's surface glints and shimmers; a faint heat haze shimmers low over the far valley. The riderless saddled horse keeps grazing on the same spot, swishing its tail slowly from side to side and flicking its mane once. The horse keeps four legs and one head and does not walk or turn; the sun disc, the mountains, the sky and the dark left side of the frame (the shadowed oak and hillside) stay still. One uninterrupted shot; the grass and the leaves keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, lens flares, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "accept": "grass/leaf flow p99.9 >= ~3-4 px in the sunlit field; left 45% x y 25-75% <= 1/255; sun disc tracked <= 1 px; horse 4 legs / 1 head at 200-400% on 0/25/50/75/100% and does not walk; seam residual K=12 if the raw join >= 0.98."
+ },
+ "retake1": {
+  "batch": "B8 (docs/build/media/p3/B8.md)",
+  "job": "a9bd36fa-a67f-48ea-980c-f6292eb7b620",
+  "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image 3a486a0a (uploaded 2560x1440 web still), end_image 3a486a0a]; declined_preset_id 24bae836; use_unlim false",
+  "credits": 14,
+  "prompt": "this file's retake.prompt, verbatim",
+  "master": "media-src/p3/masters/L04r-frontier-dusk-a9bd36fa.mp4 (4496102 bytes, 193 frames, 8.042 s, 1920x1080 24 fps, 0 audio)",
+  "verdict": "FAIL",
+  "reason": "Motion not delivered again for the breeze: sunlit grass 0.37 px, oak canopy 0.39 px, river 0.37 px (Farneback optical flow vs frame 0 at 960x540 on every 4th frame, reported as max-over-frames p99.9 magnitude in 1920-px units (scratchpad/p3/b8/flow.py); first take: grass 0.44, canopy 0.36, river 0.34). Accept rule was grass/leaf p99.9 >= ~3-4 px. The one visible motion is the horse's tail: one slow swish around 40-80% of the clip (tail box 4.3 px, horse box 4.0 px, whole-frame p99.9 2.34 px, 0.003% of pixels > 4 px). At display size that is a ~15 px tail movement in a still landscape, so the breeze the hosts need is not there.",
+  "hardLimits": "all pass: the horse keeps 4 legs + 1 head, grazes in place, no rider, does not walk (200% crops at 0/25/50/75/100%); no people/figures/text/flares; left 45% x y .25-.75 static 0.36/255; sun disc zone 1.87/255 (haze over the disc, as the first take's 1.91); 0 flashes, red share 1e-5; 0 audio streams",
+  "checks": {
+   "master": {
+    "bytes": 4496102,
+    "frames": 193,
+    "durationS": 8.042,
+    "audioStreams": 0,
+    "ssim": {
+     "firstVsPlate": 0.9875,
+     "lastVsPlate": 0.9878,
+     "join": 0.9948,
+     "joinRgb": 0.9791,
+     "consecutive": {
+      "min": 0.9981,
+      "minAt": 1,
+      "p05": 0.9989,
+      "median": 0.9998
+     },
+     "joinMinusMedian": -0.005,
+     "joinPercentile": 0
+    },
+    "static": [
+     {
+      "rect": [
+       0,
+       0.25,
+       0.45,
+       0.75
+      ],
+      "maxMeanAbsDeltaVsFirst": 0.36,
+      "maxMeanAbsDeltaStep": 0.07
+     },
+     {
+      "rect": [
+       0.79,
+       0.19,
+       0.835,
+       0.25
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.87,
+      "maxMeanAbsDeltaStep": 0.94
+     }
+    ],
+    "flash": {
+     "wholeMaxPerSecond": 0,
+     "wholeTransitions": 0,
+     "tilesMaxPerSecond": 0,
+     "worstTile": 0,
+     "redShareMax": 1e-05
+    },
+    "luma": {
+     "min": 44.87,
+     "max": 45.3,
+     "range": 0.42,
+     "rangePct": 0.94
+    },
+    "light": [
+     {
+      "rect": [
+       0.8,
+       0.2,
+       0.825,
+       0.24
+      ],
+      "meanLuma": 220.17,
+      "ptpPct": 0.9,
+      "reversalsPerS": 0,
+      "dominantHz": 0.25
+     },
+     {
+      "rect": [
+       0.48,
+       0.38,
+       0.8,
+       0.5
+      ],
+      "meanLuma": 97.71,
+      "ptpPct": 1.14,
+      "reversalsPerS": 0,
+      "dominantHz": 0.12
+     }
+    ],
+    "phaseShiftPx": {
+     "dx": 0.006,
+     "dy": 0.027,
+     "note": "px at 1920 wide (measured at 960x540 x2)"
+    },
+    "pass": {
+     "registration": true,
+     "join": "codec",
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "flow": {
+    "grass": 0.37,
+    "canopy": 0.39,
+    "river": 0.37,
+    "left45": 0.26,
+    "whole": 2.34,
+    "pct_gt4px_max": 0.003,
+    "frames": 193
+   },
+   "flowFirstTake": {
+    "grass": 0.44,
+    "canopy": 0.36,
+    "river": 0.34,
+    "left45": 0.29,
+    "whole": 0.49,
+    "pct_gt4px_max": 0.0,
+    "frames": 193
+   }
+  },
+  "option": "If Aryan prefers a living still with one tail swish over the code camera, this master seams with residual K=12 at 0 credits (raw join 0.9948, first/last 0.9875/0.9878). Not staged here.",
+  "why": "B8 evidence: all three start=end Kling v3.0 pro jobs submitted with the FAIL-JSON 'gentle but clearly visible, continuous' wording (L03r, L04r, L07) came back as near-stills again (0.3-0.6 px in the named motion zones), numerically the same as the first takes. The wording change did not fix the failure mode on these busy daylight plates."
+ },
+ "finalVerdict": "FAIL confirmed (breeze not delivered; one tail swish only). Second failure: no further retake. The code ALT (depth + camera) is the DEFAULT for the tintype star (b), FrontierBand and the beyond window. The 0-cr living-still option stands (retake1.option): the check encodes here pass every mechanical gate except the sun-disc static zone (MP4 1.76 / WebM 1.51 /255; a sun hold-out like L24 would fix it). Flag for Aryan.",
+ "checkStepB9": {
+  "batch": "B9 (docs/build/media/p3/B9.md section 1), 0 credits",
+  "what": "the full check step on the retake master, as for B3-B6: residual seam, check on both encodes with --plate/--static/--light, L2 sweep on the WebM at 0/25/50/75/100% + crops, wrap strips and slit-scans. Check encodes are in the session scratchpad only, not staged.",
+  "seamArgs": "--k=12 --tier=S --method=residual --crf-mp4=22 --crf-webm=30",
+  "tier": "S",
+  "seamCheckLossless": {
+   "join": 0.9992,
+   "joinRgb": 0.9986,
+   "consecutive": {
+    "min": 0.9981,
+    "minAt": 1,
+    "p05": 0.9988,
+    "median": 0.9998
+   },
+   "joinMinusMedian": -0.0005,
+   "joinPercentile": 0.2263,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "checkZones": "static rects [left 45% x0-.45 y.25-.75, sun disc x.79-.835 y.19-.25]; light [sun disc, river band]",
+  "mp4": {
+   "bytes": 1139727,
+   "frames": 192,
+   "durationS": 8,
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "firstVsPlate": 0.9852,
+   "lastVsPlate": 0.9865,
+   "join": 0.9949,
+   "joinPercentile": 0,
+   "consecutiveMin": 0.9983,
+   "consecutiveMedian": 0.9997,
+   "static": [
+    0.4,
+    1.76
+   ],
+   "light": [
+    [
+     0.91,
+     0
+    ],
+    [
+     1.13,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "webm": {
+   "bytes": 276039,
+   "frames": 192,
+   "durationS": 8,
+   "width": 1920,
+   "height": 1080,
+   "codec": "vp9",
+   "firstVsPlate": 0.9842,
+   "lastVsPlate": 0.9842,
+   "join": 0.9997,
+   "joinPercentile": 0.1,
+   "consecutiveMin": 0.999,
+   "consecutiveMedian": 1,
+   "static": [
+    0.13,
+    1.51
+   ],
+   "light": [
+    [
+     0.81,
+     0
+    ],
+    [
+     0.91,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": true,
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "visual": "slit x.30 y.55-.95 +-48 frames: horizontal streaks, no seam (the slit crosses the dark oak); frames 0/25/50/75/100% + 200% horse crops: grazing horse, one slow tail swish only",
+  "l2": "WebM frames 0/25/50/75/100% + 200% crops: no people, figures, riders, faces, hands, text or symbols; horses (L03r, L04r) 4 legs + 1 head each; the drone board (L07) shows chips and traces only",
+  "verdict": "FAIL confirmed (breeze not delivered; one tail swish only). Second failure: no further retake. The code ALT (depth + camera) is the DEFAULT for the tintype star (b), FrontierBand and the beyond window. The 0-cr living-still option stands (retake1.option): the check encodes here pass every mechanical gate except the sun-disc static zone (MP4 1.76 / WebM 1.51 /255; a sun hold-out like L24 would fix it). Flag for Aryan."
+ }
 }
