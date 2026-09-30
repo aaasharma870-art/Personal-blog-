@@ -12,6 +12,40 @@
   }
 }
 
+/* Phase 3 desktop gates (PHASE3-PLAN §0.1 #7, §4.2; spec §3.1). Never `lg:`
+   for desktop-only UI; the media queries match lib/flags.ts exactly.
+   `dw:`  DESKTOP_WIDE  = (min-width: 64rem)
+   `df:`  DESKTOP_FINE  = DESKTOP_WIDE + (hover: hover) and (pointer: fine)
+   `boot:` the boot gate = DESKTOP_FINE + no reduced motion + html.js (set by
+          the boot head script) without data-motion-boot="paused"; layout
+          differences key only on this gate (it is right from first paint)
+   `stage-live:` boot + html[data-stage="live"] (the stage's first poster has
+          decoded), not while Pause is on */
+@custom-variant dw {
+  @media (min-width: 64rem) {
+    @slot;
+  }
+}
+@custom-variant df {
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+    @slot;
+  }
+}
+@custom-variant boot {
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:where(html.js:not([data-motion-boot="paused"]) *) {
+      @slot;
+    }
+  }
+}
+@custom-variant stage-live {
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:where(html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) *) {
+      @slot;
+    }
+  }
+}
+
 /* ============================================================================
    DESIGN SYSTEM — "Midnight Aqua" (modern, premium, fintech-terminal)
    Dark cool base · teal-aqua dominant accent · warm amber support · coral kill.
@@ -311,6 +345,16 @@
   --z-menu: 60;
   --z-intro: 80;
   --z-skip: 90;
+  /* Phase 3 (PHASE3-PLAN §4.2, spec §3.2): the fixed stage sits under
+     <main>; the letterbox bars, the game HUD, the stop control, toasts and
+     the director's-cut overlay sit above the page and under the header. */
+  --z-stage: 0;
+  --z-main: 1;
+  --z-bars: 20;
+  --z-game-hud: 25;
+  --z-stop: 30;
+  --z-toast: 32;
+  --z-cut: 35;
 
   /* primitive geometry (DESIGN v2 §5, §3.3): Lens bracket, dome seam, letterbox */
   --lens-stroke: 2px;

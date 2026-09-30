@@ -3,6 +3,10 @@ import { SectionFrame } from "@/components/sections/SectionFrame";
 import { rendererFor } from "@/components/sections/registry";
 import { ActCardSection } from "@/components/sections/act-card/act-card-section";
 import { enabledSections, numberOf, pageItems, type PageItem } from "@/lib/sections";
+import { StageGate } from "@/components/stage/stage-gate";
+import { LetterboxBars } from "@/components/stage/letterbox-bars";
+import { StageLayers } from "@/components/stage/stage-layers";
+import { PageHydrated } from "@/components/site/page-hydrated";
 
 /** The home page is the manifest (lib/page.ts), rendered in the derived
  *  order `pageItems` (lib/sections.ts): every enabled section, with an act
@@ -49,10 +53,19 @@ const isCredits = (item: PageItem) => item.kind === "section" && item.entry.type
 export default function Home() {
   return (
     <>
+      {/* Phase 3 (PHASE3-PLAN §4.2): the stage, the letterbox bars and the
+          fixed layers sit before <main>; W1.0 stubs render nothing. */}
+      <StageGate />
+      <LetterboxBars />
+      <StageLayers />
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {pageItems.filter((item) => !isCredits(item)).map(hydrateApart)}
       </main>
       {pageItems.filter(isCredits).map(hydrateApart)}
+      {/* the LAST Suspense child: it hydrates after every section (B1-INTRO) */}
+      <Suspense fallback={null}>
+        <PageHydrated />
+      </Suspense>
     </>
   );
 }
