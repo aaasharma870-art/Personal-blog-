@@ -1,11 +1,63 @@
-# CONTINUE: phase 2 — the info details
+# CONTINUE: Phase 3 (keep them scrolling), then Phase 2 (the info details)
 
-> **PHASE 3 IS QUEUED (ideas only, 2026-09-30): "Keep them scrolling".**
-> - Aryan finds the site choppy and not entertaining enough. Read **`docs/build/IDEAS.md`** first. Its §0 decisions are BINDING and override the older rules: smooth scroll (Lenis + GSAP) YES, one WebGL transition layer YES, about 350 Higgsfield credits for living loops YES, an egg hunt with a counter YES, themed sound YES, per-world fonts YES, and fixing the intro hand-off.
-> - When Aryan says to start Phase 3: turn IDEAS.md into a spec and plan (brainstorm with him on its open points), then build. Until then, nothing in IDEAS.md is built.
-> - The skills are in `.claude/skills/` (tracked). Use them.
+> **NEXT UP: PHASE 3, "Keep them scrolling"** (set up 2026-09-30). When Aryan says "continue", "go" or "start Phase 3", do the **Phase 3 brief** below. Phase 2 (the info details, further down) waits until he asks for it.
 
-**If you are Claude and Aryan says "continue", "go" or similar in this repo, this file is your brief.** Read it fully before touching anything.
+## Phase 3 brief (read this first)
+
+**Why:** Aryan reviewed the finished site and finds it choppy and not entertaining enough. The goal is to keep viewers scrolling: the site should feel like an interactive game and a movie.
+
+**Authority, in this order:**
+1. **`docs/build/IDEAS.md`**. Section **O (TRIAGE)** is the working decision: keep, ration, cut, and the **one-star-per-screen** rule. Section **0** holds Aryan's binding decisions. Sections A–N are the full idea lists, and O overrides them.
+2. The Rules section below (branches, content and honesty, film layer).
+3. `docs/build/SPEC.md`, `DESIGN.md`, `ICONS.md`, `MOTION-REPORT.md`. Where they say "native scroll only / no WebGL / no audio", IDEAS section 0 overrides them.
+
+**Skills:** `.claude/skills/` (tracked). Use `gsap-scrolltrigger`, `gsap-react`, `gsap-performance`, `cinematic-gsap-lenis-motion-system`, `motion`, `animate`, `emil-design-eng`, `review-animations`, `design-motion-principles`, `fixing-motion-performance`, `vercel-react-view-transitions`, `frontend-design`, `impeccable` (hooks off), `better-typography`, `core-web-vitals`, `vercel-react-best-practices`, `web-design-guidelines`.
+
+**Higgsfield:** balance 506.5 credits (2026-09-29). About 350 are approved for living loops, and sound can use the audio tools.
+- Keep a reserve of at least 100.
+- Video is silent; audio is separate.
+- Runner-up = alt where affordable.
+- Log every run in `docs/build/media/LOG.md` and a ledger.
+- Generation works in cloud sessions (Aryan confirmed). If the tools are missing, build with existing media and list what is missing.
+
+**Constraints that still hold:**
+- **Reduced motion and Pause** stop ALL motion and sound.
+- **The intro and the entertainment never block content.** The "Skip to the research" fast lane is always visible.
+- **Page basics:** one h1, AA contrast, no hydration errors.
+- **Video:** one video decoder at a time.
+- **Loading:** lazy-load below the fold. WebGL is lazy, with a plain-image fallback.
+- **Sound** is muted by default.
+- **Mobile** gets a lighter but still moving cut.
+- **Film layer:** no actor likenesses, ripped stills, official logos or ripped audio. Fonts must have web-embedding licences (log them in `docs/build/FONTS.md`).
+- **Git:** work on `design/three-films`. Merge to `main` only when Aryan asks and `RELEASE=1 npm run check`, `npx eslint .` and `npm run build` pass.
+
+### Phase 3 queue (tick each with a one-line outcome; commit and push after every step)
+- [ ] **P3-0. Settle the open points with Aryan (ask once, briefly), then measure.**
+  - Ask: (a) where he saw the choppiness (laptop, phone, browser); (b) whether the hero name stays in Geist or takes the Pirates face; (c) whether he wants any cut toy back as an egg (cannon, scratch-off map, visitor WANTED poster).
+  - Then record a baseline with `tools/capture/motion.js`, and ask him for a real-device Chrome performance recording if he can make one.
+  - If he says "just go", use these defaults: Geist name; no extra eggs; treat both laptop and phone as choppy.
+- [ ] **P3-1. Spec and plan.** Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
+  - Include a beat map of the whole page: one star per screen, no dead screen over 100vh.
+  - Include the list of 12 eggs (3 per world), one toy per act, and the loop list (about 25 plates).
+  - Include the performance budget, the font choices with licences, and the sound list.
+  - Then write `docs/build/PHASE3-PLAN.md`: tasks with file ownership, so builders can run in parallel.
+- [ ] **P3-2. Foundation.**
+  - Lenis + GSAP ScrollTrigger: smooth scroll, off for reduced motion and Pause, phones native unless testing says otherwise.
+  - The persistent stage: sticky media behind the content, and split-screen reading sections.
+  - Extend the manifest and validator with beats (warn on gaps over 100vh).
+- [ ] **P3-3. Intro to hero hand-off fix** (IDEAS section J), plus the opening title sequence. Measure before and after.
+- [ ] **P3-4. Typography per world** (IDEAS section I): iconic header + legible body per world. Research data stays in Geist.
+- [ ] **P3-5. Every plate moves.** Depth parallax + virtual camera (code). Living loops (Higgsfield, in parallel). 3 to 4 scroll-scrubbed push-in sequences.
+- [ ] **P3-6. World transitions.** The contained WebGL layer, match cuts between worlds, letterbox breathing, and the day-to-night arc.
+- [ ] **P3-7. Words.** Titles arriving in character, the one-liners as subtitles, and the rationed kinetic words (caps in IDEAS O.2).
+- [ ] **P3-8. Game layer.** One toy per act (drone flight and the Dead Eye target game are the two real games). The 12-egg hunt with a header counter and a 12/12 reward. Post-credits scene.
+- [ ] **P3-9. Sound.** An ambient bed per world plus egg and transition effects. Muted by default, with a toggle, and tied to Pause.
+- [ ] **P3-10. Director's cut autoplay, DVD chapter select, the "Skip to the research" fast lane, and the mobile cut.**
+- [ ] **P3-11. Critic loop** (up to 3 rounds).
+  - Capture frames and motion runs.
+  - Judges: one-star-per-screen; a "would you keep scrolling?" panel; the blind stranger test; smoothness (`motion.js` before and after, plus a real device if available).
+  - Fix what they find.
+- [ ] **P3-12. Final QA + `docs/build/PHASE3-REPORT.md`.** Check, eslint and build pass, all widths, reduced motion, no-JS, LCP. List what Aryan should review. Do NOT merge to `main` unless he asks.
 
 ## Where things stand (2026-09-29)
 - **The site is built and on `main`.** "One Line, Four Lights": a single-page Next.js 16 / React 19 / Tailwind v4 / motion 12 portfolio in four film-lit acts (Pirates of the Caribbean · 3 Idiots · Red Dead Redemption 2 · Harry Potter) plus the Harry Potter intro. The autonomous build (P0 → M5) is finished; its record is `docs/build/FINAL-REPORT.md` (read §6–§8) and the old brief is `docs/build/CONTINUE-BUILD.md`.
@@ -20,7 +72,7 @@
 - **A11y/perf:** reduced motion + Pause stop everything; one h1; AA contrast; no hydration errors; mobile stills.
 - Next 16: check `node_modules/next/dist/docs` before Next-specific code.
 
-## Phase 2 queue — the info details (Aryan leads; Claude drafts options, then edits)
+## Phase 2 queue — the info details (AFTER Phase 3, or whenever Aryan asks) (Aryan leads; Claude drafts options, then edits)
 Tick each item here with a one-line outcome when done.
 - [ ] **1. The four "why this film matters to me" lines** — `lib/film.ts` → `reasons` (`pirates`, `idiots`, `rdr2`, `hp`). Each has the current text + 2 alternates + a prompt. Aryan rewrites in his own words (1–2 sentences each).
 - [ ] **2. The four act loglines** — `lib/film.ts` → `"act-1"…"act-4"` (under `aryanDraft(...)`).
