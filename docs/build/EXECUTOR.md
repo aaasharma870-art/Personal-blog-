@@ -1,3 +1,4 @@
 # Executor heartbeat (one executor at a time; stale after 30 min)
-executor: NONE - idle since 2026-09-30T09:36:57Z (brainstorm session ended; no build running)
-next: Phase 3 - CONTINUE.md -> Phase 3 queue -> P3-0
+executor: claude.ai/code cloud session (session_01MjSTvSKaJE5W4MbSShgKBx)
+heartbeat_utc: 2026-09-30T16:39:22Z
+current_step: Phase 3 - P3-1 (spec + plan workflow wf_67b98983-f5e running)
