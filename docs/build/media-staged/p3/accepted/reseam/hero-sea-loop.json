@@ -1,0 +1,279 @@
+{
+  "proposedMediaId": "MV-03",
+  "kind": "re-seam (0 credits) of a shipped, registered loop; replaces the public files of the same name",
+  "replaces": [
+    "public/media/films/hero-sea-loop.mp4",
+    "public/media/films/hero-sea-loop.webm",
+    "public/media/films/hero-sea-loop-poster.webp (MV-03-poster)"
+  ],
+  "sourceMediaId": "MV-01",
+  "plate": "public/media/films/hero-sea.webp",
+  "job": "764ca916-286d-41a4-b06f-81f36fd06c92",
+  "model": "kling3_0 pro 16:9 8 s, sound off, start = end = the plate (original generation; no new job)",
+  "credits": 0,
+  "master": "media-src/p3/masters/MV-03_764ca916.mp4 (Kling original, 9935927 bytes, 193 frames; downloaded 2026-09-30 from the job's rawUrl)",
+  "files": {
+    "mp4": "hero-sea-loop.mp4",
+    "webm": "hero-sea-loop.webm",
+    "poster": "hero-sea-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 192,
+  "durationS": 8,
+  "bytes": {
+    "mp4": 2086403,
+    "webm": 1284744,
+    "poster": 52560
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/MV-03_764ca916.mp4 docs/build/media-staged/p3/accepted/reseam/hero-sea-loop --k=24 --tier=S --method=residual --crf-mp4=24 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 24,
+    "crfMp4": 24,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 80
+  },
+  "seamCheckLossless": {
+    "join": 0.9972,
+    "joinRgb": 0.9921,
+    "consecutive": {
+      "min": 0.9953,
+      "minAt": 1,
+      "p05": 0.9959,
+      "median": 0.9972
+    },
+    "joinMinusMedian": 0,
+    "joinPercentile": 0.4737,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": "zones: left 45% + top 15% static; light = ship lantern (0.86-0.90, 0.36-0.44)",
+  "before": {
+    "masterLossless": {
+      "join": 0.9917,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9953,
+      "consecutiveMedian": 0.9972
+    },
+    "mp4": {
+      "bytes": 2239153,
+      "frames": 193,
+      "durationS": 8.042,
+      "firstVsPlate": 0.985,
+      "lastVsPlate": 0.9778,
+      "join": 0.9879,
+      "joinRgb": 0.9483,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9949,
+      "consecutiveMedian": 0.9972,
+      "staticMaxMeanAbsDelta": [
+        0.65,
+        0.37
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 10.99,
+      "light": [
+        {
+          "ptpPct": 3.08,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      ],
+      "phaseShiftPx": [
+        -0.053,
+        -0.038
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 1341726,
+      "frames": 193,
+      "durationS": 8.042,
+      "firstVsPlate": 0.9869,
+      "lastVsPlate": 0.9801,
+      "join": 0.9891,
+      "joinRgb": 0.9421,
+      "joinPercentile": 0.0052,
+      "consecutiveMin": 0.9884,
+      "consecutiveMedian": 0.9976,
+      "staticMaxMeanAbsDelta": [
+        0.65,
+        0.41
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 11,
+      "light": [
+        {
+          "ptpPct": 2.9,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      ],
+      "phaseShiftPx": [
+        -0.057,
+        -0.025
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 2086403,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9841,
+      "lastVsPlate": 0.9818,
+      "join": 0.9905,
+      "joinRgb": 0.964,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.994,
+      "consecutiveMedian": 0.9973,
+      "staticMaxMeanAbsDelta": [
+        0.65,
+        0.36
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 10.96,
+      "light": [
+        {
+          "ptpPct": 2.95,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      ],
+      "phaseShiftPx": [
+        -0.068,
+        -0.039
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 1284744,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9869,
+      "lastVsPlate": 0.9853,
+      "join": 0.9976,
+      "joinRgb": 0.9909,
+      "joinPercentile": 0.5211,
+      "consecutiveMin": 0.9921,
+      "consecutiveMedian": 0.9975,
+      "staticMaxMeanAbsDelta": [
+        0.52,
+        0.13
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 10.52,
+      "light": [
+        {
+          "ptpPct": 3.09,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      ],
+      "phaseShiftPx": [
+        -0.057,
+        -0.025
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "runnerUp": {
+    "method": "blend (map §4 recipe) + --rotate=auto; encoded at the rs-run CRFs (sea 24/32, campfire 23/30, last-light 23/26), for comparison only, not staged",
+    "k": 24,
+    "frames": 169,
+    "durationS": 7.042,
+    "rotate": {
+      "mode": "auto",
+      "frame": 154,
+      "ssimAtFrame": 0.9457,
+      "ssimAtFrame0": 0.9111
+    },
+    "lossless": {
+      "join": 0.9965,
+      "joinPercentile": 0.0952,
+      "consecutiveMin": 0.9942,
+      "firstVsPlateUnrotated": 0.9111
+    },
+    "mp4": {
+      "bytes": 1710236,
+      "firstVsPlate": 0.9451,
+      "join": 0.9911
+    },
+    "webm": {
+      "bytes": 864845,
+      "firstVsPlate": 0.9456,
+      "join": 0.9976,
+      "joinPercentile": 0.4524
+    },
+    "whyNotChosen": "drops the pinned plate frames (frame 0 is a blend, registration lower), 0.5-1 s shorter, a dissolve region; residual matched or beat it on every loop"
+  },
+  "visualChecks": "slit-scans across the wrap (±12 frames, loop.mjs frames --slit) show a vertical seam at the wrap in every shipped MP4 and none in the re-seamed MP4 or WebM; wrap strips (frames N-2, N-1 | 0, 1) continuous; L2 content unchanged (same Kling frames, no new elements).",
+  "manifestChanges": [
+    "lib/media.ts MV-03: durationS 8.04 -> 8 (192 frames)",
+    "MV-03 provenance note: \"re-seamed P3 (residual ramp K=24, one keyframe per loop): web join mp4 0.9905 / webm 0.9976 (was 0.9879 / 0.9891); H.264 2.09 MB / VP9 1.28 MB\"",
+    "MV-03-poster: frame 0 of the re-seam (= the pinned plate frame src[0]), 52560 bytes"
+  ],
+  "verdict": "ACCEPT (re-seam): every check passes; MP4 pass.join = 'codec' (the wrap lands on the H.264 IDR, a texture refresh, still above the shipped join); the motion seam is verified lossless and on the WebM (an ordinary step)"
+}
