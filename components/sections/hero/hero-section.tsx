@@ -29,6 +29,7 @@ import {
   unionBox,
 } from "@/components/sections/hero/focal";
 import { heroBootHtml } from "@/components/sections/hero/hero-boot";
+import { DirectorsCutButton } from "@/components/director/directors-cut-button";
 import {
   HeroStage,
   type HeroGeo,
@@ -222,13 +223,18 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
         ))}
       </p>
       {href ? (
-        <a
-          href={href}
-          className="type-meta mt-tier-group inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent"
-        >
-          {label}
-          {arrow ? <span aria-hidden="true">{arrow}</span> : null}
-        </a>
+        // the CTA row (Phase 3): the CTA, then the director's-cut button
+        // (W3-CINEMA; renders nothing until then, so the row is the CTA's box)
+        <div className="mt-tier-group flex flex-wrap items-center gap-3" data-hero-cta-row="">
+          <a
+            href={href}
+            className="type-meta inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent"
+          >
+            {label}
+            {arrow ? <span aria-hidden="true">{arrow}</span> : null}
+          </a>
+          <DirectorsCutButton />
+        </div>
       ) : null}
     </div>
   );

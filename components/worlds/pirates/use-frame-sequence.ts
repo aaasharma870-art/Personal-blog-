@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MutableRefObject } from "react";
 
 /* ============================================================================
    useFrameSequence — fetch + decode an image sequence (the Journey's JV:
@@ -29,7 +29,18 @@ export type FrameSequence = {
 
 const CONCURRENCY = 6;
 
-export function useFrameSequence(urls: readonly string[], enabled: boolean): FrameSequence {
+/** Phase-3 options (plan §3.4; W2-PLATES implements them). `window`: decode only
+ *  this many frames around `index.current` (a sliding window); `index`: the
+ *  host's current frame. Today both are accepted and ignored (every frame is
+ *  decoded, as before). */
+export type FrameSequenceOptions = { window?: number; index?: MutableRefObject<number> };
+
+export function useFrameSequence(
+  urls: readonly string[],
+  enabled: boolean,
+  o?: FrameSequenceOptions,
+): FrameSequence & { frameAt(i: number): CanvasImageSource | null } {
+  void o; // W1.0 stub: the options are part of the contract, not yet used
   const key = urls.length ? `${urls[0]}#${urls.length}` : "";
   const frames = useRef<(HTMLImageElement | null)[]>([]);
   // progress is keyed by the url list, so a new list reads as 0 without a
@@ -84,6 +95,9 @@ export function useFrameSequence(urls: readonly string[], enabled: boolean): Fra
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, key]);
 
+  // plan §3.4: the stable accessor W2-PLATES keeps when `frames` goes windowed
+  const frameAt = useCallback((i: number): CanvasImageSource | null => frames.current[i] ?? null, []);
+
   const mine = progress.key === key;
   const decoded = mine ? progress.done - progress.failed : 0;
   const failed = mine && progress.failed > 0;
@@ -93,5 +107,6 @@ export function useFrameSequence(urls: readonly string[], enabled: boolean): Fra
     total: urls.length,
     ready: mine && !failed && urls.length > 0 && progress.done === urls.length,
     failed,
+    frameAt,
   };
 }

@@ -1,0 +1,8 @@
+/* ============================================================================
+   app/p3/world-idiots.css: Act II hosts: work, chapters, experiment (3 Idiots).
+   OWNER: W3-IDIOTS (PHASE3-PLAN §4.6, DP-10). Only the owner edits this file.
+   Imported by app/layout.tsx after ./intro.css, so it cascades after the
+   base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
+   ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
+   stage-live, the --z-* scale) live in app/globals.css.
+   ========================================================================== */

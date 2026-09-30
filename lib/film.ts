@@ -37,7 +37,9 @@
    ========================================================================== */
 
 import type { LoaderKind, WorldId } from "./worlds";
+import type { Beat, Tempo } from "./beats";
 import type { MediaId } from "./media";
+import type { StageSpec } from "./stage";
 import type { QuoteId } from "./quotes";
 import type { Variant, VariantChoice } from "./variants";
 
@@ -56,6 +58,10 @@ export type Copy = {
   draft?: true;
   /** Other drafts to pick from (never rendered). */
   alternates?: readonly string[];
+  /** Phase 3 (PHASE3-SPEC §3.4 check 10): text Aryan has not signed yet. A
+   *  rendered `unsigned` string is a WARN in `npm run check` and an ERROR
+   *  under RELEASE=1 (the list prints key, text and where it renders). */
+  unsigned?: true;
 };
 export type TransitionKind = "flight" | "seam" | "tintype" | "ignite" | "reel" | "title" | "opening";
 export type WorkKind = "film" | "game";
@@ -128,6 +134,17 @@ export type ActSpec = {
   tip?: number;
   /** The derived card's choreography variant (default: film.defaultVariant). */
   variant?: VariantChoice;
+  /* — Phase 3 (PHASE3-SPEC §3.4, §7.1; B1-BEATS fills them in wave 1) — */
+  /** The card's beats, `at`/`span` in vh at p × travel. */
+  beats?: readonly Beat[];
+  tempo?: Tempo;
+  /** Where `#act-n` lands, as p of the card's travel (the new world fully
+   *  shown, never a dark p 0). */
+  landAt?: number;
+  /** The act title mask's origin in the frame (0–1, x/y). */
+  maskOrigin?: readonly [number, number];
+  /** The act-1 program block's stage spec (the opening card's backdrop). */
+  stage?: StageSpec;
 };
 
 export type PrologueSpec = {
@@ -150,15 +167,21 @@ export type EggSpec = {
   id: string;
   /** Section id, "global", "chrome", "intro", "console" or "404". */
   host: string;
-  trigger: ("palette" | "typed" | "auto" | "media")[];
+  /** "hotspot" (Phase 3): an on-page `<EggHotspot>` button, DESKTOP_FINE. */
+  trigger: ("palette" | "typed" | "auto" | "media" | "hotspot")[];
   desktopOnly?: boolean;
   enabled: boolean;
+  /** Phase 3: a toy (one per act, PHASE3-SPEC §9.2), not a hunt egg. */
+  toy?: true;
 };
 
 /** "caption" (M2, RECOGNIZABILITY O-1): scene captions, act-card and films
  *  film titles, WANTED, and lettered film quotes. Only inside the display
- *  scope while `film.fontScope.extended` is on (validator #10). */
-export type LetteringSlot = "act-title" | "loader" | "egg" | "caption";
+ *  scope while `film.fontScope.extended` is on (validator #10).
+ *  "display" (Phase 3, §P(b); PHASE3-SPEC §5.4): the hero h1, the name in
+ *  the hero world's face, gated by `film.fontScope.name`; exactly one entry,
+ *  rendered only by hero-section.tsx. */
+export type LetteringSlot = "act-title" | "loader" | "egg" | "caption" | "display";
 export type LetteringSpec = {
   id: string;
   /** The exact string set in the face (the glyph subset is cut from it).
@@ -180,6 +203,9 @@ export type LetteringSpec = {
 /* — Lettering (SPEC §9.7; FONTS.md is the licence record) ———————————— */
 const lettering = [
   { id: "pc-crossing", text: "THE CROSSING", face: "Pirata One", mode: "A", slot: "act-title", shipped: true },
+  // Phase 3 (§P(b), PHASE3-SPEC §5.4): the name (the hero h1) in the hero
+  // world's face, mixed case only; text === content.ts `site.name`.
+  { id: "name", text: "Aryan Sharma", face: "Pirata One", mode: "A", slot: "display", shipped: true },
   { id: "3i-workshop", text: "The Workshop", face: "Kalam", mode: "A", slot: "act-title", shipped: true },
   // M2 (RECOGNIZABILITY O-3; FONTS.md FT-2 option c): Rye (OFL; it carries a
   // Reserved Font Name — we self-host Google's served subset, judged
@@ -394,6 +420,11 @@ const tips = [
   { text: "Most failures I have seen were failures of attention before they were failures of math.", status: "confirmed", source: "principles[4].body" },
 ] as const satisfies readonly Copy[];
 
+/** Phase-3 page microcopy (PHASE3-PLAN §4.4): about THE PAGE, never a fact
+ *  about Aryan and never a film line; `proposed` AND `unsigned` until Aryan
+ *  signs (RELEASE=1 fails while any rendered one is unsigned: DP-9). */
+const p3 = (text: string) => ({ text, status: "proposed", unsigned: true }) as const;
+
 /* — Page microcopy (SPEC §9.6). `{acts}` / `{works}` are filled by
      lib/sections.ts from the enabled acts ("four", "three films and a game"). */
 const copy = {
@@ -491,18 +522,142 @@ const copy = {
   "principles.you": { text: "YOU", status: "proposed" },
   /* the map's own banner title (our wording, not a film line; lettering "hp-map-title") */
   "principles.map.title": { text: "THE MAP OF THE PRINCIPLES", status: "proposed" },
+
+  /* ══ Phase 3 (PHASE3-PLAN §4.4). Every key below is `proposed` +
+       `unsigned` (p3). Rendered by the Phase-3 builders only; nothing here
+       renders until a builder wires it. ══ */
+  /* opening titles (PHASE3-SPEC §4.3; B1-INTRO). {ACTS} from the acts in use;
+     {WORKS} = the works in use in caps joined by " • "; {ACT} = the first
+     act's title through <Lettered> ("THE CROSSING", pc-crossing). */
+  "titles.1": p3("A RESEARCH JOURNAL IN {ACTS} ACTS"),
+  "titles.2": p3("AFTER {WORKS}"),
+  "titles.3": p3("ACT I • {ACT} ↓"),
+  /* honesty copy (PHASE3-SPEC §8.6). The .p3 text REPLACES
+     "systems.pencil.body" once smooth scroll and WebGL have landed: until
+     then the page really is native scroll with no WebGL, so the old line
+     stays true and stays rendered (handoff to B1-BEATS / the assemblers). */
+  "systems.pencil.body.p3": p3(
+    "The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change.",
+  ),
+  "systems.meta.scroll": p3("Smooth scroll on desktop (Lenis)"),
+  "systems.meta.native": p3("Native scroll on phones and with reduced motion"),
+  "systems.meta.css": p3("CSS + SVG first"),
+  "systems.meta.webgl": p3("WebGL, where supported, only for scene changes"),
+  /* the fast lane (PHASE3-SPEC §11.3) */
+  "fastlane.label": p3("Skip to the research"),
+  /* collapses (PHASE3-SPEC §11.5). The appendix summary uses only content.ts
+     words: optionAlpha.tag, .name, "paper portfolio" + "no-code platform"
+     (.summary), "not a proven edge" (.honest). */
+  "optuna.appendix.summary": p3(
+    "Where the discipline started · Automated 0DTE Options Bots · a paper portfolio on a no-code platform; not a proven edge",
+  ),
+  "about.philosophy.summary": p3("The philosophy note"),
+  "credits.more.summary": p3("More credits: media, fonts and quotes"),
+  /* the egg hunt (PHASE3-SPEC §9; W2-HUNT). {n} = found count; {name} = the
+     egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
+     the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */
+  "egg.hunt.chip": p3("{n}/12"),
+  "egg.hunt.chip.name": p3("Easter-egg hunt: {n} of 12 found. Show hints"),
+  "egg.hunt.toast": p3("Egg {n} of 12 · {name}"),
+  "egg.hunt.panel.title": p3("The egg hunt"),
+  "egg.hunt.reset": p3("Reset the egg hunt"),
+  "egg.hunt.reset.confirm": p3("Reset the hunt? Every egg found so far is forgotten."),
+  "egg.hunt.off": p3("Turn off easter eggs"),
+  "egg.hunt.complete": p3("12 / 12"),
+  "egg.hunt.name.hp-map": p3("The Marauder's Map"),
+  "egg.hunt.name.hp-lumos": p3("Lumos and Nox"),
+  "egg.hunt.name.hp-snitch": p3("The Golden Snitch"),
+  "egg.hunt.name.pc-parley": p3("The right of parley"),
+  "egg.hunt.name.pc-coin": p3("The cursed coin"),
+  "egg.hunt.name.pc-kraken": p3("The kraken"),
+  "egg.hunt.name.3i-aal": p3("The chalk heart"),
+  "egg.hunt.name.3i-quad": p3("The quadcopter doodle"),
+  "egg.hunt.name.3i-pen": p3("The astronaut pen"),
+  "egg.hunt.name.rd-eagle": p3("The eagle eye"),
+  "egg.hunt.name.rd-bone": p3("The fossil bone"),
+  "egg.hunt.name.rd-fire": p3("The campfire"),
+  "egg.hunt.hint.hp-map": p3("I solemnly swear…"),
+  "egg.hunt.hint.hp-snitch": p3("Something golden waits by the way back to the opening"),
+  "egg.hunt.hint.pc-parley": p3("parley?"),
+  "egg.hunt.hint.pc-coin": p3("Hold the coin to the moonlight"),
+  "egg.hunt.hint.pc-kraken": p3("HERE BE MONSTERS"),
+  "egg.hunt.hint.3i-aal": p3("A chalk heart on the board's ledge"),
+  "egg.hunt.hint.3i-quad": p3("Clear a hypothesis through all seven gates"),
+  "egg.hunt.hint.3i-pen": p3("Kept for the one who proves worthy."),
+  "egg.hunt.hint.rd-eagle": p3("An eye at the start of the trail"),
+  "egg.hunt.hint.rd-bone": p3("Something half-buried in the journal's hills"),
+  "egg.hunt.hint.rd-fire": p3("Warm your hands by the fire"),
+  /* THE HUNT credits block (PHASE3-SPEC §9.4): about the visitor, never Aryan */
+  "egg.hunt.credit.hp-map": p3("Solemn swearer — you"),
+  "egg.hunt.credit.hp-lumos": p3("Light-bringer — you"),
+  "egg.hunt.credit.hp-snitch": p3("Seeker — you"),
+  "egg.hunt.credit.pc-parley": p3("Parley negotiator — you"),
+  "egg.hunt.credit.pc-coin": p3("Moonlight witness — you"),
+  "egg.hunt.credit.pc-kraken": p3("Kraken spotter — you"),
+  "egg.hunt.credit.3i-aal": p3("Hand on heart — you"),
+  "egg.hunt.credit.3i-quad": p3("Test pilot — you"),
+  "egg.hunt.credit.3i-pen": p3("Worthy of the pen — you"),
+  "egg.hunt.credit.rd-eagle": p3("Eagle eye — you"),
+  "egg.hunt.credit.rd-bone": p3("Bone collector — you"),
+  "egg.hunt.credit.rd-fire": p3("Warmed by the fire — you"),
+  /* egg effects (PHASE3-SPEC §9.1) */
+  "egg.console": p3("12 eggs hide on this page (on a desktop browser)"),
+  "egg.parley.fallback": p3("Parley granted — the terms are at Contact."),
+  "egg.quad.toast": p3("It flies. Take it up in Systems."),
+  "egg.pen.read": p3("Kept for the one who proves worthy. Read the whole ledger."),
+  "egg.pen.win": p3("Worthy."),
+  "egg.bone.note": p3("another bone for the collector"),
+  "egg.fire.toast": p3("The fire flares, then settles."),
+  /* the toys, one per act (PHASE3-SPEC §9.2). {n}, {s}, {title} are filled
+     by the games; {title} = the verbatim gauntlet[n].title. */
+  "toy.compass.label": p3("Spin Jack's compass"),
+  "toy.drone.cmd": p3("Fly the homemade drone"),
+  "toy.drone.pill": p3("▲ Take off"),
+  "toy.drone.gate": p3("Gate {n} of 7 · {title}"),
+  "toy.drone.next": p3("Next: the kill-list ↓"),
+  "toy.drone.score": p3("{n}/7 gates · {s} s"),
+  "toy.drone.rm": p3("Motion is off: here is the flight plan"),
+  "toy.drone.help": p3("Arrow keys or WASD to fly, or drag with the pointer. Esc lands."),
+  "toy.deadeye.pill": p3("DEAD EYE"),
+  "toy.deadeye.survivor": p3("Survived: not a target"),
+  "toy.deadeye.score": p3("{n}/5 marked · {s} s of Dead Eye left"),
+  "toy.deadeye.fire": p3("Fire"),
+  "toy.deadeye.release": p3("Release"),
+  "toy.candles.lumos": p3("Lumos"),
+  "toy.candles.done": p3("The hall is lit."),
+  /* sound (PHASE3-SPEC §10.4) */
+  "sound.name": p3("Sound"),
+  "sound.on": p3("Sound on"),
+  "sound.off": p3("Sound off"),
+  "sound.disabled": p3("Sound follows motion: resume motion to hear it"),
+  /* the director's cut (PHASE3-SPEC §11.1) */
+  "dc.button": p3("▶ Director's cut"),
+  "dc.sound": p3("(sound on)"),
+  "dc.stop": p3("■ Stop"),
+  "dc.speed": p3("2×"),
+  "dc.act": p3("Act {n}/4"),
+  "dc.cmd": p3("Play the director's cut"),
+  "dc.paused": p3("Motion is paused"),
+  /* the DVD chapter select (PHASE3-SPEC §11.2). The intermission and credits
+     rows reuse the menu group labels (lib/sections.ts "Intermission",
+     "Credits"); only the heading and the prologue row are new. */
+  "chapter.heading": p3("Chapters"),
+  "chapter.prologue": p3("Prologue"),
+  "palette.play": p3("Play"),
+  "palette.hints": p3("Show egg hints"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 
 const LOGLINE_PROMPT = "[DRAFT by Claude — Aryan: one line, in your words, on what this act is about. Optional.]";
+/** Phase 3 (PHASE3-SPEC §8.4): the loglines become the four static subtitles
+ *  (L5), a new rendering of Claude's drafts, so they are `unsigned` again
+ *  until Aryan rewrites or re-signs them. */
+const logline = (text: string): Copy => ({ ...aryanDraft(text, LOGLINE_PROMPT), unsigned: true });
 const loglines = {
-  "act-1": aryanDraft("Where I started, and the course I've been correcting ever since.", LOGLINE_PROMPT),
-  "act-2": aryanDraft("What I build, how I try to break it, and what didn't survive.", LOGLINE_PROMPT),
-  "act-3": aryanDraft(
-    "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
-    LOGLINE_PROMPT,
-  ),
-  "act-4": aryanDraft("What I believe about doing this work honestly, and where to find me.", LOGLINE_PROMPT),
+  "act-1": logline("Where I started, and the course I've been correcting ever since."),
+  "act-2": logline("What I build, how I try to break it, and what didn't survive."),
+  "act-3": logline("Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work."),
+  "act-4": logline("What I believe about doing this work honestly, and where to find me."),
 } as const satisfies Record<string, Copy>;
 
 /* — World display faces (the fan faces; FONTS.md). One per film world. — */
@@ -660,7 +815,26 @@ export const film = {
   /** FT-1 / RECOGNIZABILITY O-1: extend the display-font scope beyond act
    *  titles / loaders / eggs to the "caption" slot (scene captions, film
    *  titles, WANTED, lettered quotes). false = captions set in house type. */
-  fontScope: { extended: true as boolean },
+  fontScope: {
+    extended: true as boolean,
+    /** Phase 3 (PHASE3-SPEC §5): per-world head / body / lead type roles at
+     *  ≥ 64rem (validator #10 roles; B1-TYPE). */
+    worlds: true as boolean,
+    /** Phase 3 (§P(b), SPEC §5.4): the hero h1 in the "display" slot. */
+    name: true as boolean,
+  },
+  /** Phase 3 (PHASE3-SPEC §3.1): Lenis smooth scroll on DESKTOP_FINE with
+   *  motion on. Read by the honesty lint (§3.4 check 6) and the stubs. */
+  smoothScroll: true as boolean,
+  /** Phase 3 (§3.3): the contained WebGL layer (card transitions). */
+  gl: true as boolean,
+  /** Phase 3 (§3.5, §10): opt-in sound (every visit starts muted). */
+  sound: true as boolean,
+  /** Pinned card travel in vh, DESKTOP_FINE boot gate only; 0 below
+   *  (PHASE3-SPEC §7.1; validator check 5: each ≤ 110, sum ≤ 400). */
+  cardTravel: { opening: 90, seam: 110, tintype: 90, ignite: 110 } as Readonly<
+    Record<"opening" | "seam" | "tintype" | "ignite", number>
+  >,
   prologue: {
     enabled: true,
     world: "hp",
@@ -680,6 +854,8 @@ export const film = {
       title: { text: "The Crossing", status: "proposed" },
       logline: loglines["act-1"],
       variant: "default",
+      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
+      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
     },
     {
       id: "act-2",
@@ -688,6 +864,8 @@ export const film = {
       logline: loglines["act-2"],
       epigraph: { text: "Treat every backtest as guilty until proven innocent.", status: "confirmed", source: "REPO" },
       variant: "default",
+      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
+      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
     },
     {
       id: "act-3",
@@ -696,6 +874,8 @@ export const film = {
       logline: loglines["act-3"],
       tip: 2,
       variant: "default",
+      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
+      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
     },
     {
       id: "act-4",
@@ -704,6 +884,8 @@ export const film = {
       logline: loglines["act-4"],
       epigraph: "Q-HP-3",
       variant: "default",
+      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
+      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
     },
   ] as const satisfies readonly ActSpec[],
   /** "prev>next" world pair → card choreography. `house` is transparent. */
@@ -736,14 +918,24 @@ export const film = {
       { id: "accio-obliviate", host: "global", trigger: ["palette"], enabled: true },
       { id: "bolt-favicon", host: "intro", trigger: ["auto"], enabled: true },
       { id: "snitch", host: "credits", trigger: ["auto"], enabled: true },
-      { id: "patronus", host: "contact", trigger: ["typed", "palette"], desktopOnly: true, enabled: true },
+      // Phase 3 (PHASE3-SPEC §3.6): off; not one of the 12 hunt eggs
+      { id: "patronus", host: "contact", trigger: ["typed", "palette"], desktopOnly: true, enabled: false },
       { id: "hidden-kraken", host: "act-2", trigger: ["media"], enabled: true },
       { id: "parley", host: "global", trigger: ["palette"], enabled: true },
       { id: "quadcopter-lift", host: "work", trigger: ["auto"], enabled: true },
       { id: "aal-izz-well", host: "global", trigger: ["palette"], enabled: true },
-      { id: "dead-eye", host: "kill-list", trigger: ["palette", "typed"], desktopOnly: true, enabled: true },
+      // Phase 3 (§9.1, §9.2): Dead Eye is the Act II/III toy, not a hunt egg
+      { id: "dead-eye", host: "kill-list", trigger: ["palette", "typed"], desktopOnly: true, enabled: true, toy: true },
       { id: "console-line", host: "console", trigger: ["auto"], enabled: true },
       { id: "owl", host: "intro", trigger: ["media"], enabled: false }, // only if IN-02 renders it cleanly (it does not)
+      /* Phase 3 hunt eggs new to the registry (PHASE3-SPEC §9.1; lib/hunt.ts
+         maps the 12 hunt ids onto registry ids). On-page hotspots render
+         only on DESKTOP_FINE; W2-HUNT builds them. */
+      { id: "aztec-coin", host: "journey", trigger: ["hotspot"], desktopOnly: true, enabled: true },
+      { id: "worthy-pen", host: "kill-list", trigger: ["hotspot"], desktopOnly: true, enabled: true },
+      { id: "eagle-eye", host: "beyond", trigger: ["hotspot"], desktopOnly: true, enabled: true },
+      { id: "fossil-bone", host: "writing", trigger: ["hotspot"], desktopOnly: true, enabled: true },
+      { id: "campfire-flare", host: "voices", trigger: ["hotspot"], desktopOnly: true, enabled: true },
     ] satisfies EggSpec[],
   },
 } as const;

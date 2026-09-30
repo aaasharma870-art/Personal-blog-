@@ -208,46 +208,203 @@ export const VARIANT_REGISTRY = {
   "card-opening.choreo": {
     default: {
       name: "compass-course",
-      note: "Card I: Jack's compass heads a brass course that plots through the four acts as you scroll; the needle settles on Act I.",
+      note: "Card I: Jack's compass heads a brass course that plots through the four acts as you scroll; the needle settles on Act I. Phase 3 (W2-CARDS + W2-GL; SPEC §7.1): the Pirates spyglass IRIS, pre-opened to a 12% brass disc on the lit stern, opens to full frame over p 0–.45 (GL tier + css tier).",
     },
     alt: {
       name: "chart-unfold",
-      note: "Card I: a folded chart opens (down, then out); a dotted trail makes landfall and climbs the program leg by leg; an X is inked on Act I.",
+      note: "Card I: a folded chart opens (down, then out); a dotted trail makes landfall and climbs the program leg by leg; an X is inked on Act I. Phase 3: stays the DOM chart-unfold on the new p ranges.",
     },
-    files: ["components/sections/act-card/frames/opening.tsx", "components/sections/act-card/frames/opening-map.tsx"],
+    files: ["components/sections/act-card/frames/opening.tsx", "components/sections/act-card/frames/opening-map.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
   },
   "card-seam.choreo": {
     default: {
       name: "ice-cut",
-      note: "Card I→II (pinned): a ragged ice-cut wipes the storm into a blueprint; FIG. 0 draws the Line; Rancho's chalk circle closes it.",
+      note: "Card I→II (pinned): a ragged ice-cut wipes the storm into a blueprint; FIG. 0 draws the Line; Rancho's chalk circle closes it. Phase 3 (SPEC §7.1): a Pirates breaker WAVE rolls out the storm (p 0–.22), then 3 Idiots CHALK dust uncovers the hall (p .22–.45) at the carried line; dawn grade ramp.",
     },
     alt: {
       name: "duster-erase",
-      note: "Card I→II (pinned): a chalk duster wipes the storm off the board in five strokes, leaving chalk dust; FIG. 0 is written in chalk; Rancho's circle closes it (no aqua seam line).",
+      note: "Card I→II (pinned): a chalk duster wipes the storm off the board in five strokes, leaving chalk dust; FIG. 0 is written in chalk; Rancho's circle closes it (no aqua seam line). Phase 3: the WAVE out, then the DUSTER in.",
     },
-    files: ["components/sections/act-card/frames/seam.tsx", "components/sections/act-card/frames/seam-chalk.tsx"],
+    files: ["components/sections/act-card/frames/seam.tsx", "components/sections/act-card/frames/seam-chalk.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
   },
   "card-tintype.choreo": {
     default: {
       name: "developing-plate",
-      note: "Card II→III: a low sun sinks, a graphite trail draws, and a sepia tintype develops into the frontier dusk.",
+      note: "Card II→III: a low sun sinks, a graphite trail draws, and a sepia tintype develops into the frontier dusk. Phase 3 (SPEC §7.1): the flash powder fires at p .03 (the hook) and the tintype DEVELOPS outward from the horizon row, sepia → golden hour (p .03–.45).",
     },
     alt: {
       name: "dead-eye",
-      note: "Card II→III: the Line is drawn across the frontier tintype, the plate takes the Dead Eye grade (media only), bone marks lock onto the four act points in turn, then resolve at once (mark first, fire once).",
+      note: "Card II→III: the Line is drawn across the frontier tintype, the plate takes the Dead Eye grade (media only), bone marks lock onto the four act points in turn, then resolve at once (mark first, fire once). Phase 3: the Dead Eye grade RAMPS in over the develop's range.",
     },
-    files: ["components/sections/act-card/frames/tintype.tsx", "components/sections/act-card/frames/tintype-deadeye.tsx"],
+    files: ["components/sections/act-card/frames/tintype.tsx", "components/sections/act-card/frames/tintype-deadeye.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
   },
   "card-ignite.choreo": {
     default: {
       name: "embers-to-candles",
-      note: "Card III→IV (pinned): embers rise from a campfire and become the floating candles along the Line.",
+      note: "Card III→IV (pinned): embers rise from a campfire and become the floating candles along the Line. Phase 3 (SPEC §7.1): an RDR2 film BURN eats in from the fire (p 0–.22), then HP INK bleeds the Great Hall in (p .22–.45); the wagon wheel → ring → snitch.",
     },
     alt: {
       name: "lumos-sweep",
-      note: "Card III→IV (pinned): the campfire goes out, one wand-tip light is struck and sweeps the hall in a flourish; each floating candle catches as the light passes, the Line inks beneath it, and the light becomes the last warm point.",
+      note: "Card III→IV (pinned): the campfire goes out, one wand-tip light is struck and sweeps the hall in a flourish; each floating candle catches as the light passes, the Line inks beneath it, and the light becomes the last warm point. Phase 3: the BURN out, then the LUMOS sweep in.",
     },
-    files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx"],
+    files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+  },
+
+  /* — Phase 3 card push-ins, star (b) p .50–1 (SPEC §6.2; W2-CARDS). The
+       sequences (SEQ-PEARL, SEQ-HALL) are named in the notes, not in
+       `media`, until the assembler registers them (DP-4). — */
+  "card-opening.push": {
+    default: {
+      name: "seq-pearl",
+      note: "Push-in #1: SEQ-PEARL, a 72-frame dolly toward the Pearl (frame 0 = iconic-pearl) scrubbed over p .50–1 on the card-frame canvas; THE CROSSING opens over it from p .68.",
+    },
+    alt: {
+      name: "code-push-l01",
+      note: "A code push on the L01 loop, 1 → 1.3 about the stern (transform only).",
+    },
+    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+  },
+  "card-seam.push": {
+    default: {
+      name: "camera-l08",
+      note: "Push-in #2: a code camera on L08 toward the ICE board, 1 → 1.35; FIG. 0 rides the camera group (it arrived with the chalk).",
+    },
+    alt: {
+      name: "rack-from-benches",
+      note: "A rack-focus crossfade from the benches (opacity between the soft and sharp rungs, never a blur), then a shorter push 1 → 1.2.",
+    },
+    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+  },
+  "card-ignite.push": {
+    default: {
+      name: "seq-hall",
+      note: "Push-in #3: SEQ-HALL, a 72-frame dolly along the tables toward the high table (frame 0 = iconic-hall at the join zoom); the starry ceiling stays in the settled frame.",
+    },
+    alt: {
+      name: "code-crane-l02",
+      note: "A code crane-up on the L02 loop (zoom 1.089 at the join → 1.25, focal .45).",
+    },
+    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+  },
+
+  /* — Phase 3 card title + carried shape (SPEC §7.1, §7.3, §8.1) — */
+  "title.mask": {
+    default: {
+      name: "text-as-mask",
+      note: "Each card exits through its act title as a mask: the letters open from p .68 over the still-moving push and reach full-bleed at p 1 (GL SDF knockout; css knockout on the css tier).",
+    },
+    alt: {
+      name: "rising-title",
+      note: "The act title rises into place over the push while plain letterbox bars open (no mask).",
+    },
+    files: ["components/sections/act-card/**", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+  },
+  "match.shape": {
+    default: {
+      name: "fold",
+      note: "The carried shape folds into the next (SDF morph): compass ring → gear on the seam, wagon wheel → ring → snitch on the ignite; part of the transition, never a second star.",
+    },
+    alt: {
+      name: "roll",
+      note: "The carried shape rolls across the meet row into the next one (css tier: the static SVG of the incoming shape on both sides).",
+    },
+    files: ["components/gl/**", "lib/gl/**", "components/stage/carried-shape.tsx"],
+  },
+
+  /* — Phase 3 stage + plates (SPEC §3.2, §6.1, §7.4) — */
+  "letterbox.breath": {
+    default: {
+      name: "slide",
+      note: "Global letterbox bars slide in from the viewport edges (scaleY 0 → 1) over 40vh as the house lights go down at the films, then open.",
+    },
+    alt: {
+      name: "iris-bars",
+      note: "The bars close as an iris toward the 2.39 band, then open the same way.",
+    },
+    files: ["components/stage/letterbox-bars.tsx", "components/stage/stage-layers.tsx", "app/p3/stage.css"],
+  },
+  "stage.camera": {
+    default: {
+      name: "drift",
+      note: "Each stage cue drifts slowly across its plate as its section scrolls (transform only).",
+    },
+    alt: {
+      name: "push",
+      note: "Each stage cue pushes in toward its focal point instead of drifting.",
+    },
+    files: ["components/stage/**", "lib/stage.ts", "app/p3/stage.css", "components/primitives/camera.tsx"],
+  },
+  "plates.loops": {
+    default: {
+      name: "living-loop",
+      note: "Every plate with a registered loop plays it (loopFor(plate); one decoder; RM → the poster, 0 video bytes).",
+    },
+    alt: {
+      name: "code-depth-camera",
+      note: "No video: the still moves in code, depth parallax plus the virtual camera (DP-8).",
+    },
+    files: ["components/primitives/live-plate.tsx", "components/primitives/camera.tsx", "components/primitives/depth-plate.tsx", "components/stage/stage.tsx", "components/stage/stage-video.tsx", "lib/loops.ts", "app/p3/plates.css"],
+  },
+
+  /* — Phase 3 words (SPEC §8; W2-WORDS) — */
+  "words.title-pirates": {
+    default: { name: "stamped", note: "The Act I section titles arrive stamped, a single press in the Pirates world face." },
+    alt: { name: "branded", note: "The titles arrive branded: the letters darken in from a warm edge." },
+    files: ["components/words/**", "app/p3/words.css"],
+  },
+  "words.title-idiots": {
+    default: { name: "chalked", note: "The Act II section titles are chalked on stroke by stroke." },
+    alt: { name: "duster-reveal", note: "A duster pass reveals the chalked titles." },
+    files: ["components/words/**", "app/p3/words.css"],
+  },
+  "words.title-rdr2": {
+    default: { name: "poster-press", note: "The Act III section titles land like a poster press." },
+    alt: { name: "typewriter", note: "The titles type on, letter by letter." },
+    files: ["components/words/**", "app/p3/words.css"],
+  },
+  "words.title-hp": {
+    default: { name: "ink-nib", note: "The Act IV section titles are written on with an ink nib." },
+    alt: { name: "ink-bleed", note: "The titles bleed in as ink." },
+    files: ["components/words/**", "app/p3/words.css"],
+  },
+  "words.scrub": {
+    default: { name: "word-opacity", note: "One sentence per act brightens word by word as the reader scrolls it (per-word opacity scrub)." },
+    alt: { name: "line-sweep", note: "A per-line clip sweep, scrubbed over the same range." },
+    files: ["components/words/scrub-sentence.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+  },
+  "words.physical": {
+    default: { name: "grain-ember", note: "One physical word per section at most: \"noise\" settles like grain, \"Killed\" is struck through with an ember." },
+    alt: { name: "jitter-graphite", note: "\"noise\" only jitters its letters; \"Killed\" gets a graphite strike." },
+    files: ["components/words/physical-word.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+  },
+  "words.flythrough": {
+    default: { name: "glide-gallop", note: "A gull glides through the voyage window's sky (Act I); a graphite horse gallops along the journal's bottom edge (Act III); image zones only, never across text." },
+    alt: { name: "shadow-pass", note: "Only the sprite's shadow crosses the image zone." },
+    files: ["components/words/fly-through.tsx", "assets/p3/words/**", "app/p3/words.css"],
+  },
+
+  /* — Phase 3 intro titles + post-credits (SPEC §4.3, §9.4) — */
+  "intro.titles": {
+    default: {
+      name: "three-cards",
+      note: "After the flight lands: three title cards bottom-right in the caption slot (A RESEARCH JOURNAL IN FOUR ACTS · AFTER the four works · ACT I • THE CROSSING ↓), WAAPI opacity + 8 px.",
+    },
+    alt: {
+      name: "credit-roll",
+      note: "The same three strings as a short credit roll (translateY).",
+    },
+    files: ["components/intro/**", "public/intro/intro.js", "app/intro.css"],
+  },
+  "post-credits.scene": {
+    default: {
+      name: "riderless-broom",
+      note: "The riderless broom drifts in along the bottom, pauses under \"↑ Back to the opening\", tips up and exits up-left (≤ 5 s); the 12/12 cut plays the four instruments first.",
+    },
+    alt: {
+      name: "ink-footprints",
+      note: "Ink footprints walk to \"↑ Back to the opening\" and stop.",
+    },
+    files: ["components/site/post-credits.tsx", "app/p3/game.css", "assets/p3/hunt/**"],
   },
 
   /* — World loaders (host "loader-<kind>"; components/primitives/loaders/**) — */

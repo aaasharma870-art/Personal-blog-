@@ -3,9 +3,10 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Search, X } from "lucide-react";
-import { useReducedMotion } from "@/lib/flags";
+import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
 import {
@@ -29,6 +30,14 @@ import { useMotionPreference } from "@/components/providers/motion-provider";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
 import { useActiveSection } from "@/components/site/use-active-section";
 import { recordVisit } from "@/components/eggs/egg-bus";
+import { HuntChip } from "@/components/eggs/hunt-chip";
+import { SoundToggle } from "@/components/audio/sound-toggle";
+
+/** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
+ *  menu opens on DESKTOP_FINE (plan DP-17). */
+const ChapterSelect = dynamic(() => import("@/components/site/chapter-select").then((m) => m.ChapterSelect), {
+  ssr: false,
+});
 
 /* ============================================================================
    HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
@@ -256,6 +265,7 @@ const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
 
 export function Header() {
   const reduce = useReducedMotion();
+  const fine = useDesktopFine();
   const pathname = usePathname();
   // the page's anchors live on the home page: off it, prefix "/" (the 404)
   const base = pathname === "/" || pathname === null ? "" : "/";
@@ -337,6 +347,8 @@ export function Header() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           {workHref ? <WorkPill base={base} href={workHref} /> : null}
+          <HuntChip />
+          <SoundToggle />
           <PauseWithTooltip />
           <button
             ref={menuButtonRef}
@@ -382,6 +394,7 @@ export function Header() {
             </div>
 
             <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
+              {fine ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
               <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
                 {navGroups.map((g) => {
                   const cardLink = g.href && cardsPresent.has(g.href.slice(1)) ? g.href : null;

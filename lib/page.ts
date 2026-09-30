@@ -27,6 +27,8 @@ import type { MediaId } from "./media";
 import type { ToneId, WorldId } from "./worlds";
 import type { ActId, Intensity } from "./film";
 import type { VariantChoice } from "./variants";
+import type { Beat, EstVh, Tempo } from "./beats";
+import type { StageSpec } from "./stage";
 
 /** Ground plane a section sits on (DESIGN v3 §1.3.4). SectionFrame emits it
  *  as `data-tone`; it selects --bg / --surface-* / --fg … from the world. */
@@ -98,6 +100,14 @@ type Base<T extends string, P> = {
    *  host ("hero" for the hero, else its id). Not to be confused with
    *  `props.variant` of a story (its structural layout). */
   variant?: VariantChoice;
+  /* — Phase 3 (PHASE3-SPEC §3.2, §3.4; types only in W1.0) — */
+  /** The persistent stage behind / beside this section (desktop only). */
+  stage?: StageSpec;
+  /** The section's beats (`at` / `span` in vh from the section top @1440). */
+  beats?: readonly Beat[];
+  tempo?: Tempo;
+  /** Measured height in viewports @1440 (d) / @1024 (t); beats.mjs --write. */
+  estVh?: EstVh;
   props: P;
 };
 

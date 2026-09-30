@@ -49,6 +49,7 @@
   - Include the performance budget, the font choices with licences, and the sound list.
   - Then write `docs/build/PHASE3-PLAN.md`: tasks with file ownership, so builders can run in parallel.
 - [ ] **P3-2. Foundation.**
+  - W1.0 contracts DONE 2026-09-30 (cloud): lenis + gsap installed, every PHASE3-PLAN §3 API as a working stub, validator loader + `scripts/checks/*`, `app/p3/*.css` partials, `tools/capture/p3-probes.mjs` + probe stubs. Home page identical to 5aa4587 at 1440/390/rm (every frame difference is within the capture's own run-to-run noise); check, eslint, build green.
   - Lenis + GSAP ScrollTrigger: smooth scroll, off for reduced motion and Pause, phones native unless testing says otherwise.
   - The persistent stage: sticky media behind the content, and split-screen reading sections.
   - Extend the manifest and validator with beats (warn on gaps over 100vh).

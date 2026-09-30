@@ -21,6 +21,8 @@ import { FilmQuote } from "@/components/site/film-quote";
 import { HallowsMark, TimeTurnerLink } from "@/components/site/hp-ink";
 import { Lettered } from "@/components/primitives/scene-caption";
 import { InkFold, SeekerRow, Snitch } from "@/components/eggs/snitch";
+import { HuntCredits } from "@/components/eggs/hunt-credits";
+import { PostCredits } from "@/components/site/post-credits";
 
 /* ============================================================================
    CREDITS — the closing roll (SPEC v2 SM-13; ICONS §10), rendered as the page
@@ -198,6 +200,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
             ) : null}
           </Row>
           <SeekerRow />
+          <HuntCredits />
         </dl>
 
         {on ? (
@@ -257,6 +260,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
             {hp ? <InkFold /> : null}
           </div>
         ) : null}
+        <PostCredits />
       </div>
     </footer>
   );

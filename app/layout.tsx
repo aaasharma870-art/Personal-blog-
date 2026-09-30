@@ -2,6 +2,23 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import "./intro.css";
+/* Phase 3 CSS partials (PHASE3-PLAN §4.6, DP-10): one owner each, after the
+   base and the prologue so they cascade last. Tokens and custom variants
+   stay in globals.css. */
+import "./p3/foundation.css";
+import "./p3/stage.css";
+import "./p3/type.css";
+import "./p3/cards.css";
+import "./p3/plates.css";
+import "./p3/words.css";
+import "./p3/game.css";
+import "./p3/sound.css";
+import "./p3/games.css";
+import "./p3/world-pirates.css";
+import "./p3/world-idiots.css";
+import "./p3/world-rdr2.css";
+import "./p3/world-hp.css";
+import "./p3/cinema.css";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { Header } from "@/components/site/header";
 import { SectionRail } from "@/components/site/section-rail";
@@ -13,6 +30,9 @@ import { introModel } from "@/components/intro/intro-model";
 import { IntroHeadScript } from "@/components/intro/intro-head-script";
 import { IntroOverlay } from "@/components/intro/intro-overlay";
 import { IntroBridge } from "@/components/intro/intro-bridge";
+import { BootHeadScript } from "@/components/site/boot-head-script";
+import { SmoothScroll } from "@/components/providers/smooth-scroll";
+import { WorldFonts } from "@/components/providers/world-fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -117,16 +137,17 @@ export default function RootLayout({
       // the pre-paint head script adds `intro-armed` / `data-intro` here
       suppressHydrationWarning
     >
-      {intro ? (
-        <head>
-          <IntroHeadScript />
-        </head>
-      ) : null}
+      <head>
+        {intro ? <IntroHeadScript /> : null}
+        {/* every request (Phase 3 boot gate: html.js); B1-SCROLL */}
+        <BootHeadScript />
+      </head>
       <body className="flex min-h-full flex-col">
         {intro ? <IntroOverlay model={intro} /> : null}
         {intro ? <IntroBridge /> : null}
         <MotionProvider>
           <ChromeGate>
+            <SmoothScroll />
             <SectionRail />
             <CommandPalette />
           </ChromeGate>
@@ -139,6 +160,7 @@ export default function RootLayout({
           <ChromeGate>
             <Header />
           </ChromeGate>
+          <WorldFonts />
           {/* <main id="main"> is rendered by each route (app/page.tsx, which
               also places the credits <footer> after it; app/lab/layout.tsx). */}
           {children}
