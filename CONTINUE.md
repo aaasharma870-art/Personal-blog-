@@ -43,7 +43,7 @@
     - (b) The hero name takes the **Pirates lettering**. It stays the one `h1` and must stay legible: test it at 1440 and 1024.
     - (c) No cut toys come back. He likes the eggs as triaged: **12 eggs, 3 per world**.
   - Record a desktop baseline with `tools/capture/motion.js` (`intro` and `desktop` runs). If Aryan is around, ask him for a real Chrome performance recording from his laptop. It is optional; don't block on it.
-- [ ] **P3-1. Spec and plan.** Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
+- [x] **P3-1. Spec and plan.** DONE 2026-09-30 (cloud): `docs/build/PHASE3-SPEC.md` (7 reader maps → spec → director/engineer/completeness critics → revised) and `docs/build/PHASE3-PLAN.md` (W1.0 contracts → wave 1 foundation → wave 2 engines → wave 3 hosts, 6 builders each with one owner per shared file; media lane; critic loop). Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
   - Include a beat map of the whole page: one star per screen, no dead screen over 100vh.
   - Include the list of 12 eggs (3 per world), one toy per act, and the loop list (about 25 plates).
   - Include the performance budget, the font choices with licences, and the sound list.

@@ -1,0 +1,313 @@
+{
+  "proposedMediaId": "L15",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "iconic-wanted",
+  "plate": "public/media/films/iconic-wanted.webp",
+  "plateJob": "3af08f65-9d2e-4d84-937d-91ea9fe2991c",
+  "job": "a0835266-1eb5-4094-8e22-7b2f037ec992",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Dust blows lazily along the golden-hour street and the dry grass at the foot of the board stirs in a light breeze; the shingles' shadows are still. The five blank posters stay perfectly flat and still, with no corner lifting; the board, the fence and the buildings stay still; no lettering appears. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L15-iconic-wanted.prompt.txt",
+  "generateLog": "docs/build/media/p3/B4.md",
+  "master": "media-src/p3/masters/L15-iconic-wanted-a0835266.mp4 (Kling original, 3800833 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "iconic-wanted-loop.mp4",
+    "webm": "iconic-wanted-loop.webm",
+    "poster": "iconic-wanted-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 191234,
+    "webm": 162365,
+    "poster": 97548
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L15-iconic-wanted-a0835266-posterhold.mkv docs/build/media-staged/p3/accepted/iconic-wanted-loop --k=12 --tier=I --method=residual --crf-mp4=26 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 26,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 65
+  },
+  "prePatch": {
+    "what": "0-credit poster-board hold-out (the L05 broom precedent): frame 0 (the pinned plate frame) composited over every master frame inside a feathered rectangle covering the board interior (all five posters) before the seam",
+    "why": "raw master posterRect max mean|dY| 1.12/255 (> the 1/255 limit), the other four posters 1.05-1.37/255. Optical flow in posterRect p99 0.28 px / p99.9 0.36 px over the loop and no corner lifts (200% crops), so it is Kling texture re-render (grain boil), not paper motion",
+    "mask": {
+      "rectPx1920": [
+        240,
+        162,
+        1133,
+        842
+      ],
+      "dilatePx": 4,
+      "featherSigmaPx": 4,
+      "corePx": 608814,
+      "alphaPx": 656596,
+      "covers": "the board interior between the posts and beams: all five posters and the board planks around them; the grass, street, fence, roof and buildings are outside"
+    },
+    "math": "yuv420p planes in float, out = src*(1-a) + src[0]*a (chroma with a 2x-downsampled alpha), rounded to 8-bit",
+    "output": "media-src/p3/masters/L15-iconic-wanted-a0835266-posterhold.mkv (FFV1 lossless, 145 f, gitignored; built before the container restart and re-verified after it: 145 frames, all poster zones 0.00/255); script in the session scratchpad (b4chk/hold.py), not in the repo",
+    "effect": "every poster zone 1.05-1.37 -> 0.00/255 on the patched master, 0.07-0.15/255 on the deliverables",
+    "boundary": "mean|dY| vs frame 0 in 16-px bands inside / outside the rect edges: WebM 0.01-0.07 / 0.24-0.68, MP4 0.06-0.21 / 0.77-1.09 luma; sub-1-luma grain difference, no visible edge at 1x"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 1,
+    "consecutive": {
+      "min": 0.9986,
+      "minAt": 1,
+      "p05": 0.999,
+      "median": 0.9999
+    },
+    "joinMinusMedian": 0.0001,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "posterRect x.255-.493 y.165-.748 (map, binding: the HTML handbill registers on it)",
+      "all five posters x.13-.585 y.17-.75 (map: the five blank posters stay still)",
+      "poster top-left x.137-.246 y.18-.47",
+      "poster bottom-left x.148-.262 y.48-.73",
+      "poster top-right x.50-.582 y.236-.483",
+      "poster bottom-right x.50-.572 y.514-.715"
+    ],
+    "light": null
+  },
+  "before": {
+    "master": {
+      "bytes": 3800833,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.989,
+      "lastVsPlate": 0.9889,
+      "join": 0.9953,
+      "joinRgb": 0.9888,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9981,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "posterRect x.255-.493 y.165-.748 (map, binding: the HTML handbill registers on it)": 1.12,
+        "all five posters x.13-.585 y.17-.75 (map: the five blank posters stay still)": 1.13,
+        "poster top-left x.137-.246 y.18-.47": 1.06,
+        "poster bottom-left x.148-.262 y.48-.73": 1.05,
+        "poster top-right x.50-.582 y.236-.483": 1.37,
+        "poster bottom-right x.50-.572 y.514-.715": 1.27
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.47,
+      "phaseShiftPx": [
+        -0.009,
+        0.029
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "masterPosterHold": {
+      "bytes": 124681081,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.989,
+      "lastVsPlate": 0.989,
+      "join": 0.9969,
+      "joinRgb": 0.9923,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9986,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "posterRect x.255-.493 y.165-.748 (map, binding: the HTML handbill registers on it)": 0,
+        "all five posters x.13-.585 y.17-.75 (map: the five blank posters stay still)": 0,
+        "poster top-left x.137-.246 y.18-.47": 0,
+        "poster bottom-left x.148-.262 y.48-.73": 0,
+        "poster top-right x.50-.582 y.236-.483": 0,
+        "poster bottom-right x.50-.572 y.514-.715": 0
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.4,
+      "phaseShiftPx": [
+        -0.009,
+        0.029
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 191234,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9794,
+      "lastVsPlate": 0.9809,
+      "join": 0.995,
+      "joinRgb": 0.9896,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9984,
+      "consecutiveMinAt": 3,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "posterRect x.255-.493 y.165-.748 (map, binding: the HTML handbill registers on it)": 0.11,
+        "all five posters x.13-.585 y.17-.75 (map: the five blank posters stay still)": 0.13,
+        "poster top-left x.137-.246 y.18-.47": 0.11,
+        "poster bottom-left x.148-.262 y.48-.73": 0.15,
+        "poster top-right x.50-.582 y.236-.483": 0.11,
+        "poster bottom-right x.50-.572 y.514-.715": 0.14
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.35,
+      "phaseShiftPx": [
+        -0.007,
+        0.031
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 162365,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.984,
+      "lastVsPlate": 0.984,
+      "join": 0.9999,
+      "joinRgb": 0.9998,
+      "joinPercentile": 0.1549,
+      "consecutiveMin": 0.999,
+      "consecutiveMinAt": 31,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "posterRect x.255-.493 y.165-.748 (map, binding: the HTML handbill registers on it)": 0.1,
+        "all five posters x.13-.585 y.17-.75 (map: the five blank posters stay still)": 0.09,
+        "poster top-left x.137-.246 y.18-.47": 0.07,
+        "poster bottom-left x.148-.262 y.48-.73": 0.13,
+        "poster top-right x.50-.582 y.236-.483": 0.08,
+        "poster bottom-right x.50-.572 y.514-.715": 0.07
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.37,
+      "phaseShiftPx": [
+        -0.015,
+        0.022
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx(master)": {
+      "street": {
+        "p99": 0.23
+      },
+      "grass": {
+        "p99": 0.37,
+        "p999": 0.59
+      },
+      "sky": {
+        "p99": 0.46
+      },
+      "buildings": {
+        "p99": 0.44
+      },
+      "posterRect": {
+        "p99": 0.28
+      }
+    },
+    "reads": "near-still: the requested street dust and grass stir are not perceptible (every region < 0.6 px p99.9); whole-frame luma range 0.35-0.37 %. A breathing still, like L08."
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame, 100% board crops (plate side by side), final WebM/MP4 frames 0/25/50/75/100%: the five posters stay blank and flat (no lettering, numbers, symbols or ghost text; the corner curls unchanged), no figures, riders, horses, faces or hands on the street or porches, no signs appear on the false fronts, no new objects. 0 flashes/s (whole frame and tiles), red share 0.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.75 (street) and x.40 (central poster) on the MP4 and the WebM: horizontal streaks only, no vertical seam. Wrap strip continuous; x8 wrap-diff = grain only. Sunset sky at 4x gain: no contour banding in either codec.",
+  "flags": [
+    "0-credit poster-board hold-out applied (prePatch). posterRect is pixel-identical to frame 0 on the patched master, so the HTML handbill registration is exact.",
+    "Near-still: the loop adds only a faint shimmer on the street; if more life is wanted, retake with retakeIfWanted (not required by any limit) or use the code ALT.",
+    "MP4 pass.join = 'codec' (IDR texture refresh, 0.9950 vs median 0.9999); lossless join 1.0000 and WebM 0.9999. Serve the WebM first."
+  ],
+  "retakeIfWanted": "Animate the supplied image with gentle, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Fine dust drifts slowly from left to right along the sunlit street, catching the low golden light; the tufts of dry grass at the foot of the board and along the fence sway gently in a light breeze; thin high clouds drift slowly across the sky. The five blank posters stay perfectly flat and still, with no corner lifting; the board, the fence and the buildings stay still; no lettering appears. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-wanted-loop.mp4",
+    "webm": "/media/films/iconic-wanted-loop.webm",
+    "poster": "iconic-wanted plate (iconic-wanted.webp)",
+    "endsOn": "iconic-wanted.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "iconic-wanted-loop-poster.webp (frame 0 of the loop, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (with the 0-credit poster-board hold-out): posterRect 0.11 / 0.10/255 (MP4 / WebM), all posters <= 0.15, blank; 0 flashes, silent; registration 0.979-0.984; lossless join 1.0000, WebM 0.9999; bytes 191 KB / 162 KB. Flag: near-still"
+}

@@ -1,0 +1,331 @@
+{
+  "proposedMediaId": "L10",
+  "kind": "living loop (P3 media lane, batch B3), new: not registered yet",
+  "sourceMediaId": "iconic-corridor",
+  "plate": "public/media/films/iconic-corridor.webp",
+  "plateJob": "14f08567-a7ea-4474-afda-050a12407aea",
+  "pinnedInput": "the plate job 14f08567 (start = end)",
+  "job": "c6481b99-a3ce-4028-a768-88746a3083f3",
+  "model": "kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Bold pergola shadow stripes creep slowly across the floor and return; courtyard trees sway; dust motes hang in the light. The rough granite wall on the left and the stone columns stay perfectly still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "B3 generate step prompt parts (map \u00a73 PREFIX + MOTION + STILL + SUFFIX, B3.md 'Settings'); the job params hold the same text (not re-read here: no Higgsfield calls in the check stage)",
+  "generateLog": "docs/build/media/p3/B3.md",
+  "master": "media-src/p3/masters/iconic-corridor-c6481b99.mp4 (Kling original, 5441863 bytes, 145 frames, 6.042 s, 1920x1080, 24 fps, 0 audio)",
+  "prePatch": {
+    "what": "0-credit hold-out (the B2 L05 broom-hold precedent): frame 0 (the pinned plate frame) composited over every master frame on the granite wall and on the four nearest column shafts, before the seam",
+    "why": "the raw master fails the static rule: wall x0-.40 1.11/255 (a uniform ~1-unit darkening, signed -1.0, blurred 1.0, flow p99 0.17 px) and columns 1.84-1.96/255 (texture boil + a +0.86 brightening, blurred ~1.0, flow p99 0.19 px); the encodes kept it (wall 1.15 MP4 / 1.07 WebM, columns 1.5-1.75). Nothing moves there; it is exposure drift and re-rendered texture.",
+    "mask": {
+      "wall": "full height, held for x <= 0.405, smoothstep ramp to 0 at x = 0.44 (the dark floor strip next to the wall carries no moving shadow)",
+      "columns": {
+        "col1": [
+          0.743,
+          0.075,
+          0.876,
+          0.792
+        ],
+        "col2": [
+          0.655,
+          0.205,
+          0.717,
+          0.69
+        ],
+        "col3": [
+          0.595,
+          0.295,
+          0.644,
+          0.645
+        ],
+        "col4": [
+          0.563,
+          0.335,
+          0.6,
+          0.605
+        ]
+      },
+      "columnsNote": "shafts only, under the beam and above the floor line, so the moving floor stripes are never held",
+      "dilatePx": 4,
+      "featherSigmaPx": 4,
+      "corePx": 1119881,
+      "alphaPx": 1293207
+    },
+    "math": "yuv420p planes in float, out = src*(1-a) + src[0]*a (chroma with a 2x-downsampled alpha), rounded to 8-bit",
+    "output": "media-src/p3/masters/iconic-corridor-c6481b99-wallcolhold.mkv (FFV1 lossless, 145 f, gitignored); script kept in the session scratchpad (p3/b3/hold2.py), not in the repo",
+    "effect": "patched master: wall 0.00, columns 0.02-0.10 /255; deliverables wall 0.05 (MP4) / 0.11 (WebM), columns 0.11-0.19; the far columns (5+) are not held and are not a measured zone"
+  },
+  "files": {
+    "mp4": "iconic-corridor-loop.mp4",
+    "webm": "iconic-corridor-loop.webm",
+    "poster": "iconic-corridor-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6.0,
+  "bytes": {
+    "mp4": 818307,
+    "webm": 456571,
+    "poster": 100960
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/iconic-corridor-c6481b99-wallcolhold.mkv <out>/iconic-corridor-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 60,
+    "note": "poster stepped to q60 to stay <= 100 KiB (100,960 B)"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 1,
+    "consecutive": {
+      "min": 0.9993,
+      "minAt": 131,
+      "p05": 0.9996,
+      "median": 0.9999
+    },
+    "joinMinusMedian": 0.0001,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "granite wall x0-.40 full height (binding, map + B3.md)",
+      "column 1 x.745-.873 y.07-.80 (map STILL: the columns)",
+      "column 2 x.657-.713 y.20-.70 (map STILL: the columns)",
+      "wall only x0-.33 y0-.75",
+      "column 3 x.597-.642 y.29-.66"
+    ],
+    "light": [
+      "sunlit floor x.45-.95 y.62-1 (informative: the moving shadow stripes)"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 5441863,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.984,
+      "lastVsPlate": 0.9829,
+      "join": 0.9951,
+      "joinRgb": 0.9888,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9983,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "granite wall x0-.40 full height (binding, map + B3.md)": 1.11,
+        "column 1 x.745-.873 y.07-.80 (map STILL: the columns)": 1.84,
+        "column 2 x.657-.713 y.20-.70 (map STILL: the columns)": 1.86,
+        "wall only x0-.33 y0-.75": 1.16
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.68,
+      "phaseShiftPx": [
+        0,
+        0.035
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "holdMaster": {
+      "bytes": 123741756,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.984,
+      "lastVsPlate": 0.9839,
+      "join": 0.9982,
+      "joinRgb": 0.9968,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9995,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "granite wall x0-.40": 0,
+        "column 1": 0.02,
+        "column 2": 0.04,
+        "wall only": 0,
+        "column 3": 0.1
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.51,
+      "phaseShiftPx": [
+        0,
+        0.035
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 818307,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9824,
+      "lastVsPlate": 0.9827,
+      "join": 0.9975,
+      "joinRgb": 0.9958,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9993,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "granite wall x0-.40 full height (binding, map + B3.md)": 0.05,
+        "column 1 x.745-.873 y.07-.80 (map STILL: the columns)": 0.11,
+        "column 2 x.657-.713 y.20-.70 (map STILL: the columns)": 0.14,
+        "wall only x0-.33 y0-.75": 0.05,
+        "column 3 x.597-.642 y.29-.66": 0.19
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.47,
+      "phaseShiftPx": [
+        -0.003,
+        0.033
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.45,
+            0.62,
+            0.95,
+            1
+          ],
+          "ptpPct": 1.08,
+          "reversalsPerS": 0,
+          "dominantHz": 0.33
+        }
+      ]
+    },
+    "webm": {
+      "bytes": 456571,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.9826,
+      "lastVsPlate": 0.9826,
+      "join": 1,
+      "joinRgb": 0.9999,
+      "joinPercentile": 0.838,
+      "consecutiveMin": 0.9985,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "granite wall x0-.40 full height (binding, map + B3.md)": 0.11,
+        "column 1 x.745-.873 y.07-.80 (map STILL: the columns)": 0.11,
+        "column 2 x.657-.713 y.20-.70 (map STILL: the columns)": 0.13,
+        "wall only x0-.33 y0-.75": 0.1,
+        "column 3 x.597-.642 y.29-.66": 0.16
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.44,
+      "phaseShiftPx": [
+        -0.002,
+        0.031
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.45,
+            0.62,
+            0.95,
+            1
+          ],
+          "ptpPct": 1.07,
+          "reversalsPerS": 0,
+          "dominantHz": 0.33
+        }
+      ]
+    }
+  },
+  "motion": "The floor carries it: the pergola shadow stripes creep across the polished floor and return (floor flow p99.9 up to 16 px around frames 84-102, floor |dY| up to 9/255), and the light slats in the ceiling shift a little. The courtyard trees do not visibly sway (flow 0.14 px); \"dust motes\" are not visible.",
+  "l2Sweep": "Master frames 0/25/50/64/75/100% (64% = peak stripe motion): floor + columns x.40-.98 y.40-1 at 75%, far corridor + corridor end x.40-.60 y.30-.62 at 200%, courtyard x.84-1 y.05-.75 at 150%: the corridor, its far opening and the courtyard stay empty; no signage. Final WebM frame 92 x.36-.92 y.45-.90 with a x8 diff: the held columns sit cleanly next to the moving stripes, no seam at the mask edges. No people, figures, riders, faces or hands; no text, letters, numbers, logos, symbols or flags; no new objects; no lightning or flashes (0 WCAG flashes/s whole frame and 4x4 tiles).",
+  "visualChecks": "Slit-scans across the wrap (x .65 y .62-1 through the stripes; x .44 across the wall ramp; x .742 on the column 1 edge), +-36 frames, MP4 and WebM: continuous, no seam at the wrap and no edge line along the hold. Wrap strips continuous.",
+  "flags": [
+    "0-credit hold-out: the wall and the four nearest column shafts are the plate frame in every frame (as the map asks: they stay still). Documented in prePatch; the patched FFV1 master is kept in media-src (gitignored).",
+    "MP4 pass.join = \"codec\" (0.9975 vs median 0.9998); lossless and WebM joins 1.0000. Serve the WebM first.",
+    "Of the MOTION sentence only the shadow creep reads; the trees and dust motes are still."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-corridor-loop.mp4",
+    "webm": "/media/films/iconic-corridor-loop.webm",
+    "poster": "iconic-corridor plate (iconic-corridor.webp)",
+    "endsOn": "iconic-corridor.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "iconic-corridor-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (0-cr wall + column hold-out): wall 0.05/0.11 and columns <= 0.19 /255 (MP4/WebM); the shadow stripes creep and return; corridor and courtyard empty; 0 flashes, silent; lossless and WebM joins 1.0000, MP4 join \"codec\"."
+}

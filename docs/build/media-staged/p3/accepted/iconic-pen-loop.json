@@ -1,0 +1,384 @@
+{
+  "proposedMediaId": "L17",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "iconic-pen",
+  "plate": "public/media/films/iconic-pen.webp",
+  "plateJob": "8ad09fd8-3fc2-439e-9e14-b8c31c71a929",
+  "job": "924d9028-3930-4466-9d7d-b38fa7e89e81",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Dust motes drift in the window light over the desk; the light on the velvet and the pen's silver trim shimmers faintly. The stopwatch hands do not move; the pen and its case stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L17-iconic-pen.prompt.txt",
+  "generateLog": "docs/build/media/p3/B4.md",
+  "master": "media-src/p3/masters/L17-iconic-pen-924d9028.mp4 (Kling original, 1850283 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "iconic-pen-loop.mp4",
+    "webm": "iconic-pen-loop.webm",
+    "poster": "iconic-pen-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 124407,
+    "webm": 105347,
+    "poster": 64828
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L17-iconic-pen-924d9028-watchhold.mkv docs/build/media-staged/p3/accepted/iconic-pen-loop --k=12 --tier=I --method=residual --crf-mp4=26 --crf-webm=26",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 26,
+    "crfWebm": 26,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 80,
+    "crfNote": "WebM CRF 26 (near-black left half; no contour banding at 5x gain). MP4 CRF 26 (at 24 the pen + case zone read 1.04/255; at 26 it reads 0.9957)"
+  },
+  "prePatch": {
+    "what": "0-credit stopwatch hold-out (the L05 broom precedent): frame 0 (the pinned plate frame) composited over every master frame inside a feathered mask of the stopwatch (body, bow + crown, pusher) before the seam",
+    "why": "raw master dial zone 3.32/255 and stopwatch zone 2.98/255 (> 1/255). The hand does not sweep: a PCA fit of the hand angle gives -0.063 to +0.041 deg over the loop (tip shift <= 0.063 px on a 73 px lever), so the delta is texture boil on the dial ticks, bezel and crown edges (hand-mask max mean|dY| 3.6, 2.5 after removing the local dial change)",
+    "mask": {
+      "shapesPx1920": [
+        "ellipse centre (1736,710) axes (112,98) (body)",
+        "ellipse centre (1759,611) axes (46,32) (bow + crown)",
+        "rect (1808,630)-(1842,668) (pusher)"
+      ],
+      "dilatePx": 6,
+      "featherSigmaPx": 4,
+      "corePx": 38434,
+      "alphaPx": 51395,
+      "caseEdge": "the outer tail of the feather (alpha <= 0.19) touches the pen case right edge at x ~1614-1616; the case is meant to stay still, so this only damps its boil there"
+    },
+    "math": "yuv420p planes in float, out = src*(1-a) + src[0]*a (chroma with a 2x-downsampled alpha), rounded to 8-bit",
+    "output": "media-src/p3/masters/L17-iconic-pen-924d9028-watchhold.mkv (FFV1 lossless, 145 f, gitignored; built before the container restart and re-verified after it: 145 frames, dial 0.00/255); script in the session scratchpad (b4chk/hold.py), not in the repo",
+    "effect": "dial 3.32 -> 0.00/255 and stopwatch zone 2.98 -> 0.36/255 on the patched master; 0.15 / 0.01 (dial) and 0.45 / 0.35 (stopwatch) on MP4 / WebM",
+    "boundary": "mean|dY| vs frame 0 in rings 8-24 px inside / outside the mask: WebM 0.02 / 1.34, MP4 0.13 / 1.47 luma (the desk reflection around the watch shimmers); no visible edge at 1x or in 200% crops"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 0.9999,
+    "consecutive": {
+      "min": 0.9988,
+      "minAt": 131,
+      "p05": 0.9992,
+      "median": 0.9998
+    },
+    "joinMinusMedian": 0.0001,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "stopwatch dial x.873-.935 y.60-.705 (map: the hands do not move)",
+      "stopwatch x.848-.961 y.54-.745 (map)",
+      "pen + case x.455-.84 y.32-.76 (map: pen and case still; contains the requested pen-trim shimmer)",
+      "left dark 40% x0-.40 (informative)"
+    ],
+    "light": [
+      "window x.85-1 y0-.28",
+      "pen trim x.52-.80 y.55-.65"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 1850283,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.992,
+      "lastVsPlate": 0.9912,
+      "join": 0.9961,
+      "joinRgb": 0.985,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9989,
+      "consecutiveMinAt": 11,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "stopwatch dial x.873-.935 y.60-.705 (map: the hands do not move)": 3.32,
+        "stopwatch x.848-.961 y.54-.745 (map)": 2.98,
+        "pen + case x.455-.84 y.32-.76 (map: pen and case still; contains the requested pen-trim shimmer)": 1.05,
+        "left dark 40% x0-.40 (informative)": 0.48
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.39,
+      "light": {
+        "window x.85-1 y0-.28": {
+          "ptpPct": 0.97,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "pen trim x.52-.80 y.55-.65": {
+          "ptpPct": 1.33,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      },
+      "phaseShiftPx": [
+        0.053,
+        0.041
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "masterWatchHold": {
+      "bytes": 74049704,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.992,
+      "lastVsPlate": 0.9912,
+      "join": 0.9961,
+      "joinRgb": 0.9852,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9989,
+      "consecutiveMinAt": 11,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "stopwatch dial x.873-.935 y.60-.705 (map: the hands do not move)": 0,
+        "stopwatch x.848-.961 y.54-.745 (map)": 0.36,
+        "pen + case x.455-.84 y.32-.76 (map: pen and case still; contains the requested pen-trim shimmer)": 1.05,
+        "left dark 40% x0-.40 (informative)": 0.48
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.37,
+      "light": {
+        "window x.85-1 y0-.28": {
+          "ptpPct": 0.97,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "pen trim x.52-.80 y.55-.65": {
+          "ptpPct": 1.33,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      },
+      "phaseShiftPx": [
+        0.053,
+        0.041
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "handFit": {
+      "angleDeltaDeg": [
+        -0.063,
+        0.041
+      ],
+      "tipPerpShiftPx": [
+        -0.029,
+        0.063
+      ],
+      "leverPx": 72.7
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 124407,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9883,
+      "lastVsPlate": 0.9886,
+      "join": 0.9946,
+      "joinRgb": 0.9811,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9992,
+      "consecutiveMinAt": 11,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "stopwatch dial x.873-.935 y.60-.705 (map: the hands do not move)": 0.15,
+        "stopwatch x.848-.961 y.54-.745 (map)": 0.45,
+        "pen + case x.455-.84 y.32-.76 (map: pen and case still; contains the requested pen-trim shimmer)": 1,
+        "left dark 40% x0-.40 (informative)": 0.48
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.51,
+      "light": {
+        "window x.85-1 y0-.28": {
+          "ptpPct": 0.76,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "pen trim x.52-.80 y.55-.65": {
+          "ptpPct": 1.44,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      },
+      "phaseShiftPx": [
+        0.032,
+        0.025
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 105347,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9911,
+      "lastVsPlate": 0.9911,
+      "join": 0.9998,
+      "joinRgb": 0.9993,
+      "joinPercentile": 0.2113,
+      "consecutiveMin": 0.9994,
+      "consecutiveMinAt": 71,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "stopwatch dial x.873-.935 y.60-.705 (map: the hands do not move)": 0.01,
+        "stopwatch x.848-.961 y.54-.745 (map)": 0.35,
+        "pen + case x.455-.84 y.32-.76 (map: pen and case still; contains the requested pen-trim shimmer)": 0.62,
+        "left dark 40% x0-.40 (informative)": 0.26
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.6,
+      "light": {
+        "window x.85-1 y0-.28": {
+          "ptpPct": 0.94,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "pen trim x.52-.80 y.55-.65": {
+          "ptpPct": 1.28,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      },
+      "phaseShiftPx": [
+        0.058,
+        0.035
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "penCaseUnrounded": {
+      "mp4": 0.9957,
+      "webm": 0.6156
+    },
+    "mp4Crf24Discarded": {
+      "bytes": 179634,
+      "penCase": 1.04
+    }
+  },
+  "anchors": {
+    "method": "template tracking (40-48 px patches, subpixel) vs frame 0, on the watch-hold master",
+    "unit": "max |shift| px at 1920",
+    "penTip": 0.09,
+    "penMid": 0.11,
+    "penClip": 0.16,
+    "caseCorner": 0.18,
+    "caseFrontLeft": 0.13,
+    "watchHub": 0.0
+  },
+  "motion": {
+    "penZoneMeanAbsDY": "2.1-2.3/255 (the requested silver-trim shimmer; pen position <= 0.16 px)",
+    "flowVsFrame0MaxOverLoopPx(master)": {
+      "window": {
+        "p99": 0.94,
+        "p999": 1.43
+      },
+      "deskSpec": {
+        "p99": 0.82,
+        "p999": 2.2
+      },
+      "penCase": {
+        "p99": 0.88,
+        "p999": 2.21
+      },
+      "air": {
+        "p99": 0.69
+      }
+    },
+    "reads": "near-still: the pen's engraved trim and the desk reflections shimmer faintly (light zones ptp 0.8-1.4 %, 0 reversals/s); no dust motes are visible"
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame, 200% dial crops at frames 0/48/96/144 with x8 diffs, pen and case crops, final WebM/MP4 frames 0/25/50/75/100% and 200% watch-edge crops with x8 diffs: the dial shows ticks only (no numerals, letters or logo), the single hand keeps its angle, the pen engraving stays abstract swirls (no letters), the chalkboard keeps the plate's faint smudges (no letters or numbers), no hands, faces or figures, no new objects. 0 flashes/s, red share 0.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.65 (pen) and x.90 (window): no vertical seam on the WebM; the MP4 shows only the faint IDR texture refresh at the tick. Wrap strip continuous; x8 wrap-diff = grain only. Near-black left half at 5x gain: mild block texture, no contour banding, in both codecs.",
+  "flags": [
+    "0-credit stopwatch hold-out applied (prePatch): the watch is pixel-identical to frame 0 on the patched master.",
+    "pen + case zone: 0.9957/255 on the MP4 (at the limit) and 0.62 on the WebM. The zone holds the prompt's own pen-trim shimmer (pen-only zone 2.1/255); the pen and case do not move (anchors <= 0.18 px). If the builder overlays anything on the case, hold it too.",
+    "Near-still: if more life is wanted, retake with retakeIfWanted (not required by any limit) or use the code ALT.",
+    "MP4 pass.join = 'codec' (IDR refresh, 0.9946 vs median 0.9999); lossless join 1.0000, WebM 0.9998. Serve the WebM first."
+  ],
+  "retakeIfWanted": "Animate the supplied image with gentle, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Visible dust motes drift slowly through the shaft of window light above the desk; the leaves outside the window sway gently; the reflections on the polished desk and the pen's silver trim shimmer softly. The stopwatch and its single hand do not move; the pen and its case stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-pen-loop.mp4",
+    "webm": "/media/films/iconic-pen-loop.webm",
+    "poster": "iconic-pen plate (iconic-pen.webp)",
+    "endsOn": "iconic-pen.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "iconic-pen-loop-poster.webp (frame 0 of the loop, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (with the 0-credit stopwatch hold-out): dial 0.15 / 0.01/255, stopwatch 0.45 / 0.35 (MP4 / WebM), hand angle fixed; pen + case 0.9957 / 0.62 (flagged, see flags); 0 flashes, glow <= 1.44 %, silent; registration 0.988-0.991; lossless join 1.0000, WebM 0.9998; bytes 124 KB / 105 KB. Flag: near-still"
+}
