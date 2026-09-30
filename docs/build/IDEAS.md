@@ -166,3 +166,45 @@ All are in `.claude/skills/` (tracked from 2026-09-30).
 7. Toys (H), then the egg hunt with its counter (E), then sound (G).
 8. Text performance (F), director's cut, and chapter select.
 9. Critic loop: blind stranger test, plus a "would you keep scrolling?" judge panel and real-device motion runs.
+
+---
+
+# Round 2 brainstorm (2026-09-30): candidates, NOT yet decided by Aryan
+
+Aryan asked for more ideas on movement on screen for dramatic effect, movement in the words, other cool ideas, and what else needs improving. Everything below is a candidate until he picks.
+
+## K. Movement on screen (dramatic effect)
+1. **Virtual camera.** Every plate gets a scroll-tied camera move: a push-in on the Black Pearl, a crane-up through the Great Hall candles, a dolly across the ICE benches to the board, a pan across the camp.
+2. **Rack focus.** The background blurs while the text is the subject; then the text dims and the image snaps sharp.
+3. **Letterbox breathing.** 2.39:1 bars slide in when a scene starts and open when it ends.
+4. **Full-screen weather in the foreground.** Sea spray and rain (Pirates), chalk dust in a sunbeam (3 Idiots), embers and fireflies (RDR2), candle motes (HP). Particles in front of the text add depth. Capped and paused offscreen.
+5. **Fly-throughs.** The broom streaks between sections; a gull or the Pearl's flag passes; the drone buzzes past; a horse gallops along the bottom edge; an owl drops a letter. Rare and quick.
+6. **Light that reacts.** The cursor is a lantern or wand: a local brightening, with shadows shifting on the plate.
+7. **Impact moments.** A tiny screen shake and flash on big beats (cannon, Dead Eye lock, Lumos ignition, the chalk circle closing). Within photosensitivity limits; off under reduced motion.
+8. **Speed ramps.** Scenes go slow-motion at screen centre and speed up as they leave.
+9. **Match cuts between worlds.** A carried shape: compass ring → gear → wagon wheel → snitch. A carried line: horizon → chalk ledge → prairie horizon → Great Hall table. One continuous object through all four acts (this extends "the Line").
+
+## L. Movement in the words (kinetic typography)
+1. **Titles arrive in character.** HP: ink written with a nib. Pirates: burned or stamped onto the chart. 3 Idiots: chalked stroke by stroke with falling dust. RDR2: typewriter, or a poster press with ink bleed.
+2. **Words with physical behaviour.** "Killed" is struck through, "storm" shakes, "signal" sharpens out of noise, "drift" slides. At most 1–2 per section.
+3. **Scroll-scrubbed sentences.** A key line assembles word by word with scroll, and reverses.
+4. **Text revealed by light.** Paragraphs stay dim until the wand or lantern cursor, or the reading line, passes.
+5. **Subtitles.** The one-liners appear as film subtitles over the plates.
+6. **Text as mask.** A giant act title is a window onto the video; the letters expand until the video fills the screen.
+7. **Credits crawl and marquee quotes.**
+8. **Instrument counters.** Ship's log, Virus's stopwatch, a bounty amount. Never research metrics.
+
+## M. Other ideas
+- A **day-to-night arc** down the page: night sea → dawn classroom → golden-hour frontier → candlelit night.
+- A **film-strip scroll indicator**: a side reel with scene thumbnails that can be dragged as a scrubber.
+- An **opening title sequence** after the broom lands (about 3 s: "A film by Aryan Sharma…").
+- A **"previously on…"** recap at each act start.
+- A **post-credits scene** for people who scroll to the very end.
+- **Idle moments:** after about 10 s without scrolling, the scene does something small (the candle gutters, the horse snorts, the compass twitches).
+- **Phone tilt:** parallax and the compass respond to device orientation.
+
+## N. What else needs improving
+- **Pacing:** deliberate fast and slow passages. It is currently one speed.
+- **Each act's first 2 seconds** needs a hook frame.
+- **Mobile** needs its own lighter but still moving cut (it currently gets stills).
+- **Restraint rule:** one dramatic thing per screen, with everything else quiet. Too much at once is the main risk of Phase 3.
