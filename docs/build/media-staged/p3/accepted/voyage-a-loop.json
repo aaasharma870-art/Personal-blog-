@@ -1,0 +1,271 @@
+{
+  "proposedMediaId": "L06",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "MV-05a",
+  "plate": "public/media/films/voyage-a.webp",
+  "plateJob": "6ce86233-1be6-4d6a-b6b3-535932a1609a",
+  "job": "fa569f31-6c24-4e47-8f10-7176e8ac857d",
+  "model": "kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job",
+  "credits": 14,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Harbour lanterns glow and dim softly and their reflections waver on the black water; moored masts sway slightly; small ripples lap the piers. The quays stay empty; the horizon stays level. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "generateLog": "docs/build/media/p3/B2.md",
+  "master": "media-src/p3/masters/voyage-a-fa569f31.mp4 (Kling original, 3760236 bytes, 193 frames, 8.042 s, 0 audio)",
+  "files": {
+    "mp4": "voyage-a-loop.mp4",
+    "webm": "voyage-a-loop.webm",
+    "poster": "voyage-a-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 192,
+  "durationS": 8,
+  "bytes": {
+    "mp4": 833976,
+    "webm": 282606,
+    "poster": 98798
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/voyage-a-fa569f31.mp4 docs/build/media-staged/p3/accepted/voyage-a-loop --k=24 --tier=S --method=residual --crf-mp4=23 --crf-webm=28",
+  "seam": {
+    "method": "residual",
+    "k": 24,
+    "crfMp4": 23,
+    "crfWebm": 28,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80
+  },
+  "seamCheckLossless": {
+    "join": 0.9993,
+    "joinRgb": 0.9988,
+    "consecutive": {
+      "min": 0.9985,
+      "minAt": 1,
+      "p05": 0.9989,
+      "median": 0.9998
+    },
+    "joinMinusMedian": -0.0005,
+    "joinPercentile": 0.2,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "quay wall x.655-.755 y.395-.43 (informative, not a map static zone; lantern-lit stone)",
+      "horizon band x.90-1 y.41-.445 (map: horizon stays level)"
+    ],
+    "light": [
+      "breakwater lantern x.765-.785 y.335-.37",
+      "mid-quay lantern x.335-.347 y.37-.395",
+      "left-quay lantern x.025-.045 y.35-.385"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 3760236,
+      "frames": 193,
+      "durationS": 8.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9845,
+      "lastVsPlate": 0.9837,
+      "join": 0.9948,
+      "joinRgb": 0.9823,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9985,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "quay wall x.655-.755 y.395-.43 (informative, not a map static zone; lantern-lit stone)": 1.53,
+        "horizon band x.90-1 y.41-.445 (map: horizon stays level)": 0.55
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 3.24,
+      "light": {
+        "breakwater lantern x.765-.785 y.335-.37": {
+          "ptpPct": 1.26,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        "mid-quay lantern x.335-.347 y.37-.395": {
+          "ptpPct": 1.67,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "left-quay lantern x.025-.045 y.35-.385": {
+          "ptpPct": 1.73,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      },
+      "phaseShiftPx": [
+        -0.011,
+        0.015
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "horizonRowY": {
+      "min": 0.4302,
+      "max": 0.4303,
+      "rangePx1080": 0.1
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 833976,
+      "frames": 192,
+      "durationS": 8,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9826,
+      "lastVsPlate": 0.9831,
+      "join": 0.9946,
+      "joinRgb": 0.9849,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9989,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "quay wall x.655-.755 y.395-.43 (informative, not a map static zone; lantern-lit stone)": 1.34,
+        "horizon band x.90-1 y.41-.445 (map: horizon stays level)": 0.53
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 2.98,
+      "light": {
+        "breakwater lantern x.765-.785 y.335-.37": {
+          "ptpPct": 0.94,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        "mid-quay lantern x.335-.347 y.37-.395": {
+          "ptpPct": 1.53,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "left-quay lantern x.025-.045 y.35-.385": {
+          "ptpPct": 1.47,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      },
+      "phaseShiftPx": [
+        -0.013,
+        0.013
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 282606,
+      "frames": 192,
+      "durationS": 8,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.983,
+      "lastVsPlate": 0.983,
+      "join": 0.9997,
+      "joinRgb": 0.9994,
+      "joinPercentile": 0.1211,
+      "consecutiveMin": 0.9988,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "quay wall x.655-.755 y.395-.43 (informative, not a map static zone; lantern-lit stone)": 1.27,
+        "horizon band x.90-1 y.41-.445 (map: horizon stays level)": 0.23
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 2.28,
+      "light": {
+        "breakwater lantern x.765-.785 y.335-.37": {
+          "ptpPct": 0.66,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        "mid-quay lantern x.335-.347 y.37-.395": {
+          "ptpPct": 0.85,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        "left-quay lantern x.025-.045 y.35-.385": {
+          "ptpPct": 1.67,
+          "reversalsPerS": 0,
+          "dominantHz": 0.38
+        }
+      },
+      "phaseShiftPx": [
+        -0.019,
+        0.01
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "horizonRowY_webm": {
+      "min": 0.4302,
+      "max": 0.4303,
+      "rangePx1080": 0.06
+    }
+  },
+  "l2Sweep": "Frames 0/25/50/75/100% + 150% left-quay crop, 120% right-quay/breakwater crop, 300% crane/quay crop vs the plate: quays and decks empty (the pale shape by the second ship and the distant tower silhouette are plate content, unchanged); no flags, lettering, numbers or figures on hulls or buildings; masts and rigging keep their shape; moon unchanged; no flash.",
+  "motion": "Very restrained: lantern reflections and water shimmer (light zones ptp 0.7-1.7 %, 0 reversals/s), cloud texture near the moon breathes; masts do not visibly sway; max 16x9-tile change vs frame 0 is 2.1/255.",
+  "visualChecks": "Slit-scans across the wrap (loop.mjs frames --slit, +-36 frames) on the MP4 and the WebM show no vertical seam at the wrap; wrap strips (N-2, N-1 | 0, 1) continuous; x8 wrap-diff shows only natural motion detail. Halos (candles, lanterns) at 6x gain: no contour banding in either codec.",
+  "flags": [
+    "The informative quay-wall rect reads 1.27-1.34/255: the lantern-lit stone dims by about 1 luma unit in the first 16 frames and returns through the residual ramp (the prompt's lantern glow). It is not a map static zone; the map's STILL items (quays empty, horizon level at 0.06-0.10 px) pass.",
+    "Frame 0 = the pinned plate frame src[0], so the match cut into the voyage scrub (JV frame 0) keeps registration (0.983 vs the plate at 960x540).",
+    "Motion is subtle; judge in real time."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/voyage-a-loop.mp4",
+    "webm": "/media/films/voyage-a-loop.webm",
+    "poster": "MV-05a plate (voyage-a.webp)",
+    "endsOn": "voyage-a.webp",
+    "durationS": 8,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "voyage-a-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: every map check passes (quays empty, horizon level, lanterns <= 2 %, 0 flashes, silent); MP4 pass.join = \"codec\", lossless and WebM joins are ordinary steps (0.9993 / 0.9997)"
+}

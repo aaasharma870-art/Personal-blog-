@@ -1,0 +1,457 @@
+{
+  "proposedMediaId": "L05",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "IN-01",
+  "plate": "public/media/films/intro-play.webp",
+  "plateJob": "3edb46de-7312-414f-bbac-9f0a1bbd12ed",
+  "job": "930949e7-1ce9-4072-8e66-0c15f9ed2693",
+  "model": "kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job",
+  "credits": 14,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The floating candles bob gently and their flames flicker softly; a few castle windows twinkle; a low mist drifts over the black lake, whose surface ripples faintly. The broom stays exactly where it is and does not move; the dark empty sky and lake on the left of the frame stay dark and still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "generateLog": "docs/build/media/p3/B2.md",
+  "master": "media-src/p3/masters/intro-play-930949e7.mp4 (Kling original, 2202012 bytes, 193 frames, 8.042 s, 0 audio)",
+  "files": {
+    "mp4": "intro-play-loop.mp4",
+    "webm": "intro-play-loop.webm",
+    "poster": "intro-play-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 192,
+  "durationS": 8,
+  "bytes": {
+    "mp4": 508920,
+    "webm": 237748,
+    "poster": 57218
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/intro-play-930949e7-broomhold.mkv docs/build/media-staged/p3/accepted/intro-play-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=24",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 24,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80
+  },
+  "prePatch": {
+    "what": "0-credit broom hold-out: frame 0 (the pinned plate frame) composited over every master frame inside a feathered broom mask before the seam",
+    "why": "raw master broom texture re-renders frame to frame: broom mask max mean|dY| 1.97/255 (handle 2.95 on a thin line mask), broom rects 1.11-1.30/255 on the tool check (1.58-1.68 on full-res), > the 1/255 static limit; phase shift <= 0.58 px, so no positional move, only texture boil (the rock around it boils too: 1.34/255 in a broom-free rect)",
+    "mask": {
+      "polygonPx1920": [
+        [
+          1040,
+          408
+        ],
+        [
+          1100,
+          410
+        ],
+        [
+          1200,
+          428
+        ],
+        [
+          1300,
+          458
+        ],
+        [
+          1360,
+          476
+        ],
+        [
+          1400,
+          494
+        ],
+        [
+          1440,
+          498
+        ],
+        [
+          1470,
+          500
+        ],
+        [
+          1540,
+          515
+        ],
+        [
+          1600,
+          522
+        ],
+        [
+          1650,
+          532
+        ],
+        [
+          1700,
+          545
+        ],
+        [
+          1745,
+          562
+        ],
+        [
+          1780,
+          590
+        ],
+        [
+          1780,
+          630
+        ],
+        [
+          1745,
+          652
+        ],
+        [
+          1700,
+          660
+        ],
+        [
+          1650,
+          652
+        ],
+        [
+          1600,
+          630
+        ],
+        [
+          1540,
+          600
+        ],
+        [
+          1515,
+          585
+        ],
+        [
+          1460,
+          562
+        ],
+        [
+          1420,
+          540
+        ],
+        [
+          1390,
+          535
+        ],
+        [
+          1360,
+          522
+        ],
+        [
+          1300,
+          494
+        ],
+        [
+          1200,
+          464
+        ],
+        [
+          1100,
+          448
+        ],
+        [
+          1040,
+          444
+        ]
+      ],
+      "dilatePx": 4,
+      "featherSigmaPx": 4,
+      "corePx": 47645,
+      "alphaPx": 72114,
+      "excludes": "every candle (nearest flame >= 30 px outside the feather)"
+    },
+    "math": "yuv420p planes in float, out = src*(1-a) + src[0]*a (chroma with a 2x-downsampled alpha), rounded to 8-bit",
+    "output": "media-src/p3/masters/intro-play-930949e7-broomhold.mkv (FFV1 lossless, 193 f, gitignored); script kept in the session scratchpad (b2chk/py/hold.py), not in the repo",
+    "effect": "broom mask 1.97 -> 0.00/255 on the patched master, 0.037 (mp4) / 0.005 (webm) on the deliverables; broom rects 0.07-0.48/255; Play zone unchanged 0.25/255"
+  },
+  "seamCheckLossless": {
+    "join": 0.9997,
+    "joinRgb": 0.9993,
+    "consecutive": {
+      "min": 0.9994,
+      "minAt": 181,
+      "p05": 0.9996,
+      "median": 0.9999
+    },
+    "joinMinusMedian": -0.0002,
+    "joinPercentile": 0.2526,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "playZone x.09-.46 y.28-.64 (map)",
+      "broom handle-left x.542-.641 y.380-.431 (map: broom)",
+      "broom handle-mid x.641-.755 y.417-.500 (map: broom)",
+      "broom bristles x.755-.925 y.468-.579 (map: broom)"
+    ],
+    "light": [
+      "castle-right candle x.88-.96 y.08-.22",
+      "lower-right candle x.88-.93 y.66-.86"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 2202012,
+      "frames": 193,
+      "durationS": 8.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9914,
+      "lastVsPlate": 0.9912,
+      "join": 0.9969,
+      "joinRgb": 0.9794,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9994,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "playZone x.09-.46 y.28-.64 (map)": 0.25,
+        "broom handle-left x.542-.641 y.380-.431 (map: broom)": 1.3,
+        "broom handle-mid x.641-.755 y.417-.500 (map: broom)": 1.3,
+        "broom bristles x.755-.925 y.468-.579 (map: broom)": 1.11
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 6e-05,
+      "lumaRangePct": 0.63,
+      "light": {
+        "castle-right candle x.88-.96 y.08-.22": {
+          "ptpPct": 0.58,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "lower-right candle x.88-.93 y.66-.86": {
+          "ptpPct": 1.25,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      },
+      "phaseShiftPx": [
+        0.006,
+        0.018
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "masterBroomHold": {
+      "bytes": 80815223,
+      "frames": 193,
+      "durationS": 8.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.9914,
+      "lastVsPlate": 0.9912,
+      "join": 0.997,
+      "joinRgb": 0.9797,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9994,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "playZone x.09-.46 y.28-.64 (map)": 0.25,
+        "broom handle-left x.542-.641 y.380-.431 (map: broom)": 0.15,
+        "broom handle-mid x.641-.755 y.417-.500 (map: broom)": 0.45,
+        "broom bristles x.755-.925 y.468-.579 (map: broom)": 0.2
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 6e-05,
+      "lumaRangePct": 0.62,
+      "light": {
+        "castle-right candle x.88-.96 y.08-.22": {
+          "ptpPct": 0.58,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "lower-right candle x.88-.93 y.66-.86": {
+          "ptpPct": 1.25,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      },
+      "phaseShiftPx": [
+        0.006,
+        0.018
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "rawMasterBroomMask": {
+      "maxMeanAbsDelta": 1.971,
+      "atFrame": 122,
+      "maxShiftPx": 0.58
+    },
+    "rawMasterBroomRects": {
+      "handleLeft": 1.3,
+      "handleMid": 1.3,
+      "bristles": 1.11
+    },
+    "rockBelowBroomRect_noBroom": 1.34
+  },
+  "after": {
+    "mp4": {
+      "bytes": 508920,
+      "frames": 192,
+      "durationS": 8,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9905,
+      "lastVsPlate": 0.9908,
+      "join": 0.9973,
+      "joinRgb": 0.9867,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9995,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "playZone x.09-.46 y.28-.64 (map)": 0.26,
+        "broom handle-left x.542-.641 y.380-.431 (map: broom)": 0.18,
+        "broom handle-mid x.641-.755 y.417-.500 (map: broom)": 0.48,
+        "broom bristles x.755-.925 y.468-.579 (map: broom)": 0.27
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 7e-05,
+      "lumaRangePct": 0.67,
+      "light": {
+        "castle-right candle x.88-.96 y.08-.22": {
+          "ptpPct": 0.62,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "lower-right candle x.88-.93 y.66-.86": {
+          "ptpPct": 0.9,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      },
+      "phaseShiftPx": [
+        0.004,
+        0.012
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 237748,
+      "frames": 192,
+      "durationS": 8,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.9911,
+      "lastVsPlate": 0.9911,
+      "join": 0.9998,
+      "joinRgb": 0.9992,
+      "joinPercentile": 0.0789,
+      "consecutiveMin": 0.9996,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "playZone x.09-.46 y.28-.64 (map)": 0.07,
+        "broom handle-left x.542-.641 y.380-.431 (map: broom)": 0.07,
+        "broom handle-mid x.641-.755 y.417-.500 (map: broom)": 0.23,
+        "broom bristles x.755-.925 y.468-.579 (map: broom)": 0.06
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 6e-05,
+      "lumaRangePct": 0.43,
+      "light": {
+        "castle-right candle x.88-.96 y.08-.22": {
+          "ptpPct": 0.53,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        "lower-right candle x.88-.93 y.66-.86": {
+          "ptpPct": 1.13,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      },
+      "phaseShiftPx": [
+        0.005,
+        0.021
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "broomMaskMaxMeanAbsDelta": {
+      "mp4": 0.037,
+      "webm": 0.005
+    },
+    "playZoneFullRes": {
+      "mp4": 0.252,
+      "webm": 0.085
+    }
+  },
+  "l2Sweep": "Frames 0/25/50/75/100% (193 f master) + 120% crops of broom, castle and lake, 200% gridded broom crops: no people, riders, figures, faces or hands; no letters, numbers, logos or symbols (castle windows are plain lit rectangles); broom unchanged and unridden; candles keep their shape; no mist wall, no lightning or flash. Plate content only.",
+  "motion": "Very restrained: whole-frame luma range 0.43-0.67 %; the candles do not visibly bob; candle flames and the lake reflections shimmer faintly (light zones ptp 0.5-1.1 %, 0 reversals/s); max 16x9-tile change vs frame 0 is 1.8/255. Reads as a breathing still. Judge in real time.",
+  "visualChecks": "Slit-scans across the wrap (loop.mjs frames --slit, +-36 frames) on the MP4 and the WebM show no vertical seam at the wrap; wrap strips (N-2, N-1 | 0, 1) continuous; x8 wrap-diff shows only natural motion detail. Halos (candles, lanterns) at 6x gain: no contour banding in either codec.",
+  "flags": [
+    "0-credit broom hold-out patch applied (see patch). The broom is pixel-identical to frame 0 in every frame, which also makes the Play -> IN-02 match cut exact.",
+    "Motion is at the edge of perceptible; if the intro needs visible candle bob, retake with the proposed prompt below (not required by any limit)."
+  ],
+  "retakeIfWanted": "Animate the supplied image with gentle, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Each floating candle bobs slowly up and down by a few pixels, out of step with the others, and its flame sways softly; the candle reflections on the black lake ripple and stretch; a few castle windows glow a little brighter and dimmer. The broom stays exactly where it is and does not move; the dark empty sky and lake on the left of the frame stay dark and still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/intro-play-loop.mp4",
+    "webm": "/media/films/intro-play-loop.webm",
+    "poster": "IN-01 plate (intro-play.webp)",
+    "endsOn": "intro-play.webp",
+    "durationS": 8,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "intro-play-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (with the 0-credit broom hold-out): every check passes on both encodes; MP4 pass.join = \"codec\" (the IDR texture refresh), the motion seam is an ordinary step (lossless 0.9997, WebM 0.9998)"
+}

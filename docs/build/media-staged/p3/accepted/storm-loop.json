@@ -1,0 +1,308 @@
+{
+  "proposedMediaId": "L12",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "MV-04",
+  "plate": "public/media/films/storm.webp",
+  "plateJob": "350f546b-fb55-4549-820c-3e052999cfc4",
+  "job": "09b500b6-5f9c-46a8-bda6-c11f483e84fc",
+  "model": "kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Rain streaks slant across the frame; the dark sea heaves; foam blows off the crests; the low clouds race; a large swell under the foam rises slowly and sinks back. No lightning, no flashes; the horizon stays level. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "generateLog": "docs/build/media/p3/B2.md",
+  "master": "media-src/p3/masters/storm-09b500b6.mp4 (Kling original, 10854261 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "storm-loop.mp4",
+    "webm": "storm-loop.webm",
+    "poster": "storm-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 807036,
+    "webm": 499791,
+    "poster": 65374
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/storm-09b500b6.mp4 docs/build/media-staged/p3/accepted/storm-loop --k=24 --tier=I --method=residual --crf-mp4=26 --crf-webm=38",
+  "seam": {
+    "method": "residual",
+    "k": 24,
+    "crfMp4": 26,
+    "crfWebm": 38,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80
+  },
+  "seamCheckLossless": {
+    "join": 0.9902,
+    "joinRgb": 0.9793,
+    "consecutive": {
+      "min": 0.9782,
+      "minAt": 87,
+      "p05": 0.9794,
+      "median": 0.9829
+    },
+    "joinMinusMedian": 0.0073,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "horizon band left x0-.35 y.40-.445 (map: horizon y .423 stays level; rain crosses it)"
+    ],
+    "light": [
+      "crest/foam right x.85-.97 y.44-.56 (informative: moving foam, not a flame or glow)",
+      "swell face x.55-.75 y.47-.55 (informative)"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 10854261,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9868,
+      "lastVsPlate": 0.9666,
+      "join": 0.9771,
+      "joinRgb": 0.929,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9782,
+      "consecutiveMedian": 0.9828,
+      "staticMaxMeanAbsDelta": {
+        "horizon band left x0-.35 y.40-.445 (map: horizon y .423 stays level; rain crosses it)": 0.67
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 19.24,
+      "light": {
+        "crest/foam right x.85-.97 y.44-.56 (informative: moving foam, not a flame or glow)": {
+          "ptpPct": 111.07,
+          "reversalsPerS": 0.66,
+          "dominantHz": 0.17
+        },
+        "swell face x.55-.75 y.47-.55 (informative)": {
+          "ptpPct": 81.75,
+          "reversalsPerS": 0.66,
+          "dominantHz": 0.33
+        }
+      },
+      "phaseShiftPx": [
+        0.01,
+        -0.062
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "horizonRowY": {
+      "min": 0.4245,
+      "max": 0.4246,
+      "rangePx1080": 0.14
+    },
+    "skyLuma": {
+      "min": 15.79,
+      "max": 16.92,
+      "maxStep": 0.251
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 807036,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9725,
+      "lastVsPlate": 0.9649,
+      "join": 0.9741,
+      "joinRgb": 0.9205,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.98,
+      "consecutiveMedian": 0.9864,
+      "staticMaxMeanAbsDelta": {
+        "horizon band left x0-.35 y.40-.445 (map: horizon y .423 stays level; rain crosses it)": 0.6
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 19.16,
+      "light": {
+        "crest/foam right x.85-.97 y.44-.56 (informative: moving foam, not a flame or glow)": {
+          "ptpPct": 108.06,
+          "reversalsPerS": 0.67,
+          "dominantHz": 0.17
+        },
+        "swell face x.55-.75 y.47-.55 (informative)": {
+          "ptpPct": 81.24,
+          "reversalsPerS": 0.67,
+          "dominantHz": 0.33
+        }
+      },
+      "phaseShiftPx": [
+        -0.05,
+        -0.105
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 499791,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9775,
+      "lastVsPlate": 0.9712,
+      "join": 0.9938,
+      "joinRgb": 0.9889,
+      "joinPercentile": 1,
+      "consecutiveMin": 0.9774,
+      "consecutiveMedian": 0.9873,
+      "staticMaxMeanAbsDelta": {
+        "horizon band left x0-.35 y.40-.445 (map: horizon y .423 stays level; rain crosses it)": 0.46
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 18.93,
+      "light": {
+        "crest/foam right x.85-.97 y.44-.56 (informative: moving foam, not a flame or glow)": {
+          "ptpPct": 108.24,
+          "reversalsPerS": 0.67,
+          "dominantHz": 0.17
+        },
+        "swell face x.55-.75 y.47-.55 (informative)": {
+          "ptpPct": 82.06,
+          "reversalsPerS": 0.67,
+          "dominantHz": 0.33
+        }
+      },
+      "phaseShiftPx": [
+        -0.013,
+        -0.082
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "horizonRowY_mp4": {
+      "min": 0.4246,
+      "max": 0.4247,
+      "rangePx1080": 0.15
+    },
+    "webmCrfTrial": {
+      "note": "fidelity = SSIM vs the lossless seam at 1280x720",
+      "crf30": {
+        "bytes": 1006716,
+        "fidelity": 0.9806
+      },
+      "crf34": {
+        "bytes": 721633,
+        "fidelity": 0.9767
+      },
+      "crf36": {
+        "bytes": 600705
+      },
+      "crf38 (chosen)": {
+        "bytes": 499791,
+        "fidelity": 0.9721
+      },
+      "crf40": {
+        "bytes": 413398
+      },
+      "crf42": {
+        "bytes": 341294,
+        "fidelity": 0.9671
+      },
+      "mp4 crf26": {
+        "bytes": 807036,
+        "fidelity": 0.974
+      },
+      "why38": "CRF 40-42 drop the rain streaks in whole blocks at 5x gain (visible as rainless patches); CRF 38 keeps them and matches the MP4 fidelity"
+    },
+    "rainGhostCheck": "high-pass (sigma 2) correlation of the sky rain between consecutive frames is 0.995 in the master (the rain layer is near-static), and 0.96-1.0 through the ramped tail of the loop, so the residual ramp adds no visible frozen-rain ghost"
+  },
+  "runnerUp": {
+    "method": "blend + --rotate=auto (tools.md 5 fallback for master joins < 0.98), K=24, CRF 26/30; scratch only, not staged",
+    "frames": 121,
+    "durationS": 5.042,
+    "rotate": {
+      "frame": 110,
+      "ssimAtFrame": 0.9054,
+      "ssimAtFrame0": 0.8877
+    },
+    "lossless": {
+      "join": 0.9849,
+      "joinPercentile": 0.8417
+    },
+    "bytes": {
+      "mp4": 560999,
+      "webm": 761680
+    },
+    "whyNotChosen": "fails registration: the best rotated frame is 0.905 vs the plate (< 0.95), because the calm plate state exists only at src[0] and src[N-1] and the blend consumes both; residual keeps frame 0 = src[0] (0.987 master / 0.973-0.978 encoded at 720p) and its lossless join is 0.9902, above every natural step (0.978-0.990: rain and sea)"
+  },
+  "l2Sweep": "Frames 0/25/50/75/100% + 100% crest crop and 120% horizon crop: no ship, figure, face, creature or hand in the foam; no lightning, no bolt, no sky flash (sky luma 15.8-16.9, max step 0.25/255); no text; horizon level (0.14-0.15 px).",
+  "motion": "Big: the swell rises into a tall breaking wave whose aqua crest spray brightens and fills the right third (25-75 %), then subsides back to the plate foam band by 100 %. Whole-frame luma range 19 % once per loop (0.17 Hz), crest zone ptp 108 % at 0.67 reversals/s; 0 WCAG flashes/s (whole frame and 4x4 tiles), red share 0.",
+  "visualChecks": "Slit-scans across the wrap (loop.mjs frames --slit, +-36 frames) on the MP4 and the WebM show no vertical seam at the wrap; wrap strips (N-2, N-1 | 0, 1) continuous; x8 wrap-diff shows only natural motion detail.",
+  "flags": [
+    "Composition change: at ~50 % the wave is far bigger than the plate's foam band, and its spray briefly crosses the horizon line at the right edge (x > .9); the horizon itself stays level. This matches the prompt (\"a large swell ... rises slowly and sinks back\") and breaks no hard limit, but check it against the seam card (outgoing half) and the hidden-kraken egg, which shares this plate.",
+    "The check tool's light=false comes from the informative crest zones (moving lit foam, not a flame or glow source); the 15 % glow rule was not applied to them. No flicker: 0.67 reversals/s against the 4/s limit.",
+    "Master join 0.9771 is under the 0.98 residual threshold in tools.md 5, but the blend fallback fails registration (runnerUp); residual chosen on the measurements.",
+    "Sizes: MP4 0.81 MB (tier I target <= 0.8 MB), WebM 0.50 MB at CRF 38 (target <= 0.4 MB; rain costs bytes, see webmCrfTrial)."
+  ],
+  "retakeIfRejected": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Fine rain streaks slant steadily across the frame; the dark sea heaves gently; the existing band of pale foam churns in place and keeps its size and brightness; the low clouds drift slowly. No wave rises taller than the foam band already in the image. No lightning, no flashes; the horizon stays level. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/storm-loop.mp4",
+    "webm": "/media/films/storm-loop.webm",
+    "poster": "MV-04 plate (storm.webp)",
+    "endsOn": "storm.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "storm-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (flagged for Aryan): 0 flashes, no lightning, horizon level, no figures, silent, registration >= 0.95 at both ends, smooth, seamless (lossless 0.9902, WebM 0.9938); the swell becomes a large bright breaking wave mid-loop (prompted, but a big composition change) - retake prompt attached if it is rejected"
+}
