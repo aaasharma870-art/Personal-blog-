@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import { motion, useTransform } from "motion/react";
+import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath } from "@/components/primitives/loaders/kit";
@@ -150,7 +151,7 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
         )}
       </div>
       {plate && live ? (
-        <motion.div className="act-tintype absolute overflow-hidden" style={{ ...PLATE_STYLE, opacity: sepia }}>
+        <motion.div className="act-tintype absolute overflow-hidden will-change-[opacity]" style={{ ...PLATE_STYLE, opacity: sepia }}>
           <PlateBox plate={plate} aspect={PLATE_ASPECT}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
@@ -161,14 +162,14 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
             cover that clears as it develops — evenly, never a few solid blobs
             that read as dirt (M2 critic 3 #4; the procedural ink-bleed mask
             was retired). Live only. */}
-        {live ? <motion.div className="absolute inset-0 bg-bg" style={{ opacity: cover }} /> : null}
+        {live ? <motion.div className="absolute inset-0 bg-bg will-change-[opacity]" style={{ opacity: cover }} /> : null}
         <span className="act-tintype-vignette pointer-events-none absolute inset-0 opacity-70" />
       </div>
 
       {/* the low sun (a pre-rendered --w-dusk sprite: world media), sinking
           onto the photograph's sun; with no plate it stays (the code sun) */}
       {live || !plate ? (
-        <motion.div className="pointer-events-none absolute inset-0" style={live ? { y: sunY, opacity: sunOpacity } : undefined}>
+        <motion.div className={cn("pointer-events-none absolute inset-0", live && "will-change-[transform,opacity]")} style={live ? { y: sunY, opacity: sunOpacity } : undefined}>
           <span
             className="absolute block -translate-x-1/2 -translate-y-1/2"
             style={{ left: pct(sun[0]), top: pct(sun[1]), width: pct(SUN.size), aspectRatio: "1" }}

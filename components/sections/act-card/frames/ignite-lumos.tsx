@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
+import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/kit";
@@ -134,7 +135,7 @@ export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; 
     return f ? frameToHall(f) : null;
   }, [camp]);
   const hallOpacity = useTransform(p, hallAt);
-  const drawnOpacity = useTransform(p, (v) => 1 - remap(v, 0.84, 0.94));
+  const drawnOpacity = useTransform(p, (v) => 1 - remap(v, 0.82, 0.96));
 
   const campLayer = live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null;
 
@@ -142,13 +143,13 @@ export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; 
     return (
       <div aria-hidden="true" data-frame="ignite-lumos" className="absolute inset-0">
         {campLayer}
-        <motion.div className="absolute inset-0" style={live ? { opacity: hallOpacity } : undefined}>
+        <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: hallOpacity } : undefined}>
           <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
         {/* the drawn hall (candles, the light) over the photograph until the
             hall takes the frame */}
         {live ? (
-          <motion.div className="absolute inset-0" style={{ opacity: drawnOpacity }}>
+          <motion.div className="absolute inset-0 will-change-[opacity]" style={{ opacity: drawnOpacity }}>
             <Hall key="live" p={p} fire={fire} />
           </motion.div>
         ) : null}

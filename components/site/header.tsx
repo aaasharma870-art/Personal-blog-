@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Search, X } from "lucide-react";
@@ -124,6 +124,89 @@ function worldForId(id: string): WorldId {
   return s ? worldOf(s) : "house";
 }
 
+/* — The active id reaches only the parts that show it (the ground, the act
+   label, the Work pill and the menu's links): a section change re-renders
+   those, never the whole header and its menu sheet. — */
+const ActiveContext = createContext("");
+
+function labelFor(active: string): string {
+  return active === "credits" && !sectionById("credits") ? "CREDITS" : headerLabel(active);
+}
+
+/** The <header> itself: its ground follows the active act's world. Its
+ *  children are the Header's own elements (unchanged on a section change,
+ *  so React skips them); the context consumers below re-render. */
+function HeaderGround({ className, children }: { className: string; children: ReactNode }) {
+  const active = useHeaderActive();
+  // the visitor's own trail, for the Marauder's Map egg (never shown at rest)
+  useEffect(() => {
+    if (active && sectionById(active)) recordVisit(active);
+  }, [active]);
+  return (
+    <ActiveContext.Provider value={active}>
+      <header {...planeAttrs("deep", worldForId(active))} className={className}>
+        {children}
+      </header>
+    </ActiveContext.Provider>
+  );
+}
+
+/** The act label (M2 fix, ART-DIRECTOR #15): a keyed fade-IN with no exit.
+ *  The old AnimatePresence mode="wait" swap could strand the label
+ *  mid-exchange on a fast multi-act scroll (an empty act label on #about);
+ *  now the newest label always mounts and always ends at opacity 1. The
+ *  hydration pass mounts it without animating (server == client); static
+ *  under reduced motion / Pause. */
+function ActLabel() {
+  const label = labelFor(useContext(ActiveContext));
+  const reduce = useReducedMotion();
+  const mounted = useMounted();
+  return (
+    <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
+      <motion.span
+        key={label}
+        className="block truncate"
+        initial={mounted && !reduce ? { opacity: 0, y: 4 } : false}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduce ? 0 : dur.micro, ease }}
+      >
+        {label}
+      </motion.span>
+    </p>
+  );
+}
+
+function WorkPill({ base, href }: { base: string; href: string }) {
+  const active = useContext(ActiveContext);
+  return (
+    <a
+      href={`${base}${href}`}
+      aria-current={active === href.slice(1) ? "location" : undefined}
+      className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
+    >
+      Work
+    </a>
+  );
+}
+
+function MenuLink({ id, href, label, onPick }: { id: string; href: string; label: string; onPick: () => void }) {
+  const current = useContext(ActiveContext) === id;
+  return (
+    <a
+      href={href}
+      data-menu-first={id === FIRST_LINK_ID ? "" : undefined}
+      onClick={onPick}
+      aria-current={current ? "location" : undefined}
+      className={cn(
+        "inline-flex min-h-11 items-center type-heading transition-colors duration-(--dur-micro)",
+        current ? "text-fg" : "text-fg-muted hover:text-fg",
+      )}
+    >
+      {label}
+    </a>
+  );
+}
+
 /** The [AS] logo: the bracket's chrome use (DESIGN §5.1 ⑤, not counted). */
 function Logo({ base }: { base: string }) {
   return (
@@ -172,9 +255,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
 const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
 
 export function Header() {
-  const active = useHeaderActive();
   const reduce = useReducedMotion();
-  const mounted = useMounted();
   const pathname = usePathname();
   // the page's anchors live on the home page: off it, prefix "/" (the 404)
   const base = pathname === "/" || pathname === null ? "" : "/";
@@ -184,14 +265,7 @@ export function Header() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  const label = active === "credits" && !sectionById("credits") ? "CREDITS" : headerLabel(active);
-  const world = worldForId(active);
   const workHref = hrefOfType("gauntlet");
-
-  // the visitor's own trail, for the Marauder's Map egg (never shown at rest)
-  useEffect(() => {
-    if (active && sectionById(active)) recordVisit(active);
-  }, [active]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -249,8 +323,7 @@ export function Header() {
   };
 
   return (
-    <header
-      {...planeAttrs("deep", world)}
+    <HeaderGround
       className={cn(
         "fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base)",
         scrolled ? "bg-bg" : "bg-transparent",
@@ -259,35 +332,11 @@ export function Header() {
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
         <div className="flex min-w-0 items-center gap-4">
           <Logo base={base} />
-          <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
-            {/* M2 fix (ART-DIRECTOR #15): a keyed fade-IN with no exit. The
-                old AnimatePresence mode="wait" swap could strand the label
-                mid-exchange on a fast multi-act scroll (an empty act label on
-                #about); now the newest label always mounts and always ends at
-                opacity 1. The hydration pass mounts it without animating
-                (server == client); static under reduced motion / Pause. */}
-            <motion.span
-              key={label}
-              className="block truncate"
-              initial={mounted && !reduce ? { opacity: 0, y: 4 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduce ? 0 : dur.micro, ease }}
-            >
-              {label}
-            </motion.span>
-          </p>
+          <ActLabel />
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2">
-          {workHref ? (
-            <a
-              href={`${base}${workHref}`}
-              aria-current={active === workHref.slice(1) ? "location" : undefined}
-              className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
-            >
-              Work
-            </a>
-          ) : null}
+          {workHref ? <WorkPill base={base} href={workHref} /> : null}
           <PauseWithTooltip />
           <button
             ref={menuButtonRef}
@@ -360,24 +409,11 @@ export function Header() {
                       </p>
                       {g.items.length ? (
                         <ul className="mt-tier-pair space-y-1">
-                          {g.items.map((n) => {
-                            return (
-                              <li key={n.id}>
-                                <a
-                                  href={`${base}${n.href}`}
-                                  data-menu-first={n.id === FIRST_LINK_ID ? "" : undefined}
-                                  onClick={() => closeMenu(false)}
-                                  aria-current={active === n.id ? "location" : undefined}
-                                  className={cn(
-                                    "inline-flex min-h-11 items-center type-heading transition-colors duration-(--dur-micro)",
-                                    active === n.id ? "text-fg" : "text-fg-muted hover:text-fg",
-                                  )}
-                                >
-                                  {n.label}
-                                </a>
-                              </li>
-                            );
-                          })}
+                          {g.items.map((n) => (
+                            <li key={n.id}>
+                              <MenuLink id={n.id} href={`${base}${n.href}`} label={n.label} onPick={() => closeMenu(false)} />
+                            </li>
+                          ))}
                         </ul>
                       ) : null}
                     </li>
@@ -412,6 +448,6 @@ export function Header() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </header>
+    </HeaderGround>
   );
 }

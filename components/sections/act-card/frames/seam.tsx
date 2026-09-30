@@ -12,6 +12,7 @@ import { GaugeDrawing } from "@/components/primitives/loaders/gauge";
 import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
 import { BoardFig, boardQuad } from "@/components/sections/act-card/frames/board-fig";
+import { EDGE_MASK_PNG } from "@/components/sections/act-card/frames/seam-edge-mask";
 import {
   FRAME_ASPECT,
   PlateBox,
@@ -89,12 +90,30 @@ const EDGE_POINTS = (() => {
   return pts;
 })();
 const EDGE_LINE = EDGE_POINTS.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`).join("");
-const EDGE_MASK = `url("data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 300' preserveAspectRatio='none'><defs><filter id='f' x='-5%' y='-5%' width='110%' height='110%'><feGaussianBlur stdDeviation='0.25 1'/></filter></defs><path d='${EDGE_LINE}L100 300L0 300Z' transform='translate(0 -1.6)' fill='#fff' filter='url(#f)'/></svg>`,
-)}")`;
-/** mask-position-y (0–1) for the wipe fraction w (see the M1 note: c = .1
- *  puts all of the edge below the frame, c = .84 all of it above). */
+/* The mask is BAKED (tools/bake/textures.js renders this very edge, blurred,
+   to a PNG once): no feGaussianBlur is re-run while the card scrubs. */
+const EDGE_MASK = `url("${EDGE_MASK_PNG}")`;
+/** The wipe's position c (0–1) for the wipe fraction w (see the M1 note:
+ *  c = .1 puts all of the edge below the frame, c = .84 all of it above).
+ *  The masked layer is three frames tall and rides UP by 2c frames (a
+ *  transform, composited, like the seam line), its plate counter-moved
+ *  down by the same amount: the ragged edge sweeps, the hall stays put. */
 const cutAt = (w: number) => 0.1 + 0.74 * w;
+/** The seam line's glow as stacked strokes [width px, opacity]: together
+ *  they approximate the old 20 px chalk at .24 and 6 px aqua at .4 under a
+ *  5 px blur (a soft falloff, no filter). */
+const GLOW_CHALK: readonly (readonly [number, number])[] = [
+  [34, 0.05],
+  [26, 0.06],
+  [18, 0.07],
+  [10, 0.08],
+];
+const GLOW_ACCENT: readonly (readonly [number, number])[] = [
+  [18, 0.07],
+  [12, 0.1],
+  [7, 0.13],
+  [3, 0.16],
+];
 /** The wipe's window of p. */
 const CUT = { from: 0.12, to: 0.66 };
 /** How far (frame heights) the storm is lifted at p 0 (≤ .19: the plate's
@@ -153,12 +172,16 @@ export function SeamFrame({
   // settles onto its registration (horizon on the ledge) by the time the
   // cut starts (M2 critic 3 #3: at p 0 the top half was only night sky)
   const outY = useTransform(p, (v) => `${(-100 * STORM_ENTRY * (1 - smooth01(remap(v, 0, CUT.from))) - 40 * v * v).toFixed(3)}%`);
-  const inY = useTransform(p, (v) => `${(40 * (1 - v) * (1 - v)).toFixed(3)}%`);
   const cut = useTransform(p, (v) => cutAt(remap(v, CUT.from, CUT.to)));
-  const maskY = useTransform(cut, (c) => `0% ${(c * 100).toFixed(3)}%`);
   // belt and braces: once the wipe is complete the incoming is unmasked
   const mask = useTransform(p, (v) => (remap(v, CUT.from, CUT.to) >= 1 ? "none" : EDGE_MASK));
   const lineY = useTransform(cut, (c) => `${((-2 * c) / 3) * 100}%`);
+  // the hall, counter-moved inside the rising mask layer (+2c frames), plus
+  // its own opposing parallax (+.4·(1−p)² frames)
+  const hallY = useTransform(p, (v) => {
+    const c = cutAt(remap(v, CUT.from, CUT.to));
+    return `${(200 * c + 40 * (1 - v) * (1 - v)).toFixed(3)}%`;
+  });
   const lineOn = useTransform(p, (v) => (v > 0.1 && v < CUT.to ? 1 : 0));
   const dustOn = useTransform(p, (v) => Math.min(remap(v, 0.1, 0.18), 1 - remap(v, CUT.to - 0.08, CUT.to)));
   const grey = useTransform(p, (v) => 0.85 * remap(v, CUT.from, CUT.to));
@@ -175,36 +198,49 @@ export function SeamFrame({
     >
       {/* outgoing: the storm (mounted hidden while static, so it has
           decoded before the card goes live) */}
-      <motion.div className="absolute inset-0" style={live ? { y: outY } : { display: "none" }}>
+      <motion.div
+        className={cn("absolute inset-0", live && "will-change-transform")}
+        style={live ? { y: outY } : { display: "none" }}
+      >
         {storm ? (
           <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
             <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
           </PlateBox>
         ) : null}
-        {/* the teal foam desaturates toward chalk white as the cut rises */}
-        <motion.span className="absolute inset-0 bg-[#8a8f8c] mix-blend-saturation" style={{ opacity: live ? grey : 0 }} />
+        {/* the teal foam desaturates toward chalk white as the cut rises: a
+            grey copy of the storm (drawn once) faded in over it — opacity
+            only, no blend mode re-drawn per frame */}
+        {storm && live ? (
+          <motion.div className="absolute inset-0 grayscale will-change-[opacity]" style={{ opacity: grey }}>
+            <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+              <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" loader={false} />
+            </PlateBox>
+          </motion.div>
+        ) : null}
       </motion.div>
 
       {/* incoming: the ICE lecture hall (or the code blueprint), revealed by
           the ragged cut */}
       <motion.div
-        className="absolute inset-0"
+        className={live ? "absolute inset-x-0 top-0 h-[300%] will-change-transform" : "absolute inset-0"}
         style={
           live
             ? {
+                y: lineY,
                 maskImage: mask,
                 WebkitMaskImage: mask,
-                maskSize: "100% 300%",
-                WebkitMaskSize: "100% 300%",
+                maskSize: "100% 100%",
+                WebkitMaskSize: "100% 100%",
                 maskRepeat: "no-repeat",
                 WebkitMaskRepeat: "no-repeat",
-                maskPosition: maskY,
-                WebkitMaskPosition: maskY,
               }
             : undefined
         }
       >
-        <motion.div className="absolute inset-0" style={live ? { y: inY } : undefined}>
+        <motion.div
+          className={live ? "absolute inset-x-0 top-0 h-1/3 will-change-transform" : "absolute inset-0"}
+          style={live ? { y: hallY } : undefined}
+        >
           {board ? (
             <PlateBox plate={board}>
               <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
@@ -227,26 +263,31 @@ export function SeamFrame({
           haze and the chalk specks, riding the cut — never a razor edge */}
       {live ? (
         <motion.div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[300%]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[300%] will-change-transform"
           style={{ y: lineY }}
         >
+          {/* the soft glow, PRE-BLURRED: stacked strokes, widest faintest
+              (the old 5 px CSS blur on a three-frame layer re-ran per frame) */}
           <motion.svg
             viewBox="0 0 100 300"
             preserveAspectRatio="none"
             focusable="false"
-            className="absolute inset-0 size-full blur-[5px]"
+            className="absolute inset-0 size-full"
             fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{ opacity: lineOn }}
           >
-            <path
-              d={EDGE_LINE}
-              transform="translate(0 1.2)"
-              stroke="var(--w-chalk)"
-              strokeOpacity={0.24}
-              strokeWidth={20}
-              vectorEffect="non-scaling-stroke"
-            />
-            <path d={EDGE_LINE} stroke="var(--accent)" strokeOpacity={0.4} strokeWidth={6} vectorEffect="non-scaling-stroke" />
+            <g transform="translate(0 1.2)" stroke="var(--w-chalk)">
+              {GLOW_CHALK.map(([w, o]) => (
+                <path key={w} d={EDGE_LINE} strokeOpacity={o} strokeWidth={w} vectorEffect="non-scaling-stroke" />
+              ))}
+            </g>
+            <g stroke="var(--accent)">
+              {GLOW_ACCENT.map(([w, o]) => (
+                <path key={w} d={EDGE_LINE} strokeOpacity={o} strokeWidth={w} vectorEffect="non-scaling-stroke" />
+              ))}
+            </g>
           </motion.svg>
           <motion.svg
             viewBox="0 0 100 300"

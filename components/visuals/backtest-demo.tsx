@@ -149,7 +149,7 @@ export function BacktestDemo() {
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="none"
-          className="h-60 w-full touch-none"
+          className="h-60 w-full touch-pan-y"
           role="img"
           aria-label="Conceptual, synthetic equity curve illustrating how realistic costs and out-of-sample testing erode a naïve backtest."
           onPointerMove={onMove}

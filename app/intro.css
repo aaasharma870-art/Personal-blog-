@@ -447,6 +447,22 @@ html.intro-armed .hero-cap__in,
 html.intro-caps-linger .hero-cap__in {
   opacity: 0;
 }
+/* the hand-off runs in sequence, never a same-spot crossfade of two
+   right-aligned captions of different widths (they read as one garbled
+   line): the flight's caption fades out over 260 ms, this one fades in
+   after it. */
+html:not(.intro-caps-linger) .hero-cap__in {
+  transition: opacity 380ms var(--ease-out) 200ms;
+}
+html[data-motion="paused"] .hero-cap__in {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cap__in,
+  html:not(.intro-caps-linger) .hero-cap__in {
+    transition: none;
+  }
+}
 .hero-cap .scene-caption,
 #intro-cap-pc .scene-caption {
   margin-left: auto;

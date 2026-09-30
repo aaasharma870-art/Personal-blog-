@@ -30,15 +30,19 @@ if (typeof window !== "undefined") {
   window.addEventListener("intro:end", (e) => {
     const detail = (e as CustomEvent<EndDetail | undefined>).detail;
     ended = { played: Boolean(detail?.played) };
-    listeners.forEach((l) => l());
-    endCallbacks.forEach((cb) => cb(ended?.played ?? false));
+    // the next task, not the controller's finish(): the hero's re-render
+    // (and its loop video mount) never lands in the hand-off frame
+    window.setTimeout(() => {
+      listeners.forEach((l) => l());
+      endCallbacks.forEach((cb) => cb(ended?.played ?? false));
+    }, 0);
   });
 }
 
 function subscribe(onChange: () => void): () => void {
   listeners.add(onChange);
   const mo =
-    typeof MutationObserver === "undefined" ? null : new MutationObserver(onChange);
+    typeof MutationObserver === "undefined" ? null : new MutationObserver(() => window.setTimeout(onChange, 0));
   mo?.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   return () => {
     listeners.delete(onChange);

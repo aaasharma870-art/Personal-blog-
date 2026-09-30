@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import {
   motion,
@@ -21,6 +21,7 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { Footprint } from "@/components/worlds/hp/footprints";
 import { InkWall, MapBanner, MapTrail, Stairs, Turret } from "@/components/worlds/hp/map-ink";
 import { CandleField, spotsIn } from "@/components/worlds/hp/hall-ceiling";
+import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
 
 /* ============================================================================
    PRINCIPLES · DEFAULT "marauders-map" (RECOGNIZABILITY S18, T11; ICONS
@@ -117,10 +118,10 @@ function leadOf(v: number): StepDef {
 /* — parchment paint (paper tokens; darkening stays ≤ 5 % where text sits) — */
 const LIGHT = (a: number) => `rgb(255 250 240 / ${a})`;
 const DARK = (a: number) => `rgb(46 35 24 / ${a})`;
-/** A low-frequency parchment grain (an SVG image, tileable; ≤ 7 % ink). */
-const GRAIN = `url("data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.011 0.018" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.36 0 0 0 0 0.25 0 0 0 0 0.12 0 0 0 0.1 -0.015"/></filter><rect width="100%" height="100%" filter="url(#g)"/></svg>`,
-)}")`;
+/** A low-frequency parchment grain (tileable, 280 px; ≤ 7 % ink): baked
+ *  ONCE from its feTurbulence filter (seed 7) by tools/bake/textures.js, so
+ *  no noise filter is recomputed while the walk scrolls. */
+const GRAIN = `url("${PARCHMENT_GRAIN}")`;
 const PAPER = "color-mix(in oklab, var(--paper) 45%, var(--paper-edge))";
 /** The three panels of the accordion fold: each leans a different way. */
 const PANELS: readonly CSSProperties[] = [
@@ -181,7 +182,7 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       <CandleField spots={HALL_LAST} className="inset-x-0 bottom-full h-(--section-pad)" />
 
       {/* the parchment: three panels, the outer two unfold from the centre */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3 will-change-transform">
         <motion.div
           className="origin-right"
           style={PANELS[0]}
@@ -201,7 +202,7 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       {/* fold creases + burnt edges, once the sheet lies flat */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-10 will-change-transform"
         style={WEAR}
         initial={false}
         animate={{ opacity: folded ? 0 : 1 }}
@@ -333,7 +334,9 @@ function MapRoom({
   useMotionValueEvent(walk, "change", (v) => setInRoom(v >= DOOR && v < 0.999));
   const active = live && inRoom;
   const bannerOpacity = useTransform(walk, (v) => (v > 0.01 && v < 0.999 ? 1 : 0));
-  const bannerTop = useTransform(walk, (v) => `calc(${leadOf(v).top} - 2.75rem)`);
+  // the banner rides on a transform (never `top`: no layout per step, no
+  // layout shift): a full-height track translated to the lead step's line
+  const bannerY = useTransform(walk, (v) => `translateY(${leadOf(v).top})`);
 
   return (
     <li
@@ -350,11 +353,13 @@ function MapRoom({
         ))}
         {live ? (
           <motion.span
-            className="pointer-events-none absolute z-10 -translate-x-1/2 transition-opacity duration-(--dur-base) motion-off:transition-none"
-            style={{ left: HALL_MID, top: bannerTop, opacity: bannerOpacity }}
-            data-motif="you-banner"
+            className="pointer-events-none absolute inset-y-0 z-10 w-0 transition-[opacity,transform] ease-(--ease-out) will-change-[transform,opacity] motion-off:transition-none"
+            // it glides between steps (180 ms) instead of jumping
+            style={{ left: HALL_MID, transform: bannerY, opacity: bannerOpacity, transitionDuration: "var(--dur-base), 180ms" }}
           >
-            <YouBanner />
+            <span className="absolute -top-11 left-0 -translate-x-1/2" data-motif="you-banner">
+              <YouBanner />
+            </span>
           </motion.span>
         ) : index === 0 ? (
           // the static map: YOU stand at the first door
@@ -374,7 +379,7 @@ function MapRoom({
         <RoomWalls
           seed={index}
           className={cn(
-            "stroke-(--world-emphasis) transition-opacity duration-(--dur-base) motion-off:transition-none",
+            "stroke-(--world-emphasis) transition-opacity duration-(--dur-base) will-change-[opacity] motion-off:transition-none",
             active ? "opacity-90" : "opacity-0",
           )}
         />
@@ -395,7 +400,7 @@ function MapRoom({
 
 /** The corridor's two walls through this row (the right one opens on the
  *  passage) and the passage's two walls to the room's door. */
-function Corridor({ seed }: { seed: number }) {
+const Corridor = memo(function Corridor({ seed }: { seed: number }) {
   const gapTop = `calc(${DOOR * 100}% - 1rem)`;
   const gapBottom = `calc(${DOOR * 100}% + 1rem)`;
   return (
@@ -421,12 +426,12 @@ function Corridor({ seed }: { seed: number }) {
       />
     </>
   );
-}
+});
 
 /** A room's four hand-inked double walls with the door gap on the left,
  *  inset from the row so neighbouring rooms stay separate while the
  *  corridor runs on. `className` sets the ink (stroke) and opacity. */
-function RoomWalls({ seed, className }: { seed: number; className: string }) {
+const RoomWalls = memo(function RoomWalls({ seed, className }: { seed: number; className: string }) {
   const inset = "0.625rem";
   return (
     <span aria-hidden="true" className={cn("pointer-events-none absolute inset-0", className)}>
@@ -447,12 +452,12 @@ function RoomWalls({ seed, className }: { seed: number; className: string }) {
       />
     </span>
   );
-}
+});
 
 /** Each room's free lower-right corner (≥ lg, never under text): a round
  *  tower with its spiral stair, or a hatched flight — and someone's trail
  *  walking to it. */
-function RoomFeature({ index }: { index: number }) {
+const RoomFeature = memo(function RoomFeature({ index }: { index: number }) {
   const tower = index % 2 === 0;
   return (
     <span
@@ -487,21 +492,22 @@ function RoomFeature({ index }: { index: number }) {
       )}
     </span>
   );
-}
+});
 
-function Step({ def, walk, live }: { def: StepDef; walk: MotionValue<number>; live: boolean }) {
+const Step = memo(function Step({ def, walk, live }: { def: StepDef; walk: MotionValue<number>; live: boolean }) {
   const opacity = useTransform(walk, (v) => stepOpacity(v, def.at));
   const rest = def.kind === "door" ? 0.85 : 0.5;
   return (
     <motion.span
       // the turn in at the door needs the wider passage (≥ sm): on phones the walk runs straight on
-      className={cn("pointer-events-none absolute", def.kind === "door" && "hidden sm:block")}
+      // its own layer: a live opacity write never re-draws the parchment under it
+      className={cn("pointer-events-none absolute", live && "will-change-[opacity]", def.kind === "door" && "hidden sm:block")}
       style={{ top: def.top, left: def.left, x: "-50%", y: "-50%", rotate: def.rot, opacity: live ? opacity : rest }}
     >
       <Footprint side={def.side} size={PRINT} fill="var(--world-emphasis)" />
     </motion.span>
   );
-}
+});
 
 /** The Map's name banner, reading YOU (IC-HP-06): a parchment ribbon with
  *  notched ends, inked; the word is real text (aria-hidden: decorative). */

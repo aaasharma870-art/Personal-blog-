@@ -90,7 +90,7 @@ function drawProps(phase: EnterPhase, l: Pick<Stroke, "t" | "dur">) {
 function Furniture({ fid }: { fid: string }) {
   const c = FURNITURE.clipping;
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="absolute inset-0 size-full overflow-visible">
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="absolute inset-0 size-full overflow-visible will-change-transform">
       <defs>
         <GraphiteFilter id={`jf-${fid}`} />
       </defs>
@@ -111,7 +111,7 @@ function Furniture({ fid }: { fid: string }) {
 
 function Landscape({ phase, fid }: { phase: EnterPhase; fid: string }) {
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible" data-motif="journal-landscape">
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible will-change-transform" data-motif="journal-landscape">
       <defs>
         <GraphiteFilter id={`jl-${fid}`} />
       </defs>
@@ -146,7 +146,7 @@ function PageVignette({ index, still }: { index: number; still: boolean }) {
         }
       : { initial: false as const, animate: { pathLength: 1 } };
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible" data-motif="journal-vignette">
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible will-change-transform" data-motif="journal-vignette">
       <defs>
         <GraphiteFilter id={`jv-${fid}`} />
       </defs>

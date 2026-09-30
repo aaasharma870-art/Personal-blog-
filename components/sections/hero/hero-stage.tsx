@@ -10,6 +10,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
+import { cn } from "@/lib/utils";
 import {
   parseSkipFlags,
   shouldSkip,
@@ -684,7 +685,8 @@ export function HeroStage({
           <motion.div
             ref={plateRef}
             data-hero-plate=""
-            className="absolute inset-0 origin-center"
+            // its own layer while the scroll-out scrubs it (no plate re-draw)
+            className={cn("absolute inset-0 origin-center", moving && "will-change-transform")}
             style={{
               maskImage: gateMask,
               WebkitMaskImage: gateMask,
@@ -694,7 +696,7 @@ export function HeroStage({
             {/* the spyglass zoom layer (×1 on the DEFAULT side) */}
             <motion.div
               data-hero-zoom=""
-              className="absolute inset-0"
+              className={cn("absolute inset-0", moving && "will-change-transform")}
               style={{ scale: zoom, transformOrigin: pos(geo.origin) }}
             >
               <MediaFrame
@@ -725,7 +727,7 @@ export function HeroStage({
             {moving ? (
               <motion.div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-bg"
+                className="pointer-events-none absolute inset-0 bg-bg will-change-[opacity]"
                 style={{ opacity: darken }}
               />
             ) : null}

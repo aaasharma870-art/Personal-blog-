@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useTransform } from "motion/react";
+import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { remap } from "@/components/primitives/loaders/line";
@@ -60,7 +61,8 @@ export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId |
       className="absolute inset-0 overflow-hidden sm:[mask-image:linear-gradient(to_bottom,transparent,#000_min(14vh,24%))]"
       style={live ? { clipPath: clip } : undefined}
     >
-      <motion.div className="absolute inset-0" style={live ? { scale } : undefined}>
+      {/* its own layer: the aperture's clip changes never re-draw the plate */}
+      <motion.div className={cn("absolute inset-0", live && "will-change-transform")} style={live ? { scale } : undefined}>
         <PlateBox plate={plate}>
           <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
         </PlateBox>

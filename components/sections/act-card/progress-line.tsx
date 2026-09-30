@@ -27,7 +27,11 @@ const MATERIAL: Record<string, string> = {
 export function ProgressLine({ world }: { world: WorldId }) {
   const { p, live } = useCard();
   const kind = worlds[world].loader;
-  const clip = useTransform(p, (v) => `inset(-4px ${(100 - Math.min(1, Math.max(0, v)) * 100).toFixed(2)}% -4px 0)`);
+  // the drawn part is a window sliding in from the left over a counter-moved
+  // line (transforms only, composited: no clip-path re-draw per frame); the
+  // dashes stay put, exactly as the old clip showed them
+  const hide = useTransform(p, (v) => `${(-(1 - Math.min(1, Math.max(0, v))) * 100).toFixed(2)}%`);
+  const back = useTransform(p, (v) => `${((1 - Math.min(1, Math.max(0, v))) * 100).toFixed(2)}%`);
   const x = useTransform(p, (v) => `${(Math.min(1, Math.max(0, v)) * 100).toFixed(2)}%`);
 
   return (
@@ -37,10 +41,15 @@ export function ProgressLine({ world }: { world: WorldId }) {
       <span className={cn("absolute inset-x-0 top-1/2 -translate-y-1/2 opacity-25", MATERIAL[kind] ?? MATERIAL.plain)} />
       {/* the drawn part = p */}
       <motion.span
-        className="absolute inset-0 flex items-center"
-        style={live ? { clipPath: clip } : undefined}
+        className={cn("absolute -inset-y-1 inset-x-0 overflow-hidden", live && "will-change-transform")}
+        style={live ? { x: hide } : undefined}
       >
-        <span className={cn("block w-full", MATERIAL[kind] ?? MATERIAL.plain)} />
+        <motion.span
+          className={cn("absolute inset-0 flex items-center", live && "will-change-transform")}
+          style={live ? { x: back } : undefined}
+        >
+          <span className={cn("block w-full", MATERIAL[kind] ?? MATERIAL.plain)} />
+        </motion.span>
       </motion.span>
       {kind === "gauge" ? (
         // the rack's end ticks (0 / end) — the dimension line's grammar
