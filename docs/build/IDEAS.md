@@ -208,3 +208,62 @@ Aryan asked for more ideas on movement on screen for dramatic effect, movement i
 - **Each act's first 2 seconds** needs a hook frame.
 - **Mobile** needs its own lighter but still moving cut (it currently gets stills).
 - **Restraint rule:** one dramatic thing per screen, with everything else quiet. Too much at once is the main risk of Phase 3.
+
+---
+
+# O. TRIAGE (2026-09-30): the working decision for Phase 3
+
+Aryan liked every idea but fears "too much". He delegated the cut to Claude with this filter: **keep what makes it feel like an interactive game and/or a movie; cut what is merely decoration or too much.** This section overrides the A–N lists wherever they conflict.
+
+## O.1 KEEP (core)
+- **Movie:**
+  - Lenis + GSAP smooth scroll
+  - the persistent stage (A)
+  - living loops + depth parallax (B)
+  - the virtual camera (K1)
+  - world transitions + the WebGL layer (C)
+  - match cuts between worlds (K9)
+  - letterbox breathing (K3)
+  - titles arriving in character (L1)
+  - the one-liners as subtitles (L5)
+  - the opening title sequence, the intro hand-off fix (J), and the post-credits scene
+  - the day-to-night arc
+  - sound (G)
+  - director's cut autoplay and DVD chapter select
+- **Game:**
+  - An egg hunt with a counter. **Exactly 12 eggs, 3 per world**, and a reward at 12/12.
+  - **One toy per act**, only two of them real games: **fly Rancho's drone** and the **Dead Eye target game on the kill-list**. The others stay simple: spin Jack's compass, light the candles with the wand.
+- **Safety nets:**
+  - the no-dead-screen rule (D)
+  - the "Skip to the research" fast lane
+  - a lighter moving mobile cut
+  - per-world fonts (I)
+  - scroll-depth analytics
+  - collapsing long text
+
+## O.2 KEEP, RATIONED (hard caps)
+| Idea | Cap |
+|---|---|
+| Weather particles (K4) | one kind per world, light density |
+| Fly-throughs (K5) | ≤ 1 per act; the snitch counts as an egg |
+| Impact shake/flash (K7) | 4 on the whole page (1 per world) |
+| Words with physical behaviour (L2) | ≤ 1 per section |
+| Text as mask (L6) | the four act titles only |
+| Scroll-scrubbed sentences (L3) | 1 per act |
+| Rack focus (K2) | pinned stage sections only |
+| Light cursor (K6) | Harry Potter acts only (the wand) |
+
+## O.3 CUT
+- Speed ramps (K8). They fight smooth scroll and read as lag.
+- Text revealed by light for paragraphs (L4). It hurts reading.
+- Cursor trails in every world (F). The HP wand is the only one.
+- Phone tilt. iOS shows a permission prompt, for low payoff.
+- "Previously on…" recaps.
+- The film-strip scroll indicator. Redundant with the compass and chapter select.
+- Instrument counters (L8) and marquee quotes.
+- Extra toys: cannon, scratch-off map, pet the horse, honor meter, visitor bounty poster, journal sketch pad, stoke the fire. The best may be reused as eggs.
+- Eggs beyond 12: rum, Wingardium Leviosa, 9¾, stopwatch, quiz.
+- **Deferred, not cut:** idle moments, and the 12/12 share card.
+
+## O.4 THE RULE: one star per screen
+At any scroll position, exactly ONE thing is dramatic: a camera move, a transition, a toy, or a title arriving. Everything else on screen is still and quiet. The critic loop checks this on every captured frame, alongside the blind stranger test and a "would you keep scrolling?" judge.
