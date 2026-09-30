@@ -1,5 +1,10 @@
 # CONTINUE: phase 2 — the info details
 
+> **PHASE 3 IS QUEUED (ideas only, 2026-09-30): "Keep them scrolling".**
+> - Aryan finds the site choppy and not entertaining enough. Read **`docs/build/IDEAS.md`** first. Its §0 decisions are BINDING and override the older rules: smooth scroll (Lenis + GSAP) YES, one WebGL transition layer YES, about 350 Higgsfield credits for living loops YES, an egg hunt with a counter YES, themed sound YES, per-world fonts YES, and fixing the intro hand-off.
+> - When Aryan says to start Phase 3: turn IDEAS.md into a spec and plan (brainstorm with him on its open points), then build. Until then, nothing in IDEAS.md is built.
+> - The skills are in `.claude/skills/` (tracked). Use them.
+
 **If you are Claude and Aryan says "continue", "go" or similar in this repo, this file is your brief.** Read it fully before touching anything.
 
 ## Where things stand (2026-09-29)
