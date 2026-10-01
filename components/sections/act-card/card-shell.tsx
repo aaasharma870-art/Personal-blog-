@@ -353,7 +353,13 @@ function ProgramStage({ live, variant, children }: { live: boolean; variant: Var
     [scrollYProgress, live, variant],
   );
   return (
-    <div ref={ref} className="relative px-gutter pt-tier-group pb-section sm:pt-tier-block">
+    <div
+      ref={ref}
+      className="relative px-gutter pt-tier-group pb-section sm:pt-tier-block"
+      data-beat="B06"
+      data-beat-star=""
+      data-beat-weight="1"
+    >
       <CardContext.Provider value={state}>{children}</CardContext.Provider>
     </div>
   );

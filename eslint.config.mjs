@@ -17,7 +17,9 @@ const MOTION_PATHS = [
 // never in the first-load bundle. Type-only imports are fine anywhere.
 const SCROLL_LIB_PATTERNS = [
   {
-    group: ["gsap", "gsap/*", "@gsap/react", "lenis", "lenis/*"],
+    // A regex, not a gitignore-style group: the group form `gsap` also
+    // matched "@/lib/gsap" and "./gsap" (the lazy wrapper itself).
+    regex: "^(gsap|lenis)(/.*)?$|^@gsap/react$",
     allowTypeImports: true,
     message:
       "GSAP / Lenis load lazily: use loadGsap() or useScrollScene() (lib/gsap.ts, lib/use-scroll-scene.ts) and lib/smooth-scroll.ts. Only lib/gsap.ts and components/providers/smooth-scroll.tsx import them.",

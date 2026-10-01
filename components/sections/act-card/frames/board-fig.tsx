@@ -26,6 +26,9 @@ import { anchor, anchorRect, plateViewBox, type Plate } from "@/components/secti
  * `fig` 0–1 draws the Line (DrawPath; static → drawn with non-scaling
  * strokes), `rack` drives the gauge (the card's p: L1 exact kinematics),
  * `circle` draws Rancho's circle. aria-hidden (the card is labelled).
+ * Live, the whole chalk overlay (drone, FIG, gauge, label) rides ONE layer
+ * of its own over the photograph (spec §12.1 #8): a scrubbed draw repaints
+ * only the chalk, never the plate under it.
  */
 
 type Q = { tl: [number, number]; tr: [number, number]; bl: [number, number]; br: [number, number] };
@@ -279,7 +282,7 @@ export function BoardFig({
   const chalk = W * 0.0018;
   const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
 
-  return (
+  const overlay = (
     <>
       {/* THE HOMEMADE DRONE, chalked in with the FIG (left third) */}
       <BoardDrone plate={plate} draw={fig} live={live} />
@@ -354,4 +357,7 @@ export function BoardFig({
       </p>
     </>
   );
+  // live: the chalk on its own layer over the plate (same box: inset-0 of
+  // the PlateBox, so every %-placed piece lands where it did)
+  return live ? <div className="pointer-events-none absolute inset-0 will-change-transform">{overlay}</div> : overlay;
 }

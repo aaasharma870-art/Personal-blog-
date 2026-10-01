@@ -1,14 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { dur, ease, easeDraw } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
-import { GraphiteFilter, RD_PIECES, useFid } from "@/components/worlds/rdr2/kit";
+import { GraphiteFilter, RD_PIECES, bakedGraphite, useFid } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 
 /* ============================================================================
@@ -29,6 +30,9 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
 
    One-shot on entry; SSR / no-JS / reduced motion / Pause = the final
    drawing. Art aria-hidden; the labels are real text in a list.
+   RASTER (P3-2, spec §12.1 #5, #8): at DESKTOP_WIDE the graphite is baked
+   (a static tooth mask, no live filter; phones keep the filter), and each
+   spilling piece slides on its own layer only while it spills. B43.
    ========================================================================== */
 
 type Kit = { label: string; strokes: string[]; heavy?: number };
@@ -112,7 +116,8 @@ function Bag({ phase, shut, start, fid }: { phase: EnterPhase; shut: boolean; st
       viewBox="0 -14 200 184"
       aria-hidden="true"
       focusable="false"
-      className="h-auto w-44 overflow-visible sm:w-52"
+      className={cn("h-auto w-44 overflow-visible sm:w-52", s.graphiteDw)}
+      style={bakedGraphite(200)}
       data-motif="satchel-bag"
     >
       <defs>
@@ -143,7 +148,15 @@ function Bag({ phase, shut, start, fid }: { phase: EnterPhase; shut: boolean; st
 
 function KitIcon({ kit, phase, delay, fid, i }: { kit: Kit; phase: EnterPhase; delay: number; fid: string; i: number }) {
   return (
-    <svg viewBox="0 0 48 48" width={64} height={64} aria-hidden="true" focusable="false" className="overflow-visible">
+    <svg
+      viewBox="0 0 48 48"
+      width={64}
+      height={64}
+      aria-hidden="true"
+      focusable="false"
+      className={cn("overflow-visible", s.graphiteDw)}
+      style={bakedGraphite(48)}
+    >
       <defs>
         <GraphiteFilter id={`kit-${fid}-${i}`} />
       </defs>
@@ -178,6 +191,10 @@ export function Satchel({
   const alt = v === "alt";
   const armed = phase === "armed";
   const entered = phase === "entered";
+  // DEFAULT: the pieces are promoted while they can slide (armed, then the
+  // spill), so a sliding piece never repaints the section under it
+  const [spilled, setSpilled] = useState(false);
+  const sliding = !alt && (armed || (entered && !spilled));
 
   // DEFAULT: the bag first (0–1.2 s), then each piece slides out of its mouth.
   // ALT: each piece drawn + ticked in turn, the bag drawn last.
@@ -188,6 +205,7 @@ export function Satchel({
     <figure
       ref={ref}
       className={cn("m-0", className)}
+      {...beatAttrs("B43", { weight: 2 })}
       data-motif="satchel"
       data-piece={RD_PIECES.satchel}
       data-variant={v}
@@ -199,7 +217,7 @@ export function Satchel({
           {KIT.map((k, i) => (
             <motion.li
               key={k.label}
-              className="flex min-w-0 flex-col items-start gap-2"
+              className={cn("flex min-w-0 flex-col items-start gap-2", sliding && "will-change-[transform,opacity]")}
               initial={false}
               animate={
                 alt
@@ -209,6 +227,7 @@ export function Satchel({
                     : { opacity: 1, x: 0, rotate: 0 }
               }
               transition={entered && !alt ? { duration: dur.reveal, ease, delay: itemStart(i) - 0.15 } : { duration: 0 }}
+              onAnimationComplete={i === KIT.length - 1 && entered && !alt ? () => setSpilled(true) : undefined}
             >
               <KitIcon kit={k} phase={phase} delay={itemStart(i)} fid={fid} i={i} />
               <span className="flex items-center gap-1.5 type-meta text-fg-muted">

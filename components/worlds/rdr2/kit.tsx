@@ -1,6 +1,8 @@
 "use client";
 
 import { useId } from "react";
+import type { CSSProperties } from "react";
+import tooth from "@/assets/p3/raster/graphite-tooth.png";
 
 /* ============================================================================
    ACT III KIT — shared bits of the rdr2 world components.
@@ -37,6 +39,30 @@ export function GraphiteFilter({ id }: { id: string }) {
       <feComposite in="w" in2="tooth" operator="in" />
     </filter>
   );
+}
+
+/**
+ * BAKED GRAPHITE (PHASE3-SPEC §12.1 #5). The R-1 filter above re-runs a
+ * per-pixel turbulence every time its SVG repaints (a draw-on, a moving
+ * parent). Its look is the PAPER TOOTH — stroke alpha × clamp(1.25 − 1.6·A)
+ * of that noise (mean .45); the displacement is sub-pixel (±.2 px). So the
+ * tooth is baked once, by Chromium's own filter, into a tileable 128 px
+ * texture (assets/p3/raster/graphite-tooth.png, 100 user units; see
+ * bake-graphite-tooth.mjs beside it) and laid on the plain strokes as a
+ * static CSS mask: same grain, no live filter, nothing recomputed per frame.
+ *
+ * `bakedGraphite(viewBoxW)` gives the SVG its mask variables (the tile is
+ * 100 units of its own viewBox, so the grain keeps the filter's scale); the
+ * rdr2.module.css classes apply them:
+ *   .graphiteBaked  always (art that only renders ≥ 64rem: the journal page);
+ *   .graphiteDw     at DESKTOP_WIDE only — below it the live filter stays,
+ *                   so phones are byte-for-byte unchanged.
+ */
+export function bakedGraphite(viewBoxW: number): CSSProperties {
+  return {
+    "--graphite-tooth": `url(${tooth.src})`,
+    "--graphite-tile": `${((100 / viewBoxW) * 100).toFixed(3)}%`,
+  } as CSSProperties;
 }
 
 /** A DOM-safe unique id for SVG defs (SSR = client). */

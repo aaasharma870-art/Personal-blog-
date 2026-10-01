@@ -53,6 +53,7 @@
   - Lenis + GSAP ScrollTrigger: smooth scroll, off for reduced motion and Pause, phones native unless testing says otherwise.
   - The persistent stage: sticky media behind the content, and split-screen reading sections.
   - Extend the manifest and validator with beats (warn on gaps over 100vh).
+  - W1 INTEGRATED 2026-10-01 (cloud, not yet gated): the six wave-1 builders (SCROLL, STAGE, BEATS, RASTER, INTRO, TYPE) merged with their W1 handoffs; 19 living loops (L01 L02 L05 L06 L08–L12 L14–L23) + SEQ-HALL + the six re-seams + marks registered (SEQ-PEARL failed Check L2: the code push on L01 is push-in #1's DEFAULT); tsc, check, eslint, build green; RELEASE fails only on unsigned copy, Check-L2 `aryan:pending` and the deferred `systems.pencil.body` (W2). Next: the W1 gate captures/probes (PHASE3-PLAN §10.1 #5, §10.2), then tick P3-2/P3-3/P3-4.
 - [ ] **P3-3. Intro to hero hand-off fix** (IDEAS section J), plus the opening title sequence. Measure before and after.
 - [ ] **P3-4. Typography per world** (IDEAS section I): iconic header + legible body per world. Research data stays in Geist.
 - [ ] **P3-5. Every plate moves.** Depth parallax + virtual camera (code). Living loops (Higgsfield, in parallel). 3 to 4 scroll-scrubbed push-in sequences.

@@ -14,6 +14,10 @@ declare global {
     __enhanceQ?: { sel: string; t: number }[];
     /** <PageHydrated/>: every Suspense section has hydrated. */
     __pageHydrated?: boolean;
+    /** lib/codec.ts + the intro controller: one codec answer per MP4 src. */
+    __codecPicks?: Record<string, "video/mp4" | "video/webm">;
+    /** The intro's hero-loop blob, handed to MediaFrame (lib/codec.ts handoffSource). */
+    __introHandoff?: { src: string; url: string | null; at: number };
   }
 }
 

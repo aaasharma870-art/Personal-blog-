@@ -22,6 +22,10 @@ export type P3Events = {
   "intro:quiet": void;
   /** After the opening titles, or on any exit (§4.3). */
   "intro:quiet-end": void;
+  /** The opening titles begin (§4.3; marks `intro:titles`). */
+  "intro:titles": void;
+  /** The opening titles end, or are cut by input/Pause (marks `intro:titles-end`). */
+  "intro:titles-end": void;
   /** <PageHydrated/>: the last Suspense child committed. */
   "page:hydrated": void;
   "ladder:step": { step: LadderStep };

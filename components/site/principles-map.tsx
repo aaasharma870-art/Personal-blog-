@@ -1,14 +1,16 @@
 "use client";
 
-import { memo, useRef, useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import { memo, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties, ReactNode, RefObject } from "react";
 import {
   motion,
+  motionValue,
   useMotionValueEvent,
   useScroll,
   useTransform,
   type MotionValue,
 } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { principles, type Principle } from "@/lib/content";
 import { film } from "@/lib/film";
 import { copyVisible } from "@/lib/sections";
@@ -45,8 +47,9 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
      tower with its spiral stair or a hatched flight, and someone's trail
      walking to it (≥ lg).
    - THE WALK: a pair of 14 px footprints walks the corridor WITH the reader
-     (scroll-driven: one useScroll per room, the reading line at 62 % of the
-     viewport), turns in at each door, and fades behind (never below 40 %:
+     (scroll-driven: ONE useScroll for the whole list, split per room by the
+     rooms' measured rows — the reading line at 62 % of the viewport), turns
+     in at each door, and fades behind (never below 40 %:
      the map keeps your trail). A YOU banner rides above the lead step
      (IC-HP-06: it follows only the visitor's own reading). The room you are
      in inks its walls darker: the active principle.
@@ -59,6 +62,12 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
    the film's castle plan; the prints are ours (worlds/hp/footprints). All
    ink is SVG on CSS variables (never currentColor). Everything here is
    aria-hidden except the head, the banner's words and the list.
+
+   RASTER (P3-2, spec §12.1 #1): at most 7 promoted layers, only on what
+   moves — the 5 YOU banners (transform) while the walk is live, and the
+   two outer panels only while they unfold. The 40 prints, the active
+   room's ink and the wear carry no will-change: a print is a 14 px opacity
+   write (a tiny repaint), and one-shot fades run as compositor animations.
    ========================================================================== */
 
 /** The door (and the passage to it) sits at this fraction of a room's height. */
@@ -154,20 +163,73 @@ const WEAR: CSSProperties = {
 /** The hall's last candles over the sheet (T11): few, small, dim. */
 const HALL_LAST = spotsIn(9, 71, { x0: 3, x1: 97, y0: 8, y1: 44 }, { w0: 6, w1: 11, o0: 0.22, o1: 0.45 });
 
+/** Room i's walk (0–1) from the list's: the reading line's position in the
+ *  list (`p` × the list's height) re-based on the room's row. Identical to a
+ *  per-room useScroll with the same offsets (both clamp to 0–1). */
+function roomWalk(p: number, listH: number, row: { top: number; h: number } | undefined): number {
+  if (!row || row.h <= 0) return 0;
+  return Math.min(1, Math.max(0, (p * listH - row.top) / row.h));
+}
+
+/** ONE scroll tracker for the whole Map (spec §12.1 #1: was one per room):
+ *  the list's progress with the reading line at 62 %, split into one walk
+ *  per room by the rooms' rows, measured on resize (a font swap or a reflow
+ *  resizes the list), never per frame. */
+function useRoomWalks(listRef: RefObject<HTMLOListElement | null>, n: number): readonly MotionValue<number>[] {
+  const [walks] = useState(() => Array.from({ length: n }, () => motionValue(0)));
+  const geo = useRef<{ h: number; rows: { top: number; h: number }[] }>({ h: 0, rows: [] });
+  const { scrollYProgress: list } = useScroll({ target: listRef, offset: ["start 62%", "end 62%"] });
+  const apply = (p: number) => {
+    const g = geo.current;
+    walks.forEach((w, i) => w.set(roomWalk(p, g.h, g.rows[i])));
+  };
+  useMotionValueEvent(list, "change", apply);
+  useLayoutEffect(() => {
+    const ol = listRef.current;
+    if (!ol) return;
+    const measure = () => {
+      const items = Array.from(ol.children) as HTMLElement[];
+      geo.current = {
+        h: ol.offsetHeight,
+        rows: items.map((li) => ({ top: li.offsetTop, h: li.offsetHeight })),
+      };
+      apply(list.get());
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(ol);
+    return () => ro.disconnect();
+    // `apply` reads refs and the stable motion values only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listRef, list]);
+  return walks;
+}
+
 export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.15 });
   const folded = phase === "armed";
   // Mounted offscreen with motion on → the walk is scroll-driven. Otherwise
   // (server, hydration, reduced motion / Pause, in view at mount) → static.
   const live = phase !== "static";
+  const walks = useRoomWalks(listRef, principles.length);
+  // the outer panels are promoted only while they can move (armed, then the
+  // unfold); once flat they paint with the sheet again
+  const [flat, setFlat] = useState(false);
+  const unfolding = phase === "armed" || (phase === "entered" && !flat);
   const unfold = phase === "entered" ? { duration: dur.hero, ease: easeClip } : { duration: 0 };
   const arrive = (delay: number) =>
     phase === "entered" ? { duration: dur.reveal, ease, delay } : { duration: 0 };
+  const onUnfolded = () => {
+    if (phase === "entered") setFlat(true);
+  };
 
   return (
     <div
       ref={ref}
+      {...beatAttrs("B52", { weight: 1 })}
       data-tone="paper"
       data-world="hp"
       data-motif="marauders-map"
@@ -182,27 +244,29 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       <CandleField spots={HALL_LAST} className="inset-x-0 bottom-full h-(--section-pad)" />
 
       {/* the parchment: three panels, the outer two unfold from the centre */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3 will-change-transform">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3">
         <motion.div
-          className="origin-right"
+          className={cn("origin-right", unfolding && "will-change-transform")}
           style={PANELS[0]}
           initial={false}
           animate={{ scaleX: folded ? 0 : 1 }}
           transition={unfold}
+          onAnimationComplete={onUnfolded}
         />
         <div style={PANELS[1]} />
         <motion.div
-          className="origin-left"
+          className={cn("origin-left", unfolding && "will-change-transform")}
           style={PANELS[2]}
           initial={false}
           animate={{ scaleX: folded ? 0 : 1 }}
           transition={unfold}
         />
       </div>
-      {/* fold creases + burnt edges, once the sheet lies flat */}
+      {/* fold creases + burnt edges, once the sheet lies flat (a one-shot
+          opacity fade: a compositor animation, no standing layer) */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 will-change-transform"
+        className="pointer-events-none absolute inset-0 -z-10"
         style={WEAR}
         initial={false}
         animate={{ opacity: folded ? 0 : 1 }}
@@ -225,9 +289,9 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
             <InkWall dir="v" seed={5} style={{ left: "calc(var(--wall-l) - 4px)", top: 0, height: "100%" }} />
             <InkWall dir="v" seed={6} style={{ left: "calc(var(--wall-r) - 4px)", top: 0, height: "100%" }} />
           </div>
-          <ol aria-label="Operating principles" className="relative">
+          <ol ref={listRef} aria-label="Operating principles" className="relative">
             {principles.map((p, i) => (
-              <MapRoom key={p.n} p={p} index={i} live={live} ribbons={ribbons} />
+              <MapRoom key={p.n} p={p} index={i} walk={walks[i]!} live={live} ribbons={ribbons} />
             ))}
           </ol>
         </div>
@@ -317,19 +381,23 @@ function HeadTrail() {
 }
 
 /* — a room ———————————————————————————————————————————————————————————— */
+/** B54 (ribbons converge, rooms 3–4): the third room carries the beat. */
+const RIBBONS_BEAT_ROOM = 2;
+
 function MapRoom({
   p,
   index,
+  walk,
   live,
   ribbons,
 }: {
   p: Principle;
   index: number;
+  /** This room's share of the Map's one scroll tracker (useRoomWalks). */
+  walk: MotionValue<number>;
   live: boolean;
   ribbons: boolean;
 }) {
-  const ref = useRef<HTMLLIElement>(null);
-  const { scrollYProgress: walk } = useScroll({ target: ref, offset: ["start 62%", "end 62%"] });
   const [inRoom, setInRoom] = useState(false);
   useMotionValueEvent(walk, "change", (v) => setInRoom(v >= DOOR && v < 0.999));
   const active = live && inRoom;
@@ -340,7 +408,7 @@ function MapRoom({
 
   return (
     <li
-      ref={ref}
+      {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
       className="relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]"
       data-room={index + 1}
       data-active={active ? "" : undefined}
@@ -378,8 +446,9 @@ function MapRoom({
         <RoomWalls seed={index} className="stroke-(--world-line) opacity-85" />
         <RoomWalls
           seed={index}
+          // a CSS transition: the compositor promotes it only while it runs
           className={cn(
-            "stroke-(--world-emphasis) transition-opacity duration-(--dur-base) will-change-[opacity] motion-off:transition-none",
+            "stroke-(--world-emphasis) transition-opacity duration-(--dur-base) motion-off:transition-none",
             active ? "opacity-90" : "opacity-0",
           )}
         />
@@ -499,9 +568,9 @@ const Step = memo(function Step({ def, walk, live }: { def: StepDef; walk: Motio
   const rest = def.kind === "door" ? 0.85 : 0.5;
   return (
     <motion.span
-      // the turn in at the door needs the wider passage (≥ sm): on phones the walk runs straight on
-      // its own layer: a live opacity write never re-draws the parchment under it
-      className={cn("pointer-events-none absolute", live && "will-change-[opacity]", def.kind === "door" && "hidden sm:block")}
+      // the turn in at the door needs the wider passage (≥ sm): on phones the walk runs straight on.
+      // No will-change (spec §12.1 #1): a print's opacity write repaints only its own 14 px box.
+      className={cn("pointer-events-none absolute", def.kind === "door" && "hidden sm:block")}
       style={{ top: def.top, left: def.left, x: "-50%", y: "-50%", rotate: def.rot, opacity: live ? opacity : rest }}
     >
       <Footprint side={def.side} size={PRINT} fill="var(--world-emphasis)" />

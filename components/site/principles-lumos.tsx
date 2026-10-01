@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { principles, type Principle } from "@/lib/content";
 import { dur, ease } from "@/lib/motion";
+import { beatAttrs } from "@/lib/beats";
 import { Meta } from "@/components/site/world-kit";
 import { PatronusRibbons } from "@/components/site/hp-ink";
 import { maskIntersect, maskStyle } from "@/components/primitives/mask-style";
@@ -66,7 +67,7 @@ const ROW_SIDE: readonly (readonly CandleSpot[])[] = principles.map((_, i) =>
 
 export function PrinciplesLumos({ ribbons, head }: { ribbons: boolean; head: ReactNode }) {
   return (
-    <div className="relative" data-motif="enchanted-ceiling">
+    <div className="relative" data-motif="enchanted-ceiling" {...beatAttrs("B52", { weight: 1 })}>
       <CeilingGround />
       {/* the ceiling band over the head (reaches up into the section's top padding) */}
       <div aria-hidden="true" className="relative h-24 sm:h-36">
@@ -126,6 +127,9 @@ function CeilingGround() {
   );
 }
 
+/** B54 (ribbons converge, rooms 3–4): the third room carries the beat (as the Map). */
+const RIBBONS_BEAT_ROOM = 2;
+
 function LumosRow({ p, index, ribbons }: { p: Principle; index: number; ribbons: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.45 });
@@ -134,6 +138,7 @@ function LumosRow({ p, index, ribbons }: { p: Principle; index: number; ribbons:
   return (
     <li
       ref={ref}
+      {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
       className="relative grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-4 gap-y-tier-pair border-b border-rule py-tier-block sm:grid-cols-12 sm:gap-x-6"
       data-candle-row={index + 1}
     >

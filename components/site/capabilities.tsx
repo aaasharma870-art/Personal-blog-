@@ -7,6 +7,8 @@ import { DroneBand } from "@/components/worlds/idiots/drone-band";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { BlueprintSchematic } from "@/components/worlds/idiots/schematic";
 import { actCards, acts, copyText, copyVisible, enabledSections, variantChoiceOf, worksInUse } from "@/lib/sections";
+import { beatAttrs } from "@/lib/beats";
+import type { CopyKey } from "@/lib/film";
 import type { SectionProps } from "@/components/sections/types";
 
 /**
@@ -18,10 +20,11 @@ import type { SectionProps } from "@/components/sections/types";
  *   2. A real matrix of rows (area · methods · tools · outputs).
  *   3. FIG "How this page is built": a TRUE schematic of the pipeline that
  *      renders this very page, on the ICE board in the jugaad register;
- *      every count is computed from the live manifest at build time. Under
- *      it the space-pen wink (IC-3I-06, our own phrasing, not a quote):
- *      "Why not just use a pencil?", the true no-WebGL note, and a footnote
- *      that checks the film's legend. (Wording: verify before ship.)
+ *      every count is computed from the live manifest at build time (beat
+ *      B27: the FIG inks). Under it the honesty Meta (PHASE3-SPEC §8.6:
+ *      every claim carries its scope, validator P3 #6), the space-pen wink
+ *      (IC-3I-06, our own phrasing, not a quote): "Why not just use a
+ *      pencil?", and a footnote that checks the film's legend.
  * The graph grid thins here toward open air and keeps thinning through the
  * kill-list to 0 at its last row (3I-07): this section takes it 6 % → 3 %.
  */
@@ -30,6 +33,13 @@ const COLS = [
   ["Tools", "tools"],
   ["Outputs", "outputs"],
 ] as const;
+
+/** How this page is built, scoped to where each claim is true (PHASE3-SPEC
+ *  §8.6; proposed + unsigned until Aryan signs). "systems.meta.webgl"
+ *  ("WebGL, where supported, only for scene changes") joins this list in the
+ *  commit that ships the WebGL layer (W2-GL handoff): until then the page has
+ *  no WebGL and the line would be untrue. */
+const META: readonly CopyKey[] = ["systems.meta.scroll", "systems.meta.native", "systems.meta.css"];
 
 export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   const titleId = `${entry.id}-title`;
@@ -44,6 +54,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   const pencilQ = copyText("systems.pencil.q");
   const pencilBody = copyText("systems.pencil.body");
   const pencilNote = copyText("systems.pencil.footnote");
+  const meta = META.map((k) => copyText(k)).filter(copyVisible).map((c) => c.text);
   return (
     <IdiotsSection
       entry={entry}
@@ -102,7 +113,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           </ol>
         </div>
 
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4" {...beatAttrs("B27", { weight: 2 })}>
           {/* FIG numbering continues the chapters' FIG. 1…n */}
           <ChalkboardFrame>
             <BlueprintSchematic
@@ -113,7 +124,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
               pieceKey="systems.fig"
             />
           </ChalkboardFrame>
-          <Meta className="mt-tier-group" fields={["Native scroll", "CSS + SVG first", "no WebGL"]} />
+          <Meta className="mt-tier-group" fields={meta} />
           {/* IC-3I-06: the space-pen wink, in our own words (not a quote);
               lib/film.ts copy "systems.pencil.*" (proposed) */}
           {copyVisible(pencilQ) && copyVisible(pencilBody) ? (

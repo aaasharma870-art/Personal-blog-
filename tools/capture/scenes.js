@@ -1,5 +1,13 @@
 // Scene capture for the recognizability re-test (M2 / M5).
 // Usage: node tools/capture/scenes.js <baseUrl> <outDir> [--only=desktop,alt,mobile,rm,loaders,intro] [--names=F06,F08]
+//                                      [--vw=<w>x<h>] [--touch]
+// --vw=WxH   the viewport of every group that runs (default: 1440x900 for desktop / alt / rm / intro /
+//            loaders, 390x844 for mobile). E.g. --only=desktop --vw=1024x768, --only=mobile --vw=320x640,
+//            --only=mobile --vw=844x390 (a phone in landscape).
+// --touch    those contexts are a phone / tablet (isMobile + hasTouch + a mobile UA; tools/capture/browser.js
+//            contextFor), e.g. --only=desktop --vw=1024x1366 --touch (an iPad: DESKTOP_WIDE, coarse pointer).
+// Phase 3: on a desktop context Lenis may be running; scrolls here are programmatic (window.scrollTo), which
+// Lenis follows, so frames are unchanged. Defaults (no flags) shoot exactly what they shot before.
 // One browser for the whole run. Every film scene is shot twice from the SAME
 // state: NAME.captioned.png, then NAME.blind.png (CSS hides all text, keeps shapes).
 // Also: act-card transitions at 3 scroll points, 390 + reduced-motion frames per
@@ -9,6 +17,7 @@ let chromium;
 try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require('/opt/node22/lib/node_modules/playwright')); }
 const fs = require('fs');
 const path = require('path');
+const { parseViewport, contextFor } = require('./browser');
 
 const [, , BASE, OUT, ...rest] = process.argv;
 if (!BASE || !OUT) { console.error('usage: node scenes.js <baseUrl> <outDir>'); process.exit(1); }
@@ -16,6 +25,9 @@ const opt = Object.fromEntries(rest.map(a => a.replace(/^--/, '').split('=')).ma
 const ONLY = opt.only ? String(opt.only).split(',') : null;
 const NAMES = opt.names ? new Set(String(opt.names).split(',')) : null;
 const want = g => !ONLY || ONLY.includes(g);
+const VW = parseViewport(opt.vw);
+if (opt.vw && !VW) { console.error(`--vw must be WxH (got "${opt.vw}")`); process.exit(1); }
+const TOUCH = !!opt.touch;
 fs.mkdirSync(OUT, { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -27,13 +39,12 @@ const manifest = [];
 const checks = { consoleErrors: [], overflow: [], h1: {}, hydration: [] };
 
 async function newPage(browser, { width, height, mobile, reduced }) {
-  const ctx = await browser.newContext({
-    viewport: { width, height }, deviceScaleFactor: 1, isMobile: !!mobile, hasTouch: !!mobile,
-    reducedMotion: reduced ? 'reduce' : 'no-preference',
-    userAgent: mobile ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1' : undefined,
-  });
+  // --vw / --touch override every group's viewport / device (defaults: exactly the old contexts)
+  if (VW) ({ width, height } = VW);
+  const touch = !!mobile || TOUCH;
+  const ctx = await browser.newContext(contextFor({ width, height, touch, reduced }));
   const page = await ctx.newPage();
-  const tag = `${width}${reduced ? '-rm' : ''}`;
+  const tag = `${width}${touch && !mobile ? '-touch' : ''}${reduced ? '-rm' : ''}`;
   page.on('console', m => {
     if (m.type() === 'error') {
       const t = m.text().slice(0, 300);
@@ -111,8 +122,8 @@ async function desktop(browser, variant) {
   const q = V ? '?skip=intro&variant=alt' : '?skip=intro';
   const { ctx, page } = await newPage(browser, { width: 1440, height: 900 });
   await go(page, '/' + q, 2500);
-  await overflowCheck(page, `1440${V ? '-alt' : ''}`);
-  const vh = 900;
+  const { width: vw, height: vh } = page.viewportSize();
+  await overflowCheck(page, `${vw}${TOUCH ? '-touch' : ''}${V ? '-alt' : ''}`);
   const P = (n) => V ? `A${n}` : `D${n}`;
   const at = async (sel, frac, settle) => { const r = await rectOf(page, sel); if (!r) return null; await scrollToY(page, r.top + frac, settle); return r; };
 
@@ -258,8 +269,9 @@ async function sweep(browser, kind) {
   const mobile = kind === 'mobile';
   const size = mobile ? { width: 390, height: 844, mobile: true } : { width: 1440, height: 900, reduced: true };
   const { ctx, page } = await newPage(browser, size);
+  if (VW) Object.assign(size, VW);
   await go(page, '/?skip=intro', 2500);
-  await overflowCheck(page, mobile ? '390' : '1440-rm');
+  await overflowCheck(page, mobile ? `${size.width}` : `${size.width}-rm`);
   const tag = mobile ? 'm390' : 'rm';
   let i = 0;
   for (const id of SECTIONS) {
@@ -285,7 +297,7 @@ async function sweep(browser, kind) {
   }
   if (mobile) {
     // mobile overflow after full scroll (lazy content mounted)
-    await overflowCheck(page, '390-after-scroll');
+    await overflowCheck(page, `${size.width}-after-scroll`);
   }
   await ctx.close();
 }

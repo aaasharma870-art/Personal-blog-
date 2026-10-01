@@ -12,18 +12,55 @@
    curves. It holds no copy, no titles and no timings of its own.
 
    Owns: the one canvas (plate, candle sprites, motes, light trail, LD-HP),
-   the one video (IN-02), and the state machine
-     armed (S0/S0a/S0b/S0c) → launch (S1) → wait (S1w) → flight (S2) |
+   one video at a time (L05, then IN-02), and the state machine
+     armed (S0/S0a/S0b/S0c) → launch (S1) → wait (S1w) → flight (S2) →
+     [warm (S2w)] → hold (S3h) → reveal (S3r) → end (S4) → titles (S5) |
      code (S2c, dome exit) → landing (S3) → end (S4)      · leaving (SX)
    Hydration contract: it writes only (a) classes / data-intro on <html>,
    (b) the children and styles of #intro-stage (opaque innerHTML to React),
    (c) the text of #intro-status (suppressed), (d) `inert` on the page behind,
    and only after IntroBridge reports hydration, (e) the favicon href, also
    only after hydration; all other motion runs through the Web Animations API.
-   Public: window.__introCtl = { arm, onHydrated, state }. Events:
-   window "intro:end" {played, reason}; html[data-intro="played|skipped"].
-   Performance marks: intro:arm (head) · ready · play · flight · landing ·
-   dismiss · end.
+   Public: window.__introCtl = { arm, onHydrated, state }. Events (window
+   CustomEvents; the lib/events.ts bus names): "intro:end" {played, reason,
+   href?}, "intro:quiet" (warm), "intro:quiet-end" (titles end or any exit;
+   exactly once per run), "intro:titles", "intro:titles-end";
+   html[data-intro="played|skipped"]. Performance marks: intro:arm (head) ·
+   ready · play · flight · warm · hold · reveal · landing · dismiss · end ·
+   titles · titles-end.
+
+   P3-3 HAND-OFF (PHASE3-SPEC §4.2; no frame of it repaints #intro):
+     S2   the trail is emitted and drawn on the flight's own frames
+          (requestVideoFrameCallback mediaTime: 24 draws/s, locked to the
+          broom); frame() idles whenever nothing draws on rAF; when the
+          trail stops emitting its canvas freezes and fades by WAAPI
+          opacity; canvases are capped at DPR 1.5; the codec is the
+          MediaCapabilities pick (lib/codec.ts's rule) set as video.src.
+     S2w  warm (1.4 s before the hold): the hero poster decodes, #intro
+          goes to opacity .999 (html.intro-warm) so the hero is rasterised
+          under it, the hero loop is prefetched (a blob: URL for MediaFrame,
+          window.__introHandoff) and "intro:quiet" opens the quiet window.
+     S3h  hold (the last presented frame): drawImage into #intro-hold, kill
+          the flight (the decoder is free), html.intro-handoff (IntroBridge
+          releases the lock; the hero loop mounts under the hold), `inert`
+          off in its own task; wait for the loop's data-media-state
+          "playing" (≤ t.handoffMax) and <PageHydrated/> (≤ t.hydrateMax).
+     S3r  reveal: #intro-stage (300% wide, a STATIC feathered mask) rides
+          translateX while #intro-film is counter-moved — two WAAPI
+          transforms created in one task (seam.tsx's IceCut). ALT: the
+          map-fold, its shade pre-drawn once.
+     S4   end: classes, data-intro, intro:end, focus in its own task.
+     S5   the opening titles (PHASE3-SPEC §4.3) in #intro-caps, then
+          cap.hero. Any input / Pause / RM / hidden tab ends them.
+   B00 / L05: when the model ships a living play-screen loop it plays under
+   the candles after hydration + idle (desktop, not lite); Play pauses it,
+   holds its frame on #intro-still, frees its decoder, then the flight's
+   first frame crossfades in (t.liveFade). Until L05 is registered the
+   play screen is the still, as before.
+   FAST LANE (PHASE3-SPEC §11.3): #intro-fastlane ("Skip to the research",
+   DESKTOP_WIDE) = dismiss(), then — once the page is live — the jump
+   (IntroBridge: scrollToTarget; before hydration the browser's own hash
+   navigation).
 
    VARIANTS (M1.5; lib/variants.ts). Every piece has a DEFAULT and an ALT;
    the head script resolves them before the first paint (manifest +
@@ -56,12 +93,14 @@
 
   var R = d.documentElement, M = Math, PI = M.PI;
   var SCROLL = { PageDown: 1, PageUp: 1, ArrowDown: 1, ArrowUp: 1, Home: 1, End: 1, " ": 1, Spacebar: 1 };
-  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-landing", "intro-sweep", "intro-leaving", "intro-kbd",
-    "intro-inked", "intro-fold", "intro-alt-play", "intro-alt-flight", "intro-alt-codeflight", "intro-alt-landing"];
+  var CLASSES = ["intro-armed", "intro-launched", "intro-waiting", "intro-warm", "intro-handoff", "intro-landing",
+    "intro-sweep", "intro-fade-out", "intro-leaving", "intro-kbd", "intro-inked", "intro-fold", "intro-alt-play",
+    "intro-alt-flight", "intro-alt-codeflight", "intro-alt-landing", "intro-alt-titles"];
+  var HERO = '[data-hero-lens="desktop"]';
   var BOLT = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#e9b44c" d="M19.5 1.5 6.5 18h8.2l-2.9 12.5L25.5 13h-8.3z"/></svg>');
 
-  var C, intro, stage, play, skip, lensL, lensR, statusEl, statusText, broom;
+  var C, intro, stage, film, play, skip, fast, lensL, lensR, statusEl, statusText, broom;
   var st = "idle", inited = false, hydrated = !!w.__introHydrated;
   var cv = null, cx = null, dpr = 1, W = 0, H = 0;
   var plate = null, fitP = null, img = null, imgFor = "", imgOk = false, showPlate = false, plateAt = -1;
@@ -77,7 +116,12 @@
   var E, ED;
   // variants (resolved at arm from window.__introV) and their state
   var VV = {}, FL = null, altPlay = false, altCode = false, altLand = false, heroAlt = false;
-  var ink = null, inkAt = 0, inked = false, foldAt = -1;
+  var ink = null, inkAt = 0, inked = false;
+  // P3-3: the hand-off (S2w → S3r), the titles, L05, the codec cache
+  var vfOn = false, vfId = 0, trailOn = false, frozen = false, warmed = false, pf = false;
+  var holdCv = null, shadeCv = null, stillCv = null, quietSent = false, titling = false, fastHref = "";
+  var lv = null, lvOn = false, flightBlob = null;
+  var PICK = w.__codecPicks || (w.__codecPicks = {});
 
   var ctl = { arm: arm, onHydrated: onHydrated, state: function () { return st; } };
   w.__introCtl = ctl;
@@ -87,6 +131,16 @@
   /** The resolved variant of a piece is its ALT (window.__introV). */
   function alt(key) { return VV[key] === "alt"; }
   function mark(n) { try { performance.mark("intro:" + n); } catch { /* no-op */ } }
+  function noop() { /* swallowed */ }
+  /** A window CustomEvent (the lib/events.ts bus: same names, same detail). */
+  function fire(n, detail) { try { w.dispatchEvent(new CustomEvent(n, { detail: detail })); } catch { /* old browsers */ } }
+  /** Motion is off: the Pause toggle or OS reduced motion. */
+  function motionOff() {
+    return R.getAttribute("data-motion") === "paused" ||
+      !!(w.matchMedia && w.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+  /** The overlay is already leaving on its own (no dismissal any more). */
+  function exiting() { return st === "hold" || st === "reveal" || st === "landing" || domeOn; }
   function setState(s) { st = s; w.__introState = s; }
   function on(t, type, fn, o) { t.addEventListener(type, fn, o); offs.push(function () { t.removeEventListener(type, fn, o); }); }
   function later(fn, ms) { var id = setTimeout(fn, ms); timers.push(id); return id; }
@@ -150,16 +204,34 @@
     stage = d.getElementById("intro-stage");
     play = d.getElementById("intro-play");
     skip = d.getElementById("intro-skip");
+    fast = d.getElementById("intro-fastlane");
     if (!stage || !play || !skip) return false;
+    // the viewport-sized picture in the middle third of the 300% stage
+    // (app/intro.css): every layer the controller draws lives in it
+    film = d.getElementById("intro-film");
+    if (!film) {
+      film = d.createElement("div");
+      film.id = "intro-film";
+      film.setAttribute("aria-hidden", "true");
+      stage.appendChild(film);
+    }
     statusEl = d.getElementById("intro-status");
     statusText = statusEl ? statusEl.textContent : "";
     lensL = play.querySelector(".intro-lens-l");
     lensR = play.querySelector(".intro-lens-r");
     broom = stage.querySelector(".intro-broom");
+    if (broom && broom.parentNode !== film) film.appendChild(broom);
     E = bez(C.ease);
     ED = bez(C.easeDraw);
     play.addEventListener("click", function () { launch(); });
     skip.addEventListener("click", function () { dismiss("skip"); });
+    if (fast) {
+      fast.addEventListener("click", function (e) {
+        e.preventDefault(); // the jump waits for the overlay to go (inert off)
+        e.stopPropagation(); // and is the bridge's, not the page's anchor handler
+        fastLane();
+      });
+    }
     play.addEventListener("pointerenter", function (e) { if (e.pointerType !== "touch") { hover = true; intent(); } });
     play.addEventListener("pointerleave", function () { hover = false; intent(); });
     play.addEventListener("focus", function () { kfocus = modality === "key"; intent(); });
@@ -170,7 +242,8 @@
 
   function onHydrated() {
     hydrated = true;
-    if (st !== "idle") setInert(true);
+    if (st !== "idle" && st !== "hold" && st !== "reveal") setInert(true);
+    if (st === "armed") liveSoon();
   }
 
   /** S0: armed. Called at boot and by window.__intro.replay(). */
@@ -184,6 +257,9 @@
     awakeUntil = armAt + C.t.rest;
     clock = 0; hover = kfocus = false; gat = gFrom = gTo = 0; gAt = -1; modality = "";
     motes = null; trail = []; lastEmit = null; code = null; patch = null; domeOn = false; vPlaying = false;
+    vfOn = false; vfId = 0; trailOn = false; frozen = false; warmed = false; pf = false;
+    holdCv = shadeCv = stillCv = null; quietSent = false; titling = false; fastHref = "";
+    lv = null; lvOn = false; flightBlob = null;
     loaderAt = -1; showPlate = false; plateAt = -1; plate = null;
     VV = w.__introV || {};
     altPlay = alt("intro.play");
@@ -191,7 +267,7 @@
     altLand = alt("intro.landing");
     heroAlt = VV["hero.plate"] === "alt";
     FL = alt("intro.flight") && C.flightAlt ? C.flightAlt : C.flight;
-    ink = null; inkAt = armAt; inked = false; foldAt = -1;
+    ink = null; inkAt = armAt; inked = false;
 
     var mm = w.matchMedia ? function (q) { return w.matchMedia(q); } : null;
     fine = !!(mm && mm("(pointer: fine)").matches);
@@ -201,9 +277,12 @@
     cv = d.createElement("canvas");
     cv.setAttribute("aria-hidden", "true");
     cv.tabIndex = -1;
-    stage.appendChild(cv);
+    film.appendChild(cv);
     cx = cv.getContext("2d");
     size();
+    // the codec question, asked early (lib/codec.ts's rule; the answers are
+    // shared with MediaFrame through window.__codecPicks)
+    if (!lite) { codecAsk(FL); codecAsk(C.playLoop); codecAsk(heroLoop()); }
 
     on(w, "keydown", onKey, true);
     on(w, "wheel", onWheel, { capture: true, passive: true });
@@ -216,10 +295,13 @@
     on(d, "focusin", onFocusIn, true);
     if (mm) {
       var rq = mm("(prefers-reduced-motion: reduce)");
-      if (rq.addEventListener) on(rq, "change", function () { if (rq.matches) finish(false, "motion"); });
+      if (rq.addEventListener) on(rq, "change", function () { if (rq.matches) finish(st === "hold" || st === "reveal", "motion"); });
     }
     if (w.MutationObserver) {
-      var mo = new MutationObserver(function () { if (R.getAttribute("data-motion") === "paused") finish(false, "motion"); });
+      // Pause mid-reveal (or anywhere) finishes at once: the final hero
+      var mo = new MutationObserver(function () {
+        if (R.getAttribute("data-motion") === "paused") finish(st === "hold" || st === "reveal", "motion");
+      });
       mo.observe(R, { attributes: true, attributeFilter: ["data-motion"] });
       offs.push(function () { mo.disconnect(); });
     }
@@ -232,7 +314,10 @@
     afterLoad(function () {
       if (st === "idle") return;
       loadPlate();
-      if (!lite && fastNet()) ensureVideo();
+      if (lite || !fastNet()) return;
+      // with a living play screen its loop has the decoder: the flight is
+      // fetched (no element, no second decoder) until Play
+      if (C.playLoop) { prefetchFlight(); liveSoon(); } else ensureVideo();
     });
     kick();
     if (w.__introQueued === "play") { w.__introQueued = null; launch(); }
@@ -256,7 +341,7 @@
   function size() {
     W = intro.clientWidth || w.innerWidth;
     H = intro.clientHeight || w.innerHeight;
-    var nd = M.min(2, w.devicePixelRatio || 1);
+    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1);
     cv.width = M.round(W * nd);
     cv.height = M.round(H * nd);
     cx.setTransform(nd, 0, 0, nd, 0, 0);
@@ -452,7 +537,7 @@
     else im.onload = done;
   }
   function revealPlate() {
-    if (showPlate || (st !== "armed" && st !== "wait")) return;
+    if (showPlate || lvOn || (st !== "armed" && st !== "wait")) return;
     showPlate = true;
     plateAt = now();
     kick();
@@ -465,7 +550,7 @@
     if (to !== gTo) { gFrom = gat; gTo = to; gAt = t; }
     if (to) {
       awakeUntil = M.max(awakeUntil, t + C.t.rest);
-      if (!lite) ensureVideo();
+      if (!lite && !C.playLoop) ensureVideo();
     }
     kick();
   }
@@ -485,13 +570,21 @@
     if (now() < awakeUntil) kick();
   }
 
-  /* — frame loop: runs only while something moves (0 rAF at rest, I20) — */
+  /* — frame loop: runs only while something moves (0 rAF at rest, I20).
+       P3-3: the video flight's trail is drawn on the video's own frames
+       (onVF), so after the motes the flight needs no rAF at all. — */
   function kick() { if (!raf && st !== "idle") raf = w.requestAnimationFrame(frame); }
 
   function frame(t) {
     raf = 0;
-    if (st === "idle" || !cx) return;
-    var dt = M.min(64, M.max(0, t - last)), more = st !== "armed", i;
+    if (draw(t)) kick();
+  }
+
+  /** One canvas frame at time t. Returns true while anything still moves on
+   *  rAF (`more = trail-on-rAF || motes || code || ink || loader || …`). */
+  function draw(t) {
+    if (st === "idle" || !cx || frozen) return false;
+    var dt = M.min(64, M.max(0, t - last)), more = false, i;
     last = t;
     var awake = st === "armed" && t < awakeUntil;
     if (awake) {
@@ -530,19 +623,23 @@
       }
     }
     if (ink && drawInk(t)) more = true;
-    if (motes) drawMotes(t);
-    if (code) stepCode(t);
-    if (st === "flight" && video) { emitVideo(t); checkLanding(); }
-    if (st === "wait") waitStep(t);
-    if (trail.length) drawTrail(t);
-    if (foldAt >= 0) foldShade(t);
+    if (motes) { drawMotes(t); if (motes) more = true; }
+    if (code) { stepCode(t); more = true; }
+    if (st === "flight" && video && !vfOn) { // no rVFC: the old clock (currentTime on rAF)
+      var vt = video.currentTime;
+      emitVideo(t, vt);
+      if (checkWarmHold(vt)) return false;
+      more = true;
+    }
+    if (st === "wait") { waitStep(t); more = true; }
+    if (trail.length) { drawTrail(t); if (!vfOn || code) more = true; }
 
     cx.globalAlpha = 1;
-    if (more && st !== "idle") kick();
+    return more && st !== "idle";
   }
 
   /* — the flight captions (S02 / T1) ———————————————————————————————— */
-  var capBox = null, capHp = null, capPc = null, capAnims = [], capTimer = 0, capOff = null;
+  var capBox = null, capHp = null, capPc = null, capAnims = [], capTimer = 0, capOff = null, boxFi = 1;
   function capsFind() {
     capBox = d.getElementById("intro-caps");
     capHp = d.getElementById("intro-cap-hp");
@@ -552,16 +649,38 @@
   function capsCancel(list) {
     for (var i = 0; i < list.length; i++) try { list[i].cancel(); } catch { /* gone */ }
   }
-  /** Stop the captions: at once (ms 0) or fading the box out over `ms`. */
+  /** The caption box's opacity now, from its own animation's timing (no
+   *  getComputedStyle: no forced style read). */
+  function boxOpacity() {
+    try {
+      var p = capAnims[0].effect.getComputedTiming().progress;
+      return p == null ? 1 : M.min(1, p / boxFi);
+    } catch { return 1; }
+  }
+  /** "intro:quiet-end": the quiet window closes (titles end, or any exit
+   *  once the overlay has gone). Exactly once per run. */
+  function quietEnd() {
+    if (quietSent) return;
+    quietSent = true;
+    fire("intro:quiet-end");
+  }
+  /** Stop the captions (and the titles): at once (ms 0) or fading the box
+   *  out over `ms`. The hero's cap.hero then fades in, in place (T1). */
   function capsStop(ms) {
     if (capTimer) { clearTimeout(capTimer); capTimer = 0; }
     if (capOff) { var off = capOff; capOff = null; off(); }
+    if (titling) {
+      titling = false;
+      mark("titles-end");
+      fire("intro:titles-end");
+    }
     R.classList.remove("intro-caps-linger"); // T1: the hero's cap.hero fades in, in place
     var list = capAnims;
     capAnims = [];
+    if (st === "idle") quietEnd();
     if (!list.length) return;
     if (!ms || !capBox) return capsCancel(list);
-    var o = +w.getComputedStyle(capBox).opacity || 0, out = null;
+    var o = boxOpacity(), out = null;
     try {
       out = capBox.animate([{ visibility: "visible", opacity: o }, { visibility: "visible", opacity: 0 }],
         { duration: ms, easing: curve(C.ease), fill: "forwards" });
@@ -576,33 +695,96 @@
     capsStop(0);
     var a = 2.5 / 6, b = 3.5 / 6, fi = M.min(a / 2, 300 / ms);
     var o = { duration: ms, easing: "linear", fill: "forwards" };
+    boxFi = fi;
     try {
       capAnims.push(capBox.animate([{ visibility: "visible", opacity: 0 }, { visibility: "visible", opacity: 1, offset: fi }, { visibility: "visible", opacity: 1 }], o));
       capAnims.push(capHp.animate([{ opacity: 0 }, { opacity: 1, offset: fi }, { opacity: 1, offset: a }, { opacity: 0, offset: b }, { opacity: 0 }], o));
       capAnims.push(capPc.animate([{ opacity: 0 }, { opacity: 0, offset: a }, { opacity: 1, offset: b }, { opacity: 1 }], o));
     } catch { capsStop(0); }
   }
-  /** Landed: the Pirates caption stays 2.5 s over the hero (≥ 640, where it
-   *  sits below the crest), then hands off (T1): html.intro-caps-linger holds
-   *  the hero's own caption (cap.hero, in the very same spot) hidden, and
-   *  removing it as this one fades crossfades the two in place — the film
-   *  name never moves. Any scroll hands off sooner; Pause hands off at once. */
+  /** Any input, a fast-lane click, Pause, a reduced-motion change or a
+   *  hidden tab ends the linger / the titles early (200 ms; motion off: at
+   *  once, the final state with cap.hero visible). */
+  function capsExits() {
+    var soft = function () { capsStop(200); };
+    var evs = ["wheel", "touchmove", "keydown", "pointerdown"], i;
+    for (i = 0; i < evs.length; i++) w.addEventListener(evs[i], soft, { capture: true, passive: true });
+    var vis = function () { if (d.hidden) capsStop(200); };
+    d.addEventListener("visibilitychange", vis);
+    var mo = w.MutationObserver ? new MutationObserver(function () {
+      if (R.getAttribute("data-motion") === "paused") capsStop(0);
+    }) : null;
+    if (mo) mo.observe(R, { attributes: true, attributeFilter: ["data-motion"] });
+    var rq = w.matchMedia ? w.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    var rm = function () { if (rq.matches) capsStop(0); };
+    if (rq && rq.addEventListener) rq.addEventListener("change", rm);
+    capOff = function () {
+      for (var j = 0; j < evs.length; j++) w.removeEventListener(evs[j], soft, { capture: true });
+      d.removeEventListener("visibilitychange", vis);
+      if (mo) mo.disconnect();
+      if (rq && rq.removeEventListener) rq.removeEventListener("change", rm);
+    };
+  }
+  /** No titles (their copy may not render, or the slot is too small):
+   *  the M2 hand-off — the Pirates caption stays 2.5 s over the hero
+   *  (≥ 640, where it sits below the crest), then html.intro-caps-linger
+   *  goes and the hero's own caption (cap.hero, the very same spot) fades
+   *  in: the film name never moves. Any input hands off sooner; Pause at
+   *  once. */
   function capsLinger() {
     if (!capAnims.length) return;
     if (!(w.matchMedia && w.matchMedia("(min-width: 40rem)").matches)) return capsStop(C.t.base);
     R.classList.add("intro-caps-linger");
     capTimer = setTimeout(function () { capTimer = 0; capsStop(260); }, 2500); // then the hero's, in sequence (intro.css)
-    var early = function () { capsStop(200); };
-    var evs = ["wheel", "touchmove", "keydown"];
-    for (var i = 0; i < evs.length; i++) w.addEventListener(evs[i], early, { passive: true });
-    var mo = w.MutationObserver ? new MutationObserver(function () {
-      if (R.getAttribute("data-motion") === "paused") capsStop(0);
-    }) : null;
-    if (mo) mo.observe(R, { attributes: true, attributeFilter: ["data-motion"] });
-    capOff = function () {
-      for (var j = 0; j < evs.length; j++) w.removeEventListener(evs[j], early);
-      if (mo) mo.disconnect();
-    };
+    capsExits();
+  }
+
+  /* — S5: the opening titles (PHASE3-SPEC §4.3; intro.titles) ————————— */
+  /** ≈ 3.2 s in the T1 caption slot, right after the end: the flight caption
+   *  leaves first (never a same-spot crossfade), then the three cards one
+   *  at a time — DEFAULT: opacity + a rise of `rise` px on one spot; ALT:
+   *  the same lines as a short credit roll through a feathered window —
+   *  then cap.hero takes the corner. They REPLACE the 2.5 s linger (no
+   *  added time) and never gate anything: every animation is WAAPI,
+   *  created in this one task (compositor; no React, no attribute), and
+   *  any input, Pause, a reduced-motion change or a hidden tab ends them.
+   *  Played path only; ≥ 640 × ≥ 32rem tall (the slot), else the linger. */
+  function titles() {
+    var T = C.titles, roll = VV["intro.titles"] === "alt";
+    var box = d.getElementById(roll ? "intro-roll" : "intro-titles");
+    var slot = !!(w.matchMedia && w.matchMedia("(min-width: 40rem) and (min-height: 32rem)").matches);
+    if (!T || !box || !slot || !capAnims.length || !capsFind()) return capsLinger();
+    titling = true;
+    mark("titles");
+    fire("intro:titles");
+    R.classList.add("intro-caps-linger"); // cap.hero waits hidden (app/intro.css T1)
+    var tot = T.total, e = curve(C.ease), y = T.rise, i;
+    var o = { duration: tot, fill: "forwards" };
+    var at = function (ms) { return M.min(1, M.max(0, ms / tot)); };
+    var add = function (el, kf) { if (el) try { capAnims.push(el.animate(kf, o)); } catch { /* no WAAPI */ } };
+    add(capPc, [{ opacity: 1, easing: e }, { opacity: 0, offset: at(T.capOut) }, { opacity: 0 }]);
+    if (roll) {
+      add(box, [{ opacity: 0 }, { opacity: 0, offset: at(T.first), easing: e }, { opacity: 1, offset: at(T.first + T.enter) },
+        { opacity: 1, offset: at(tot - T.exit), easing: e }, { opacity: 0 }]);
+      // the column starts just below the window (top: 100%) and rolls up
+      // past its top; 9rem = the window's height (app/intro.css #intro-roll)
+      add(box.firstElementChild, [{ transform: "translateY(0)" }, { transform: "translateY(0)", offset: at(T.first) },
+        { transform: "translateY(calc(-100% - 9rem))" }]);
+    } else {
+      for (i = 0; i < box.children.length; i++) {
+        var a = T.first + i * T.step, b = a + T.card, up = "translateY(" + y + "px)", gone = "translateY(" + -y + "px)";
+        add(box.children[i], [
+          { opacity: 0, transform: up },
+          { opacity: 0, transform: up, offset: at(a), easing: e },
+          { opacity: 1, transform: "none", offset: at(a + T.enter) },
+          { opacity: 1, transform: "none", offset: at(b - T.exit), easing: e },
+          { opacity: 0, transform: gone, offset: at(b) },
+          { opacity: 0, transform: gone },
+        ]);
+      }
+    }
+    capTimer = setTimeout(function () { capTimer = 0; capsStop(260); }, tot); // then cap.hero (intro.css)
+    capsExits();
   }
 
   /* — S1 launch ————————————————————————————————————————————————————— */
@@ -623,6 +805,7 @@
       motes.push({ x: p[0], y: p[1], z: cands[i].z, ring: cands[i].ring, dl: cands[i].ring ? i * 14 : 0 });
     }
     if (lite) return codeFlight();
+    releaseLive(); // L05: its frame held on a still, its decoder freed, before the flight's
     var v = ensureVideo();
     if (v && ready(v)) videoFlight();
     else waitFor();
@@ -654,12 +837,34 @@
   }
 
   /* — the flight video (IN-02) ———————————————————————————————————— */
-  function ensureVideo() {
-    if (video || lite || !FL || st === "idle") return video;
-    var f = FL, v = d.createElement("video");
+  /** The encode to play for a model video (lib/codec.ts's rule: each encode
+   *  ranks 2 smooth + power-efficient / 1 supported / 0 not decodable; the
+   *  WebM only with the higher rank; every tie, error or unknown → the MP4). */
+  function srcOf(e) { return PICK[e.mp4] === "video/webm" && e.webm ? e.webm : e.mp4; }
+  /** Ask MediaCapabilities about both encodes of `e` (once per page; the
+   *  answer is shared with MediaFrame through window.__codecPicks). */
+  function codecAsk(e) {
+    var mc = navigator.mediaCapabilities;
+    if (!e || !e.webm || !e.codec || PICK[e.mp4] || !mc || !mc.decodingInfo) return;
+    var q = function (c) {
+      return mc.decodingInfo({ type: "file", video: c }).then(function (r) {
+        return !r || !r.supported ? 0 : r.smooth && r.powerEfficient ? 2 : 1;
+      }, function () { return 0; });
+    };
+    try {
+      Promise.all([q(e.codec.webm), q(e.codec.mp4)]).then(function (r) {
+        if (!PICK[e.mp4]) PICK[e.mp4] = r[0] > r[1] ? "video/webm" : "video/mp4";
+      }, noop);
+    } catch { /* no MediaCapabilities */ }
+  }
+  /** A muted, inline, decorative video (no <source> list: `src` is set
+   *  directly, the codec already chosen). */
+  function mkVideo(src, loop) {
+    var v = d.createElement("video");
     v.muted = true;
     v.defaultMuted = true;
     v.playsInline = true;
+    v.loop = !!loop;
     v.setAttribute("muted", "");
     v.setAttribute("playsinline", "");
     v.setAttribute("aria-hidden", "true");
@@ -669,12 +874,26 @@
     v.preload = "auto";
     var pos = (plate || C.plate).pos;
     v.style.objectPosition = pos[0] * 100 + "% " + pos[1] * 100 + "%";
-    var add = function (src, type) { var s = d.createElement("source"); s.src = src; s.type = type; v.appendChild(s); };
-    if (f.webm) add(f.webm, "video/webm");
-    add(f.mp4, "video/mp4");
-    stage.insertBefore(v, cv);
+    v.src = src;
+    return v;
+  }
+  function ensureVideo() {
+    if (video || lite || !FL || st === "idle") return video;
+    var fb = flightBlob, v = mkVideo(fb && fb.url ? fb.url : srcOf(FL), false);
+    film.insertBefore(v, film.firstChild);
     video = v;
     return v;
+  }
+  /** L05 on: the flight's bytes come in as a blob (no element, so no second
+   *  decoder while the living play screen plays); Play makes the element. */
+  function prefetchFlight() {
+    if (flightBlob || !FL || !w.fetch) return;
+    var fb = flightBlob = { url: null };
+    try {
+      w.fetch(srcOf(FL), { priority: "low" }).then(function (r) { return r.ok ? r.blob() : null; }).then(function (b) {
+        if (b && flightBlob === fb && w.URL && URL.createObjectURL) fb.url = URL.createObjectURL(b);
+      }).catch(noop);
+    } catch { /* no fetch: the element loads it at Play */ }
   }
   function ready(v) { return v.readyState >= 4; }
   function killVideo() {
@@ -682,11 +901,116 @@
     video = null;
     vPlaying = false;
     if (!v) return;
+    unload(v);
+  }
+  function unload(v) {
     try { v.pause(); } catch { /* no-op */ }
     while (v.firstChild) v.removeChild(v.firstChild);
     v.removeAttribute("src");
     try { v.load(); } catch { /* no-op */ }
     if (v.parentNode) v.parentNode.removeChild(v);
+  }
+  function drop(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
+  /** The hold's still without a main-thread copy: createImageBitmap crops
+   *  the visible (cover-fit) part of the paused frame and scales it to the
+   *  canvas off the main thread, and a "bitmaprenderer" canvas shows it
+   *  with no draw. `done(canvas)` runs once (stillOf as the fallback). */
+  function grabStill(v, id, done) {
+    var once = false, fin = function (c) { if (!once) { once = true; done(c); } };
+    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), m = v && v.videoWidth ? fit(v.videoWidth, v.videoHeight, (plate || C.plate).pos) : null;
+    if (!m || !w.createImageBitmap) return fin(stillOf(v, id));
+    var c = canvas(W * nd, H * nd), k = v.videoWidth / m.w;
+    c.id = id;
+    c.setAttribute("aria-hidden", "true");
+    later(function () { fin(stillOf(v, id)); }, 250); // never stranded on a slow bitmap
+    try {
+      w.createImageBitmap(v, -m.x * k, -m.y * k, W * k, H * k, { resizeWidth: c.width, resizeHeight: c.height, resizeQuality: "medium" })
+        .then(function (bmp) {
+          if (once) return;
+          var r = c.getContext("bitmaprenderer");
+          if (r) r.transferFromImageBitmap(bmp);
+          else c.getContext("2d").drawImage(bmp, 0, 0);
+          fin(c);
+        }, function () { fin(stillOf(v, id)); });
+    } catch { fin(stillOf(v, id)); }
+  }
+  /** A static canvas of video `v`'s current frame, cover-fit exactly as the
+   *  <video> is (object-position = the plate's pos): the hold (S3h) and
+   *  L05's crossfade still. A frame that cannot be drawn leaves the night
+   *  ground, never a hole. */
+  function stillOf(v, id) {
+    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), c = canvas(W * nd, H * nd), g = c.getContext("2d"), drew = false;
+    c.id = id;
+    c.setAttribute("aria-hidden", "true");
+    if (!g) return c;
+    g.setTransform(nd, 0, 0, nd, 0, 0);
+    try {
+      if (v && v.videoWidth) {
+        var m = fit(v.videoWidth, v.videoHeight, (plate || C.plate).pos);
+        g.drawImage(v, m.x, m.y, m.w, m.h);
+        drew = true;
+      }
+    } catch { /* not drawable */ }
+    if (!drew) {
+      g.fillStyle = w.getComputedStyle(intro).backgroundColor; // the failure path only
+      g.fillRect(0, 0, W, H);
+    }
+    return c;
+  }
+
+  /* — B00 / L05: the living play screen (IN-01's loop; PHASE3-SPEC §6.3) — */
+  /** After hydration + an idle slice, desktop (not lite), motion on, still
+   *  armed: the loop plays UNDER the candles and the canvas stops drawing
+   *  the still on its first frame (the loop starts and ends on it). */
+  function liveSoon() {
+    if (!C.playLoop || lite || lv || st !== "armed" || !hydrated || !fastNet()) return;
+    afterLoad(livePlate);
+  }
+  function livePlate() {
+    if (!C.playLoop || lite || lv || st !== "armed" || !hydrated || motionOff()) return;
+    var v = mkVideo(srcOf(C.playLoop), true);
+    film.insertBefore(v, film.firstChild);
+    lv = v;
+    var first = function () {
+      if (lv !== v || lvOn || st !== "armed") return;
+      lvOn = true;
+      v.style.opacity = "1";
+      showPlate = false; // the loop IS the plate now
+      kick();
+    };
+    v.addEventListener("playing", function () {
+      if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(first); else first();
+    });
+    v.addEventListener("error", function () { if (lv === v) killLive(); }, true);
+    try {
+      var p = v.play();
+      if (p && p.catch) p.catch(function (err) { if (lv === v && !(err && err.name === "AbortError")) killLive(); });
+    } catch { killLive(); }
+  }
+  function killLive() {
+    var v = lv, was = lvOn;
+    lv = null;
+    lvOn = false;
+    if (v) unload(v);
+    if (was && st === "armed") { showPlate = false; revealPlate(); } // back to the still
+  }
+  /** Play: L05 pauses, its frame is held on #intro-still and its decoder is
+   *  freed — then the flight's first frame crossfades in (fadeStill). */
+  function releaseLive() {
+    var v = lv;
+    if (!v) return;
+    try { v.pause(); } catch { /* no-op */ }
+    if (lvOn && cv) film.insertBefore(stillCv = stillOf(v, "intro-still"), cv);
+    lvOn = false;
+    lv = null;
+    unload(v);
+  }
+  function fadeStill() {
+    var c = stillCv;
+    if (!c) return;
+    stillCv = null;
+    var a = anim(c, [{ opacity: 1 }, { opacity: 0 }], C.t.liveFade, C.ease, function () { drop(c); });
+    if (!a) drop(c);
   }
 
   /* — S1w: the flight is not playable yet (real progress, never fake) —— */
@@ -758,6 +1082,7 @@
     mark("flight");
     hideWait();
     lastEmit = null;
+    trailOn = !!FL.trail;
     bolt(true);
     h1Rect = rectOfH1();
     var shown = false;
@@ -767,6 +1092,7 @@
       vPlaying = true;
       v.style.opacity = "1";
       showPlate = false; // the video's first frame IS the plate
+      fadeStill(); // L05's held frame → the flight's first (t.liveFade)
       // the captions run on the flight's own length (to its cut + landing)
       var len = v.duration > 0 ? M.min(v.duration, FL.dur) : FL.dur;
       if (FL.cut > 0) len = M.min(len, FL.cut + (altLand ? C.t.fold : C.t.landing) / 1000);
@@ -774,12 +1100,16 @@
       kick();
     };
     v.addEventListener("playing", function () {
-      if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(show);
-      else show();
+      if (v.requestVideoFrameCallback) {
+        if (!vfOn) { // the flight's own frame clock (onVF), started once
+          vfOn = true;
+          vfId = v.requestVideoFrameCallback(function (n, m) { show(); onVF(n, m); });
+        }
+      } else show();
       later(show, 120);
     });
-    v.addEventListener("ended", function () { if (video === v) landing(); });
-    v.addEventListener("error", function () { if (video !== v) return; if (vPlaying) landing(); else codeFlight(); }, true);
+    v.addEventListener("ended", function () { if (video === v) hold(); });
+    v.addEventListener("error", function () { if (video !== v) return; if (vPlaying) hold(); else codeFlight(); }, true);
     var pr;
     try { pr = v.play(); } catch { return codeFlight(); }
     if (pr && pr.catch) pr.catch(function (err) {
@@ -788,17 +1118,49 @@
     var wd = function () {
       if (st !== "flight") return;
       if (d.hidden) { later(wd, 1000); return; }
-      landing();
+      hold();
     };
     later(wd, (FL.dur + 1.5) * 1000); // a stalled network never strands the visitor
     kick();
   }
 
-  function emitVideo(t) {
-    var v = video, tr = FL.trail;
-    if (!vPlaying || !tr) return; // a clip without its own tracked path flies unlit
-    var vt = v.currentTime, vd = v.duration > 0 ? v.duration : FL.dur;
-    if (h1Rect && vd - vt < 1.25) { // no light across the name in the last 1.2 s (I15)
+  /** The video time of the hold: the clip's last presented frame, or its
+   *  `cut` (IN-02-alt hands off before its splash-down). */
+  function endAt(v) {
+    var vd = v.duration > 0 ? v.duration : FL.dur;
+    return FL.cut > 0 ? M.min(FL.cut, vd) : vd - 1.5 / (FL.fps || 24);
+  }
+  /** S2 on the flight's own frames (requestVideoFrameCallback): the trail
+   *  is emitted and drawn at the PRESENTED media time (24 draws/s, locked
+   *  to the broom, not to currentTime on rAF), and the warm-up and the
+   *  hold are detected here (+ `ended`) — no polling. Once the trail has
+   *  stopped emitting this does nothing but watch for the hold. */
+  function onVF(t, meta) {
+    var v = video;
+    vfId = 0;
+    if (!v || st !== "flight") return;
+    var mt = meta && meta.mediaTime >= 0 ? meta.mediaTime : v.currentTime;
+    if (checkWarmHold(mt)) return;
+    if (trailOn) {
+      emitVideo(t, mt);
+      if (mt > FL.trail.emitUntil) freezeTrail();
+      else if (!raf) draw(t); // the motes' rAF draws it while they run
+    }
+    vfId = v.requestVideoFrameCallback(onVF);
+  }
+  /** Warm-up at (hold − t.warm), the hold at the last frame. True = held. */
+  function checkWarmHold(vt) {
+    var end = endAt(video);
+    if (!warmed && vt >= end - C.t.warm / 1000) warm();
+    if (vt < end) return false;
+    hold();
+    return true;
+  }
+
+  function emitVideo(t, vt) {
+    var tr = FL.trail;
+    if (!vPlaying || !tr || !trailOn || !video) return; // a clip without its own tracked path flies unlit
+    if (h1Rect && endAt(video) - vt < 1.25) { // no light across the name in the last 1.2 s (I15)
       for (var j = 0; j < trail.length; j++) if (near(trail[j], h1Rect, 24)) trail[j].cut = 1;
     }
     if (vt > tr.emitUntil) return;
@@ -810,35 +1172,174 @@
     var m = fit(C.plate.w, C.plate.h, C.plate.pos);
     emit(m.x + u * m.w, m.y + y * m.h, s, t, C.trailMax);
   }
-  function checkLanding() {
-    var v = video;
-    if (!vPlaying || !v) return;
-    var vd = v.duration > 0 ? v.duration : FL.dur;
-    // a clip with a `cut` hands off there (IN-02-alt: before the splash-down)
-    var at = FL.cut > 0 ? M.min(FL.cut, vd) : vd - (altLand ? C.t.fold : C.t.landing) / 1000;
-    if (v.currentTime >= at) landing();
-  }
-  /** At a cut, the clip holds its last clean frame under the landing. */
-  function holdCut() {
-    if (FL && FL.cut > 0 && video) try { video.pause(); } catch { /* gone */ }
+  /** The trail has stopped emitting (S2, v 4.55 s; or the hold came
+   *  first): its canvas freezes as it is and fades by WAAPI opacity — no
+   *  per-frame main-thread work from here to the end. */
+  function freezeTrail() {
+    var was = trailOn;
+    trailOn = false;
+    frozen = true;
+    trail = [];
+    lastEmit = null;
+    if (was && cv) anim(cv, [{ opacity: 1 }, { opacity: 0 }], C.t.trailFade, C.ease);
   }
 
-  /** S3: the left → right mask dissolve; the name zone clears first (I14).
-   *  A clip whose last frame is not the hero plate (IN-02-alt, or the ALT
-   *  hero plate) also crossfades, so no seam is revealed. ALT: map-fold. */
-  function landing() {
+  /* — S2w → S3h → S3r: the hand-off (PHASE3-SPEC §4.2) ———————————————— */
+  /** The hero loop that will play (hero.plate × hero.loop), or null. */
+  function heroLoop() {
+    var L = C.heroLoops && C.heroLoops[heroAlt ? "alt" : "default"];
+    return L ? L[VV["hero.loop"] === "alt" ? "alt" : "default"] || null : null;
+  }
+  /** S2w, t.warm before the hold: (a) the hero poster decodes; (b) #intro
+   *  stops occluding the hero (html.intro-warm: opacity .999), so the
+   *  compositor rasterises it — the name in its final face, the Lens, the
+   *  header — before the reveal; (c) the hero loop's bytes are prefetched;
+   *  (d) "intro:quiet": nothing new starts until "intro:quiet-end". */
+  function warm() {
+    if (warmed || st === "idle") return;
+    warmed = true;
+    mark("warm");
+    R.classList.add("intro-warm");
+    try {
+      var im = d.querySelector(HERO + " [data-hero-plate] img");
+      if (im && im.decode) im.decode().catch(noop);
+    } catch { /* no decode() */ }
+    prefetchLoop();
+    fire("intro:quiet");
+  }
+  /** (c): once the flight is fully buffered, fetch the hero loop (the
+   *  encode MediaFrame will pick) at low priority into a blob: URL that
+   *  MediaFrame plays at the hand-off (window.__introHandoff; lib/codec.ts
+   *  handoffSource) — no network between the hold and the reveal. */
+  function prefetchLoop() {
+    var L = heroLoop();
+    if (!L || pf) return;
+    var src = srcOf(L), h = w.__introHandoff, at = FL && FL.loopAt > 0 ? FL.loopAt : 0;
+    if (h && h.src === src && h.url) { h.at = at; return; } // a replay: already in
+    w.__introHandoff = { src: src, url: null, at: at };
+    var go = function () {
+      if (pf || !w.fetch) return;
+      pf = true;
+      try {
+        w.fetch(src, { priority: "low" }).then(function (r) { return r.ok ? r.blob() : null; }).then(function (b) {
+          var hh = w.__introHandoff;
+          if (b && hh && hh.src === src && !hh.url && w.URL && URL.createObjectURL) hh.url = URL.createObjectURL(b);
+        }).catch(noop);
+      } catch { /* MediaFrame fetches it itself */ }
+    };
+    var v = video;
+    if (!v || progress() >= 1) return go();
+    var onP = function () { if (progress() >= 1 || video !== v) { v.removeEventListener("progress", onP); if (video === v) go(); } };
+    v.addEventListener("progress", onP);
+  }
+  /** S3h: the last presented frame. Hold it on a static canvas, kill the
+   *  flight (exactly one decoder, now free), mark html.intro-handoff
+   *  (IntroBridge releases the lock; useIntroPhase → "handoff", so the hero
+   *  loop mounts under the hold with no fade), drop `inert` in its own task
+   *  (its recalc lands on a still), set the wipe's static mask, and reveal
+   *  once the loop plays (≤ t.handoffMax) and the page has hydrated
+   *  (≤ t.hydrateMax). */
+  function hold() {
     if (st !== "flight") return;
-    setState("landing");
-    holdCut();
+    var v = video;
+    setState("hold");
+    mark("hold");
+    if (!warmed) warm(); // a short or stalled clip still un-occludes the hero
+    // the paused last frame stays on screen while its still is grabbed
+    if (v) try { v.pause(); } catch { /* gone */ }
+    if (v && vfId && v.cancelVideoFrameCallback) try { v.cancelVideoFrameCallback(vfId); } catch { /* gone */ }
+    vfId = 0;
+    freezeTrail();
+    if (raf) { w.cancelAnimationFrame(raf); raf = 0; }
+    grabStill(v, "intro-hold", handoff);
+  }
+  /** The hold's still is ready: it covers the paused video, which goes. */
+  function handoff(c) {
+    if (st !== "hold") return;
+    holdCv = c;
+    film.insertBefore(c, cv);
+    killVideo();
+    R.classList.add("intro-landing", "intro-handoff");
+    if (altLand) shade(); // the fold's wash, drawn now (under the hold), not on its first frame
+    else sweepMask();
+    later(function () { setInert(false); }, 0);
+    awaitHandoff(function () {
+      if (w.requestAnimationFrame) w.requestAnimationFrame(reveal); else reveal();
+    });
+  }
+  /** The wipe's mask: opaque from the film's left edge (a third of the
+   *  stage), ramping to transparent over the feather to its left. STATIC:
+   *  it is rasterised once, here, and only ever moves with the stage. */
+  function sweepMask() {
+    var F = M.round(W * C.feather), g = "linear-gradient(to right, transparent calc(100% / 3 - " + F + "px), #000 calc(100% / 3))";
+    var sty = stage.style;
+    sty.setProperty("-webkit-mask-image", g);
+    sty.setProperty("mask-image", g);
+    sty.setProperty("-webkit-mask-repeat", "no-repeat");
+    sty.setProperty("mask-repeat", "no-repeat");
+    sty.setProperty("-webkit-mask-size", "100% 100%");
+    sty.setProperty("mask-size", "100% 100%");
+  }
+  /** The hold's two conditions, each with its own cap: the hero loop
+   *  reports data-media-state "playing" (MediaFrame; or "failed"; no loop =
+   *  nothing to wait for) and <PageHydrated/> has fired. */
+  function awaitHandoff(go) {
+    var box = heroLoop() ? d.querySelector(HERO + " [data-media]") : null;
+    var mediaOk = !box, hydOk = !!w.__pageHydrated, done = false, mo = null;
+    var check = function () {
+      if (done || st !== "hold") return;
+      if (!mediaOk) {
+        var s = box.getAttribute("data-media-state");
+        if (s === "playing" || s === "failed") mediaOk = true;
+      }
+      if (!mediaOk || !hydOk) return;
+      done = true;
+      stop();
+      go();
+    };
+    var onH = function () { hydOk = true; check(); };
+    var stop = function () {
+      if (mo) mo.disconnect();
+      w.removeEventListener("page:hydrated", onH);
+    };
+    offs.push(stop);
+    if (box && w.MutationObserver) {
+      mo = new MutationObserver(check);
+      mo.observe(box, { attributes: true, attributeFilter: ["data-media-state"] });
+    }
+    w.addEventListener("page:hydrated", onH);
+    later(function () { mediaOk = true; check(); }, C.t.handoffMax);
+    later(function () { hydOk = true; check(); }, C.t.hydrateMax);
+    check();
+  }
+  /** S3r: the compositor-only feathered wipe, left → right over t.landing
+   *  (easeClip): the name zone clears first. #intro-stage rides from
+   *  −W to +F (its static mask's edge crosses the whole viewport and its
+   *  feather clears it) while #intro-film is counter-moved by the same
+   *  amount, so the held picture stays put; the two WAAPI transforms are
+   *  created in this one task and share a start time on the compositor.
+   *  A clip whose last frame is not the hero plate (IN-02-alt, the ALT hero
+   *  plate) also fades the film. No WAAPI: an opacity fade. ALT: the fold. */
+  function reveal() {
+    if (st !== "hold") return;
+    setState("reveal");
+    mark("reveal");
     if (altLand) return fold();
     mark("landing");
-    R.classList.add("intro-landing", "intro-sweep");
-    var k = "maskPosition" in R.style ? "maskPosition" : "webkitMaskPosition", a = {}, b = {};
-    a[k] = "100% 0";
-    b[k] = "0% 0";
-    if (!FL.anchored || heroAlt) { a.opacity = 1; b.opacity = 0; }
-    anim(intro, [a, b], C.t.landing, C.ease, function () { finish(true, "played"); });
-    kick();
+    var done = function () { finish(true, "played"); };
+    if (!stage.animate || !film.animate) {
+      R.classList.add("intro-fade-out");
+      later(done, C.t.landing);
+      return;
+    }
+    R.classList.add("intro-sweep"); // a phase label: it changes no style
+    var F = M.round(W * C.feather), o = { duration: C.t.landing, easing: curve(C.easeClip), fill: "forwards" };
+    var a = stage.animate([{ transform: "translateX(" + -W + "px)" }, { transform: "translateX(" + F + "px)" }], o);
+    owned.push(a);
+    owned.push(film.animate([{ transform: "translateX(0px)" }, { transform: "translateX(" + -(W + F) + "px)" }], o));
+    if (!FL.anchored || heroAlt) owned.push(film.animate([{ opacity: 1 }, { opacity: 0 }], o));
+    a.onfinish = done;
+    later(done, C.t.landing + 150); // a hidden tab; finish() is idempotent
   }
 
   /* — S2c: the code flight (mobile, low-power, or the video never came) — */
@@ -849,6 +1350,12 @@
     hideWait();
     lastEmit = null;
     killVideo();
+    if (stillCv) { // L05's held frame: the code flight draws the plate itself
+      drop(stillCv);
+      stillCv = null;
+      plateAt = -1e9;
+      showPlate = imgOk;
+    }
     bolt(true);
     h1Rect = rectOfH1();
     var p = plate, tip = at(fitP, p.tip), end = at(fitP, p.end);
@@ -1014,54 +1521,61 @@
    *  dome (code flight). Transform only; finish() cancels it. */
   function fold() {
     domeOn = true; // exiting: Skip / Esc / Tab stand down (intro.css hides Skip at once: it never turns with the page)
-    foldAt = now();
     mark("landing");
     R.classList.add("intro-landing", "intro-fold");
+    // the wash fades in with the turn: alpha 1 by p = .35 (the old ramp)
+    var sh = shade();
+    if (sh) anim(sh, [{ opacity: 0 }, { opacity: 1, offset: 0.35 }, { opacity: 1 }], C.t.fold, C.ease);
     var pp = "perspective(" + C.foldPerspective + "px) rotateY(";
     anim(intro, [{ transform: pp + "0deg)" }, { transform: pp + -C.foldDeg + "deg)" }], C.t.fold, C.ease,
       function () { finish(true, "played"); });
     kick();
   }
   /** M2 (ART-DIRECTOR #8): the turning page is a folded map (M5: inked as
-   *  the Pirates' sea chart, chartMarks) — its
-   *  parchment reaches alpha ≥ .8 by p = .35 (before the page has turned
-   *  far), folded in three panels (creases, the shaded middle panel) inside
-   *  an inked border; the free (left) edge darkens into a soft shadow that
-   *  the CSS mask (app/intro.css, html.intro-fold) feathers out, so no
-   *  hard-edged card rotates over the hero. */
-  function foldShade(t) {
-    var p = E(clamp01((t - foldAt) / C.t.fold));
-    if (p <= 0) return;
-    var a = clamp01(p / 0.35), i, pw = W / 3, sw = M.min(160, W * 0.12);
-    cx.globalAlpha = 1;
-    cx.fillStyle = "rgba(214,189,136," + (0.88 * a).toFixed(3) + ")"; // the map's paper
-    cx.fillRect(0, 0, W, H);
-    cx.fillStyle = "rgba(92,62,24," + (0.14 * a).toFixed(3) + ")"; // the middle panel, folded away from the light
-    cx.fillRect(pw, 0, pw, H);
-    cx.fillStyle = "rgba(74,48,18," + (0.45 * a).toFixed(3) + ")"; // the creases
-    for (i = 1; i < 3; i++) cx.fillRect(M.round(i * pw) - 1, 0, 2, H);
-    cx.strokeStyle = "rgba(58,36,14," + (0.5 * a).toFixed(3) + ")"; // the inked border
-    cx.lineWidth = 1.5;
-    cx.strokeRect(24.5, 24.5, W - 49, H - 49);
-    var g = cx.createLinearGradient(0, 0, W, 0); // turning out of the light: the far edge darkest
-    g.addColorStop(0, "rgba(28,18,8," + (0.4 * p).toFixed(3) + ")");
-    g.addColorStop(1, "rgba(28,18,8," + (0.06 * p).toFixed(3) + ")");
-    cx.fillStyle = g;
-    cx.fillRect(0, 0, W, H);
-    chartMarks(a);
-    var e = cx.createLinearGradient(0, 0, sw, 0); // the soft edge shadow
-    e.addColorStop(0, "rgba(12,8,4," + (0.55 * a).toFixed(3) + ")");
+   *  the Pirates' sea chart, chartMarks) — parchment in three panels
+   *  (creases, the shaded middle panel) inside an inked border; the free
+   *  (left) edge darkens into a soft shadow that the CSS mask (app/intro.css,
+   *  html.intro-fold) feathers out, so no hard-edged card rotates over the
+   *  hero. P3-3: drawn ONCE into #intro-shade (above the canvas, below the
+   *  broom); the fold fades it in by WAAPI opacity — no per-frame fills. */
+  function shade() {
+    if (shadeCv) return shadeCv;
+    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), c = canvas(W * nd, H * nd), g = c.getContext("2d");
+    if (!g) return null;
+    c.id = "intro-shade";
+    c.setAttribute("aria-hidden", "true");
+    g.setTransform(nd, 0, 0, nd, 0, 0);
+    var i, pw = W / 3, sw = M.min(160, W * 0.12);
+    g.fillStyle = "rgba(214,189,136,.88)"; // the map's paper
+    g.fillRect(0, 0, W, H);
+    g.fillStyle = "rgba(92,62,24,.14)"; // the middle panel, folded away from the light
+    g.fillRect(pw, 0, pw, H);
+    g.fillStyle = "rgba(74,48,18,.45)"; // the creases
+    for (i = 1; i < 3; i++) g.fillRect(M.round(i * pw) - 1, 0, 2, H);
+    g.strokeStyle = "rgba(58,36,14,.5)"; // the inked border
+    g.lineWidth = 1.5;
+    g.strokeRect(24.5, 24.5, W - 49, H - 49);
+    var gr = g.createLinearGradient(0, 0, W, 0); // turning out of the light: the far edge darkest
+    gr.addColorStop(0, "rgba(28,18,8,.4)");
+    gr.addColorStop(1, "rgba(28,18,8,.06)");
+    g.fillStyle = gr;
+    g.fillRect(0, 0, W, H);
+    chartMarks(g, 1);
+    var e = g.createLinearGradient(0, 0, sw, 0); // the soft edge shadow
+    e.addColorStop(0, "rgba(12,8,4,.55)");
     e.addColorStop(1, "rgba(12,8,4,0)");
-    cx.fillStyle = e;
-    cx.fillRect(0, 0, sw, H);
-    if (p < 1) kick();
+    g.fillStyle = e;
+    g.fillRect(0, 0, sw, H);
+    film.appendChild(c);
+    shadeCv = c;
+    return c;
   }
   /** M5 (blind A00 mid, Pirates .50–.60: "a blank parchment panel"): the
    *  folding page lands us at the Pearl, so it is inked as a SEA CHART on its
    *  hinge-side panel (the part still in view as it turns edge-on) — a
    *  compass rose, and a dotted course to a red X (Pirates' own "X marks the
    *  spot"). Strokes and fills only: no lettering on the canvas. */
-  function chartMarks(a) {
+  function chartMarks(cx, a) {
     if (a <= 0) return;
     var i, r = M.max(28, M.min(W, H) * 0.11), rx = W * 0.83, ry = H * 0.34;
     var ink = "rgba(58,36,14," + (0.78 * a).toFixed(3) + ")";
@@ -1343,17 +1857,31 @@
    *  opens on intro:end without an aperture, as on the landed path). No
    *  bookend line: Q-HP-2 lives in the credits and the footer egg. */
   function dismiss(reason) {
-    if (st === "idle" || st === "leaving" || st === "landing" || domeOn) return;
+    if (st === "idle" || st === "leaving" || exiting()) return;
     setState("leaving");
     mark("dismiss");
     ses("intro-seen", "1");
     capsStop(80);
     killVideo();
+    if (lv) killLive();
     R.classList.add("intro-leaving"); // the hero opens on this class (hero-stage.tsx)
     anim(intro, [{ opacity: 1 }, { opacity: 0 }], C.t.base, C.ease, function () { finish(false, reason); });
   }
 
-  /** S4 / end of SX: release everything, hand the page back. */
+  /** The overlay's "Skip to the research" (PHASE3-SPEC §11.3): dismiss()
+   *  now; the jump follows in finish(), once `inert` is off (IntroBridge:
+   *  the fonts, then scrollToTarget; before hydration, the browser's own
+   *  hash navigation). Hidden from the hold on: the overlay is leaving. */
+  function fastLane() {
+    if (st === "idle" || st === "leaving" || exiting()) return;
+    fastHref = (fast && fast.getAttribute("href")) || "";
+    dismiss("fastlane");
+  }
+  function fastOn() { return !!(fast && w.matchMedia && w.matchMedia("(min-width: 64rem)").matches); }
+
+  /** S4 / end of SX: release everything, hand the page back. Light work on
+   *  the played path: the video, `inert` and the hero's media re-render are
+   *  already behind us (the hold). Then the titles (S5). */
   function finish(played, reason) {
     if (st === "idle") return;
     setState("idle");
@@ -1366,24 +1894,47 @@
     offs = [];
     bolt(false);
     if (video) try { video.pause(); } catch { /* gone */ } // unloaded after the hand-off frame
+    if (lv) killLive();
     ses("intro-seen", "1");
     setInert(false);
     for (i = 0; i < CLASSES.length; i++) R.classList.remove(CLASSES[i]);
     R.setAttribute("data-intro", played ? "played" : "skipped");
     for (i = 0; i < owned.length; i++) try { owned[i].cancel(); } catch { /* gone */ }
     owned = [];
-    if (cv && cv.parentNode) cv.parentNode.removeChild(cv);
+    drop(cv);
     cv = cx = null;
+    drop(holdCv);
+    drop(shadeCv);
+    drop(stillCv);
+    holdCv = shadeCv = stillCv = null;
+    var sty = stage.style; // the wipe's mask (the overlay is display:none now)
+    sty.removeProperty("-webkit-mask-image");
+    sty.removeProperty("mask-image");
+    sty.removeProperty("-webkit-mask-repeat");
+    sty.removeProperty("mask-repeat");
+    sty.removeProperty("-webkit-mask-size");
+    sty.removeProperty("mask-size");
     if (broom) { broom.style.transform = ""; broom.style.opacity = ""; }
     cands = []; trail = []; motes = null; patch = null; code = null; domeOn = false;
-    ink = null; inked = false; foldAt = -1;
+    ink = null; inked = false; frozen = false; trailOn = false; vfOn = false;
     tl = tlx = null; eimg = null; eimgOk = false;
-    if (played) capsLinger();
+    // S5: the opening titles on the played path with motion on; any other
+    // end (a dismissal, Pause / RM mid-way) shows the final hero at once
+    if (played && !motionOff()) titles();
     else capsStop(0);
+    if (!capTimer) quietEnd(); // nothing left running (no captions at all)
     mark("end");
-    try { w.dispatchEvent(new CustomEvent("intro:end", { detail: { played: played, reason: reason } })); } catch { /* old browsers */ }
-    // focus (forces layout) after the hand-off frame has painted, in its own task
-    var after = function () { setTimeout(function () { killVideo(); focusLanding(); }, 0); };
+    fire("intro:end", { played: played, reason: reason, href: reason === "fastlane" ? fastHref : undefined });
+    // focus (forces layout) after the hand-off frame has painted, in its own
+    // task; the fast lane's focus is the jump's (#work)
+    var jump = reason === "fastlane" ? fastHref : "";
+    var after = function () {
+      setTimeout(function () {
+        killVideo();
+        if (!jump) focusLanding();
+        else if (!w.__introHydrated) try { w.location.hash = jump; } catch { /* stays on the hero */ }
+      }, 0);
+    };
     if (w.requestAnimationFrame) w.requestAnimationFrame(after); else after();
   }
 
@@ -1451,8 +2002,8 @@
     if (k === "Tab") { // the dialog traps Tab: Play ↔ Skip (Skip only after launch)
       e.preventDefault();
       e.stopPropagation();
-      if (st === "landing" || st === "leaving" || domeOn) return;
-      var list = st === "armed" ? [play, skip] : [skip], i = list.indexOf(d.activeElement);
+      if (st === "leaving" || exiting()) return;
+      var list = (st === "armed" ? [play] : []).concat(fastOn() ? [fast, skip] : [skip]), i = list.indexOf(d.activeElement);
       focus(i < 0 ? list[0] : list[(i + (e.shiftKey ? list.length - 1 : 1)) % list.length]);
       return;
     }
@@ -1488,8 +2039,10 @@
     if (d.hidden) {
       hiddenAt = now();
       if (video && !video.paused) try { video.pause(); } catch { /* no-op */ }
+      if (lv) try { lv.pause(); } catch { /* no-op */ }
       return;
     }
+    if (lv && st === "armed") { var lp = lv.play(); if (lp && lp.catch) lp.catch(noop); }
     if (st === "flight" && video) {
       if (now() - hiddenAt > C.t.hiddenSkip) dismiss("hidden");
       else { var p = video.play(); if (p && p.catch) p.catch(function () { /* stays paused */ }); }

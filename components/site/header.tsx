@@ -1,12 +1,16 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Search, X } from "lucide-react";
-import { useDesktopFine, useReducedMotion } from "@/lib/flags";
+import { DESKTOP_WIDE, useDesktopFine, useReducedMotion } from "@/lib/flags";
+import { emit } from "@/lib/events";
+import { track } from "@/lib/analytics";
+import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
+import { markWorldFontsReady } from "@/lib/world-fonts";
 import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
 import {
@@ -185,15 +189,47 @@ function ActLabel() {
   );
 }
 
+/* — The fast lane (spec §11.3, DP-14; P3-10 #3): at DESKTOP_WIDE the Work
+   pill reads "Skip to the research" (fastlane.label, proposed + unsigned)
+   and jumps to #work through the cut — world fonts ready, focus moved, the
+   director's cut and any game stopped (`fastlane`), never a 20-screen glide.
+   Below 64rem it stays "Work", a native anchor (phones unchanged). Both
+   labels are server markup; CSS (`dw:`) picks one, so SSR is identical for
+   every visitor. Off the home page (the 404) it is a plain /#work link. — */
+const FAST_LANE = copyText("fastlane.label");
+const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
+
+function runFastLane(href: string): void {
+  void markWorldFontsReady("idiots");
+  emit("fastlane");
+  track("fast_lane");
+  void scrollToTarget(href, { immediate: true, cut: true, focus: true, history: "push" });
+}
+
 function WorkPill({ base, href }: { base: string; href: string }) {
   const active = useContext(ActiveContext);
+  const onClick = (e: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (base || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!window.matchMedia(DESKTOP_WIDE).matches) return; // "Work": today's native anchor
+    e.preventDefault();
+    runFastLane(href);
+  };
   return (
     <a
       href={`${base}${href}`}
+      data-fast-lane=""
+      onClick={onClick}
       aria-current={active === href.slice(1) ? "location" : undefined}
       className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
     >
-      Work
+      {FAST_LANE_SHOWN ? (
+        <>
+          <span className="dw:hidden">Work</span>
+          <span className="hidden dw:inline">{FAST_LANE.text}</span>
+        </>
+      ) : (
+        "Work"
+      )}
     </a>
   );
 }
@@ -295,10 +331,10 @@ export function Header() {
     if (restoreFocus) window.setTimeout(() => menuButtonRef.current?.focus(), 0);
   }, []);
 
-  // while open: lock scroll, focus the first link, Esc closes
+  // while open: lock scroll (body + Lenis), focus the first link, Esc closes
   useEffect(() => {
     if (!open) return;
-    document.body.style.overflow = "hidden";
+    lockScroll("menu");
     const t = window.setTimeout(() => {
       sheetRef.current?.querySelector<HTMLElement>("[data-menu-first]")?.focus();
     }, 20);
@@ -312,7 +348,7 @@ export function Header() {
     return () => {
       window.clearTimeout(t);
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll("menu");
     };
   }, [open, closeMenu]);
 
@@ -374,6 +410,7 @@ export function Header() {
             aria-modal="true"
             aria-label="Menu"
             onKeyDown={onSheetKey}
+            data-lenis-prevent=""
             {...planeAttrs("deep", "house")}
             className="fixed inset-0 z-(--z-menu) overflow-y-auto bg-bg text-fg"
             initial={{ opacity: 0 }}

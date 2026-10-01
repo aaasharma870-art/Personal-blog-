@@ -37,7 +37,7 @@
    ========================================================================== */
 
 import type { LoaderKind, WorldId } from "./worlds";
-import type { Beat, Tempo } from "./beats";
+import type { Beat, EstVh, Tempo } from "./beats";
 import type { MediaId } from "./media";
 import type { StageSpec } from "./stage";
 import type { QuoteId } from "./quotes";
@@ -145,6 +145,10 @@ export type ActSpec = {
   maskOrigin?: readonly [number, number];
   /** The act-1 program block's stage spec (the opening card's backdrop). */
   stage?: StageSpec;
+  /** The card item's height in viewports @1440 (d) / @1024 (t): pin wrapper
+   *  (100vh + travel) plus, for act-1, the program block. Seeded from spec
+   *  §2.2; `node tools/capture/beats.mjs <base> --write` re-measures it. */
+  estVh?: EstVh;
 };
 
 export type PrologueSpec = {
@@ -161,6 +165,10 @@ export type PrologueSpec = {
   /** The intro's variant: one for every piece, or per piece (play, flight,
    *  codeflight, landing). Default: film.defaultVariant. */
   variant?: VariantChoice;
+  /** Phase 3 (PHASE3-SPEC §2.3): the intro's beats (B00, B01). They play
+   *  before the page (time, outside the page rules): the validator counts
+   *  their ids and rations but not their gaps, overlaps or pacing. */
+  beats?: readonly Beat[];
 };
 
 export type EggSpec = {
@@ -845,8 +853,19 @@ export const film = {
     landsOn: "top",
     maxFlightS: 6.0,
     variant: "default",
+    beats: [
+      // B00: the living play screen (L05, after P3-3); B01: flight → hold →
+      // reveal → the three title cards (P3-3), weight 3 outside the page rules
+      { id: "B00", at: 0, span: 0, kind: "signature", timing: "time", star: true, weight: 2, feature: "P3-5" },
+      { id: "B01", at: 0, span: 0, kind: "signature", timing: "time", star: true, weight: 3, feature: "P3-3" },
+    ],
   } satisfies PrologueSpec,
   worlds: { house, pirates, idiots, rdr2, hp } satisfies Record<WorldId, WorldSpec>,
+  /* Phase 3 (PHASE3-SPEC §2.3, §7.1): each card's beats sit at p × travel
+     (vh into the pin; `film.cardTravel`): star (a) = the hook + transition
+     (p 0–.45, its impact at .45 or .03), star (b) = the push through the
+     title (p .50–1) with the act's logline as the static subtitle. A card's
+     (a) → (b) is one set piece (validator: sequential by construction). */
   acts: [
     {
       id: "act-1",
@@ -856,6 +875,27 @@ export const film = {
       variant: "default",
       landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
       maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      tempo: "slow",
+      // pin wrapper 190vh (90 travel) + the program block ≈ 76vh
+      estVh: { d: 2.66, t: 2.625 },
+      // the program block reads over the stage (spec §3.2): the opening's exit
+      // frame. SEQ-PEARL failed Check L2 (W1 assembler, 2026-10-01) and has no
+      // end still, so the exit frame is iconic-pearl at the code push's end
+      // scale (the push-in #1 DEFAULT, card-opening.push).
+      stage: {
+        mode: "backdrop",
+        scrim: { text: 0.86, image: 0.45, imageZone: "gutters" },
+        cues: [{ at: "act-1-program", media: "iconic-pearl", camera: "drift", depth: true, weather: "spray" }],
+      },
+      beats: [
+        { id: "B03", at: 0, span: 40.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B03-impact", at: 40.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B04", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B04-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B04-spray", at: 45, span: 45, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        // the program block (a backdrop sibling of the pin): the breath
+        { id: "B06", at: 90, span: 76, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+      ],
     },
     {
       id: "act-2",
@@ -866,6 +906,15 @@ export const film = {
       variant: "default",
       landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
       maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      tempo: "slow",
+      estVh: { d: 2.1, t: 2.099 },
+      beats: [
+        { id: "B13", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B13-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B14", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B14-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B14-chalk", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+      ],
     },
     {
       id: "act-3",
@@ -876,6 +925,17 @@ export const film = {
       variant: "default",
       landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
       maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      tempo: "slow",
+      estVh: { d: 1.9, t: 1.9 },
+      beats: [
+        // the other half of the films' carried shape (B35): the card's sun
+        // mark, on screen as the card rises (before the pin)
+        { id: "B35-sun", at: -45, span: 45, kind: "match-cut", timing: "scroll", feature: "P3-6" },
+        { id: "B36", at: 0, span: 40.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B36-impact", at: 2.7, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B38", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "sun", feature: "P3-5" },
+        { id: "B38-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+      ],
     },
     {
       id: "act-4",
@@ -886,6 +946,17 @@ export const film = {
       variant: "default",
       landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
       maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      tempo: "slow",
+      estVh: { d: 2.1, t: 2.099 },
+      beats: [
+        { id: "B48", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        // the RDR2 side of the burn (p < .1) keeps the camp's fireflies
+        { id: "B48-fireflies", at: 0, span: 11, kind: "stage-cue", timing: "scroll", world: "rdr2", feature: "P3-6" },
+        { id: "B48-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B50", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B50-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B50-motes", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+      ],
     },
   ] as const satisfies readonly ActSpec[],
   /** "prev>next" world pair → card choreography. `house` is transparent. */

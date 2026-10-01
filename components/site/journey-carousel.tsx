@@ -13,6 +13,10 @@ import type { Variant } from "@/lib/variants";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { JourneyChart, Waypoint, WaypointLabel } from "@/components/site/journey-chart";
 import { BREAK_INDEX, NOW_INDEX, bearingTo, legHeading } from "@/components/worlds/pirates/voyage-chart";
+import { beatAttrs } from "@/lib/beats";
+
+/** The voyage's two beats on the step tabs (spec §2.3 B10 step 1, B11 step 3). */
+const STEP_BEATS: Readonly<Record<number, string>> = { 0: "B10", 2: "B11" };
 
 /* ============================================================================
    JourneyCarousel — the voyage's touch / reduced-motion / Save-Data path
@@ -101,6 +105,7 @@ export function JourneyCarousel({ variant, stills, captions, cartouche, saveData
                   type="button"
                   role="tab"
                   id={`journey-tab-${idx + 1}`}
+                  {...(STEP_BEATS[idx] ? beatAttrs(STEP_BEATS[idx], { weight: 2 }) : {})}
                   aria-selected={sel}
                   aria-controls="journey-panel"
                   tabIndex={sel ? 0 : -1}

@@ -2,7 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import type { CaptionKey } from "@/lib/film";
 import { getMedia, rectOf, type MediaId } from "@/lib/media";
 import { dur, easeDraw } from "@/lib/motion";
@@ -48,6 +49,11 @@ import { PlateBox, plateOf, type Plate } from "@/components/sections/act-card/pl
    on the board and the answer + caption flow under it. Server HTML, no-JS,
    reduced motion and Pause: the final frame (the circle needs a measurement,
    so without JS it is simply absent).
+   RASTER (P3-2, spec §12.1 #2, #8): the chalk that moves over the plate
+   moves on its own layer, promoted only while it writes or draws — the
+   lines write on by a sliding clip window (two transforms, no animated
+   clip-path) and the drone chalks in on its own layer, so the photograph
+   under them is never redrawn per frame.
    ========================================================================== */
 
 /** The lecture's question (a registered lettering string: lib/film.ts). */
@@ -57,11 +63,20 @@ const QUESTION = "What is a machine?";
 const CIRCLED = "reduces human effort";
 
 const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
-const WRITE_OPEN = "inset(-30% -6% -30% -2%)";
-const WRITE_SHUT = "inset(-30% 100% -30% -2%)";
+/** The write's clip window reaches this far past the line's box (glyph
+ *  overhang; the old clip was inset(-30% -6% -30% -2%)). */
+const WRITE_MARGIN_EM = 0.4;
+/** The window (and its counter-slide) at write progress k: 0 = the window a
+ *  full width (+ its margins) left of the line, 1 = home. */
+const windowAt = (k: number) => `translateX(calc(${((k - 1) * 100).toFixed(3)}% - ${((1 - k) * WRITE_MARGIN_EM).toFixed(4)}em))`;
+const contentAt = (k: number) => `translateX(calc(${((1 - k) * 100).toFixed(3)}% + ${((1 - k) * WRITE_MARGIN_EM).toFixed(4)}em))`;
 
-/** A line that writes itself on (clip left → right + a quick fade), once,
- *  when `phase` enters; `write` false = already written. */
+/** A line that writes itself on (a clip window sliding left → right + a
+ *  quick fade), once, when `phase` enters; `write` false = already written.
+ *  The window is the line's box widened by WRITE_MARGIN_EM (an overflow
+ *  clip margin) and it slides in from the left while the line counter-
+ *  slides: the reveal edge moves by transform only, on layers promoted for
+ *  the write alone. At rest nothing clips or transforms. */
 function ChalkWrite({
   phase,
   write,
@@ -80,33 +95,50 @@ function ChalkWrite({
   /** A <div> (it holds a <p>) instead of a block <span>. */
   block?: boolean;
 }) {
-  const clipPath = useMotionValue(WRITE_OPEN);
+  const k = useMotionValue(1);
   const opacity = useMotionValue(1);
+  const windowT = useTransform(k, windowAt);
+  const contentT = useTransform(k, contentAt);
+  const [done, setDone] = useState(false);
   useLayoutEffect(() => {
     if (!write || phase === "static") {
-      clipPath.jump(WRITE_OPEN);
+      k.jump(1);
       opacity.jump(1);
       return;
     }
     if (phase === "armed") {
-      clipPath.jump(WRITE_SHUT);
+      k.jump(0);
       opacity.jump(0);
       return;
     }
-    const a = animate(clipPath, WRITE_OPEN, { duration, delay, ease: [0.4, 0, 0.6, 1] });
+    let live = true;
+    const a = animate(k, 1, { duration, delay, ease: [0.4, 0, 0.6, 1] });
     const b = animate(opacity, 1, { duration: 0.2, delay });
+    Promise.all([a.finished, b.finished]).then(() => {
+      if (live) setDone(true);
+    });
     return () => {
+      live = false;
       a.stop();
       b.stop();
     };
-  }, [phase, write, delay, duration, clipPath, opacity]);
+  }, [phase, write, delay, duration, k, opacity]);
+  const writing = write && (phase === "armed" || (phase === "entered" && !done));
+  const windowClass = writing ? "overflow-clip [overflow-clip-margin:0.4em] will-change-transform" : undefined;
+  const contentClass = writing ? "will-change-[transform,opacity]" : undefined;
+  const windowStyle = writing ? { transform: windowT } : undefined;
+  const contentStyle = writing ? { transform: contentT, opacity } : { opacity };
   return block ? (
-    <motion.div className={className} style={{ clipPath, opacity }}>
-      {children}
+    <motion.div className={cn(className, windowClass)} style={windowStyle}>
+      <motion.div className={contentClass} style={contentStyle}>
+        {children}
+      </motion.div>
     </motion.div>
   ) : (
-    <motion.span className={cn("block", className)} style={{ clipPath, opacity }}>
-      {children}
+    <motion.span className={cn("block", className, windowClass)} style={windowStyle}>
+      <motion.span className={cn("block", contentClass)} style={contentStyle}>
+        {children}
+      </motion.span>
     </motion.span>
   );
 }
@@ -145,6 +177,7 @@ function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; dra
   const plate = plateOf(id);
   const progress = useMotionValue(1);
   const live = draw && phase !== "static";
+  const [drawn, setDrawn] = useState(false);
   useLayoutEffect(() => {
     if (!live) {
       progress.jump(1);
@@ -154,13 +187,26 @@ function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; dra
       progress.jump(0);
       return;
     }
+    let on = true;
     const a = animate(progress, 1, { duration: 1.1, delay: 0.1, ease: easeDraw });
-    return () => a.stop();
+    a.finished.then(() => {
+      if (on) setDrawn(true);
+    });
+    return () => {
+      on = false;
+      a.stop();
+    };
   }, [live, phase, progress]);
   const box = plate ? droneBoxOf(plate) : null;
   if (!plate || !box) return null;
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden sm:block" data-board-art="machine-drone">
+    // its own layer while it chalks in (spec §12.1 #8): the plate under it
+    // is never redrawn per frame
+    <div
+      aria-hidden="true"
+      className={cn("pointer-events-none absolute inset-0 hidden sm:block", live && !drawn && "will-change-transform")}
+      data-board-art="machine-drone"
+    >
       <PlateBox plate={plate} aspect={BAND_ASPECT}>
         <BoardDrone plate={plate} box={box} draw={progress} live={live} />
       </PlateBox>
@@ -299,7 +345,13 @@ export function MachineBoard({
 
   if (!id) return null;
   return (
-    <div style={vars} className={className} data-scene="machine" data-choreo={alt ? "rancho-circle" : "chalk-write"}>
+    <div
+      style={vars}
+      className={className}
+      data-scene="machine"
+      data-choreo={alt ? "rancho-circle" : "chalk-write"}
+      {...beatAttrs("B22", { weight: 2 })}
+    >
       <PlateBand
         plate={id}
         entrance="none"

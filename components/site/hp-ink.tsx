@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 import { dur, easeClip, easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { drawn, faded, useDrawPhase } from "@/components/site/world-motion";
@@ -191,6 +192,9 @@ export function HallowsMark({ className }: { className?: string }) {
  * nested rings that turns 3× in 600 ms on activation, then native scroll to
  * the target. The link text stays literal; the icon is aria-hidden; no spin
  * under reduced motion / Pause (it just scrolls). It never re-arms the intro.
+ * The jump is lib/smooth-scroll.ts scrollToTarget (Lenis-aware; from the
+ * credits to the opening it is a long jump, so it lands through the cut),
+ * replaceState as before, focus on the target's heading.
  */
 export function TimeTurnerLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
   const reduce = useReducedMotion();
@@ -202,9 +206,7 @@ export function TimeTurnerLink({ href, children, className }: { href: string; ch
     window.setTimeout(() => {
       const id = href.startsWith("#") ? href.slice(1) : "";
       const el = id ? document.getElementById(id) : null;
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      else window.scrollTo({ top: 0, behavior: "smooth" });
-      if (id) history.replaceState(null, "", href);
+      void scrollToTarget(el ?? 0, { focus: true, history: el ? "replace" : false });
     }, 600);
   };
   return (

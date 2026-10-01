@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
+import type { BeatAttrs } from "@/lib/beats";
 import { dur, easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { drawn, faded, useDrawPhase } from "@/components/site/world-motion";
@@ -84,17 +85,21 @@ export function loopPath(w: number, h: number, room = Infinity): { d: string; vw
 
 /**
  * RanchoCircle (IC-3I-02) — one chalk loop around real HTML text (the text is
- * never restyled). `block` for a paragraph, inline for a phrase.
+ * never restyled). `block` for a paragraph, inline for a phrase. A host
+ * whose circle is a page beat passes `{...beatAttrs(id, star)}` (B21's
+ * caveat circle, B24's "anything > 2.0" circle): the attributes land on the
+ * circled wrapper.
  */
 export function RanchoCircle({
   children,
   block = false,
   className,
+  ...beat
 }: {
   children: ReactNode;
   block?: boolean;
   className?: string;
-}) {
+} & Partial<BeatAttrs>) {
   const ref = useRef<HTMLSpanElement>(null);
   const box = useBox(ref);
   const phase = useDrawPhase(ref, 0.6);
@@ -102,7 +107,7 @@ export function RanchoCircle({
   const Wrap = block ? "div" : "span";
   const loop = box ? loopPath(box.w, box.h, box.room) : null;
   return (
-    <Wrap ref={ref as React.RefObject<never>} className={cn("relative", block ? "block" : "inline-block", className)}>
+    <Wrap ref={ref as React.RefObject<never>} className={cn("relative", block ? "block" : "inline-block", className)} {...beat}>
       {children}
       {loop ? (
         // The SVG box is the TEXT's own box (user units = CSS px); the loop

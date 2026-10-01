@@ -40,7 +40,7 @@ Words used below:
 | D3-14 | **Analytics:** ship a no-op `track()` hook with privacy-light events. Installing `@vercel/analytics` waits for Aryan's hosting and consent. | "No third-party trackers without consent." |
 | D3-15 | **Pacing is weighted.** Every star has a weight (3 set piece · 2 signature · 1 quiet star) and every item a tempo (slow / medium / brisk). After any weight-3 star comes a breath. | IDEAS N: "deliberate fast and slow passages". |
 | D3-16 | **Titles arrive in character 8 times:** the first world h2 of each act (about, work, beyond, principles) and the four films-screen film titles. Every other world h2 keeps its world face with today's quiet `MaskReveal`. | The gag wears out at 15. |
-| D3-17 | **Split screens keep the stage at 1024:** the split text column is a named container `split`, and research grids inside it stack below 48rem of column width (§3.2). | Chosen over "split only at ≥ 80rem" so both judged widths keep the window. |
+| D3-17 | **Split screens keep the stage at 1024:** the split text column is a named container `split`, and research grids inside it stack below 48rem of column width (§3.2). | Chosen over "split only at ≥ 80rem" so both judged widths keep the window. W1 as built: 40rem (§3.2 note). |
 
 ---
 
@@ -240,7 +240,7 @@ At 1024×768 every range scales by roughly 0.9 (cards scale with vh; reading sec
 **RM, Pause, modals:**
 - RM or Pause → `destroy()`, remove the ticker callback, `requestScrollRefresh()`. Destroy, never `stop()`, so the only Lenis state under RM is none.
 - Lumos/resume mid-session re-creates it (the effect re-runs).
-- Do not import `lenis.css`. Add to `globals.css`: **`html.lenis, html.lenis body{height:auto}`** (without it Lenis's ResizeObserver on the `h-full` `<html>` never fires and its scroll limit goes stale), `html.lenis{scroll-behavior:auto}` and `.lenis [data-lenis-prevent]{overscroll-behavior:contain}`.
+- Do not import `lenis.css`. Add to `globals.css`: **`html.lenis, html.lenis body{height:auto}`** (without it Lenis's ResizeObserver on the `h-full` `<html>` never fires and its scroll limit goes stale), `html.lenis{scroll-behavior:auto}` and `.lenis [data-lenis-prevent]{overscroll-behavior:contain}`. **W1 as built (2026-10-01):** these rules live in `app/p3/foundation.css` (B1-SCROLL's partial, DP-10), not `globals.css`.
 - **Scroll lock:** `lockScroll(owner)`/`unlockScroll(owner)` (ref-counted) sets `body.style.overflow="hidden"` and `lenis?.stop()/start()`. It replaces the three hand-rolled locks (`header.tsx:289-307`, `command-palette.tsx:293-302`, `marauders-map-dialog.tsx:54-69`). Add `data-lenis-prevent` to the menu sheet (`header.tsx:366`), the palette overlay and list (`command-palette.tsx:353/398`) and the map dialog (`marauders-map-dialog.tsx:98`).
 
 **Anchors and jumps:** `scrollToTarget(target, { block, focus, history, immediate, cut })` in `lib/smooth-scroll.ts`.
@@ -261,7 +261,7 @@ At 1024×768 every range scales by roughly 0.9 (cards scale with vh; reading sec
 - `intro:quiet-end` (once, at the end of ladder step 2);
 - the stage mounting.
 
-Each Suspense section hydrates separately, so every ScrollTrigger gets `refreshPriority` from manifest order. After the first refresh, re-apply `location.hash` once.
+Each Suspense section hydrates separately, so every ScrollTrigger gets `refreshPriority` from manifest order. After the first refresh, re-apply `location.hash` once. **W1 as built (2026-10-01):** `requestScrollRefresh()` runs `ScrollTrigger.sort()` before each refresh (document order), which replaces per-trigger `refreshPriority`.
 
 **Which driver for which motion (the 1-frame rule):**
 - Anything whose transform must track content that is itself scrolling (depth parallax in flow, in-flow camera, scrubbed sentences) uses **motion's accelerated path** first (`useScroll` + array `useTransform` onto opacity/clipPath/transform), else `useScrollScene` with ScrollTrigger **`scrub:true`** (0-frame lag inside Lenis's emit). In-flow motion is never damped.
@@ -320,9 +320,9 @@ Manifest entries (`lib/page.ts`) gain `stage?: StageSpec`, `beats` and `tempo`. 
   - Text AA: muted `#9db0bd` needs ≥ .77 against a white plate pixel; at .86 ink ≈ 11.7:1 and muted ≈ 6.3:1. **The AA probe** samples every text box against the brightest plate pixel under it, for every cue (including the L06 loop playing), at 1440 and 1024.
 - **`split`:** `lg:grid-cols-[7fr_5fr]` (or `[5fr_7fr]` for a left window) inside the boot gate. The text column keeps `bg-bg`.
   - **The grid is CSS from first paint** under the boot gate. It never waits for the stage, so a late mount causes no CLS.
-  - **The text column is a named container `split`** (`container: split / inline-size`). Research grids inside it (`chapter-section.tsx:108` claim/problem, `:164` approach + metric tiles, and the Option Alpha block) carry a `split-stack` class: `@container split (width < 48rem) { .split-stack { grid-template-columns: 1fr } }`. At 1024 (≈ 560 px column) they stack; at 1440 (≈ 790 px) they keep two columns. Outside a split the container does not exist, so phones, tablets and RM keep today's `lg:` layout byte-for-byte.
+  - **The text column is a named container `split`** (`container: split / inline-size`). Research grids inside it (`chapter-section.tsx:108` claim/problem, `:164` approach + metric tiles, and the Option Alpha block) carry a `split-stack` class: `@container split (width < 48rem) { .split-stack { grid-template-columns: 1fr } }`. At 1024 (≈ 560 px column) they stack; at 1440 (≈ 790 px) they keep two columns. Outside a split the container does not exist, so phones, tablets and RM keep today's `lg:` layout byte-for-byte. **W1 as built (2026-10-01):** the stack breakpoint is **40rem** of column width, not 48rem (the text column is ≈ 740 px at 1440, so 48rem would stack there too); `app/p3/stage.css`.
   - The window column is `<StageWindow>` (server markup): `self-start sticky top-[var(--header-h)] h-[calc(100svh-var(--header-h))]`. It registers its rect on resize only.
-  - It SSR-renders a lazy `next/image` of cue 1 with the same focal fit. When `data-stage="live"` it turns transparent and the stage shows the same pixels, so the column is never empty; under a mid-session Pause the poster simply stays.
+  - It SSR-renders a lazy `next/image` of cue 1 with the same focal fit. When `data-stage="live"` it turns transparent and the stage shows the same pixels, so the column is never empty; under a mid-session Pause the poster simply stays. **W1 as built (2026-10-01):** the live stage reaches the window through a **portal into the sticky window** (`[data-stage-window] > [data-stage-window-host]`), not by making the split section transparent.
   - Under RM (at boot) and on phones the section keeps today's single-column layout.
   - The stage centres the cue's `focal` in that rect by translating the slot (transform).
   - **Rack focus** here only: the 384 px `next/image` rung, stretched, is crossfaded with the sharp slot by opacity (soft while the reading line is inside a text block, sharp for 30vh between blocks). Never animate `filter: blur`.

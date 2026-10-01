@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, PointerEvent, ReactNode } from "react";
+import type { CSSProperties, PointerEvent, ReactNode, RefObject } from "react";
 import {
   animate,
   motion,
@@ -9,7 +9,9 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionValue,
 } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { cn } from "@/lib/utils";
 import {
   parseSkipFlags,
@@ -20,7 +22,8 @@ import {
   useSaveData,
 } from "@/lib/flags";
 import { hasRunThisSession, markRunThisSession } from "@/lib/session";
-import { dur, ease, easeClip, spanUnit, springSoft } from "@/lib/motion";
+import { on } from "@/lib/events";
+import { dur, ease, easeClip, intro as introTiming, spanUnit, springSoft } from "@/lib/motion";
 import type { MediaId } from "@/lib/media";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
@@ -64,7 +67,11 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *              80 ms and its plate fades over dur.base onto the open hero
  *              (a closed Lens under a fading castle read as a stray box).
  *   velocity   VelocityNoise on the plate only (grain, chroma, wake).
- *   pointer    the plate shifts ≤ 6 px (fine pointer), reset on leave.
+ *   pointer    the plate shifts ≤ 6 px (fine pointer), reset on leave. After
+ *              a played prologue its gain ramps 0 → 1 over
+ *              intro.pointerGainMs from the end of the opening titles
+ *              (`intro:quiet-end`), so no second motion competes with the
+ *              reveal or the title cards (PHASE3-SPEC §4.2 "End").
  *   exit       the D3 scroll-out map: scale 1 → 1.03 (p .2) → 1.08 (p .7),
  *              media y → −24 px and text y → −16 px over .2–.7, the plate
  *              darkens over .7–1 (R2, direct, no springs).
@@ -96,11 +103,18 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  *              layer scaled ×zoom about the Pearl (×1 — the DEFAULT framing —
  *              where the cover fit crops the Pearl out). SSR / hydration /
  *              RM / Pause / a dismissal: the final (zoomed) composition.
- *              While the prologue is up the layer waits at ×1 — the flight's
- *              last frame IS the plate at ×1, so the landing meets it with no
- *              jump — and the bracket halves are held invisible; once the
- *              flight has landed the plate pushes in toward the ship
- *              (PUSH_S) and the halves grow onto it. Mobile: static ×zoom.
+ *              While the prologue is up (armed AND its hand-off hold) the
+ *              layer waits at ×1 — the flight's last frame IS the plate at
+ *              ×1, so the reveal meets it with no jump — and the bracket
+ *              halves are held invisible; once the flight has landed the
+ *              plate pushes in toward the ship (PUSH_S) and the halves grow
+ *              onto it. Mobile: static ×zoom.
+ *
+ * P3-3 HAND-OFF (PHASE3-SPEC §4.2): the prologue's phase is read only by two
+ * small children — <HeroLoopFrame> (the loop may take the decoder from the
+ * hold, "handoff", and plays with no fade: loop frame 0 is the poster) and
+ * <SpyglassDriver> (the ALT push-in) — so the hand-off re-renders the loop
+ * frame alone, never this whole stage.
  *   caption    cap.hero (a server-rendered <SceneCaption>): ≥ 640 bottom-
  *              right on its own scrim, exactly where the flight's Pirates
  *              caption lingers (app/intro.css "T1": hidden while the prologue
@@ -239,7 +253,6 @@ export function HeroStage({
   const saveData = useSaveData();
   const wide = useMediaQuery(WIDE);
   const fine = useFinePointer();
-  const phase = useIntroPhase();
 
   const motionOn = !reduced;
   const moving = motionOn && wide; // exit + pointer: the full-bleed layout only
@@ -432,75 +445,12 @@ export function HeroStage({
     };
   }, [plate, boxW, boxH]);
 
-  /* — The ALT spyglass push-in (see the header). The halves are held with
-       WAAPI (React's markup untouched), like the film gate's. — */
+  /* — The ALT spyglass push-in (see the header; <SpyglassDriver>). — */
   const zoom = useMotionValue(geo.zoom);
-  const spyHold = useRef<Animation | null>(null);
-  const spyWaits = useRef(false);
   const frameRef = useRef(frame);
   useEffect(() => {
     frameRef.current = frame;
   });
-  const spyZoom = geo.zoom;
-  useEffect(() => {
-    const halves =
-      lensBoxRef.current?.querySelector<HTMLElement>(":scope > [data-lens] > div:last-child") ?? null;
-    const release = () => {
-      spyHold.current?.cancel();
-      spyHold.current = null;
-    };
-    const final = () => {
-      spyWaits.current = false;
-      zoom.jump(spyZoom);
-      release();
-    };
-    if (spyZoom === 1 || reduced || !wide) {
-      final();
-      return;
-    }
-    if (phase === "armed") {
-      // under the opaque prologue: wait at ×1 (the flight lands on it)
-      spyWaits.current = true;
-      zoom.jump(1);
-      if (halves && !spyHold.current && typeof halves.animate === "function") {
-        spyHold.current = halves.animate({ opacity: [0, 0] }, { duration: 1, fill: "forwards" });
-      }
-      return;
-    }
-    if (!spyWaits.current || phase !== "played") {
-      // never held (no prologue, SSR / hydration) or dismissed: final
-      final();
-      return;
-    }
-    spyWaits.current = false;
-    const f = frameRef.current;
-    const origin = `50% ${(((f.y0 + f.y1) / 2) * 100).toFixed(2)}%`;
-    let settle: Animation | null = null;
-    const run = animate(zoom, spyZoom, {
-      duration: PUSH_S,
-      ease,
-      onComplete: () => {
-        release();
-        if (halves && typeof halves.animate === "function") {
-          settle = halves.animate(
-            [
-              { opacity: 0, transform: "scaleY(0.12)", transformOrigin: origin },
-              { opacity: 1, transform: "scaleY(1)", transformOrigin: origin },
-            ],
-            { duration: dur.reveal * 1000, easing: `cubic-bezier(${ease.join(",")})` },
-          );
-        }
-      },
-    });
-    return () => {
-      // interrupted (motion off, a variant switch, unmount): the final frame
-      run.stop();
-      settle?.cancel();
-      zoom.jump(spyZoom);
-      release();
-    };
-  }, [spyZoom, phase, reduced, wide, zoom]);
-  useEffect(() => () => spyHold.current?.cancel(), []);
 
   // the portrait's Lens frame (intrinsic layout: plate fractions = frame
   // fractions), through its static spyglass zoom
@@ -615,14 +565,37 @@ export function HeroStage({
   useEffect(() => () => holdRef.current?.cancel(), []);
 
   /* — Pointer shift (≤ 6 px, springSoft; the plate scales just enough to
-       never show its edge). — */
+       never show its edge). Held at gain 0 while the prologue is up, then
+       ramped 0 → 1 from the end of its titles (see the header). — */
   const shiftX = useSpring(0, springSoft);
   const shiftY = useSpring(0, springSoft);
+  // performance.now() when the gain ramp starts; Infinity = held
+  const gainFrom = useRef(0);
+  useEffect(() => {
+    if (!document.documentElement.classList.contains("intro-armed")) return;
+    gainFrom.current = Number.POSITIVE_INFINITY;
+    const start = () => {
+      if (gainFrom.current === Number.POSITIVE_INFINITY) gainFrom.current = performance.now();
+    };
+    // the titles' end (or any exit) — and a backstop past their length
+    let backstop = 0;
+    const offQuiet = on("intro:quiet-end", start);
+    const offEnd = onIntroEnd(() => {
+      backstop = window.setTimeout(start, introTiming.titles.total * 1000 + 600);
+    });
+    return () => {
+      offQuiet();
+      offEnd();
+      window.clearTimeout(backstop);
+    };
+  }, []);
   const onPointerMove = (e: PointerEvent<HTMLElement>) => {
     if (!noisy || e.pointerType !== "mouse") return;
+    const g = Math.min(1, Math.max(0, (performance.now() - gainFrom.current) / introTiming.pointerGainMs));
+    if (!(g > 0)) return;
     const r = e.currentTarget.getBoundingClientRect();
-    shiftX.set(((e.clientX - r.left) / r.width - 0.5) * 2 * SHIFT_PX);
-    shiftY.set(((e.clientY - r.top) / r.height - 0.5) * 2 * SHIFT_PX);
+    shiftX.set(((e.clientX - r.left) / r.width - 0.5) * 2 * SHIFT_PX * g);
+    shiftY.set(((e.clientY - r.top) / r.height - 0.5) * 2 * SHIFT_PX * g);
   };
   const onPointerLeave = () => {
     shiftX.set(0);
@@ -647,15 +620,14 @@ export function HeroStage({
   );
   const plateY = useTransform([exitY, shiftY], ([a, b]) => (a as number) + (b as number));
 
-  /* — The loop may take the decoder only once the overlay is gone (H25). — */
-  const playOn = introSettled(phase) ? "desktop" : "never";
-
   return (
     <section
       ref={sectionRef}
       id={id}
       aria-labelledby={titleId}
       data-hero=""
+      // B02: the hero (the loop, the pointer shift, the scroll-out push)
+      {...beatAttrs("B02", { weight: 2 })}
       // the boot script may set data-aperture before hydration
       suppressHydrationWarning
       onPointerMove={onPointerMove}
@@ -663,6 +635,14 @@ export function HeroStage({
       className="relative isolate flex flex-col overflow-hidden bg-bg text-fg sm:min-h-svh sm:justify-center"
     >
       <div hidden data-hero-boot="" dangerouslySetInnerHTML={{ __html: boot }} />
+      <SpyglassDriver
+        zoom={zoom}
+        spyZoom={geo.zoom}
+        reduced={reduced}
+        wide={wide}
+        lensBoxRef={lensBoxRef}
+        frameRef={frameRef}
+      />
 
       {/* — Desktop / tablet: the full-bleed plate behind the name — */}
       <div
@@ -699,19 +679,12 @@ export function HeroStage({
               className={cn("absolute inset-0", moving && "will-change-transform")}
               style={{ scale: zoom, transformOrigin: pos(geo.origin) }}
             >
-              <MediaFrame
+              <HeroLoopFrame
                 // a plate / loop switch (?variant=…) remounts: fresh poster
                 // state and a fresh decoder claim
                 key={`${plate.poster}:${media}`}
                 media={media}
                 poster={plate.poster}
-                priority
-                layout="fill"
-                // art direction without a double download: below 640 this
-                // frame is display:none, so its preload resolves to the 16 w
-                // rung; the mobile frame does the inverse.
-                sizes="(max-width: 639px) 1vw, 100vw"
-                playOn={playOn}
               />
               {noisy ? (
                 <VelocityLayers
@@ -819,3 +792,113 @@ export function HeroStage({
     </section>
   );
 }
+
+/** The hero's desktop plate media: the poster, and the loop once the
+ *  prologue lets it take the decoder (H25: its decoder, then ours). From
+ *  the hand-off hold ("handoff") the loop mounts UNDER the overlay's held
+ *  last frame and cuts in with no fade (its frame 0 is the poster), so the
+ *  reveal uncovers a sea that is already moving. Only this frame re-renders
+ *  on the prologue's phase changes. */
+function HeroLoopFrame({ media, poster }: { media: MediaId; poster: MediaId }) {
+  const phase = useIntroPhase();
+  return (
+    <MediaFrame
+      media={media}
+      poster={poster}
+      priority
+      layout="fill"
+      // art direction without a double download: below 640 this frame is
+      // display:none, so its preload resolves to the 16 w rung; the mobile
+      // frame does the inverse.
+      sizes="(max-width: 639px) 1vw, 100vw"
+      playOn={introSettled(phase) ? "desktop" : "never"}
+      fade={phase === "handoff" ? 0 : undefined}
+    />
+  );
+}
+
+/** The ALT spyglass push-in (see the header). The halves are held with
+ *  WAAPI (React's markup untouched), like the film gate's. Renders nothing;
+ *  it reads the prologue's phase so the stage itself never re-renders on it. */
+function SpyglassDriver({
+  zoom,
+  spyZoom,
+  reduced,
+  wide,
+  lensBoxRef,
+  frameRef,
+}: {
+  zoom: MotionValue<number>;
+  spyZoom: number;
+  reduced: boolean;
+  wide: boolean;
+  lensBoxRef: RefObject<HTMLDivElement | null>;
+  frameRef: RefObject<Box01>;
+}): null {
+  const phase = useIntroPhase();
+  const spyHold = useRef<Animation | null>(null);
+  const spyWaits = useRef(false);
+  useEffect(() => {
+    const halves =
+      lensBoxRef.current?.querySelector<HTMLElement>(":scope > [data-lens] > div:last-child") ?? null;
+    const release = () => {
+      spyHold.current?.cancel();
+      spyHold.current = null;
+    };
+    const final = () => {
+      spyWaits.current = false;
+      zoom.jump(spyZoom);
+      release();
+    };
+    if (spyZoom === 1 || reduced || !wide) {
+      final();
+      return;
+    }
+    // under the prologue: armed, and its hand-off hold (the loop starts
+    // under the held frame; the push waits for the reveal to finish)
+    if (phase === "armed" || phase === "handoff") {
+      // under the opaque prologue: wait at ×1 (the flight lands on it)
+      spyWaits.current = true;
+      zoom.jump(1);
+      if (halves && !spyHold.current && typeof halves.animate === "function") {
+        spyHold.current = halves.animate({ opacity: [0, 0] }, { duration: 1, fill: "forwards" });
+      }
+      return;
+    }
+    if (!spyWaits.current || phase !== "played") {
+      // never held (no prologue, SSR / hydration) or dismissed: final
+      final();
+      return;
+    }
+    spyWaits.current = false;
+    const f = frameRef.current;
+    const origin = `50% ${(((f.y0 + f.y1) / 2) * 100).toFixed(2)}%`;
+    let settle: Animation | null = null;
+    const run = animate(zoom, spyZoom, {
+      duration: PUSH_S,
+      ease,
+      onComplete: () => {
+        release();
+        if (halves && typeof halves.animate === "function") {
+          settle = halves.animate(
+            [
+              { opacity: 0, transform: "scaleY(0.12)", transformOrigin: origin },
+              { opacity: 1, transform: "scaleY(1)", transformOrigin: origin },
+            ],
+            { duration: dur.reveal * 1000, easing: `cubic-bezier(${ease.join(",")})` },
+          );
+        }
+      },
+    });
+    return () => {
+      // interrupted (motion off, a variant switch, unmount): the final frame
+      run.stop();
+      settle?.cancel();
+      zoom.jump(spyZoom);
+      release();
+    };
+  }, [spyZoom, phase, reduced, wide, zoom, lensBoxRef, frameRef]);
+  useEffect(() => () => spyHold.current?.cancel(), []);
+  return null;
+}
+

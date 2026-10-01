@@ -250,17 +250,20 @@ export const VARIANT_REGISTRY = {
     files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
   },
 
-  /* — Phase 3 card push-ins, star (b) p .50–1 (SPEC §6.2; W2-CARDS). The
-       sequences (SEQ-PEARL, SEQ-HALL) are named in the notes, not in
-       `media`, until the assembler registers them (DP-4). — */
+  /* — Phase 3 card push-ins, star (b) p .50–1 (SPEC §6.2; W2-CARDS).
+       W1 assembler (2026-10-01): SEQ-HALL is registered (push-in #3's
+       DEFAULT plays it). SEQ-PEARL FAILED Check L2 (lightning flash frames
+       and figure-like silhouettes on the bow rail; media-staged/p3/accepted/
+       seq-pearl.FAIL.json) and is NOT registered, so push-in #1's DEFAULT is
+       the code push on L01 (its former ALT) and the ALT is a code rack. — */
   "card-opening.push": {
     default: {
-      name: "seq-pearl",
-      note: "Push-in #1: SEQ-PEARL, a 72-frame dolly toward the Pearl (frame 0 = iconic-pearl) scrubbed over p .50–1 on the card-frame canvas; THE CROSSING opens over it from p .68.",
+      name: "code-push-l01",
+      note: "Push-in #1: a code push on the L01 loop, 1 → 1.3 about the stern (transform only), over p .50–1; THE CROSSING opens over it from p .68. (DEFAULT since SEQ-PEARL failed Check L2.)",
     },
     alt: {
-      name: "code-push-l01",
-      note: "A code push on the L01 loop, 1 → 1.3 about the stern (transform only).",
+      name: "code-rack-l01",
+      note: "A rack-focus crossfade on L01 from the soft to the sharp rung (opacity between the rungs, never a blur), then a shorter push 1 → 1.15 about the stern (transform only).",
     },
     files: ["components/sections/act-card/**", "app/p3/cards.css"],
   },
@@ -279,6 +282,7 @@ export const VARIANT_REGISTRY = {
     default: {
       name: "seq-hall",
       note: "Push-in #3: SEQ-HALL, a 72-frame dolly along the tables toward the high table (frame 0 = iconic-hall at the join zoom); the starry ceiling stays in the settled frame.",
+      media: ["SEQ-HALL"],
     },
     alt: {
       name: "code-crane-l02",

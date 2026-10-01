@@ -213,6 +213,13 @@
   /* `font-world-act`: the plane's display lettering (act titles, loader
      route cards, eggs ONLY — SPEC §9.7). Newsreader when the face is absent. */
   --font-world-act: var(--world-font-act);
+  /* Phase 3 world type roles (PHASE3-SPEC §5.1; ≥ 64rem only — the vars are
+     set inside the "world type" block below): `font-world-head|body|lead|
+     hand`. Never on research data (validator #10). Geist when unset. */
+  --font-world-head: var(--world-font-head, var(--font-geist-sans));
+  --font-world-body: var(--world-font-body, var(--font-geist-sans));
+  --font-world-lead: var(--world-font-lead, var(--font-geist-sans));
+  --font-world-hand: var(--world-font-hand, var(--font-geist-sans));
 }
 
 /* ----------------------------------------------------------------------------
@@ -408,10 +415,14 @@
   --world-emphasis: var(--color-ink);
   --world-quiet: var(--color-muted);
   --world-panel: var(--house-raised);
-  /* The world's display lettering (SPEC §9.7): act titles, loader route
-     cards and eggs ONLY — never the name, body, Meta, quotes or data. The
-     --font-world-* vars come from lib/fonts.ts (next/font/local, applied on
-     <html>); a missing face falls through to Newsreader (fixture L). */
+  /* The world's display lettering (SPEC §9.7 + M2 O-1): act titles, loader
+     route cards, eggs and (fontScope.extended) the caption slot. Below 64rem
+     these legacy subsets are the only world faces; at ≥ 64rem the "world
+     type" block (end of file) re-points --world-font-act at each world's
+     HEAD face and adds the head / body / lead roles (PHASE3-SPEC §5). Never
+     Meta or research data. The --font-world-* vars come from lib/fonts.ts
+     (next/font/local, applied on <html>); a missing face falls through to
+     Newsreader (fixture L). */
   --world-font-act: var(--font-newsreader), "Source Serif 4", Georgia, serif;
 }
 [data-world="pirates"] {
@@ -464,8 +475,8 @@
   --world-emphasis: var(--w-bone);
   --world-quiet: var(--w-sage);
   --world-panel: var(--rd-raised);
-  /* Chinese Rocks is outline-only by licence and not shipped in M1
-     (FONTS.md): --font-world-rdr2 resolves to Newsreader until it is. */
+  /* Rye (M2 O-3; FONTS.md): the rdr2 lettering face. Chinese Rocks stays
+     outline-only by its EULA and is not used. */
   --world-font-act: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
 }
 
@@ -654,6 +665,12 @@ body {
 /* ----------------------------------------------------------------------------
    DESIGN v2 type steps (§2.2) — each utility is a COMPLETE step: family,
    size, leading, tracking, weight, case and wrapping. <= 3 per viewport.
+   Phase 3 (P3-4, PHASE3-SPEC §5.3): the head steps (chapter, title) read the
+   world HEAD role and the prose steps (lead, body, small) the world BODY /
+   LEAD role through --world-* vars with today's values as the fallback. The
+   vars are set ONLY inside `@media (min-width: 64rem)` (the "world type"
+   block at the end of this file), so below 64rem every step computes
+   exactly as before.
    -------------------------------------------------------------------------- */
 @utility type-display {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
@@ -663,20 +680,44 @@ body {
   font-weight: 400;
   text-wrap: balance;
 }
-@utility type-chapter {
+/* The name (§P(b), PHASE3-SPEC §5.4): the hero h1 only (validator #10).
+   Below 64rem it is type-display, declaration for declaration. At ≥ 64rem
+   (DESKTOP_WIDE) it is Pirata One (the "Film Name Pirates" face, declared
+   and preloaded for ≥ 64rem only) on a Geist fallback, mixed case only
+   (blackletter caps are illegible: never `uppercase`), line-height .96
+   (.9 collides the y descender with the h), tracking .01em (−.03 clogs the
+   counters): 172.8 px @1440, 122.9 px @1024. */
+@utility type-name {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-chapter);
-  line-height: var(--text-chapter--line-height);
-  letter-spacing: var(--text-chapter--letter-spacing);
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 400;
+  text-wrap: balance;
+  @media (min-width: 64rem) {
+    font-family: var(--font-name-pirates), var(--font-geist-sans), ui-sans-serif, sans-serif;
+    font-size: clamp(4.75rem, 12vw, 11.5rem);
+    line-height: 0.96;
+    letter-spacing: 0.01em;
+    font-kerning: normal;
+    font-synthesis: none;
+    text-transform: none;
+  }
+}
+@utility type-chapter {
+  font-family: var(--world-font-head, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+  font-size: calc(var(--text-chapter) * var(--world-head-scale, 1));
+  line-height: var(--world-head-lh, var(--text-chapter--line-height));
+  letter-spacing: var(--world-head-track, var(--text-chapter--letter-spacing));
   font-weight: 400;
   text-wrap: balance;
 }
 @utility type-title {
-  font-family: var(--font-serif), "Source Serif 4", Literata, Georgia, serif;
+  font-family: var(--world-font-head, var(--font-serif)), "Source Serif 4", Literata, Georgia, serif;
   font-optical-sizing: auto;
-  font-size: var(--text-title);
-  line-height: var(--text-title--line-height);
-  letter-spacing: var(--text-title--letter-spacing);
+  font-size: calc(var(--text-title) * var(--world-head-scale, 1));
+  line-height: var(--world-head-lh, var(--text-title--line-height));
+  letter-spacing: var(--world-head-track, var(--text-title--letter-spacing));
   font-weight: 400;
   text-wrap: balance;
 }
@@ -688,26 +729,26 @@ body {
   font-weight: var(--text-heading--font-weight);
 }
 @utility type-lead {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-lead);
-  line-height: var(--text-lead--line-height);
-  letter-spacing: var(--text-lead--letter-spacing);
+  font-family: var(--world-font-lead, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--world-lead-size, var(--text-lead));
+  line-height: var(--world-lead-lh, var(--text-lead--line-height));
+  letter-spacing: var(--world-lead-track, var(--text-lead--letter-spacing));
   font-weight: 400;
   text-wrap: balance;
 }
 @utility type-body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-body);
-  line-height: var(--text-body--line-height);
-  letter-spacing: var(--text-body--letter-spacing);
+  font-family: var(--world-font-body, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--world-body-size, var(--text-body));
+  line-height: var(--world-body-lh, var(--text-body--line-height));
+  letter-spacing: var(--world-body-track, var(--text-body--letter-spacing));
   font-weight: 400;
   text-wrap: pretty;
 }
 @utility type-small {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-small);
-  line-height: var(--text-small--line-height);
-  letter-spacing: var(--text-small--letter-spacing);
+  font-family: var(--world-font-body, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--world-small-size, var(--text-small));
+  line-height: var(--world-small-lh, var(--text-small--line-height));
+  letter-spacing: var(--world-body-track, var(--text-small--letter-spacing));
   font-weight: 400;
 }
 @utility type-meta {
@@ -1357,3 +1398,198 @@ html[data-motion="paused"] .opening-vignette {
   .scene-caption__film { display: block; margin-top: 0.2em; }
 }
 /* === /scene captions === */
+
+/* === world type (P3-4; PHASE3-SPEC §5; owner B1-TYPE) ========================
+   DESKTOP_WIDE (≥ 64rem) ONLY. Below 64rem nothing in this block applies:
+   phones keep today's four lettering subsets (54,336 B), slot rules and
+   --world-font-act byte-for-byte, and fetch no new font. At ≥ 64rem the
+   legacy subsets are never referenced, so desktop never requests them.
+
+   1. The name: Pirata One ASCII+ (public/fonts/film/pirata-one/, OFL.txt
+      beside it), preloaded with media "(min-width: 64rem)" by
+      app/layout.tsx. Its vertical metrics are overridden to Geist's
+      (ascent 1005 / descent 295 / gap 0 per 1000 upm; Pirata's own are
+      1006 / 279 / 0), so the Geist fallback and Pirata share one line box
+      and one baseline: a late swap changes only glyph widths (the h1 is
+      w-fit; its height is fixed by line-height .96 × 2 lines): CLS 0.
+   2. Lazy per world: a face is referenced only through
+      --font-world-<world>-<role>-live, which exists only once
+      html[data-fonts~="<world>"] carries the token (<WorldFonts/>,
+      lib/world-fonts.ts; ladder step 5, then on approach). The Pirates head
+      is the name's file (already loaded), so it is live from first paint.
+      The prologue (first visit, html.intro-armed) letters its two hp
+      captions in the hp head before the quiet window; nothing else loads
+      before step 5. No JS: app/layout.tsx's <noscript> style makes every
+      face live.
+   3. Roles: [data-world] planes set the HEAD role (any plane: sections, film
+      screens, captions); [data-section][data-world] sections set the BODY /
+      LEAD / HAND roles (prose). The type steps above read them; the
+      research guard and the house-type resets are in app/p3/type.css.
+   Metrics (scale, leading, tracking, measures) are static per world; only
+   the face waits for its token, so a swap lands while the world is still
+   ≥ 150% of a viewport away. Validator: scripts/checks/fonts.mjs. */
+@media (min-width: 64rem) {
+  @font-face {
+    font-family: "Film Name Pirates";
+    src: url("/fonts/film/pirata-one/pirata-one-ascii.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    ascent-override: 100.5%;
+    descent-override: 29.5%;
+    line-gap-override: 0%;
+  }
+
+  :root {
+    --font-name-pirates: "Film Name Pirates";
+    /* the Pirates head IS the name's file (5.3 KB, preloaded): never gated */
+    --font-world-pirates-head-live: var(--font-name-pirates);
+    /* PHASE3-SPEC §5.3: 68ch is ≈ 96 Geist characters; 35rem ≈ 70 */
+    --container-body: 35rem;
+  }
+
+  /* — the tokens (lib/world-fonts.ts markWorldFontsReady) — */
+  html[data-fonts~="pirates"] {
+    --font-world-pirates-body-live: var(--font-world-pirates-body);
+  }
+  html[data-fonts~="idiots"] {
+    --font-world-idiots-head-live: var(--font-world-idiots-head);
+    --font-world-idiots-lead-live: var(--font-world-idiots-lead);
+  }
+  html[data-fonts~="rdr2"] {
+    --font-world-rdr2-head-live: var(--font-world-rdr2-head);
+    --font-world-rdr2-body-live: var(--font-world-rdr2-body);
+    --font-world-rdr2-hand-live: var(--font-world-rdr2-hand);
+  }
+  html[data-fonts~="hp"] {
+    --font-world-hp-head-live: var(--font-world-hp-head);
+    --font-world-hp-body-live: var(--font-world-hp-body);
+  }
+  /* the prologue's play-screen and flight captions (hp), first visit only */
+  html.intro-armed :is(#intro, #intro-caps) {
+    --font-world-hp-head-live: var(--font-world-hp-head);
+  }
+
+  /* — HEAD role, every plane (PHASE3-SPEC §5.3 table) — */
+  [data-world="house"] {
+    --world-font-head: initial;
+    --world-head-scale: 1;
+    --world-head-lh: initial;
+    --world-head-track: initial;
+    --world-head-weight: initial;
+    --world-font-body: initial;
+    --world-font-lead: initial;
+    --world-font-hand: initial;
+    --world-body-size: initial;
+    --world-body-lh: initial;
+    --world-body-track: initial;
+    --world-small-size: initial;
+    --world-small-lh: initial;
+    --world-lead-size: initial;
+    --world-lead-lh: initial;
+    --world-lead-track: initial;
+  }
+  [data-world="pirates"] {
+    --world-font-head: var(--font-world-pirates-head-live), var(--font-newsreader), Georgia, serif; /* Pirata One */
+    --world-head-scale: 1;
+    --world-head-lh: 0.95;
+    --world-head-track: 0em;
+    --world-head-weight: 400;
+    --world-font-act: var(--font-world-pirates-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
+  }
+  [data-world="idiots"] {
+    --world-font-head: var(--font-world-idiots-head-live), var(--font-newsreader), Georgia, serif; /* Kalam 700 */
+    --world-head-scale: 0.95;
+    --world-head-lh: 1.05; /* ≥ 1.05: Kalam's ascenders clip under MaskReveal at .95 */
+    --world-head-track: 0em;
+    --world-head-weight: 400;
+    --world-font-act: var(--font-world-idiots-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
+  }
+  [data-world="rdr2"] {
+    --world-font-head: var(--font-world-rdr2-head-live), var(--font-newsreader), Georgia, serif; /* Rye */
+    --world-head-scale: 0.8;
+    --world-head-lh: 1;
+    --world-head-track: 0.01em;
+    --world-head-weight: 400;
+    --world-font-act: var(--font-world-rdr2-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
+  }
+  [data-world="hp"] {
+    --world-font-head: var(--font-world-hp-head-live), var(--font-newsreader), Georgia, serif; /* IM Fell English SC */
+    --world-head-scale: 1.1;
+    --world-head-lh: 1;
+    --world-head-track: 0.02em;
+    --world-head-weight: 400;
+    --world-font-act: var(--font-world-hp-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif;
+  }
+
+  /* — BODY / LEAD / HAND roles, sections only (PHASE3-SPEC §5.2–5.3).
+       Measures in rem, not ch (ch is each face's "0"). — */
+  [data-section][data-world="pirates"] {
+    /* Cormorant Garamond 500, 20 px / 1.55, ink only (app/p3/type.css) */
+    --world-font-body: var(--font-world-pirates-body-live), var(--font-newsreader), Georgia, serif;
+    --world-font-lead: var(--font-world-pirates-body-live), var(--font-newsreader), Georgia, serif;
+    --world-font-hand: initial;
+    --world-body-size: 1.25rem;
+    --world-body-lh: 1.55;
+    --world-body-track: 0em;
+    --world-small-size: 1.125rem;
+    --world-small-lh: 1.55;
+    --world-lead-size: 1.375rem;
+    --world-lead-lh: 1.5;
+    --world-lead-track: 0em;
+    --container-body: 32rem;
+    --container-lead: 30rem;
+  }
+  [data-section][data-world="idiots"] {
+    /* a LEAD face only (Patrick Hand 22 px / 1.45, ≤ 3 lines); long text
+       and all research stay Geist */
+    --world-font-body: initial;
+    --world-font-lead: var(--font-world-idiots-lead-live), var(--font-geist-sans), ui-sans-serif, sans-serif;
+    --world-font-hand: initial;
+    --world-lead-size: 1.375rem;
+    --world-lead-lh: 1.45;
+    --world-lead-track: 0em;
+    --container-lead: 25rem;
+  }
+  [data-section][data-world="rdr2"] {
+    /* Courier Prime 17 px / 1.65; the journal hand ≤ 4 words per page */
+    --world-font-body: var(--font-world-rdr2-body-live), var(--font-geist-mono), ui-monospace, monospace;
+    --world-font-lead: var(--font-world-rdr2-body-live), var(--font-geist-mono), ui-monospace, monospace;
+    --world-font-hand: var(--font-world-rdr2-hand-live), var(--font-newsreader), Georgia, serif;
+    --world-body-size: 1.0625rem;
+    --world-body-lh: 1.65;
+    --world-body-track: 0em;
+    --world-small-size: 0.9375rem;
+    --world-small-lh: 1.6;
+    --world-lead-size: 1.25rem;
+    --world-lead-lh: 1.55;
+    --world-lead-track: 0em;
+    --container-body: 36rem;
+    --container-lead: 34rem;
+  }
+  [data-section][data-world="hp"] {
+    /* Crimson Pro 400, 19 px / 1.6 (no italic shipped) */
+    --world-font-body: var(--font-world-hp-body-live), var(--font-newsreader), Georgia, serif;
+    --world-font-lead: var(--font-world-hp-body-live), var(--font-newsreader), Georgia, serif;
+    --world-font-hand: initial;
+    --world-body-size: 1.1875rem;
+    --world-body-lh: 1.6;
+    --world-body-track: 0em;
+    --world-small-size: 1rem;
+    --world-small-lh: 1.55;
+    --world-lead-size: 1.375rem;
+    --world-lead-lh: 1.5;
+    --world-lead-track: 0em;
+    --container-body: 31rem;
+    --container-lead: 30rem;
+  }
+
+  /* — the lettering slots (captions, film titles, WANTED, lettered quotes)
+       follow their world's HEAD face at ≥ 64rem (hp: IM Fell English SC
+       replaces the roman subset; idiots: Kalam 700 replaces the 400). — */
+  .world-face-pirates { font-family: var(--font-world-pirates-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+  .world-face-idiots { font-family: var(--font-world-idiots-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+  .world-face-rdr2 { font-family: var(--font-world-rdr2-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+  .world-face-hp { font-family: var(--font-world-hp-head-live, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
+}
+/* === /world type === */

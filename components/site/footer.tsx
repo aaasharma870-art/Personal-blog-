@@ -23,6 +23,8 @@ import { Lettered } from "@/components/primitives/scene-caption";
 import { InkFold, SeekerRow, Snitch } from "@/components/eggs/snitch";
 import { HuntCredits } from "@/components/eggs/hunt-credits";
 import { PostCredits } from "@/components/site/post-credits";
+import { StageScrim } from "@/components/stage/scrim";
+import { typeCredits } from "@/lib/fonts";
 
 /* ============================================================================
    CREDITS — the closing roll (SPEC v2 SM-13; ICONS §10), rendered as the page
@@ -51,7 +53,28 @@ import { PostCredits } from "@/components/site/post-credits";
      adds SEEKER — you. The Time-Turner is 24 px, the Hallows end mark 16 px.
    - The last line, Q-HP-2, is LETTERED in IM Fell at the heading size, and
      a short ink fold-line draws closed beneath it (the Map folding shut).
+
+   PHASE 3 (PHASE3-SPEC §3.2, §12.1; B1-STAGE):
+   - The footer is `relative z-(--z-main)` (above the fixed stage, below the
+     fixed layers and the header), like <main>.
+   - `backdrop` (the credits roll over the last shot, MV-08): with a
+     backdrop StageSpec the footer carries `.stage-backdrop` and its static
+     StageScrim; both do nothing until the live stage marks it (stage.css).
+   - TYPE: every film face B1-TYPE ships (lib/fonts.ts `typeCredits`) at
+     ≥ 64rem, where they load (DESKTOP_FACES below); below 64rem the row is
+     today's.
+   - LIBRARIES (new row, the boot gate only: GSAP and Lenis load only on a
+     desktop with a fine pointer and motion on, so the row says so only
+     where it is true).
    ========================================================================== */
+
+/** The film faces the site ships (PHASE3-SPEC §5.2; `typeCredits` in
+ *  lib/fonts.ts, B1-TYPE, house faces first), minus the house three this row
+ *  already names. Shown ≥ 64rem, where the world faces load; below 64rem
+ *  phones load none of the new ones, so the roll there keeps the shipped
+ *  lettering faces (today's row). */
+const HOUSE_FACES: ReadonlySet<string> = new Set(["Geist", "Geist Mono", "Newsreader"]);
+const DESKTOP_FACES: readonly string[] = typeCredits.filter((f) => !HOUSE_FACES.has(f));
 
 /** Quote hosts whose lines render only when someone triggers them (an egg's
  *  toast, the devtools console): they are not on the page at rest, so the
@@ -100,9 +123,11 @@ function shippedFaces(): string[] {
   return [...new Set(film.lettering.filter((l) => l.shipped && l.mode === "A").map((l) => l.face))];
 }
 
-function Row({ role, children }: { role: string; children: ReactNode }) {
+function Row({ role, children, className }: { role: string; children: ReactNode; className?: string }) {
   return (
-    <div className="grid grid-cols-1 gap-1 border-t border-rule py-tier-group sm:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] sm:gap-8">
+    <div
+      className={`grid grid-cols-1 gap-1 border-t border-rule py-tier-group sm:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] sm:gap-8${className ? ` ${className}` : ""}`}
+    >
       <dt className="type-meta text-fg-muted sm:pt-0.5 sm:text-right">{role}</dt>
       <dd className="type-body text-fg">{children}</dd>
     </div>
@@ -126,14 +151,16 @@ export function Footer({ entry }: SectionProps<"credits">) {
   const i = enabledSections.indexOf(entry);
   const prev = i > 0 ? enabledSections[i - 1] : undefined;
   const fromWorld = on && prev ? worldOf(prev) : "house";
+  const scrim = entry.stage?.mode === "backdrop" ? entry.stage.scrim : undefined;
 
   return (
     <footer
       id={anchorId(entry)}
       aria-labelledby="credits-title"
       {...planeAttrs("deep", "house")}
-      className="relative isolate bg-bg py-section text-fg"
+      className={`relative isolate z-(--z-main) bg-bg py-section text-fg${scrim ? " stage-backdrop" : ""}`}
     >
+      {scrim ? <StageScrim scrim={scrim} /> : null}
       {fromWorld !== "house" ? (
         <div
           aria-hidden="true"
@@ -193,11 +220,21 @@ export function Footer({ entry }: SectionProps<"credits">) {
           <Row role="Type">
             Geist<Dot />Geist Mono<Dot />Newsreader
             {faces.length ? (
-              <>
+              <span className="dw:hidden">
                 <Dot />
                 {faces.join(", ")} (SIL Open Font License 1.1)
-              </>
+              </span>
             ) : null}
+            {faces.length ? (
+              <span className="hidden dw:inline">
+                <Dot />
+                {DESKTOP_FACES.join(", ")} (SIL Open Font License 1.1)
+              </span>
+            ) : null}
+          </Row>
+          {/* shown by the boot gate only (app/p3/stage.css) */}
+          <Row role="Libraries" className="credits-libraries">
+            On desktop: GSAP (standard no-charge licence)<Dot />Lenis (MIT)
           </Row>
           <SeekerRow />
           <HuntCredits />

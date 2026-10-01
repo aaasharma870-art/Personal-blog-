@@ -5,4 +5,262 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   THE GATES (spelled out here; the same as globals.css `boot:` and
+   `stage-live:`):
+     BOOT  @media DESKTOP_FINE and (prefers-reduced-motion: no-preference)
+           + html.js:not([data-motion-boot="paused"])
+           Every LAYOUT difference keys on this alone (split grids): right
+           from first paint, never changed by a later Pause, absent without
+           JS, on phones, tablets and under reduced motion.
+     LIVE  BOOT + html[data-stage="live"]:not([data-motion="paused"])
+           Transparency and the stage's layers only (paint, never layout):
+           a mid-session Pause drops them in the same frame, 0 shift.
+   Unlayered rules on purpose: they win over Tailwind's layered utilities
+   (`bg-bg`, `grid`) exactly where a gate applies.
    ========================================================================== */
+
+/* — tokens ———————————————————————————————————————————————————————————— */
+:root {
+  /* the split grid's gutter between the text and the window */
+  --split-gap: clamp(1.5rem, 3vw, 3rem);
+  /* letterbox bar height (spec §7.4): the 2.39 band; 148.7 px @1440×900 */
+  --lb-h: max(0px, (100svh - 100vw / 2.39) / 2);
+}
+@media (width < 80rem) {
+  :root {
+    /* capped at 11svh below 80rem: 84.5 px @1024×768 (a 599 px band) */
+    --lb-h: min(max(0px, (100svh - 100vw / 2.39) / 2), 11svh);
+  }
+}
+
+/* while the bars are closed, anchors and focus clear them (Lenis's
+   scrollTo reads scroll-padding); spec §7.4, WCAG 2.4.11 */
+html[data-letterbox] {
+  scroll-padding-top: max(var(--lb-h), calc(var(--header-h) + 24px));
+  scroll-padding-bottom: var(--lb-h);
+}
+
+/* — the stage root and its layers (client-only markup, components/stage) — */
+.stage-root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-stage);
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+  display: none;
+}
+.stage-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: none;
+  will-change: transform, opacity;
+}
+.stage-cam {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.stage-video-host {
+  position: absolute;
+  inset: 0;
+}
+.stage-video,
+.stage-soft {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stage-soft {
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* — backdrop: the static scrim (components/stage/scrim.tsx) ———————————— */
+.stage-scrim {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: -20; /* under the world ground (-10) and every text box */
+  pointer-events: none;
+  --scrim-t: color-mix(in oklab, var(--bg) var(--scrim-text, 86%), transparent);
+  --scrim-i: color-mix(in oklab, var(--bg) var(--scrim-image, 45%), transparent);
+}
+/* text on the left: its right edge stays at or left of the 58 % stop */
+.stage-scrim[data-zone="right"] {
+  background-image: linear-gradient(to right, var(--scrim-t) 0 58%, var(--scrim-i) 72% 100%);
+}
+.stage-scrim[data-zone="left"] {
+  background-image: linear-gradient(to left, var(--scrim-t) 0 58%, var(--scrim-i) 72% 100%);
+}
+/* .86 over the page container's content box; the plate at .45 only in the
+   outer gutters (the container's padding and anything outside 90rem) */
+.stage-scrim[data-zone="gutters"] {
+  --scrim-edge: calc(max(0px, (100% - var(--container-page, 90rem)) / 2) + var(--spacing-gutter, 4rem));
+  background-image: linear-gradient(
+    to right,
+    var(--scrim-i) 0 var(--scrim-edge),
+    var(--scrim-t) var(--scrim-edge) calc(100% - var(--scrim-edge)),
+    var(--scrim-i) calc(100% - var(--scrim-edge)) 100%
+  );
+}
+
+/* — split: the text column + the sticky window (stage-window.tsx) ——————— */
+.stage-split,
+.stage-split-text {
+  display: contents;
+}
+.stage-window {
+  display: none;
+}
+.stage-window-host {
+  position: absolute;
+  inset: 0;
+}
+.stage-window-poster {
+  transition: opacity 300ms linear;
+}
+
+/* — the credits' libraries row: only where GSAP and Lenis can load —————— */
+.credits-libraries {
+  display: none;
+}
+
+/* — BOOT: layout (from first paint) ———————————————————————————————— */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) .stage-split {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--split-gap);
+    align-items: start;
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-split[data-side="left"] {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-split-text {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    container: split / inline-size;
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-split[data-side="left"] > .stage-split-text {
+    grid-column: 2;
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-window {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100svh - var(--header-h));
+    overflow: hidden;
+    background-color: var(--bg);
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-split[data-side="left"] > .stage-window {
+    grid-column: 1;
+  }
+  /* a wide block (the ICE board) spans the whole grid, over the window */
+  html.js:not([data-motion-boot="paused"]) .stage-split [data-stage-wide] {
+    position: relative;
+    z-index: 1;
+    width: calc(100% * 12 / 7 + var(--split-gap));
+    background-color: var(--bg);
+  }
+  html.js:not([data-motion-boot="paused"]) .stage-split[data-side="left"] [data-stage-wide] {
+    margin-left: calc(-100% * 5 / 7 - var(--split-gap));
+  }
+  html.js:not([data-motion-boot="paused"]) .credits-libraries {
+    display: grid;
+  }
+}
+
+/* research grids stack in a narrow split column (≈ 523 px @1024; ≈ 740 px
+   @1440 keeps two columns). Outside a split the container does not exist,
+   so every other layout is today's. */
+@container split (width < 40rem) {
+  .split-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .split-stack > * {
+    grid-column: 1 / -1;
+  }
+}
+
+/* — LIVE: paint only (the stage is showing; never while paused) ———————— */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-root,
+  html.js:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-layer {
+    display: block;
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on] .stage-backdrop,
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on].stage-backdrop {
+    background-color: transparent;
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on] .stage-scrim {
+    display: block;
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-window[data-stage-on] .stage-window-poster {
+    opacity: 0;
+  }
+}
+
+/* — letterbox bars (components/stage/letterbox-bars.tsx) ——————————————— */
+.letterbox {
+  display: contents;
+}
+.letterbox-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: var(--lb-h);
+  z-index: var(--z-bars);
+  pointer-events: none;
+  background-color: var(--lb-bg, #050708);
+  transform: scaleY(0);
+  will-change: transform;
+}
+.letterbox-bar[data-bar="top"] {
+  top: 0;
+  transform-origin: 50% 0;
+}
+.letterbox-bar[data-bar="bottom"] {
+  bottom: 0;
+  transform-origin: 50% 100%;
+}
+/* ALT "iris-bars": an elliptical iris (static gradient, scaled) closes
+   toward the 2.39 band, then the flat bars square it off */
+.letterbox[data-variant="iris-bars"] .letterbox-bar {
+  transform: none;
+  opacity: 0;
+  will-change: opacity;
+}
+.letterbox-iris {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bars);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(2.6);
+  will-change: transform, opacity;
+  background-image: radial-gradient(
+    ellipse 72vw calc(50svh - var(--lb-h)) at 50% 50%,
+    transparent 99%,
+    var(--lb-bg, #050708) 100%
+  );
+}
+/* bars never show under reduced motion or Pause (the component unmounts
+   them too; this covers the frame in between) */
+@media (prefers-reduced-motion: reduce) {
+  .letterbox {
+    display: none;
+  }
+}
+html[data-motion="paused"] .letterbox {
+  display: none;
+}
