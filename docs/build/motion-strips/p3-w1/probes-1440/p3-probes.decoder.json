@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:46:38.079Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "decoder"
+    ]
+  },
+  "results": {
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 71,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 2798,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "stage",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "stage",
+          "MV-09"
+        ],
+        "crossfadeSamples": 9,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 324755,
+      "console": []
+    }
+  }
+}

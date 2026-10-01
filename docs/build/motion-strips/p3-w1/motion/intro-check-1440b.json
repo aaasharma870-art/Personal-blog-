@@ -1,0 +1,200 @@
+[
+ {
+  "run": 0,
+  "nameFirstVisibleMsAfterReveal": 760,
+  "revFrames": [
+   [
+    76,
+    0
+   ],
+   [
+    93,
+    0
+   ],
+   [
+    160,
+    0
+   ],
+   [
+    226,
+    0
+   ]
+  ],
+  "nameFramesAfterReveal": 11,
+  "marks": {
+   "intro:arm": 88,
+   "intro:ready": 368,
+   "intro:play": 3138,
+   "intro:flight": 3381,
+   "intro:warm": 7999,
+   "intro:hold": 9458,
+   "intro:reveal": 9826,
+   "intro:landing": 9826,
+   "intro:titles": 10598,
+   "intro:end": 10598,
+   "intro:titles-end": 13799,
+   "p3:quiet-end": 13799,
+   "p3:ladder-1": 13983,
+   "p3:ladder-2": 14233,
+   "p3:ladder-3": 14417,
+   "p3:ladder-4": 14570,
+   "p3:ladder-5": 14748
+  },
+  "mediaAtFirstSweepFrame": "playing",
+  "mediaAtRevealMark": "playing",
+  "mediaStatesSeen": [
+   "poster",
+   "starting",
+   "playing"
+  ],
+  "loafWarmToEnd": {
+   "n": 33,
+   "over50dur": 33,
+   "maxDur": 221,
+   "over50work": 5,
+   "maxWork": 169,
+   "worst": [
+    {
+     "t": 9408,
+     "d": 221,
+     "work": 169,
+     "top": {
+      "d": 128,
+      "inv": "FrameRequestCallback",
+      "src": "",
+      "fn": "",
+      "st": 9498.900000000373
+     }
+    },
+    {
+     "t": 7969,
+     "d": 175,
+     "work": 144,
+     "top": {
+      "d": 139,
+      "inv": "FrameRequestCallback",
+      "src": "",
+      "fn": "",
+      "st": 8003.5999999996275
+     }
+    },
+    {
+     "t": 9800,
+     "d": 113,
+     "work": 87
+    }
+   ]
+  },
+  "handoff": {
+   "loafs": 4,
+   "maxScript": 128,
+   "scripts": [
+    "41ms VideoFrameRequestCallback calhost:3161/intro/intro.js?v=5b1fad446f hn"
+   ]
+  },
+  "errs": []
+ },
+ {
+  "run": 1,
+  "nameFirstVisibleMsAfterReveal": 776,
+  "revFrames": [
+   [
+    126,
+    0
+   ],
+   [
+    143,
+    0
+   ],
+   [
+    209,
+    0
+   ],
+   [
+    292,
+    0
+   ]
+  ],
+  "nameFramesAfterReveal": 11,
+  "marks": {
+   "intro:arm": 72,
+   "intro:ready": 332,
+   "intro:play": 3107,
+   "intro:flight": 3358,
+   "intro:warm": 7976,
+   "intro:hold": 9383,
+   "intro:reveal": 9731,
+   "intro:landing": 9731,
+   "intro:titles": 10503,
+   "intro:end": 10504,
+   "intro:titles-end": 13705,
+   "p3:quiet-end": 13705,
+   "p3:ladder-1": 13933,
+   "p3:ladder-2": 14100,
+   "p3:ladder-3": 14288,
+   "p3:ladder-4": 14448,
+   "p3:ladder-5": 14615
+  },
+  "mediaAtFirstSweepFrame": "playing",
+  "mediaAtRevealMark": "playing",
+  "mediaStatesSeen": [
+   "poster",
+   "starting",
+   "playing"
+  ],
+  "loafWarmToEnd": {
+   "n": 37,
+   "over50dur": 37,
+   "maxDur": 202,
+   "over50work": 5,
+   "maxWork": 131,
+   "worst": [
+    {
+     "t": 10449,
+     "d": 202,
+     "work": 131,
+     "top": {
+      "d": 131,
+      "inv": "FrameRequestCallback",
+      "src": "",
+      "fn": "",
+      "st": 10518.800000000745
+     }
+    },
+    {
+     "t": 9331,
+     "d": 182,
+     "work": 129,
+     "top": {
+      "d": 91,
+      "inv": "FrameRequestCallback",
+      "src": "",
+      "fn": "",
+      "st": 9421.200000000186
+     }
+    },
+    {
+     "t": 9660,
+     "d": 179,
+     "work": 113,
+     "top": {
+      "d": 5,
+      "inv": "TimerHandler:setTimeout",
+      "src": "calhost:3161/intro/intro.js?v=5b1fad446f",
+      "fn": "",
+      "st": 9662.200000000186
+     }
+    }
+   ]
+  },
+  "handoff": {
+   "loafs": 3,
+   "maxScript": 91,
+   "scripts": [
+    "38ms VideoFrameRequestCallback calhost:3161/intro/intro.js?v=5b1fad446f hn",
+    "5ms TimerHandler:setTimeout calhost:3161/intro/intro.js?v=5b1fad446f "
+   ]
+  },
+  "errs": []
+ }
+]

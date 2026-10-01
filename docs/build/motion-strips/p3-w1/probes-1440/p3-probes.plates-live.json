@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:49:22.941Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "plates-live"
+    ]
+  },
+  "results": {
+    "plates-live": {
+      "skipped": true,
+      "ms": 10,
+      "console": []
+    }
+  }
+}

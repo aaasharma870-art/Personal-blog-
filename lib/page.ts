@@ -266,7 +266,7 @@ export const page: readonly SectionEntry[] = [
       ],
     },
     tempo: "medium",
-    estVh: { d: 1.389, t: 1.715 },
+    estVh: { d: 1.473, t: 1.941 },
     beats: [
       { id: "B07", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B08", at: 0, span: 50, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
@@ -285,7 +285,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Journey", primary: true },
     stage: { mode: "own" },
     tempo: "medium",
-    estVh: { d: 3.128, t: 3.09 },
+    estVh: { d: 3.173, t: 3.144 },
     beats: [
       { id: "B09-window", at: 0, span: 10, kind: "match-cut", timing: "scroll", feature: "P3-2" },
       { id: "B10", at: 0, span: 106.2, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
@@ -323,7 +323,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Work", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.547, t: 2.586 },
+    estVh: { d: 2.593, t: 2.713 },
     beats: [
       { id: "B16", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B17", at: 0, span: 100.1, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -344,7 +344,7 @@ export const page: readonly SectionEntry[] = [
     // split, window right (spec §3.2): the corridor, panning left, chalk dust
     stage: { mode: "split", side: "right", cues: [{ media: "iconic-corridor", camera: "pan-l", weather: "chalk" }] },
     tempo: "brisk",
-    estVh: { d: 1.789, t: 1.885 },
+    estVh: { d: 2.134, t: 2.928 },
     beats: [
       { id: "B19", at: -100, span: 100, kind: "stage-cue", timing: "scroll", star: true, weight: 1, feature: "P3-2" },
       { id: "B20", at: 0, span: 95.4, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -370,7 +370,7 @@ export const page: readonly SectionEntry[] = [
       ],
     },
     tempo: "brisk",
-    estVh: { d: 2.522, t: 2.632 },
+    estVh: { d: 4.94, t: 6.564 },
     beats: [
       { id: "B22", at: 0, span: 83.2, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
       { id: "B23", at: 83.2, span: 88.9, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
@@ -392,7 +392,7 @@ export const page: readonly SectionEntry[] = [
     tone: "raised",
     stage: { mode: "opaque" }, // H4: no film here
     tempo: "brisk",
-    estVh: { d: 1.111, t: 1.169 },
+    estVh: { d: 1.258, t: 1.338 },
     beats: [
       { id: "B25", at: 0, span: 111.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-7" },
     ],
@@ -406,7 +406,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.176, t: 2.286 },
+    estVh: { d: 2.358, t: 2.419 },
     beats: [
       { id: "B26", at: 0, span: 97.7, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 97.7, span: 119.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -435,7 +435,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
     stage: { mode: "opaque" }, // the head inset keeps its own plate
     tempo: "brisk",
-    estVh: { d: 2.358, t: 2.824 },
+    estVh: { d: 2.358, t: 2.784 },
     beats: [
       { id: "B28", at: 0, span: 96.8, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B29", at: 96.8, span: 94.4, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
@@ -454,7 +454,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     stage: { mode: "own" },
     tempo: "slow",
-    estVh: { d: 5.927, t: 5.829 },
+    estVh: { d: 6.056, t: 5.816 },
     // each screen's title + finale belong to that film's world (rations)
     beats: [
       { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
@@ -489,7 +489,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ at: "beyond-activities", media: "MV-10", camera: "push", grade: "golden" }],
     },
     tempo: "medium",
-    estVh: { d: 4.181, t: 4.743 },
+    estVh: { d: 4.864, t: 5.678 },
     beats: [
       // B39: the breath after the act-3 card (quiet only): the FrontierBand drift
       { id: "B39-drift", at: -100, span: 100, kind: "stage-cue", timing: "scroll", feature: "existing" },
@@ -516,7 +516,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Writing", primary: true },
     stage: { mode: "opaque" }, // paper
     tempo: "medium",
-    estVh: { d: 2.948, t: 3.215 },
+    estVh: { d: 2.871, t: 3.117 },
     beats: [
       { id: "B44", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
       { id: "B45", at: 96.9, span: 100, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
@@ -538,7 +538,7 @@ export const page: readonly SectionEntry[] = [
     },
     stage: { mode: "own" }, // campSticky; no letterbox, no subtitle
     tempo: "slow",
-    estVh: { d: 1.548, t: 1.902 },
+    estVh: { d: 1.602, t: 2.01 },
     beats: [
       { id: "B47", at: 0, span: 154.8, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "P3-5" },
       { id: "B47-fireflies", at: 50, span: 104.8, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
@@ -555,7 +555,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Principles", primary: true },
     stage: { mode: "opaque" }, // the map sheet
     tempo: "medium",
-    estVh: { d: 2.586, t: 2.904 },
+    estVh: { d: 2.989, t: 3.183 },
     beats: [
       { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       { id: "B53", at: 0, span: 98.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
@@ -596,7 +596,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
     },
     tempo: "slow",
-    estVh: { d: 2.167, t: 2.478 },
+    estVh: { d: 2.266, t: 2.568 },
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },

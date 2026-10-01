@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T13:12:02.114Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "loaf"
+    ]
+  },
+  "results": {
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 8,
+      "over": 4,
+      "worstDur": 1010,
+      "worstWork": 109,
+      "loafs": [
+        {
+          "dur": 1010,
+          "block": 61,
+          "work": 104,
+          "top": {
+            "d": 101,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 716
+        },
+        {
+          "dur": 422,
+          "block": 0,
+          "work": 6,
+          "top": null,
+          "t": 2256
+        },
+        {
+          "dur": 319,
+          "block": 263,
+          "work": 109,
+          "top": {
+            "d": 109,
+            "inv": "IdleRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/2ihssomsxg640.js",
+            "fn": "r"
+          },
+          "t": 185
+        },
+        {
+          "dur": 313,
+          "block": 48,
+          "work": 95,
+          "top": {
+            "d": 93,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 1940
+        },
+        {
+          "dur": 306,
+          "block": 67,
+          "work": 108,
+          "top": {
+            "d": 106,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 2687
+        },
+        {
+          "dur": 204,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1732
+        },
+        {
+          "dur": 107,
+          "block": 0,
+          "work": 13,
+          "top": {
+            "d": 6,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3tsl4njztm8lt.js",
+            "fn": "v"
+          },
+          "t": 603
+        },
+        {
+          "dur": 57,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 511
+        }
+      ],
+      "ladderMs": {
+        "1": 186,
+        "2": 1515,
+        "3": 2771,
+        "4": 3523
+      },
+      "lenis": true,
+      "ms": 19659,
+      "console": []
+    }
+  }
+}

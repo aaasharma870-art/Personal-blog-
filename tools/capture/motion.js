@@ -11,6 +11,10 @@
 //   mobile   390x844   /?skip=intro               touch strokes at 1200 px/s top to bottom (synthesizeScrollGesture,
 //                                                 falling back to raw Input.dispatchTouchEvent strokes in headless)
 //   intro    1440x900  /?intro=1                  wait 2.5 s, click #intro-play, record flight + landing (~9 s)
+//   gl       1440x900  /?skip=intro&gl=force      the desktop run with the WebGL card tier forced on (W2-GL; not in the
+//                                                 default --runs): the browser runs --use-angle=swiftshader
+//                                                 --enable-unsafe-swiftshader, which the GL tier probe rejects without
+//                                                 ?gl=force. Read it against `desktop` (the css tier) on the same build.
 //
 // Instrumentation (addInitScript): a rAF loop logging [t, dt, scrollY, section], PerformanceObserver
 // 'long-animation-frame' (duration, blockingDuration, render/style split, top scripts) and 'layout-shift'
@@ -47,7 +51,7 @@ const BASE = BASE_ARG.replace(/\/$/, '');
 const OUT = path.resolve(OUT_ARG);
 const opt = Object.fromEntries(rest.map(a => a.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? true]));
 const RUNS = String(opt.runs || 'desktop,alt,mobile,intro,rm').split(',');
-const ALL_RUNS = ['intro', 'desktop', 'native', 'alt', 'mobile', 'rm'];
+const ALL_RUNS = ['intro', 'desktop', 'native', 'alt', 'mobile', 'rm', 'gl'];
 const NTH = Number(opt.nth || 1);
 const IDLE = opt.idle !== '0';
 const TRACE = opt.trace !== '0';
@@ -417,11 +421,11 @@ async function paintAttribution(tr, M, cdp) {
 // ---------------------------------------------------------------- runs
 async function scrollRun(browser, run) {
   const { ctx, page, cdp, errors } = await openRun(browser, run);
-  const q = run === 'alt' ? '?skip=intro&variant=alt' : run === 'native' ? '?skip=intro,smooth' : '?skip=intro';
+  const q = run === 'alt' ? '?skip=intro&variant=alt' : run === 'native' ? '?skip=intro,smooth' : run === 'gl' ? '?skip=intro&gl=force' : '?skip=intro';
   await page.goto(BASE + '/' + q, { waitUntil: 'networkidle', timeout: 90000 }).catch(e => console.error('goto', e.message));
   await sleep(2500);
   // Phase 3: smooth scroll starts as ladder step 1 (desktop runs only); give it a moment, record whether it ran
-  if (run === 'desktop' || run === 'alt') {
+  if (run === 'desktop' || run === 'alt' || run === 'gl') {
     await page.waitForFunction(() => !!window.__lenis, null, { timeout: 4000 }).catch(() => {});
   }
   const lenis = await page.evaluate(() => !!window.__lenis).catch(() => false);
@@ -813,7 +817,7 @@ async function runStrips(A) {
         const pass = fr.slice(Math.max(0, firstIn), lastIn < 0 ? undefined : lastIn + 1);
         out.push(await strip(evenByScroll(pass, 20, ya, yb), dir, `${A.run}-${id}`, { title: `${A.run} ${id}: scrollY ${Math.round(ya)} -> ${Math.round(yb)} (card top ${s.top}, h ${s.h}; 20 frames even in scroll)` }));
       }
-      if (A.run === 'desktop' || A.run === 'rm' || A.run === 'native') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, `${A.run}-first-60s`, { title: `${A.run}: first 60 s of the scroll (24 frames, even in time)` }));
+      if (A.run === 'desktop' || A.run === 'rm' || A.run === 'native' || A.run === 'gl') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, `${A.run}-first-60s`, { title: `${A.run}: first 60 s of the scroll (24 frames, even in time)` }));
       if (A.run === 'alt') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, 'alt-first-60s', { title: 'alt: first 60 s of the scroll (24 frames, even in time)' }));
     } else {
       out.push(await strip(evenByTime(fr, 24, 0, fr[fr.length - 1].t), dir, 'mobile-full-scroll', { cols, tileW: tw, title: 'mobile 390x844: full touch scroll (24 frames, even in time)' }));

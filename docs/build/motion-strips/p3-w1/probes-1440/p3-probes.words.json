@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:51:59.345Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "words"
+    ]
+  },
+  "results": {
+    "words": {
+      "skipped": true,
+      "ms": 11,
+      "console": []
+    }
+  }
+}

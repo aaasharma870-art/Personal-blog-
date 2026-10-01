@@ -1,0 +1,22 @@
+(node:32169) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///tmp/claude-0/-home-user-Personal-blog-/7ca933b7-5e56-569a-94dd-f539ac2c18f0/scratchpad/p3-w1/lib/page.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /tmp/claude-0/-home-user-Personal-blog-/7ca933b7-5e56-569a-94dd-f539ac2c18f0/scratchpad/p3-w1/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+beats @1440: page 4885.1vh; 22 beat element(s), 78 declared
+  estVh: top 1 · act-1 1.757 · about 1.473 · journey 3.173 · act-2 1.58 · work 2.593 · trading-algos 2.134 · optuna-screener 4.94 · experiment 1.258 · systems 2.358 · kill-list 2.358 · films 6.056 · act-3 1 · beyond 4.864 · writing 2.871 · voices 1.602 · act-4 1.58 · principles 2.989 · contact 1 · credits 2.266
+  GAPS > 100vh (9): B02 → B06 100.9vh; B06 → B10 203.8vh; B11 → B17 412.3vh; B22 → B24 162.1vh; B24 → B23-rack 148.7vh; B23-rack → B27 265.2vh; B27 → B41 1079.2vh; B44 → B46 271.2vh; B46 → B52 183.6vh
+  competing stars (4): B20 × B19 7.1vh; B19 × B21-circle 73.5vh; B19 × B22 24.4vh; B21-circle × B22 50.9vh
+  declared but missing (56): B03; B03-impact; B04; B04-subtitle; B04-spray; B07; B08; B08-invite; B09; B09-window; B12; B13; B13-impact; B14; B14-subtitle; B14-chalk; B16; B18; B21; B23; B25; B26; B28; B29; B30; B31; B31-finale; B31-bars; B32; B32-finale; B33; B33-finale; B34; B34-finale; B35; B35-sun; B36; B36-impact; B38; B38-subtitle; B39-drift; B40; B42; B45; B47; B47-fireflies; B48; B48-fireflies; B48-impact; B50; B50-subtitle; B50-motes; B53; B55; B57; B58
+  spotlight: {"own":5,"free":5}
+
+beats @1024: page 5408.7vh; 22 beat element(s), 78 declared
+  estVh: top 1 · act-1 1.725 · about 1.941 · journey 3.144 · act-2 1.58 · work 2.713 · trading-algos 2.928 · optuna-screener 6.564 · experiment 1.338 · systems 2.419 · kill-list 2.784 · films 5.816 · act-3 1 · beyond 5.678 · writing 3.117 · voices 2.01 · act-4 1.58 · principles 3.183 · contact 1 · credits 2.568
+  GAPS > 100vh (10): B06 → B10 249.8vh; B11 → B17 402.3vh; B17 → B20 129.5vh; B22 → B24 223.6vh; B24 → B23-rack 265.4vh; B23-rack → B27 260.6vh; B27 → B41 1111.4vh; B42-rack → B43 136.6vh; B44 → B46 296.8vh; B46 → B52 179.3vh
+  competing stars (3): B19 × B21-circle 76.3vh; B19 × B22 28.7vh; B21-circle × B22 52.3vh
+  SCROLL-STAR SPANS < 300px (1): B41 229px
+  declared but missing (56): B03; B03-impact; B04; B04-subtitle; B04-spray; B07; B08; B08-invite; B09; B09-window; B12; B13; B13-impact; B14; B14-subtitle; B14-chalk; B16; B18; B21; B23; B25; B26; B28; B29; B30; B31; B31-finale; B31-bars; B32; B32-finale; B33; B33-finale; B34; B34-finale; B35; B35-sun; B36; B36-impact; B38; B38-subtitle; B39-drift; B40; B42; B45; B47; B47-fireflies; B48; B48-fireflies; B48-impact; B50; B50-subtitle; B50-motes; B53; B55; B57; B58
+  spotlight: {"own":1,"free":1}
+
+beats: wrote /home/user/Personal-blog-/docs/build/motion-strips/p3-w1/beats/beats.json
+beats --write: estVh updated for 20 item(s) in lib/page.ts and lib/film.ts

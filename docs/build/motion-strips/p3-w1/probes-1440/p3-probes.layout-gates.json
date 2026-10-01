@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:47:39.940Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "layout-gates"
+    ]
+  },
+  "results": {
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            930
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            5916,
+            180
+          ],
+          [
+            "DIV",
+            5166,
+            930
+          ],
+          [
+            "act-2-title",
+            5914,
+            44
+          ],
+          [
+            "work",
+            6096,
+            2365
+          ],
+          [
+            "trading-algos",
+            8461,
+            1786
+          ],
+          [
+            "optuna-screener",
+            10247,
+            3739
+          ],
+          [
+            "experiment",
+            13986,
+            1132
+          ]
+        ],
+        "heights": [
+          37240,
+          39813
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": false,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 1,
+        "layersHidden": false,
+        "scroll": [
+          11284,
+          11284
+        ],
+        "shift": 0,
+        "diff": [],
+        "ok": false
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 19714,
+      "console": []
+    }
+  }
+}

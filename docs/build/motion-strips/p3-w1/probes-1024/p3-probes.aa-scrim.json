@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:57:03.129Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": false,
+      "liveBoxes": 626,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 113,
+            "worst": {
+              "ratio": 1,
+              "text": "NW",
+              "y": 2481,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 2481,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2481,
+                "text": "NE",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2481,
+                "text": "SW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2481,
+                "text": "SE",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "I'm Aryan Sharma, a high-school student in the W",
+                "ratio": 2.93,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "I'm Aryan Sharma, a high-school student in the W",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "I treat every backtest as guilty until proven in",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "I treat every backtest as guilty until proven in",
+                "ratio": 2.93,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "SW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2931,
+                "text": "SE",
+                "ratio": 1,
+                "min": 4.5
+              }
+            ],
+            "failCount": 10
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 176,
+            "worst": {
+              "ratio": 6.48,
+              "text": "2018",
+              "y": 41486,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 147,
+            "worst": {
+              "ratio": 1,
+              "text": "NW",
+              "y": 2093,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 2093,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2477,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2477,
+                "text": "NE",
+                "ratio": 1,
+                "min": 4.5
+              }
+            ],
+            "failCount": 3
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 190,
+            "worst": {
+              "ratio": 6.4,
+              "text": "Pirates of the Caribbean: The Curse of the Black",
+              "y": 39190,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 80610,
+      "console": []
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:49:21.002Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "loaf"
+    ]
+  },
+  "results": {
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 8,
+      "over": 8,
+      "worstDur": 1119,
+      "worstWork": 124,
+      "loafs": [
+        {
+          "dur": 1119,
+          "block": 79,
+          "work": 124,
+          "top": {
+            "d": 121,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 746
+        },
+        {
+          "dur": 687,
+          "block": 60,
+          "work": 107,
+          "top": {
+            "d": 94,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 2329
+        },
+        {
+          "dur": 280,
+          "block": 123,
+          "work": 86,
+          "top": {
+            "d": 85,
+            "inv": "IdleRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/2ihssomsxg640.js",
+            "fn": "r"
+          },
+          "t": 230
+        },
+        {
+          "dur": 243,
+          "block": 87,
+          "work": 1,
+          "top": null,
+          "t": 1870
+        },
+        {
+          "dur": 206,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 2118
+        },
+        {
+          "dur": 119,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 622
+        },
+        {
+          "dur": 70,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 513
+        },
+        {
+          "dur": 60,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 164
+        }
+      ],
+      "ladderMs": {
+        "1": 230,
+        "2": 1381,
+        "3": 2532,
+        "4": 3684
+      },
+      "lenis": true,
+      "ms": 19274,
+      "console": []
+    }
+  }
+}

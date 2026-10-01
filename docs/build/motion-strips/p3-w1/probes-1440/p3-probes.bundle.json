@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:41:11.076Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "bundle"
+    ]
+  },
+  "results": {
+    "bundle": {
+      "pass": false,
+      "failed": [
+        "compare",
+        "static.ric"
+      ],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 21,
+            "css": 4,
+            "jsGz": 464914,
+            "cssGz": 32455,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 24,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": false,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            464914
+          ],
+          "cssGz": [
+            29433,
+            32455
+          ],
+          "deltaJsGz": 25822,
+          "deltaCssGz": 3022,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": false,
+          "hits": [
+            "components/intro/controller.js:328"
+          ]
+        }
+      },
+      "ms": 22064,
+      "console": []
+    }
+  }
+}

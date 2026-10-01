@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T13:01:43.114Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "research-font"
+    ]
+  },
+  "results": {
+    "research-font": {
+      "pass": false,
+      "vw": {
+        "width": 1024,
+        "height": 768
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 246,
+      "islands": 14,
+      "families": {
+        "Geist Mono": 180,
+        "Geist": 62,
+        "fontWorldIdiotsHead": 4
+      },
+      "offenders": 4,
+      "bad": [
+        {
+          "text": "“Pursue excellence, and success will follow.”",
+          "family": "fontWorldIdiotsHead, Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "at": "div > p > span > q"
+        },
+        {
+          "text": "THE",
+          "family": "fontWorldIdiotsHead, Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "at": "div > figure > p > span"
+        },
+        {
+          "text": "ICE CHALKBOARD",
+          "family": "fontWorldIdiotsHead, Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "at": "figure > p > span > span"
+        },
+        {
+          "text": "3 IDIOTS",
+          "family": "fontWorldIdiotsHead, Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "at": "div > figure > p > span"
+        }
+      ],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 2154,
+      "console": []
+    }
+  }
+}

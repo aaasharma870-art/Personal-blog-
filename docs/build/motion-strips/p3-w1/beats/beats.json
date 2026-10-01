@@ -1,0 +1,734 @@
+{
+  "base": "http://localhost:3161",
+  "path": "/?skip=intro,smooth&debug=spotlight",
+  "date": "2026-10-01T13:14:36.441Z",
+  "results": [
+    {
+      "width": 1440,
+      "pageVh": 4885.1,
+      "heights": {
+        "top": 1,
+        "act-1": 1.757,
+        "about": 1.473,
+        "journey": 3.173,
+        "act-2": 1.58,
+        "work": 2.593,
+        "trading-algos": 2.134,
+        "optuna-screener": 4.94,
+        "experiment": 1.258,
+        "systems": 2.358,
+        "kill-list": 2.358,
+        "films": 6.056,
+        "act-3": 1,
+        "beyond": 4.864,
+        "writing": 2.871,
+        "voices": 1.602,
+        "act-4": 1.58,
+        "principles": 2.989,
+        "contact": 1,
+        "credits": 2.266
+      },
+      "gaps": [
+        {
+          "after": "B02",
+          "before": "B06",
+          "vh": 100.9
+        },
+        {
+          "after": "B06",
+          "before": "B10",
+          "vh": 203.8
+        },
+        {
+          "after": "B11",
+          "before": "B17",
+          "vh": 412.3
+        },
+        {
+          "after": "B22",
+          "before": "B24",
+          "vh": 162.1
+        },
+        {
+          "after": "B24",
+          "before": "B23-rack",
+          "vh": 148.7
+        },
+        {
+          "after": "B23-rack",
+          "before": "B27",
+          "vh": 265.2
+        },
+        {
+          "after": "B27",
+          "before": "B41",
+          "vh": 1079.2
+        },
+        {
+          "after": "B44",
+          "before": "B46",
+          "vh": 271.2
+        },
+        {
+          "after": "B46",
+          "before": "B52",
+          "vh": 183.6
+        }
+      ],
+      "competing": [
+        {
+          "a": "B20",
+          "b": "B19",
+          "vh": 7.1
+        },
+        {
+          "a": "B19",
+          "b": "B21-circle",
+          "vh": 73.5
+        },
+        {
+          "a": "B19",
+          "b": "B22",
+          "vh": 24.4
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 50.9
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [
+        "B03",
+        "B03-impact",
+        "B04",
+        "B04-subtitle",
+        "B04-spray",
+        "B07",
+        "B08",
+        "B08-invite",
+        "B09",
+        "B09-window",
+        "B12",
+        "B13",
+        "B13-impact",
+        "B14",
+        "B14-subtitle",
+        "B14-chalk",
+        "B16",
+        "B18",
+        "B21",
+        "B23",
+        "B25",
+        "B26",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B31-finale",
+        "B31-bars",
+        "B32",
+        "B32-finale",
+        "B33",
+        "B33-finale",
+        "B34",
+        "B34-finale",
+        "B35",
+        "B35-sun",
+        "B36",
+        "B36-impact",
+        "B38",
+        "B38-subtitle",
+        "B39-drift",
+        "B40",
+        "B42",
+        "B45",
+        "B47",
+        "B47-fireflies",
+        "B48",
+        "B48-fireflies",
+        "B48-impact",
+        "B50",
+        "B50-subtitle",
+        "B50-motes",
+        "B53",
+        "B55",
+        "B57",
+        "B58"
+      ],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 5,
+          "free": 5
+        },
+        "log": [
+          {
+            "t": 6479,
+            "y": 9897,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 6504,
+            "y": 9768,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 6534,
+            "y": 9841,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 6825,
+            "y": 11636,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 6848,
+            "y": 10694,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 7023,
+            "y": 11427,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 7045,
+            "y": 11034,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 7122,
+            "y": 11525,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 7151,
+            "y": 11113,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 7223,
+            "y": 11617,
+            "ev": "free",
+            "id": "B19"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 900
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 200.9,
+          "hPx": 673
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 479.5,
+          "hPx": 558
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 603.5,
+          "hPx": 558
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1077.8,
+          "hPx": 548
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1222.9,
+          "hPx": 519
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1265.7,
+          "hPx": 832
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1265.7,
+          "hPx": 832
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1334.7,
+          "hPx": 109
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1383.8,
+          "hPx": 562
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1608.4,
+          "hPx": 24
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1759.7,
+          "hPx": 832
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2117.4,
+          "hPx": 868
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3293,
+          "hPx": 312
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3334.9,
+          "hPx": 832
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3503.1,
+          "hPx": 294
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3547.5,
+          "hPx": 756
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 3671.8,
+          "hPx": 101
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 3954.3,
+          "hPx": 1211
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4272.4,
+          "hPx": 2459
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4423,
+          "hPx": 373
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 4593.8,
+          "hPx": 56
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "width": 1024,
+      "pageVh": 5408.7,
+      "heights": {
+        "top": 1,
+        "act-1": 1.725,
+        "about": 1.941,
+        "journey": 3.144,
+        "act-2": 1.58,
+        "work": 2.713,
+        "trading-algos": 2.928,
+        "optuna-screener": 6.564,
+        "experiment": 1.338,
+        "systems": 2.419,
+        "kill-list": 2.784,
+        "films": 5.816,
+        "act-3": 1,
+        "beyond": 5.678,
+        "writing": 3.117,
+        "voices": 2.01,
+        "act-4": 1.58,
+        "principles": 3.183,
+        "contact": 1,
+        "credits": 2.568
+      },
+      "gaps": [
+        {
+          "after": "B06",
+          "before": "B10",
+          "vh": 249.8
+        },
+        {
+          "after": "B11",
+          "before": "B17",
+          "vh": 402.3
+        },
+        {
+          "after": "B17",
+          "before": "B20",
+          "vh": 129.5
+        },
+        {
+          "after": "B22",
+          "before": "B24",
+          "vh": 223.6
+        },
+        {
+          "after": "B24",
+          "before": "B23-rack",
+          "vh": 265.4
+        },
+        {
+          "after": "B23-rack",
+          "before": "B27",
+          "vh": 260.6
+        },
+        {
+          "after": "B27",
+          "before": "B41",
+          "vh": 1111.4
+        },
+        {
+          "after": "B42-rack",
+          "before": "B43",
+          "vh": 136.6
+        },
+        {
+          "after": "B44",
+          "before": "B46",
+          "vh": 296.8
+        },
+        {
+          "after": "B46",
+          "before": "B52",
+          "vh": 179.3
+        }
+      ],
+      "competing": [
+        {
+          "a": "B19",
+          "b": "B21-circle",
+          "vh": 76.3
+        },
+        {
+          "a": "B19",
+          "b": "B22",
+          "vh": 28.7
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 52.3
+        }
+      ],
+      "spans": [
+        {
+          "id": "B41",
+          "px": 229
+        }
+      ],
+      "pacing": [],
+      "missing": [
+        "B03",
+        "B03-impact",
+        "B04",
+        "B04-subtitle",
+        "B04-spray",
+        "B07",
+        "B08",
+        "B08-invite",
+        "B09",
+        "B09-window",
+        "B12",
+        "B13",
+        "B13-impact",
+        "B14",
+        "B14-subtitle",
+        "B14-chalk",
+        "B16",
+        "B18",
+        "B21",
+        "B23",
+        "B25",
+        "B26",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B31-finale",
+        "B31-bars",
+        "B32",
+        "B32-finale",
+        "B33",
+        "B33-finale",
+        "B34",
+        "B34-finale",
+        "B35",
+        "B35-sun",
+        "B36",
+        "B36-impact",
+        "B38",
+        "B38-subtitle",
+        "B39-drift",
+        "B40",
+        "B42",
+        "B45",
+        "B47",
+        "B47-fireflies",
+        "B48",
+        "B48-fireflies",
+        "B48-impact",
+        "B50",
+        "B50-subtitle",
+        "B50-motes",
+        "B53",
+        "B55",
+        "B57",
+        "B58"
+      ],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 1,
+          "free": 1
+        },
+        "log": [
+          {
+            "t": 6931,
+            "y": 8810,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 7395,
+            "y": 10025,
+            "ev": "free",
+            "id": "B19"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 768
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 192,
+          "hPx": 619
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 522.3,
+          "hPx": 476
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 646.3,
+          "hPx": 476
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1110.6,
+          "hPx": 398
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1292,
+          "hPx": 413
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1401.3,
+          "hPx": 700
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1401.3,
+          "hPx": 700
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1466.1,
+          "hPx": 82
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1513.8,
+          "hPx": 398
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1789.1,
+          "hPx": 24
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 2057.7,
+          "hPx": 700
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2409.5,
+          "hPx": 884
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3636,
+          "hPx": 229
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3671.1,
+          "hPx": 700
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3898.9,
+          "hPx": 285
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3949.6,
+          "hPx": 707
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 4079.1,
+          "hPx": 72
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 4385.3,
+          "hPx": 1379
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4744.3,
+          "hPx": 2281
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4906.6,
+          "hPx": 332
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 5086.7,
+          "hPx": 56
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}
