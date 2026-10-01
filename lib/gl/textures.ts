@@ -9,7 +9,7 @@
    ========================================================================== */
 
 import { getImageProps } from "next/image";
-import { resolveMedia, type MediaAsset, type MediaId } from "../media";
+import { getMedia, resolveMedia, type MediaAsset, type MediaId } from "../media";
 import type { RawTex } from "./transition-gl";
 
 /** The image a plate id draws from (a video id → its poster still). */
@@ -21,10 +21,21 @@ export function plateAsset(id: MediaId): MediaAsset | null {
   return poster?.kind === "image" ? poster : null;
 }
 
-/** The optimized URL of `asset` at the rung ≥ `width` (frame CSS width ×
- *  min(DPR, 1.5) × the box scale: the 1920 rung at 1440, 1440 at 1024). */
+/** The ids whose `marks` describe what `plateAsset(id)` draws: the drawn
+ *  asset first, then (a video drawn as its poster) the video itself. A
+ *  fallback image never borrows the planned plate's marks (lib/media.ts
+ *  `markOf`: pass the id of the asset you actually render). */
+export function markIds(id: MediaId): MediaId[] {
+  const a = plateAsset(id);
+  if (!a) return [];
+  return a.id !== id && getMedia(id).kind === "video" ? [a.id, id] : [a.id];
+}
+
+/** The optimized URL of `asset` at the rung ≥ ~`width` (frame CSS width ×
+ *  min(DPR, 1.5) × the box scale: the 1920 rung at 1440, 1440 at 1024; 3%
+ *  slack so 1922 px takes the 1920 rung, not 2048). */
 export function plateUrl(asset: MediaAsset, width: number): string {
-  const w = Math.max(64, Math.round(width));
+  const w = Math.max(64, Math.round(Math.min(width * 0.97, asset.width)));
   const { props } = getImageProps({
     src: asset.src,
     alt: "",
@@ -40,11 +51,20 @@ export function plateUrl(asset: MediaAsset, width: number): string {
  *  and the response is the cached one when the DOM already fetched it. */
 const IMG_ACCEPT = "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8";
 
-/** fetch (low priority) → createImageBitmap (decoded off the main thread). */
-export async function loadBitmap(url: string, signal?: AbortSignal): Promise<ImageBitmap> {
-  const res = await fetch(url, { headers: { Accept: IMG_ACCEPT }, signal, priority: "low" } as RequestInit);
+/** fetch (low priority) → createImageBitmap, decoded off the main thread
+ *  and capped at `maxW` px wide (the rung: an unoptimized source never
+ *  costs more GPU memory than its rung). */
+export async function loadBitmap(url: string, maxW: number, aspect: number): Promise<ImageBitmap> {
+  const res = await fetch(url, { headers: { Accept: IMG_ACCEPT }, priority: "low" } as RequestInit);
   if (!res.ok) throw new Error(`gl: ${res.status} ${url}`);
-  return createImageBitmap(await res.blob());
+  const w = Math.round(maxW);
+  return createImageBitmap(await res.blob(), { resizeWidth: w, resizeHeight: Math.round(w / aspect), resizeQuality: "high" });
+}
+
+/** The rung width in a next/image URL (`&w=`), else `fallback`. */
+export function rungOf(url: string, fallback: number): number {
+  const m = /[?&]w=(\d+)/.exec(url);
+  return m ? Number(m[1]) : fallback;
 }
 
 /** 256² value noise (R8, REPEAT), seeded: identical on every load. */

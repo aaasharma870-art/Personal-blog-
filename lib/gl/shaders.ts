@@ -46,14 +46,14 @@ out vec4 o;
 vec2 uv;float A;
 #define PI 3.14159265
 float S(float a,float b,float x){return smoothstep(a,b,x);}
-float N(vec2 q){return texture(uNoise,q/256.).r;}
+float N(vec2 q){vec2 i=floor(q),f=fract(q);return texture(uNoise,(i+f*f*(3.-2.*f)+.5)/256.).r;}
 float fbm(vec2 q){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*N(q);q=mat2(1.6,1.2,-1.2,1.6)*q+.31;a*=.5;}return s/.9375;}
 vec2 G2(){return uv*vec2(A,1.);}
 float D(vec2 a,vec2 b){return length((a-b)*vec2(A,1.));}
 vec3 F(vec2 q){return texture(uFrom,(q-uCoverFrom.zw)/uCoverFrom.xy).rgb;}
 vec3 T(vec2 q){return texture(uTo,(q-uCoverTo.zw)/uCoverTo.xy).rgb*uGradeFrom.rgb/uGradeTo.rgb*exp2(uGradeFrom.a-uGradeTo.a);}
 float L(vec3 c){return dot(c,vec3(.299,.587,.114));}
-vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*6.+vec2(0.,uP*2.));float s=N(q*vec2(A,1.)*220.);
+vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*vec2(4.,10.)+vec2(uP*3.,0.));float s=N(q*vec2(A,1.)*220.);
 return mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.8+.3*s),k);}
 `;
 
@@ -89,11 +89,11 @@ return vec4(mix(c,brass,m),1.);}`,
 
   // Pirates breaker OUT: a wave front from the left, foam behind it; the
   // kraken swells under the sea at the hook
-  wave: `vec4 fl(){float t=uP,y=uv.y,f=mix(.04,1.45,t*t*(3.-2.*t))+.06*sin(y*9.+t*5.)+.12*(fbm(vec2(y*3.,t*2.))-.5);
-float dx=f-uv.x,nr=exp(-abs(dx)*16.);vec2 q=uv;q.x+=nr*.025*sign(dx);q.y-=nr*.012;
-float b=exp(-pow(D(uv,vec2(.62,uRow+.16))/.24,2.))*uKraken*S(uRow-.02,uRow+.04,uv.y);q.y+=b*.035;
-vec3 s=F(q)*(1.-.55*b);float m=S(-.02,.07,dx+.06*(N(G2()*40.)-.5));
-vec3 c=mix(s,veil(uv,0.),m)+vec3(.85,1.,1.)*nr*(1.-m)*.3;return vec4(c,1.);}`,
+  wave: `vec4 fl(){float t=uP,y=uv.y,f=mix(.04,1.45,t*t*(3.-2.*t))+.05*sin(y*7.+t*4.)+.1*(fbm(vec2(y*4.,t*3.))-.5);
+float j=(fbm(G2()*9.+vec2(t*3.,0.))-.5)*.08,dx=f-uv.x-j,nr=exp(-abs(dx)*14.);vec2 q=uv;q.x+=nr*.03*sign(dx);q.y-=nr*.02;
+float b=exp(-pow(D(uv,vec2(.62,uRow+.16))/.24,2.))*uKraken*S(uRow-.02,uRow+.04,uv.y);q.y+=b*.05;
+vec3 c=mix(F(q)*(1.-.7*b)*(1.+.25*nr),veil(uv,0.),S(-.015,.03,dx));
+return vec4(mix(c,vec3(.95,1.,1.),exp(-dx*dx/3e-4)*.85),1.);}`,
 
   // 3 Idiots chalk IN: foam turns to chalk speckle; a noisy diagonal edge
   // uncovers the hall
@@ -136,7 +136,7 @@ return vec4(mix(uDeep,T(uv)*(1.+1.4*b),m)+vec3(1.,.92,.75)*b*.55,1.);}`,
 
   // the act title as a mask: deep outside the letters, transparent inside
   title: `vec4 fl(){float s=texture(uTitle,uv*uTitleXf.xy+uTitleXf.zw).r,a=max(fwidth(s),1e-5)*.7;
-return vec4(uDeep,S(0.,.25,uP)*(1.-S(.5-a,.5+a,s)));}`,
+return vec4(uDeep,S(0.,.18,uP)*(1.-S(.5-a,.5+a,s)));}`,
 };
 
 /** The fragment source of one flavour (header + shapes + flavour + main). */

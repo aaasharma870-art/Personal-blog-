@@ -139,8 +139,12 @@ export const MEET_CUES: Partial<Record<TransitionKind, readonly Shot[]>> = {
   ],
 };
 
-/** `egg:trigger`: each egg's own sound (spec §10.3 "Eggs"). The Pause
- *  control never triggers an egg, so lumos/nox are the typed/palette spells.
+/** `egg:trigger`: each egg's own sound (spec §10.3 "Eggs"). The engine
+ *  voices an egg ONLY through this event, so every egg, however it fires
+ *  (a typed word, the palette, a hotspot, the Snitch appearing, the kraken,
+ *  the quadcopter), goes through `triggerEgg(id)` and the egg host runs it
+ *  from that event. The Pause control never triggers an egg, so lumos/nox
+ *  are the typed/palette spells.
  *  "Mischief managed" (tts-mischief) plays when the map dialog closes: the
  *  dialog calls sound.cue() itself (there is no event for it). */
 export const EGG_CUES: Partial<Record<EggId, readonly Shot[]>> = {

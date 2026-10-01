@@ -33,7 +33,7 @@
 import type { MotionValue } from "motion/react";
 import type { MediaId } from "../media";
 import type { SkyKey } from "../sky";
-import type { Variant } from "../variants";
+import type { Variant, VariantChoice } from "../variants";
 import type { WorldId } from "../worlds";
 
 export type GlFlavour =
@@ -65,6 +65,11 @@ export type GlShape = "ring32" | "gear12" | "wheel12" | "snitch";
 export type GlCardSpec = {
   card: GlCard;
   variant: Variant;
+  /** The card's manifest variant choice (`film.acts[i].variant`: "alt" or
+   *  per piece), which GlFrame resolves `title.mask` and `match.shape`
+   *  with, like CARDS' css side. Optional (additive): absent → the act of
+   *  `b.world` in the film manifest. */
+  choice?: VariantChoice;
   /** Star (a): the world transition, p 0–.45 (tintype .03–.45). `from` /
    *  `to` are image plates (a video id falls back to its poster). Plate
    *  marks are read from lib/media.ts: `fire` (burn origin, `from`),

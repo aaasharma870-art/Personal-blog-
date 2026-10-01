@@ -5,12 +5,14 @@
    Original by construction: filtered noise, single tones, struck
    inharmonic "bells" and one three-note chime. No film theme, no melody, no
    celesta / music-box figure, no "Aal izz well" rhythm (two heartbeats
-   only), no voice, and no gunshot: Dead Eye's strike is a muffled "thock".
+   only), no voice, and no gunshot: Dead Eye's strike is a muffled "thock",
+   the RDR2 impact a flash-powder "poof" and the parley flag a cloth flap
+   (neither is a fast white-noise crack).
 
    Levels: the `peak` values inside a recipe only balance its own layers.
    The engine renders every recipe once offline and normalises it to its
-   LEVEL below (peak dBFS; every SFX ≤ −6 dBFS, §3.5), and the master
-   ceiling holds the sum under −6 dBFS.
+   loudness target below, capped at −6.5 dBFS sample peak (SFX ≤ −6 dBFS,
+   §3.5); the master ceiling holds the sum under −6 dBFS.
    ========================================================================== */
 
 import type { CueId, RecipeCueId } from "./cues";
@@ -18,35 +20,37 @@ import { bell, filter, gain, noise, noiseSrc, osc, scatter, sweepPan, tone, wire
 
 export type Recipe = (k: Kit) => void;
 
-/** Target peak (dBFS) per cue after normalisation. Default −9. */
+/** Loudness target per cue (momentary LUFS: the loudest 400 ms, K-weighted)
+ *  after normalisation; default −21, about 9 dB over a −30 LUFS bed. Every
+ *  cue is also capped at −6.5 dBFS sample peak (spec §3.5: SFX ≤ −6 dBFS). */
 const LEVELS: Partial<Record<CueId, number>> = {
-  "impact-iris": -6,
-  "impact-chalk": -6,
-  "impact-flash": -6,
-  "impact-lumos": -7,
-  "wave-wash": -8,
-  "wave-recede": -8,
-  "flash-whumpf": -8,
-  "kraken-rumble": -7,
-  "title-sting": -14,
-  "typewriter-click": -16,
-  "compass-ratchet": -16,
-  "compass-lid": -13,
-  "drone-gate": -13,
-  "drone-hum": -17,
-  "deadeye-scratch": -14,
-  "candle-fwip": -12,
-  "found-pirates": -12,
-  "found-idiots": -12,
-  "found-rdr2": -12,
-  "found-hp": -12,
-  "hunt-complete": -10,
-  "postcredits-chime": -11,
-  "toggle-click": -20,
-  "letterbox-whum": -10,
+  "impact-iris": -18,
+  "impact-chalk": -18,
+  "impact-flash": -21,
+  "impact-lumos": -19,
+  "kraken-rumble": -19,
+  "wave-wash": -20,
+  "letterbox-whum": -23,
+  "title-sting": -25,
+  "typewriter-click": -27,
+  "compass-ratchet": -27,
+  "compass-lid": -26,
+  "drone-gate": -26,
+  "deadeye-scratch": -26,
+  "drone-hum": -25,
+  "candle-fwip": -24,
+  "found-pirates": -23,
+  "found-idiots": -23,
+  "found-rdr2": -23,
+  "found-hp": -23,
+  "postcredits-chime": -23,
+  "toggle-click": -30,
 };
 
-export const levelOf = (id: CueId): number => LEVELS[id] ?? -9;
+/** The sample-peak cap of every cue (dBFS). */
+export const PEAK_CAP_DB = -6.5;
+
+export const levelOf = (id: CueId): number => LEVELS[id] ?? -21;
 
 /* The procedural cues (every CueId except the tts-* files; tsc checks the
    set is complete). Times in seconds, frequencies in Hz. */
@@ -115,13 +119,17 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     tone(k, 0, { f: 70, to: 45, peak: 0.25, d: 0.25 });
   },
   "impact-chalk": (k) => {
-    tone(k, 0, { f: 930, to: 720, glide: 0.04, peak: 0.42, a: 0.001, d: 0.07 });
-    tone(k, 0, { f: 190, peak: 0.25, a: 0.002, d: 0.09 });
-    noise(k, 0, { f: 2600, q: 1.2, peak: 0.3, a: 0.001, d: 0.03 });
+    // The chalk circle's "tock": a hollow wooden knock with a body.
+    tone(k, 0, { f: 930, to: 720, glide: 0.04, peak: 0.36, a: 0.001, d: 0.12 });
+    tone(k, 0, { f: 190, peak: 0.3, a: 0.002, d: 0.22 });
+    tone(k, 0, { f: 72, to: 50, peak: 0.25, a: 0.004, d: 0.25 });
+    noise(k, 0, { f: 2600, q: 1.2, peak: 0.3, a: 0.001, d: 0.05 });
   },
   "impact-flash": (k) => {
-    noise(k, 0, { type: "lowpass", f: 3200, to: 900, peak: 0.5, a: 0.004, d: 0.4 });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 500, peak: 0.35, a: 0.01, d: 0.35 });
+    // The flash-powder "poof": a soft puff of air rising, like flash-whumpf.
+    // No white-noise crack, no fast attack: never a shot.
+    noise(k, 0, { f: 700, to: 2200, glide: 0.3, q: 0.8, peak: 0.28, a: 0.06, d: 0.5, swell: true });
+    noise(k, 0, { n: "brown", type: "lowpass", f: 450, to: 900, glide: 0.2, q: 0.6, peak: 0.35, a: 0.035, d: 0.55 });
   },
   "impact-lumos": (k) => {
     [330, 495, 660].forEach((f, i) => tone(k, 0, { f, detune: (i - 1) * 4, peak: 0.13, a: 0.35, d: 0.6, swell: true }));
@@ -218,7 +226,10 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     tone(k, 0, { type: "sawtooth", f: 140, to: 230, glide: 0.5, bp: 520, q: 6, peak: 0.45, a: 0.08, d: 0.45, swell: true, am: [23, 0.6] });
   },
   "flag-snap": (k) => {
-    [0, 0.045, 0.1].forEach((o, i) => noise(k, o, { type: "lowpass", f: 3200, peak: 0.2 + i * 0.12, a: 0.002, d: 0.04 + i * 0.03 }));
+    // A canvas flap: soft band-passed flutters on a cloth body. No white
+    // cracks (that read as pistol shots).
+    [0, 0.08, 0.17].forEach((o, i) => noise(k, o, { f: 1200 - i * 120, q: 1.1, peak: 0.14 + i * 0.05, a: 0.012, d: 0.1 + i * 0.03 }));
+    noise(k, 0, { n: "brown", type: "lowpass", f: 650, peak: 0.16, a: 0.02, d: 0.3 });
   },
   "coin-ting": (k) => {
     bell(k, 0, 3100, [1, 1.57, 2.11], { peak: 0.3, d: 0.85 });
@@ -278,9 +289,11 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     bell(k, 0, 523.25, [1, 2, 2.92, 4.1], { peak: 0.38, d: 1.15 });
   },
   "found-idiots": (k) => {
-    noise(k, 0, { f: 3500, q: 1.5, peak: 0.35, a: 0.001, d: 0.02 });
-    noise(k, 0.07, { f: 3200, q: 1.5, peak: 0.3, a: 0.001, d: 0.025 });
-    tone(k, 0.07, { f: 1050, peak: 0.12, a: 0.001, d: 0.04 });
+    // Two chalk ticks on a board.
+    noise(k, 0, { f: 3500, q: 1.5, peak: 0.35, a: 0.001, d: 0.06 });
+    noise(k, 0.08, { f: 3200, q: 1.5, peak: 0.3, a: 0.001, d: 0.08 });
+    tone(k, 0.08, { f: 1050, peak: 0.12, a: 0.001, d: 0.09 });
+    tone(k, 0, { f: 210, peak: 0.12, a: 0.002, d: 0.12 });
   },
   "found-rdr2": (k) => {
     scatter(k, 0, 4, 0.22, (o, _i, r) => bell(k, o, 4000 + r * 900, [1, 1.38], { peak: 0.14, d: 0.09 }));

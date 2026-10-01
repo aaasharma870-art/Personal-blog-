@@ -6,3 +6,25 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* The toggle exists only under DESKTOP_FINE (the full media query of
+   lib/flags.ts, never `lg:`): phones and touch tablets never see it, and
+   the server markup is the same for every visitor (no layout shift). */
+.sound-toggle {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .sound-toggle {
+    display: inline-flex;
+  }
+}
+
+/* The speaker: waves while on, a small cross while muted. Opacity only. */
+.sound-toggle__waves,
+.sound-toggle__mute {
+  transition: opacity var(--dur-micro, 150ms) ease-out;
+}
+[data-sound-toggle="off"] .sound-toggle__waves,
+[data-sound-toggle="on"] .sound-toggle__mute {
+  opacity: 0;
+}

@@ -1,110 +1,92 @@
 /* ============================================================================
    SOUND (facade) — the page's sound API (PHASE3-SPEC §3.5, §10; DP-13).
-   Every visit starts muted; the AudioContext and the engine chunk load only
-   on the first unmute click (lib/audio/store.ts). Beds follow the world at
-   the reading line; cues are short procedural or file effects.
+   Tiny and static: every call forwards to the lazy engine once it exists
+   (lib/audio/engine.ts, loaded by the first unmute; lib/audio/store.ts).
+   While muted, `cue` is a no-op; `bed` and `loop` remember what they asked
+   for, so a later unmute starts the right bed and any live loop. In the
+   moment between an unmute (or `borrow()`) and the engine's arrival, `cue`
+   holds the request and plays it when the engine lands (≤ 1 s late).
 
-   W1.0 STUB: every call is a no-op (W2-SOUND implements the lazy engine,
-   recipes and cue map behind this same surface).
+   The engine already voices the page events (impact, transition:meet,
+   letterbox, hunt:found, egg:trigger, game:*, toy, post-credits, dc:*; see
+   lib/audio/cues.ts). Call `sound.cue` only for sounds no event carries
+   (e.g. "typewriter-click", "title-sting", "tts-mischief" on the map close).
    ========================================================================== */
 
-/** Every effect id (spec §10.3; PHASE3-PLAN §4.8). */
-export type CueId =
-  | "broom-whoosh"
-  | "broom-land"
-  | "wave-wash"
-  | "wave-recede"
-  | "duster-swipe"
-  | "shutter"
-  | "flash-whumpf"
-  | "match-strike"
-  | "shimmer-rise"
-  | "letterbox-whum"
-  | "projector-start"
-  | "reel-runout"
-  | "impact-iris"
-  | "impact-chalk"
-  | "impact-flash"
-  | "impact-lumos"
-  | "title-sting"
-  | "typewriter-click"
-  | "compass-lid"
-  | "compass-ratchet"
-  | "compass-settle"
-  | "drone-hum"
-  | "drone-gate"
-  | "drone-finish"
-  | "deadeye-swell"
-  | "deadeye-scratch"
-  | "deadeye-strike"
-  | "deadeye-release"
-  | "candle-fwip"
-  | "hall-swell"
-  | "map-unfold"
-  | "ink-scratch"
-  | "lumos-bell"
-  | "nox-snuff"
-  | "snitch-flutter"
-  | "snitch-ting"
-  | "parley-creak"
-  | "flag-snap"
-  | "coin-ting"
-  | "hollow-wind"
-  | "kraken-rumble"
-  | "wave-slap"
-  | "heartbeat-2"
-  | "quad-spinup"
-  | "pen-creak"
-  | "pen-ting"
-  | "eagle-shimmer"
-  | "bone-scratch"
-  | "fire-shift"
-  | "fire-crackle"
-  | "found-pirates"
-  | "found-idiots"
-  | "found-rdr2"
-  | "found-hp"
-  | "hunt-complete"
-  | "postcredits-whoosh"
-  | "postcredits-chime"
-  | "toggle-click"
-  | "tts-lumos"
-  | "tts-nox"
-  | "tts-solemn"
-  | "tts-mischief"
-  | "tts-parley";
+import type { BedId, CueId } from "./cues";
+import type { Engine } from "./engine";
+import { borrowSound, onSoundEngine, soundEngine, soundState } from "./store";
 
-/** One bed per world plus the house (spec §10.2). */
-export type BedId = "pirates" | "idiots" | "rdr2" | "hp" | "house";
+export type { BedId, CueId } from "./cues";
 
 export type CueOptions = { pan?: number; rate?: number; gain?: number };
 export type SoundLoop = { set(o: CueOptions): void; stop(): void };
 
-const idleLoop: SoundLoop = { set: () => {}, stop: () => {} };
+/** What the page last asked for (applied when the engine arrives). */
+let bedWant: BedId | null | undefined;
+let stormWant = false;
+type LoopProxy = { id: CueId; o: CueOptions; inner: SoundLoop | null };
+const loops = new Set<LoopProxy>();
+/** Cues asked while sound is on but the engine is still loading. */
+let held: { id: CueId; o?: CueOptions; t: number }[] = [];
+
+onSoundEngine((e: Engine) => {
+  if (bedWant !== undefined) e.bed(bedWant);
+  e.layer("storm", stormWant);
+  for (const l of loops) l.inner = e.loop(l.id, l.o);
+  const now = performance.now();
+  for (const h of held) if (now - h.t <= 1000) e.cue(h.id, h.o);
+  held = [];
+});
 
 export const sound = {
   /** Play one effect (no-op while muted). */
   cue(id: CueId, o?: CueOptions): void {
-    void id;
-    void o;
+    const e = soundEngine();
+    if (e) e.cue(id, o);
+    else if (soundState().on) {
+      const now = performance.now();
+      held = held.filter((h) => now - h.t <= 1000).slice(-7);
+      held.push({ id, o, t: now });
+    }
   },
-  /** Start a looping effect (the drone's hum); stop() ends it. */
-  loop(id: CueId, o?: CueOptions): SoundLoop {
-    void id;
-    void o;
-    return idleLoop;
+  /** Start a looping effect (the drone's hum: `rate` 1 → 1.78 = 180 → 320 Hz);
+   *  stop() ends it. Survives a later unmute. */
+  loop(id: CueId, o: CueOptions = {}): SoundLoop {
+    const l: LoopProxy = { id, o: { ...o }, inner: null };
+    loops.add(l);
+    l.inner = soundEngine()?.loop(id, l.o) ?? null;
+    return {
+      set(n) {
+        Object.assign(l.o, n);
+        l.inner?.set(n);
+      },
+      stop() {
+        loops.delete(l);
+        l.inner?.stop();
+        l.inner = null;
+      },
+    };
   },
   /** Crossfade to a world's bed (null = silence). */
   bed(b: BedId | null): void {
-    void b;
+    bedWant = b;
+    soundEngine()?.bed(b);
   },
   /** Duck the beds by `db` for `ms`. */
   duck(db: number, ms: number): void {
-    void db;
-    void ms;
+    soundEngine()?.duck(db, ms);
   },
-  /** The director's cut: unmute for its duration; resolves to `restore`. */
+  /** The director's cut: unmute for its duration; resolves to `restore`
+   *  once the engine is ready. Call it from the click (the click is the
+   *  consent and the gesture) and await it before emitting dc:start. */
   borrow(): Promise<() => void> {
-    return Promise.resolve(() => {});
+    return borrowSound();
   },
 };
+
+/** The seam's storm over the Pirates bed (the bed follower switches it). */
+export function bedLayer(name: "storm", on: boolean): void {
+  stormWant = on;
+  soundEngine()?.layer(name, on);
+}

@@ -235,18 +235,19 @@ export type SdfMeta = {
 };
 
 /** frame uv → title SDF uv at title-local t (0 → 1, p .68 → 1): the title
- *  rests centred (cap ≤ 20% of the frame height, ink ≤ 80% of its width),
+ *  rests centred (cap ≤ 20% of the frame height, ink ≤ 72% of its width),
  *  then scales about its origin, which drifts to the frame centre, until
  *  the stroke's inscribed disc covers the frame. */
 export function titleXf(m: SdfMeta, res: readonly [number, number], t: number): [number, number, number, number] {
   const [W, H] = res;
-  const k = Math.min((0.2 * H) / m.cap, (0.8 * W) / Math.max(1, m.ink[2] - m.ink[0]));
+  const k = Math.min((0.2 * H) / m.cap, (0.72 * W) / Math.max(1, m.ink[2] - m.ink[0]));
   const cx = (m.ink[0] + m.ink[2]) / 2;
   const cy = m.ink[1] + m.cap / 2;
   const e = ss(0, 1, t);
   const px = W / 2 + (m.ox - cx) * k * (1 - e);
   const py = H / 2 + (m.oy - cy) * k * (1 - e);
   const end = ((Math.hypot(W, H) / 2) * 1.08) / Math.max(0.5, m.rIn * k);
-  const ks = k * Math.pow(Math.max(1, end), t * t);
+  // legible first, then the zoom accelerates (exponent t³)
+  const ks = k * Math.pow(Math.max(1, end), t * t * t);
   return [W / (ks * m.w), H / (ks * m.h), (m.ox - px / ks) / m.w, (m.oy - py / ks) / m.h];
 }

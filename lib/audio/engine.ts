@@ -3,28 +3,35 @@
    Loaded by lib/audio/store.ts only after the first unmute (the click that
    creates the AudioContext). Framework-free.
 
-   Graph:  cue voices (gain → pan) ─→ sfx bus ─┐
-           beds (trim → fade) → bed bus (duck) → time-slow LP ─┤→ master → ceiling → out
+   Graph:  cue voices (gain → pan) ─→ sfx bus ─────────────────────┐
+           beds (trim → fade) → bed bus (duck) → time-slow LP → gate ─┤→ master → ceiling → out
    - Beds ≈ −30 LUFS: each bed's continuous layers are rendered offline once
      (K-weighted) and trimmed; 1.5 s equal-power crossfades.
-   - SFX: every recipe is rendered offline once and normalised to its peak
-     LEVEL (≤ −6 dBFS); the master ceiling (a waveshaper) holds the sum
-     under −6 dBFS. Beds duck −6 dB under SFX.
+   - SFX: every recipe is rendered offline once and normalised to its
+     loudness target (momentary LUFS), capped at −6.5 dBFS sample peak; the
+     master ceiling (a waveshaper) holds the sum under −6 dBFS. Beds duck
+     −6 dB under SFX.
    - Files (the tts-* lines): public/audio/<id>.webm (Opus) or .mp3 by
      canPlayType, fetched after the first unmute, decoded to AudioBuffers,
      played by AudioBufferSourceNode. A 404 is a silent no-op.
    - Event listeners (lib/events.ts) voice the page: impact, transition:meet,
      letterbox, hunt:found, egg:trigger, game:*, toy, post-credits, dc:*.
    - `setRunning(false)` (Pause / RM / hidden tab / muted) silences the
-     master at once and every cue is a no-op; the store suspends the
-     context. Timed bed events skip while not running.
+     master at once, every cue is a no-op and every timer (bed events,
+     re-triggered loops) stops until it runs again; the store suspends the
+     context. `setRunning(true, true)` is the nox grace: effects only, the
+     bed gate stays shut.
+   - A cue asked while the context is still waking from a suspend (Lumos
+     resuming from Pause) plays once the resume lands (≤ 1.5 s late).
+   - Egg and hunt events are voiced one task later, after the egg host's
+     own listener (Lumos resumes motion first; Nox pauses it first).
    ========================================================================== */
 
+import { SNITCH_EVENT, eggEnabled, snitchCaught } from "@/components/eggs/egg-bus";
 import { on } from "../events";
 import { onIdle } from "../idle";
 import { BEDS, type BedKit, type BedLayers } from "./beds";
 import {
-  CUE_IDS,
   EGG_CUES,
   FILE_CUES,
   FOUND_CUES,
@@ -39,7 +46,7 @@ import {
   type RecipeCueId,
   type Shot,
 } from "./cues";
-import { RECIPES, droneHum, levelOf } from "./recipes";
+import { PEAK_CAP_DB, RECIPES, droneHum, levelOf } from "./recipes";
 import { dbToGain, filter, gain, holdAt, rng, type Kit } from "./synth";
 import type { CueOptions, SoundLoop } from "./index";
 
@@ -53,6 +60,11 @@ const MAX_VOICES = 24;
 /** Cues that legitimately repeat fast (ticks); everything else drops a
  *  same-id repeat inside 70 ms (an event voiced twice). */
 const REPEATABLE = new Set<CueId>(["compass-ratchet", "typewriter-click", "deadeye-scratch", "drone-gate", "candle-fwip"]);
+/** Cues with a longer minimum gap (ms): a reader nudging the wheel at a
+ *  card edge closes the bars again and again. */
+const MIN_GAP: Partial<Record<CueId, number>> = { "letterbox-whum": 1200 };
+/** A cue that waits for a resume gives up after this long (s). */
+const LATE = 1.5;
 
 export type EngineHooks = {
   /** Keep the context running `ms` longer even though motion just turned
@@ -79,13 +91,15 @@ export type Engine = {
   bed(b: BedId | null): void;
   layer(name: "storm", on: boolean): void;
   duck(db: number, ms: number): void;
-  setRunning(on: boolean): void;
+  /** `sfxOnly` = the nox grace: effects play, the beds stay shut. */
+  setRunning(on: boolean, sfxOnly?: boolean): void;
   /** Lab/probe: the master's current peak and RMS (dBFS). */
   meter(): { peakDb: number; rmsDb: number };
   /** Lab/probe: a snapshot of the engine. */
   state(): EngineState;
-  /** Lab: a recipe's measured peak (dBFS) before normalisation, if known. */
-  measuredPeakDb(id: CueId): number | null;
+  /** Lab: a recipe's offline measurement before normalisation (sample
+   *  peak dBFS, momentary LUFS) and its gain, if known. */
+  measured(id: CueId): { peakDb: number; lufs: number; gain: number } | null;
 };
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
@@ -112,7 +126,8 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   const sfxBus = gain(ctx, 1);
   const bedBus = gain(ctx, 1);
   const slow = filter(ctx, "lowpass", 20000, 0.5);
-  bedBus.connect(slow).connect(master);
+  const bedGate = gain(ctx, 1);
+  bedBus.connect(slow).connect(bedGate).connect(master);
   sfxBus.connect(master);
   master.connect(ceiling).connect(ctx.destination);
 
@@ -120,15 +135,43 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   let voices = 0;
   const last = new Map<CueId, number>();
   const log: { id: CueId; t: number }[] = [];
+  /** Every timer that should only tick while running (bed events, loops). */
+  type Timed = { arm(): void; disarm(): void };
+  const timed = new Set<Timed>();
 
-  function setRunning(v: boolean): void {
-    running = v;
+  function fadeTo(p: AudioParam, up: boolean): void {
     const t = ctx.currentTime;
-    holdAt(master.gain, t);
-    master.gain.setTargetAtTime(v ? 1 : 0, t, v ? 0.03 : 0.008);
+    holdAt(p, t);
+    p.setTargetAtTime(up ? 1 : 0, t, up ? 0.03 : 0.008);
+  }
+
+  function setRunning(v: boolean, sfxOnly = false): void {
+    const was = running;
+    running = v;
+    fadeTo(master.gain, v);
+    fadeTo(bedGate.gain, v && !sfxOnly);
+    if (v !== was) timed.forEach((x) => (v ? x.arm() : x.disarm()));
   }
 
   const live = () => running && ctx.state === "running";
+
+  /** Run `fn` now, or once a pending resume lands (running, but the
+   *  context is still waking from a suspend); `late` = seconds waited. */
+  function whenLive(fn: (late: number) => void): void {
+    if (live()) {
+      fn(0);
+      return;
+    }
+    if (!running || ctx.state === "closed") return;
+    const asked = performance.now();
+    void ctx.resume().then(
+      () => {
+        const late = (performance.now() - asked) / 1000;
+        if (live() && late < LATE) fn(late);
+      },
+      () => {},
+    );
+  }
 
   /* — Ducking ——————————————————————————————————————————————————————— */
   let duckUntil = 0;
@@ -148,54 +191,74 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
 
   /* — Offline measurement (levels) ————————————————————————————————— */
   const norms = new Map<CueId, number>();
-  const peaks = new Map<CueId, number>();
+  const measured = new Map<CueId, { peakDb: number; lufs: number }>();
 
-  async function peakOf(build: (c: BaseAudioContext, out: AudioNode, pan: AudioParam) => void, seconds: number): Promise<number> {
+  /** K-weighting (BS.1770): a +4 dB high shelf at ~1.7 kHz, a 38 Hz high-pass. */
+  function kWeight(c: BaseAudioContext): { input: AudioNode; output: AudioNode } {
+    const shelf = new BiquadFilterNode(c, { type: "highshelf", frequency: 1681, gain: 4 });
+    const hp = new BiquadFilterNode(c, { type: "highpass", frequency: 38, Q: 0.5 });
+    shelf.connect(hp);
+    return { input: shelf, output: hp };
+  }
+
+  /** Render a mono voice offline: its sample peak and its momentary
+   *  loudness (the loudest 400 ms window, 100 ms hop; a centred voice keeps
+   *  its mono power on two channels, so no channel correction). */
+  async function measure(build: (c: BaseAudioContext, out: AudioNode) => void, seconds: number): Promise<{ peak: number; lufs: number }> {
     const oc = new OfflineAudioContext(2, Math.ceil(sr * seconds), sr);
     const v = gain(oc, 1);
-    const p = new StereoPannerNode(oc, { pan: 0 });
-    v.connect(p).connect(oc.destination);
-    build(oc, v, p.pan);
+    const merge = new ChannelMergerNode(oc, { numberOfInputs: 2 });
+    const k = kWeight(oc);
+    v.connect(merge, 0, 0);
+    v.connect(k.input);
+    k.output.connect(merge, 0, 1);
+    merge.connect(oc.destination);
+    build(oc, v);
     const buf = await oc.startRendering();
+    const raw = buf.getChannelData(0);
+    const kw = buf.getChannelData(1);
     let peak = 0;
-    for (let ch = 0; ch < buf.numberOfChannels; ch++) {
-      const d = buf.getChannelData(ch);
-      for (let i = 0; i < d.length; i++) {
-        const a = d[i] < 0 ? -d[i] : d[i];
-        if (a > peak) peak = a;
-      }
+    for (let i = 0; i < raw.length; i++) {
+      const a = raw[i] < 0 ? -raw[i] : raw[i];
+      if (a > peak) peak = a;
     }
-    return peak;
+    const w = Math.round(sr * 0.4);
+    const hop = Math.round(sr * 0.1);
+    let best = 0;
+    for (let start = 0; start + w <= kw.length; start += hop) {
+      let s = 0;
+      for (let i = start; i < start + w; i++) s += kw[i] * kw[i];
+      if (s > best) best = s;
+    }
+    return { peak, lufs: -0.691 + 10 * Math.log10(best / w + 1e-12) };
   }
 
   function measureCue(id: RecipeCueId): Promise<void> {
     const build =
       id === "drone-hum"
         ? (c: BaseAudioContext, out: AudioNode) => void droneHum(c, out, 1)
-        : (c: BaseAudioContext, out: AudioNode, pan: AudioParam) => {
-            const k: Kit = { ctx: c, out, t0: 0.005, rate: 1, rnd: rng(7), pan, end: 0 };
-            RECIPES[id](k);
-          };
-    return peakOf(build, id === "drone-hum" ? 1 : 2.2).then(
-      (pk) => {
-        if (pk <= 1e-5) return;
-        peaks.set(id, pk);
-        norms.set(id, clamp(dbToGain(levelOf(id)) / pk, 0.02, 8));
+        : (c: BaseAudioContext, out: AudioNode) => RECIPES[id]({ ctx: c, out, t0: 0.005, rate: 1, rnd: rng(7), end: 0 });
+    return measure(build, id === "drone-hum" ? 1.2 : 2.2).then(
+      ({ peak, lufs }) => {
+        if (peak <= 1e-5) return;
+        measured.set(id, { peakDb: 20 * Math.log10(peak), lufs });
+        // Reach the loudness target, but never past the peak cap.
+        const g = Math.min(dbToGain(levelOf(id) - lufs), dbToGain(PEAK_CAP_DB) / peak);
+        norms.set(id, clamp(g, 0.01, 12));
       },
       () => {},
     );
   }
 
-  /** Before its measurement lands, a cue assumes a 0.45 design peak. */
-  const normOf = (id: CueId) => norms.get(id) ?? dbToGain(levelOf(id)) / 0.45;
+  /** Before its measurement lands (≈ 1 s after the first unmute), a cue
+   *  plays at a conservative guess. */
+  const normOf = (id: CueId) => norms.get(id) ?? 0.5;
 
   async function measureBed(id: BedId): Promise<number> {
     const oc = new OfflineAudioContext(1, Math.ceil(sr * 6), sr);
-    // BS.1770 K-weighting: a +4 dB high shelf at ~1.7 kHz and a 38 Hz high-pass.
-    const shelf = new BiquadFilterNode(oc, { type: "highshelf", frequency: 1681, gain: 4 });
-    const hp = new BiquadFilterNode(oc, { type: "highpass", frequency: 38, Q: 0.5 });
-    shelf.connect(hp).connect(oc.destination);
-    BEDS[id](bedKit(oc, shelf, false).kit);
+    const k = kWeight(oc);
+    k.output.connect(oc.destination);
+    BEDS[id](bedKit(oc, k.input, false).kit);
     const d = (await oc.startRendering()).getChannelData(0);
     let s = 0;
     for (let i = sr; i < d.length; i++) s += d[i] * d[i];
@@ -230,20 +293,22 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   }
 
   function play(id: CueId, o: CueOptions = {}, delay = 0): void {
-    if (!live()) return;
-    const now = performance.now();
-    if (now - (last.get(id) ?? -1e9) < (REPEATABLE.has(id) ? 15 : 70)) return;
-    last.set(id, now);
-    if (voices >= MAX_VOICES) return;
-    if (isFileCue(id)) {
-      playFile(id, o, delay);
-      return;
-    }
-    const { v, p } = voice(o, normOf(id));
-    const k: Kit = { ctx, out: v, t0: ctx.currentTime + 0.005 + delay, rate: clamp(o.rate ?? 1, 0.25, 4), rnd, pan: p.pan, end: 0 };
-    RECIPES[id](k);
-    occupy(p, delay + k.end);
-    remember(id);
+    whenLive((late) => {
+      const now = performance.now();
+      if (now - (last.get(id) ?? -1e9) < (MIN_GAP[id] ?? (REPEATABLE.has(id) ? 15 : 70))) return;
+      if (voices >= MAX_VOICES) return;
+      last.set(id, now);
+      const wait = Math.max(0, delay - late);
+      if (isFileCue(id)) {
+        playFile(id, o, wait);
+        return;
+      }
+      const { v, p } = voice(o, normOf(id));
+      const k: Kit = { ctx, out: v, t0: ctx.currentTime + 0.005 + wait, rate: clamp(o.rate ?? 1, 0.25, 4), rnd, pan: p.pan, end: 0 };
+      RECIPES[id](k);
+      occupy(p, wait + k.end);
+      remember(id);
+    });
   }
 
   /* — Files (TTS) ————————————————————————————————————————————————————— */
@@ -284,16 +349,18 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   function playFile(id: FileCueId, o: CueOptions, delay: number): void {
     const asked = performance.now();
     void loadFile(id).then((buf) => {
-      const late = (performance.now() - asked) / 1000;
-      if (!buf || !live() || late > 1.5) return;
-      const rate = clamp(o.rate ?? 1, 0.5, 2);
-      const s = new AudioBufferSourceNode(ctx, { buffer: buf, playbackRate: rate });
-      const { v, p } = voice(o, 1);
-      s.connect(v);
-      const wait = Math.max(0, delay - late);
-      s.start(ctx.currentTime + 0.005 + wait);
-      occupy(p, wait + buf.duration / rate);
-      remember(id);
+      if (!buf || performance.now() - asked > LATE * 1000) return;
+      whenLive(() => {
+        const late = (performance.now() - asked) / 1000;
+        const rate = clamp(o.rate ?? 1, 0.5, 2);
+        const s = new AudioBufferSourceNode(ctx, { buffer: buf, playbackRate: rate });
+        const { v, p } = voice(o, 1);
+        s.connect(v);
+        const wait = Math.max(0, delay - late);
+        s.start(ctx.currentTime + 0.005 + wait);
+        occupy(p, wait + buf.duration / rate);
+        remember(id);
+      });
     });
   }
 
@@ -310,20 +377,36 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       stopInner = h.stop;
       setRate = h.rate;
     } else {
-      // Any other cue loops by re-triggering back to back while running.
+      // Any other cue loops by re-triggering back to back, only while
+      // running (setRunning re-arms it).
       let timer = 0;
       let rate = clamp(o.rate ?? 1, 0.25, 4);
       const again = () => {
-        let len = 0.5;
-        if (live() && !isFileCue(id)) {
+        timer = 0;
+        if (!running || isFileCue(id)) return;
+        let len = 0.1; // waking from a suspend: look again shortly
+        if (live()) {
           const k: Kit = { ctx, out: v, t0: ctx.currentTime + 0.005, rate, rnd, pan: p.pan, end: 0 };
           RECIPES[id](k);
           len = Math.max(0.05, k.end);
         }
         timer = window.setTimeout(again, len * 1000);
       };
-      again();
-      stopInner = () => window.clearTimeout(timer);
+      const t: Timed = {
+        arm: () => {
+          if (!timer) again();
+        },
+        disarm: () => {
+          window.clearTimeout(timer);
+          timer = 0;
+        },
+      };
+      timed.add(t);
+      t.arm();
+      stopInner = () => {
+        t.disarm();
+        timed.delete(t);
+      };
       setRate = (r) => {
         rate = clamp(r, 0.25, 4);
       };
@@ -355,7 +438,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
 
   function bedKit(c: BaseAudioContext, out: AudioNode, isLive: boolean): { kit: BedKit; stop(at: number): void } {
     const srcs: AudioScheduledSourceNode[] = [];
-    const timers: { id: number }[] = [];
+    const timers: Timed[] = [];
     const r = isLive ? rnd : rng(11);
     const kit: BedKit = {
       ctx: c,
@@ -369,24 +452,38 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       },
       every(min, max, fn) {
         if (!isLive) return;
-        const h = { id: 0 };
-        timers.push(h);
+        let id = 0;
         const tick = () => {
-          h.id = window.setTimeout(
+          id = window.setTimeout(
             () => {
+              id = 0;
               if (live()) fn({ ctx: c, out, t0: c.currentTime + 0.05, rate: 1, rnd: r, end: 0 });
-              tick();
+              if (running) tick();
             },
             (min + r() * (max - min)) * 1000,
           );
         };
-        tick();
+        const t: Timed = {
+          arm: () => {
+            if (!id) tick();
+          },
+          disarm: () => {
+            window.clearTimeout(id);
+            id = 0;
+          },
+        };
+        timers.push(t);
+        timed.add(t);
+        if (running) t.arm();
       },
     };
     return {
       kit,
       stop(at) {
-        for (const h of timers) window.clearTimeout(h.id);
+        for (const t of timers) {
+          t.disarm();
+          timed.delete(t);
+        }
         for (const s of srcs) {
           try {
             s.stop(at);
@@ -437,14 +534,20 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       const x = ((i / 32) * Math.PI) / 2;
       curve[i] = up ? v0 + (1 - v0) * Math.sin(x) : v0 * Math.cos(x);
     }
-    p.setValueCurveAtTime(curve, t + 0.01, XFADE);
+    try {
+      p.setValueCurveAtTime(curve, t + 0.01, XFADE);
+    } catch {
+      // An engine that rejects the overlap: an exponential approach instead.
+      p.setTargetAtTime(up ? 1 : 0, t + 0.01, XFADE / 4);
+    }
   }
 
   function retire(e: LiveBed): void {
     window.clearTimeout(e.timer);
     const done = () => {
-      // Wait for a running context and a finished fade before stopping.
-      if (ctx.state !== "running" || e.fade.gain.value > 0.002) {
+      // Not running (muted, Pause, hidden): silent anyway, stop it now.
+      // Running: wait for the context and the fade to finish first.
+      if (running && (ctx.state !== "running" || e.fade.gain.value > 0.002)) {
         e.timer = window.setTimeout(done, 500);
         return;
       }
@@ -496,16 +599,27 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     if (id) play(id);
   });
   on("transition:meet", (d) => shots(MEET_CUES[d.card]));
-  on("letterbox", (d) => play("letterbox-whum", { rate: d.state === "open" ? 1.12 : 1 }));
-  on("hunt:found", (d) => {
-    const id = FOUND_CUES[String(d.id).split("-")[0]];
-    if (id) play(id);
-    if (d.count >= 12) play("hunt-complete", {}, 0.5);
+  // The bars closing only (not opening), at most one whum per 1.2 s.
+  on("letterbox", (d) => {
+    if (d.state === "close") play("letterbox-whum");
   });
-  on("egg:trigger", (d) => {
-    if (d.id === "nox") hooks.grace(1500);
-    shots(EGG_CUES[d.id]);
-  });
+  // One task later: the egg host's listener has run (Lumos has resumed
+  // motion, Nox has paused it), whatever order the listeners were added in.
+  const soon = (fn: () => void) => window.setTimeout(fn, 0);
+  on("hunt:found", (d) =>
+    soon(() => {
+      const id = FOUND_CUES[String(d.id).split("-")[0]];
+      if (id) play(id);
+      if (d.count >= 12) play("hunt-complete", {}, 0.5);
+    }),
+  );
+  on("egg:trigger", (d) =>
+    soon(() => {
+      if (!eggEnabled(d.id)) return;
+      if (d.id === "nox") hooks.grace(1500);
+      shots(EGG_CUES[d.id]);
+    }),
+  );
   on("game:start", (d) => {
     if (d.game !== "deadeye") return;
     slowmo(true);
@@ -530,13 +644,17 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   });
   on("dc:start", () => play("projector-start"));
   on("dc:stop", () => play("reel-runout"));
-  window.addEventListener("egg:snitch-caught", () => play("snitch-ting"));
+  // Obliviate fires the same event to reset the Snitch: only a catch tings.
+  window.addEventListener(SNITCH_EVENT, () => {
+    if (snitchCaught()) play("snitch-ting");
+  });
 
   /* — Warm-up after the first unmute: TTS files, then every level ————— */
   onIdle(() => FILE_CUES.forEach((id) => void loadFile(id)), { timeout: 3000 });
   onIdle(
     () => {
-      const ids = CUE_IDS.filter((id): id is RecipeCueId => !isFileCue(id));
+      // The recipe keys, not CUE_IDS: the id list stays out of this chunk.
+      const ids = Object.keys(RECIPES) as RecipeCueId[];
       void ids.reduce((p, id) => p.then(() => measureCue(id)), Promise.resolve());
     },
     { timeout: 4000 },
@@ -586,9 +704,9 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       voices,
       cues: log.slice(-20),
     }),
-    measuredPeakDb: (id) => {
-      const pk = peaks.get(id);
-      return pk ? 20 * Math.log10(pk) : null;
+    measured: (id) => {
+      const m = measured.get(id);
+      return m ? { ...m, gain: norms.get(id) ?? 0 } : null;
     },
   };
   (window as Window & { __p3sound?: Engine }).__p3sound = engine;
