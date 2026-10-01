@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
+import type { BeatWeight } from "@/lib/beats";
 import type { CaptionKey, CaptionPlace, CaptionWorld } from "@/lib/film";
 import { captionOf, filmTitleOf, letteredIn } from "@/lib/sections";
+import type { Variant } from "@/lib/variants";
 import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
 import { worldFaceClass } from "@/components/primitives/world-face";
+import { InCharacterInner, inCharacterAttrs } from "@/components/words/in-character-title";
 
 /* ============================================================================
    SCENE CAPTION — the RECOGNIZABILITY RULE (b) primitive (§4): every film
@@ -31,7 +34,26 @@ import { worldFaceClass } from "@/components/primitives/world-face";
      head     the section head (right after the Meta number, or opposite
               the h2 — the host lays it out).
    Under 640 px every placement renders as `under` (static, in flow).
+
+   IN CHARACTER (PHASE3-SPEC §8.2, W2-WORDS): `inCharacter` on <Lettered>,
+   <FilmTitle> or <SceneCaption> makes the element an in-character title
+   (components/words/in-character-title.tsx): same text, same face, two
+   inline wrappers + an empty hidden decoration layer; the words binder
+   plays the world's arrival on desktop. Hosts: the four films-screen titles
+   (<FilmTitle as="h3" inCharacter beat="B31"…>). Pass the beat id.
    ========================================================================== */
+
+/** The in-character options shared by Lettered, FilmTitle and SceneCaption. */
+export type InCharacterOpts = {
+  /** Play the world's arrival (spec §8.2) on desktop. */
+  inCharacter?: boolean;
+  /** Its beat id (lib/page.ts `kind: "title"`), e.g. "B31". */
+  beat?: string;
+  /** The beat's star weight (default 1). */
+  weight?: BeatWeight;
+  /** The manifest's variant for `words.title-<world>`. */
+  variant?: Variant;
+};
 
 export { worldFaceClass };
 
@@ -49,6 +71,10 @@ export function Lettered({
   className,
   id,
   glue = false,
+  inCharacter = false,
+  beat,
+  weight,
+  variant,
 }: {
   world: CaptionWorld;
   text: string;
@@ -57,15 +83,17 @@ export function Lettered({
   id?: string;
   /** Keep the last two words on one line (credits: "REDEMPTION 2"). */
   glue?: boolean;
-}) {
+} & InCharacterOpts) {
   const face = letteredIn(world, text);
+  const body = glue ? <GluedTail text={text} /> : text;
   return (
     <T
       id={id}
       className={cn(face.lettered && worldFaceClass(world), face.upper && "uppercase", className)}
       data-lettered={face.lettered ? world : undefined}
+      {...(inCharacter ? inCharacterAttrs({ world, beat, weight, variant }) : {})}
     >
-      {glue ? <GluedTail text={text} /> : text}
+      {inCharacter ? <InCharacterInner>{body}</InCharacterInner> : body}
     </T>
   );
 }
@@ -81,15 +109,16 @@ export function FilmTitle({
   as = "p",
   className,
   id,
+  ...inChar
 }: {
   world: CaptionWorld;
   as?: Tag;
   className?: string;
   id?: string;
-}) {
+} & InCharacterOpts) {
   const title = filmTitleOf(world);
   if (!title) return null;
-  return <Lettered world={world} text={title} as={as} className={className} id={id} />;
+  return <Lettered world={world} text={title} as={as} className={className} id={id} {...inChar} />;
 }
 
 /**
@@ -108,6 +137,10 @@ export function SceneCaption({
   className,
   ariaHidden,
   children,
+  inCharacter = false,
+  beat,
+  weight,
+  variant,
 }: {
   k: CaptionKey;
   /** Override the data's default placement. */
@@ -117,20 +150,14 @@ export function SceneCaption({
   ariaHidden?: boolean;
   /** Extra inline content after the film span (rare; e.g. a Meta note). */
   children?: ReactNode;
-}) {
+} & InCharacterOpts) {
   const c = captionOf(k);
   if (!c) return null;
   const hidden = ariaHidden ?? c.ariaHidden;
   const face = c.moment ? letteredIn(c.world, c.moment) : { lettered: false, upper: false };
   const filmFace = c.film ? letteredIn(c.world, c.film) : { lettered: false, upper: false };
-  return (
-    <p
-      className={cn("scene-caption", className)}
-      data-caption={c.key}
-      data-caption-world={c.world}
-      data-place={place ?? c.place}
-      aria-hidden={hidden || undefined}
-    >
+  const body = (
+    <>
       {c.quote ? (
         <FilmQuote id={c.quote} rendition="lettered" attribution="speaker" className="scene-caption__moment scene-caption__quote" />
       ) : (
@@ -151,6 +178,18 @@ export function SceneCaption({
         </>
       ) : null}
       {children}
+    </>
+  );
+  return (
+    <p
+      className={cn("scene-caption", className)}
+      data-caption={c.key}
+      data-caption-world={c.world}
+      data-place={place ?? c.place}
+      aria-hidden={hidden || undefined}
+      {...(inCharacter ? inCharacterAttrs({ world: c.world, beat, weight, variant }) : {})}
+    >
+      {inCharacter ? <InCharacterInner>{body}</InCharacterInner> : body}
     </p>
   );
 }

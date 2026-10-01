@@ -12,7 +12,7 @@ import { LINE_D, LINE_FIG, LINE_VIEWBOX, remap, smooth01 } from "@/components/pr
 import { useCard } from "@/components/sections/act-card/card-context";
 import { BoardDrone, boardQuad, onBoard, poly, type BoardQuad } from "@/components/sections/act-card/frames/board-fig";
 import { registeredStorm, useRanchoCircle } from "@/components/sections/act-card/frames/seam";
-import { PlateBox, plateOf, plateViewBox, type Plate } from "@/components/sections/act-card/plate";
+import { PlateBox, plateOf, plateViewBox, type Box, type Plate } from "@/components/sections/act-card/plate";
 
 /**
  * Card I→II, ALT choreography "duster-erase" (lib/variants.ts
@@ -81,14 +81,18 @@ export function SeamChalkFrame({
   storm: stormId,
   board: boardId = null,
   graded,
+  reg,
 }: {
   storm: MediaId | null;
   /** The ICE board the duster uncovers (iconic-ice-alt); null → the code
    *  blueprint (the lab's old call). */
   board?: MediaId | null;
   graded: boolean;
+  /** Phase 3: the registered crops (the carried line; boot gate only). */
+  reg?: { storm?: Box | null; board?: Box | null } | null;
 }) {
-  const { p, live } = useCard();
+  const { p, live, pin } = useCard();
+  const PlateLayers = pin?.ui?.PlateLayers;
   const reduced = useReducedMotion();
   const board = plateOf(boardId);
   const storm = registeredStorm(stormId, board);
@@ -111,8 +115,9 @@ export function SeamChalkFrame({
       {/* the board: the ICE lecture hall's green board (iconic-ice-alt),
           wiped clean — the duster's dust arcs on the slate only */}
       {board ? (
-        <PlateBox plate={board}>
+        <PlateBox plate={board} reg={reg?.board}>
           <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
+          {PlateLayers ? <PlateLayers plate={board.asset.id} /> : null}
           <DustArcs plate={board} />
           <BoardDrone plate={board} box={DRONE_ALT} live={false} />
         </PlateBox>
@@ -145,7 +150,7 @@ export function SeamChalkFrame({
             className={live ? "absolute inset-y-0 left-0 w-1/3 will-change-transform" : "absolute inset-0"}
             style={live ? { x: stormX, y: stormY } : undefined}
           >
-            <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+            <PlateBox plate={storm} reg={reg?.storm} className={cn(graded && "act-storm-grade")}>
               <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
             </PlateBox>
           </motion.div>

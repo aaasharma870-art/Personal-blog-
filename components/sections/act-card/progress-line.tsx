@@ -25,7 +25,9 @@ const MATERIAL: Record<string, string> = {
 };
 
 export function ProgressLine({ world }: { world: WorldId }) {
-  const { p, live } = useCard();
+  const { p: own, live, pin } = useCard();
+  // pin mode: the whole card's damped p (the frames' p is star (a) alone)
+  const p = pin?.t ?? own;
   const kind = worlds[world].loader;
   // the drawn part is a window sliding in from the left over a counter-moved
   // line (transforms only, composited: no clip-path re-draw per frame); the

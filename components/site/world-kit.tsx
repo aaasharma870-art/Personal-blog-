@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 import type { SectionEntry } from "@/lib/page";
 import { anchorId, pageItems, toneOf, worldOf } from "@/lib/sections";
+import type { Variant } from "@/lib/variants";
 import type { ToneId, WorldId } from "@/lib/worlds";
 import { Seam } from "@/components/primitives/seam";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
 import { StageScrim } from "@/components/stage/scrim";
+import { InCharacterInner, inCharacterAttrs } from "@/components/words/in-character-title";
 import { cn } from "@/lib/utils";
 
 /* ============================================================================
@@ -152,6 +154,14 @@ export function WorldSection({
  * SectionHead — Meta (derived number • label) → h2 in `chapter` (masked R1
  * rise, SSR-final) → optional intro in `lead`. Three type styles, one Meta.
  * No ghost numeral, no eyebrow, no decorative rule.
+ *
+ * `inCharacter` (PHASE3-SPEC §8.2, D3-16; W2-WORDS): the h2 ARRIVES IN
+ * CHARACTER on desktop (components/words/in-character-title.tsx: stamped,
+ * chalked, poster press or ink nib, by `world`). Only the first world h2 of
+ * each act: About (B07), Work (B16), Beyond (B40), Principles (B53). Pass
+ * `world` (worldOf(entry); omitted → the binder reads the section's
+ * `[data-world]`) and the `beat` id. The h2 keeps its id, text and type;
+ * phones and touch keep today's masked rise (MaskReveal `handOff`).
  */
 export function SectionHead({
   id,
@@ -162,6 +172,10 @@ export function SectionHead({
   className,
   titleClassName,
   after,
+  inCharacter = false,
+  world,
+  beat,
+  variant,
 }: {
   /** The h2 id (the section's aria-labelledby). */
   id: string;
@@ -173,6 +187,14 @@ export function SectionHead({
   titleClassName?: string;
   /** Rendered right after the h2 (e.g. a world emphasis mark). */
   after?: ReactNode;
+  /** The h2 arrives in character on desktop (spec §8.2; 4 hosts only). */
+  inCharacter?: boolean;
+  /** The section's world (the arrival's grammar). */
+  world?: WorldId;
+  /** The title's beat id (lib/page.ts `kind: "title"`), e.g. "B07". */
+  beat?: string;
+  /** The manifest's variant for `words.title-<world>`. */
+  variant?: Variant;
 }) {
   return (
     <header className={cn("max-w-[56rem]", className)}>
@@ -181,8 +203,15 @@ export function SectionHead({
         as="h2"
         id={id}
         className={cn("mt-tier-group max-w-title type-chapter text-fg", titleClassName)}
+        handOff={inCharacter}
       >
-        {title}
+        {inCharacter ? (
+          <span {...inCharacterAttrs({ world, beat, variant })}>
+            <InCharacterInner>{title}</InCharacterInner>
+          </span>
+        ) : (
+          title
+        )}
       </MaskReveal>
       {after}
       {intro ? (

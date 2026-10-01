@@ -4,6 +4,7 @@ import { Fragment, useRef } from "react";
 import type { ElementType, ReactNode } from "react";
 import { motion } from "motion/react";
 import { dur, ease, maskTravel, stagger } from "@/lib/motion";
+import { useDesktopFine } from "@/lib/flags";
 import { cn } from "@/lib/utils";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 
@@ -26,6 +27,13 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
  *
  * Note: DESIGN v2 keeps the REPO `maskedLine` travel of 115% (the P1-early
  * brief said 110%); DESIGN wins on tokens.
+ *
+ * `handOff` (PHASE3-SPEC §8.2, W2-WORDS): the line holds an in-character
+ * title (components/words/in-character-title.tsx). On DESKTOP_FINE the
+ * words binder owns that title's entrance, so the rise stays static there
+ * and the line drops its overflow mask (the arrival's scorch, dust and nib
+ * reach past the line box). Everywhere else (phones, touch, narrow windows)
+ * the rise plays exactly as before.
  */
 type MaskRevealProps = {
   /** Element to render (default "div"). Use the real heading level. */
@@ -39,6 +47,9 @@ type MaskRevealProps = {
   lineClassName?: string;
   /** Viewport fraction that triggers the rise (default viewportOnce.amount = .25). */
   amount?: number;
+  /** An in-character title inside: on DESKTOP_FINE the words binder owns
+   *  the entrance (static rise, no overflow mask). */
+  handOff?: boolean;
 };
 
 export function MaskReveal({
@@ -49,9 +60,13 @@ export function MaskReveal({
   className,
   lineClassName,
   amount,
+  handOff = false,
 }: MaskRevealProps) {
   const ref = useRef<HTMLElement>(null);
-  const phase = useEnterOnce(ref, { amount });
+  const entered = useEnterOnce(ref, { amount });
+  // false on the server and during hydration, so the SSR markup is unchanged
+  const quiet = useDesktopFine() && handOff;
+  const phase = quiet ? "static" : entered;
   const items = lines ?? [children];
 
   return (
@@ -59,7 +74,7 @@ export function MaskReveal({
       {items.map((line, i) => (
         <Fragment key={i}>
           {i > 0 ? " " : null}
-          <span className="-mb-[0.15em] block overflow-hidden pb-[0.15em]">
+          <span className={quiet ? "-mb-[0.15em] block pb-[0.15em]" : "-mb-[0.15em] block overflow-hidden pb-[0.15em]"}>
             <motion.span
               className={cn("block", lineClassName)}
               initial={false}

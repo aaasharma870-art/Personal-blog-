@@ -5,4 +5,113 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   Paint only, never layout: every rule here positions a layer inside a box
+   the host already sized, so nothing shifts when the plates engine arrives
+   or leaves (Pause / reduced motion). No rule keys on <html> state.
+   Motion is transform / opacity, written by the engine (components/stage/
+   stage.tsx); the masks and dots below are static and ride their layer.
    ========================================================================== */
+
+/* — depth (components/primitives/depth-plate.tsx; the stage's depth shots) —
+   The far band is the plate itself; the near band is a second copy of the
+   same image, masked below the registered line with a feather, promoted once
+   (the mask never animates; it rides the layer). --depth-line is the line
+   mapped into the box (the engine writes it on resize). */
+.plate-depth {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.plate-depth-far,
+.plate-far {
+  position: absolute;
+  inset: 0;
+}
+.plate-far {
+  will-change: transform;
+}
+.plate-depth-near {
+  --depth-line: 50%;
+  --depth-feather: 6%;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--depth-line) - var(--depth-feather) / 2),
+    #000 calc(var(--depth-line) + var(--depth-feather) / 2)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--depth-line) - var(--depth-feather) / 2),
+    #000 calc(var(--depth-line) + var(--depth-feather) / 2)
+  );
+}
+
+/* — the stage's static grade (spec §7.5): a multiply layer of a cue's sky
+   ratio, faded in by opacity only — */
+.plate-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* — weather (components/stage/weather-layer.tsx; spec §7.7) ——————————————
+   ≤ 16 dots per layer, each its own small layer: a static radial gradient
+   (painted once, crisp at any DPR) moved by one WAAPI transform / opacity
+   keyframe. The container fills the host's image zone; never text. */
+.plate-weather {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+.plate-weather > i {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.plate-weather[data-weather="spray"] > i {
+  background-image: radial-gradient(circle, rgb(226 244 248 / 0.95) 0 35%, transparent 70%);
+}
+.plate-weather[data-weather="chalk"] > i {
+  background-image: radial-gradient(circle, rgb(246 242 228 / 0.85) 0 30%, transparent 70%);
+}
+.plate-weather[data-weather="fireflies"] > i {
+  background-image: radial-gradient(circle, rgb(255 238 150) 0 22%, rgb(255 210 90 / 0.45) 45%, transparent 70%);
+}
+.plate-weather[data-weather="motes"] > i {
+  background-image: radial-gradient(circle, rgb(255 216 146) 0 28%, rgb(255 182 92 / 0.4) 50%, transparent 72%);
+}
+
+/* a backdrop's weather: the outer gutters only (the same edge as the
+   `gutters` scrim in stage.css), never behind the text column */
+.plate-gutter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(max(0px, (100% - var(--container-page, 90rem)) / 2) + var(--spacing-gutter, 4rem));
+  pointer-events: none;
+}
+.plate-gutter[data-side="left"] {
+  left: 0;
+}
+.plate-gutter[data-side="right"] {
+  right: 0;
+}
+
+/* reduced motion: the engine never runs; this covers the frame between an
+   OS switch and React's next render (the dots are invisible at rest) */
+@media (prefers-reduced-motion: reduce) {
+  .plate-weather {
+    display: none;
+  }
+}

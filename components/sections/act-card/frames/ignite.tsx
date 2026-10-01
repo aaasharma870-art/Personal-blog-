@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
@@ -16,6 +16,7 @@ import {
   coverBox,
   inBox,
   plateOf,
+  type Box,
   type Plate,
   type Pos,
 } from "@/components/sections/act-card/plate";
@@ -52,6 +53,14 @@ import {
  * + 3 fire frames. The canvas lives only while the card is within one
  * viewport and the device has ≥ 4 cores. Static card (RM, Pause, < 1024 /
  * coarse, no JS, SSR): the Great Hall still. aria-hidden art.
+ *
+ * Phase 3 PIN MODE (PHASE3-SPEC §7.1–§7.2; CardShell): the css tier, run
+ * over star (a) (p 0–.45). The camp and the hall take their REGISTERED crops
+ * under the boot gate (`reg`: the lake and the high table's top on
+ * MATCH_ROW; the hall zooms 1.089 at the join) and the embers rise from the
+ * fire as that crop places it. Star (b) is push-in #3: SEQ-HALL on the card
+ * canvas (card-p3.tsx) over the hall, or the ALT crane on L02 (PlateLayers);
+ * the hall's media layer is the wand's zone (`data-wand-zone`).
  *
  * MV-07 missing (`hall` null; ignite.BAR "the code-rendered final frame"):
  * the live canvas stays on its own final frame at p = 1 (every candle lit
@@ -90,6 +99,7 @@ export function IgniteFrame({
   mid = null,
   fire = null,
   camp = null,
+  reg = null,
 }: {
   /** The settled plate: the Great Hall (iconic-hall). */
   hall: MediaId | null;
@@ -101,16 +111,20 @@ export function IgniteFrame({
   /** The previous section's plate (Voices: iconic-camp): the outgoing
    *  picture, held until p ≈ .5; the embers rise from ITS fire. */
   camp?: MediaId | null;
+  /** Phase 3: the registered crops (the carried line; boot gate only). */
+  reg?: { camp?: Box | null; hall?: Box | null } | null;
 }) {
-  const { p, live } = useCard();
+  const { p, live, pin } = useCard();
   const hostRef = useRef<HTMLDivElement>(null);
   const campPlate = plateOf(camp);
+  const PlateLayers = pin?.ui?.PlateLayers;
+  const regCamp = pin ? (reg?.camp ?? null) : null;
   // the camp's fire in FRAME fractions (the plate as the 2.39 frame crops
   // it); memoised: the canvas re-initialises when its fire changes
   const fireAt = useMemo(() => {
     const c = plateOf(camp);
-    return c ? (fireInFrame(c) ?? fire) : fire;
-  }, [camp, fire]);
+    return c ? (fireInFrame(c, regCamp) ?? fire) : fire;
+  }, [camp, fire, regCamp]);
 
   // The static card: the hall (or the lit Line when the hall is missing).
   const [done, setDone] = useState(() => p.get() >= 0.999);
@@ -142,15 +156,21 @@ export function IgniteFrame({
 
   return (
     <div ref={hostRef} aria-hidden="true" data-frame="ignite" className="absolute inset-0">
-      {live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null}
+      {live && campPlate ? <CampLayer plate={campPlate} p={p} reg={reg?.camp} /> : null}
       {mid && !hall ? (
         <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: midOpacity } : undefined}>
           <MediaFrame media={mid} layout="fill" playOn="never" sizes="100vw" />
         </motion.div>
       ) : null}
       {hall ? (
-        <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: hallOpacity } : undefined}>
-          <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
+        <motion.div
+          className={cn("absolute inset-0", live && "will-change-[opacity]")}
+          style={live ? { opacity: hallOpacity } : undefined}
+          data-wand-zone=""
+        >
+          <HallPlate hall={hall} reg={reg?.hall}>
+            {PlateLayers ? <PlateLayers plate={hall} /> : null}
+          </HallPlate>
         </motion.div>
       ) : null}
       {!plated && (!live || !near) ? <StaticIgnition /> : null}
@@ -168,15 +188,32 @@ export function IgniteFrame({
 const CAMP_OUT = { from: 0.3, to: 0.62 };
 
 /** THE CAMP (the previous section's plate) sinking into the hp deep over
- *  CAMP_OUT; live only. Shared with the ALT (frames/ignite-lumos.tsx). */
-export function CampLayer({ plate, p }: { plate: Plate; p: MotionValue<number> }) {
+ *  CAMP_OUT; live only. Shared with the ALT (frames/ignite-lumos.tsx).
+ *  `reg`: its registered crop (the lake on MATCH_ROW; boot gate only). */
+export function CampLayer({ plate, p, reg = null }: { plate: Plate; p: MotionValue<number>; reg?: Box | null }) {
   const opacity = useTransform(p, (v) => 1 - remap(v, CAMP_OUT.from, CAMP_OUT.to));
   return (
     <motion.div className="absolute inset-0 overflow-hidden will-change-[opacity]" style={{ opacity }}>
-      <PlateBox plate={plate}>
+      <PlateBox plate={plate} reg={reg}>
         <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
       </PlateBox>
     </motion.div>
+  );
+}
+
+/** The Great Hall still, as its whole plate box (the same pixels as a
+ *  `fill` MediaFrame at its focal: cover = no crop inside the box), so the
+ *  pin mode can register it (`reg`: the high table on MATCH_ROW, zoom 1.089)
+ *  and the push's loop / extras sit in plate coordinates. A non-image
+ *  asset keeps the plain fill. Shared with the ALT. */
+export function HallPlate({ hall, reg = null, children }: { hall: MediaId; reg?: Box | null; children?: ReactNode }) {
+  const plate = plateOf(hall);
+  if (!plate) return <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />;
+  return (
+    <PlateBox plate={plate} reg={reg}>
+      <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
+      {children}
+    </PlateBox>
   );
 }
 
@@ -200,10 +237,11 @@ export function hallAt(v: number): number {
 const PLATE_FIRE: Partial<Record<MediaId, Pos>> = { "MV-11": [0.76, 0.62], "MV-11-alt": [0.76, 0.62] };
 
 /** A camp plate's fire in FRAME fractions of the 2.39:1 letterbox (the
- *  canvas and the sweep only run there: live is ≥ 1024), or null. */
-export function fireInFrame(plate: Plate): readonly [number, number] | null {
+ *  canvas and the sweep only run there: live is ≥ 1024), or null. `reg`:
+ *  the plate's registered crop in pin mode. */
+export function fireInFrame(plate: Plate, reg: Box | null = null): readonly [number, number] | null {
   const f = anchor(plate, "fire", PLATE_FIRE[plate.asset.id] ?? null);
-  return f ? inBox(coverBox(FRAME_ASPECT.sm, plate.ratio, plate.pos), f) : null;
+  return f ? inBox(reg ?? coverBox(FRAME_ASPECT.sm, plate.ratio, plate.pos), f) : null;
 }
 
 /** The ignition's final frame (every point lit), drawn once in SVG from the

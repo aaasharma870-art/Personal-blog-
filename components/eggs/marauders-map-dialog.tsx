@@ -8,6 +8,7 @@ import { useReducedMotion } from "@/lib/flags";
 import { easeClip } from "@/lib/motion";
 import { copyVisible } from "@/lib/sections";
 import { lockScroll, unlockScroll } from "@/lib/smooth-scroll";
+import { sound } from "@/lib/audio";
 import { planeAttrs } from "@/lib/worlds";
 import { FilmQuote, quoteAttribution } from "@/components/site/film-quote";
 import { FilmTitle, Lettered } from "@/components/primitives/scene-caption";
@@ -26,6 +27,8 @@ import { MapPlan, mapRooms } from "@/components/eggs/marauders-map";
    panels are folded over the middle and swing open on their creases.
    ALT (?variant=egg-map.unfold:alt): the sheet opens from the centre crease
    (scaleX). Reduced motion / Pause: it opens flat (E10).
+   Sound (PHASE3-SPEC §10.3): the closing line's button plays its TTS
+   ("tts-mischief"; no page event carries it). Silent while muted.
    ========================================================================== */
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -173,7 +176,10 @@ export default function MaraudersMapDialog({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <button
             type="button"
-            onClick={close}
+            onClick={() => {
+              sound.cue("tts-mischief");
+              close();
+            }}
             className="inline-flex min-h-11 items-center gap-3 rounded-control text-left text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] text-fg transition-colors hover:text-(--world-emphasis)"
             data-map-close=""
           >

@@ -5,4 +5,298 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   Rules kept here (W1 lessons): desktop-only UI is shown by the FULL
+   DESKTOP_FINE media query (never `lg:`); layout keys only on the boot gate
+   (`html.js:not([data-motion-boot="paused"])`, set once at boot); no rule
+   matches <html> for a runtime-toggled class or attribute, none keys on
+   `html.lenis*`, no substring attribute selectors. Every-frame motion is
+   transform / opacity only. Reduced motion: no tick, no bloom, no hold ring
+   transition; the global Pause rule (html[data-motion="paused"], globals.css)
+   already stops CSS animations.
    ========================================================================== */
+
+/* — The hunt chip (spec §9.3): DESKTOP_FINE only ——————————————————————— */
+.hunt-chip-wrap {
+  display: none;
+  position: relative;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .hunt-chip-wrap {
+    display: inline-flex;
+  }
+}
+.hunt-chip {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.5rem;
+  border-radius: var(--radius-control);
+  color: var(--fg-muted);
+  transition: color var(--dur-micro) ease;
+  touch-action: manipulation;
+}
+.hunt-chip:hover,
+.hunt-chip:focus-visible,
+.hunt-chip[aria-expanded="true"] {
+  color: var(--fg);
+}
+.hunt-chip[data-complete] {
+  color: var(--w-ink-contour); /* Snitch gold at 12/12 */
+}
+/* the count box reserves "12/12": the count arriving never shifts the row */
+.hunt-chip-n {
+  display: inline-block;
+  /* five monospace glyphs + Meta's tracking after each */
+  min-width: calc(5ch + 5 * var(--text-meta--letter-spacing, 0.04em));
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.hunt-chip-n[data-tick] {
+  animation: hunt-tick 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes hunt-tick {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.14) translateY(-1px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* — The hunt panel (lazy; non-modal popover under the chip) ——————————— */
+.hunt-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 1;
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: calc(100vh - var(--header-h, 4rem) - 1.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  transform-origin: top right;
+  transition:
+    opacity 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@starting-style {
+  .hunt-panel {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+.hunt-panel-action {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding-inline: 0.75rem;
+  border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  color: var(--fg-muted);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  transition: color var(--dur-micro) ease;
+}
+.hunt-panel-action:hover,
+.hunt-panel-action:focus-visible {
+  color: var(--fg);
+}
+.hunt-panel-action[data-danger] {
+  color: var(--fg);
+}
+
+/* — Egg hotspots (<EggHotspot>): DESKTOP_FINE only, ≥ 44 px ——————————— */
+/* the gate is unlayered (it must win over any utility a host adds) */
+.egg-hotspot {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .egg-hotspot {
+    display: inline-flex;
+  }
+}
+/* the defaults sit in the components layer, so a host's utilities
+   (`absolute left-[…]`, a size, a radius) position and shape it */
+@layer components {
+  .egg-hotspot {
+    position: relative;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+}
+.egg-hotspot[aria-disabled="true"] {
+  cursor: default;
+}
+/* the press-and-hold ring (the chalk heart): slow while held, instant on
+   release (a transition on transform / opacity only) */
+.egg-hotspot[data-egg-hold]::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  opacity: 0;
+  transform: scale(0.82);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+.egg-hotspot[data-egg-hold][data-holding]::after {
+  opacity: 0.85;
+  transform: scale(1);
+  transition:
+    opacity 600ms linear,
+    transform 600ms linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg-hotspot[data-egg-hold]::after,
+  .egg-hotspot[data-egg-hold][data-holding]::after {
+    transition: none;
+  }
+}
+
+/* — Lumos / Nox (spec §9.1 #2): the media veil + the wand-tip bloom ——— */
+/* a layer INSIDE each media box in view (never over text), opacity only;
+   added and removed by the egg runtime */
+.lumos-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.lumos-veil[data-dir="lumos"] {
+  background: rgb(255 255 255 / 0.1);
+  mix-blend-mode: screen;
+}
+.lumos-veil[data-dir="nox"] {
+  background: rgb(0 0 0 / 0.1);
+}
+/* the bloom sits UNDER the Pause glyph (the button is `relative isolate`;
+   IC-HP-09: no light across text) */
+[data-motion-toggle][data-wand-bloom]::before {
+  content: "";
+  position: absolute;
+  inset: -0.625rem;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--w-patronus) 55%, transparent), transparent);
+  pointer-events: none;
+  animation: wand-bloom 900ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes wand-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-motion-toggle][data-wand-bloom]::before {
+    display: none;
+  }
+  .hunt-chip-n[data-tick] {
+    animation: none;
+  }
+}
+
+/* — The post-credits tail + scene (spec §9.4, B58): the BOOT GATE only —— */
+.post-credits {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) .post-credits {
+    display: block;
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+    contain: layout paint;
+  }
+}
+.pc-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pc-broom {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(180px, 22%, 260px);
+  will-change: transform, opacity;
+}
+/* playing: every part starts hidden until its timeline (set before paint) */
+.pc-scene:not([data-still]) .pc-broom,
+.pc-scene:not([data-still]) .pc-print {
+  opacity: 0;
+}
+.pc-broom svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* still (motion off, a spotlight skip): the broom rests under the link */
+.pc-scene[data-still] .pc-broom {
+  left: 50%;
+  top: 68%;
+  transform: translate(-50%, -50%);
+  will-change: auto;
+}
+.pc-instruments {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  display: flex;
+  gap: 2rem;
+  transform: translateX(-50%);
+  color: var(--fg-muted);
+}
+.pc-instruments svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+.pc-pivot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.pc-gold {
+  fill: var(--w-ink-contour);
+  stroke: none;
+}
+.pc-scene[data-still] [data-pc-part="quad"] {
+  transform: translateY(-8px);
+}
+.pc-prints {
+  position: absolute;
+  inset: 0;
+}
+.pc-print {
+  position: absolute;
+  fill: var(--w-ink-contour);
+  opacity: 0.85;
+  transform: rotate(90deg);
+}
+.pc-print:nth-child(even) {
+  transform: rotate(90deg) scaleX(-1);
+}

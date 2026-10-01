@@ -1,18 +1,28 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useMediaQuery, useMotionPausedAtBoot, useReducedMotion } from "@/lib/flags";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
+import { useDesktopFine, useMediaQuery, useMotionPausedAtBoot, useReducedMotion } from "@/lib/flags";
+import type { Scrim } from "@/lib/stage";
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
 import type { Variant, VariantChoice } from "@/lib/variants";
 import { planeAttrs, type ToneId, type WorldId } from "@/lib/worlds";
 import { WorldProvider } from "@/components/primitives/world";
 import { remap } from "@/components/primitives/loaders/line";
+import { StageScrim } from "@/components/stage/scrim";
+import { Subtitle } from "@/components/stage/subtitle";
 import { CardCaptions, type CaptionCue } from "@/components/sections/act-card/card-captions";
-import { CardContext, type CardState } from "@/components/sections/act-card/card-context";
+import { CardContext, type CardState, type PinState, type PinUi } from "@/components/sections/act-card/card-context";
+import type { CardPinSpec } from "@/components/sections/act-card/pin-spec";
 import { ProgressLine } from "@/components/sections/act-card/progress-line";
+
+/* Phase 3 pin mode (DP-13): everything the pinned card does beyond Phase 2
+   — the damped p, impacts, the GL layer, the title mask, the push-ins, the
+   kraken, weather — is ONE lazy chunk, loaded on DESKTOP_FINE only. */
+const CardP3 = lazy(() => import("@/components/sections/act-card/card-p3").then((m) => ({ default: m.CardP3 })));
 
 /**
  * CardShell — the letterboxed loading-reel grammar every derived act card
@@ -55,9 +65,9 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  * Driver p (direct, no spring; reverses by position):
  *   passage (0-travel cards: opening, tintype, reel, title) — 0 as the card's
  *     top enters the viewport, 1 as it reaches the top: "the card has arrived".
- *   pinned (long cards: seam, ignite) — the card's own ≤ 60vh of travel
- *     (the extra height is CSS: [data-act-card-long] in app/globals.css, only
- *     ≥ 1024 + fine pointer + motion on, so SSR already reserves it: CLS 0).
+ *   pinned — Phase 3's pin mode (below): the four authored cards' travel,
+ *     reserved by CSS on the boot gate (app/p3/cards.css), so SSR already
+ *     has it: CLS 0. (Phase 2's `[data-act-card-long]` rule is retired.)
  *   The opening program (`after`) runs on its OWN passage (its top entering
  *     → its bottom in view), so the course is drawn while it is on screen.
  *
@@ -73,6 +83,26 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
  * The section, the bars, the film title, the h2 and every focus target are
  * the same DOM in both (the opening program's alt keeps the same row
  * anchors, in the same order).
+ *
+ * PHASE 3 PIN MODE (PHASE3-SPEC §7.1; PHASE3-PLAN §6.1 W2-CARDS):
+ *   pinned = travel > 0 && DESKTOP_FINE && !pausedAtBoot. The four
+ *   authored cards (opening, seam, tintype, ignite) pin for
+ *   `film.cardTravel` (90 / 110 / 90 / 110 vh). The card stage sits in its
+ *   own PIN WRAPPER (`data-act-card-pin`, the p target; the opening's
+ *   program is a sibling after it, its own `stage-backdrop` block). The
+ *   travel, the sticky stage, the opening's letterbox grid, the registered
+ *   crops, the subtitle and the beat markers are CSS keyed ONLY on the boot
+ *   gate (app/p3/cards.css): SSR paints the final layout, and a Pause or a
+ *   paused reload never changes a box (P3-2 #11). A mid-session Pause keeps
+ *   the pin; the card rests as its static settled frame while it passes.
+ *   Below DESKTOP_FINE every card keeps the Phase-2 `long` flag, driver and
+ *   `eligible` rule above, unchanged.
+ *   In pin mode the frames' `p` is star (a)'s progress (0 → 1 over p 0–.45;
+ *   the tintype's develop .03–.45) and `pin` carries the damped p (`t`),
+ *   star (b) (`b`), the approach (`enter`) and the lazy chunk's pieces
+ *   (card-p3.tsx): the damping, the push-ins, the act title mask, the
+ *   subtitle phases, the impacts, the GL layer, the kraken and weather. The
+ *   card goes live only once that chunk is in (never a half-built card).
  */
 type Ground = { world: WorldId; tone: ToneId };
 
@@ -125,10 +155,23 @@ type Props = {
   /** The lower bar's progress line (default on). The opening card's course
    *  through its rows IS its progress element, so it passes false. */
   progress?: boolean;
+  /* — Phase 3 (pin mode; all optional: /lab and the generic cards omit them) — */
+  /** The card's pinned travel in vh (`item.travel`; 0 = no pin). */
+  travel?: number;
+  /** What the pinned card plays (server-built; pin-spec.ts). */
+  pin?: CardPinSpec | null;
+  /** The act logline: the static subtitle line in the lower bar (§8.4). */
+  subtitle?: string | null;
+  /** Its beat id ("B04-subtitle" …). */
+  subtitleBeat?: string;
+  /** The seam's "HERE BE MONSTERS" button label (pc-kraken; upper bar). */
+  krakenLabel?: string | null;
+  /** The opening program's stage backdrop (lib/film.ts acts[0].stage): its
+   *  anchor id (the stage cue's `at`) and scrim. */
+  program?: { id: string; scrim: Scrim } | null;
 };
 
 const WIDE = "(min-width: 40rem)";
-const DESKTOP_FINE = "(min-width: 64rem) and (pointer: fine)";
 
 export function CardShell({
   id,
@@ -155,11 +198,21 @@ export function CardShell({
   lower,
   summary,
   progress = true,
+  travel = 0,
+  pin = null,
+  subtitle = null,
+  subtitleBeat,
+  krakenLabel = null,
+  program = null,
 }: Props) {
   const ref = useRef<HTMLElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
   const wide = useMediaQuery(WIDE);
-  const desktopFine = useMediaQuery(DESKTOP_FINE);
+  // the Phase-3 desktop gate (lib/flags.ts; ≥ 64rem, hover, fine pointer)
+  const desktopFine = useDesktopFine();
 
   // Offscreen gate: a card already in view at hydration keeps its static
   // composition until it has left the viewport once (never swap in front of
@@ -184,26 +237,52 @@ export function CardShell({
     return () => io.disconnect();
   }, [cleared]);
 
-  // The travel is reserved in CSS (no JS needed, CLS 0) wherever it can
-  // run; a view that STARTED paused drops it. A mid-session Pause keeps it —
-  // the card rests static while it passes — so the page never reflows under
-  // the reader (the spacer is not motion).
+  // The travel is reserved in CSS keyed on the boot gate alone (cards.css:
+  // no JS, CLS 0): a view that STARTED paused never has it (the pre-paint
+  // boot script marks <html>), and a mid-session Pause keeps it — the card
+  // rests static while it passes — so the page never reflows under the
+  // reader (the spacer is not motion; P3-2 #11).
   const pausedAtBoot = useMotionPausedAtBoot();
+  // Phase 3 pin mode (the boot gate's JS twin: CSS reserves the travel)
+  const p3 = travel > 0 && pin !== null && desktopFine && !pausedAtBoot;
+  const [ui, setUi] = useState<PinUi | null>(null);
+  // Phase 2 (everything below the pin mode), unchanged
   const travels = long && !pausedAtBoot;
-  const eligible = wide && !reduced && !still && (!long || desktopFine);
-  const live = eligible && cleared;
-  const pinned = travels && eligible;
+  const eligible = p3 ? !reduced && !still : wide && !reduced && !still && (!long || desktopFine);
+  const live = eligible && cleared && (!p3 || ui !== null);
+  const pinned = !p3 && travels && eligible;
 
-  const passage = useScroll({ target: ref, offset: ["start end", "start start"] });
-  const travel = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const p = pinned ? travel.scrollYProgress : passage.scrollYProgress;
+  // the pin wrapper's top is the section's: the passage is the same driver
+  const passage = useScroll({ target: pinRef, offset: ["start end", "start start"] });
+  const travelP = useScroll({ target: pinRef, offset: ["start start", "end end"] });
+  // pin mode: the DAMPED p (card-p3.tsx owns its one rAF) and its stars
+  const t = useMotionValue(0);
+  const kraken = useMotionValue(0);
+  const a0 = pin?.a[0] ?? 0;
+  const a1 = pin?.a[1] ?? 0.45;
+  const pa = useTransform(t, (v) => remap(v, a0, a1));
+  const pb = useTransform(t, (v) => remap(v, 0.5, 1));
+  const p = p3 ? pa : pinned ? travelP.scrollYProgress : passage.scrollYProgress;
   const fromOpacity = useTransform(p, (v) => 1 - remap(v, 0, 0.2));
 
   // which choreography plays (an ALT that was not built plays the default)
   const chosen = useVariant(variantChoice, `card-${kind}.choreo`);
   const variant: Variant = (forced ?? chosen) === "alt" && altFrame != null ? "alt" : "default";
+  const pushV = useVariant(variantChoice, `card-${kind}.push`);
+  const titleV = useVariant(variantChoice, "title.mask");
+  const shapeV = useVariant(variantChoice, "match.shape");
 
-  const state = useMemo(() => ({ p, live, long: pinned, variant }), [p, live, pinned, variant]);
+  const pinState = useMemo<PinState | null>(
+    () =>
+      p3
+        ? { kind, t, b: pb, enter: passage.scrollYProgress, kraken, ui, push: pushV, title: titleV }
+        : null,
+    [p3, kind, t, pb, passage.scrollYProgress, kraken, ui, pushV, titleV],
+  );
+  const state = useMemo(
+    () => ({ p, live, long: pinned || p3, variant, pin: pinState }),
+    [p, live, pinned, p3, variant, pinState],
+  );
   const titleId = `${id}-title`;
   const cues = variant === "alt" && altCaptions ? altCaptions : captions;
   // an outgoing caption over the frame exists only while live (≥ 640, the
@@ -221,8 +300,8 @@ export function CardShell({
       data-section={id}
       data-act-card={kind}
       data-variant={variant}
-      data-act-card-long={travels ? "" : undefined}
       data-live={live ? "" : undefined}
+      data-title-mask={p3 ? titleV : undefined}
       {...planeAttrs("deep", world)}
       className="relative bg-bg text-fg"
     >
@@ -239,102 +318,164 @@ export function CardShell({
           {nextGround ? (
             <span
               aria-hidden="true"
+              data-card-ground="next"
               {...planeAttrs(nextGround.tone, nextGround.world)}
               className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(20vh,30%)] bg-bg [mask-image:linear-gradient(to_top,#000,transparent)]"
             />
           ) : null}
 
-          <div
-            className={cn(
-              "relative flex flex-col gap-tier-group px-gutter py-section",
-              flow
-                ? "sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-0 sm:px-0 sm:pt-[calc(var(--header-h)+var(--spacing-tier-group))] sm:pb-0"
-                : // the upper bar clears the fixed header (+ Meta + the film
-                  // title); the lower keeps the h2 + line; the frame (capped
-                  // in CSS: .act-card-letterbox) takes what is left
-                  // the lower row is `auto` (not 1fr): two 1fr rows under a
-                  // min-height resolve to the LARGER minimum each (196 px),
-                  // which made every card 952 px at 1440×900 (critic 3 #2)
-                  "act-card-letterbox sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[minmax(calc(var(--header-h)+8rem),1fr)_auto_minmax(8.5rem,auto)] sm:gap-0 sm:px-0 sm:py-0",
-              travels && "act-card-stage",
-            )}
-          >
-            {fromGround && live ? (
-              <motion.div
+          {/* the PIN WRAPPER (the p target): the card's stage, and in pin
+              mode its travel (CSS, the boot gate only) and the stars'
+              markers (the pin spacer: the beats probe and the spotlight
+              measure them); a plain block everywhere else */}
+          <div ref={pinRef} className="act-card-pin" data-act-card-pin={travel > 0 ? kind : undefined}>
+            {pin?.beats.map((b) => (
+              <span
+                key={b.id}
                 aria-hidden="true"
-                {...planeAttrs("deep", fromGround)}
-                className="pointer-events-none absolute inset-0 bg-bg will-change-[opacity]"
-                style={{ opacity: fromOpacity }}
+                className="act-card-beat"
+                data-card-beat=""
+                style={{ "--b0": b.from, "--b1": b.to } as CSSProperties}
+                {...beatAttrs(b.id, b.weight ? { weight: b.weight } : undefined)}
               />
-            ) : null}
-
-            {/* upper bar: Meta, then the film title right above the frame */}
+            ))}
             <div
               className={cn(
-                "relative order-1 flex flex-col justify-end gap-2 sm:order-none sm:col-span-2 sm:row-start-1 sm:pb-4",
-                flow ? "sm:px-gutter" : "sm:px-(--card-inset)",
+                "act-card-stage relative flex flex-col gap-tier-group px-gutter py-section",
+                flow
+                  ? "sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-0 sm:px-0 sm:pt-[calc(var(--header-h)+var(--spacing-tier-group))] sm:pb-0"
+                  : // the upper bar clears the fixed header (+ Meta + the film
+                    // title); the lower keeps the h2 + line; the frame (capped
+                    // in CSS: .act-card-letterbox) takes what is left
+                    // the lower row is `auto` (not 1fr): two 1fr rows under a
+                    // min-height resolve to the LARGER minimum each (196 px),
+                    // which made every card 952 px at 1440×900 (critic 3 #2)
+                    "act-card-letterbox sm:grid sm:min-h-svh sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[minmax(calc(var(--header-h)+8rem),1fr)_auto_minmax(8.5rem,auto)] sm:gap-0 sm:px-0 sm:py-0",
               )}
+              data-card-stage=""
             >
-              <div className="flex items-end justify-between gap-tier-group">
-                <p className="type-meta text-fg-muted">{upperLeft}</p>
-                {upperRight ? <p className="type-meta whitespace-nowrap text-fg-muted">{upperRight}</p> : null}
-              </div>
-              {film}
-            </div>
-
-            {/* the frame (2.39:1 letterbox ≥ 640; 3:2 plate or free below) */}
-            <div
-              className={cn(
-                "relative order-3 aspect-[3/2] overflow-hidden sm:order-none sm:col-span-2 sm:row-start-2 sm:aspect-(--letterbox-ratio)",
-                flow ? "sm:w-full" : "sm:w-[min(100%,var(--card-frame-w))] sm:justify-self-center",
-              )}
-            >
-              {variant === "alt" ? altFrame : frame}
-              {/* the OUTGOING caption, over the corner the old world leaves
-                  by (live, ≥ 640; its own world's deep scrim: CSS) */}
-              {frameCues.length ? (
-                <div className="card-cap-frame pointer-events-none absolute top-[max(1.5rem,8%)] right-[max(1.5rem,8%)] z-[2] hidden w-[min(46%,36rem)] sm:block">
-                  <CardCaptions cues={frameCues} align="end" />
-                </div>
+              {fromGround && live ? (
+                <motion.div
+                  aria-hidden="true"
+                  {...planeAttrs("deep", fromGround)}
+                  className="pointer-events-none absolute inset-0 bg-bg will-change-[opacity]"
+                  style={{ opacity: fromOpacity }}
+                />
               ) : null}
-            </div>
 
-            {/* lower bar, left: the h2 + ≤ 1 line + the progress element */}
-            {lower || progress || summary ? (
-              <div className="relative order-2 flex min-w-0 flex-col items-start gap-3 sm:order-none sm:col-start-1 sm:row-start-3 sm:pt-4 sm:pr-6 sm:pl-(--card-inset)">
-                {lower}
-                {progress ? <ProgressLine world={motifWorld} /> : null}
-                {/* live: screen-reader only, so the bars keep the letterbox
-                    geometry; the static card shows it as a visible line */}
-                {summary ? (
-                  <p className={cn("type-small max-w-body text-fg-muted", live && "sr-only")}>{summary}</p>
-                ) : null}
-              </div>
-            ) : null}
-
-            {/* lower bar, right: the MOMENT caption under the frame's corner
-                (a cell that never shrinks: the caption fills its first line,
-                ART-DIRECTOR #4) */}
-            {underCues.length ? (
+              {/* upper bar: Meta, then the film title right above the frame */}
               <div
                 className={cn(
-                  "relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end sm:pt-4 sm:pl-6",
-                  // the opening has no lower-left block: the caption spans the
-                  // row and hugs the frame's right corner
-                  flow
-                    ? "sm:col-span-2 sm:col-start-1 sm:w-[min(46vw,38rem)] sm:pr-gutter"
-                    : "act-card-cap sm:col-start-2 sm:pr-(--card-inset)",
+                  "act-card-upper relative order-1 flex flex-col justify-end gap-2 sm:order-none sm:col-span-2 sm:row-start-1 sm:pb-4",
+                  flow ? "sm:px-gutter" : "sm:px-(--card-inset)",
                 )}
               >
-                <CardCaptions cues={underCues} />
+                <div className="flex items-end justify-between gap-tier-group">
+                  <p className="type-meta text-fg-muted">{upperLeft}</p>
+                  {krakenLabel ? (
+                    // pc-kraken (§9.1 #6): DESKTOP_FINE only (cards.css), bound
+                    // by the pin chunk; the frame it changes is right below
+                    <button type="button" className="act-card-kraken type-meta" data-kraken="">
+                      {krakenLabel}
+                    </button>
+                  ) : null}
+                  {upperRight ? <p className="type-meta whitespace-nowrap text-fg-muted">{upperRight}</p> : null}
+                </div>
+                {film}
               </div>
-            ) : null}
+
+              {/* the frame (2.39:1 letterbox ≥ 640; 3:2 plate or free below).
+                  The choreography sits in a frame-sized content box (the
+                  push-ins scale it in pin mode); the pin chunk adds its
+                  layers (GL, the title mask, the kraken, weather) after it */}
+              <div
+                ref={setFrameEl}
+                data-act-card-frame=""
+                className={cn(
+                  "act-card-frame relative order-3 aspect-[3/2] overflow-hidden sm:order-none sm:col-span-2 sm:row-start-2 sm:aspect-(--letterbox-ratio)",
+                  flow ? "sm:w-full" : "sm:w-[min(100%,var(--card-frame-w))] sm:justify-self-center",
+                )}
+              >
+                <div ref={contentRef} className="absolute inset-0" data-card-content="">
+                  {variant === "alt" ? altFrame : frame}
+                </div>
+                {/* the OUTGOING caption, over the corner the old world leaves
+                    by (live, ≥ 640; its own world's deep scrim: CSS) */}
+                {frameCues.length ? (
+                  <div className="card-cap-frame pointer-events-none absolute top-[max(1.5rem,8%)] right-[max(1.5rem,8%)] z-[2] hidden w-[min(46%,36rem)] sm:block">
+                    <CardCaptions cues={frameCues} align="end" />
+                  </div>
+                ) : null}
+              </div>
+
+              {/* lower bar, left: the h2 + ≤ 1 line + the progress element */}
+              {lower || progress || summary ? (
+                <div className="act-card-lower relative order-2 flex min-w-0 flex-col items-start gap-3 sm:order-none sm:col-start-1 sm:row-start-3 sm:pt-4 sm:pr-6 sm:pl-(--card-inset)">
+                  {lower}
+                  {progress ? <ProgressLine world={motifWorld} /> : null}
+                  {/* live: screen-reader only, so the bars keep the letterbox
+                      geometry; the static card shows it as a visible line
+                      (pin mode: always screen-reader only, cards.css, so a
+                      Pause never changes the bar's height) */}
+                  {summary ? (
+                    <p className={cn("act-card-summary type-small max-w-body text-fg-muted", live && "sr-only")}>{summary}</p>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {/* lower bar, right: the MOMENT caption under the frame's corner
+                  (a cell that never shrinks: the caption fills its first line,
+                  ART-DIRECTOR #4) */}
+              {underCues.length ? (
+                <div
+                  className={cn(
+                    "act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end sm:pt-4 sm:pl-6",
+                    // the opening has no lower-left block: the caption spans the
+                    // row and hugs the frame's right corner
+                    flow
+                      ? "sm:col-span-2 sm:col-start-1 sm:w-[min(46vw,38rem)] sm:pr-gutter"
+                      : "act-card-cap sm:col-start-2 sm:pr-(--card-inset)",
+                  )}
+                >
+                  <CardCaptions cues={underCues} />
+                </div>
+              ) : null}
+
+              {/* the act logline as a static subtitle (§8.4): shown in the
+                  lower bar during star (b) in pin mode, screen-reader only
+                  everywhere else (cards.css; absolutely placed: 0 layout) */}
+              {subtitle ? <Subtitle text={subtitle} beat={subtitleBeat} /> : null}
+            </div>
           </div>
 
           {tail != null ? (
-            <ProgramStage live={live} variant={variant}>
+            <ProgramStage live={live} variant={variant} program={program}>
               {tail}
             </ProgramStage>
+          ) : null}
+
+          {desktopFine && pin !== null && travel > 0 ? (
+            <Suspense fallback={null}>
+              <CardP3
+                spec={pin}
+                pinned={p3}
+                live={live}
+                raw={travelP.scrollYProgress}
+                t={t}
+                b={pb}
+                kraken={kraken}
+                section={ref}
+                pinEl={pinRef}
+                content={contentRef}
+                frame={frameEl}
+                choreo={variant}
+                push={pushV}
+                title={titleV}
+                shape={shapeV}
+                choice={variantChoice}
+                onUi={setUi}
+              />
+            </Suspense>
           ) : null}
         </CardContext.Provider>
       </WorldProvider>
@@ -345,7 +486,21 @@ export function CardShell({
 /** The opening program's own driver: its passage from its top entering the
  *  viewport to its bottom coming into view (so the course plots while the
  *  rows are on screen). Same `live` gate as the card. */
-function ProgramStage({ live, variant, children }: { live: boolean; variant: Variant; children: ReactNode }) {
+function ProgramStage({
+  live,
+  variant,
+  program,
+  children,
+}: {
+  live: boolean;
+  variant: Variant;
+  /** Phase 3 (spec §3.2): the block is a `stage-backdrop` — the act-1
+   *  program reads over the persistent stage's plate (the opening's exit
+   *  frame) behind its static scrim, where the stage is live (stage.css);
+   *  opaque on the section's ground everywhere else. */
+  program: { id: string; scrim: Scrim } | null;
+  children: ReactNode;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
   const state = useMemo<CardState>(
@@ -355,11 +510,11 @@ function ProgramStage({ live, variant, children }: { live: boolean; variant: Var
   return (
     <div
       ref={ref}
-      className="relative px-gutter pt-tier-group pb-section sm:pt-tier-block"
-      data-beat="B06"
-      data-beat-star=""
-      data-beat-weight="1"
+      id={program?.id}
+      className={cn("relative px-gutter pt-tier-group pb-section sm:pt-tier-block", program && "stage-backdrop isolate")}
+      {...beatAttrs("B06", { weight: 1 })}
     >
+      {program ? <StageScrim scrim={program.scrim} /> : null}
       <CardContext.Provider value={state}>{children}</CardContext.Provider>
     </div>
   );

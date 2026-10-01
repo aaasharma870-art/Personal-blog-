@@ -21,6 +21,12 @@ import { useMotionPreference } from "@/components/providers/motion-provider";
  *   period (a one-shot transform transition, never a loop).
  * - ≥ 44 × 44 px target; ink/muted colours only (it is not the viewport's
  *   aqua mark); the global aqua focus ring.
+ * - PHASE 3 (PHASE3-SPEC §9.1 #2, §12.2; P3-8 #3): it pauses instantly and
+ *   SILENTLY and is never an egg or a toy — no dim, bloom, sound, toast or
+ *   hunt credit. Its tooltip only hints at the spells. The typed / palette
+ *   Lumos borrows its position for the wand-tip bloom (`data-wand-bloom`,
+ *   set by the egg runtime; app/p3/game.css), painted UNDER the glyph
+ *   (`relative isolate`, the bloom at z -1: IC-HP-09).
  */
 type MotionToggleProps = {
   /** Accessible name (and visible text when `showLabel`). Default "Pause motion". */
@@ -49,7 +55,7 @@ export function MotionToggle({
       onClick={() => setPaused(!paused)}
       data-motion-toggle={paused ? "paused" : "running"}
       className={cn(
-        "group inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-control px-2",
+        "group relative isolate inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-control px-2",
         "text-fg-muted transition-colors duration-(--dur-micro) hover:text-fg focus-visible:text-fg",
         className,
       )}
