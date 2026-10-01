@@ -1,8 +1,8 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import type { CaptionKey } from "@/lib/film";
 import { altOf, defaultOf, isOwnUsable, resolveMedia, type FocalBox, type MediaId } from "@/lib/media";
 import { dur, ease, easeClip, springSettle } from "@/lib/motion";
@@ -38,7 +38,19 @@ import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter
    anything already in view at mount, reduced motion and Pause: the FINAL
    frame. Hiding happens only offscreen ("armed"), and the observer watches
    the OUTER wrapper, which is never clipped or transformed (ART-DIRECTOR #1);
-   the clip / transform / filter live on inner elements.
+   the clip / transform live on inner elements.
+
+   RASTER (P3-2, spec §12.1 #2): every entrance is transform + opacity on
+   layers promoted only while it is armed or playing — never a filter,
+   clip-path or blend redrawn per frame:
+     - light-sweep's shadow (was an animated brightness(.32) saturate(.7)
+       filter) is two overlays faded by opacity: a grey copy of the poster
+       at .3 (saturate .7) under black at .68 (brightness .32) — the same
+       colour, exactly, at every step. Its warm bars are a plain (no blend)
+       layer that exists only during the sweep.
+     - lid-lift's clip (was an animated inset() clip-path) is the frame
+       sliding up from below its own clipped box while its content
+       counter-slides: the same moving edge, on two transforms.
    ========================================================================== */
 
 /* — plate choice (lib/media.ts variants) ————————————————————————————— */
@@ -84,31 +96,36 @@ export function coverRect(r: FocalBox, plate: number, box: number, focal: readon
 
 export type PlateEntranceKind = "none" | "slow-settle" | "light-sweep" | "pats" | "lid-lift";
 
-const CLIP_OPEN = "inset(0% 0% 0% 0%)";
-const CLIP_SHUT = "inset(100% 0% 0% 0%)";
-const LIT = "brightness(1) saturate(1)";
-const SHADOW = "brightness(0.32) saturate(0.7)";
+/** light-sweep's shadow at full strength (k = 1): brightness(.32) is black
+ *  at .68 over the plate; saturate(.7) is a grey copy of it at .3. */
+const SHADE = { dark: 0.68, grey: 0.3 } as const;
+
+type Run = { stop: () => void; finished: Promise<unknown> };
 
 function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntranceKind, amount: number) {
   const phase = useEnterOnce(ref, { amount });
   const frameOpacity = useMotionValue(1);
   const frameY = useMotionValue(0);
   const frameScale = useMotionValue(1);
-  const frameClip = useMotionValue(CLIP_OPEN);
+  /** lid-lift: 1 = shut (the frame a full height below its box) → 0 = open. */
+  const lid = useMotionValue(0);
   const imageScale = useMotionValue(1);
-  const imageFilter = useMotionValue(LIT);
+  /** light-sweep: 1 = in shadow → 0 = lit. */
+  const shade = useMotionValue(0);
   const sweepX = useMotionValue("-75%");
   const sweepOpacity = useMotionValue(0);
   const captionOpacity = useMotionValue(1);
+  /** The entrance has played out (its layers drop their promotion). */
+  const [done, setDone] = useState(false);
 
   useLayoutEffect(() => {
     const final = () => {
       frameOpacity.jump(1);
       frameY.jump(0);
       frameScale.jump(1);
-      frameClip.jump(CLIP_OPEN);
+      lid.jump(0);
       imageScale.jump(1);
-      imageFilter.jump(LIT);
+      shade.jump(0);
       sweepX.jump("-75%");
       sweepOpacity.jump(0);
       captionOpacity.jump(1);
@@ -123,28 +140,30 @@ function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntr
         frameOpacity.jump(0);
         imageScale.jump(1.07);
       } else if (kind === "light-sweep") {
-        imageFilter.jump(SHADOW);
+        shade.jump(1);
         sweepX.jump("-75%");
       } else if (kind === "pats") {
         frameOpacity.jump(0);
         frameY.jump(8);
         frameScale.jump(0.96);
       } else {
-        frameClip.jump(CLIP_SHUT);
+        lid.jump(1);
         imageScale.jump(1.05);
       }
       return;
     }
     // entered: play once
-    const run: { stop: () => void }[] = [];
+    const run: Run[] = [];
+    const later: Promise<unknown>[] = [];
     let timer: number | null = null;
+    let live = true;
     let capDelay = 0.6;
     if (kind === "slow-settle") {
       run.push(animate(frameOpacity, 1, { duration: dur.reveal, ease }));
       run.push(animate(imageScale, 1, { duration: 1.6, ease }));
       capDelay = 0.9;
     } else if (kind === "light-sweep") {
-      run.push(animate(imageFilter, LIT, { duration: 1.4, ease }));
+      run.push(animate(shade, 0, { duration: 1.4, ease }));
       run.push(animate(sweepX, "75%", { duration: 1.7, ease: [0.45, 0, 0.35, 1] }));
       run.push(animate(sweepOpacity, [0, 0.9, 0.9, 0], { duration: 1.7, times: [0, 0.2, 0.7, 1], ease: "linear" }));
       capDelay = 1.2;
@@ -153,23 +172,37 @@ function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntr
       run.push(animate(frameScale, 1, { type: "spring", ...springSettle }));
       run.push(animate(frameY, 0, { type: "spring", ...springSettle }));
       // the second soft pat: a small downward kick that settles again
-      timer = window.setTimeout(() => {
-        run.push(animate(frameY, 0, { type: "spring", ...springSettle, velocity: 90 }));
-      }, 180);
+      later.push(
+        new Promise<void>((resolve) => {
+          timer = window.setTimeout(resolve, 180);
+        }).then(() => {
+          if (!live) return;
+          const kick = animate(frameY, 0, { type: "spring", ...springSettle, velocity: 90 });
+          run.push(kick);
+          return kick.finished;
+        }),
+      );
       capDelay = 0.5;
     } else {
-      run.push(animate(frameClip, CLIP_OPEN, { duration: dur.hero, ease: easeClip }));
+      run.push(animate(lid, 0, { duration: dur.hero, ease: easeClip }));
       run.push(animate(imageScale, 1, { duration: 1.2, ease }));
       capDelay = 0.7;
     }
     run.push(animate(captionOpacity, 1, { duration: dur.base, ease, delay: capDelay }));
+    Promise.all([...run.map((a) => a.finished), ...later]).then(() => {
+      if (live) setDone(true);
+    });
     return () => {
+      live = false;
       if (timer !== null) window.clearTimeout(timer);
       run.forEach((a) => a.stop());
     };
-  }, [phase, kind, frameOpacity, frameY, frameScale, frameClip, imageScale, imageFilter, sweepX, sweepOpacity, captionOpacity]);
+  }, [phase, kind, frameOpacity, frameY, frameScale, lid, imageScale, shade, sweepX, sweepOpacity, captionOpacity]);
 
-  return { phase, frameOpacity, frameY, frameScale, frameClip, imageScale, imageFilter, sweepX, sweepOpacity, captionOpacity };
+  // promoted only while it can move: armed (so the first frame is ready)
+  // and while it plays
+  const moving = kind !== "none" && (phase === "armed" || (phase === "entered" && !done));
+  return { phase, moving, frameOpacity, frameY, frameScale, lid, imageScale, shade, sweepX, sweepOpacity, captionOpacity };
 }
 
 /* — the primitive ————————————————————————————————————————————————————— */
@@ -218,31 +251,58 @@ export function PlateBand({
   const ref = useRef<HTMLDivElement>(null);
   const e = usePlateEntrance(ref, entrance, amount);
   const s = SHAPE[shape];
+  const lidLift = entrance === "lid-lift";
+  // lid-lift: the frame rides a full height below its clipped box and the
+  // content counter-rides it (the moving bottom-up edge of the old inset clip)
+  const lidY = useTransform(e.lid, (l) => `${(l * 100).toFixed(3)}%`);
+  const contentY = useTransform(e.lid, (l) => `${(-l * 100).toFixed(3)}%`);
+  const darkOpacity = useTransform(e.shade, (k) => SHADE.dark * k);
+  const greyOpacity = useTransform(e.shade, (k) => SHADE.grey * k);
   const frameStyle =
-    entrance === "lid-lift"
-      ? { clipPath: e.frameClip }
+    lidLift
+      ? { y: lidY }
       : entrance === "pats"
         ? { opacity: e.frameOpacity, y: e.frameY, scale: e.frameScale }
         : entrance === "slow-settle"
           ? { opacity: e.frameOpacity }
           : undefined;
-  const imageStyle =
-    entrance === "light-sweep"
-      ? { filter: e.imageFilter }
-      : entrance === "slow-settle" || entrance === "lid-lift"
-        ? { scale: e.imageScale }
-        : undefined;
-  return (
-    <div ref={ref} className={cn("scene-caption-host", className)} data-band={plate ?? "code"} data-entrance={entrance}>
-      <motion.div className={cn("relative @container", s.frame)} style={frameStyle}>
-        <div className={cn("relative overflow-hidden bg-(--world-deep)", s.box)}>
-          <motion.div className="absolute inset-0" style={imageStyle}>
-            {plate ? <MediaFrame media={plate} layout="fill" sizes={sizes} /> : null}
-          </motion.div>
-          {entrance === "light-sweep" ? (
+  const imageStyle = entrance === "slow-settle" || lidLift ? { scale: e.imageScale } : undefined;
+  // light-sweep's shadow overlays and warm bars exist only while it plays
+  const sweeping = entrance === "light-sweep" && e.moving;
+  const frameMoves = e.moving && (entrance === "slow-settle" || entrance === "pats" || lidLift);
+  const imageMoves = e.moving && Boolean(imageStyle);
+
+  const content = (
+    <>
+      <div className={cn("relative overflow-hidden bg-(--world-deep)", s.box)}>
+        <motion.div className={cn("absolute inset-0", imageMoves && "will-change-transform")} style={imageStyle}>
+          {plate ? <MediaFrame media={plate} layout="fill" sizes={sizes} /> : null}
+        </motion.div>
+        {sweeping ? (
+          <>
+            {/* saturate(.7) → 1: a grey copy of the poster (drawn once on
+                its layer) fading out */}
+            {plate ? (
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 will-change-[opacity]"
+                style={{ opacity: greyOpacity }}
+              >
+                <div className="absolute inset-0 grayscale">
+                  <MediaFrame media={plate} layout="fill" sizes={sizes} playOn="never" loader={false} />
+                </div>
+              </motion.div>
+            ) : null}
+            {/* brightness(.32) → 1: black over the plate, fading out */}
             <motion.div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 -left-1/4 w-[150%] mix-blend-screen"
+              className="pointer-events-none absolute inset-0 bg-black will-change-[opacity]"
+              style={{ opacity: darkOpacity }}
+            />
+            {/* the warm bars raking across, once (normal blend) */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 -left-1/4 w-[150%] will-change-[transform,opacity]"
               style={{
                 x: e.sweepX,
                 opacity: e.sweepOpacity,
@@ -250,15 +310,38 @@ export function PlateBand({
                   "repeating-linear-gradient(112deg, transparent 0 5.5%, rgb(255 214 150 / 0.34) 6.5% 9%, transparent 10% 12%)",
               }}
             />
-          ) : null}
-          {renderSlot(overlay, e.phase)}
-        </div>
-        {renderSlot(after, e.phase)}
-        {caption ? (
-          <motion.div className={captionClassName} style={{ opacity: e.captionOpacity }}>
-            {caption}
-          </motion.div>
+          </>
         ) : null}
+        {renderSlot(overlay, e.phase)}
+      </div>
+      {renderSlot(after, e.phase)}
+      {caption ? (
+        <motion.div className={cn(captionClassName, e.moving && "will-change-[opacity]")} style={{ opacity: e.captionOpacity }}>
+          {caption}
+        </motion.div>
+      ) : null}
+    </>
+  );
+
+  return (
+    <div ref={ref} className={cn("scene-caption-host", className)} data-band={plate ?? "code"} data-entrance={entrance}>
+      <motion.div
+        className={cn(
+          "relative @container",
+          s.frame,
+          // the old inset(0) clip at rest, as an overflow clip
+          lidLift && "overflow-clip",
+          frameMoves && (lidLift ? "will-change-transform" : "will-change-[transform,opacity]"),
+        )}
+        style={frameStyle}
+      >
+        {lidLift ? (
+          <motion.div className={cn(e.moving && "will-change-transform")} style={{ y: contentY }}>
+            {content}
+          </motion.div>
+        ) : (
+          content
+        )}
       </motion.div>
     </div>
   );

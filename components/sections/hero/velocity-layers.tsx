@@ -25,7 +25,11 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                brightens by ≤ 15 % (1 + .15·vn);
  * all from one value `vn` (0–1) that decays on springSoft, so stopping
  * restores clarity (vn < .005 within ~1.5 s). `--vn` is mirrored on the host
- * for tests. Nothing here touches text; every node is aria-hidden and sits
+ * for tests, written only when it moved by more than .01 (or comes to rest):
+ * an inherited custom property restyles the whole plate on every write.
+ * The wake and the grain are promoted (will-change): a vn step is a
+ * compositor opacity/transform change, never a repaint of the plate (spec
+ * §12.1 #7). Nothing here touches text; every node is aria-hidden and sits
  * inside the plate, under the h1. Mounted only on a wide fine-pointer
  * screen with motion on and no Save-Data (H17): elsewhere vn stays 0.
  *
@@ -41,6 +45,9 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                      live ≤ .65 s and emission stops as vn decays, so the
  *                      sea is clear ≤ 1.5 s after the scroll stops (H16).
  */
+
+/** `--vn` is mirrored only on a change larger than this (or at rest). */
+const VN_STEP = 0.01;
 
 /** |v| (px/s) below which nothing happens, and the span to full effect. */
 const DEADZONE = 400;
@@ -122,7 +129,16 @@ export function VelocityLayers({
   const vn = useSpring(target, springSoft);
   const grain = useTransform(vn, (n) => n * GRAIN_MAX);
   const chroma = useTransform(vn, (n) => n * CHROMA_MAX_PX);
+  // `--vn` mirrors vn in steps: a write only when it moved by > VN_STEP, when
+  // it crosses under the .005 "clear" line, and when it comes to rest at 0
+  const vnWritten = useRef(0);
   useMotionValueEvent(vn, "change", (n) => {
+    const last = vnWritten.current;
+    const moved = Math.abs(n - last) > VN_STEP;
+    const cleared = n < 0.005 && last >= 0.005;
+    const rest = n === 0 && last !== 0;
+    if (!moved && !cleared && !rest) return;
+    vnWritten.current = n;
     hostRef.current?.style.setProperty("--vn", n.toFixed(4));
   });
 
@@ -168,7 +184,7 @@ export function VelocityLayers({
           aria-hidden="true"
           draggable={false}
           data-hero-wake=""
-          className="pointer-events-none absolute inset-0 size-full object-cover"
+          className="pointer-events-none absolute inset-0 size-full object-cover will-change-[transform,opacity]"
           style={{ ...wakeStyle, opacity: vn, x: spray ? 0 : chroma }}
         />
       ) : null}
@@ -177,7 +193,7 @@ export function VelocityLayers({
         <motion.div
           aria-hidden="true"
           data-hero-grain=""
-          className="pointer-events-none absolute inset-0 mix-blend-overlay"
+          className="pointer-events-none absolute inset-0 mix-blend-overlay will-change-[opacity]"
           style={{ opacity: grain, backgroundImage: `url(${tile})`, backgroundSize: `${TILE}px ${TILE}px` }}
         />
       ) : null}

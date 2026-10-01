@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, CornerDownLeft, Hash, Mail, Pause, Play, Search, Sparkles } from "lucide-react";
 import { film } from "@/lib/film";
 import { useReducedMotion } from "@/lib/flags";
+import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
 import {
   actCards,
   copyVisible,
@@ -143,14 +144,13 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  // every palette / egg jump: lib/smooth-scroll.ts (instant under reduced
+  // motion AND Pause — the old matchMedia check missed Pause; Lenis-aware;
+  // a far room is a cut, not a glide). Resolves on arrival, focus moved.
   const go = useCallback(
-    (id: string) => {
+    async (id: string): Promise<void> => {
       const el = document.getElementById(id);
-      if (el)
-        el.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-          block: "start",
-        });
+      if (el) await scrollToTarget(el, { focus: true, history: "replace" });
       // off the home page (the 404): the room lives on the home page
       else if (!onHome && sectionById(id)) window.location.assign(`/#${id}`);
     },
@@ -290,14 +290,14 @@ export function CommandPalette() {
     };
   }, [open]);
 
-  // lock scroll + focus the input while open (DOM side-effects only)
+  // lock scroll (body + Lenis) + focus the input while open (DOM side-effects only)
   useEffect(() => {
     if (!open) return;
-    document.body.style.overflow = "hidden";
+    lockScroll("palette");
     const t = setTimeout(() => inputRef.current?.focus(), 20);
     return () => {
       clearTimeout(t);
-      document.body.style.overflow = "";
+      unlockScroll("palette");
     };
   }, [open]);
 
@@ -350,6 +350,7 @@ export function CommandPalette() {
       {open ? (
         <motion.div
           {...planeAttrs("canvas", "house")}
+          data-lenis-prevent=""
           className="fixed inset-0 z-(--z-menu) flex items-start justify-center px-4 pt-[12vh] text-fg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -395,7 +396,7 @@ export function CommandPalette() {
               <kbd className="hidden shrink-0 type-meta text-fg-muted sm:block">Esc</kbd>
             </div>
 
-            <div ref={listRef} id="cmd-list" role="listbox" aria-label="Commands" className="max-h-[52vh] overflow-y-auto p-2">
+            <div ref={listRef} id="cmd-list" role="listbox" aria-label="Commands" data-lenis-prevent="" className="max-h-[52vh] overflow-y-auto p-2">
               {filtered.length === 0 ? (
                 <p className="px-3 py-8 text-center type-small text-fg-muted">No matches.</p>
               ) : (

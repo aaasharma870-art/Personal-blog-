@@ -4,7 +4,9 @@
    stars `request()` it and get "play" or "skip" (skip = show the end state
    without animating). Facade + lazy impl (DP-13): this file stays < 1 KB;
    lib/spotlight-impl.ts loads on first use, on DESKTOP_FINE with motion on.
-   Not DESKTOP_FINE, motion off, or the server → "skip" at once.
+   Not DESKTOP_FINE, motion off, or the server → "skip" at once. Existing
+   entrances that must keep today's behaviour on phones ask only on
+   DESKTOP_FINE (useEnterOnce's `star` option does this).
    ========================================================================== */
 
 import { DESKTOP_FINE, motionOffNow } from "./flags";
@@ -29,6 +31,13 @@ function load(): Promise<Impl> {
     });
   }
   return loading;
+}
+
+// ?debug=spotlight: load the impl up front so the probes find window.__spotlight
+if (typeof window !== "undefined" && /[?&]debug=[^&]*spotlight/.test(window.location.search)) {
+  window.setTimeout(() => {
+    if (eligible()) void load();
+  }, 0);
 }
 
 export const spotlight = {

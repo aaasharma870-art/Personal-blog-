@@ -7,6 +7,8 @@
    caption set their Rye face through components/primitives/scene-caption.
    Motion is JS-driven (motion/react) and gated by lib/flags; nothing here
    animates, so reduced motion / Pause / no-JS render these final states.
+   (The two dusk veils carry will-change: their opacity follows the scroll,
+   so they ride the compositor instead of repainting the camp.)
    ========================================================================== */
 
 /* — SM-15 · the golden-hour band (MV-10 / MV-10m) ———————————————————— */
@@ -246,6 +248,35 @@
   padding: 0.75rem;
 }
 
+/* — baked graphite (spec §12.1 #5; components/worlds/rdr2/kit.tsx) ——————
+   The R-1 paper tooth as a static mask on a graphite SVG (the variables
+   come from bakedGraphite(viewBoxW)). `.graphiteBaked` always; `.graphiteDw`
+   at DESKTOP_WIDE only, where it also turns the live filter off (below
+   64rem the filter stays: phones unchanged). */
+.graphiteBaked {
+  -webkit-mask-image: var(--graphite-tooth);
+  mask-image: var(--graphite-tooth);
+  -webkit-mask-size: var(--graphite-tile) auto;
+  mask-size: var(--graphite-tile) auto;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  mask-mode: alpha;
+}
+@media (min-width: 64rem) {
+  .graphiteDw {
+    -webkit-mask-image: var(--graphite-tooth);
+    mask-image: var(--graphite-tooth);
+    -webkit-mask-size: var(--graphite-tile) auto;
+    mask-size: var(--graphite-tile) auto;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+    mask-mode: alpha;
+  }
+  .graphiteDw [filter] {
+    filter: none;
+  }
+}
+
 /* — SM-11 · the journal (paper plane) ——————————————————————————————— */
 
 /* The caption on the page: Rye on the paper tokens; the film span and the
@@ -304,8 +335,16 @@
   inset-block: 0;
   left: 12%;
   right: 0;
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18%);
-  mask-image: linear-gradient(to right, transparent 0, #000 18%);
+}
+/* its left edge feathered into the deep — BAKED (spec §12.1 #6): the old
+   mask (transparent 0 → opaque 18 %) over the sticky's --bg is exactly this
+   --bg → transparent wash over the plate, so the sticky paints no mask */
+.campPlate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, var(--bg) 0, transparent 18%);
 }
 /* RD-P6 / D1: the quotes sit in a near-black left half (the plate's sunset
    sky and horses glow through, dimmed); the camp is lit to the right. Top
@@ -329,11 +368,14 @@
       transparent 65%
     );
 }
+/* both veils follow the scroll by OPACITY only, each on its own layer
+   (spec §12.1 #6): the camp under them is never repainted per frame */
 .duskVeil {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: var(--bg);
+  will-change: opacity;
 }
 .campCopy {
   position: relative;

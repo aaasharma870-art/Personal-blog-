@@ -1,12 +1,15 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
-import { motion } from "motion/react";
+import { animate, motion } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { dur, easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { drawn, faded, useDrawPhase } from "@/components/site/world-motion";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
+import { bakedGraphite } from "@/components/worlds/rdr2/kit";
+import rd from "@/components/worlds/rdr2/rdr2.module.css";
 
 /* ============================================================================
    RDR2 GRAPHITE — Act III "The Frontier" (SPEC v2 SM-15, SM-11, SM-16;
@@ -16,6 +19,12 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
    static layer. "Kept by hand" (RD-P1): marks draw ONCE; motion off = drawn.
    No light in the DOM (Law 1): the campfire here is a pencil sketch, the
    fire's glow belongs to MV-11 media when it is accepted.
+   RASTER (P3-2, spec §12.1 #5): at DESKTOP_WIDE the graphite is BAKED — the
+   live filter is switched off and the same paper tooth lies on the strokes
+   as a static mask (worlds/rdr2/kit.tsx bakedGraphite, rd.graphiteDw), so
+   nothing re-runs a turbulence filter while it draws. Below 64rem the live
+   filter stays (phones unchanged). The NibTitle's nib point travels by
+   transform.
    ========================================================================== */
 
 /** R-1 graphite: a slight wobble plus paper tooth (our own filter). */
@@ -63,7 +72,8 @@ export function ShoePrints({ className }: { className?: string }) {
       viewBox="0 0 280 80"
       aria-hidden="true"
       focusable="false"
-      className={cn("h-auto w-full max-w-[17.5rem] overflow-visible", className)}
+      className={cn("h-auto w-full max-w-[17.5rem] overflow-visible", rd.graphiteDw, className)}
+      style={bakedGraphite(280)}
       data-motif="shoe-prints"
     >
       <defs>
@@ -143,7 +153,8 @@ export function JournalVignette({ index, className }: { index: number; className
       height={64}
       aria-hidden="true"
       focusable="false"
-      className={cn("shrink-0 overflow-visible", className)}
+      className={cn("shrink-0 overflow-visible", rd.graphiteDw, className)}
+      style={bakedGraphite(64)}
       data-motif="journal-vignette"
     >
       <defs>
@@ -177,8 +188,12 @@ export function JournalVignette({ index, className }: { index: number; className
  * moving graphite nib point (≤ 1.4 s), then one red pencil underline (the
  * rdr2 `pencil-underline` emphasis: --world-emphasis = --paper-red on the
  * journal). The text is in the DOM, final, from first paint; only an element
- * that mounted offscreen is ever masked.
+ * that mounted offscreen is ever masked. The nib point travels by transform
+ * (the heading's width, read once as it starts), never `left`. B44.
  */
+const NIB_WRITE = 1.3;
+const NIB_EASE = [0.45, 0.05, 0.55, 0.95] as const;
+
 export function NibTitle({
   id,
   children,
@@ -189,28 +204,44 @@ export function NibTitle({
   className?: string;
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
+  const nibRef = useRef<HTMLSpanElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.5 });
   const fid = useFid();
   const armed = phase === "armed";
   const entered = phase === "entered";
-  const WRITE = 1.3;
+
+  // the nib point rides the write on a transform: 0 → the heading's width
+  useEffect(() => {
+    const h2 = ref.current;
+    const nib = nibRef.current;
+    if (!entered || !h2 || !nib) return;
+    const w = h2.getBoundingClientRect().width;
+    const a = animate(
+      nib,
+      { x: [0, w], opacity: [1, 1, 0] },
+      {
+        x: { duration: NIB_WRITE, ease: NIB_EASE },
+        opacity: { duration: NIB_WRITE + 0.3, times: [0, 0.85, 1] },
+      },
+    );
+    return () => a.stop();
+  }, [entered]);
+
   return (
-    <h2 ref={ref} id={id} className={cn("relative", className)}>
+    <h2 ref={ref} id={id} className={cn("relative", className)} {...beatAttrs("B44", { weight: 2 })}>
       <motion.span
         className="block"
         initial={false}
         animate={{ clipPath: armed ? "inset(0 100% 0 0)" : "inset(0 0% 0 0)" }}
-        transition={entered ? { duration: WRITE, ease: [0.45, 0.05, 0.55, 0.95] } : { duration: 0 }}
+        transition={entered ? { duration: NIB_WRITE, ease: NIB_EASE } : { duration: 0 }}
       >
         {children}
       </motion.span>
       {entered ? (
-        <motion.span
+        <span
+          ref={nibRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[0.18em] left-0 size-1.5 rounded-full bg-(--world-line)"
-          initial={{ left: "0%", opacity: 1 }}
-          animate={{ left: "100%", opacity: [1, 1, 0] }}
-          transition={{ duration: WRITE, ease: [0.45, 0.05, 0.55, 0.95], opacity: { duration: WRITE + 0.3, times: [0, 0.85, 1] } }}
+          className="pointer-events-none absolute bottom-[0.18em] left-0 size-1.5 rounded-full bg-(--world-line) will-change-[transform,opacity]"
         />
       ) : null}
       <svg
@@ -218,7 +249,8 @@ export function NibTitle({
         focusable="false"
         viewBox="0 0 400 10"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute -bottom-3 left-0 h-2.5 w-[min(100%,18ch)] overflow-visible"
+        className={cn("pointer-events-none absolute -bottom-3 left-0 h-2.5 w-[min(100%,18ch)] overflow-visible", rd.graphiteDw)}
+        style={bakedGraphite(400)}
         data-emphasis="pencil-underline"
       >
         <defs>
@@ -233,7 +265,7 @@ export function NibTitle({
           filter={`url(#u-${fid})`}
           initial={false}
           animate={{ pathLength: armed ? 0 : 1 }}
-          transition={entered ? { duration: dur.draw.short, ease: easeDraw, delay: WRITE } : { duration: 0 }}
+          transition={entered ? { duration: dur.draw.short, ease: easeDraw, delay: NIB_WRITE } : { duration: 0 }}
         />
       </svg>
     </h2>
@@ -259,7 +291,8 @@ export function CampfireSketch({ className }: { className?: string }) {
       viewBox="0 0 240 190"
       aria-hidden="true"
       focusable="false"
-      className={cn("h-auto w-full overflow-visible", className)}
+      className={cn("h-auto w-full overflow-visible", rd.graphiteDw, className)}
+      style={bakedGraphite(240)}
       data-motif="campfire-sketch"
     >
       <defs>
@@ -350,7 +383,15 @@ export function SatchelStrip({ className }: { className?: string }) {
     <ul ref={ref} aria-label="What I carry" className={cn("flex flex-wrap gap-x-8 gap-y-tier-group", className)} data-motif="satchel">
       {KIT.map((k, i) => (
         <li key={k.label} className="flex flex-col items-start gap-2">
-          <svg viewBox="0 0 48 48" width={48} height={48} aria-hidden="true" focusable="false" className="overflow-visible">
+          <svg
+            viewBox="0 0 48 48"
+            width={48}
+            height={48}
+            aria-hidden="true"
+            focusable="false"
+            className={cn("overflow-visible", rd.graphiteDw)}
+            style={bakedGraphite(48)}
+          >
             <defs>
               <GraphiteFilter id={`s-${fid}-${i}`} />
             </defs>

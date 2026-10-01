@@ -1,4 +1,10 @@
-// Final QA probes (M5). Usage: node tools/capture/qa.js <baseUrl> <outDir>
+// Final QA probes (M5). Usage: node tools/capture/qa.js <baseUrl> <outDir> [--vw=<w>x<h>] [--touch]
+// --vw=WxH  the viewport of the default contexts (anchors, no-JS, media-blocked, reduced motion / Pause,
+//           the desktop decoder run; default 1440x900); its width joins the overflow widths.
+// --touch   those contexts are a phone / tablet (tools/capture/browser.js contextFor), e.g.
+//           --vw=1024x1366 --touch (DESKTOP_WIDE with a coarse pointer: no Lenis, no stage, no GL).
+// R.lenis records whether smooth scroll (Phase 3, DESKTOP_FINE only) ran in the reduced-motion / Pause
+// contexts (it must not) and in the default context.
 // One browser. Writes <outDir>/qa.json and a few evidence PNGs:
 //  - anchors: every in-page href="#id" / "/#id" resolves to an element; external links have rel/target sanity
 //  - overflow at 320 / 390 / 1024 / 1440 after scrolling the whole page (lazy content mounted)
@@ -12,15 +18,27 @@ let chromium;
 try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require('/opt/node22/lib/node_modules/playwright')); }
 const fs = require('fs');
 const path = require('path');
-const [, , BASE, OUT] = process.argv;
-if (!BASE || !OUT) { console.error('usage: node qa.js <baseUrl> <outDir>'); process.exit(1); }
+const { parseViewport, contextFor } = require('./browser');
+const [, , BASE, OUT, ...rest] = process.argv;
+if (!BASE || !OUT) { console.error('usage: node qa.js <baseUrl> <outDir> [--vw=WxH] [--touch]'); process.exit(1); }
+const opt = Object.fromEntries(rest.map(a => a.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? true]));
+const VW = parseViewport(opt.vw);
+if (opt.vw && !VW) { console.error(`--vw must be WxH (got "${opt.vw}")`); process.exit(1); }
+const TOUCH = !!opt.touch;
+const DEF = VW || { width: 1440, height: 900 };
 fs.mkdirSync(OUT, { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const R = { console: [], hydration: [], anchors: {}, overflow: {}, noJs: {}, mediaBlocked: {}, motion: {}, lcp: {} };
+const R = { console: [], hydration: [], anchors: {}, overflow: {}, noJs: {}, mediaBlocked: {}, motion: {}, lcp: {}, lenis: {},
+  meta: { viewport: `${DEF.width}x${DEF.height}`, touch: TOUCH } };
 
 async function ctxPage(browser, o = {}, label = '') {
-  const ctx = await browser.newContext({ viewport: { width: o.w || 1440, height: o.h || 900 }, isMobile: !!o.mobile, hasTouch: !!o.mobile,
-    javaScriptEnabled: o.js !== false, reducedMotion: o.reduced ? 'reduce' : 'no-preference', deviceScaleFactor: o.mobile ? 2 : 1 });
+  // a context without its own size is a "default" one: --vw / --touch apply to it
+  const dflt = !o.w;
+  const touch = !!o.mobile || (dflt && TOUCH);
+  const c = { viewport: { width: o.w || DEF.width, height: o.h || DEF.height }, isMobile: touch, hasTouch: touch,
+    javaScriptEnabled: o.js !== false, reducedMotion: o.reduced ? 'reduce' : 'no-preference', deviceScaleFactor: o.mobile ? 2 : 1 };
+  if (touch && !o.mobile) Object.assign(c, contextFor({ width: c.viewport.width, height: c.viewport.height, touch: true, reduced: o.reduced, js: o.js }));
+  const ctx = await browser.newContext(c);
   const page = await ctx.newPage();
   page.on('console', m => { if (m.type() === 'error') { const t = `[${label}] ${m.text().slice(0, 300)}`; R.console.push(t); if (/hydrat|#418|#423|#425|did not match/i.test(t)) R.hydration.push(t); } });
   page.on('pageerror', e => R.console.push(`[${label}] pageerror ${e.message.slice(0, 300)}`));
@@ -37,6 +55,8 @@ async function scrollAll(page, step = 600) {
     {
       const { ctx, page } = await ctxPage(browser, {}, 'anchors');
       await page.goto(BASE + '/?skip=intro', { waitUntil: 'networkidle' });
+      await page.waitForFunction(() => !!window.__lenis, null, { timeout: 4000 }).catch(() => {});
+      R.lenis.default = await page.evaluate(() => !!window.__lenis);
       await scrollAll(page);
       R.anchors = await page.evaluate(() => {
         const links = [...document.querySelectorAll('a[href]')];
@@ -65,7 +85,7 @@ async function scrollAll(page, step = 600) {
       await ctx.close();
     }
     // 2. overflow at 4 widths
-    for (const w of [320, 390, 1024, 1440]) {
+    for (const w of [...new Set([320, 390, 1024, 1440, DEF.width])].sort((a, b) => a - b)) {
       const { ctx, page } = await ctxPage(browser, { w, h: w < 640 ? 800 : 900, mobile: w < 640 }, `ov${w}`);
       await page.goto(BASE + '/?skip=intro', { waitUntil: 'networkidle' });
       await scrollAll(page);
@@ -112,10 +132,13 @@ async function scrollAll(page, step = 600) {
     for (const mode of ['reduced', 'pause']) {
       const { ctx, page } = await ctxPage(browser, { reduced: mode === 'reduced' }, mode);
       await page.goto(BASE + '/?skip=intro', { waitUntil: 'networkidle' });
+      // smooth scroll: none under OS reduced motion; under Pause it is destroyed (spec §3.1)
+      R.lenis[mode + 'Before'] = await page.evaluate(() => !!window.__lenis);
       if (mode === 'pause') {
         const btn = await page.$('header button[aria-pressed], header [data-motion-toggle], header button[aria-label*="otion" i]');
         R.motion.pauseButton = btn ? await btn.evaluate(b => b.outerHTML.slice(0, 160)) : null;
         if (btn) { await btn.click(); await sleep(500); }
+        R.lenis.pauseAfter = await page.evaluate(() => !!window.__lenis);
       }
       const samples = [];
       for (const id of ['top', 'act-1', 'journey', 'act-2', 'work', 'films', 'act-3', 'voices', 'act-4', 'contact', 'credits']) {

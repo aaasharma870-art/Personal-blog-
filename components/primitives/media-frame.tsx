@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { CSSProperties } from "react";
 import {
+  DESKTOP_FINE,
   useDocumentVisible,
   useMediaQuery,
   useReducedMotion,
@@ -21,6 +22,7 @@ import {
   releaseDecoder,
   subscribeDecoder,
 } from "@/lib/decoder-lock";
+import { codecKnown, handoffSource, pickCodec, type CodecEntry, type CodecPick } from "@/lib/codec";
 import { getMedia, resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
 import { loader as loaderTiming } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -46,6 +48,15 @@ import { Loader } from "@/components/primitives/loader";
  * It pauses while the tab is hidden, unmounts when it leaves view or loses
  * the decoder (it waits in the lock's queue and resumes when re-granted),
  * and on a rejected play() or a load error it unmounts for good (poster).
+ *
+ * CODEC (PHASE3-SPEC §6.3; lib/codec.ts): the encode is `pickCodec()`'s
+ * (the WebM twin only when MediaCapabilities says it decodes smooth and
+ * power-efficient and the H.264 does not), set as `video.src` directly;
+ * the video mounts once the answer is known (cached per page, so usually at
+ * once). The intro's prefetched hand-off (`handoffSource`) is played from
+ * its `blob:` URL at its start time. `fade` overrides the poster → video
+ * crossfade (s): the hero passes 0 under the intro's hold, where loop
+ * frame 0 IS the poster (a match cut needs no fade).
  *
  * `object-position` comes from the asset's `focal`. Decorative media
  * (manifest alt null) is aria-hidden with alt="". If the poster hasn't
@@ -75,13 +86,13 @@ type MediaFrameProps = {
   decoderPriority?: number;
   /** Mini world loader while the poster is pending (default true). */
   loader?: boolean;
+  /** Poster → video crossfade in seconds (default dur.preview); 0 = cut. */
+  fade?: number;
   /** Loader world (default: the nearest WorldProvider). */
   world?: WorldId;
   className?: string;
   onStateChange?: (state: MediaFrameState) => void;
 };
-
-const DESKTOP = "(min-width: 64rem) and (pointer: fine)";
 
 function focalPosition(asset: MediaAsset | null): string | undefined {
   const f = asset?.focal;
@@ -101,6 +112,7 @@ export function MediaFrame({
   loop = true,
   decoderPriority = 0,
   loader = true,
+  fade,
   world,
   className,
   onStateChange,
@@ -114,7 +126,8 @@ export function MediaFrame({
 
   const reduced = useReducedMotion();
   const saveData = useSaveData();
-  const desktop = useMediaQuery(DESKTOP);
+  // the Phase-3 desktop gate (lib/flags.ts): ≥ 64rem, hover, fine pointer
+  const desktop = useMediaQuery(DESKTOP_FINE);
   const visible = useDocumentVisible();
 
   const boxRef = useRef<HTMLDivElement>(null);
@@ -161,7 +174,37 @@ export function MediaFrame({
     return () => window.clearTimeout(t);
   }, [loader, still, inView, posterLoaded]);
 
-  const mountVideo = wantVideo && holdsDecoder && video !== null;
+  // The encode (lib/codec.ts): known at once from the page cache (the intro
+  // controller fills it for the hero loop), else asked once, async. Read
+  // only while the frame wants its video, which is never during hydration.
+  const codecEntry: CodecEntry | null = video
+    ? { src: video.src, webm: video.webm, width: video.width, height: video.height }
+    : null;
+  const [askedPick, setAskedPick] = useState<CodecPick | null>(null);
+  const asked =
+    askedPick && codecEntry && (askedPick.src === codecEntry.src || askedPick.src === codecEntry.webm)
+      ? askedPick
+      : null;
+  const pick = wantVideo && codecEntry ? (codecKnown(codecEntry) ?? asked) : null;
+  const needPick = wantVideo && codecEntry !== null && pick === null;
+  const codecSrc = codecEntry?.src;
+  const codecWebm = codecEntry?.webm;
+  const codecW = codecEntry?.width ?? 0;
+  const codecH = codecEntry?.height ?? 0;
+  useEffect(() => {
+    if (!needPick || !codecSrc) return;
+    let live = true;
+    void pickCodec({ src: codecSrc, webm: codecWebm, width: codecW, height: codecH }).then((p) => {
+      if (live) setAskedPick(p);
+    });
+    return () => {
+      live = false;
+    };
+  }, [needPick, codecSrc, codecWebm, codecW, codecH]);
+
+  const mountVideo = wantVideo && holdsDecoder && video !== null && pick !== null;
+  // the intro's prefetched hand-off (a blob: URL + its start), else the pick
+  const handoff = mountVideo && pick ? handoffSource(pick.src) : null;
   const [playing, setPlaying] = useState(false);
   const state: MediaFrameState = failed
     ? "failed"
@@ -212,9 +255,11 @@ export function MediaFrame({
         />
       ) : null}
 
-      {mountVideo && video ? (
+      {mountVideo && video && pick ? (
         <VideoLayer
-          src={video.src}
+          src={handoff?.url ?? pick.src}
+          start={handoff?.at ?? 0}
+          fade={fade}
           loop={loop}
           active={visible}
           className={fitClass}
@@ -241,6 +286,8 @@ export function MediaFrame({
  *  while the frame may decode; its opacity stays 0 until `playing` fires. */
 function VideoLayer({
   src,
+  start,
+  fade,
   loop,
   active,
   className,
@@ -250,6 +297,10 @@ function VideoLayer({
   onFail,
 }: {
   src: string;
+  /** Start time (s): the intro hand-off's `loopAt` (0 = the top). */
+  start: number;
+  /** Crossfade override (s); undefined = dur.preview (the CSS token). */
+  fade?: number;
   loop: boolean;
   active: boolean;
   className: string;
@@ -307,7 +358,14 @@ function VideoLayer({
         className,
         shown ? "opacity-100" : "opacity-0",
       )}
-      style={objectPosition ? { objectPosition } : undefined}
+      style={{
+        ...(objectPosition ? { objectPosition } : null),
+        ...(fade !== undefined ? { transitionDuration: `${fade}s` } : null),
+      }}
+      onLoadedMetadata={(e) => {
+        // the hand-off's match frame (FLIGHTS[*].loopAt), set before play
+        if (start > 0 && start < (e.currentTarget.duration || 0)) e.currentTarget.currentTime = start;
+      }}
       onPlaying={() => {
         setShown(true);
         onPlaying();

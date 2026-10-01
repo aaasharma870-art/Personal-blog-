@@ -159,7 +159,10 @@ export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; 
   return (
     <div aria-hidden="true" className="absolute inset-0">
       {campLayer}
-      {/* no hall yet (MV-07): the sweep ends on its own final frame */}
+      {/* no hall yet (MV-07): the sweep ends on its own final frame. NOT
+          promoted (spec §12.1 #8 checked): its plus-lighter sprites add
+          light onto the camp below, and a layer would isolate them from it
+          (with the hall, the drawn hall above already rides its own layer) */}
       <Hall key={live ? "live" : "static"} p={live ? p : one} fire={live ? fire : null} />
     </div>
   );

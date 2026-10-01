@@ -180,7 +180,8 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
         </motion.div>
       ) : null}
 
-      {/* the graphite trail over 6 hachures, and the plate's bone border */}
+      {/* the graphite trail over 6 hachures, and the plate's bone border —
+          live, on its own layer over the photograph (spec §12.1 #8) */}
       <svg
         viewBox={`0 0 ${VB.w} ${VB.h}`}
         // stretched with the frame, so it registers with the %-placed plate
@@ -188,7 +189,7 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
         // is static, with non-scaling strokes)
         preserveAspectRatio="none"
         focusable="false"
-        className="pointer-events-none absolute inset-0 size-full"
+        className={cn("pointer-events-none absolute inset-0 size-full", live && "will-change-transform")}
         fill="none"
         strokeLinecap="round"
       >

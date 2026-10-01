@@ -4,6 +4,7 @@ import { anchorId, pageItems, toneOf, worldOf } from "@/lib/sections";
 import type { ToneId, WorldId } from "@/lib/worlds";
 import { Seam } from "@/components/primitives/seam";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
+import { StageScrim } from "@/components/stage/scrim";
 import { cn } from "@/lib/utils";
 
 /* ============================================================================
@@ -97,6 +98,13 @@ export function Meta({
  * or the idiots graph grid, drawn by CSS per data-world in the world-skins
  * block of globals.css — so a section moved to another act re-grounds
  * itself), and the page container (max 1440, the DESIGN gutter).
+ *
+ * Phase 3 `backdrop` (PHASE3-SPEC §3.2, B1-STAGE): when the entry's
+ * StageSpec is a backdrop, the section carries `.stage-backdrop` and its
+ * static StageScrim (under the ground). Both do nothing until the live
+ * stage marks the section (app/p3/stage.css): the section then drops its
+ * plane to transparent and the scrim keeps every text box AA over the
+ * plate. Every other case renders exactly as before.
  */
 export function WorldSection({
   entry,
@@ -117,13 +125,15 @@ export function WorldSection({
   groundClassName?: string;
 }) {
   const from = seamFromFor(entry);
+  const scrim = entry.stage?.mode === "backdrop" ? entry.stage.scrim : undefined;
   return (
     <section
       id={anchorId(entry)}
       aria-labelledby={labelledBy}
       data-world-section={entry.id}
-      className={cn("relative isolate bg-bg py-section text-fg", className)}
+      className={cn("relative isolate bg-bg py-section text-fg", scrim && "stage-backdrop", className)}
     >
+      {scrim ? <StageScrim scrim={scrim} /> : null}
       {from ? <Seam from={from} /> : null}
       {ground ? (
         <div

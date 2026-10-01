@@ -8,10 +8,12 @@ import { RanchoCircle } from "@/components/site/idiots-chalk";
  * figures, the note in `small`. `circleNote` puts Rancho's chalk circle
  * around the note when the note IS the caveat (SPEC TA-07: "anything > 2.0
  * is a red flag") — never around the value.
+ * `data-research` (PHASE3-SPEC §5.5): a data island — the world type roles
+ * reset inside it, so the tile stays Geist / Geist Mono in every world.
  */
 export function MetricTile({ m, circleNote = false }: { m: Metric; circleNote?: boolean }) {
   return (
-    <div className="border-t border-rule pt-tier-pair">
+    <div className="border-t border-rule pt-tier-pair" data-research="">
       <dt className="type-meta text-fg-muted">{m.label}</dt>
       <dd className="mt-1">
         <span className="tnum block type-heading text-fg">{m.value}</span>

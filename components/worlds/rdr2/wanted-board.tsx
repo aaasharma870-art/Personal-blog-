@@ -106,6 +106,9 @@ export function WantedBoard({
       style={vars}
       data-piece={RD_PIECES.handbill}
       data-variant={v}
+      data-beat="B43-wanted"
+      data-beat-star=""
+      data-beat-weight="2"
     >
       {rect ? (
         <div className={s.boardPlate} aria-hidden="true">

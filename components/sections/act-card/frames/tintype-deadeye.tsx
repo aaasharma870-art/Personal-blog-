@@ -3,6 +3,7 @@
 import { useId, useRef } from "react";
 import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
 import type { MediaId } from "@/lib/media";
+import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, useSvgAttr } from "@/components/primitives/loaders/kit";
 import { LINE, LINE_D, fitPath, fitPoint, remap } from "@/components/primitives/loaders/line";
@@ -49,6 +50,10 @@ import { PlateBox, plateOf } from "@/components/sections/act-card/plate";
  * IC-RD-02); any other plate (the lab's MV-10, a fallback) gets the code
  * grade layer at full strength instead. With no plate at all, the code
  * frontier in that grade.
+ * Live, every overlay that changes with p is its own layer over the
+ * photograph (spec §12.1 #8): the marks SVG, the shots, the tintype copy
+ * and — on a plate that carries its own grade (no blend inside it, so the
+ * layer's isolation changes nothing) — the grade.
  */
 
 const { VB, PLATE, TRAIL_BOX } = TINTYPE;
@@ -101,7 +106,9 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
           viewBox={`0 0 ${PLATE.w} ${PLATE.h}`}
           preserveAspectRatio="none"
           focusable="false"
-          className="absolute inset-0 size-full"
+          // a layer would isolate the code grade's color / multiply blends
+          // from the plate: promoted only when the plate carries the grade
+          className={cn("absolute inset-0 size-full", live && baked && "will-change-[opacity]")}
           style={{ opacity: grade }}
         >
           <defs>
@@ -122,7 +129,7 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
       </div>
       {/* before Dead Eye engages: the same plate as a neutral tintype */}
       {live && plate ? (
-        <motion.div className="act-tintype absolute overflow-hidden" style={{ ...PLATE_STYLE, opacity: tintype }}>
+        <motion.div className="act-tintype absolute overflow-hidden will-change-[opacity]" style={{ ...PLATE_STYLE, opacity: tintype }}>
           <PlateBox plate={plate} aspect={PLATE_ASPECT}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
@@ -135,7 +142,7 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
         // stretched with the frame so it registers with the %-placed plate
         preserveAspectRatio="none"
         focusable="false"
-        className="pointer-events-none absolute inset-0 size-full"
+        className={cn("pointer-events-none absolute inset-0 size-full", live && "will-change-transform")}
         fill="none"
         strokeLinecap="round"
       >
@@ -149,20 +156,23 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
       {/* the shots: an ember point opens in each X at once (HTML dots
           placed in %, so they stay round in the < 640 3:2 plate) */}
       {ACTS.map((a, k) => (
-        <ActPoint key={k} act={a} p={p} />
+        <ActPoint key={k} act={a} p={p} live={live} />
       ))}
     </div>
   );
 }
 
 /** The shot in an act's X (all four at once: fire once). */
-function ActPoint({ act, p }: { act: (typeof ACTS)[number]; p: MotionValue<number> }) {
+function ActPoint({ act, p, live }: { act: (typeof ACTS)[number]; p: MotionValue<number>; live: boolean }) {
   const scale = useTransform(p, (v) => remap(v, FIRE.from, FIRE.to));
   return (
     <motion.span
       // border colour inline: an unlayered `* { border-color }` in
       // app/globals.css outranks the border-colour utilities
-      className="pointer-events-none absolute block size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-(--color-ember)"
+      className={cn(
+        "pointer-events-none absolute block size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-(--color-ember)",
+        live && "will-change-transform",
+      )}
       style={{
         left: `${((act.x / VB.w) * 100).toFixed(3)}%`,
         top: `${((act.y / VB.h) * 100).toFixed(3)}%`,

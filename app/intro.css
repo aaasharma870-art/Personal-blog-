@@ -14,8 +14,17 @@
      intro-kbd       a key was pressed: Play may show its focus ring
      intro-launched  S1+: the text exits, Play leaves the tab order
      intro-waiting   S1w: the real-loading status is visible
-     intro-landing   S3 (sweep or dome): Skip leaves
-     intro-sweep     S3 on the video path: the left→right mask dissolve
+     intro-warm      S2w (P3-3): #intro at opacity .999, so the compositor
+                     rasterises the hero under it ~1.4 s before the reveal
+     intro-handoff   S3h (P3-3): the flight's last frame is held on a static
+                     canvas, the overlay's night ground goes transparent and
+                     the stage + film are promoted (one raster, under the
+                     hold); the hero loop starts underneath
+     intro-landing   S3h+ (hold, reveal, fold or dome): Skip and the fast
+                     lane leave
+     intro-sweep     S3r on the video path: a phase label only (the wipe is
+                     two WAAPI transforms; it changes no style)
+     intro-fade-out  S3r without WAAPI: an opacity fade
      intro-leaving   SX (Skip / Esc / scroll): the text layer is gone in 80 ms
      intro-alt-<p>   (pre-paint) piece <p> plays its ALT (variants block below)
      intro-inked     intro.play ALT: the ink route reached Play
@@ -26,6 +35,12 @@
    Law 1: no text-shadow, glow box-shadow, filter animation or
    radial-gradient paint on the DOM here; luminous paint lives only in the
    canvas and the video (#intro-stage).
+   P3-3 (PHASE3-SPEC §4.2): nothing in the overlay repaints per frame. The
+   reveal is the IceCut technique (act-card/frames/seam.tsx): the 300%
+   stage carries a STATIC feathered mask (set by the controller at the
+   hold) and rides a transform while its film is counter-moved, so the
+   edge sweeps and the picture stays put — compositor only. No
+   mask-position, no animated custom property, no animated mask.
    ========================================================================== */
 
 /* The bracket's draw-on progress (HP-01 ink draw-on, pathLength 0 → 1).
@@ -43,23 +58,6 @@
   }
   to {
     --intro-draw: 1;
-  }
-}
-
-/* The map-fold's edge feather (ART-DIRECTOR #8): grows from 0 as the page
-   starts to turn, so frame one of the fold is still the full flight frame. */
-@property --intro-fold-feather {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
-@keyframes intro-fold-feather {
-  from {
-    --intro-fold-feather: 0px;
-  }
-  to {
-    --intro-fold-feather: 72px;
   }
 }
 
@@ -86,34 +84,89 @@ html.intro-armed #intro {
 }
 
 /* — Stage: canvas (plate, candles, trail, LD-HP) over the flight video;
-     the code-flight broom above both. Controller-owned. — */
+     the code-flight broom above both. Controller-owned.
+     P3-3: the stage is THREE viewports wide, parked one viewport left, and
+     the controller's #intro-film (the viewport-sized picture: video, hold,
+     shade, canvas, broom) sits in its middle third — static from the
+     first paint, so the reveal needs no layout: the stage rides
+     translateX while the film is counter-moved (the controller's WAAPI).
+     Layers inside the film, bottom → top: the video (IN-02 / L05), the
+     held stills (#intro-hold at the hold, #intro-still for L05's crossfade
+     into the flight), the canvas (plate, candles, trail), the map-fold
+     shade (#intro-shade, pre-drawn once), the code-flight broom. — */
 #intro-stage {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: 0; /* own stacking context: the layers below stay under the text */
+  width: 300%;
+  height: 100%;
+  transform: translateX(calc(-100% / 3));
   pointer-events: none;
 }
-#intro-stage > canvas,
-#intro-stage > video {
+#intro-film {
+  position: absolute;
+  top: 0;
+  left: calc(100% / 3);
+  width: calc(100% / 3);
+  height: 100%;
+  overflow: clip;
+}
+#intro-film > canvas,
+#intro-film > video {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
 }
-#intro-stage > video {
+#intro-film > video {
   z-index: 0;
   object-fit: cover;
   opacity: 0;
 }
-#intro-stage > canvas {
+#intro-film > canvas {
+  z-index: 2;
+}
+#intro-film > #intro-hold,
+#intro-film > #intro-still {
   z-index: 1;
+}
+#intro-film > #intro-shade {
+  z-index: 3;
+  opacity: 0;
+}
+
+/* — S2w warm (P3-3): the overlay stops being an occluder ~1.4 s before the
+     reveal, so the hero (the name in its final face, the Lens, the header,
+     the decoded poster) is rasterised under it in time. 1/1000 of a level:
+     invisible. — */
+html.intro-warm #intro {
+  opacity: 0.999;
+  will-change: opacity;
+}
+/* — S3h hold (P3-3): the held frame covers the viewport, so the night
+     ground can go and the stage + film take their own layers here — one
+     raster under a still, none in the reveal. The default wipe's feathered
+     mask is set on #intro-stage by the controller (its width comes from the
+     model); the ALT map-fold keeps the stage as it is. — */
+html.intro-handoff #intro {
+  background: transparent;
+}
+html.intro-handoff:not(.intro-alt-landing) #intro-stage,
+html.intro-handoff:not(.intro-alt-landing) #intro-film {
+  will-change: transform;
+}
+/* S3r without the Web Animations API: an opacity fade (no wipe). */
+html.intro-fade-out #intro {
+  opacity: 0;
+  transition: opacity 0.62s var(--ease-out);
 }
 .intro-broom {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 4;
   width: 1000px;
   height: 200px;
   opacity: 0;
@@ -260,7 +313,9 @@ html.intro-armed .intro-lens {
   color: var(--color-aqua-bright);
 }
 
-/* — Skip intro: top right, in the header row; Meta, muted → ink. — */
+/* — Skip intro: top right, in the header row; Meta, muted → ink. The fast
+     lane "Skip to the research" sits before it at DESKTOP_WIDE only
+     (PHASE3-SPEC §11.3; the same Meta link style). — */
 .intro-top {
   position: absolute;
   top: 0;
@@ -290,6 +345,17 @@ html.intro-armed .intro-lens {
 .intro-skip:hover,
 .intro-skip:focus-visible {
   color: var(--color-ink);
+}
+.intro-fastlane {
+  display: none;
+  align-items: center;
+  margin-right: 0.75rem;
+  text-decoration: none;
+}
+@media (min-width: 64rem) {
+  .intro-fastlane {
+    display: inline-flex;
+  }
 }
 
 /* — S1w: the real-loading status (LD-HP draws just above it). — */
@@ -350,24 +416,15 @@ html.intro-leaving .intro-wait {
     visibility 0s linear 80ms;
 }
 
-/* — S3: Skip leaves; on the video path the overlay dissolves left → right
-     (the name zone clears first; the controller animates mask-position). — */
+/* — S3 (from the hold): Skip and the fast lane leave; on the video path the
+     overlay is then wiped left → right (the name zone clears first): the
+     compositor-only IceCut wipe above, driven by the controller. — */
 html.intro-landing .intro-skip {
   visibility: hidden;
   opacity: 0;
   transition:
     opacity var(--dur-base) var(--ease-out),
     visibility 0s linear var(--dur-base);
-}
-html.intro-sweep #intro {
-  -webkit-mask-image: linear-gradient(to right, transparent 45%, #000 51.67%);
-  mask-image: linear-gradient(to right, transparent 45%, #000 51.67%);
-  -webkit-mask-position: 100% 0;
-  mask-position: 100% 0;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 240% 100%;
-  mask-size: 240% 100%;
 }
 
 /* — VARIANTS (M1.5; lib/variants.ts). html.intro-alt-<piece> is set before
@@ -393,28 +450,18 @@ html.intro-fold #intro {
   /* M2 (ART-DIRECTOR #8): no hard-edged card turning over the hero — the
      free (left) edge and the top / bottom edges feather out (the mask rides
      the transform; the hinge edge stays on the viewport's edge), over the
-     canvas's parchment wash and edge shadow (controller foldShade). */
+     pre-drawn parchment wash and edge shadow (controller #intro-shade).
+     P3-3: the feather is STATIC (72 px / 48 px), rasterised once when the
+     fold starts; it no longer grows by an animated custom property (a
+     repaint of the whole overlay every frame). */
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 var(--intro-fold-feather)),
-    linear-gradient(
-      to bottom,
-      transparent,
-      #000 calc(var(--intro-fold-feather) * 0.67),
-      #000 calc(100% - var(--intro-fold-feather) * 0.67),
-      transparent
-    );
+    linear-gradient(to right, transparent, #000 72px),
+    linear-gradient(to bottom, transparent, #000 48px, #000 calc(100% - 48px), transparent);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, transparent, #000 var(--intro-fold-feather)),
-    linear-gradient(
-      to bottom,
-      transparent,
-      #000 calc(var(--intro-fold-feather) * 0.67),
-      #000 calc(100% - var(--intro-fold-feather) * 0.67),
-      transparent
-    );
+    linear-gradient(to right, transparent, #000 72px),
+    linear-gradient(to bottom, transparent, #000 48px, #000 calc(100% - 48px), transparent);
   mask-composite: intersect;
-  animation: intro-fold-feather 0.3s var(--ease-out) both;
 }
 /* Skip never turns with the page (it rotated across MENU): gone the moment
    the fold starts (the fold is the exit; Skip / Esc stand down). */
@@ -494,6 +541,73 @@ html[data-motion="paused"] .hero-cap__in {
     -webkit-mask-image: linear-gradient(to right, transparent, #000 16rem);
     mask-image: linear-gradient(to right, transparent, #000 16rem);
   }
+}
+
+/* — P3-3 OPENING TITLES (PHASE3-SPEC §4.3; intro.titles): inside
+     #intro-caps, in the T1 slot — the flight caption's own corner (right
+     gutter, max(7svh, 2.75rem) up, right-aligned, ≤ 52rem) on its scrim —
+     ≥ 640 × ≥ 32rem tall only (the controller checks the same query).
+     Every line waits at opacity 0; the controller animates opacity +
+     transform (WAAPI) and nothing else, so there is no style change and no
+     React work during the sequence. One card at a time, never a same-spot
+     crossfade. Cards 1–2: Meta caps; card 3: Meta + the act title in the
+     Pirates face (<Lettered>, the registered "THE CROSSING").
+     DEFAULT #intro-titles: the three cards stacked on one spot.
+     ALT #intro-roll: a window three lines tall, feathered top and bottom by
+     a static mask; the column starts below it and rolls up through it. — */
+#intro-titles,
+#intro-roll {
+  position: absolute;
+  right: var(--spacing-gutter);
+  bottom: max(7svh, 2.75rem);
+  display: none;
+  max-width: min(52rem, calc(100% - 2 * var(--spacing-gutter)));
+  color: var(--fg);
+  text-align: right;
+}
+@media (min-width: 40rem) and (min-height: 32rem) {
+  #intro-titles {
+    display: grid;
+    justify-items: end;
+  }
+  #intro-roll {
+    display: block;
+  }
+}
+.intro-title,
+.intro-roll__line {
+  margin: 0;
+  letter-spacing: 0.2em;
+  text-wrap: balance;
+}
+.intro-title {
+  grid-area: 1 / 1;
+  align-self: end;
+  opacity: 0;
+}
+.intro-title__act {
+  font-size: var(--text-title);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+#intro-roll {
+  /* an explicit box: its only child is absolutely positioned */
+  width: min(52rem, calc(100% - 2 * var(--spacing-gutter)));
+  height: 9rem;
+  overflow: clip;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2rem, #000 calc(100% - 2rem), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 2rem, #000 calc(100% - 2rem), transparent);
+}
+.intro-roll__col {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: grid;
+  gap: 1rem;
+  justify-items: end;
+  width: max-content;
+  max-width: 100%;
 }
 
 /* — Below 1024 or portrait: the Play block sits in the lower third. — */
