@@ -15,7 +15,7 @@ import {
   PLATE_STYLE,
   TINTYPE,
 } from "@/components/sections/act-card/frames/tintype";
-import { PlateBox, plateOf } from "@/components/sections/act-card/plate";
+import { PlateBox, plateOf, type Box } from "@/components/sections/act-card/plate";
 
 /**
  * Card II→III, ALT choreography "dead-eye" (lib/variants.ts
@@ -71,14 +71,25 @@ const FIRE = { from: 0.86, to: 0.92 };
 const ENGAGE = { from: 0.22, to: 0.32 };
 const X_R = 15;
 
-export function TintypeDeadEyeFrame({ plate }: { plate: MediaId | null }) {
+export function TintypeDeadEyeFrame({ plate, reg = null }: { plate: MediaId | null; reg?: Box | null }) {
   const { p, live } = useCard();
   const one = useMotionValue(1);
   // the static card is the final frame; useTransform binds one source
-  return <DeadEye key={live ? "live" : "static"} p={live ? p : one} live={live} plate={plate} />;
+  return <DeadEye key={live ? "live" : "static"} p={live ? p : one} live={live} plate={plate} reg={reg} />;
 }
 
-function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean; plate: MediaId | null }) {
+function DeadEye({
+  p,
+  live,
+  plate: id,
+  reg,
+}: {
+  p: MotionValue<number>;
+  live: boolean;
+  plate: MediaId | null;
+  /** Phase 3: the registered crop (the horizon on MATCH_ROW; boot gate). */
+  reg: Box | null;
+}) {
   const ids = useId();
   const plate = plateOf(id);
   // does the plate carry the Dead Eye grade itself?
@@ -94,7 +105,7 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
       {/* the plate: the frozen frontier, in its Dead Eye grade */}
       <div className="absolute overflow-hidden rounded-[6px]" style={PLATE_STYLE}>
         {plate ? (
-          <PlateBox plate={plate} aspect={PLATE_ASPECT}>
+          <PlateBox plate={plate} aspect={PLATE_ASPECT} reg={reg}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
         ) : (
@@ -130,7 +141,7 @@ function DeadEye({ p, live, plate: id }: { p: MotionValue<number>; live: boolean
       {/* before Dead Eye engages: the same plate as a neutral tintype */}
       {live && plate ? (
         <motion.div className="act-tintype absolute overflow-hidden will-change-[opacity]" style={{ ...PLATE_STYLE, opacity: tintype }}>
-          <PlateBox plate={plate} aspect={PLATE_ASPECT}>
+          <PlateBox plate={plate} aspect={PLATE_ASPECT} reg={reg}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
         </motion.div>

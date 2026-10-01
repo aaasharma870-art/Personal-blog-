@@ -9,7 +9,16 @@ import { hasRunThisSession, markRunThisSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { useDrawPhase } from "@/components/site/world-motion";
 import { eggCopy } from "@/components/eggs/egg-copy";
-import { SNITCH_EVENT, catchSnitch, eggEnabled, eggsSessionOff, snitchCaught, subscribeEggs } from "@/components/eggs/egg-bus";
+import {
+  SNITCH_EVENT,
+  catchSnitch,
+  eggEnabled,
+  eggsSessionOff,
+  snitchCaught,
+  subscribeEggs,
+  triggerEgg,
+} from "@/components/eggs/egg-bus";
+import { HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
 
 /* ============================================================================
    THE SNITCH (IC-HP-12; SPEC v2 SM-13; eggs.BAR E8, E10, E14) — the credits'
@@ -22,7 +31,19 @@ import { SNITCH_EVENT, catchSnitch, eggEnabled, eggsSessionOff, snitchCaught, su
    credits row SEEKER — you. No score, ever (RD-P8). Reduced motion / Pause /
    "Turn off easter eggs": it only rests (still catchable).
    Our own drawing (a gold sphere, two feathered wings): no crest, no mark.
+   PHASE 3 (PHASE3-SPEC §3.6, §9.1 #3; W2-HUNT): the catch counts the hunt
+   egg hp-snitch (lib/hunt.ts markFound, loaded on the catch); the SEEKER
+   row reads the HUNT (localStorage), not this session's catch (B10), and
+   steps aside at 12/12, where THE HUNT block names the Seeker. The dart
+   fires `triggerEgg("snitch")` (the sound engine's wing flutter; the egg
+   host ignores it: an appearance never counts). The dart's spotlight
+   request (B57) belongs to the credits' wave-3 owner.
    ========================================================================== */
+
+/** Count the find (idempotent); the hunt actions load on the catch. */
+function countCatch(): void {
+  void import("@/lib/hunt").then((m) => m.markFound("hp-snitch"));
+}
 
 const RUN_KEY = "egg:snitch";
 /** The dart: offsets from the rest spot (px), right of the link row. */
@@ -93,6 +114,7 @@ export function Snitch({ className }: { className?: string }) {
         if (k < 0.35) return; // no room to fly (a phone): it just rests
         markRunThisSession(RUN_KEY);
         setDarting(true);
+        triggerEgg("snitch");
         const cx = animate(x, DART_X.map((v) => v * k), { duration: DART_S, ease: easeDraw });
         const cy = animate(y, DART_Y, { duration: DART_S, ease: "easeInOut", onComplete: () => setDarting(false) });
         stop = () => {
@@ -129,6 +151,8 @@ export function Snitch({ className }: { className?: string }) {
       aria-label={label.text}
       onClick={() => {
         if (!caught) catchSnitch();
+        // also after a reset of the hunt, when this session already caught it
+        countCatch();
         setDarting(false);
       }}
       style={{ x, y }}
@@ -146,10 +170,12 @@ export function Snitch({ className }: { className?: string }) {
 }
 
 /** SEEKER — you: the credits row the caught Snitch adds (absent at rest and
- *  on the server: E1). Mirrors the roll's row grid. */
+ *  on the server: E1). It reads the hunt (B10), so it survives a reload and
+ *  Obliviate; at 12/12 THE HUNT block carries "Seeker — you" instead.
+ *  Mirrors the roll's row grid. */
 export function SeekerRow() {
-  const caught = useCaught();
-  if (!caught || !eggEnabled("snitch")) return null;
+  const { count, found } = useHuntState();
+  if (!found.has("hp-snitch") || count === HUNT_TOTAL || !eggEnabled("snitch")) return null;
   const role = eggCopy["credits.seeker.role"];
   const name = eggCopy["credits.seeker.name"];
   if (!copyVisible(role) || !copyVisible(name)) return null;

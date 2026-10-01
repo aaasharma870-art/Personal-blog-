@@ -575,6 +575,10 @@ const copy = {
   "egg.hunt.reset.confirm": p3("Reset the hunt? Every egg found so far is forgotten."),
   "egg.hunt.off": p3("Turn off easter eggs"),
   "egg.hunt.complete": p3("12 / 12"),
+  /* the hunt panel's slot states (screen readers) and the reset's cancel */
+  "egg.hunt.found": p3("Found"),
+  "egg.hunt.unfound": p3("Not found yet"),
+  "egg.hunt.reset.cancel": p3("Cancel"),
   "egg.hunt.name.hp-map": p3("The Marauder's Map"),
   "egg.hunt.name.hp-lumos": p3("Lumos and Nox"),
   "egg.hunt.name.hp-snitch": p3("The Golden Snitch"),
@@ -994,10 +998,14 @@ export const film = {
       { id: "snitch", host: "credits", trigger: ["auto"], enabled: true },
       // Phase 3 (PHASE3-SPEC §3.6): off; not one of the 12 hunt eggs
       { id: "patronus", host: "contact", trigger: ["typed", "palette"], desktopOnly: true, enabled: false },
-      { id: "hidden-kraken", host: "act-2", trigger: ["media"], enabled: true },
-      { id: "parley", host: "global", trigger: ["palette"], enabled: true },
+      /* W2-HUNT (PHASE3-SPEC §9.1): the kraken's long look + its upper-bar
+         button; parley gains the typed word; aal lives on the optuna board
+         (the chalk heart) and is typed too. The 12 hunt eggs' own rows are
+         components/eggs/hunt-rows.ts (scripts/checks/hunt.mjs). */
+      { id: "hidden-kraken", host: "act-2", trigger: ["auto", "hotspot"], enabled: true },
+      { id: "parley", host: "global", trigger: ["palette", "typed"], enabled: true },
       { id: "quadcopter-lift", host: "work", trigger: ["auto"], enabled: true },
-      { id: "aal-izz-well", host: "global", trigger: ["palette"], enabled: true },
+      { id: "aal-izz-well", host: "optuna-screener", trigger: ["palette", "typed", "hotspot"], enabled: true },
       // Phase 3 (§9.1, §9.2): Dead Eye is the Act II/III toy, not a hunt egg
       { id: "dead-eye", host: "kill-list", trigger: ["palette", "typed"], desktopOnly: true, enabled: true, toy: true },
       { id: "console-line", host: "console", trigger: ["auto"], enabled: true },

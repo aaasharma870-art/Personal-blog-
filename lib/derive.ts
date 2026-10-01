@@ -105,8 +105,16 @@ export type ActCardItem = {
   from: World | null;
   /** The incoming world (its deep ground, its loader, its lettering). */
   to: World;
-  /** Pinned long card (≤ 60vh, desktop fine pointer; D-5). */
+  /** Pinned long card (≤ 60vh, desktop fine pointer; D-5). Phase 2's flag:
+   *  what the card does BELOW the Phase-3 pin mode (CardShell). */
   long: boolean;
+  /** Phase 3 (PHASE3-SPEC §7.1, D3-1): the card's pinned travel in vh
+   *  (`film.cardTravel[transition]`; 0 for reel / title cards and a turned-
+   *  down film). DATA only: the travel is LAYOUT under the boot gate alone
+   *  (app/p3/cards.css; validator check 5, scripts/checks/travel.mjs), and
+   *  CardShell pins only where that gate holds (DESKTOP_FINE, motion on at
+   *  boot). Below it every card keeps `long`'s behaviour. */
+  travel: number;
   /** Act title, e.g. "The Workshop" (the h2; world lettering on cards). */
   title: string;
   titleCopy: Copy;
@@ -178,6 +186,10 @@ export function actCardsOf(sections: readonly SectionEntry[], film: Film): ActCa
       (transition === "seam" || transition === "ignite") &&
       film.longCards.includes(key) &&
       film.intensity === "full";
+    const travel =
+      film.intensity === "full" && Object.prototype.hasOwnProperty.call(film.cardTravel, transition)
+        ? (film.cardTravel as Readonly<Record<string, number>>)[transition]
+        : 0;
     const spec = film.worlds[to];
     const title = run.act.title.text;
     const numeral = roman(run.n);
@@ -206,6 +218,7 @@ export function actCardsOf(sections: readonly SectionEntry[], film: Film): ActCa
       from: first ? null : from,
       to,
       long,
+      travel,
       title,
       titleCopy: run.act.title,
       label: `ACT ${numeral} • ${title.toUpperCase()}`,

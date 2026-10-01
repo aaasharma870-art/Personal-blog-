@@ -89,12 +89,17 @@ export function anchorRect(p: Plate, name: string): FocalBox | null {
 export function PlateBox({
   plate,
   aspect = FRAME_ASPECT,
+  reg,
   className,
   style,
   children,
 }: {
   plate: Plate;
   aspect?: Aspects;
+  /** Phase 3: the REGISTERED crop (registerLine) the pinned card draws under
+   *  the boot gate only (app/p3/cards.css `[data-plate-reg]`): the carried
+   *  line on MATCH_ROW. Below the gate the box is the plain crop above. */
+  reg?: Box | null;
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
@@ -110,6 +115,9 @@ export function PlateBox({
     "--pb-t-sm": pct(b.t),
     "--pb-w-sm": pct(b.w),
     "--pb-h-sm": pct(b.h),
+    ...(reg
+      ? { "--pb-l-reg": pct(reg.l), "--pb-t-reg": pct(reg.t), "--pb-w-reg": pct(reg.w), "--pb-h-reg": pct(reg.h) }
+      : null),
   } as CSSProperties;
   return (
     <div
@@ -118,6 +126,7 @@ export function PlateBox({
         "sm:top-(--pb-t-sm) sm:left-(--pb-l-sm) sm:h-(--pb-h-sm) sm:w-(--pb-w-sm)",
         className,
       )}
+      data-plate-reg={reg ? "" : undefined}
       style={{ ...vars, ...style }}
     >
       {children}

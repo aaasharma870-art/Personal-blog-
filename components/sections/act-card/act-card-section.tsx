@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { film, type CaptionKey, type Copy } from "@/lib/film";
+import { film, type ActSpec, type CaptionKey, type Copy } from "@/lib/film";
 import { numberWord } from "@/lib/derive";
 import { isMediaId, markOf, resolveMedia, resolveVariant, type MediaId } from "@/lib/media";
 import {
@@ -32,6 +32,9 @@ import {
 import type { CaptionCue } from "@/components/sections/act-card/card-captions";
 import { CardReveal } from "@/components/sections/act-card/card-reveal";
 import { CardShell } from "@/components/sections/act-card/card-shell";
+import { buildPin, type PinPlates } from "@/components/sections/act-card/pin-build";
+import { StageScrim } from "@/components/stage/scrim";
+import { Subtitle } from "@/components/stage/subtitle";
 import { IgniteFrame } from "@/components/sections/act-card/frames/ignite";
 import { OpeningFrame, type OpeningRow } from "@/components/sections/act-card/frames/opening";
 import { OpeningPlateFrame } from "@/components/sections/act-card/frames/opening-plate";
@@ -73,6 +76,15 @@ import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
  * own plates (resolveVariant) and its own captions (captionKeyFor); the
  * shell plays `item.variant` (or the ?variant=… preview). The generic
  * `reel` / `title` cards have no alternate.
+ *
+ * Phase 3 (PHASE3-SPEC §6.2, §7.1–§7.6, §8.1, §8.4; W2-CARDS): the four
+ * authored cards PIN (item.travel; the boot gate only). Here the server
+ * builds what the pinned card plays (pin-build.ts: the registered crops on
+ * MATCH_ROW, the GL specs, the push-ins, the impact, the title mask, the
+ * beats) and the act LOGLINE as the lower bar's static subtitle (copy-gated;
+ * Aryan's unsigned drafts), the seam's "HERE BE MONSTERS" (pc-kraken) and
+ * the opening program's stage backdrop. Below the pin mode none of it
+ * changes what a card shows.
  */
 
 /** When each piece of the lower bar rises (card passage / pinned p). */
@@ -275,7 +287,7 @@ export function ActCardSection({
   const filmTitle =
     item.to !== "house" && spec.work ? (
       <p className="card-film text-[length:var(--text-title)] leading-[1.02] tracking-[0.03em] text-balance text-fg">
-        <CardReveal at={FILM_AT[kind]}>
+        <CardReveal at={FILM_AT[kind]} pinned="static">
           <FilmTitle world={item.to} as="span" />
         </CardReveal>
       </p>
@@ -336,6 +348,11 @@ export function ActCardSection({
   let altAfter: ReactNode = null;
   let captions: CaptionCue[] = [];
   let altCaptions: CaptionCue[] | undefined;
+  // Phase 3: what each choreography's two halves draw (pin-build.ts)
+  const plates: PinPlates = { from: { default: null, alt: null }, to: { default: null, alt: null } };
+  // the frames' registered crops (filled once the plates are known)
+  const regOf = (v: Variant, side: "from" | "to") => pinned?.regs[v][side] ?? null;
+  let pinned: ReturnType<typeof buildPin> = null;
   switch (kind) {
     case "opening": {
       // S03/S04: the hero sea sinks into the deep (hero-stage.tsx's feather);
@@ -343,8 +360,11 @@ export function ActCardSection({
       // feathered into the deep; the program (h2 + rows + Jack's compass)
       // below.
       const pearl = spec.media.cardStill;
-      frame = <OpeningPlateFrame plate={variantMedia(pearl, "default")} />;
-      altFrame = <OpeningPlateFrame plate={variantMedia(pearl, "alt")} alt />;
+      plates.to = { default: variantMedia(pearl, "default"), alt: variantMedia(pearl, "alt") };
+      plates.from = { default: variantMedia(spec.media.plate, "default"), alt: variantMedia(spec.media.plate, "alt") };
+      pinned = buildPin(item, plates, title);
+      frame = <OpeningPlateFrame plate={plates.to.default} />;
+      altFrame = <OpeningPlateFrame plate={plates.to.alt} alt />;
       const h2Copy = copyText("opening.h2");
       // ONE heading node for both choreographies (same id, same text)
       const openingHeading = (
@@ -378,12 +398,23 @@ export function ActCardSection({
       const storm = variantMedia(stormId, "default");
       const board = variantMedia(spec.media.cardStill, "default");
       if (storm || board) {
-        frame = <SeamFrame storm={storm} board={board} graded={false} />;
+        plates.from = { default: storm, alt: variantMedia(stormId, "alt") };
+        plates.to = { default: board, alt: variantMedia(spec.media.cardStill, "alt") };
+        pinned = buildPin(item, plates, title);
+        frame = (
+          <SeamFrame
+            storm={storm}
+            board={board}
+            graded={false}
+            reg={{ storm: regOf("default", "from"), board: regOf("default", "to") }}
+          />
+        );
         altFrame = (
           <SeamChalkFrame
-            storm={variantMedia(stormId, "alt")}
-            board={variantMedia(spec.media.cardStill, "alt")}
+            storm={plates.from.alt}
+            board={plates.to.alt}
             graded={false}
+            reg={{ storm: regOf("alt", "from"), board: regOf("alt", "to") }}
           />
         );
       } else {
@@ -405,9 +436,12 @@ export function ActCardSection({
       // frozen frontier (iconic-deadeye), four ember X marks locked on the
       // act points; the settled ALT keeps the grade and the marks.
       const plate = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
-      frame = <TintypeFrame plate={plate} />;
       const deadeye = variantMedia(spec.media.cardAltStill, "default") ?? variantMedia(spec.media.cardStill, "alt");
-      altFrame = <TintypeDeadEyeFrame plate={deadeye} />;
+      plates.to = { default: plate, alt: deadeye };
+      plates.from = plates.to;
+      pinned = buildPin(item, plates, title);
+      frame = <TintypeFrame plate={plate} reg={regOf("default", "to")} />;
+      altFrame = <TintypeDeadEyeFrame plate={deadeye} reg={regOf("alt", "to")} />;
       // the plate develops over p .25–.82: its caption comes up with it
       captions = cues(cue(settledKey("cap.act-3", "default"), { in: [0.5, 0.66] }));
       altCaptions = cues(cue(settledKey("cap.act-3", "alt"), { in: [0.3, 0.45] }));
@@ -424,9 +458,24 @@ export function ActCardSection({
       const hall = variantMedia(spec.media.cardStill, "default") ?? usable(spec.media.plate);
       const mid = variantMedia(spec.media.cardMidStill, "default");
       const fire = fireBefore(item);
-      frame = <IgniteFrame hall={hall} mid={mid} fire={fire} camp={campBefore(item, "default")} />;
+      plates.from = { default: campBefore(item, "default"), alt: campBefore(item, "alt") };
+      plates.to = { default: hall, alt: variantMedia(spec.media.cardStill, "alt") ?? hall };
+      pinned = buildPin(item, plates, title);
+      frame = (
+        <IgniteFrame
+          hall={hall}
+          mid={mid}
+          fire={fire}
+          camp={plates.from.default}
+          reg={{ camp: regOf("default", "from"), hall: regOf("default", "to") }}
+        />
+      );
       altFrame = (
-        <IgniteLumosFrame hall={variantMedia(spec.media.cardStill, "alt") ?? hall} camp={campBefore(item, "alt")} />
+        <IgniteLumosFrame
+          hall={plates.to.alt}
+          camp={plates.from.alt}
+          reg={{ camp: regOf("alt", "from"), hall: regOf("alt", "to") }}
+        />
       );
       captions = cues(cue("cap.act-4.out", OUT), cue(settledKey("cap.act-4", "default"), { in: IN_BY_MID }));
       altCaptions = cues(cue("cap.act-4.out", OUT), cue(settledKey("cap.act-4", "alt"), { in: IN_BY_MID }));
@@ -444,6 +493,27 @@ export function ActCardSection({
 
   const prev = groundBefore(item);
   const next = groundAfter(item);
+
+  // Phase 3: the logline as the lower bar's static subtitle (§8.4; Aryan's
+  // drafts, unsigned: copy-gated), the kraken's hint (§9.1 #6), the opening
+  // program's stage backdrop (spec §3.2)
+  const act = (film.acts as readonly ActSpec[]).find((a) => a.id === item.act);
+  const subtitle = item.logline && visible(item.logline) ? item.logline.text : null;
+  const subtitleBeat = act?.beats?.find((b) => b.kind === "subtitle")?.id;
+  const krakenHint = kind === "seam" ? copyText("egg.hunt.hint.pc-kraken") : null;
+  const programCue = act?.stage?.mode === "backdrop" ? act.stage.cues?.find((c) => c.at) : undefined;
+  const program =
+    kind === "opening" && act?.stage?.scrim && programCue?.at
+      ? { id: programCue.at, scrim: <StageScrim scrim={act.stage.scrim} /> }
+      : null;
+  const kraken =
+    krakenHint && visible(krakenHint) ? (
+      // pc-kraken (§9.1 #6): DESKTOP_FINE only (cards.css), bound by the pin
+      // chunk (card-p3.tsx); the frame it changes is right below
+      <button type="button" className="act-card-kraken type-meta" data-kraken="">
+        {krakenHint.text}
+      </button>
+    ) : null;
   const same = (g: Ground | null, w: WorldId) => g !== null && g.world === w && g.tone === "deep";
 
   return (
@@ -482,6 +552,11 @@ export function ActCardSection({
       summary={kind === "opening" ? "" : item.summary}
       // the opening's course (compass → rows) is its progress element
       progress={kind !== "opening"}
+      travel={pinned ? item.travel : 0}
+      pin={pinned?.spec ?? null}
+      subtitle={subtitle ? <Subtitle text={subtitle} beat={subtitleBeat} /> : null}
+      metaExtra={kraken}
+      program={program}
     />
   );
 }
