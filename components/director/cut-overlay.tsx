@@ -34,7 +34,14 @@ export function CutOverlay() {
       for (const a of el.getAnimations()) a.cancel();
       el.dataset.cut = "on";
       const fadeIn = el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: IN_MS, easing: "ease-in", fill: "forwards" });
-      await Promise.all([fadeIn.finished.catch(() => undefined), ready.catch(() => undefined)]);
+      // the fade's `finished` is delivered with a frame: on a slow frame
+      // pipeline (software raster) it could hold the jump for seconds, so a
+      // wall-clock cap bounds the fast lane's latency (spec §11.3, ≤ 400 ms)
+      const faded = Promise.race([
+        fadeIn.finished.catch(() => undefined),
+        new Promise<void>((r) => window.setTimeout(r, IN_MS + 20)),
+      ]);
+      await Promise.all([faded, ready.catch(() => undefined)]);
       // superseded by a newer cut: it owns the layer (no jump, no fade-out)
       if (mine !== gen) return;
       try {

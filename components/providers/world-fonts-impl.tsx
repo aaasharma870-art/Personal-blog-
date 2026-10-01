@@ -62,7 +62,9 @@ function watchWorlds(): () => void {
         const w = byTarget.get(e.target);
         if (!w || done.has(w)) continue;
         done.add(w);
-        void markWorldFontsReady(w, 0);
+        // the faces load first and the token follows (≤ 4 s): the swap lands
+        // once, while the world is still ≥ 150% of a viewport away
+        void markWorldFontsReady(w, 4000);
         for (const [t, tw] of byTarget) if (tw === w) io.unobserve(t);
       }
       if (FILM_WORLDS.every((w) => done.has(w))) io.disconnect();

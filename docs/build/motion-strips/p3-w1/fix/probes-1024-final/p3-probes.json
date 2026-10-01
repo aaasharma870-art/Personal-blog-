@@ -1,0 +1,386 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T21:05:51.064Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "decoder",
+      "lenis",
+      "loaf",
+      "research-font",
+      "spotlight"
+    ]
+  },
+  "results": {
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 74,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 663,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "stage",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "stage",
+          "MV-09"
+        ],
+        "crossfadeSamples": 14,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 83521,
+      "console": []
+    },
+    "lenis": {
+      "pass": false,
+      "failed": [
+        "fastlane",
+        "hash.load"
+      ],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 41609,
+          "vh": 768,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 2
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 2001,
+          "y1": 2001
+        },
+        "fastlane": {
+          "pass": false,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 524,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": false,
+          "top": 7211,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 1,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 2001
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 56757,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": true,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 24,
+      "over": 0,
+      "worstDur": 209,
+      "worstWork": 5,
+      "loafs": [
+        {
+          "dur": 209,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 998
+        },
+        {
+          "dur": 206,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1216
+        },
+        {
+          "dur": 175,
+          "block": 0,
+          "work": 3,
+          "top": null,
+          "t": 146
+        },
+        {
+          "dur": 162,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1691
+        },
+        {
+          "dur": 148,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1859
+        },
+        {
+          "dur": 146,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2012
+        },
+        {
+          "dur": 132,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 857
+        },
+        {
+          "dur": 130,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1558
+        },
+        {
+          "dur": 128,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1426
+        },
+        {
+          "dur": 98,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 756
+        },
+        {
+          "dur": 97,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2164
+        },
+        {
+          "dur": 97,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2453
+        }
+      ],
+      "ladderMs": {
+        "1": 323,
+        "2": 1475,
+        "3": 2355
+      },
+      "lenis": true,
+      "ms": 14906,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1024,
+        "height": 768
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 236,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 60
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1321,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "failed": [],
+      "tests": {
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 504
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 2
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 592
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 1,
+            "free": 1
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 17139,
+          "y": 8832,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 18647,
+          "y": 9984,
+          "ev": "free",
+          "id": "B19"
+        }
+      ],
+      "ms": 56220,
+      "console": []
+    }
+  }
+}

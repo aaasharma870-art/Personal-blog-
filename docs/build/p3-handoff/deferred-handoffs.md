@@ -42,3 +42,41 @@ Source: scratchpad/p3/w1/returns/B1-*.md. Everything addressed to a W1 file or t
 21. Sign the unsigned copy (96 strings incl. `fastlane.label` "Skip to the research", `titles.1–3`, the `systems.meta.*` lines).
 22. Countersign Check L2 on the 40 new P3 media rows (lib/media.ts `aryan:pending`).
 23. 19 of 25 loops pass (one short of "≥ 20"); SEQ-HALL 3.66 MB vs 1.6 MB budget; L12 storm composition flag; IM Fell English SC (44 KB) loads with the page on a first visit for the hp captions (B1-TYPE note).
+
+---
+
+# W1 fix stage (the W1 fixer + gatekeeper, 2026-10-01; full report `docs/build/p3-reports/W1.md`)
+
+Numbering continues from above. Item 20 (the libraries credit as a copy key) is **done**: `credits.libraries` (p3, unsigned) is rendered by the footer.
+
+## W2-CARDS
+24. (P3-2 #11, inherited: base does the same) Pause mid-scroll CLS 1.0 on act-2 and the paused-reload reflow (layout-gates). Key the card travel / pin mode on the boot gate only (`@media (min-width:64rem) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)` + `html.js:not([data-motion-boot="paused"])`), so Pause and a paused reload keep the same box heights.
+25. (visual judge 4, not a W1 regression) The act-2 chalk label is clipped at 1024, and act-card images sit 17 px outside the gutters at 1024.
+26. (visual judge 7, not a W1 regression) The outgoing caption shows over the wipe.
+27. (judge 12) The act-1 caption is orphaned until the act-1 program block (item 1) lands.
+
+## W2-SOUND / W2-HUNT
+28. The sound probe's `eggs.typed` and `eggs.lumos` fail until the egg cues are wired. Pause (2 ms) and RM (37 ms) now pass: lib/audio/store-impl.ts suspends the context at once when `motionOffNow()`.
+29. TTS registration is still item 13.
+
+## W2-GL
+30. The gl probe's `lab` check fails: GL is not mounted on `/` yet (items 6–8).
+
+## B1-TYPE follow-up (W2)
+31. World-font swap CLS: 0.003–0.005 remains on lettered captions and rdr2 h3s (P3-2 #7 wants 0). The `html[data-fonts~=world]` token is now added only after the faces load (lib/world-fonts.ts, timeout 4000 / 3000 for the fast-lane warm), which took it from 0.0151. Next: metric overrides (`size-adjust` / `ascent-override` / `descent-override`) on the world faces, or reserve the line boxes.
+32. Glue or balance the dangling separators (LOW 8 / judge 11; glued to the moment by an M2 decision, so a taste call for P3-11).
+
+## Every builder: a new rule
+33. Never add a CSS rule that can match `<html>` itself for a class or attribute toggled at runtime, and never use `[class*=…]` / `[class^=…]` substring selectors. Each such toggle restyles the whole document (70–100 ms headless). Lenis rewrites `html` classes at every glide start and stop, so nothing may key on `html.lenis*` (foundation.css now keys on the boot gate and `html[data-smooth]`). `html[data-letterbox]` (stage.css scroll-padding) is one such toggle: W3-CINEMA keeps it to once per scene.
+34. Budget headroom: first-load JS has ≈ 4.6 KB gz left (base +1,524 B of 6,144). Desktop-only code goes behind a facade (`React.lazy` mounted under `useDesktopFine()` / `useDesktopWide()`, DP-13), as smooth-scroll, world-fonts, stage-gate, letterbox-bars and the cut overlay now do. Docs-only data fields are stripped from browser chunks by `scripts/build/browser-data-loader.cjs`: a client file that starts reading `provenance.*` (other than `source`), a variant's `note`/`plan`/`files`, or a section's `beats`/`tempo`/`estVh` must be removed from its RULES first.
+35. Large painted layers (gradients, wear, grain) must be static promoted layers (`will-change: transform` that never changes) with positioned, non-repeating bands, not full-size gradients re-rastered on repaint (see the principles fix in components/site/principles-map.tsx).
+
+## Probes (W2 assembler)
+36. `split.mjs` still reads stale rects; use the direct check (`docs/build/motion-strips/p3-w1/fix/split-*.json`).
+37. `motion.js`'s idle probe and intro run pay the screencast cost; the intro "name visible" metric should read the stage's mask edge, not `elementFromPoint` (the empty `.intro-block` is hit-testable but transparent).
+
+## Aryan
+38. The iPad (1024×1366 touch) gets the world type (spec §5.4 keys it on DESKTOP_WIDE; DP-18 says "1024×1366 unchanged"): keep, or key it on DESKTOP_FINE?
+39. The `minimax_h3` credit now shows on every device (true, public): OK?
+40. Sign `credits.libraries` with the 96 unsigned strings (item 21).
+41. Optional: a real-laptop Chrome performance recording of the intro and one full scroll at 1440 (§4.4 hand-off script 21–22 ms and intro fps 18.5 / p95 133.3 are software-raster bound headless).

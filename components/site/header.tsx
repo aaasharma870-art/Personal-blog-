@@ -224,7 +224,7 @@ function WorkPill({ base, href }: { base: string; href: string }) {
   // intent (hover / keyboard focus) warms the target world's faces, so the
   // cut rarely waits on them (spec §11.3: the fast lane lands ≤ 400 ms)
   const warm = () => {
-    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 0);
+    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 3000);
   };
   return (
     <a
