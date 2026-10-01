@@ -156,7 +156,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
         as="article"
         key={b.kicker}
         id={noteAnchor(entry.id, b.kicker)}
-        className="split-stack grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
+        className="split-stack split-stack-wide grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
       >
         <div className="lg:col-span-4">
           <Meta fields={[b.kicker]} />
@@ -170,7 +170,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
           ) : null}
         </div>
         <div className="lg:col-span-8">
-          <dl aria-labelledby={noteId} className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
+          <dl aria-labelledby={noteId} data-split-pairs="" className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
             {b.items.map((it) => (
               <div key={it.head}>
                 <dt className="type-body text-fg">{it.head}</dt>

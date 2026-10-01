@@ -85,13 +85,22 @@ const log: SpotlightLogEntry[] = [];
 
 function note(ev: SpotlightLogEntry["ev"], id?: string, extra: Partial<SpotlightLogEntry> = {}): void {
   if (!DEBUG) return;
-  const e: SpotlightLogEntry = { t: Math.round(performance.now()), y: Math.round(window.scrollY), ev, id, ...extra };
+  // `lastY` (the last evaluate's scroll), never a fresh window.scrollY: a
+  // read here would force the whole-document restyle a Pause has just
+  // queued, inside the Pause (debug logging must not cost the skip)
+  const e: SpotlightLogEntry = { t: Math.round(performance.now()), y: Math.round(lastY), ev, id, ...extra };
   log.push(e);
   console.info(`[spotlight] ${ev}${id ? ` ${id}` : ""}${e.why ? ` (${e.why})` : ""} @y=${e.y}`);
 }
 
+/** The attribute first: setting html[data-motion="paused"] invalidates the
+ *  whole document's style, and `matchMedia().matches` would force that
+ *  restyle (≈ 100+ ms headless) before Pause could answer "skip". */
+/** The scroll position the last evaluate() saw (the log's `y`). */
+let lastY = 0;
+
 function motionOff(): boolean {
-  return motionOffNow() || document.documentElement.dataset.motion === "paused" || !window.matchMedia(DESKTOP_FINE).matches;
+  return document.documentElement.dataset.motion === "paused" || motionOffNow() || !window.matchMedia(DESKTOP_FINE).matches;
 }
 
 /* — scroll-star ranges (measured on register and on resize only) ———————— */
@@ -135,7 +144,8 @@ function ownerAt(y: number): ScrollStar | null {
 
 function evaluate(): void {
   if (off) return;
-  const next = ownerAt(window.scrollY);
+  lastY = window.scrollY;
+  const next = ownerAt(lastY);
   if (next !== owner) {
     if (next) note("own", next.id, { weight: next.weight });
     else if (owner) note("free", owner.id);
@@ -310,7 +320,8 @@ export function request(id: string, o: SpotlightRequest): Promise<SpotlightAnswe
     p.io.observe(host);
   }
   if (p.needsIdle) armIdle(p);
-  owner = ownerAt(window.scrollY);
+  lastY = window.scrollY;
+  owner = ownerAt(lastY);
   tryGrant();
   return promise;
 }

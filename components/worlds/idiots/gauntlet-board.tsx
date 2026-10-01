@@ -434,7 +434,7 @@ export function GauntletBoard({
   const choreo = alt ? "marking-sheet" : "rail-run";
 
   return (
-    <figure className={cn("scene-caption-host", className)} data-board={plate} data-choreo={choreo} {...beatAttrs("B17", { weight: 2 })}>
+    <figure className={cn("scene-caption-host", className)} data-choreo={choreo} {...beatAttrs("B17", { weight: 2 })}>
       {/* the caption sits UNDER the board (M2 finish, BLIND-1 D25): no scrim
           darkens the board, its wooden frame or the chalk ledge */}
       <SettleFrame entrance={alt ? "wipe" : "settle"} className="relative sm:overflow-hidden sm:rounded-frame">
@@ -460,8 +460,13 @@ export function GauntletBoard({
         {/* (< 640 it ends at 86 %: the labels stay on the board, above the
             bright chalk ledge, so they keep their contrast) */}
         <div className="absolute left-[4%] top-[4%] flex h-[82%] w-[66%] flex-col sm:left-[3.5%] sm:top-[5%] sm:h-[73%] sm:w-[55%]">
+          {/* the lettered Q-3I-2 header and the scene caption are film
+              lettering (the "head" role, spec §5.1), so they sit OUTSIDE
+              the research islands: `data-board` marks the board's data
+              (the gates and ordinals; the tally is a research island too),
+              never the whole scene figure (P3-4 #4) */}
           {header ? <div className="shrink-0">{header}</div> : null}
-          <div className="relative mt-[3%] flex min-h-0 flex-1 items-center">
+          <div data-research="" data-board={plate} className="relative mt-[3%] flex min-h-0 flex-1 items-center">
             <div className="relative w-full">
               {alt ? (
                 <MarkingSheet gates={gates} active={active} derive={derive} run={run} reduced={reduced} />
@@ -492,7 +497,7 @@ export function GauntletBoard({
             </div>
           </div>
           {/* the tally (HTML) and the label, inside the same figure */}
-          <div className="mt-[3%] shrink-0">
+          <div data-research="" className="mt-[3%] shrink-0">
             <p className="type-small text-fg">
               <ChalkLoop on={run.phase === "settled"}>
                 <span className="tnum">{tallyText}</span>

@@ -190,6 +190,25 @@ html[data-letterbox] {
   .split-stack > * {
     grid-column: 1 / -1;
   }
+  /* paired facts (the beyond notes) read as one column there */
+  .stage-split-text [data-split-pairs] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* The beyond notes stack below 52rem of column (so at 1440 too: a 4/8
+   split of ≈ 740 px left the facts ≈ 200 px measures and the satchel kit
+   colliding), and the satchel kit wraps to the columns that fit (W1 visual
+   gate HIGH 1). */
+@container split (width < 52rem) {
+  .split-stack-wide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .split-stack-wide > * {
+    grid-column: 1 / -1;
+  }
+  .stage-split-text [data-satchel-kit] {
+    grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  }
 }
 
 /* — LIVE: paint only (the stage is showing; never while paused) ———————— */

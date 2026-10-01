@@ -116,8 +116,10 @@ export function GauntletTabs({
   const canRun = hydrated && !reduce;
 
   return (
-    <div data-research="" className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
-      <div className="lg:col-span-4">
+    <div className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+      {/* the gates are data (Geist); the board beside them marks its own
+          data islands and leaves its film lettering out (P3-4 #4) */}
+      <div data-research="" className="lg:col-span-4">
         <div
           role="tablist"
           aria-label="Validation gauntlet gates"

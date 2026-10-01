@@ -283,6 +283,7 @@ export function Stage() {
       // per layer: opacity, arrival, camera, rack focus
       let rootWanted = false;
       const want = new Set<HTMLElement>();
+      const opacityOf = new Map<number, number>();
       for (const k of near) {
         const s = SHOTS[k];
         const m = g[k];
@@ -314,6 +315,7 @@ export function Stage() {
         }
         const plate = PLATES[k];
         const pose = stageCamera(s.cue.camera, shotLocal(sy, vh, { y: s.y, end: s.end }), plate?.focal, cv);
+        opacityOf.set(k, o);
         if (e) write(e, o, t, poseTransform(pose), soft);
       }
       setRoot(rootWanted);
@@ -328,7 +330,9 @@ export function Stage() {
         const onScreen = m !== null && m.top < sy + vh && m.bottom > sy;
         const clear = !ownExtents.current.some(([t0, t1]) => t0 < sy + vh + OWN_CLEAR_VH * vh && t1 > sy - OWN_CLEAR_VH * vh);
         host = els.current.get(kv)?.video ?? null;
-        play = onScreen && clear && host !== null;
+        // posters during every fade, the split window's arrival included:
+        // the loop plays only once its layer is fully in (decoder probe)
+        play = onScreen && clear && host !== null && (opacityOf.get(kv) ?? 0) >= 0.98;
       }
       const v = videoRef.current;
       if (v.k !== kv || v.host !== host || v.play !== play) {

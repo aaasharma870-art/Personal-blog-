@@ -59,13 +59,20 @@ function addToken(world: WorldId): boolean {
  *  phones (below DESKTOP_WIDE) and for "house" it resolves at once. */
 export function markWorldFontsReady(world: WorldId, timeoutMs = 300): Promise<void> {
   if (typeof document === "undefined") return Promise.resolve();
-  addToken(world);
   const fonts = document.fonts;
   const wide = typeof window.matchMedia === "function" && window.matchMedia(DESKTOP_WIDE).matches;
-  if (!wide || !fonts || typeof fonts.load !== "function" || FACES[world].length === 0) return Promise.resolve();
+  if (!wide || !fonts || typeof fonts.load !== "function" || FACES[world].length === 0) {
+    addToken(world);
+    return Promise.resolve();
+  }
+  // Read the family names BEFORE the token changes <html>: the token
+  // invalidates the whole document's style, and a computed-style read
+  // after it would force that restyle inside the caller (the fast lane's
+  // click). The faces' vars come from next/font classes, not the token.
   const style = window.getComputedStyle(document.documentElement);
-  const loads = FACES[world].map(([v, weight]) => {
-    const family = style.getPropertyValue(v).trim();
+  const families = FACES[world].map(([v, weight]) => [style.getPropertyValue(v).trim(), weight] as const);
+  addToken(world);
+  const loads = families.map(([family, weight]) => {
     return family ? fonts.load(`${weight} 1em ${family}`).then(
       () => undefined,
       () => undefined,

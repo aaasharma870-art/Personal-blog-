@@ -6,7 +6,8 @@
 // Lights EVERY world (html[data-fonts] = all four tokens, as after a full
 // scroll), waits for the faces, then walks every text node inside
 // [data-research], .tnum / .tabular-nums, table, the research figures
-// (figure[data-figure], figure[data-board]) and the experiment section, and
+// (figure[data-figure], [data-board]: the ICE board's data, not its lettered
+// header or scene caption) and the experiment section, and
 // reads the computed font-family of its element. At ≥ 64rem (the world-type
 // gate) the first family must be Geist or Geist Mono (the house's next/font
 // names, read from --font-geist-sans / --font-geist-mono). Below 64rem the
@@ -58,7 +59,7 @@ export default async function probe(page, ctx) {
       }
     };
     const data = [];
-    walk('[data-research], .tnum, .tabular-nums, table, figure[data-figure], figure[data-board], [data-world-section="experiment"]', data, new Set());
+    walk('[data-research], .tnum, .tabular-nums, table, figure[data-figure], [data-board], [data-world-section="experiment"]', data, new Set());
     const bad = data.filter((d) => !ok(d.first));
     const figures = [];
     const seenData = new Set(data.map((d) => d.el));

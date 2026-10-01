@@ -106,6 +106,11 @@ function startLenis(LenisCtor: typeof Lenis, { gsap, ScrollTrigger }: GsapKit): 
   setLenis(lenis);
 
   const root = document.documentElement;
+  // app/p3/foundation.css: the boot gate already made the page Lenis-ready
+  // (html height:auto); a view that booted paused and resumed needs the
+  // same, once (an <html> attribute restyles the whole document)
+  const bootPaused = root.dataset.motionBoot === "paused";
+  if (bootPaused) root.dataset.smooth = "";
   // keyboard / focus / find-in-page scrolls are native: never overridden
   const onKey = () => haltGlide();
   // an intro replay's scrollTo(0) wins over a glide
@@ -126,6 +131,7 @@ function startLenis(LenisCtor: typeof Lenis, { gsap, ScrollTrigger }: GsapKit): 
     gsap.ticker.lagSmoothing(500, 33);
     setLenis(null);
     lenis.destroy();
+    if (bootPaused) delete root.dataset.smooth;
     requestScrollRefresh();
     sleepTickerIfIdle();
   };

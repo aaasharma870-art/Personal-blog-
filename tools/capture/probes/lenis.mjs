@@ -196,7 +196,7 @@ export default async function probe(page, ctx) {
         : null;
       set(
         "fastlane",
-        label === "Skip to the research" && r && r.focusedAt != null && r.focusedAt <= 400 && r.overlaySeen && !r.pillCovered && Math.abs(r.workTop - r.expected) <= 4 && /idiots/.test(r.fonts),
+        label?.toLowerCase() === "skip to the research" && r && r.focusedAt != null && r.focusedAt <= 400 && r.overlaySeen && !r.pillCovered && Math.abs(r.workTop - r.expected) <= 4 && /idiots/.test(r.fonts),
         { label, ...r },
       );
     }
@@ -287,7 +287,7 @@ export default async function probe(page, ctx) {
     await sleep(6000);
     const present = await hasLenis(p);
     const extra = name === "off.390touch" ? { label: await p.$eval("header [data-fast-lane]", (a) => a.innerText.trim()).catch(() => null) } : {};
-    set(name, !present && (name !== "off.390touch" || extra.label === "Work"), { lenis: present, ...extra });
+    set(name, !present && (name !== "off.390touch" || extra.label?.toLowerCase() === "work"), { lenis: present, ...extra });
   }
 
   const failed = Object.entries(checks).filter(([, v]) => v.pass === false).map(([k]) => k);

@@ -253,14 +253,17 @@ export function rackSoft(scrollY: number, vh: number, edges: readonly number[]):
 /** next/image settings shared by a split window's SSR poster and the
  *  stage's layer of the same plate, so both request the same URL (the layer
  *  is a cache hit, "the same pixels"). The rack-focus soft copy is the
- *  384 px rung, stretched (a free, pre-rasterised blur; never `filter`). */
+ *  640 px rung at q75, stretched (a free, pre-rasterised blur; never
+ *  `filter`): ≈ 2.4× in a portrait window, soft but clean. The W1 visual
+ *  gate rejected the 384 px q55 rung (≈ 4× upscale: JPEG blocks and smear,
+ *  "broken", not out of focus). */
 export const STAGE_IMAGE = {
   windowSizes: "42vw",
   backdropSizes: "100vw",
   quality: 75,
   backdropQuality: 55,
-  softWidth: 384,
-  softQuality: 55,
+  softWidth: 640,
+  softQuality: 75,
 } as const;
 
 /* — Validator rules (spec §3.2; scripts/checks/stage.mjs) —————————————— */

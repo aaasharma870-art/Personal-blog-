@@ -154,7 +154,7 @@ async function desktop(browser, variant) {
     ['#journey-step-4', -150, 'SM-4 voyage step 4: X marks the spot', 'BLIND'],
     ['work', 0, 'SM-6 work head band (top)', 'BLIND'],
     // an ELEMENT target (the layout moved: the board is ~1500 px down now)
-    ['work', { sel: '#work figure[data-board]', tag: 'board', lead: 140 }, 'SM-6 gauntlet on the ICE dawn board (board, gates)', 'BLIND'],
+    ['work', { sel: '#work figure:has([data-board])', tag: 'board', lead: 140 }, 'SM-6 gauntlet on the ICE dawn board (board, gates)', 'BLIND'],
     ['trading-algos', 0, 'SM-7 chapter Trading_Algos', 'CAPTION'],
     ['optuna-screener', 0, 'SM-7 chapter Optuna-Screener', 'CAPTION'],
     ['experiment', 0, 'Experiment (BacktestDemo, synthetic; NO film styling)', 'NONE'],

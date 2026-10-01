@@ -102,8 +102,13 @@ function useHeaderActive(): string {
   const observed = useActiveSection();
   const observedRef = useRef(observed);
   const [probe, setProbe] = useState<{ id: string | null; base: string }>({ id: null, base: "" });
+  const reprobe = useRef<() => void>(() => {});
   useEffect(() => {
     observedRef.current = observed;
+    // an observer change that lands AFTER the last settle probe (a late
+    // entry after a long programmatic jump: the W1 visual gate's stale
+    // "ACT IV" over the films) is probed again once it settles
+    reprobe.current();
   }, [observed]);
   useEffect(() => {
     let t = 0;
@@ -116,10 +121,12 @@ function useHeaderActive(): string {
         setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
       }, PROBE_SETTLE_MS);
     };
+    reprobe.current = schedule;
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     return () => {
+      reprobe.current = () => {};
       window.clearTimeout(t);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);

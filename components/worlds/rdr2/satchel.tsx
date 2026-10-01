@@ -213,7 +213,9 @@ export function Satchel({
       {caption ? <figcaption className="mb-tier-group">{caption}</figcaption> : null}
       <div className={s.satchel}>
         <Bag phase={phase} shut={alt} start={bagStart} fid={fid} />
-        <ul aria-label="What I carry" className={cn(s.kit, alt && s.kitLedger)}>
+        {/* data-satchel-kit: inside a narrow split column the kit wraps
+            to as many columns as fit (app/p3/stage.css) */}
+        <ul aria-label="What I carry" data-satchel-kit="" className={cn(s.kit, alt && s.kitLedger)}>
           {KIT.map((k, i) => (
             <motion.li
               key={k.label}

@@ -1240,8 +1240,14 @@ html[data-motion="paused"] .opening-vignette {
 .world-face-idiots { font-family: var(--font-world-idiots, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
 .world-face-rdr2 { font-family: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
 .world-face-hp { font-family: var(--font-world-hp, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
-/* the fan faces are single-weight display cuts: never synthesize bold */
-[class*="world-face-"] { font-weight: 400; font-synthesis: none; }
+/* the fan faces are single-weight display cuts: never synthesize bold.
+   Named classes, never `[class*="world-face-"]`: a substring selector on
+   `class` made every class change on <html> restyle the whole document
+   (≈ 50–100 ms headless; the intro and Lenis toggle html classes). */
+.world-face-pirates,
+.world-face-idiots,
+.world-face-rdr2,
+.world-face-hp { font-weight: 400; font-synthesis: none; }
 
 /* SceneCaption: MOMENT • FILM, 22–32 px, the world face, a 24 px accent rule
    above ("museum label"). Colours come from the PLANE (--fg / --world-

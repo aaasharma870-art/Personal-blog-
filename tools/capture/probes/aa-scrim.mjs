@@ -96,7 +96,7 @@ async function measureAt(page, shotFile) {
   const boxes = await page.evaluate(collectBoxes);
   if (!boxes.length || !sharp) return { boxes: boxes.length, results: [] };
   await page.addStyleTag({
-    content: `.stage-backdrop, .stage-backdrop * { color: transparent !important; text-shadow: none !important; -webkit-text-stroke: 0 !important; }`,
+    content: `.stage-backdrop, .stage-backdrop * { color: transparent !important; transition: none !important; text-shadow: none !important; -webkit-text-stroke: 0 !important; }`,
   }).then((h) => h.evaluate((el, id) => (el.id = id), HIDE_TEXT_ID));
   const png = await page.screenshot({ type: "png", path: shotFile });
   await page.evaluate((id) => document.getElementById(id)?.remove(), HIDE_TEXT_ID);
