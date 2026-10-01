@@ -126,9 +126,13 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           </ChalkboardFrame>
           <Meta className="mt-tier-group" fields={meta} />
           {/* IC-3I-06: the space-pen wink, in our own words (not a quote);
-              lib/film.ts copy "systems.pencil.*" (proposed) */}
+              lib/film.ts copy "systems.pencil.*" (proposed). Its body says
+              "no WebGL, just native scroll", which is untrue wherever Lenis
+              can run, so it is hidden under the boot gate (CSS, first paint,
+              no shift) until W2 renders "systems.pencil.body.p3" there. It
+              stays true, and shown, on phones, touch, RM and no-JS. */}
           {copyVisible(pencilQ) && copyVisible(pencilBody) ? (
-            <p className="mt-tier-group max-w-body type-small text-fg-muted">
+            <p className="mt-tier-group max-w-body type-small text-fg-muted boot:hidden">
               <span className="text-fg">{pencilQ.text}</span> {pencilBody.text}
             </p>
           ) : null}

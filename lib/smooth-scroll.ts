@@ -24,7 +24,7 @@
 import { useSyncExternalStore } from "react";
 import { emit } from "./events";
 import { film, type ActSpec } from "./film";
-import { DESKTOP_WIDE, motionOffNow } from "./flags";
+import { DESKTOP_FINE, DESKTOP_WIDE, motionOffNow } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import { actCards } from "./sections";
 import { markWorldFontsReady } from "./world-fonts";
@@ -241,41 +241,58 @@ function focusOn(el: Element): void {
 
 const nextFrame = (): Promise<void> => new Promise((r) => requestAnimationFrame(() => r()));
 
-/** A native smooth scroll has arrived: `scrollend`, or a cap (Safari has
- *  no scrollend; a zero-length scroll fires none). */
-function nativeArrival(y: number): Promise<void> {
-  if (Math.abs(window.scrollY - y) < 1) return nextFrame();
-  return new Promise<void>((resolve) => {
+/** At `y` (within 2 px): a glide that was interrupted did not arrive. */
+const arrivedAt = (y: number): boolean => Math.abs(window.scrollY - y) < 2;
+
+const USER_SCROLL_INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+
+/** A native smooth scroll has ended: `scrollend`, or a cap (Safari has
+ *  no scrollend; a zero-length scroll fires none). Resolves `false` when
+ *  the visitor took over (wheel, touch, pointer, key) and the page is not
+ *  at `y`: an interrupted scroll never moves focus off screen. A slow but
+ *  uninterrupted scroll still counts as arrived (the skip link's focus). */
+function nativeArrival(y: number): Promise<boolean> {
+  if (Math.abs(window.scrollY - y) < 1) return nextFrame().then(() => true);
+  return new Promise<boolean>((resolve) => {
+    let interrupted = false;
+    const took = () => {
+      interrupted = true;
+    };
+    const opts = { capture: true, passive: true } as const;
     const finish = () => {
       window.removeEventListener("scrollend", finish);
+      for (const ev of USER_SCROLL_INPUT) window.removeEventListener(ev, took, opts);
       clearTimeout(timer);
-      resolve();
+      resolve(!interrupted || arrivedAt(y));
     };
     const timer = setTimeout(finish, 1500);
     window.addEventListener("scrollend", finish);
+    for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, took, opts);
   });
 }
 
 /** A Lenis glide to `y`: resolves on completion, or as soon as the glide is
- *  interrupted (a wheel, a newer jump, Lenis destroyed), capped at 4 s. */
-function lenisGlide(l: LenisLike, y: number): Promise<void> {
-  return new Promise<void>((resolve) => {
+ *  interrupted (a wheel, a newer jump, Lenis destroyed), capped at 4 s.
+ *  Resolves `true` only when it arrived (onComplete, or the page is at `y`):
+ *  an interrupted glide never moves focus to an off-screen target. */
+function lenisGlide(l: LenisLike, y: number): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
     let done = false;
     let started = false;
-    const finish = () => {
+    const finish = (completed: boolean) => {
       if (done) return;
       done = true;
       clearInterval(poll);
       clearTimeout(cap);
-      resolve();
+      resolve(completed || arrivedAt(y));
     };
     const poll = setInterval(() => {
-      if (lenis !== l) return finish();
+      if (lenis !== l) return finish(false);
       if (l.isScrolling === "smooth") started = true;
-      else if (started) finish();
+      else if (started) finish(false);
     }, 100);
-    const cap = setTimeout(finish, 4000);
-    l.scrollTo(y, { force: true, onComplete: finish });
+    const cap = setTimeout(() => finish(false), 4000);
+    l.scrollTo(y, { force: true, onComplete: () => finish(true) });
   });
 }
 
@@ -309,14 +326,21 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
 
   if (immediate) {
     const jump = () => {
-      if (l && lenis === l) l.scrollTo(y, { immediate: true, force: true });
-      else window.scrollTo({ top: y, behavior: "instant" });
+      // a newer jump owns the page: a superseded cut never lands
+      if (seq !== jumpSeq) return;
+      // measured now, not before the cut: the fonts readied during the
+      // fade-in (and any chapter above the target) may have re-flowed
+      const yy = el ? clampY(targetY(el, o.block ?? "start")) : y;
+      if (l && lenis === l) l.scrollTo(yy, { immediate: true, force: true });
+      else window.scrollTo({ top: yy, behavior: "instant" });
       gsapIfLoaded()?.ScrollTrigger.update();
       // cards set their damped p to the raw value: no catch-up after a cut
-      emit("scroll:jump", { y, immediate: true });
+      emit("scroll:jump", { y: yy, immediate: true });
     };
     const runner = cutRunner;
-    if (wantsCut && !off && runner) await runner(cutReady(el), jump);
+    // the overlay is motion: DESKTOP_FINE only (spec §1.2). A wide touch
+    // screen keeps the instant jump without the fade.
+    if (wantsCut && !off && runner && window.matchMedia(DESKTOP_FINE).matches) await runner(cutReady(el), jump);
     else {
       if (o.cut) await cutReady(el);
       jump();
@@ -327,12 +351,13 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
   }
 
   emit("scroll:jump", { y, immediate: false });
-  if (l) await lenisGlide(l, y);
+  let arrived: boolean;
+  if (l) arrived = await lenisGlide(l, y);
   else {
     window.scrollTo({ top: y, behavior: "smooth" });
-    await nativeArrival(y);
+    arrived = await nativeArrival(y);
   }
-  if (o.focus && el && seq === jumpSeq) focusOn(el);
+  if (o.focus && el && arrived && seq === jumpSeq) focusOn(el);
 }
 
 /* — locks (ref-counted by owner) ——————————————————————————————————— */

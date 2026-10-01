@@ -257,6 +257,9 @@ export function MediaFrame({
 
       {mountVideo && video && pick ? (
         <VideoLayer
+          // a new pick remounts the layer; the hand-off blob arriving late
+          // does not (VideoLayer keeps the source it mounted with)
+          key={pick.src}
           src={handoff?.url ?? pick.src}
           start={handoff?.at ?? 0}
           fade={fade}
@@ -311,6 +314,12 @@ function VideoLayer({
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shown, setShown] = useState(false);
+  // The source is fixed for the life of this layer: the intro's prefetched
+  // loop can resolve to a blob: URL after the video mounted, and swapping
+  // `src` then would reload the element and leave it paused on frame 0
+  // (the play effect only re-runs on `active`). A remount (mountVideo
+  // toggling, or a new pick) reads the hand-off afresh.
+  const [first] = useState(() => ({ src, start }));
   const mounted = useEffectEvent(onMount);
   const fail = useEffectEvent(onFail);
 
@@ -346,7 +355,7 @@ function VideoLayer({
   return (
     <video
       ref={ref}
-      src={src}
+      src={first.src}
       muted
       playsInline
       loop={loop}
@@ -364,7 +373,8 @@ function VideoLayer({
       }}
       onLoadedMetadata={(e) => {
         // the hand-off's match frame (FLIGHTS[*].loopAt), set before play
-        if (start > 0 && start < (e.currentTarget.duration || 0)) e.currentTarget.currentTime = start;
+        const at = first.start;
+        if (at > 0 && at < (e.currentTarget.duration || 0)) e.currentTarget.currentTime = at;
       }}
       onPlaying={() => {
         setShown(true);

@@ -35,6 +35,8 @@ export function CutOverlay() {
       el.dataset.cut = "on";
       const fadeIn = el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: IN_MS, easing: "ease-in", fill: "forwards" });
       await Promise.all([fadeIn.finished.catch(() => undefined), ready.catch(() => undefined)]);
+      // superseded by a newer cut: it owns the layer (no jump, no fade-out)
+      if (mine !== gen) return;
       try {
         jump();
       } finally {
