@@ -63,11 +63,16 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
    ink is SVG on CSS variables (never currentColor). Everything here is
    aria-hidden except the head, the banner's words and the list.
 
-   RASTER (P3-2, spec §12.1 #1): at most 7 promoted layers, only on what
-   moves — the 5 YOU banners (transform) while the walk is live, and the
-   two outer panels only while they unfold. The 40 prints, the active
-   room's ink and the wear carry no will-change: a print is a 14 px opacity
-   write (a tiny repaint), and one-shot fades run as compositor animations.
+   RASTER (P3-2, spec §12.1 #1): 7 promoted layers at rest — the 5 YOU
+   banners (transform) while the walk is live, and two STATIC ones: the
+   parchment sheet (its three panels) and the wear. They are the costly
+   paint (grain + ten gradients) and never change once flat, so they raster
+   once instead of with every print's repaint; the two outer panels add a
+   layer each only while armed / unfolding (≈ 1 s), so the unfold is a
+   compositor change, not a repaint of the sheet (the W1 gate's principles
+   stall: 0.2–0.6 fps headless, both after a scroll-through and after a
+   jump). The 40 prints and the active room's ink carry no will-change: a
+   print is a 14 px opacity write (a tiny repaint).
    ========================================================================== */
 
 /** The door (and the passage to it) sits at this fraction of a room's height. */
@@ -139,25 +144,51 @@ const PANELS: readonly CSSProperties[] = [
   `linear-gradient(to right, ${LIGHT(0.26)}, transparent 48%, ${DARK(0.03)})`,
 ].map((g) => ({ backgroundColor: PAPER, backgroundImage: `${GRAIN}, ${g}` }));
 
-const vCrease = (at: string) =>
-  `linear-gradient(to right, transparent calc(${at} - 26px), ${DARK(0.045)} calc(${at} - 1px), ${DARK(0.26)} calc(${at} - 1px) ${at}, ${LIGHT(0.6)} ${at} calc(${at} + 1px), ${LIGHT(0.16)} calc(${at} + 2px), transparent calc(${at} + 34px))`;
-const hCrease = (at: string) =>
-  `linear-gradient(to bottom, transparent calc(${at} - 22px), ${DARK(0.035)} calc(${at} - 1px), ${DARK(0.16)} calc(${at} - 1px) ${at}, ${LIGHT(0.5)} ${at} calc(${at} + 1px), ${LIGHT(0.14)} calc(${at} + 2px), transparent calc(${at} + 30px))`;
-const burn = (to: string) =>
-  `linear-gradient(to ${to}, color-mix(in oklab, var(--paper-edge-deep) 62%, transparent), color-mix(in oklab, var(--paper-edge-deep) 18%, transparent) var(--burn), transparent calc(var(--burn) * 1.6))`;
+/* The wear: every crease and burn is a BAND (background-size/position,
+   no-repeat), never a full-sheet gradient that is transparent but for a
+   few px: the same pixels, a fraction of the raster (the W1 gate's
+   principles stall: ten full-sheet gradients cost ≈ 400 ms a playback in
+   headless software raster). Band stops are the old ones re-based on the
+   band's own edge; `calc(p% + c)` places a band's left / top edge at p of
+   the sheet (a percentage there refers to sheet − band). */
+const vCrease = (at: number) => ({
+  image: `linear-gradient(to right, transparent, ${DARK(0.045)} 25px, ${DARK(0.26)} 25px 26px, ${LIGHT(0.6)} 26px 27px, ${LIGHT(0.16)} 28px, transparent)`,
+  size: "60px 100%",
+  position: `calc(${(at * 100).toFixed(3)}% + ${Math.round(60 * at - 26)}px) 0`,
+});
+const hCrease = (at: number) => ({
+  image: `linear-gradient(to bottom, transparent, ${DARK(0.035)} 21px, ${DARK(0.16)} 21px 22px, ${LIGHT(0.5)} 22px 23px, ${LIGHT(0.14)} 24px, transparent)`,
+  size: "100% 52px",
+  position: `0 calc(${at * 100}% + ${Math.round(52 * at - 22)}px)`,
+});
+const BURN_IN = "color-mix(in oklab, var(--paper-edge-deep) 62%, transparent)";
+const BURN_MID = "color-mix(in oklab, var(--paper-edge-deep) 18%, transparent) var(--burn)";
+const burn = (to: "right" | "left" | "bottom" | "top") => ({
+  image: `linear-gradient(to ${to}, ${BURN_IN}, ${BURN_MID}, transparent)`,
+  size: to === "right" || to === "left" ? "calc(var(--burn) * 1.6) 100%" : "100% calc(var(--burn) * 1.6)",
+  position: { right: "0 0", left: "100% 0", bottom: "0 0", top: "0 100%" }[to],
+});
+const WEAR_LAYERS = [
+  vCrease(1 / 3),
+  vCrease(2 / 3),
+  hCrease(0.25),
+  hCrease(0.5),
+  hCrease(0.75),
+  burn("right"),
+  burn("left"),
+  burn("bottom"),
+  burn("top"),
+  {
+    image: "radial-gradient(ellipse 92% 88% at 50% 46%, transparent 72%, color-mix(in oklab, var(--paper-edge-deep) 24%, transparent) 100%)",
+    size: "100% 100%",
+    position: "0 0",
+  },
+];
 const WEAR: CSSProperties = {
-  backgroundImage: [
-    vCrease("33.333%"),
-    vCrease("66.667%"),
-    hCrease("25%"),
-    hCrease("50%"),
-    hCrease("75%"),
-    burn("right"),
-    burn("left"),
-    burn("bottom"),
-    burn("top"),
-    "radial-gradient(ellipse 92% 88% at 50% 46%, transparent 72%, color-mix(in oklab, var(--paper-edge-deep) 24%, transparent) 100%)",
-  ].join(", "),
+  backgroundImage: WEAR_LAYERS.map((l) => l.image).join(", "),
+  backgroundSize: WEAR_LAYERS.map((l) => l.size).join(", "),
+  backgroundPosition: WEAR_LAYERS.map((l) => l.position).join(", "),
+  backgroundRepeat: "no-repeat",
 };
 
 /** The hall's last candles over the sheet (T11): few, small, dim. */
@@ -215,8 +246,9 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
   // (server, hydration, reduced motion / Pause, in view at mount) → static.
   const live = phase !== "static";
   const walks = useRoomWalks(listRef, principles.length);
-  // the outer panels are promoted only while they can move (armed, then the
-  // unfold); once flat they paint with the sheet again
+  // the two outer panels are their own layers only while they can move
+  // (armed, then the unfold): their scaleX is then a compositor property
+  // change, never a repaint of the sheet's layer; flat, they paint into it
   const [flat, setFlat] = useState(false);
   const unfolding = phase === "armed" || (phase === "entered" && !flat);
   const unfold = phase === "entered" ? { duration: dur.hero, ease: easeClip } : { duration: 0 };
@@ -243,8 +275,12 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       {/* T11: the Great Hall's candles, dimming above the sheet */}
       <CandleField spots={HALL_LAST} className="inset-x-0 bottom-full h-(--section-pad)" />
 
-      {/* the parchment: three panels, the outer two unfold from the centre */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3">
+      {/* the parchment: three panels, the outer two unfold from the centre.
+          The sheet (grain + gradients) and the wear below are STATIC
+          layers (W1 gate: painted into the section, every footprint's
+          repaint re-rastered their ten-gradient tiles, ≈ 0.3 fps idle at
+          1440 headless after a scroll-through); they raster once */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 grid grid-cols-3 will-change-transform">
         <motion.div
           className={cn("origin-right", unfolding && "will-change-transform")}
           style={PANELS[0]}
@@ -263,10 +299,10 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
         />
       </div>
       {/* fold creases + burnt edges, once the sheet lies flat (a one-shot
-          opacity fade: a compositor animation, no standing layer) */}
+          opacity fade on its own static layer) */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-10 will-change-transform"
         style={WEAR}
         initial={false}
         animate={{ opacity: folded ? 0 : 1 }}
