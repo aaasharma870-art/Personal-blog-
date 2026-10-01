@@ -323,6 +323,9 @@
     if (w.__introQueued === "play") { w.__introQueued = null; launch(); }
   }
 
+  /** After `load`, in an idle slice: the vanilla twin of lib/idle.ts
+   *  (rIC with a cap, else a timer). This script runs before React and
+   *  cannot import it; the bundle probe's static.ric check exempts it. */
   function afterLoad(fn) {
     var go = function () {
       if (w.requestIdleCallback) w.requestIdleCallback(fn, { timeout: 800 });
@@ -662,6 +665,7 @@
   function quietEnd() {
     if (quietSent) return;
     quietSent = true;
+    w.__introQuiet = 0;
     fire("intro:quiet-end");
   }
   /** Stop the captions (and the titles): at once (ms 0) or fading the box
@@ -748,11 +752,14 @@
    *  added time) and never gate anything: every animation is WAAPI,
    *  created in this one task (compositor; no React, no attribute), and
    *  any input, Pause, a reduced-motion change or a hidden tab ends them.
-   *  Played path only; ≥ 640 × ≥ 32rem tall (the slot), else the linger. */
+   *  Played path only; DESKTOP_FINE × ≥ 32rem tall (the slot), else the
+   *  linger. */
   function titles() {
     var T = C.titles, roll = VV["intro.titles"] === "alt";
     var box = d.getElementById(roll ? "intro-roll" : "intro-titles");
-    var slot = !!(w.matchMedia && w.matchMedia("(min-width: 40rem) and (min-height: 32rem)").matches);
+    // DESKTOP_FINE + ≥ 32rem tall (lib/flags.ts; spec §1.2: a tablet or any
+    // touch screen keeps today's 2.5 s linger, never the new cards)
+    var slot = !!(w.matchMedia && w.matchMedia("(min-width: 64rem) and (hover: hover) and (pointer: fine) and (min-height: 32rem)").matches);
     if (!T || !box || !slot || !capAnims.length || !capsFind()) return capsLinger();
     titling = true;
     mark("titles");
@@ -1205,6 +1212,9 @@
       if (im && im.decode) im.decode().catch(noop);
     } catch { /* no decode() */ }
     prefetchLoop();
+    // durable too: lib/ladder.ts is a lazy desktop chunk that may evaluate
+    // after this event, so it reads window.__introQuiet at install
+    w.__introQuiet = 1;
     fire("intro:quiet");
   }
   /** (c): once the flight is fully buffered, fetch the hero loop (the
@@ -1932,7 +1942,13 @@
       setTimeout(function () {
         killVideo();
         if (!jump) focusLanding();
-        else if (!w.__introHydrated) try { w.location.hash = jump; } catch { /* stays on the hero */ }
+        else if (!w.__introHydrated) {
+          // an instant jump (html is `scroll-behavior: smooth`): the fast
+          // lane never glides through 20 screens (PHASE3-SPEC §11.3)
+          R.style.scrollBehavior = "auto";
+          try { w.location.hash = jump; } catch { /* stays on the hero */ }
+          w.requestAnimationFrame(function () { R.style.scrollBehavior = ""; });
+        }
       }, 0);
     };
     if (w.requestAnimationFrame) w.requestAnimationFrame(after); else after();

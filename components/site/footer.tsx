@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { Mail } from "lucide-react";
 import { footerLine, site } from "@/lib/content";
 import { film } from "@/lib/film";
@@ -7,6 +7,7 @@ import { quotes, type QuoteId } from "@/lib/quotes";
 import {
   anchorId,
   bookendWorld,
+  copyText,
   copyVisible,
   credits,
   enabledSections,
@@ -152,6 +153,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
   const prev = i > 0 ? enabledSections[i - 1] : undefined;
   const fromWorld = on && prev ? worldOf(prev) : "house";
   const scrim = entry.stage?.mode === "backdrop" ? entry.stage.scrim : undefined;
+  const libraries = copyText("credits.libraries");
 
   return (
     <footer
@@ -232,10 +234,18 @@ export function Footer({ entry }: SectionProps<"credits">) {
               </span>
             ) : null}
           </Row>
-          {/* shown by the boot gate only (app/p3/stage.css) */}
-          <Row role="Libraries" className="credits-libraries">
-            On desktop: GSAP (standard no-charge licence)<Dot />Lenis (MIT)
-          </Row>
+          {/* shown by the boot gate only (app/p3/stage.css); copy key
+              "credits.libraries" (proposed, unsigned: validator #10) */}
+          {copyVisible(libraries) ? (
+            <Row role="Libraries" className="credits-libraries">
+              {libraries.text.split(" · ").map((part, i) => (
+                <Fragment key={part}>
+                  {i ? <Dot /> : null}
+                  {part}
+                </Fragment>
+              ))}
+            </Row>
+          ) : null}
           <SeekerRow />
           <HuntCredits />
         </dl>

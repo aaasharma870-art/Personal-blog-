@@ -14,7 +14,6 @@
 import { useEffect, useEffectEvent, type RefObject } from "react";
 import { DESKTOP_FINE, motionOffNow, useDesktopFine, useReducedMotion } from "./flags";
 import { gsapIfLoaded, loadGsap, sleepTickerIfIdle, type Gsap, type ScrollTriggerStatic } from "./gsap";
-import { whenLadder } from "./ladder";
 import { requestScrollRefresh } from "./smooth-scroll";
 
 export type ScrollSceneApi = { gsap: Gsap; ScrollTrigger: ScrollTriggerStatic; scope: Element };
@@ -30,7 +29,10 @@ let flushing = false;
 function flushWhenReady(): void {
   if (flushing) return;
   flushing = true;
-  whenLadder(2)
+  // the ladder is a desktop chunk (DP-13): imported here, never statically,
+  // so a first-load host of a scene does not carry it
+  import("./ladder")
+    .then((m) => m.whenLadder(2))
     .then(() => loadGsap())
     .then(() => {
       flushed = true;

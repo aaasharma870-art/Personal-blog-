@@ -561,6 +561,9 @@ const copy = {
   ),
   "about.philosophy.summary": p3("The philosophy note"),
   "credits.more.summary": p3("More credits: media, fonts and quotes"),
+  /* the credits LIBRARIES row (boot gate only: GSAP and Lenis load only on
+     DESKTOP_FINE with motion on); the parts split on " · " into <Dot/>s */
+  "credits.libraries": p3("On desktop: GSAP (standard no-charge licence) · Lenis (MIT)"),
   /* the egg hunt (PHASE3-SPEC §9; W2-HUNT). {n} = found count; {name} = the
      egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
      the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */

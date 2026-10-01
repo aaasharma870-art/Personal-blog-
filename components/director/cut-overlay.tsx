@@ -3,17 +3,17 @@
 /* ============================================================================
    CUT OVERLAY (spec §3.1, §11.3) — OWNER: B1-SCROLL.
    The hard cut of a long jump (scrollToTarget({ cut: true }), or any jump
-   longer than 3 viewports ≥ 64rem): the fast lane, the chapter select, far
-   menu and palette targets. Rendered by <StageLayers/> in
-   StageLayerPortal("cut"): a fixed deep layer at --z-cut (35), above the
+   longer than 3 viewports on DESKTOP_FINE): the fast lane, the chapter
+   select, far menu and palette targets. Rendered by <StageLayers/> in
+   StageLayerPortal("cut"), lazily and on DESKTOP_FINE only (DP-13; a portal,
+   so never in the server markup): a fixed deep layer at --z-cut (35), above the
    stage, bars, game HUDs, the stop pill and toasts, BELOW the header (40),
    so the fast lane stays visible through it.
      opacity 0 → 1 (140 ms) while the target world's fonts get ready →
      the immediate scroll + ScrollTrigger.update() → 1 → 0 (220 ms).
    Opacity only (WAAPI, compositor); visibility hidden at rest so the layer
    never paints. Reduced motion / Pause: lib/smooth-scroll.ts jumps
-   instantly and never calls the cut. Server markup is one empty div, the
-   same for every visitor.
+   instantly and never calls the cut.
    ========================================================================== */
 
 import { useEffect, useRef } from "react";

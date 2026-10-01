@@ -45,7 +45,7 @@ const ALLOW = [
   /^lib[\\/]fonts\.ts$/,
   // Phase 3: the world-fonts registration (B1-TYPE, PHASE3-PLAN §5.6)
   /^lib[\\/]world-fonts\.ts$/,
-  /^components[\\/]providers[\\/]world-fonts\.tsx$/,
+  /^components[\\/]providers[\\/]world-fonts(-impl)?\.tsx$/,
   /^app[\\/]p3[\\/]type\.css$/,
   /^components[\\/]primitives[\\/](act-card|loader)\.tsx$/,
   /^components[\\/]primitives[\\/]loaders[\\/]/,

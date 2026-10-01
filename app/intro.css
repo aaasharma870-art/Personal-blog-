@@ -546,7 +546,8 @@ html[data-motion="paused"] .hero-cap__in {
 /* — P3-3 OPENING TITLES (PHASE3-SPEC §4.3; intro.titles): inside
      #intro-caps, in the T1 slot — the flight caption's own corner (right
      gutter, max(7svh, 2.75rem) up, right-aligned, ≤ 52rem) on its scrim —
-     ≥ 640 × ≥ 32rem tall only (the controller checks the same query).
+     DESKTOP_FINE × ≥ 32rem tall only (the controller checks the same
+     query; tablets and touch keep today's linger).
      Every line waits at opacity 0; the controller animates opacity +
      transform (WAAPI) and nothing else, so there is no style change and no
      React work during the sequence. One card at a time, never a same-spot
@@ -565,7 +566,7 @@ html[data-motion="paused"] .hero-cap__in {
   color: var(--fg);
   text-align: right;
 }
-@media (min-width: 40rem) and (min-height: 32rem) {
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (min-height: 32rem) {
   #intro-titles {
     display: grid;
     justify-items: end;

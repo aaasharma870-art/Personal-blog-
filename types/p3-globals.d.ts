@@ -18,6 +18,9 @@ declare global {
     __codecPicks?: Record<string, "video/mp4" | "video/webm">;
     /** The intro's hero-loop blob, handed to MediaFrame (lib/codec.ts handoffSource). */
     __introHandoff?: { src: string; url: string | null; at: number };
+    /** The intro controller: 1 inside the quiet window (warm → quiet-end),
+     *  0 after it. lib/ladder.ts (a lazy chunk) reads it when it installs. */
+    __introQuiet?: 0 | 1;
   }
 }
 

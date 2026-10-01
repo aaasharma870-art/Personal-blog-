@@ -22,7 +22,7 @@ const SCROLL_LIB_PATTERNS = [
     regex: "^(gsap|lenis)(/.*)?$|^@gsap/react$",
     allowTypeImports: true,
     message:
-      "GSAP / Lenis load lazily: use loadGsap() or useScrollScene() (lib/gsap.ts, lib/use-scroll-scene.ts) and lib/smooth-scroll.ts. Only lib/gsap.ts and components/providers/smooth-scroll.tsx import them.",
+      "GSAP / Lenis load lazily: use loadGsap() or useScrollScene() (lib/gsap.ts, lib/use-scroll-scene.ts) and lib/smooth-scroll.ts. Only lib/gsap.ts and components/providers/smooth-scroll-impl.tsx import them.",
   },
 ];
 
@@ -40,7 +40,7 @@ const eslintConfig = defineConfig([
   // The only two files that may import GSAP / Lenis at runtime (the rest use
   // loadGsap(), useScrollScene() and the lib/smooth-scroll.ts API).
   {
-    files: ["lib/gsap.ts", "components/providers/smooth-scroll.tsx"],
+    files: ["lib/gsap.ts", "components/providers/smooth-scroll-impl.tsx"],
     rules: {
       "no-restricted-imports": ["error", { paths: MOTION_PATHS }],
     },
