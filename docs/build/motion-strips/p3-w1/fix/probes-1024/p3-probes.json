@@ -1,0 +1,1778 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T19:21:06.161Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 625,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 117,
+            "worst": {
+              "ratio": 3.73,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2031,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 186,
+            "worst": {
+              "ratio": 6.58,
+              "text": "Built and documented by Aryan Sharma — treating ",
+              "y": 43357,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 168,
+            "worst": {
+              "ratio": 4.04,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 1709,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 154,
+            "worst": {
+              "ratio": 6.59,
+              "text": "Harry Potter and the Philosopher's Stone (2001)",
+              "y": 39635,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 42060,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 440421,
+            "cssGz": 32856,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            440421
+          ],
+          "cssGz": [
+            29433,
+            32856
+          ],
+          "deltaJsGz": 1329,
+          "deltaCssGz": 3423,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17406,
+      "console": []
+    },
+    "cards": {
+      "skipped": true,
+      "ms": 5,
+      "console": []
+    },
+    "cinema": {
+      "skipped": true,
+      "ms": 6,
+      "console": []
+    },
+    "decoder": {
+      "pass": false,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 83,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 728,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "stage",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "stage",
+          "MV-09"
+        ],
+        "crossfadeSamples": 15,
+        "overOne": [],
+        "stageDuringCrossfade": [
+          {
+            "y": 11408,
+            "t": 21401,
+            "playing": 1,
+            "stage": true,
+            "who": [
+              "stage"
+            ],
+            "holder": "stage",
+            "crossfade": true
+          },
+          {
+            "y": 11424,
+            "t": 21510,
+            "playing": 1,
+            "stage": true,
+            "who": [
+              "stage"
+            ],
+            "holder": "stage",
+            "crossfade": true
+          }
+        ],
+        "ok": false
+      },
+      "ms": 89767,
+      "console": []
+    },
+    "font-network": {
+      "pass": true,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": true,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "117.965px",
+          "fontSize": "122.88px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": 1934,
+        "beforeStep5": [
+          "17 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "18 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "18 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "80 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "419 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "beforeStep5Bad": [],
+        "legacyRequested": [],
+        "worldsAtRest": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "worldOrder": [
+          "1948 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "4738 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "4739 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "8885 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "8886 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "9204 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "9204 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 174960,
+        "lcp": {
+          "t": 208,
+          "el": "SPAN",
+          "size": 53901
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "lcp": {
+          "t": 496,
+          "el": "IMG",
+          "size": 89604
+        },
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [],
+      "ms": 29584,
+      "console": []
+    },
+    "games": {
+      "skipped": true,
+      "ms": 6,
+      "console": []
+    },
+    "gl": {
+      "pass": false,
+      "checks": {
+        "lab": {
+          "pass": false,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 1874,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 15,
+              "draws": 2,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 5,
+              "draws": 2,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 5,
+              "draws": 2,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 5,
+              "draws": 2,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 4,
+              "draws": 2,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 3,
+              "draws": 2,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 4,
+              "draws": 2,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 5318656,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 1145,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 1175,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 9816,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 9840,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 13760,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 17810,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 21774,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 25799,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 25827,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 30107,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 33.09999999962747,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 35122,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 35204,
+              "ev": "lost"
+            },
+            {
+              "t": 35204,
+              "ev": "disengage:now",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 35219,
+              "ev": "restored"
+            },
+            {
+              "t": 35435,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 35635,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.2000000001862645,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": true,
+          "skipped": true,
+          "note": "no card frame engaged: GlGate not mounted yet (W2-CARDS) or nothing reached ladder step 4",
+          "frames": [],
+          "tier": null
+        },
+        "page.default": {
+          "pass": true,
+          "tier": null,
+          "on": 0
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": null,
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 68546,
+      "console": []
+    },
+    "hunt": {
+      "skipped": true,
+      "ms": 4,
+      "console": []
+    },
+    "keyboard": {
+      "skipped": true,
+      "ms": 13,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            930
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            5916,
+            180
+          ],
+          [
+            "DIV",
+            5166,
+            930
+          ],
+          [
+            "act-2-title",
+            5914,
+            44
+          ],
+          [
+            "work",
+            6096,
+            2365
+          ],
+          [
+            "trading-algos",
+            8461,
+            1786
+          ],
+          [
+            "optuna-screener",
+            10247,
+            3739
+          ],
+          [
+            "experiment",
+            13986,
+            1132
+          ]
+        ],
+        "heights": [
+          10958,
+          39813
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          11251,
+          11251
+        ],
+        "shift": 1,
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            1422
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            6408,
+            180
+          ],
+          [
+            "DIV",
+            5658,
+            930
+          ],
+          [
+            "act-2-title",
+            6405,
+            44
+          ],
+          [
+            "work",
+            6588,
+            2333
+          ],
+          [
+            "trading-algos",
+            8921,
+            1921
+          ],
+          [
+            "optuna-screener",
+            10842,
+            4446
+          ],
+          [
+            "experiment",
+            15288,
+            1132
+          ]
+        ],
+        "ok": false
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 17644,
+      "console": []
+    },
+    "lenis": {
+      "pass": false,
+      "failed": [
+        "fastlane"
+      ],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 41411,
+          "vh": 768,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 1
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 2001,
+          "y1": 2001
+        },
+        "fastlane": {
+          "pass": false,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 574,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 1,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 2001
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 56200,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": true,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 16,
+      "over": 0,
+      "worstDur": 176,
+      "worstWork": 6,
+      "loafs": [
+        {
+          "dur": 176,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 757
+        },
+        {
+          "dur": 173,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 156
+        },
+        {
+          "dur": 173,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 940
+        },
+        {
+          "dur": 137,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1853
+        },
+        {
+          "dur": 110,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1405
+        },
+        {
+          "dur": 107,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1520
+        },
+        {
+          "dur": 104,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1993
+        },
+        {
+          "dur": 100,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2478
+        },
+        {
+          "dur": 97,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 2103
+        },
+        {
+          "dur": 96,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2203
+        },
+        {
+          "dur": 92,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 365
+        },
+        {
+          "dur": 90,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2580
+        }
+      ],
+      "ladderMs": {
+        "1": 332,
+        "2": 1895,
+        "3": 3430
+      },
+      "lenis": true,
+      "ms": 15039,
+      "console": []
+    },
+    "plates-live": {
+      "skipped": true,
+      "ms": 9,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1024,
+        "height": 768
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 237,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1488,
+      "console": []
+    },
+    "sound": {
+      "pass": false,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [],
+          "bytes": 0,
+          "files": {
+            "tts-lumos": "missing",
+            "tts-nox": "missing",
+            "tts-solemn": "missing",
+            "tts-mischief": "missing",
+            "tts-parley": "missing"
+          },
+          "note": "no file in public/audio yet (404s): the engine plays nothing for the tts-* cues"
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 4
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 364
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 366
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 512
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 366
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 420
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980216521295142,
+            "rdr2": 0.27871968829162813,
+            "hp": 0.19078427676292614
+          }
+        },
+        "pause": {
+          "pass": false,
+          "off": {
+            "ok": true,
+            "ms": 304
+          },
+          "on": {
+            "ok": true,
+            "ms": 264
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 47
+          },
+          "on": {
+            "ok": true,
+            "ms": 5
+          }
+        },
+        "eggs.typed": {
+          "pass": false,
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike",
+            "projector-start"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": false,
+          "pause": {
+            "ok": true,
+            "ms": 207
+          },
+          "resumed": true,
+          "bell": false,
+          "ms": 2004,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": false,
+          "rmAt": 17378.900000000373,
+          "ms": null,
+          "state": "running",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_l_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 53258,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "split": {
+      "pass": false,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 11072.921875,
+            "bottom": 12764.171875,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -408,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 13620.828125,
+            "bottom": 17147.265625,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              12,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -344,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 29863,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 29863,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 29863,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ],
+        "1024x768": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 9564,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 9409,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 9409,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 12120,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 12120,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 12120,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 28146,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 28146,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 28146,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ]
+      },
+      "ms": 41550,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "failed": [],
+      "tests": {
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 501
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 738
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 1,
+            "free": 1
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 17197,
+          "y": 8832,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 18708,
+          "y": 9984,
+          "ev": "free",
+          "id": "B19"
+        }
+      ],
+      "ms": 56235,
+      "console": []
+    },
+    "words": {
+      "skipped": true,
+      "ms": 8,
+      "console": []
+    }
+  }
+}

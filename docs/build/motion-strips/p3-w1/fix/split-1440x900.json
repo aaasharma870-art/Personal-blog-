@@ -1,0 +1,12 @@
+1440x900 trading-algos 
+  start: win.top=238 h=832 hdr=68 winL=847 txtL=64 on=true imgs=1 ovf=0
+  middle: win.top=68 h=832 hdr=68 winL=847 txtL=64 on=true imgs=2 ovf=0
+  end: win.top=-22 h=832 hdr=68 winL=847 txtL=64 on=true imgs=2 ovf=0
+1440x900 optuna-screener 
+  start: win.top=270 h=832 hdr=68 winL=847 txtL=64 on=true imgs=1 ovf=0
+  middle: win.top=68 h=832 hdr=68 winL=847 txtL=64 on=true imgs=2 ovf=0
+  end: win.top=-22 h=832 hdr=68 winL=847 txtL=64 on=true imgs=4 ovf=0
+1440x900 beyond 
+  start: win.top=322 h=832 hdr=68 winL=64 txtL=636 on=true imgs=1 ovf=0
+  middle: win.top=68 h=832 hdr=68 winL=64 txtL=636 on=true imgs=2 ovf=0
+  end: win.top=-22 h=832 hdr=68 winL=64 txtL=636 on=true imgs=2 ovf=0

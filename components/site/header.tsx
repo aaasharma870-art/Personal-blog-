@@ -221,11 +221,18 @@ function WorkPill({ base, href }: { base: string; href: string }) {
     e.preventDefault();
     runFastLane(href);
   };
+  // intent (hover / keyboard focus) warms the target world's faces, so the
+  // cut rarely waits on them (spec §11.3: the fast lane lands ≤ 400 ms)
+  const warm = () => {
+    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 0);
+  };
   return (
     <a
       href={`${base}${href}`}
       data-fast-lane=""
       onClick={onClick}
+      onPointerEnter={warm}
+      onFocus={warm}
       aria-current={active === href.slice(1) ? "location" : undefined}
       className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
     >

@@ -1,0 +1,4 @@
+run intro
+  intro: 118 screencast frames, 304 rAF samples, 126 LoAF, 2 shifts
+run desktop
+  desktop: smooth scroll (Lenis) ON

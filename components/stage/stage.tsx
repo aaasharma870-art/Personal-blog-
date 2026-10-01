@@ -330,9 +330,11 @@ export function Stage() {
         const onScreen = m !== null && m.top < sy + vh && m.bottom > sy;
         const clear = !ownExtents.current.some(([t0, t1]) => t0 < sy + vh + OWN_CLEAR_VH * vh && t1 > sy - OWN_CLEAR_VH * vh);
         host = els.current.get(kv)?.video ?? null;
-        // posters during every fade, the split window's arrival included:
-        // the loop plays only once its layer is fully in (decoder probe)
-        play = onScreen && clear && host !== null && (opacityOf.get(kv) ?? 0) >= 0.98;
+        // posters during every fade, a split window's arrival included,
+        // anywhere on the stage: the loop plays only while its own layer is
+        // fully in and no other layer is mid-fade (one decoder; P3-2 #5)
+        const fading = [...opacityOf.values()].some((x) => x > 0.02 && x < 0.98);
+        play = onScreen && clear && host !== null && !fading && (opacityOf.get(kv) ?? 0) >= 0.98;
       }
       const v = videoRef.current;
       if (v.k !== kv || v.host !== host || v.play !== play) {
