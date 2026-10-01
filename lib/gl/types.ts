@@ -78,7 +78,7 @@ export type GlCardSpec = {
    *  fallback, `to`). */
   a: { flavour: GlFlavour; from: MediaId; to: MediaId; range: readonly [number, number] };
   /** Star (b): the act title as a mask over the push, p .50–1. `text` is
-   *  set in the world's head face (`--font-world-head`). `maskOrigin` =
+   *  set in the world's head face (the world head font variable). `maskOrigin` =
    *  the zoom point in the TITLE'S INK BOX (0–1 across the ink, 0 = cap
    *  top … 1 = ink bottom); the SDF generator snaps it to the deepest stroke
    *  point nearby, so the stroke always covers the frame at p 1. */

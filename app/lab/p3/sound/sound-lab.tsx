@@ -31,7 +31,7 @@ const EVENTS: readonly { label: string; fire: () => void }[] = [
   { label: "meet tintype", fire: () => emit("transition:meet", { card: "tintype" }) },
   { label: "meet ignite", fire: () => emit("transition:meet", { card: "ignite" }) },
   { label: "letterbox close", fire: () => emit("letterbox", { state: "close" }) },
-  { label: "letterbox open (silent)", fire: () => emit("letterbox", { state: "open" }) },
+  { label: "letterbox open (no cue)", fire: () => emit("letterbox", { state: "open" }) },
   { label: "found pc-coin (3/12)", fire: () => emit("hunt:found", { id: "pc-coin", count: 3 }) },
   { label: "found hp-map (12/12)", fire: () => emit("hunt:found", { id: "hp-map", count: 12 }) },
   { label: "dead eye: start", fire: () => emit("game:start", { game: "deadeye" }) },

@@ -8,7 +8,7 @@ import { GlLab } from "./gl-lab";
    captures add `?gl=force` (SwiftShader). */
 export const metadata: Metadata = {
   title: "GL lab",
-  description: "The card transitions' WebGL flavours on a p slider.",
+  description: "On desktop, where supported: the card transitions' WebGL flavours on a p slider.",
   robots: { index: false, follow: false, nocache: true },
 };
 
@@ -18,7 +18,7 @@ export default function GlLabPage() {
       <div className="flex flex-col gap-2">
         <h1 className="type-heading">GL lab</h1>
         <p className="type-small max-w-body text-fg-muted">
-          One WebGL context, re-parented into the frame below. The tier switches only at p 0 or 1: move the slider to an
+          On desktop, where WebGL2 is supported: one WebGL context, re-parented into the frame below. The tier switches only at p 0 or 1: move the slider to an
           end to hand over. Reduced motion or Pause turns it off at once.
         </p>
       </div>
