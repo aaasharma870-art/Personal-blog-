@@ -19,6 +19,12 @@
      section re-enters view).
    - release() in every cleanup path (leaving view, unmount, failure).
    Observers (a React store, the /lab readout) use subscribe()/holder().
+
+   PHASE 3 PRIORITIES (PHASE3-SPEC §3.2): the intro flight 10 · a card's
+   frame loop 2 (only while the card is its screen's star) · the stage's
+   StageVideo 1 (components/stage/stage-video.tsx; it releases one viewport
+   before an `own` section) · own sections and inline plates 0. The holder's
+   label is mirrored on `window.__decoderHolder` for the decoder probe.
    ========================================================================== */
 
 export type DecoderClaim = {
@@ -43,6 +49,11 @@ let seq = 0;
 const listeners = new Set<() => void>();
 
 function notify(): void {
+  // Diagnostics (tools/capture/probes/decoder.mjs): the holder's label, or
+  // null. A plain property write: no cost when nobody reads it.
+  if (typeof window !== "undefined") {
+    (window as Window & { __decoderHolder?: string | null }).__decoderHolder = decoderHolderLabel();
+  }
   listeners.forEach((l) => l());
 }
 

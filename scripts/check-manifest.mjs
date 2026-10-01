@@ -7,7 +7,7 @@
 //
 // SPEC v2 §12.5 checks implemented here (numbers match the SPEC list):
 //   1 acts contiguous, ≤ 4 works, ≤ 4 major world changes   2 hero / credits / films placement
-//   3 ≤ 2 derived long cards                                 4 signature ≤ 6, scene + long ≤ 2
+//   (3, 4 retired by PHASE3-SPEC §3.4 check 5: card travel, scripts/checks/travel.mjs)
 //   5 world × tone AA table computed from globals.css        6 draft / proposed copy (release gate)
 //   7 quote registry lint + OUT lines                        8 H2 file checks (provenance, accept, font licences)
 //   9 hygiene (title / description / OG: no work titles)     10 lettering scope + display-face allow-list
@@ -20,8 +20,9 @@
 // and never pick an ALT that is not built;
 // plus the cheap adaptability fixtures (A, D, E, F, G, I, J) run through the
 // SAME derivation code the page uses (lib/derive.ts).
-// Not automated yet: travel budgets (no travel data in the manifest yet) and
-// #13 handbill fields (no handbill data yet).
+// Not automated yet: #13 handbill fields (no handbill data yet). Phase 3's
+// beats, travel, honesty and unsigned-copy checks live in scripts/checks/
+// (spec §3.4 numbering, printed as "[P3 #n]").
 //
 // PHASE3-PLAN DP-11: this file is also a LOADER. Every scripts/checks/*.mjs
 // (sorted) exports `default function run(ctx)` and runs where #10 used to be;
@@ -57,11 +58,8 @@ const RELEASE = process.env.RELEASE === "1";
 /** Anchors the brief requires while their section is enabled (relaxable). */
 const REQUIRED_ANCHORS = ["top", "about", "journey", "work", "systems", "principles", "writing", "beyond", "contact"];
 const NAV_LABEL_WARN = 12;
-/** SPEC v2 §3: at most 6 signature moments (the prologue counts as one). */
-const MAX_SIGNATURE = 6;
 const MAX_WORKS = 4;
 const MAX_WORLD_CHANGES = 4;
-const MAX_LONG_CARDS = 2;
 const EXACT_H3 = "Fan tribute — not affiliated with Warner Bros., Disney, Vinod Chopra Films or Rockstar Games.";
 const TONES = TONE_IDS;
 const WORLDS = WORLD_IDS;
@@ -367,18 +365,13 @@ if (page.filter((s) => s.type === "films").length > 1) err(`#2 at most one films
   if (act2 && act2.sections.length > 6) warn(`the Act II run has ${act2.sections.length} sections (> 6)`);
 }
 
-/* — #3/#4 cards, long cards, signature ———————————————————————————— */
+/* — Cards ———————————————————————————————————————————————————————————
+   The old #3 (≤ 2 long cards) and #4 (signature ≤ 6, scene + long ≤ 2) are
+   RETIRED (PHASE3-SPEC §3.4 check 5): Phase 3 budgets the page by card
+   travel (scripts/checks/travel.mjs) and by beats, rations and pacing
+   (scripts/checks/beats.mjs). */
 const cards = actCardsOf(enabled, film);
-{
-  const long = cards.filter((c) => c.long);
-  if (long.length > MAX_LONG_CARDS) err(`#3 ${long.length} derived long cards (max ${MAX_LONG_CARDS}): ${long.map((c) => c.id).join(", ")}`);
-  const scenes = enabled.filter((s) => s.motion === "scene").length;
-  if (scenes + long.length > 2) err(`#4 scene sections (${scenes}) + long cards (${long.length}) > 2`);
-  for (const c of cards) if (c.transition === "reel") warn(`generic transition used for ${c.from}>${c.to} (card ${c.id})`);
-  const signature = enabled.filter((s) => s.motion === "signature").map((s) => s.id);
-  if (film.enabled && film.prologue.enabled) signature.unshift("(prologue)");
-  if (signature.length > MAX_SIGNATURE) err(`#4 ${signature.length} signature moments (max ${MAX_SIGNATURE}): ${signature.join(", ")}`);
-}
+for (const c of cards) if (c.transition === "reel") warn(`generic transition used for ${c.from}>${c.to} (card ${c.id})`);
 
 /* — Variants (M1.5): registry + manifest choices ———————————————————— */
 const variantStats = { hosts: 0, pieces: 0, alts: 0 };

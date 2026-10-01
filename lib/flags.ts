@@ -302,6 +302,21 @@ export function motionOffNow(): boolean {
   return reducedMotion.getSnapshot() || pausedSnapshot();
 }
 
+/** NON-HOOK: call `fn` whenever motion may have turned off or on (the OS
+ *  reduced-motion preference changed, or the Pause toggle flipped); read
+ *  `motionOffNow()` inside it. Synchronous with the change (no React render
+ *  in between), so smooth scroll and the ladder can stop within one task.
+ *  Returns the unsubscribe; a no-op where there is no window. */
+export function onMotionOffChange(fn: () => void): () => void {
+  if (!hasMatchMedia()) return noop;
+  const offOs = reducedMotion.subscribe(fn);
+  pauseListeners.add(fn);
+  return () => {
+    offOs();
+    pauseListeners.delete(fn);
+  };
+}
+
 /** NON-HOOK: the boot gate is on — `html.js`, the view did not START paused
  *  (`html[data-motion-boot="paused"]`, set once by the pre-paint boot
  *  script), DESKTOP_FINE and no reduced-motion preference. The CSS twin is

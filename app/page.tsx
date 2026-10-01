@@ -53,12 +53,19 @@ const isCredits = (item: PageItem) => item.kind === "section" && item.entry.type
 export default function Home() {
   return (
     <>
-      {/* Phase 3 (PHASE3-PLAN §4.2): the stage, the letterbox bars and the
-          fixed layers sit before <main>; W1.0 stubs render nothing. */}
+      {/* Phase 3 (PHASE3-SPEC §3.2; B1-STAGE): the persistent stage (fixed,
+          --z-stage 0: client-only, desktop-only, lazy at ladder step 3), the
+          letterbox bars (--z-bars) and the fixed layers (game HUD, stop pill,
+          toasts, the cut: <StageLayers/>) sit before <main>. <main> and the
+          credits <footer> are `relative z-(--z-main)` (1): above the stage,
+          below every fixed layer and the header. Fixed-layer audit
+          (2026-09-30): nothing inside <main> is position:fixed (the egg
+          toast, the Map, the palette and the menu render from the layout,
+          at --z-menu), so the stacking context changes nothing on screen. */}
       <StageGate />
       <LetterboxBars />
       <StageLayers />
-      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+      <main id="main" tabIndex={-1} className="relative z-(--z-main) flex-1 outline-none">
         {pageItems.filter((item) => !isCredits(item)).map(hydrateApart)}
       </main>
       {pageItems.filter(isCredits).map(hydrateApart)}

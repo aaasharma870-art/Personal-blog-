@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { animate, motion, useMotionValue } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { springFollow } from "@/lib/motion";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,11 @@ import { LensFigure, type LensFigureKind, type LensRoute } from "@/components/se
    CONTRACT — each killed <li> carries data-verdict="killed", its recorded
    reason data-reason and its name data-name — and, while the run marks the
    section (`data-deadeye` on #kill-list), the lens figure takes the Dead
-   Eye plate as its media grade. At rest nothing of the egg renders.
+   Eye plate as its media grade (an overlay layer over the figure, never a
+   filter). At rest nothing of the egg renders.
+   RASTER (P3-2, spec §12.1 #4): the lens bracket and the index bar travel
+   by transform only, each on its own layer — a spring step never repaints
+   the ledger.
    ========================================================================== */
 
 export type LedgerRow = {
@@ -248,7 +253,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
     const b = btnRefs.current[next];
     if (!b) return;
     b.focus({ preventScroll: true });
-    b.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+    void scrollToTarget(b, { block: "nearest" });
   };
 
   const lensRowData = rows[lensRow] ?? rows[0];
@@ -381,7 +386,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
           lane stays empty (only Dead Eye's plate uses it). */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden grid-cols-12 gap-x-6 lg:grid">
         <div ref={laneRef} className="relative col-span-2 col-start-8">
-          <motion.div className="absolute inset-x-0 top-0" style={{ y: ly }}>
+          <motion.div className="absolute inset-x-0 top-0 will-change-transform" style={{ y: ly }}>
             {lensOn ? (
               <>
                 <Lens
@@ -423,7 +428,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
         <motion.div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute -left-3 top-0 w-0.5 bg-fg-muted transition-opacity duration-(--dur-micro) sm:-left-4",
+            "pointer-events-none absolute -left-3 top-0 w-0.5 bg-fg-muted transition-opacity duration-(--dur-micro) will-change-transform sm:-left-4",
             active !== null ? "opacity-100" : "opacity-0",
           )}
           style={{ y: by, height: bh }}

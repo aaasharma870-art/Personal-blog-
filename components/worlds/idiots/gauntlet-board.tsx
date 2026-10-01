@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { useReducedMotion } from "@/lib/flags";
 import { resolveVariant, type MediaId } from "@/lib/media";
 import { dur, ease, easeDraw } from "@/lib/motion";
@@ -40,6 +41,11 @@ import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "
    Honesty (HO2–HO4): the Run is labelled illustrative everywhere, its dot
    counts never equal a content.ts count, and gate 2 is the plurality
    killer ("This gate killed most ideas"). Deterministic (N19).
+   RASTER (P3-2, spec §12.1 #8): what the Run moves or draws (the dots, the
+   ticks and strikes) lies on its own promoted SVG over the static chalk
+   figure, so a Run step never redraws the plate, its slate lift or the
+   chalk filter under it; the board frame moves only as a promoted layer
+   (SettleFrame) and the quadcopter lifts its own wrapper.
    ========================================================================== */
 
 /** Seeded, fixed run data: where each illustrative hypothesis stops (a gate
@@ -195,60 +201,74 @@ function RailRun({
   const g = railGeometry(gates);
   const moveT = run.phase === "anticipate" ? dur.micro : dur.base;
   return (
-    <svg viewBox={`0 0 ${VB.w} ${VB.h}`} aria-hidden="true" focusable="false" className="h-auto w-full overflow-visible" data-figure="gates" data-choreo="rail-run">
-      <defs>
-        <ChalkFilter id={fid} />
-      </defs>
-      <g filter={`url(#${fid})`} strokeLinecap="round">
-        {/* the rail, the start line and the finish */}
-        <path d={`M8 ${g.railY} L${VB.w - 8} ${g.railY}`} fill="none" className="stroke-(--w-chalk)" strokeOpacity={0.55} strokeWidth={2} />
-        <path d={`M${g.startX + 10} ${g.topY + 8} L${g.startX + 10} ${g.railY}`} fill="none" className="stroke-(--w-chalk)" strokeOpacity={0.4} strokeWidth={1.6} strokeDasharray="4 6" />
-        <path
-          d={`M${g.finishX + 12} ${g.topY} L${g.finishX + 12} ${g.railY} M${g.finishX + 18} ${g.topY} L${g.finishX + 18} ${g.railY}`}
-          fill="none"
-          className="stroke-(--w-chalk)"
-          strokeOpacity={0.55}
-          strokeWidth={1.8}
-        />
-        {/* the gates: posts + lintel; the chosen one derives (post, post, lintel) */}
-        {Array.from({ length: gates }, (_, i) => {
-          const x = g.gx(i);
-          const isActive = i === active;
-          const op = isActive ? 1 : i < active ? 0.9 : 0.38;
-          const d0 = isActive && derive;
+    <>
+      <svg viewBox={`0 0 ${VB.w} ${VB.h}`} aria-hidden="true" focusable="false" className="h-auto w-full overflow-visible" data-figure="gates" data-choreo="rail-run">
+        <defs>
+          <ChalkFilter id={fid} />
+        </defs>
+        <g filter={`url(#${fid})`} strokeLinecap="round">
+          {/* the rail, the start line and the finish */}
+          <path d={`M8 ${g.railY} L${VB.w - 8} ${g.railY}`} fill="none" className="stroke-(--w-chalk)" strokeOpacity={0.55} strokeWidth={2} />
+          <path d={`M${g.startX + 10} ${g.topY + 8} L${g.startX + 10} ${g.railY}`} fill="none" className="stroke-(--w-chalk)" strokeOpacity={0.4} strokeWidth={1.6} strokeDasharray="4 6" />
+          <path
+            d={`M${g.finishX + 12} ${g.topY} L${g.finishX + 12} ${g.railY} M${g.finishX + 18} ${g.topY} L${g.finishX + 18} ${g.railY}`}
+            fill="none"
+            className="stroke-(--w-chalk)"
+            strokeOpacity={0.55}
+            strokeWidth={1.8}
+          />
+          {/* the gates: posts + lintel; the chosen one derives (post, post, lintel) */}
+          {Array.from({ length: gates }, (_, i) => {
+            const x = g.gx(i);
+            const isActive = i === active;
+            const op = isActive ? 1 : i < active ? 0.9 : 0.38;
+            const d0 = isActive && derive;
+            return (
+              <g key={isActive ? `a-${active}-${i}` : `g-${i}`}>
+                <GateStroke d={`M${x - 14} ${g.railY} L${x - 14} ${g.topY}`} active={isActive} derive={d0} delay={0} opacity={op} />
+                <GateStroke d={`M${x + 14} ${g.railY} L${x + 14} ${g.topY}`} active={isActive} derive={d0} delay={0.3} opacity={op} />
+                <GateStroke d={`M${x - 22} ${g.topY} L${x + 22} ${g.topY}`} active={isActive} derive={d0} delay={0.6} opacity={op} />
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      {/* the hypotheses (not filtered: dots stay round), on their own layer
+          over the chalk: a Run step moves only this layer's dots */}
+      <svg
+        viewBox={`0 0 ${VB.w} ${VB.h}`}
+        aria-hidden="true"
+        focusable="false"
+        // top-aligned: registers with the chalk SVG above whatever line gap
+        // its host's box adds under it
+        preserveAspectRatio="xMidYMin meet"
+        className="pointer-events-none absolute inset-0 size-full overflow-visible will-change-transform"
+        data-figure="run"
+      >
+        {Array.from({ length: RUN_HYPOTHESES }, (_, i) => {
+          const look = dotLook(i, run.step, run.phase, gates);
+          const x = dotX(i, run.step, run.phase, g, gates);
           return (
-            <g key={isActive ? `a-${active}-${i}` : `g-${i}`}>
-              <GateStroke d={`M${x - 14} ${g.railY} L${x - 14} ${g.topY}`} active={isActive} derive={d0} delay={0} opacity={op} />
-              <GateStroke d={`M${x + 14} ${g.railY} L${x + 14} ${g.topY}`} active={isActive} derive={d0} delay={0.3} opacity={op} />
-              <GateStroke d={`M${x - 22} ${g.topY} L${x + 22} ${g.topY}`} active={isActive} derive={d0} delay={0.6} opacity={op} />
-            </g>
+            <motion.circle
+              key={i}
+              cy={g.laneY(i)}
+              r={3.2}
+              initial={false}
+              animate={{ cx: x }}
+              transition={reduced ? { duration: 0 } : { duration: moveT, ease }}
+              className={cn(
+                "transition-[fill,stroke] duration-(--dur-micro)",
+                look === "stopping" && "fill-kill stroke-kill",
+                look === "stopped" && "fill-transparent stroke-fg-ghost",
+                look === "cleared" && "fill-fg stroke-fg",
+                look === "live" && "fill-(--w-chalk) stroke-(--w-chalk)",
+              )}
+              strokeWidth={1.4}
+            />
           );
         })}
-      </g>
-      {/* the hypotheses (not filtered: dots stay round) */}
-      {Array.from({ length: RUN_HYPOTHESES }, (_, i) => {
-        const look = dotLook(i, run.step, run.phase, gates);
-        const x = dotX(i, run.step, run.phase, g, gates);
-        return (
-          <motion.circle
-            key={i}
-            cy={g.laneY(i)}
-            r={3.2}
-            initial={false}
-            animate={{ cx: x }}
-            transition={reduced ? { duration: 0 } : { duration: moveT, ease }}
-            className={cn(
-              "transition-[fill,stroke] duration-(--dur-micro)",
-              look === "stopping" && "fill-kill stroke-kill",
-              look === "stopped" && "fill-transparent stroke-fg-ghost",
-              look === "cleared" && "fill-fg stroke-fg",
-              look === "live" && "fill-(--w-chalk) stroke-(--w-chalk)",
-            )}
-            strokeWidth={1.4}
-          />
-        );
-      })}
-    </svg>
+      </svg>
+    </>
   );
 }
 
@@ -266,88 +286,108 @@ function MarkingSheet({
   reduced: boolean;
 }) {
   const fid = useSvgId("sheet-chalk");
+  const mid = useSvgId("sheet-marks");
   const s = sheetGeometry(gates);
   const showMarks = run.phase === "running" || run.phase === "settled";
   const t = (delay = 0) => (reduced ? { duration: 0 } : { duration: dur.base * 0.8, ease: easeDraw, delay });
   return (
-    <svg viewBox={`0 0 ${VB.w} ${VB.h}`} aria-hidden="true" focusable="false" className="h-auto w-full overflow-visible" data-figure="gates" data-choreo="marking-sheet">
-      <defs>
-        <ChalkFilter id={fid} />
-      </defs>
-      <g filter={`url(#${fid})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
-        {/* the ruled sheet: head rule, column rules, a name stub per row */}
-        <path d={`M12 ${s.headY + 8} L${s.right} ${s.headY + 8}`} className="stroke-(--w-chalk)" strokeOpacity={0.6} strokeWidth={2} />
-        {Array.from({ length: gates + 1 }, (_, g) => (
-          <path key={`c${g}`} d={`M${s.left + s.cw * g} ${s.headY - 10} L${s.left + s.cw * g} ${s.rowY(RUN_HYPOTHESES - 1) + 10}`} className="stroke-(--w-chalk)" strokeOpacity={0.28} strokeWidth={1.4} />
-        ))}
-        {Array.from({ length: RUN_HYPOTHESES }, (_, i) => (
-          <path key={`n${i}`} d={`M20 ${s.rowY(i)} l${34 + ((i * 7) % 18)} ${((i % 3) - 1) * 0.8}`} className="stroke-(--w-chalk)" strokeOpacity={0.55} strokeWidth={1.6} />
-        ))}
-        {/* the chosen gate's column: framed in aqua, drawn on selection */}
-        <motion.rect
-          key={`col-${active}`}
-          x={s.cx(active) - s.cw / 2 + 4}
-          y={s.headY - 14}
-          width={s.cw - 8}
-          height={s.rowY(RUN_HYPOTHESES - 1) - s.headY + 28}
-          rx={6}
-          className="stroke-accent"
-          strokeWidth={2.2}
-          initial={derive ? { pathLength: 0 } : false}
-          animate={{ pathLength: 1 }}
-          transition={derive ? { duration: dur.draw.short, ease: easeDraw } : { duration: 0 }}
-        />
-        {/* the Run's marks */}
-        {showMarks
-          ? Array.from({ length: RUN_HYPOTHESES }, (_, i) => {
-              const stop = Math.min(STOP_AT[i] ?? 0, gates);
-              const y = s.rowY(i);
-              const marks: ReactNode[] = [];
-              for (let c = 0; c < gates; c++) {
-                if (c > run.step || c > stop) break;
-                const x = s.cx(c);
-                if (c < stop) {
-                  marks.push(
-                    <motion.path
-                      key={`t${i}-${c}`}
-                      d={`M${x - 5} ${y} L${x - 1.2} ${y + 4} L${x + 6} ${y - 5}`}
-                      className="stroke-(--w-chalk)"
-                      strokeWidth={1.8}
-                      initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={t()}
-                    />,
-                  );
-                } else {
-                  const stopping = run.phase === "running" && run.step === c;
-                  marks.push(
-                    <motion.path
-                      key={`x${i}-${c}`}
-                      d={`M${x - 5} ${y - 4.5} L${x + 5} ${y + 4.5} M${x + 5} ${y - 4.5} L${x - 5} ${y + 4.5}`}
-                      className={cn("transition-[stroke] duration-(--dur-micro)", stopping ? "stroke-kill" : "stroke-fg-ghost")}
-                      strokeWidth={2}
-                      initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={t()}
-                    />,
-                    <motion.path
-                      key={`s${i}-${c}`}
-                      d={`M${x + 12} ${y} L${s.right - 6} ${y}`}
-                      className="stroke-fg-ghost"
-                      strokeOpacity={0.7}
-                      strokeWidth={1.4}
-                      initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={t(dur.base * 0.4)}
-                    />,
-                  );
+    <>
+      <svg viewBox={`0 0 ${VB.w} ${VB.h}`} aria-hidden="true" focusable="false" className="h-auto w-full overflow-visible" data-figure="gates" data-choreo="marking-sheet">
+        <defs>
+          <ChalkFilter id={fid} />
+        </defs>
+        <g filter={`url(#${fid})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* the ruled sheet: head rule, column rules, a name stub per row */}
+          <path d={`M12 ${s.headY + 8} L${s.right} ${s.headY + 8}`} className="stroke-(--w-chalk)" strokeOpacity={0.6} strokeWidth={2} />
+          {Array.from({ length: gates + 1 }, (_, g) => (
+            <path key={`c${g}`} d={`M${s.left + s.cw * g} ${s.headY - 10} L${s.left + s.cw * g} ${s.rowY(RUN_HYPOTHESES - 1) + 10}`} className="stroke-(--w-chalk)" strokeOpacity={0.28} strokeWidth={1.4} />
+          ))}
+          {Array.from({ length: RUN_HYPOTHESES }, (_, i) => (
+            <path key={`n${i}`} d={`M20 ${s.rowY(i)} l${34 + ((i * 7) % 18)} ${((i % 3) - 1) * 0.8}`} className="stroke-(--w-chalk)" strokeOpacity={0.55} strokeWidth={1.6} />
+          ))}
+          {/* the chosen gate's column: framed in aqua, drawn on selection */}
+          <motion.rect
+            key={`col-${active}`}
+            x={s.cx(active) - s.cw / 2 + 4}
+            y={s.headY - 14}
+            width={s.cw - 8}
+            height={s.rowY(RUN_HYPOTHESES - 1) - s.headY + 28}
+            rx={6}
+            className="stroke-accent"
+            strokeWidth={2.2}
+            initial={derive ? { pathLength: 0 } : false}
+            animate={{ pathLength: 1 }}
+            transition={derive ? { duration: dur.draw.short, ease: easeDraw } : { duration: 0 }}
+          />
+        </g>
+      </svg>
+      {/* the Run's marks, in the same chalk, on their own layer over the
+          sheet: a mark drawing on redraws only this layer */}
+      <svg
+        viewBox={`0 0 ${VB.w} ${VB.h}`}
+        aria-hidden="true"
+        focusable="false"
+        // top-aligned: registers with the chalk SVG above whatever line gap
+        // its host's box adds under it
+        preserveAspectRatio="xMidYMin meet"
+        className="pointer-events-none absolute inset-0 size-full overflow-visible will-change-transform"
+        data-figure="run"
+      >
+        <defs>
+          <ChalkFilter id={mid} />
+        </defs>
+        <g filter={`url(#${mid})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {showMarks
+            ? Array.from({ length: RUN_HYPOTHESES }, (_, i) => {
+                const stop = Math.min(STOP_AT[i] ?? 0, gates);
+                const y = s.rowY(i);
+                const marks: ReactNode[] = [];
+                for (let c = 0; c < gates; c++) {
+                  if (c > run.step || c > stop) break;
+                  const x = s.cx(c);
+                  if (c < stop) {
+                    marks.push(
+                      <motion.path
+                        key={`t${i}-${c}`}
+                        d={`M${x - 5} ${y} L${x - 1.2} ${y + 4} L${x + 6} ${y - 5}`}
+                        className="stroke-(--w-chalk)"
+                        strokeWidth={1.8}
+                        initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={t()}
+                      />,
+                    );
+                  } else {
+                    const stopping = run.phase === "running" && run.step === c;
+                    marks.push(
+                      <motion.path
+                        key={`x${i}-${c}`}
+                        d={`M${x - 5} ${y - 4.5} L${x + 5} ${y + 4.5} M${x + 5} ${y - 4.5} L${x - 5} ${y + 4.5}`}
+                        className={cn("transition-[stroke] duration-(--dur-micro)", stopping ? "stroke-kill" : "stroke-fg-ghost")}
+                        strokeWidth={2}
+                        initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={t()}
+                      />,
+                      <motion.path
+                        key={`s${i}-${c}`}
+                        d={`M${x + 12} ${y} L${s.right - 6} ${y}`}
+                        className="stroke-fg-ghost"
+                        strokeOpacity={0.7}
+                        strokeWidth={1.4}
+                        initial={reduced || run.phase === "settled" ? false : { pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={t(dur.base * 0.4)}
+                      />,
+                    );
+                  }
                 }
-              }
-              return <g key={`row-${i}`}>{marks}</g>;
-            })
-          : null}
-      </g>
-    </svg>
+                return <g key={`row-${i}`}>{marks}</g>;
+              })
+            : null}
+        </g>
+      </svg>
+    </>
   );
 }
 
@@ -392,7 +432,7 @@ export function GauntletBoard({
   const choreo = alt ? "marking-sheet" : "rail-run";
 
   return (
-    <figure className={cn("scene-caption-host", className)} data-board={plate} data-choreo={choreo}>
+    <figure className={cn("scene-caption-host", className)} data-board={plate} data-choreo={choreo} {...beatAttrs("B17", { weight: 2 })}>
       {/* the caption sits UNDER the board (M2 finish, BLIND-1 D25): no scrim
           darkens the board, its wooden frame or the chalk ledge */}
       <SettleFrame entrance={alt ? "wipe" : "settle"} className="relative sm:overflow-hidden sm:rounded-frame">

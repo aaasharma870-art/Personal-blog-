@@ -9,6 +9,7 @@ import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { MachineBoard } from "@/components/worlds/idiots/machine-board";
 import { BlueprintSchematic, type SchematicSpec } from "@/components/worlds/idiots/schematic";
 import { Rise } from "@/components/site/world-motion";
+import { StageSplit } from "@/components/stage/stage-window";
 import {
   earlierRepos,
   featuredProjects,
@@ -48,6 +49,16 @@ import type { SectionProps } from "@/components/sections/types";
    effort" — captioned WHAT IS A MACHINE? • 3 IDIOTS (machine-board.tsx;
    `<id>.head`: default chalk-write, alt rancho-circle). The line lives on
    the board now, so the pipeline FIG below carries no caption of its own.
+   PHASE 3 SPLIT (PHASE3-SPEC §3.2; B1-STAGE): when the entry's StageSpec is
+   `split`, <StageSplit> sets the body (and the appendix) beside a sticky
+   stage window under the boot gate (anything else: today's DOM). Inside the
+   split the research grids carry `split-stack` (they stack in a narrow
+   column, ≈ 1024), the ICE board is `data-stage-wide` (it breaks out over
+   the whole grid, so the horizontal schematic keeps its size), each text
+   block is a `data-stage-block` (the window's rack focus) and the approach
+   and metrics carry the cue anchors `<id>-approach` / `<id>-metrics`. The
+   data islands (metric tiles, reported figures, caveats and limitations)
+   are `data-research`: Geist only, whatever the world's faces (B1-TYPE).
    ========================================================================== */
 
 /** Each flagship's schematic: nodes ONLY from content.ts approach/stack
@@ -105,7 +116,7 @@ function ChapterBody({
   return (
     <div>
       {/* the claim, beside the problem it answers */}
-      <div className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+      <div data-stage-block="" className="split-stack grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-7">
           <Meta fields={[number, p.status]} />
           <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
@@ -131,34 +142,40 @@ function ChapterBody({
 
       {/* the ICE board: the real system as a Rancho-style blueprint */}
       {s ? (
-        <Rise className="mt-tier-block">
-          {/* the board is NAMED as it comes into view — above it, not under
-              it a screen later (M2 fix round 3, blind D26: the chapter's
-              first view showed the board with no film cue); never beside a
-              metric. A chapter with a `head` is named by its head band. */}
-          {entry.props.head ? null : (
-            <div className="relative">
-              <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
-              {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
-                  D26 3I .20–.25: "a generic diagram"). ≥ 1024 only, where the
-                  claim grid leaves the right column clear above the board;
-                  it rises into that gap, so the board never moves. */}
-              <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
-            </div>
-          )}
-          <ChalkboardFrame>
-            <BlueprintSchematic
-              fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
-              spec={s}
-              choice={variantChoiceOf(entry)}
-              pieceKey={`${entry.id}.schematic`}
-            />
-          </ChalkboardFrame>
-          {/* (the pipeline's film cue is its head band, MachineBoard) */}
-        </Rise>
+        <div data-stage-block="" data-stage-wide="" className="mt-tier-block">
+          <Rise>
+            {/* the board is NAMED as it comes into view — above it, not under
+                it a screen later (M2 fix round 3, blind D26: the chapter's
+                first view showed the board with no film cue); never beside a
+                metric. A chapter with a `head` is named by its head band. */}
+            {entry.props.head ? null : (
+              <div className="relative">
+                <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
+                {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
+                    D26 3I .20–.25: "a generic diagram"). ≥ 1024 only, where the
+                    claim grid leaves the right column clear above the board;
+                    it rises into that gap, so the board never moves. */}
+                <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
+              </div>
+            )}
+            <ChalkboardFrame>
+              <BlueprintSchematic
+                fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
+                spec={s}
+                choice={variantChoiceOf(entry)}
+                pieceKey={`${entry.id}.schematic`}
+              />
+            </ChalkboardFrame>
+            {/* (the pipeline's film cue is its head band, MachineBoard) */}
+          </Rise>
+        </div>
       ) : null}
 
-      <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
+      <div
+        id={`${entry.id}-approach`}
+        data-stage-block=""
+        className="split-stack mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6"
+      >
         <div className="lg:col-span-7">
           <Meta fields={["Approach"]} />
           <ul className="mt-tier-pair max-w-body list-disc space-y-2 pl-5 type-body text-fg-muted marker:text-fg-ghost">
@@ -167,19 +184,23 @@ function ChapterBody({
             ))}
           </ul>
         </div>
-        <dl className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1">
+        <dl
+          id={`${entry.id}-metrics`}
+          data-research=""
+          className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1"
+        >
           {p.metrics.map((m, i) => (
             <MetricTile key={m.label} m={m} circleNote={isOptuna && i === p.metrics.length - 1} />
           ))}
         </dl>
       </div>
 
-      <div className="mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2 lg:gap-x-6">
+      <div data-stage-block="" className="split-stack mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2 lg:gap-x-6">
         <div>
           <Meta fields={["What I learned"]} />
           <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.learned}</p>
         </div>
-        <div>
+        <div data-research="">
           <Meta fields={["Honest limitations"]} />
           {isOptuna ? (
             <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.limitations}</p>
@@ -215,9 +236,9 @@ function OptionAlphaOrigin() {
         <span className="normal-case">{optionAlpha.repo}</span>
         <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
       </a>
-      <div className="mt-tier-group grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+      <div className="split-stack mt-tier-group grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
         <p className="max-w-body type-body text-fg lg:col-span-6">{optionAlpha.summary}</p>
-        <div className="space-y-tier-group lg:col-span-6">
+        <div data-research="" className="space-y-tier-group lg:col-span-6">
           <div>
             <Meta fields={["Paper", "small sample"]} />
             <p className="tnum mt-tier-pair type-body text-fg-muted">{optionAlpha.reported}</p>
@@ -311,14 +332,16 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
           className="mb-tier-block"
         />
       ) : null}
-      <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} entry={entry} />
-      {appendix.length ? (
-        <div className="mt-tier-block space-y-tier-block">
-          {appendix.map((a) => (
-            <Appendix key={a} kind={a} />
-          ))}
-        </div>
-      ) : null}
+      <StageSplit entry={entry}>
+        <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} entry={entry} />
+        {appendix.length ? (
+          <div data-stage-block="" className="mt-tier-block space-y-tier-block">
+            {appendix.map((a) => (
+              <Appendix key={a} kind={a} />
+            ))}
+          </div>
+        ) : null}
+      </StageSplit>
     </IdiotsSection>
   );
 }

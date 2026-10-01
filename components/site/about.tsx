@@ -41,7 +41,8 @@ export function About({ entry, number }: SectionProps<"story">) {
         <div className="lg:col-span-5">
           <AboutBio />
         </div>
-        <div className="lg:col-span-7">
+        {/* #about-pillars: the stage's cue 2 anchor (PHASE3-SPEC §3.2 cue plan) */}
+        <div id="about-pillars" className="lg:col-span-7">
           <AboutPillars choice={variantChoiceOf(entry)} caption={<SceneCaption k="cap.about" place="under" className="mt-0" />} />
         </div>
       </div>

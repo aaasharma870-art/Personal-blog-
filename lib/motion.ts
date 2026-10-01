@@ -185,7 +185,8 @@ export const springPlayful = { stiffness: 180, damping: 14, mass: 1.1 } as const
  *  ζ 0.54, 13.3% overshoot, settle 781 ms — the one >~800 ms-class exception. */
 export const springNeedle = { stiffness: 55, damping: 8, mass: 1 } as const;
 
-/** Prologue timing (SPEC §5). */
+/** Prologue timing (SPEC §5; PHASE3-SPEC §4.2–§4.3 for the hand-off and the
+ *  opening titles). `landing` is the reveal wipe (easeClip). */
 export const intro = {
   flightMaxS: 6.0,
   landing: 0.62,
@@ -195,6 +196,38 @@ export const intro = {
   failsafeMs: 3000,
   mobileFlightS: 1.6,
   mobileTotalMaxS: 2.4,
+  /* — P3-3 hand-off (PHASE3-SPEC §4.2) — */
+  /** Warm-up lead before the hold: decode the hero poster, un-occlude the
+   *  hero (#intro opacity .999), prefetch the loop, open the quiet window. */
+  warmMs: 1400,
+  /** The hold waits at most this long for the hero loop's `playing`… */
+  handoffMaxMs: 450,
+  /** …and at most this long for <PageHydrated/>. */
+  hydrateMaxMs: 1200,
+  /** The light trail freezes when it stops emitting and fades by opacity. */
+  trailFadeMs: 600,
+  /** L05: the living play screen's still crossfades into the flight. */
+  liveFadeMs: 200,
+  /** The reveal wipe's feather, as a fraction of the viewport width. */
+  feather: 0.4,
+  /** Canvas DPR cap (the trail glow is soft; the hold is a 1080p frame). */
+  dprMax: 1.5,
+  /** The hero's pointer shift ramps its gain 0 → 1 after the titles. */
+  pointerGainMs: 800,
+  /** Opening titles (PHASE3-SPEC §4.3), seconds after the end of the
+   *  overlay: the flight caption leaves by `capOut`; card k enters at
+   *  `first + k × step` (over `enter`, rising `rise` px) and has left by
+   *  `card` later (over `exit`); `total` hands off to cap.hero. */
+  titles: {
+    capOut: 0.26,
+    first: 0.3,
+    step: 1.0,
+    card: 0.9,
+    enter: 0.3,
+    exit: 0.22,
+    total: 3.2,
+    rise: 8,
+  },
 } as const;
 
 /** Loader timing (SPEC §8). `showDelayMs` is the media/real-load delay (the

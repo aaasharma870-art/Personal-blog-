@@ -84,3 +84,13 @@ const SKY_OF: Readonly<Record<string, SkyKey>> = {
 export function skyOf(sectionOrAct: string): SkyKey {
   return SKY_OF[sectionOrAct] ?? "day";
 }
+
+/** The grade `t` (0–1) of the way from `a` to `b`: kelvin and EV interpolate
+ *  linearly, the gain is recomputed (the GL IN half's `uGradeFrom → uGradeTo`
+ *  ramp, e.g. the seam's dawn over p .22–.45; spec §7.5). Pure. */
+export function skyMix(a: SkyKey, b: SkyKey, t: number): SkyGrade {
+  const u = Math.min(1, Math.max(0, t));
+  const k = SKY[a].k + (SKY[b].k - SKY[a].k) * u;
+  const ev = SKY[a].ev + (SKY[b].ev - SKY[a].ev) * u;
+  return { k, ev, gain: kelvinGain(k) };
+}

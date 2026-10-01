@@ -1,9 +1,12 @@
 // Motion harness: records how the page MOVES while a person scrolls it.
-// Usage: node tools/capture/motion.js <baseUrl> <outDir> [--runs=desktop,alt,mobile,intro,rm] [--nth=1] [--limit=<scroll ms>] [--idle=0] [--trace=0] [--analyse-only]
+// Usage: node tools/capture/motion.js <baseUrl> <outDir> [--runs=desktop,alt,mobile,intro,rm,native] [--nth=1] [--limit=<scroll ms>]
+//                                      [--idle=0] [--trace=0] [--vw=1024x768] [--analyse-only]
 //
 // Runs (each in a fresh context, one browser for the whole job):
 //   desktop  1440x900  /?skip=intro               wheel 100 px / 110 ms, 1.2 s pauses at act cards + films screens
 //   alt      1440x900  /?skip=intro&variant=alt   same
+//   native   1440x900  /?skip=intro,smooth        the desktop run with Lenis off (Phase 3 A/B: smooth vs native
+//                                                 scroll on the same build; not in the default --runs)
 //   rm       1440x900  /?skip=intro, reducedMotion 'reduce'  (the control)
 //   mobile   390x844   /?skip=intro               touch strokes at 1200 px/s top to bottom (synthesizeScrollGesture,
 //                                                 falling back to raw Input.dispatchTouchEvent strokes in headless)
@@ -21,6 +24,11 @@
 // IDLE PROBE (each section standing still), and mobile SCROLL TRAPS (a stroke that did not move the page).
 // Each run's raw data is kept in <outDir>/<run>/raw.json; --analyse-only re-runs the analysis on it.
 //
+// --vw=WxH sets the desktop viewport of the desktop / alt / native / rm / intro runs (e.g. 1024x768).
+// Phase 3 smooth scroll (Lenis, DESKTOP_FINE only): the desktop runs wait for window.__lenis before they
+// scroll (recorded as `lenis` in each run), and every pause waits until window.__lenis.isScrolling === false
+// (the Lenis tail runs ~0.9 s per notch) instead of a fixed 80 ms; with no Lenis it is the old 80 ms.
+//
 // NOTE: headless Chromium rasterises in software (SwiftShader), so absolute frame times are pessimistic
 // vs a real GPU; read the numbers as RELATIVE hotspots. The wheel is the same CDP event page.mouse.wheel
 // sends, dispatched WITHOUT awaiting the renderer's ack (at most 8 in flight): awaiting it paces the
@@ -28,6 +36,7 @@
 let chromium;
 try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require('/opt/node22/lib/node_modules/playwright')); }
 const sharp = require('sharp');
+const { parseViewport } = require('./browser');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -38,6 +47,7 @@ const BASE = BASE_ARG.replace(/\/$/, '');
 const OUT = path.resolve(OUT_ARG);
 const opt = Object.fromEntries(rest.map(a => a.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? true]));
 const RUNS = String(opt.runs || 'desktop,alt,mobile,intro,rm').split(',');
+const ALL_RUNS = ['intro', 'desktop', 'native', 'alt', 'mobile', 'rm'];
 const NTH = Number(opt.nth || 1);
 const IDLE = opt.idle !== '0';
 const TRACE = opt.trace !== '0';
@@ -46,7 +56,8 @@ const STRIPS = path.join(OUT, 'strips');
 fs.mkdirSync(STRIPS, { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const DESK = { width: 1440, height: 900 };
+const DESK = parseViewport(opt.vw) || { width: 1440, height: 900 };
+if (opt.vw && !parseViewport(opt.vw)) { console.error(`--vw must be WxH (got "${opt.vw}")`); process.exit(1); }
 const MOB = { width: 390, height: 844 };
 const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
 const WHEEL_DY = 100, WHEEL_MS = 110, PAUSE_MS = 1200, MAX_INFLIGHT = 8, MAX_SCROLL_MS = Number(opt.limit || 240000);
@@ -194,6 +205,14 @@ async function pauseTargets(page) {
 
 const scrollState = page => page.evaluate(() => ({ y: Math.round(scrollY), end: scrollY + innerHeight >= document.documentElement.scrollHeight - 2 }));
 
+// The scroll has come to rest: Lenis (Phase 3, desktop) reports isScrolling === false; native scroll gets 80 ms.
+async function settle(page, timeout = 4000) {
+  const lenis = await page.evaluate(() => !!window.__lenis).catch(() => false);
+  if (!lenis) { await sleep(80); return; }
+  await page.waitForFunction(() => !window.__lenis || window.__lenis.isScrolling === false, null, { timeout, polling: 16 })
+    .catch(() => console.error('  lenis still scrolling after', timeout, 'ms'));
+}
+
 // A person with a mouse wheel: one 100 px notch every 110 ms (~900 px/s), a 1.2 s look at every act card and films screen.
 async function wheelScroll(page, cdp) {
   const x = DESK.width / 2, yM = DESK.height / 2;
@@ -209,7 +228,7 @@ async function wheelScroll(page, cdp) {
     const hit = targets.find(t => !done.has(t.key) && ahead >= t.y - 20);
     if (hit) {
       while (inflight > 0) await sleep(20);
-      await sleep(80);
+      await settle(page);
       const y = (await scrollState(page)).y;
       done.add(hit.key);
       pauses.push({ key: hit.key, target: hit.y, y, at: Date.now() - start });
@@ -231,6 +250,7 @@ async function wheelScroll(page, cdp) {
     if (w > 0) await sleep(w); else next = Date.now();
   }
   while (inflight > 0) await sleep(20);
+  await settle(page);
   return { pauses, ms: Date.now() - start };
 }
 
@@ -395,9 +415,15 @@ async function paintAttribution(tr, M, cdp) {
 // ---------------------------------------------------------------- runs
 async function scrollRun(browser, run) {
   const { ctx, page, cdp, errors } = await openRun(browser, run);
-  const q = run === 'alt' ? '?skip=intro&variant=alt' : '?skip=intro';
+  const q = run === 'alt' ? '?skip=intro&variant=alt' : run === 'native' ? '?skip=intro,smooth' : '?skip=intro';
   await page.goto(BASE + '/' + q, { waitUntil: 'networkidle', timeout: 90000 }).catch(e => console.error('goto', e.message));
   await sleep(2500);
+  // Phase 3: smooth scroll starts as ladder step 1 (desktop runs only); give it a moment, record whether it ran
+  if (run === 'desktop' || run === 'alt') {
+    await page.waitForFunction(() => !!window.__lenis, null, { timeout: 4000 }).catch(() => {});
+  }
+  const lenis = await page.evaluate(() => !!window.__lenis).catch(() => false);
+  console.log(`  ${run}: smooth scroll (Lenis) ${lenis ? 'ON' : 'off'}`);
   await page.evaluate(() => scrollTo(0, 0));
   await sleep(300);
   const rec = recorder(cdp, path.join(OUT, run));
@@ -414,7 +440,7 @@ async function scrollRun(browser, run) {
   const paints = await paintAttribution(tr, M, cdp);
   const idle = run === 'desktop' && IDLE ? await idleProbe(page, cdp) : null;
   await ctx.close();
-  return { run, url: '/' + q, M, frames: rec.frames, t0, t1, scroll, errors, idle, paints };
+  return { run, url: '/' + q, lenis, M, frames: rec.frames, t0, t1, scroll, errors, idle, paints };
 }
 
 // IDLE PROBE (desktop, after the scroll): park on each section for 2.5 s, then trace 1.5 s of standing
@@ -737,7 +763,7 @@ async function analyse(R) {
   const topShifts = [...ls].filter(s => !s.input).sort((a, b) => b.v - a.v).slice(0, 8).map(s => ({ t: s.tRel, v: +s.v.toFixed(4), sec: s.sec, sources: s.src.slice(0, 3) }));
   const durS = (t1 - t0) / 1000;
   return {
-    run, url: R.url, viewport: `${M.vw}x${vh}`, pageHeight: M.H, durationS: r1(durS), scroll: R.scroll,
+    run, url: R.url, lenis: R.lenis == null ? null : !!R.lenis, viewport: `${M.vw}x${vh}`, pageHeight: M.H, durationS: r1(durS), scroll: R.scroll,
     screencast: { frames: frames.length, fps: r1(frames.length / Math.max(0.001, (t1 - tStart) / 1000)) },
     frame: frameStats(measured), whole: cause(measured, loaf),
     loaf: { count: loaf.length, totalMs: loaf.reduce((a, l) => a + l.dur, 0), blockingMs: loaf.reduce((a, l) => a + l.block, 0),
@@ -773,7 +799,7 @@ async function runStrips(A) {
         const pass = fr.slice(Math.max(0, firstIn), lastIn < 0 ? undefined : lastIn + 1);
         out.push(await strip(evenByScroll(pass, 20, ya, yb), dir, `${A.run}-${id}`, { title: `${A.run} ${id}: scrollY ${Math.round(ya)} -> ${Math.round(yb)} (card top ${s.top}, h ${s.h}; 20 frames even in scroll)` }));
       }
-      if (A.run === 'desktop' || A.run === 'rm') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, `${A.run}-first-60s`, { title: `${A.run}: first 60 s of the scroll (24 frames, even in time)` }));
+      if (A.run === 'desktop' || A.run === 'rm' || A.run === 'native') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, `${A.run}-first-60s`, { title: `${A.run}: first 60 s of the scroll (24 frames, even in time)` }));
       if (A.run === 'alt') out.push(await strip(evenByTime(fr, 24, 0, 60), dir, 'alt-first-60s', { title: 'alt: first 60 s of the scroll (24 frames, even in time)' }));
     } else {
       out.push(await strip(evenByTime(fr, 24, 0, fr[fr.length - 1].t), dir, 'mobile-full-scroll', { cols, tileW: tw, title: 'mobile 390x844: full touch scroll (24 frames, even in time)' }));
@@ -860,8 +886,8 @@ function summary(report) {
   L.push(`Base ${report.meta.base} · Chromium ${report.meta.chromium} headless · ${report.meta.cpus} CPUs · screencast everyNthFrame=${NTH}.`, '');
   L.push(`> ${report.meta.note}`, '');
   L.push('## Runs', '');
-  L.push(mdTable(['run', 'viewport', 'secs', 'rAF frames', 'fps', 'mean ms', 'p50', 'p95', 'p99', '>33.4 %', '>50 %', 'max', 'LoAF n', 'LoAF block ms', 'busy∩jank %', 'CLS total', 'CLS (session)', 'pops', 'shots'],
-    report.runs.map(A => [A.run, A.viewport, A.durationS, A.frame.frames, A.frame.fps, A.frame.mean, A.frame.p50, A.frame.p95, A.frame.p99, A.frame.jank33, A.frame.jank50, A.frame.max, A.loaf.count, A.loaf.blockingMs, A.whole.busyJankPct, A.cls.total, A.cls.sessionMax, A.pops.length, A.screencast.frames])));
+  L.push(mdTable(['run', 'viewport', 'lenis', 'secs', 'rAF frames', 'fps', 'mean ms', 'p50', 'p95', 'p99', '>33.4 %', '>50 %', 'max', 'LoAF n', 'LoAF block ms', 'busy∩jank %', 'CLS total', 'CLS (session)', 'pops', 'shots'],
+    report.runs.map(A => [A.run, A.viewport, A.lenis == null ? '' : A.lenis ? 'on' : 'off', A.durationS, A.frame.frames, A.frame.fps, A.frame.mean, A.frame.p50, A.frame.p95, A.frame.p99, A.frame.jank33, A.frame.jank50, A.frame.max, A.loaf.count, A.loaf.blockingMs, A.whole.busyJankPct, A.cls.total, A.cls.sessionMax, A.pops.length, A.screencast.frames])));
   L.push('', '## Top 10 hotspots (by mean frame time; rm excluded)', '');
   L.push(mdTable(['#', 'run', 'where', 'frames', 'fps', 'mean', 'p95', 'p99', '>50 %', 'max', 'mean / run mean', 'LoAF block ms', 'likely cause'],
     report.hotspots.map((h, i) => [i + 1, h.run, h.where, h.frames, h.fps, h.mean, h.p95, h.p99, h.jank50, h.max, h.relMean, h.loafBlockMs, h.likely])));
@@ -905,7 +931,7 @@ function summary(report) {
   const results = [];
   let version = null;
   if (ANALYSE_ONLY) {
-    for (const run of ['intro', 'desktop', 'alt', 'mobile', 'rm']) {
+    for (const run of ALL_RUNS) {
       const f = path.join(OUT, run, 'raw.json');
       if (RUNS.includes(run) && fs.existsSync(f)) { const R = JSON.parse(fs.readFileSync(f, 'utf8')); version = R.version; results.push(R); }
     }
@@ -913,7 +939,7 @@ function summary(report) {
     const browser = await chromium.launch({ headless: true, args: ['--autoplay-policy=no-user-gesture-required', '--enable-unsafe-swiftshader', '--use-angle=swiftshader'] });
     version = browser.version();
     try {
-      for (const run of ['intro', 'desktop', 'alt', 'mobile', 'rm']) {
+      for (const run of ALL_RUNS) {
         if (!RUNS.includes(run)) continue;
         console.log('run', run);
         const R = run === 'intro' ? await introRun(browser) : await scrollRun(browser, run);

@@ -77,7 +77,9 @@ function deadEyeAvailable(): boolean {
 
 const c = (k: EggCopyKey): string | null => (copyVisible(eggCopy[k]) ? eggCopy[k].text : null);
 
-export function EggHost({ go }: { go: (id: string) => void }) {
+/** `go` scrolls to a room (the palette's jump: lib/smooth-scroll.ts
+ *  scrollToTarget) and resolves on arrival. */
+export function EggHost({ go }: { go: (id: string) => Promise<void> }) {
   const reduced = useReducedMotion();
   const osReduced = useOsReducedMotion();
   const mapVariant = useVariant(null, "egg-map.unfold");
@@ -157,7 +159,7 @@ export function EggHost({ go }: { go: (id: string) => void }) {
           sayCopy("hp", "toast.obliviate");
           return;
         case "parley":
-          go("contact");
+          void go("contact");
           return;
         case "aal-izz-well": {
           // the current section heading: one two-beat settle (motion on)
@@ -182,8 +184,9 @@ export function EggHost({ go }: { go: (id: string) => void }) {
           if (killListInView()) startDeadEye();
           else {
             // from the palette: bring the ledger into view, then call it
-            go("kill-list");
-            window.setTimeout(startDeadEye, reduced ? 50 : 900);
+            // once the jump has ARRIVED (no fixed wait: a cut, a glide or an
+            // instant jump all resolve when the ledger is in place)
+            void go("kill-list").then(startDeadEye);
           }
           return;
         case "eggs-off":
