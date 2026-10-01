@@ -30,6 +30,15 @@ import { WorldProvider } from "@/components/primitives/world";
  * element inside it does those. Phase 1 moves the <section id> itself here
  * (plus scroll-margin, density, the auto dome Seam where toneOf(prevEntry)
  * differs, and the enter-once reveal); the wrapper then becomes that box.
+ *
+ * Phase 3 (PHASE3-SPEC §3.2, B1-STAGE): `data-stage-mode` mirrors the
+ * entry's StageSpec mode (absent without one). The persistent stage marks
+ * this wrapper `[data-stage-on]` while it shows the section's plate (a
+ * backdrop section then turns transparent behind its StageScrim, only
+ * inside the boot gate and while not paused: app/p3/stage.css); the
+ * section components render the modes themselves (WorldSection / the
+ * credits footer: backdrop; StageSplit: split). Attributes only: nothing
+ * here paints, so every page without a live stage is unchanged.
  */
 export function SectionFrame({
   entry,
@@ -42,7 +51,12 @@ export function SectionFrame({
   const tone = toneOf(entry);
   const world = worldOf(entry);
   return (
-    <div className="contents" data-section={entry.id} {...planeAttrs(tone, world)}>
+    <div
+      className="contents"
+      data-section={entry.id}
+      data-stage-mode={entry.stage?.mode}
+      {...planeAttrs(tone, world)}
+    >
       <WorldProvider world={world} tone={tone}>
         {children}
       </WorldProvider>

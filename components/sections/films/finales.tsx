@@ -57,6 +57,10 @@ import { DEAD_EYE_TARGETS, filmMark } from "@/components/sections/films/plate-ma
      hp       Marauder's-Map footprints walk across the enchanted paper to
               where the ink spreads from; ONE warm point lights at the walk's
               start (the same hand-off to Card II→III).
+   RASTER (P3-2, spec §12.1 #8): while a finale can still draw ("hidden",
+   "play") its SVG overlay is its own layer, so a drawing frame never
+   repaints the photograph under it; the static ("final") finale paints
+   with the still.
    ========================================================================== */
 
 export type FinaleMode = "hidden" | "play" | "final";
@@ -81,6 +85,9 @@ function appear(mode: FinaleMode, delay: number, to = 1, duration: number = dur.
     transition: mode === "play" ? { duration, ease, delay } : { duration: 0 },
   };
 }
+
+/** The overlay's own layer while it can draw (spec §12.1 #8). */
+const layerOf = (mode: FinaleMode) => (mode === "final" ? undefined : "will-change-transform");
 
 function PlateSvg({ aspect, children, className }: { aspect: number; children: ReactNode; className?: string }) {
   const W = Math.round(1000 * aspect);
@@ -126,7 +133,7 @@ export function Finale({
   else if (world === "rdr2") body = <RdrDeadEye mode={mode} W={W} stillId={stillId} />;
   else body = alt ? <HpMapWalk mode={mode} W={W} stillId={stillId} /> : <HpInkLight mode={mode} W={W} />;
   return (
-    <PlateSvg aspect={aspect} className="films-finale">
+    <PlateSvg aspect={aspect} className={cn("films-finale", layerOf(mode))}>
       {body}
     </PlateSvg>
   );
@@ -355,7 +362,7 @@ function RdrJournalFinale({ mode }: { mode: FinaleMode }) {
     { cls: "bottom-1.5 left-1.5", rot: 270 },
   ];
   return (
-    <div aria-hidden="true" className="films-finale pointer-events-none absolute inset-0" data-finale="rdr2-journal">
+    <div aria-hidden="true" className={cn("films-finale pointer-events-none absolute inset-0", layerOf(mode))} data-finale="rdr2-journal">
       <div className="absolute inset-3 sm:inset-4">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false" className="size-full overflow-visible" fill="none">
           <motion.path

@@ -1,0 +1,408 @@
+{
+  "proposedMediaId": "L21",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "iconic-deadeye",
+  "plate": "public/media/films/iconic-deadeye.webp",
+  "plateJob": "0a60fa27-78e8-4340-8ddd-ca77858eed7a",
+  "job": "8f09d527-9b20-499e-8d1b-505e37f1b909",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Only the red-sepia haze breathes very slowly and a few dust specks drift; the scene reads as time frozen. The birds stay frozen mid-air; the oak, the fence and the homestead stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L21-iconic-deadeye.prompt.txt",
+  "generateLog": "docs/build/media/p3/B6.md",
+  "checkLog": "docs/build/media/p3/B6.md#check-step",
+  "master": "media-src/p3/masters/L21-iconic-deadeye-8f09d527.mp4 (Kling original, 4136547 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "iconic-deadeye-loop.mp4",
+    "webm": "iconic-deadeye-loop.webm",
+    "poster": "iconic-deadeye-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 146506,
+    "webm": 155644,
+    "poster": 97622
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L21-iconic-deadeye-8f09d527-household.mkv docs/build/media-staged/p3/accepted/iconic-deadeye-loop --k=12 --tier=I --method=residual --crf-mp4=28 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 28,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 75,
+    "whyNotBoomerang": "boomerang is allowed for L21, but the raw join (0.9951) is >= 0.98 and residual keeps frame 0 = the pinned plate frame with an ordinary-step wrap (lossless join 1.0000, pct 1); the specks the prompt asks to drift must not reverse",
+    "crfNote": "MP4 CRF 28 (not 26): on the unpatched seam the homestead read 1.09/1.05/1.02 at CRF 26/28/30 and the oak 1.06/0.96/0.91; with the hold-out, CRF 28 puts every zone <= 0.98"
+  },
+  "prePatch": {
+    "what": "homestead hold-out (the L15/L17 precedent): frame 0 composited over the homestead rect on every frame",
+    "why": "the map zone homestead x.58-.80 y.43-.55 read 1.35/255 on the raw master (limit 1). Diff crops at 200% (frames 0/36/72/108/144) show the same buildings, roofs and fences on every frame: it is Kling texture boil (whole-frame luma range 0.26/255, flow <= 0.6 px), not haze or motion",
+    "shapes": [
+      "rect:1114,464,1536,594 (= the zone)"
+    ],
+    "units": "1920x1080 px",
+    "dilatePx": 8,
+    "featherSigmaPx": 10,
+    "output": "media-src/p3/masters/L21-iconic-deadeye-8f09d527-household.mkv (FFV1 lossless, 145 frames, gitignored)",
+    "boundary": "bands 4-16 px inside / outside the hold edge (720p): MP4 0.12 / 1.00, WebM 0.06 / 0.26 mean |dY|; no rectangle visible in the 200% homestead crops"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 0.9997,
+    "consecutive": {
+      "min": 0.9981,
+      "minAt": 131,
+      "p05": 0.9988,
+      "median": 0.9997
+    },
+    "joinMinusMedian": 0.0002,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "birds x.68-.89 y.14-.33 (map: frozen mid-air)",
+      "oak x.05-.40 y.05-.55 (map)",
+      "homestead x.58-.80 y.43-.55 (map)",
+      "fence x.76-1 y.55-.80 (map)",
+      "ground + fence + trail x.55-1 y.52-.85 (informative)"
+    ],
+    "light": null
+  },
+  "before": {
+    "master": {
+      "bytes": 16137859,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9838,
+      "lastVsPlate": 0.9837,
+      "join": 1,
+      "joinRgb": 0.9997,
+      "joinPercentile": 1,
+      "consecutiveMin": 0.998,
+      "consecutiveMinAt": 131,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.82,
+        "oak x.05-.40 y.05-.55 (map)": 1.09,
+        "homestead x.58-.80 y.43-.55 (map)": 1.35,
+        "fence x.76-1 y.55-.80 (map)": 0.91,
+        "ground + fence + trail x.55-1 y.52-.85 (informative)": 1.19
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0.05581,
+      "lumaRangePct": 1.04,
+      "light": null,
+      "phaseShiftPx": [
+        -0.022,
+        0.023
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      },
+      "note": "lossless residual seam of the unpatched master (same zones)"
+    },
+    "holdMaster": {
+      "bytes": 123323207,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.9838,
+      "lastVsPlate": 0.9838,
+      "join": 0.9952,
+      "joinRgb": 0.9784,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9982,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.83,
+        "oak x.05-.40 y.05-.55 (map)": 1.09,
+        "homestead x.58-.80 y.43-.55 (map)": 0,
+        "fence x.76-1 y.55-.80 (map)": 0.91,
+        "ground + fence + trail x.55-1 y.52-.85 (informative)": 1.1
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0.05579,
+      "lumaRangePct": 0.78,
+      "light": null,
+      "phaseShiftPx": [
+        -0.022,
+        0.023
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "unpatchedEncodes": {
+      "mp4Crf28": {
+        "bytes": 147645,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1280,
+        "height": 720,
+        "codec": "h264",
+        "firstVsPlate": 0.9684,
+        "lastVsPlate": 0.9709,
+        "join": 0.993,
+        "joinRgb": 0.9736,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.9993,
+        "consecutiveMinAt": 137,
+        "consecutiveMedian": 0.9999,
+        "staticMaxMeanAbsDelta": {
+          "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.72,
+          "oak x.05-.40 y.05-.55 (map)": 0.96,
+          "homestead x.58-.80 y.43-.55 (map)": 1.05,
+          "fence x.76-1 y.55-.80 (map)": 0.89,
+          "ground + fence + trail x.55-1 y.52-.85 (informative)": 1.02
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 0.05841,
+        "lumaRangePct": 0.61,
+        "light": null,
+        "phaseShiftPx": [
+          -0.017,
+          0.033
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": null,
+          "silent": true
+        }
+      },
+      "webmCrf30": {
+        "bytes": 156447,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1280,
+        "height": 720,
+        "codec": "vp9",
+        "firstVsPlate": 0.9783,
+        "lastVsPlate": 0.9784,
+        "join": 0.9998,
+        "joinRgb": 0.9987,
+        "joinPercentile": 0.0493,
+        "consecutiveMin": 0.9994,
+        "consecutiveMinAt": 7,
+        "consecutiveMedian": 1,
+        "staticMaxMeanAbsDelta": {
+          "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.28,
+          "oak x.05-.40 y.05-.55 (map)": 0.45,
+          "homestead x.58-.80 y.43-.55 (map)": 0.49,
+          "fence x.76-1 y.55-.80 (map)": 0.27,
+          "ground + fence + trail x.55-1 y.52-.85 (informative)": 0.43
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 0.05113,
+        "lumaRangePct": 0.38,
+        "light": null,
+        "phaseShiftPx": [
+          -0.028,
+          0.02
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": true,
+          "smooth": true,
+          "static": true,
+          "flash": true,
+          "light": null,
+          "silent": true
+        }
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 146506,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9686,
+      "lastVsPlate": 0.971,
+      "join": 0.9932,
+      "joinRgb": 0.9749,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9993,
+      "consecutiveMinAt": 137,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.69,
+        "oak x.05-.40 y.05-.55 (map)": 0.95,
+        "homestead x.58-.80 y.43-.55 (map)": 0.21,
+        "fence x.76-1 y.55-.80 (map)": 0.91,
+        "ground + fence + trail x.55-1 y.52-.85 (informative)": 0.98
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0.05867,
+      "lumaRangePct": 0.57,
+      "light": null,
+      "phaseShiftPx": [
+        -0.037,
+        0.037
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 155644,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9783,
+      "lastVsPlate": 0.9783,
+      "join": 0.9998,
+      "joinRgb": 0.9986,
+      "joinPercentile": 0.0423,
+      "consecutiveMin": 0.9994,
+      "consecutiveMinAt": 11,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "birds x.68-.89 y.14-.33 (map: frozen mid-air)": 0.29,
+        "oak x.05-.40 y.05-.55 (map)": 0.44,
+        "homestead x.58-.80 y.43-.55 (map)": 0.05,
+        "fence x.76-1 y.55-.80 (map)": 0.24,
+        "ground + fence + trail x.55-1 y.52-.85 (informative)": 0.36
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0.05058,
+      "lumaRangePct": 0.34,
+      "light": null,
+      "phaseShiftPx": [
+        -0.028,
+        0.02
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "anchors": "marks oak [0.2,0.45] and homestead [0.66,0.49] (code draws the X marks there): phase shift of the whole frame vs the plate -0.04/+0.04 px; flow at the oak 0.34 px and the homestead 0 (held)",
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx(hold master)": {
+      "birds": {
+        "p99": 0.4688,
+        "p999": 0.5978
+      },
+      "oak": {
+        "p99": 0.2567,
+        "p999": 0.3435
+      },
+      "fence": {
+        "p99": 0.2193,
+        "p999": 0.2743
+      },
+      "grassSpecks": {
+        "p99": 0.2873,
+        "p999": 0.3382
+      },
+      "sky": {
+        "p99": 0.4378,
+        "p999": 0.6307
+      },
+      "whole": {
+        "p99": 0.3091,
+        "p999": 0.4963
+      }
+    },
+    "reads": "near-still, as the plate intends (\"time frozen\"): the haze breathing is 0.26/255 of whole-frame luma and the plate's pale specks in the grass do not drift (0.34 px). A faint grain shimmer only."
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame + 200% crops of the birds, the homestead and the specks (session scratchpad b6chk); final WebM frames 0/25/50/75/100% + 200% homestead crops: five birds frozen in the same poses and places as the plate (plus the plate's faint pale shape low left), no reticle, no X marks, no figure, rider, face or hand in the homestead, the doorway or the fence; no text or symbols; 0 flashes/s; red share 0.051-0.059 (the red-sepia grade itself, no saturated flashes).",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.30 (sky, oak, grass) on both codecs: continuous; wrap strips continuous.",
+  "flags": [
+    "Near-still by design (the Dead Eye moment reads as time frozen); the dust specks do not drift. Shipping it buys only a faint shimmer; Aryan may prefer the poster + code ALT.",
+    "Homestead = 0-credit hold-out of frame 0.",
+    "Registration 0.969/0.971 (MP4, CRF 28 texture) and 0.978 (WebM); the poster->video fade stays 600 ms.",
+    "MP4 pass.join = \"codec\" (0.9932); lossless 1.0000, WebM 0.9998. Serve the WebM first."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-deadeye-loop.mp4",
+    "webm": "/media/films/iconic-deadeye-loop.webm",
+    "poster": "iconic-deadeye plate (iconic-deadeye.webp)",
+    "endsOn": "iconic-deadeye.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code:plate-camera",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "loopPoster": "iconic-deadeye-loop-poster.webp (frame 0 of the loop, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: birds 0.69 / 0.29/255 (MP4 / WebM), oak 0.95 / 0.44, homestead 0.21 / 0.05 (0-cr hold-out), fence 0.91 / 0.24; 0 flashes, silent; registration 0.969-0.978; lossless join 1.0000, WebM 0.9998; bytes 147 KB / 156 KB. Flag: near-still by design"
+}

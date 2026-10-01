@@ -116,7 +116,7 @@ export function GauntletTabs({
   const canRun = hydrated && !reduce;
 
   return (
-    <div className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+    <div data-research="" className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
       <div className="lg:col-span-4">
         <div
           role="tablist"

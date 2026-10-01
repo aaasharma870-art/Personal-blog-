@@ -2,9 +2,10 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
+import { beatAttrs } from "@/lib/beats";
 import { journey } from "@/lib/content";
-import { useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
 import { Loader } from "@/components/primitives/loader";
@@ -53,6 +54,12 @@ import {
    moonlight sweep runs once when The break is first reached.
    The canvas mounts only while the section is within one viewport (the
    decoded frames stay cached), and frames are requested only then.
+
+   RASTER (P3-2, spec §12.1 #3): the sticky column is never repainted while
+   it scrolls. The sequence canvas is its own layer (a frame draw uploads
+   the canvas, nothing else), and the caption veil (the calm bottom + the
+   step captions) is one layer that fades by opacity when the sea moves, so
+   the cartouche, the frame and the chart above it stay static.
    ========================================================================== */
 
 type Props = {
@@ -69,9 +76,11 @@ type Props = {
 
 const easeInOut = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
 
+/** The voyage scrub's two beats (spec §2.3 B10 steps 1–2, B11 steps 3–4). */
+const STEP_BEATS: Readonly<Record<number, string>> = { 0: "B10", 2: "B11" };
+
 export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouche }: Props) {
   const n = journey.length;
-  const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [reached, setReached] = useState(0);
   const [intent, setIntent] = useState<number | null>(null);
@@ -263,10 +272,9 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     const art = document.getElementById(`journey-step-${j + 1}`);
     if (!art) return;
     e.preventDefault();
-    // centre the step, so the sea lands exactly on its beat
-    art.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
-    window.history.replaceState(null, "", `#journey-step-${j + 1}`);
-    document.getElementById(`journey-step-${j + 1}-title`)?.focus({ preventScroll: true });
+    // centre the step, so the sea lands exactly on its beat (instant under
+    // reduced motion / Pause); the step's title takes focus on arrival
+    void scrollToTarget(art, { block: "center", focus: true, history: "replace" });
   };
 
   // At rest the caption shows: the stills path (frames not decoded yet, or
@@ -289,6 +297,7 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
           <article
             key={s.marker}
             id={`journey-step-${i + 1}`}
+            {...(STEP_BEATS[i] ? beatAttrs(STEP_BEATS[i], { weight: 2 }) : {})}
             data-step={i}
             aria-labelledby={`journey-step-${i + 1}-title`}
             className="flex min-h-[62vh] scroll-mt-[30vh] flex-col justify-center border-t border-rule py-tier-block first:border-t-0"
@@ -334,37 +343,46 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
               ) : null,
             )}
 
-            {/* the sequence (desktop only, mounted within one viewport) */}
+            {/* the sequence (desktop only, mounted within one viewport), on
+                its own layer: a scrubbed frame never repaints the column */}
             {live ? (
               <canvas
                 ref={canvasRef}
                 aria-hidden="true"
-                className="absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) data-drawn:opacity-100 motion-off:transition-none"
+                className="absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-change-transform data-drawn:opacity-100 motion-off:transition-none"
               />
             ) : null}
 
-            {/* a calm bottom for the caption (at rest only) */}
+            {/* the caption veil, ONE layer that fades when the sea moves (at
+                rest only): the calm bottom and the step captions */}
             <div
-              aria-hidden="true"
               className={cn(
-                "pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-1/2 bg-linear-to-t from-(--world-deep)/85 to-transparent transition-opacity duration-300 motion-off:transition-none",
+                "pointer-events-none absolute inset-0 z-[1] transition-opacity duration-300 will-change-[opacity] motion-off:transition-none",
                 showCaption ? "opacity-100" : "opacity-0",
               )}
-            />
-
-            {/* the step captions: MOMENT • FILM, cross-dissolving on the step */}
-            {captions.map((c, i) => (
+            >
+              {/* a calm bottom for the caption */}
               <div
-                key={i}
-                data-step-caption={i + 1}
-                className={cn(
-                  "transition-[opacity,visibility] duration-300 motion-off:transition-none",
-                  i === active && showCaption ? "visible opacity-100" : "invisible opacity-0",
-                )}
-              >
-                {c}
-              </div>
-            ))}
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-(--world-deep)/85 to-transparent"
+              />
+
+              {/* the step captions: MOMENT • FILM, cross-dissolving on the
+                  step (hidden from assistive tech while the sea moves) */}
+              {captions.map((c, i) => (
+                <div
+                  key={i}
+                  data-step-caption={i + 1}
+                  className={cn(
+                    "pointer-events-auto transition-[opacity,visibility] duration-300 motion-off:transition-none",
+                    i === active ? "opacity-100" : "opacity-0",
+                    i === active && showCaption ? "visible" : "invisible",
+                  )}
+                >
+                  {c}
+                </div>
+              ))}
+            </div>
 
             {/* real loading: the LD-PC mini, after 400 ms, real decoded / 72 */}
             {wanted && !seq.ready && !seq.failed && seq.total > 0 ? (

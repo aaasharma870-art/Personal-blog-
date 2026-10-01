@@ -7,7 +7,7 @@
 //
 // SPEC v2 §12.5 checks implemented here (numbers match the SPEC list):
 //   1 acts contiguous, ≤ 4 works, ≤ 4 major world changes   2 hero / credits / films placement
-//   3 ≤ 2 derived long cards                                 4 signature ≤ 6, scene + long ≤ 2
+//   (3, 4 retired by PHASE3-SPEC §3.4 check 5: card travel, scripts/checks/travel.mjs)
 //   5 world × tone AA table computed from globals.css        6 draft / proposed copy (release gate)
 //   7 quote registry lint + OUT lines                        8 H2 file checks (provenance, accept, font licences)
 //   9 hygiene (title / description / OG: no work titles)     10 lettering scope + display-face allow-list
@@ -20,8 +20,15 @@
 // and never pick an ALT that is not built;
 // plus the cheap adaptability fixtures (A, D, E, F, G, I, J) run through the
 // SAME derivation code the page uses (lib/derive.ts).
-// Not automated yet: travel budgets (no travel data in the manifest yet) and
-// #13 handbill fields (no handbill data yet).
+// Not automated yet: #13 handbill fields (no handbill data yet). Phase 3's
+// beats, travel, honesty and unsigned-copy checks live in scripts/checks/
+// (spec §3.4 numbering, printed as "[P3 #n]").
+//
+// PHASE3-PLAN DP-11: this file is also a LOADER. Every scripts/checks/*.mjs
+// (sorted) exports `default function run(ctx)` and runs where #10 used to be;
+// #10 itself now lives in scripts/checks/lettering.mjs. One owner per module
+// (plan §4.7). DP-7: public/audio/** skips the H2 media-row rule. DP-8: a
+// Higgsfield loop may name `codeAlt: "code:plate-camera"` as its ALT.
 //
 // Errors fail the run (exit 1); warnings are printed only. `RELEASE=1`
 // promotes the production-only gates (#6 copy sign-off + film.branchPreview
@@ -29,7 +36,7 @@
 // variant ALT) from warnings to errors.
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { ANCHORLESS_TYPES, DEFAULT_TONE, DEFAULT_WORLD, page } from "../lib/page.ts";
 import { mediaAssets } from "../lib/media.ts";
 import {
@@ -51,11 +58,8 @@ const RELEASE = process.env.RELEASE === "1";
 /** Anchors the brief requires while their section is enabled (relaxable). */
 const REQUIRED_ANCHORS = ["top", "about", "journey", "work", "systems", "principles", "writing", "beyond", "contact"];
 const NAV_LABEL_WARN = 12;
-/** SPEC v2 §3: at most 6 signature moments (the prologue counts as one). */
-const MAX_SIGNATURE = 6;
 const MAX_WORKS = 4;
 const MAX_WORLD_CHANGES = 4;
-const MAX_LONG_CARDS = 2;
 const EXACT_H3 = "Fan tribute — not affiliated with Warner Bros., Disney, Vinod Chopra Films or Rockstar Games.";
 const TONES = TONE_IDS;
 const WORLDS = WORLD_IDS;
@@ -76,6 +80,12 @@ const warnings = [];
 const err = (m) => errors.push(m);
 const warn = (m) => warnings.push(m);
 const gate = (m) => (RELEASE ? err(m) : warn(`[release gate] ${m}`));
+
+/** PHASE3-PLAN DP-8: a Higgsfield loop (`kind: "video"`) whose ALT is code
+ *  (depth + camera on its still, spec §6.1) says `codeAlt: "code:plate-camera"`
+ *  in place of a media alternate; it may keep its still as `fallback`. */
+const PLATE_CAMERA = "code:plate-camera";
+const isPlateCameraLoop = (a) => a.kind === "video" && a.provenance?.source === "higgsfield" && a.codeAlt === PLATE_CAMERA;
 
 /* — Media manifest self-consistency ——————————————————————————————— */
 const mediaIds = new Set(Object.keys(mediaAssets));
@@ -144,7 +154,7 @@ for (const [id, a] of Object.entries(mediaAssets)) {
     }
   }
   if (a.status === "planned" && !a.fallback && !a.codeAlt) warn(`media "${id}": planned with no fallback and no codeAlt (resolveMedia returns null)`);
-  if (a.fallback && a.codeAlt) err(`media "${id}": codeAlt is only for planned assets with NO media fallback`);
+  if (a.fallback && a.codeAlt && !isPlateCameraLoop(a)) err(`media "${id}": codeAlt is only for planned assets with NO media fallback`);
   if (a.focalBox) {
     const b = a.focalBox;
     if (!(0 <= b.x0 && b.x0 < b.x1 && b.x1 <= 1 && 0 <= b.y0 && b.y0 < b.y1 && b.y1 <= 1)) err(`media "${id}": focalBox out of 0-1 order`);
@@ -202,7 +212,8 @@ for (const [id, a] of Object.entries(mediaAssets)) {
     else if (mediaAssets[a.variantOf].variants?.alt !== id) err(`media "${id}": variantOf "${a.variantOf}", which does not name it in variants.alt`);
   }
   // every accepted FILM clip / plate has an alternate (Aryan's answer #2)
-  if (a.provenance.source === "higgsfield" && USABLE.has(a.status) && !a.variantOf && !a.variants) {
+  // (DP-8: a loop whose ALT is code, `codeAlt: "code:plate-camera"`, has one)
+  if (a.provenance.source === "higgsfield" && USABLE.has(a.status) && !a.variantOf && !a.variants && !isPlateCameraLoop(a)) {
     (a.kind === "video" ? mediaNoAlt.video : mediaNoAlt.image).push(id);
   }
 }
@@ -234,6 +245,8 @@ if (mediaNoAlt.image.length) warn(`variants: film still(s) with no alternate (fi
   for (const f of walk(path.join(ROOT, "public"))) {
     const rel = "/" + path.relative(path.join(ROOT, "public"), f).split(path.sep).join("/");
     if (/\.master\./i.test(rel)) err(`H2: ${rel} is a master file (masters never enter public/)`);
+    // DP-7: public/audio/** is exempt from the media-row rule (spec check #9, the SOUNDS.md rows, covers it)
+    else if (rel.startsWith("/audio/")) continue;
     else if (/\.(webp|png|jpe?g|avif|gif|mp4|webm|mov)$/i.test(rel) && !owned.has(rel) && !ownedBySequence(rel)) {
       err(`H2: public${rel} has no lib/media.ts provenance row`);
     }
@@ -352,18 +365,13 @@ if (page.filter((s) => s.type === "films").length > 1) err(`#2 at most one films
   if (act2 && act2.sections.length > 6) warn(`the Act II run has ${act2.sections.length} sections (> 6)`);
 }
 
-/* — #3/#4 cards, long cards, signature ———————————————————————————— */
+/* — Cards ———————————————————————————————————————————————————————————
+   The old #3 (≤ 2 long cards) and #4 (signature ≤ 6, scene + long ≤ 2) are
+   RETIRED (PHASE3-SPEC §3.4 check 5): Phase 3 budgets the page by card
+   travel (scripts/checks/travel.mjs) and by beats, rations and pacing
+   (scripts/checks/beats.mjs). */
 const cards = actCardsOf(enabled, film);
-{
-  const long = cards.filter((c) => c.long);
-  if (long.length > MAX_LONG_CARDS) err(`#3 ${long.length} derived long cards (max ${MAX_LONG_CARDS}): ${long.map((c) => c.id).join(", ")}`);
-  const scenes = enabled.filter((s) => s.motion === "scene").length;
-  if (scenes + long.length > 2) err(`#4 scene sections (${scenes}) + long cards (${long.length}) > 2`);
-  for (const c of cards) if (c.transition === "reel") warn(`generic transition used for ${c.from}>${c.to} (card ${c.id})`);
-  const signature = enabled.filter((s) => s.motion === "signature").map((s) => s.id);
-  if (film.enabled && film.prologue.enabled) signature.unshift("(prologue)");
-  if (signature.length > MAX_SIGNATURE) err(`#4 ${signature.length} signature moments (max ${MAX_SIGNATURE}): ${signature.join(", ")}`);
-}
+for (const c of cards) if (c.transition === "reel") warn(`generic transition used for ${c.from}>${c.to} (card ${c.id})`);
 
 /* — Variants (M1.5): registry + manifest choices ———————————————————— */
 const variantStats = { hosts: 0, pieces: 0, alts: 0 };
@@ -704,40 +712,39 @@ const uiFiles = (() => {
   }
 }
 
-/* — #10 lettering scope + display-face allow-list —————————————————— */
+/* — Check modules (PHASE3-PLAN DP-11): scripts/checks/*.mjs ————————————
+   Every module is `export default function run(ctx)` (sync or async), one
+   owner each (plan §4.7), imported in sorted file-name order and run here,
+   where #10 used to be (its block now lives in scripts/checks/lettering.mjs).
+   ctx is read-only by convention: report through err / warn / gate. */
 {
-  // M2 (RECOGNIZABILITY O-1): the "caption" slot is in scope only while
-  // film.fontScope.extended is on.
-  const SLOTS = ["act-title", "loader", "egg", ...(film.fontScope.extended ? ["caption"] : [])];
-  const QUOTE_IDS = new Set(Object.keys(quotes));
-  for (const l of film.lettering) {
-    if (!SLOTS.includes(l.slot)) err(`#10 lettering "${l.id}" slot "${l.slot}" is outside the display-font scope`);
-    if (l.quote !== undefined && !QUOTE_IDS.has(l.quote)) err(`#10 lettering "${l.id}": unknown quote "${l.quote}"`);
-    if (l.quote === undefined && !l.text) err(`#10 lettering "${l.id}" has no text`);
-    if (l.mode === "B" && l.shipped && !fs.existsSync(path.join(ROOT, "lib", "lettering.generated.ts"))) err(`#10 lettering "${l.id}" is mode B + shipped but lib/lettering.generated.ts is missing`);
-  }
-  // who may reference a display face (font-world-*, --font-egg-*, the M2
-  // .world-face-<world> classes). Everyone else sets a fan face through
-  // scene-caption.tsx (<SceneCaption>, <Lettered>, <FilmTitle>), which only
-  // letters REGISTERED strings (lib/sections.ts letteredIn).
-  const ALLOW = [
-    /^components[\\/]primitives[\\/](scene-caption\.tsx|world-face\.ts)$/,
-    /^app[\\/]globals\.css$/,
-    /^app[\\/]layout\.tsx$/,
-    /^lib[\\/]fonts\.ts$/,
-    /^components[\\/]primitives[\\/](act-card|loader)\.tsx$/,
-    /^components[\\/]primitives[\\/]loaders[\\/]/,
-    /^components[\\/]sections[\\/]act-card[\\/]/,
-    /^components[\\/]eggs[\\/]/,
-    /^components[\\/]site[\\/]journey[^\\/]*\.tsx$/, // the THE CROSSING cartouche
-    /^app[\\/](not-found|lab)/,
-  ];
-  for (const f of uiFiles) {
-    const rel = path.relative(ROOT, f);
-    const src = fs.readFileSync(f, "utf8");
-    if (/font-world-|--font-egg-|world-face-|fontWorld(Pirates|Idiots|Hp|Rdr2)|fontEggRye/.test(src) && !ALLOW.some((re) => re.test(rel))) {
-      err(`#10 ${rel} uses a world display face outside the allowed slots (act titles, loader route cards, eggs)`);
+  const dir = path.join(ROOT, "scripts", "checks");
+  const ctx = {
+    ROOT,
+    RELEASE,
+    err,
+    warn,
+    gate,
+    page,
+    film,
+    mediaAssets,
+    quotes,
+    OUT_LINES,
+    content,
+    VARIANT_REGISTRY,
+    derive: { actCardsOf, actRunsOf, actsInUse, pageItemsOf, worldOfIn },
+    css,
+    readFile: (rel) => fs.readFileSync(path.join(ROOT, rel), "utf8"),
+    uiFiles,
+  };
+  const modules = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".mjs")).sort() : [];
+  for (const f of modules) {
+    const mod = await import(pathToFileURL(path.join(dir, f)).href);
+    if (typeof mod.default !== "function") {
+      err(`checks: scripts/checks/${f} has no default export run(ctx)`);
+      continue;
     }
+    await mod.default(ctx);
   }
 }
 

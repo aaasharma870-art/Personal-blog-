@@ -1,0 +1,325 @@
+{
+  "proposedMediaId": "L09",
+  "kind": "living loop (P3 media lane, batch B3), new: not registered yet",
+  "sourceMediaId": "MV-06",
+  "plate": "public/media/films/board-dawn.webp",
+  "plateJob": "4686928b-b125-419b-aa30-af1b607c5b0e",
+  "pinnedInput": "uploaded 2560x1440 web still, media a2609cd9-c913-43c5-b31f-eaa74507d8d8 (the plate job is a 2688x1520 2k master)",
+  "job": "0b1c8d95-2a02-4bc1-9962-710fa9f05cc7",
+  "model": "kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The dawn light beam on the right slowly brightens and eases back; chalk dust floats in the beam. The left 60% of the blank chalkboard stays perfectly still, dark and unmarked; the light beam stays in its place on the right part of the board and never spreads left; the board stays blank with no chalk marks or writing. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "B3 generate step prompt parts (map \u00a73 PREFIX + MOTION + STILL + SUFFIX, B3.md 'Settings'); the job params hold the same text (not re-read here: no Higgsfield calls in the check stage)",
+  "generateLog": "docs/build/media/p3/B3.md",
+  "master": "media-src/p3/masters/board-dawn-0b1c8d95.mp4 (Kling original, 3326930 bytes, 145 frames, 6.042 s, 1920x1080, 24 fps, 0 audio)",
+  "files": {
+    "mp4": "board-dawn-loop.mp4",
+    "webm": "board-dawn-loop.webm",
+    "poster": "board-dawn-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6.0,
+  "bytes": {
+    "mp4": 190092,
+    "webm": 172768,
+    "poster": 81414
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/board-dawn-0b1c8d95.mp4 <out>/board-dawn-loop --k=12 --tier=I --method=residual --crf-webm=26 (MP4 CRF 26 = tier-I default)",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 26,
+    "crfWebm": 26,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80,
+    "note": "poster is output frame 0 at 1920 w (the tool writes posters from the 1080p lossless seam); WebM CRF 26 instead of 32: at 5x gain CRF 32 blotches the dark board texture, CRF 26 matches the MP4 (tools.md: 20-26 on dark plates)"
+  },
+  "seamCheckLossless": {
+    "join": 0.9999,
+    "joinRgb": 0.9998,
+    "consecutive": {
+      "min": 0.9981,
+      "minAt": 2,
+      "p05": 0.999,
+      "median": 0.9997
+    },
+    "joinMinusMedian": 0.0002,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "board interior left 60% x0-.60 y0-.85 (binding, map + B3.md)",
+      "board left 60% incl. lower board x0-.60 y0-.92 (informative)"
+    ],
+    "light": [
+      "beam x.65-.80 y.15-.85 (the requested brightening; glow limit 15%)",
+      "left of the beam x.55-.65 y.10-.85 (spill check)"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 3326930,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.99,
+      "lastVsPlate": 0.9899,
+      "join": 0.9956,
+      "joinRgb": 0.9901,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9981,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "board interior left 60% x0-.60 y0-.85 (binding, map + B3.md)": 0.7,
+        "board left 60% incl. lower board x0-.60 y0-.92 (informative)": 0.72
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.29,
+      "phaseShiftPx": [
+        -0.001,
+        0.035
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.65,
+            0.15,
+            0.8,
+            0.85
+          ],
+          "ptpPct": 12.93,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.55,
+            0.1,
+            0.65,
+            0.85
+          ],
+          "ptpPct": 4.63,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 190092,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9809,
+      "lastVsPlate": 0.9832,
+      "join": 0.9922,
+      "joinRgb": 0.9844,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9983,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "board interior left 60% x0-.60 y0-.85 (binding, map + B3.md)": 0.72,
+        "board left 60% incl. lower board x0-.60 y0-.92 (informative)": 0.74
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.27,
+      "phaseShiftPx": [
+        0.004,
+        0.018
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.65,
+            0.15,
+            0.8,
+            0.85
+          ],
+          "ptpPct": 12.68,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.55,
+            0.1,
+            0.65,
+            0.85
+          ],
+          "ptpPct": 4.48,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    },
+    "webm": {
+      "bytes": 172768,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9868,
+      "lastVsPlate": 0.9868,
+      "join": 1,
+      "joinRgb": 0.9999,
+      "joinPercentile": 0.669,
+      "consecutiveMin": 0.9993,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "board interior left 60% x0-.60 y0-.85 (binding, map + B3.md)": 0.5,
+        "board left 60% incl. lower board x0-.60 y0-.92 (informative)": 0.52
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.4,
+      "phaseShiftPx": [
+        0.003,
+        0.026
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.65,
+            0.15,
+            0.8,
+            0.85
+          ],
+          "ptpPct": 12.84,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.55,
+            0.1,
+            0.65,
+            0.85
+          ],
+          "ptpPct": 4.92,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    }
+  },
+  "beamEdge": {
+    "method": "half-max left edge of the beam per row on the lossless seam (1920 w, 16-row band, sigma 6 px), x as a fraction of the width",
+    "rows": {
+      "y.25": [
+        0.7401,
+        0.7385,
+        0.749
+      ],
+      "y.35": [
+        0.7182,
+        0.7172,
+        0.738
+      ],
+      "y.45": [
+        0.6948,
+        0.6943,
+        0.7146
+      ],
+      "y.55": [
+        0.6781,
+        0.6771,
+        0.6948
+      ],
+      "y.65": [
+        0.6573,
+        0.6568,
+        0.6703
+      ],
+      "y.75": [
+        0.6396,
+        0.6391,
+        0.6464
+      ],
+      "y.85": [
+        0.6161,
+        0.6161,
+        0.6193
+      ]
+    },
+    "rowsFormat": "[frame 0, min over the loop, max over the loop]",
+    "result": "the beam never spreads left of its plate edge (<= 0.0016 of the width = 3 px); mid-loop (frames 63-72) its left edge draws back right by up to 0.020 (38 px) and returns. Below y .70 the plate's own beam edge already sits at x .62-.64, so \"right of 65%\" holds relative to the plate, as in the MV-06 acceptance."
+  },
+  "motion": "The beam carries it: its left edge narrows and returns once per loop (flow p99.9 up to 30 px along the soft edge, frames 54-78), the beam zone dims/brightens 12.7-12.9% peak-to-trough at 0.17 Hz with 0.17 reversals/s (limit 15% / 2 Hz); the lit stone jamb by the window shifts a little; a few faint dust specks drift in the window light. Board interior left 60%: flow p99.9 0.12 px.",
+  "l2Sweep": "Lossless seam frames 0/25/50/75/100% full frame; board x0-.62 y0-.90 at 4x gain on all five, and the board in four quadrants (x0-.80 y0-.94) at 100% and 4x gain on frames 72 and 143: blank, only the plate's mottled board texture (no chalk marks, letters, numbers or ghost text); the motion map (max blurred |dY| vs frame 0) shows no local change on the board interior. Window + colonnade x.80-1 y0-.90 at 100% (no figures, trees still); chalk ledge x.55-.85 y.82-.95 at 100% (the plate's two chalk sticks only). No people, figures, riders, faces or hands; no text, letters, numbers, logos, symbols or flags; no new objects; no lightning or flashes (0 WCAG flashes/s whole frame and 4x4 tiles).",
+  "visualChecks": "Slit-scans across the wrap (x .70 y .10-.90 through the beam; x .66 y .30-.90 on its lower edge), +-36 frames, MP4 and WebM: continuous, no seam at the wrap (the MP4 shows only the IDR texture refresh). Wrap strips (N-2, N-1 | 0, 1) continuous; x8 wrap-diff shows only natural detail.",
+  "flags": [
+    "MP4 pass.join = \"codec\" (IDR texture refresh, 0.9922 vs median 0.9998); lossless and WebM joins are at or above every natural step. Serve the WebM first.",
+    "The beam motion is a narrowing of its left edge more than a brightening; it moves away from the board interior, never into it."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/board-dawn-loop.mp4",
+    "webm": "/media/films/board-dawn-loop.webm",
+    "poster": "MV-06 plate (board-dawn.webp)",
+    "endsOn": "board-dawn.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "board-dawn-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: board interior left 60% still (0.50 WebM / 0.72 MP4 /255), blank at 4x gain; beam stays in place on the right (never spreads left), glow 12.9% at 0.17 Hz; 0 flashes, silent; lossless and WebM joins >= every natural step (0.9999 / 1.0000), MP4 join \"codec\"."
+}

@@ -181,6 +181,8 @@ export function letteredIn(world: CaptionWorld, text: string): { lettered: boole
   for (const l of film.lettering) {
     if (!l.shipped || l.mode !== "A" || l.face !== face || !l.text) continue;
     if (l.slot === "caption" && !film.fontScope.extended) continue;
+    // "display" (the hero name) letters only the hero h1 (PHASE3-SPEC §5.4)
+    if (l.slot === "display") continue;
     if (l.text === text) return { lettered: true, upper: false };
     if (l.text === l.text.toUpperCase() && l.text === text.toUpperCase()) return { lettered: true, upper: true };
   }

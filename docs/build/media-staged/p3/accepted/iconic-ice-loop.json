@@ -1,0 +1,205 @@
+{
+  "proposedMediaId": "L08",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "iconic-ice",
+  "plate": "public/media/films/iconic-ice.webp",
+  "plateJob": "0e7a3d5c-2e37-4a53-b635-6a618e773405",
+  "job": "3d63bea9-97de-4a34-8615-387c0b4d723f",
+  "model": "kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Dust motes drift slowly through the slanted sunbeams; the striped pergola shadows creep a hair across the floor and return. The huge green board stays blank and perfectly still; the benches stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "generateLog": "docs/build/media/p3/B2.md",
+  "master": "media-src/p3/masters/iconic-ice-3d63bea9.mp4 (Kling original, 2955413 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "iconic-ice-loop.mp4",
+    "webm": "iconic-ice-loop.webm",
+    "poster": "iconic-ice-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6,
+  "bytes": {
+    "mp4": 773159,
+    "webm": 237935,
+    "poster": 101540
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/iconic-ice-3d63bea9.mp4 docs/build/media-staged/p3/accepted/iconic-ice-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80
+  },
+  "seamCheckLossless": {
+    "join": 0.9999,
+    "joinRgb": 0.9997,
+    "consecutive": {
+      "min": 0.9983,
+      "minAt": 2,
+      "p05": 0.999,
+      "median": 0.9998
+    },
+    "joinMinusMedian": 0.0002,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "boardRect x.389-.961 y.091-.41 (map; code chalks on it)",
+      "benches x0-.68 y.62-1 (map: benches stay still)"
+    ],
+    "light": null
+  },
+  "before": {
+    "master": {
+      "bytes": 2955413,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9893,
+      "lastVsPlate": 0.9888,
+      "join": 0.9956,
+      "joinRgb": 0.9866,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9983,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "boardRect x.389-.961 y.091-.41 (map; code chalks on it)": 0.76,
+        "benches x0-.68 y.62-1 (map: benches stay still)": 0.91
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.68,
+      "phaseShiftPx": [
+        0.002,
+        0.03
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 773159,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9876,
+      "lastVsPlate": 0.9881,
+      "join": 0.995,
+      "joinRgb": 0.9878,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9988,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "boardRect x.389-.961 y.091-.41 (map; code chalks on it)": 0.81,
+        "benches x0-.68 y.62-1 (map: benches stay still)": 0.92
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.8,
+      "phaseShiftPx": [
+        -0.013,
+        0.022
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 237935,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.9878,
+      "lastVsPlate": 0.9879,
+      "join": 0.9999,
+      "joinRgb": 0.9997,
+      "joinPercentile": 0.2324,
+      "consecutiveMin": 0.9987,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "boardRect x.389-.961 y.091-.41 (map; code chalks on it)": 0.51,
+        "benches x0-.68 y.62-1 (map: benches stay still)": 0.78
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.78,
+      "phaseShiftPx": [
+        -0.001,
+        0.022
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    }
+  },
+  "l2Sweep": "Frames 0/25/50/75/100% + 90% board crop, 120% door/corridor and desk crops, 130% corridor strip, 300% chalk-ledge strip: the board stays blank (no chalk marks, letters, numbers or ghost text); the ledge holds the plate's chalk sticks and duster only; corridor, doorway and benches empty (no figures); no flash.",
+  "motion": "Near-still: the requested dust motes and pergola-shadow creep are not perceptible; max 16x9-tile change vs frame 0 is 3.6/255 (texture shimmer at edges and the sunlit corridor). The board is still (0.51-0.81/255).",
+  "visualChecks": "Slit-scans across the wrap (loop.mjs frames --slit, +-36 frames) on the MP4 and the WebM show no vertical seam at the wrap; wrap strips (N-2, N-1 | 0, 1) continuous; x8 wrap-diff shows only natural motion detail.",
+  "flags": [
+    "Near-still loop: it adds only a faint shimmer over the plate. It passes every limit, and the still board is what the code needs; if more life is wanted, the code ALT (parallax) may read better. Aryan to judge in real time.",
+    "Poster is 101,540 B at q80 (just under the 100 KiB cap the tool enforces)."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-ice-loop.mp4",
+    "webm": "/media/films/iconic-ice-loop.webm",
+    "poster": "iconic-ice plate (iconic-ice.webp)",
+    "endsOn": "iconic-ice.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "iconic-ice-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS: board blank and still (<= 0.81/255), benches still, 0 flashes, silent; MP4 pass.join = \"codec\", lossless and WebM joins at or above every natural step (0.9999 / 0.9999). Flag: near-still"
+}

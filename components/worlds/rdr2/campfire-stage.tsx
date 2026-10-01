@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { markOf, resolveMedia, type MediaId } from "@/lib/media";
 import { dur, easeClip } from "@/lib/motion";
@@ -44,6 +45,10 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    no loop. Reduced motion / Pause: the still plate(s), no veil, no clip,
    quotes in ink. The DOM order is the same in both (head → lead → rest).
    Colour changes are overlays on MEDIA only (opacity); no DOM glow.
+   RASTER (P3-2, spec §12.1 #6): the sticky camp is never repainted while
+   it scrolls — the plate's feather is a baked wash (no mask) and the two
+   veils change opacity only, each on its own layer. B46 (the camp's
+   fade-up out of the journal's dusk) is this stage.
    ========================================================================== */
 
 const DESKTOP = "(min-width: 64rem)";
@@ -168,7 +173,7 @@ export function CampfireStage({
 
   if (alt && altMedia) {
     return (
-      <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v}>
+      <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B46", { weight: 1 })}>
         <div ref={bandRef} className={s.fireBand}>
           <motion.div
             className={s.fireMedia}
@@ -196,7 +201,7 @@ export function CampfireStage({
   }
 
   return (
-    <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v}>
+    <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B46", { weight: 1 })}>
       <div className={s.campCopy}>
         {head}
         {caption ? <div className={s.campHeadCaption}>{caption}</div> : null}

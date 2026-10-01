@@ -1,0 +1,39 @@
+{
+  "proposedMediaId": "SEQ-PEARL",
+  "kind": "P3 scroll-scrubbed push-in sequence #1 (opening card star (b), p .50-1)",
+  "plate": "public/media/films/iconic-pearl.webp",
+  "plateJob": "4273a1be-64f7-4c66-aabf-5b44710d490c",
+  "job": "f2bbb057-c771-4d88-81ce-ba2605a5e056",
+  "model": "kling3_0 pro 16:9, 5 s, sound off, start_image = the plate job only, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836",
+  "credits": 8.75,
+  "generateLog": "docs/build/media/p3/B8.md",
+  "checkLog": "docs/build/media/p3/B9.md#2-seq-post-processing",
+  "prompt": "One slow, steady, continuous dolly-in toward the dark sailing ship: the camera glides straight forward over the water toward the ship at a constant speed from the first frame to the last, never stopping, turning, tilting or shaking. The masts, rigging and hull outline hold their shape; the small flag stays plain and dark with no symbol; the sky stays still. One uninterrupted shot. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "master": "media-src/p3/masters/SEQ-PEARL-f2bbb057.mp4 (14570602 bytes, 1920x1080, 24 fps, 121 frames, 5.042 s, 0 audio)",
+  "verdict": "FAIL (L2 hard limits)",
+  "reason": [
+    "LIGHTNING / FLASH FRAMES: five single-frame flashes in the fog and sky at master frames 15, 31, 47, 74 and 103 (whole-frame mean luma 33.7 -> 45.5 -> 33.9, 33.2 -> 44.2, 32.8 -> 47.4, 32.3 -> 38.7, 31.2 -> 46.9; every other step <= 0.4). Four of them land in the 72-frame sequence (000-071 indices 9, 28, 44, 61; luma 44.4 / 46.3 / 37.6 / 45.8 against ~31 around them). Scrubbed, each reads as a lightning flicker behind the ship. The prompt forbade flashes and lightning. loop.mjs check did not count them (WCAG general-flash rule: the relative-luminance swing on this dark plate is ~0.014, far below its 0.10 threshold) and B8 sampled luma every 10th frame, so both missed them.",
+    "FIGURE-LIKE SHAPES (the B8 flag, judged here): the dark cluster on the bow rail, one hat-like silhouette about 13 px tall in the plate (master frame 0), is re-rendered as the push goes in into three rounded head-and-shoulders silhouettes about 23 px tall standing at the rail (frame 120, 1.27x locally; ~17 px at a 1440 px viewport). At 300% they read as crouching or standing crew; at display size as two or three dark heads at the rail. Spec 6.2: a sequence with people or likeness fails L2."
+  ],
+  "checks": {
+    "firstVsPlate(1280 q75 frame 000)": 0.9695,
+    "masterB8": {
+      "firstVsPlate": 0.9885,
+      "flash": {
+        "wholeMaxPerSecond": 0,
+        "wholeTransitions": 0,
+        "tilesMaxPerSecond": 2,
+        "worstTile": 8,
+        "redShareMax": 0
+      },
+      "audioStreams": 0
+    },
+    "push": "1.048 / 1.106 / 1.178 / 1.258 at source frames 30/60/90/120 toward the stern (B8); fine as a camera move",
+    "masterPerFrameLuma": "34.6 ... 28.4, spikes at 15, 31, 47, 74, 103 (see reason)",
+    "sequenceSize": "q75 3.62 MB, q50 2.59 MB, q40 2.22 MB (also over the 1.6 MB budget)"
+  },
+  "salvageConsidered": "Re-sampling the 72 frames around the 5 flash frames would remove the lightning at 0 credits, but the bow-rail silhouettes grow through the whole second half of the push (and into the end still the about stage would hold), so an L2-clean sequence would need a per-frame inpaint of that cluster across a parallax push; not attempted. No SEQ retake (plan 9.3).",
+  "candidateFrames": "media-src/p3/masters/seq-pearl-candidate-q75/000-071.webp (gitignored; the loop.mjs sequence output at q75, kept only so Aryan can look; 4 of them are flash frames)",
+  "consequence": "The ALT becomes the DEFAULT for push-in #1: the code push on the L01 loop (1 -> 1.3 about the stern, spec 6.2). For the act-1 program / about stage, the exit frame is iconic-pearl at the ALT push end scale (spec table row \"act-1 program block\"). No seq-pearl-end.webp is staged. Flag for Aryan.",
+  "finalVerdict": "FAIL. Code ALT (L01 push) is the DEFAULT. No retake."
+}

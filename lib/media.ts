@@ -162,6 +162,16 @@ const cleanM2 = (icon?: readonly string[]): MediaAccept => ({
 const hf2 = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
   source: "higgsfield", model, credits, date: "2026-09-29", jobId, ...(note ? { note } : {}),
 });
+/** Phase 3 media (the P3 media lane, PHASE3-PLAN §9; registered by the W1
+ *  assembler on 2026-10-01): generated 2026-09-30; Check L2 signed by Claude
+ *  on 2026-10-01, Aryan pending (DP-9: RELEASE gates on the countersignature). */
+const L2_P3 = "claude:2026-10-01+aryan:pending" as const;
+const cleanP3 = (icon?: readonly string[]): MediaAccept => ({
+  ...clean(icon), checkL2: L2_P3,
+});
+const hfP3 = (model: string, credits: number, jobId: string, note?: string): MediaProvenance => ({
+  source: "higgsfield", model, credits, date: "2026-09-30", jobId, ...(note ? { note } : {}),
+});
 /** The iconic plates (M2-R lane, LEDGER-m2iconic.md): gpt_image_2_5 16:9 4k
  *  xhigh, 3840×2160 masters, 2560×1440 web encodes here. Anchors (marks /
  *  rects) marked "provisional" are Claude's estimates at 960 px; the
@@ -377,10 +387,10 @@ export const mediaAssets = {
   "MV-03": {
     kind: "video", status: "accepted", src: "/media/films/hero-sea-loop.mp4",
     webm: "/media/films/hero-sea-loop.webm", poster: "MV-01", endsOn: "MV-01",
-    width: 1920, height: 1080, durationS: 8.04, focal: [0.7, 0.5],
+    width: 1920, height: 1080, durationS: 8, focal: [0.7, 0.5],
     focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 }, alt: null,
     provenance: hf("kling3_0 pro 16:9 8s sound-off", 14, "764ca916-286d-41a4-b06f-81f36fd06c92",
-      "start = end = MV-01 (encoded reg 0.982/0.975, join 0.987, 0 px shift); x<50% static; the lantern flickers softly (director); wrap step ~2 frames (Aryan to watch)"),
+      "start = end = MV-01 (encoded reg 0.982/0.975, join 0.987, 0 px shift); x<50% static; the lantern flickers softly (director); wrap step ~2 frames (Aryan to watch) · P3 (2026-10-01): re-seamed P3 (residual ramp K=24, one keyframe per loop): web join mp4 0.9905 / webm 0.9976 (was 0.9879 / 0.9891); H.264 2.09 MB / VP9 1.28 MB (docs/build/media-staged/p3/accepted/reseam/hero-sea-loop.json)"),
     accept: clean(["IC-PC-01", "IC-PC-08"]),
     fallback: "MV-01", reduced: "poster",
     variants: { alt: "MV-03-alt" },
@@ -389,7 +399,7 @@ export const mediaAssets = {
     kind: "image", status: "accepted", src: "/media/films/hero-sea-loop-poster.webp",
     width: 1920, height: 1080, alt: null,
     provenance: hf("frame 0 of MV-03", 0, "764ca916-286d-41a4-b06f-81f36fd06c92",
-      "frame 0 of the loop; code keeps MV-01 (the priority poster) as the loop's poster"),
+      "frame 0 of the loop; code keeps MV-01 (the priority poster) as the loop's poster · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: clean(), fallback: "MV-01", reduced: "poster",
     variants: { alt: "MV-03-alt-poster" },
   },
@@ -464,10 +474,10 @@ export const mediaAssets = {
     // M2 alt2: replaces the rejected minimax runner-up (ebb7db32).
     kind: "video", status: "accepted", src: "/media/films/hero-sea-loop-alt2.mp4",
     webm: "/media/films/hero-sea-loop-alt2.webm", poster: "MV-01", endsOn: "MV-01",
-    width: 1920, height: 1080, durationS: 8.04, focal: [0.7, 0.5],
+    width: 1920, height: 1080, durationS: 8, focal: [0.7, 0.5],
     focalBox: { x0: 0.49, x1: 0.96, y0: 0.46, y1: 0.6 }, alt: null,
     provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "f5130107-5bde-46a1-84b4-094c1b72fc4c",
-      "MV-03 alt2 (extra run): start = end = MV-01; first/last 0.987 / 0.986, join 0.995 (web MP4 0.975); left half <= 0.41/255; lantern peak +-2.3%; calmer (crest amplitude ~57% of the default). H.264 0.66 MB / VP9 0.35 MB, silent"),
+      "MV-03 alt2 (extra run): start = end = MV-01; first/last 0.987 / 0.986, join 0.995 (web MP4 0.975); left half <= 0.41/255; lantern peak +-2.3%; calmer (crest amplitude ~57% of the default). H.264 0.66 MB / VP9 0.35 MB, silent · P3 (2026-10-01): re-seamed P3 (residual ramp K=24, one keyframe per loop): web join mp4 0.9956 / webm 0.9997 (was 0.9948 / 0.9936); H.264 0.64 MB / VP9 0.24 MB (docs/build/media-staged/p3/accepted/reseam/hero-sea-loop-alt2.json)"),
     accept: cleanM2(["IC-PC-01", "IC-PC-08"]),
     variantOf: "MV-03", fallback: "MV-03", reduced: "poster",
   },
@@ -475,7 +485,7 @@ export const mediaAssets = {
     kind: "image", status: "accepted", src: "/media/films/hero-sea-loop-alt2-poster.webp",
     width: 1920, height: 1080, alt: null,
     provenance: hf2("frame 0 of MV-03-alt (alt2)", 0, "f5130107-5bde-46a1-84b4-094c1b72fc4c",
-      "frame 0; code keeps MV-01 as the loop's poster"),
+      "frame 0; code keeps MV-01 as the loop's poster · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: cleanM2(), variantOf: "MV-03-poster", fallback: "MV-03-poster", reduced: "poster",
   },
 
@@ -617,7 +627,8 @@ export const mediaAssets = {
     kind: "image", status: "accepted", src: "/media/films/frontier-dusk.webp",
     width: 2560, height: 1440, focal: [0.78, 0.45], alt: null,
     // the low sun: card II->III sinks its sprite onto it (cards builder, measured)
-    marks: { sun: [0.8125, 0.2185] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { sun: [0.8125, 0.2185], horizon: [0, 0.333] },
     provenance: hf2("gpt_image_2_5 16:9 2k high (edit of e0987388)", 2.75, "32281e86-6f1d-4db7-8bb5-73eb276e6618",
       "the Heartlands at golden hour: a riderless horse (clean at 200%), a river; left 45% x y 25-75% p95 0.0059; the rdr2 anchor (card II->III settled state = the Beyond band, a declared reuse)"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
@@ -627,6 +638,8 @@ export const mediaAssets = {
   "MV-10-alt": {
     kind: "image", status: "accepted", src: "/media/films/frontier-dusk-alt.webp",
     width: 2560, height: 1440, focal: [0.78, 0.45], alt: null,
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { horizon: [0, 0.333] },
     provenance: hf2("gpt_image_2_5 16:9 2k high (edit of e0987388)", 2.75, "c249b137-3f83-4bc7-9f0f-33ce136af6ce",
       "ALT: left45 p95 0.0073 (the sub-band x .30-.45 x y .25-.45 is 0.106)"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),
@@ -668,9 +681,9 @@ export const mediaAssets = {
   "MV-11L": {
     kind: "video", status: "accepted", src: "/media/films/campfire-loop.mp4",
     webm: "/media/films/campfire-loop.webm", poster: "MV-11", endsOn: "MV-11",
-    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    width: 1920, height: 1080, durationS: 8, alt: null,
     provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "d4086e11-bb78-451d-ae83-438b841f3a4c",
-      "start = end = MV-11; web join 0.970; silent; passes every flash check. H.264 0.54 MB / VP9 0.24 MB"),
+      "start = end = MV-11; web join 0.970; silent; passes every flash check. H.264 0.54 MB / VP9 0.24 MB · P3 (2026-10-01): re-seamed P3 (residual ramp K=12, one keyframe per loop): web join mp4 0.9959 / webm 0.9992 (was 0.9948 / 0.9941); H.264 0.59 MB / VP9 0.22 MB (docs/build/media-staged/p3/accepted/reseam/campfire-loop.json)"),
     accept: cleanM2(["IC-RD-04"]),
     fallback: "MV-11", reduced: "poster",
     variants: { alt: "MV-11L-alt" },
@@ -678,23 +691,23 @@ export const mediaAssets = {
   "MV-11L-alt": {
     kind: "video", status: "accepted", src: "/media/films/campfire-loop-alt.mp4",
     webm: "/media/films/campfire-loop-alt.webm", poster: "MV-11", endsOn: "MV-11",
-    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    width: 1920, height: 1080, durationS: 8, alt: null,
     provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "8d687e50-6273-4711-a462-d03cc7ab5531",
-      "ALT: start = end = MV-11 (the DEFAULT plate); web join 0.973; BORDERLINE: ground glow 16.6% (limit 15) and <= 3/s reversals on a very dark mean"),
+      "ALT: start = end = MV-11 (the DEFAULT plate); web join 0.973; BORDERLINE: ground glow 16.6% (limit 15) and <= 3/s reversals on a very dark mean · P3 (2026-10-01): re-seamed P3 (residual ramp K=12, one keyframe per loop): web join mp4 0.9962 / webm 0.9993 (was 0.995 / 0.9943); H.264 0.66 MB / VP9 0.25 MB (docs/build/media-staged/p3/accepted/reseam/campfire-loop-alt.json)"),
     accept: cleanM2(["IC-RD-04"]),
     variantOf: "MV-11L", fallback: "MV-11L", reduced: "poster",
   },
   "MV-11L-poster": {
     kind: "image", status: "accepted", src: "/media/films/campfire-loop-poster.webp",
     width: 1920, height: 1080, alt: null,
-    provenance: hf2("frame 0 of MV-11L", 0, "d4086e11-bb78-451d-ae83-438b841f3a4c", "frame 0; code keeps MV-11 as the loop's poster"),
+    provenance: hf2("frame 0 of MV-11L", 0, "d4086e11-bb78-451d-ae83-438b841f3a4c", "frame 0; code keeps MV-11 as the loop's poster · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: cleanM2(), fallback: "MV-11", reduced: "poster",
     variants: { alt: "MV-11L-alt-poster" },
   },
   "MV-11L-alt-poster": {
     kind: "image", status: "accepted", src: "/media/films/campfire-loop-alt-poster.webp",
     width: 1920, height: 1080, alt: null,
-    provenance: hf2("frame 0 of MV-11L-alt", 0, "8d687e50-6273-4711-a462-d03cc7ab5531", "frame 0"),
+    provenance: hf2("frame 0 of MV-11L-alt", 0, "8d687e50-6273-4711-a462-d03cc7ab5531", "frame 0 · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: cleanM2(), variantOf: "MV-11L-poster", fallback: "MV-11L-poster", reduced: "poster",
   },
 
@@ -738,9 +751,9 @@ export const mediaAssets = {
   "MV-09": {
     kind: "video", status: "accepted", src: "/media/films/last-light-loop.mp4",
     webm: "/media/films/last-light-loop.webm", poster: "MV-08", endsOn: "MV-08",
-    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    width: 1920, height: 1080, durationS: 8, alt: null,
     provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "154f82ce-aa27-4328-abb8-b2e43bc44911",
-      "start = end = MV-08; the flame breathes 3.8%, no flicker (the ~10 Hz take b1fed92b was rejected); web join 0.975; silent"),
+      "start = end = MV-08; the flame breathes 3.8%, no flicker (the ~10 Hz take b1fed92b was rejected); web join 0.975; silent · P3 (2026-10-01): re-seamed P3 (residual ramp K=12, one keyframe per loop): web join mp4 0.9982 / webm 1 (was 0.9972 / 0.9978); H.264 0.46 MB / VP9 0.08 MB (docs/build/media-staged/p3/accepted/reseam/last-light-loop.json)"),
     accept: cleanM2(["IC-HP-03"]),
     fallback: "MV-08", reduced: "poster",
     variants: { alt: "MV-09-alt" },
@@ -748,23 +761,23 @@ export const mediaAssets = {
   "MV-09-alt": {
     kind: "video", status: "accepted", src: "/media/films/last-light-loop-alt.mp4",
     webm: "/media/films/last-light-loop-alt.webm", poster: "MV-08", endsOn: "MV-08",
-    width: 1920, height: 1080, durationS: 8.04, alt: null,
+    width: 1920, height: 1080, durationS: 8, alt: null,
     provenance: hf2("kling3_0 pro 16:9 8s sound-off", 14, "634151ff-7928-49c4-b113-03c2a9fcce4d",
-      "ALT: start = end = MV-08 (the DEFAULT plate); nearly still (flame breathing ~1.6%); web join 0.977"),
+      "ALT: start = end = MV-08 (the DEFAULT plate); nearly still (flame breathing ~1.6%); web join 0.977 · P3 (2026-10-01): re-seamed P3 (residual ramp K=12, one keyframe per loop): web join mp4 0.9985 / webm 1 (was 0.9973 / 0.9977); H.264 0.39 MB / VP9 0.08 MB (docs/build/media-staged/p3/accepted/reseam/last-light-loop-alt.json)"),
     accept: cleanM2(["IC-HP-03"]),
     variantOf: "MV-09", fallback: "MV-09", reduced: "poster",
   },
   "MV-09-poster": {
     kind: "image", status: "accepted", src: "/media/films/last-light-loop-poster.webp",
     width: 1920, height: 1080, alt: null,
-    provenance: hf2("frame 0 of MV-09", 0, "154f82ce-aa27-4328-abb8-b2e43bc44911", "frame 0; code keeps MV-08 as the loop's poster"),
+    provenance: hf2("frame 0 of MV-09", 0, "154f82ce-aa27-4328-abb8-b2e43bc44911", "frame 0; code keeps MV-08 as the loop's poster · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: cleanM2(), fallback: "MV-08", reduced: "poster",
     variants: { alt: "MV-09-alt-poster" },
   },
   "MV-09-alt-poster": {
     kind: "image", status: "accepted", src: "/media/films/last-light-loop-alt-poster.webp",
     width: 1920, height: 1080, alt: null,
-    provenance: hf2("frame 0 of MV-09-alt", 0, "634151ff-7928-49c4-b113-03c2a9fcce4d", "frame 0"),
+    provenance: hf2("frame 0 of MV-09-alt", 0, "634151ff-7928-49c4-b113-03c2a9fcce4d", "frame 0 · P3 (2026-10-01): frame 0 of the re-seam (= the pinned plate frame src[0])"),
     accept: cleanM2(), variantOf: "MV-09-poster", fallback: "MV-09-poster", reduced: "poster",
   },
 
@@ -960,7 +973,8 @@ export const mediaAssets = {
     width: 2560, height: 1440, focal: [0.55, 0.55], alt: null,
     // `fire` is the hand-off point: the ignite card's embers rise from it
     // (RECOGNIZABILITY S16/S17). Provisional; the builder re-measures.
-    marks: { fire: [0.535, 0.68] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { fire: [0.535, 0.68], lake: [0, 0.378], wheel: [0.8883, 0.5667], wheelR: [0.0375, 0.0722] },
     provenance: hf2(ICONIC, 7, "3c420eac-b80f-44ff-beae-c89b4e4bb3cb",
       "S16 voices default: the gang's camp at dusk: 3 horses at the rail facing camera (4 legs, 1 head each), a lit wall tent, a covered wagon, the fire with its tripod pot, the lake glinting at sunset; no people or lettering; lower-left p95 0.044"),
     accept: cleanM2(["IC-RD-04", "IC-RD-06"]),
@@ -970,7 +984,8 @@ export const mediaAssets = {
   "iconic-camp-alt": {
     kind: "image", status: "accepted", src: "/media/films/iconic-camp-alt.webp",
     width: 2560, height: 1440, focal: [0.6, 0.55], alt: null,
-    marks: { fire: [0.62, 0.71] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { fire: [0.62, 0.71], lake: [0, 0.369], wheel: [0.4344, 0.5837], wheelR: [0.0195, 0.0517] },
     provenance: hf2(ICONIC, 7, "37726d77-ed0d-4777-8986-e84216079cfe",
       "ALT: the fire with its tripod pot, a covered wagon, A-frame and wall tents, 3 hitched horses from behind (4 legs each), the lake, sunset; no people or lettering"),
     accept: cleanM2(["IC-RD-04", "IC-RD-06"]),
@@ -1000,7 +1015,8 @@ export const mediaAssets = {
   "iconic-deadeye": {
     kind: "image", status: "accepted", src: "/media/films/iconic-deadeye.webp",
     width: 2560, height: 1440, focal: [0.5, 0.5], alt: null,
-    marks: { oak: [0.2, 0.45], homestead: [0.66, 0.49] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { oak: [0.2, 0.45], homestead: [0.66, 0.49], horizon: [0, 0.44] },
     provenance: hf2(ICONIC, 7, "0a60fa27-78e8-4340-8ddd-ca77858eed7a",
       "S13 ALT settled / SM-17 egg grade: a lone oak, a split-rail fence, a trail and a homestead with frozen birds under a heavy desaturated red-sepia grade and vignette (the Dead Eye look). No reticle, no figure; the X marks are code"),
     accept: cleanM2(["IC-RD-02", "IC-RD-05"]),
@@ -1020,7 +1036,8 @@ export const mediaAssets = {
     width: 2560, height: 1440, focal: [0.5, 0.45], alt: null,
     // provisional: lineStart = where the Line's candle run enters the plate
     // (the builder re-measures against LINE_D once lib/line.ts lands)
-    marks: { window: [0.52, 0.33], highTable: [0.5, 0.63], lineStart: [0.08, 0.3] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { window: [0.52, 0.33], highTable: [0.5, 0.63], lineStart: [0.08, 0.3], tableL: [0.398, 0.6385], tableR: [0.636, 0.6385] },
     provenance: hf2(ICONIC, 7, "1ef4355e-d82b-4513-a273-1cbdebbd8755",
       "S17 card III->IV settled (p > .85): the Great Hall: four long tables with gold plates, the high table, a tall central gothic window, the enchanted starry ceiling, hundreds of floating candles; no people, banners or crests; lower-left p95 0.088; clean at 9x ghost gain"),
     accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
@@ -1030,7 +1047,8 @@ export const mediaAssets = {
   "iconic-hall-alt": {
     kind: "image", status: "accepted", src: "/media/films/iconic-hall-alt.webp",
     width: 2560, height: 1440, focal: [0.48, 0.45], alt: null,
-    marks: { window: [0.48, 0.35], highTable: [0.47, 0.64], lineStart: [0.08, 0.3] },
+    // P3 marks (M-AUX, measured at 2560: docs/build/media-staged/p3/marks.json; PHASE3-SPEC §7.2)
+    marks: { window: [0.48, 0.35], highTable: [0.47, 0.64], lineStart: [0.08, 0.3], tableL: [0.321, 0.6306], tableR: [0.632, 0.6306] },
     provenance: hf2(ICONIC, 7, "0fd211fb-b4e9-4b19-ac70-3ac88bd8d771",
       "ALT: the same icons; slightly brighter lower-left (p95 0.105)"),
     accept: cleanM2(["IC-HP-03", "IC-HP-16"]),
@@ -1053,6 +1071,338 @@ export const mediaAssets = {
       "ALT: tender and cab plain; the carriages keep <= 5 px non-legible gold dots / handles at 2560"),
     accept: cleanM2(),
     variantOf: "iconic-express", fallback: "iconic-express", reduced: "poster",
+  },
+
+  /* == PHASE 3: LIVING LOOPS + SEQ-HALL (W1 assembler, 2026-10-01) ========
+     PHASE3-PLAN §9.4. Every PASSING loop in docs/build/media-staged/p3/
+     accepted/ (19 of 25; the FAIL records stay there): a `kind:"video"` row
+     whose poster AND end frame are the plate (DP-5: `loopFor(plate)` finds
+     it; hosts and stage cues name the plate, never the loop), `codeAlt:
+     "code:plate-camera"` as its ALT (DP-8), the plate as `fallback`. Each
+     loop's frame-0 still is registered beside it as "<id>-poster" (the
+     registration record; code keeps the plate as the poster). Ids are the
+     spec's loop ids (PHASE3-SPEC §6.3). SEQ-PEARL FAILED Check L2 (flash
+     frames + figure-like silhouettes on the bow rail) and is NOT registered:
+     the code push on L01 is the push-in #1 DEFAULT. Check L2: Claude ✓
+     2026-10-01, Aryan pending. Ledger: docs/build/media/LEDGER-p3loops.md. */
+  "L01": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-pearl-loop.mp4",
+    webm: "/media/films/iconic-pearl-loop.webm", poster: "iconic-pearl", endsOn: "iconic-pearl",
+    width: 1920, height: 1080, durationS: 8, alt: null,
+    provenance: hfP3("kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the plate); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item", 14, "7adcbc7e-4ca8-413b-b16e-5400ea0dd79d",
+      "L01 living loop on iconic-pearl (tier S; seam residual K=12; mp4 1947462 B / webm 1202049 B). PASS Motion: [object Object] FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/iconic-pearl-loop.json"),
+    accept: cleanP3(["IC-PC-01", "IC-PC-08"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-pearl", reduced: "poster",
+  },
+  "L01-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pearl-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L01", 0, "7adcbc7e-4ca8-413b-b16e-5400ea0dd79d",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-pearl as the loop's poster"),
+    accept: cleanP3(["IC-PC-01", "IC-PC-08"]), fallback: "iconic-pearl", reduced: "poster",
+  },
+  "L02": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-hall-loop.mp4",
+    webm: "/media/films/iconic-hall-loop.webm", poster: "iconic-hall", endsOn: "iconic-hall",
+    width: 1920, height: 1080, durationS: 8, alt: null,
+    provenance: hfP3("kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the plate); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item", 14, "ba931cc6-a5b6-4ada-a891-e29e5c5c0364",
+      "L02 living loop on iconic-hall (tier S; seam residual K=12; mp4 1170700 B / webm 492722 B). PASS (flagged: lineStart MP4 zone 1.16/255, see flags) Motion: [object Object] FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/iconic-hall-loop.json"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-hall", reduced: "poster",
+  },
+  "L02-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-hall-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L02", 0, "ba931cc6-a5b6-4ada-a891-e29e5c5c0364",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-hall as the loop's poster"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]), fallback: "iconic-hall", reduced: "poster",
+  },
+  "L05": {
+    kind: "video", status: "accepted", src: "/media/films/intro-play-loop.mp4",
+    webm: "/media/films/intro-play-loop.webm", poster: "IN-01", endsOn: "IN-01",
+    width: 1920, height: 1080, durationS: 8, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job", 14, "930949e7-1ce9-4072-8e66-0c15f9ed2693",
+      "L05 living loop on IN-01 (tier S; seam residual K=12; mp4 508920 B / webm 237748 B). PASS (with the 0-credit broom hold-out): every check passes on both encodes; MP4 pass.join = \"codec\" (the IDR texture refresh), the motion seam is an ordinary step (lossless 0.9997, WebM 0.9998) Motion: Very restrained: whole-frame luma range 0.43-0.67 %; the candles do not visibly bob; candle flames and the lake reflections shimmer faintly (light zones ptp 0.5 … FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/intro-play-loop.json"),
+    accept: cleanP3(["IC-HP-01", "IC-HP-02", "IC-HP-03", "IC-HP-04"]),
+    codeAlt: "code:plate-camera", fallback: "IN-01", reduced: "poster",
+  },
+  "L05-poster": {
+    kind: "image", status: "accepted", src: "/media/films/intro-play-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L05", 0, "930949e7-1ce9-4072-8e66-0c15f9ed2693",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps IN-01 as the loop's poster"),
+    accept: cleanP3(["IC-HP-01", "IC-HP-02", "IC-HP-03", "IC-HP-04"]), fallback: "IN-01", reduced: "poster",
+  },
+  "L06": {
+    kind: "video", status: "accepted", src: "/media/films/voyage-a-loop.mp4",
+    webm: "/media/films/voyage-a-loop.webm", poster: "MV-05a", endsOn: "MV-05a",
+    width: 1920, height: 1080, durationS: 8, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job", 14, "fa569f31-6c24-4e47-8f10-7176e8ac857d",
+      "L06 living loop on MV-05a (tier S; seam residual K=24; mp4 833976 B / webm 282606 B). PASS: every map check passes (quays empty, horizon level, lanterns <= 2 %, 0 flashes, silent); MP4 pass.join = \"codec\", lossless and WebM joins are ordinary steps (0.9993 / 0.9997) Motion: Very restrained: lantern reflections and water shimmer (light zones ptp 0.7-1.7 %, 0 reversals/s), cloud texture near the moon breathes … FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/voyage-a-loop.json"),
+    accept: cleanP3(["IC-PC-11"]),
+    codeAlt: "code:plate-camera", fallback: "MV-05a", reduced: "poster",
+  },
+  "L06-poster": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-a-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L06", 0, "fa569f31-6c24-4e47-8f10-7176e8ac857d",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-05a as the loop's poster"),
+    accept: cleanP3(["IC-PC-11"]), fallback: "MV-05a", reduced: "poster",
+  },
+  "L08": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-ice-loop.mp4",
+    webm: "/media/films/iconic-ice-loop.webm", poster: "iconic-ice", endsOn: "iconic-ice",
+    width: 1920, height: 1080, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job", 10.5, "3d63bea9-97de-4a34-8615-387c0b4d723f",
+      "L08 living loop on iconic-ice (tier S; seam residual K=12; mp4 773159 B / webm 237935 B). PASS: board blank and still (<= 0.81/255), benches still, 0 flashes, silent; MP4 pass.join = \"codec\", lossless and WebM joins at or above every natural step (0.9999 / 0.9999). Flag: near-still Motion: Near-still: the requested dust motes and pergola-shadow creep are not perceptible; max 16x9-tile change vs frame 0 is 3.6/255 (texture shimmer at edges and the  … FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/iconic-ice-loop.json"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-ice", reduced: "poster",
+  },
+  "L08-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-ice-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L08", 0, "3d63bea9-97de-4a34-8615-387c0b4d723f",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-ice as the loop's poster"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]), fallback: "iconic-ice", reduced: "poster",
+  },
+  "L09": {
+    kind: "video", status: "accepted", src: "/media/films/board-dawn-loop.mp4",
+    webm: "/media/films/board-dawn-loop.webm", poster: "MV-06", endsOn: "MV-06",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item", 10.5, "0b1c8d95-2a02-4bc1-9962-710fa9f05cc7",
+      "L09 living loop on MV-06 (tier I; seam residual K=12; mp4 190092 B / webm 172768 B). PASS: board interior left 60% still (0.50 WebM / 0.72 MP4 /255), blank at 4x gain; beam stays in place on the right (never spreads left), glow 12.9% at 0.17 Hz; 0 flashes, silent; lossless and WebM joins >= every natural step (0.9999 / 1.0000) … Motion: The beam carries it: its left edge narrows and returns once per loop (flow p99.9 up to 30 px along the soft edge, frames 54-78) … FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/board-dawn-loop.json"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]),
+    codeAlt: "code:plate-camera", fallback: "MV-06", reduced: "poster",
+  },
+  "L09-poster": {
+    kind: "image", status: "accepted", src: "/media/films/board-dawn-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L09", 0, "0b1c8d95-2a02-4bc1-9962-710fa9f05cc7",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-06 as the loop's poster"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]), fallback: "MV-06", reduced: "poster",
+  },
+  "L10": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-corridor-loop.mp4",
+    webm: "/media/films/iconic-corridor-loop.webm", poster: "iconic-corridor", endsOn: "iconic-corridor",
+    width: 1920, height: 1080, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item", 10.5, "c6481b99-a3ce-4028-a768-88746a3083f3",
+      "L10 living loop on iconic-corridor (tier S; seam residual K=12; mp4 818307 B / webm 456571 B). PASS (0-cr wall + column hold-out): wall 0.05/0.11 and columns <= 0.19 /255 (MP4/WebM); the shadow stripes creep and return; corridor and courtyard empty; 0 flashes, silent; lossless and WebM joins 1.0000, MP4 join \"codec\". Motion: The floor carries it: the pergola shadow stripes creep across the polished floor and return (floor flow p99.9 up to 16 px around frames 84-102 … FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/iconic-corridor-loop.json"),
+    accept: cleanP3(["IC-3I-09"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-corridor", reduced: "poster",
+  },
+  "L10-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-corridor-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L10", 0, "c6481b99-a3ce-4028-a768-88746a3083f3",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-corridor as the loop's poster"),
+    accept: cleanP3(["IC-3I-09"]), fallback: "iconic-corridor", reduced: "poster",
+  },
+  "L11": {
+    kind: "video", status: "accepted", src: "/media/films/lights-line-loop.mp4",
+    webm: "/media/films/lights-line-loop.webm", poster: "MV-07", endsOn: "MV-07",
+    width: 1920, height: 1080, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item", 10.5, "a2d361aa-ee8b-4b80-b434-7e1049676303",
+      "L11 living loop on MV-07 (tier S; seam residual K=12; mp4 551100 B / webm 294655 B). PASS, flagged near-still: left 40% still (0.21 WebM / 0.48 MP4 /255), ribbon holds LINE_D (<= 0.3 px), glow <= 2.6% with 0 reversals/s, 0 flashes, silent; lossless and WebM joins 1.0000, MP4 join \"codec\". Only a faint ribbon-flame shimmer moves. Motion: Near-still. The candles do not bob (flow p99.9 <= 0.28 px anywhere) and the large flames do not visibly flicker (luma ptp <= 0.8%); the only motion is a faint … FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/lights-line-loop.json"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]),
+    codeAlt: "code:plate-camera", fallback: "MV-07", reduced: "poster",
+  },
+  "L11-poster": {
+    kind: "image", status: "accepted", src: "/media/films/lights-line-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L11", 0, "a2d361aa-ee8b-4b80-b434-7e1049676303",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-07 as the loop's poster"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]), fallback: "MV-07", reduced: "poster",
+  },
+  "L12": {
+    kind: "video", status: "accepted", src: "/media/films/storm-loop.mp4",
+    webm: "/media/films/storm-loop.webm", poster: "MV-04", endsOn: "MV-04",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, sound off, enhance_prompt false, start_image = end_image = the plate job", 10.5, "09b500b6-5f9c-46a8-bda6-c11f483e84fc",
+      "L12 living loop on MV-04 (tier I; seam residual K=24; mp4 807036 B / webm 499791 B). PASS (flagged for Aryan): 0 flashes, no lightning, horizon level, no figures, silent, registration >= 0.95 at both ends, smooth, seamless (lossless 0.9902, WebM 0.9938); the swell becomes a large bright breaking wave mid-loop (prompted … Motion: Big: the swell rises into a tall breaking wave whose aqua crest spray brightens and fills the right third (25-75 %), then subsides back to the plate foam band b … FLAGS (4): see the json. Record: docs/build/media-staged/p3/accepted/storm-loop.json"),
+    accept: cleanP3(["IC-PC-05", "IC-PC-08"]),
+    codeAlt: "code:plate-camera", fallback: "MV-04", reduced: "poster",
+  },
+  "L12-poster": {
+    kind: "image", status: "accepted", src: "/media/films/storm-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L12", 0, "09b500b6-5f9c-46a8-bda6-c11f483e84fc",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-04 as the loop's poster"),
+    accept: cleanP3(["IC-PC-05", "IC-PC-08"]), fallback: "MV-04", reduced: "poster",
+  },
+  "L14": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-pearl-alt-loop.mp4",
+    webm: "/media/films/iconic-pearl-alt-loop.webm", poster: "iconic-pearl-alt", endsOn: "iconic-pearl-alt",
+    width: 1280, height: 720, durationS: 5.042, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job", 10.5, "c1ebe370-ecb3-455f-aae8-16ff33d605af",
+      "L14 living loop on iconic-pearl-alt (tier I; seam blend K=24; mp4 294548 B / webm 387363 B). PASS (blend seam): no figures/flags/text; ship and marks still (<= 0.21 px; MP4/WebM finial 0.34/0.09, ensign 0.26/0.09, mastTop 0.19/0.17, mizzenTop 0.62/0.72 /255); 0 flashes; glow <= 8.1 %, <= 0.6 reversals/s; silent; registration 0.961/0.963 … Motion: [object Object] FLAGS (5): see the json. Record: docs/build/media-staged/p3/accepted/iconic-pearl-alt-loop.json"),
+    accept: cleanP3(["IC-PC-01", "IC-PC-08"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-pearl-alt", reduced: "poster",
+  },
+  "L14-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pearl-alt-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L14", 0, "c1ebe370-ecb3-455f-aae8-16ff33d605af",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-pearl-alt as the loop's poster"),
+    accept: cleanP3(["IC-PC-01", "IC-PC-08"]), fallback: "iconic-pearl-alt", reduced: "poster",
+  },
+  "L15": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-wanted-loop.mp4",
+    webm: "/media/films/iconic-wanted-loop.webm", poster: "iconic-wanted", endsOn: "iconic-wanted",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job", 10.5, "a0835266-1eb5-4094-8e22-7b2f037ec992",
+      "L15 living loop on iconic-wanted (tier I; seam residual K=12; mp4 191234 B / webm 162365 B). PASS (with the 0-credit poster-board hold-out): posterRect 0.11 / 0.10/255 (MP4 / WebM), all posters <= 0.15, blank; 0 flashes, silent; registration 0.979-0.984; lossless join 1.0000, WebM 0.9999; bytes 191 KB / 162 KB. Flag: near-still Motion: [object Object] FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/iconic-wanted-loop.json"),
+    accept: cleanP3(["IC-RD-03"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-wanted", reduced: "poster",
+  },
+  "L15-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-wanted-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L15", 0, "a0835266-1eb5-4094-8e22-7b2f037ec992",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-wanted as the loop's poster"),
+    accept: cleanP3(["IC-RD-03"]), fallback: "iconic-wanted", reduced: "poster",
+  },
+  "L16": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-ice-alt-loop.mp4",
+    webm: "/media/films/iconic-ice-alt-loop.webm", poster: "iconic-ice-alt", endsOn: "iconic-ice-alt",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job", 10.5, "5469d35b-e885-48eb-9576-486d8330c6fa",
+      "L16 living loop on iconic-ice-alt (tier I; seam residual K=12; mp4 128860 B / webm 133994 B). PASS: boardRect 0.90 / 0.70/255 (MP4 / WebM), benches 0.96 / 0.88, board blank; 0 flashes, silent; registration 0.974-0.984; lossless join 1.0000, WebM 0.9997; bytes 129 KB / 134 KB. Flag: near-still Motion: [object Object] FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/iconic-ice-alt-loop.json"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-ice-alt", reduced: "poster",
+  },
+  "L16-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-ice-alt-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L16", 0, "5469d35b-e885-48eb-9576-486d8330c6fa",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-ice-alt as the loop's poster"),
+    accept: cleanP3(["IC-3I-01", "IC-3I-09"]), fallback: "iconic-ice-alt", reduced: "poster",
+  },
+  "L17": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-pen-loop.mp4",
+    webm: "/media/films/iconic-pen-loop.webm", poster: "iconic-pen", endsOn: "iconic-pen",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job", 10.5, "924d9028-3930-4466-9d7d-b38fa7e89e81",
+      "L17 living loop on iconic-pen (tier I; seam residual K=12; mp4 124407 B / webm 105347 B). PASS (with the 0-credit stopwatch hold-out): dial 0.15 / 0.01/255, stopwatch 0.45 / 0.35 (MP4 / WebM), hand angle fixed; pen + case 0.9957 / 0.62 (flagged, see flags); 0 flashes, glow <= 1.44 %, silent; registration 0.988-0.991; lossless join 1.0000 … Motion: [object Object] FLAGS (4): see the json. Record: docs/build/media-staged/p3/accepted/iconic-pen-loop.json"),
+    accept: cleanP3(["IC-3I-01"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-pen", reduced: "poster",
+  },
+  "L17-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L17", 0, "924d9028-3930-4466-9d7d-b38fa7e89e81",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-pen as the loop's poster"),
+    accept: cleanP3(["IC-3I-01"]), fallback: "iconic-pen", reduced: "poster",
+  },
+  "L18": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-pen-alt-loop.mp4",
+    webm: "/media/films/iconic-pen-alt-loop.webm", poster: "iconic-pen-alt", endsOn: "iconic-pen-alt",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item", 10.5, "99005831-b285-4160-b001-f7ded5f1a2ae",
+      "L18 living loop on iconic-pen-alt (tier I; seam residual K=12; mp4 113903 B / webm 93799 B). PASS: stopwatch dial 0.22 / 0.04/255 (MP4 / WebM, after the 0-cr hold-out), stopwatch 0.51 / 0.31, pen + case 0.95 / 0.60, left dark 0.42 / 0.15; 0 flashes, silent; registration 0.989-0.992; lossless join 1.0000, WebM 0.9997; bytes 114 KB / 94 KB … Motion: [object Object] FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/iconic-pen-alt-loop.json"),
+    accept: cleanP3(["IC-3I-01"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-pen-alt", reduced: "poster",
+  },
+  "L18-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-pen-alt-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L18", 0, "99005831-b285-4160-b001-f7ded5f1a2ae",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-pen-alt as the loop's poster"),
+    accept: cleanP3(["IC-3I-01"]), fallback: "iconic-pen-alt", reduced: "poster",
+  },
+  "L19": {
+    kind: "video", status: "accepted", src: "/media/films/voyage-b-loop.mp4",
+    webm: "/media/films/voyage-b-loop.webm", poster: "MV-05b", endsOn: "MV-05b",
+    width: 1920, height: 1080, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item", 10.5, "b82deba3-2b61-4cf6-88db-eb5ff2784802",
+      "L19 living loop on MV-05b (tier S; seam residual K=12; mp4 1280366 B / webm 554227 B). PASS: horizon band 0.53 / 0.32/255 (MP4 / WebM), moon zone ptp 0.5 %; 0 flashes, silent; registration 0.990-0.991; lossless join 1.0000 (pct 1), MP4 0.9941 (true), WebM 0.9999; consecutive min 0.9933 / 0.9917; bytes 1.28 MB / 0.55 MB. Flag: fog drift weak … Motion: [object Object] FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/voyage-b-loop.json"),
+    accept: cleanP3(),
+    codeAlt: "code:plate-camera", fallback: "MV-05b", reduced: "poster",
+  },
+  "L19-poster": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-b-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L19", 0, "b82deba3-2b61-4cf6-88db-eb5ff2784802",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-05b as the loop's poster"),
+    accept: cleanP3(), fallback: "MV-05b", reduced: "poster",
+  },
+  "L20": {
+    kind: "video", status: "accepted", src: "/media/films/voyage-d-loop.mp4",
+    webm: "/media/films/voyage-d-loop.webm", poster: "MV-05d", endsOn: "MV-05d",
+    width: 1920, height: 1080, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item", 10.5, "f487f6dc-7405-4b3c-8296-4bfa96dbd1b1",
+      "L20 living loop on MV-05d (tier S; seam residual K=12; mp4 1149764 B / webm 282615 B). PASS: ship on the horizon (centroid <= 0.8 px, horizon row fixed at 0.4199), no crew/flag/lettering; 0 flashes, silent; registration 0.984; lossless join 1.0000, WebM 0.9999; consecutive min 0.9981 / 0.9986; bytes 1.15 MB / 0.28 MB … Motion: [object Object] FLAGS (2): see the json. Record: docs/build/media-staged/p3/accepted/voyage-d-loop.json"),
+    accept: cleanP3(["IC-PC-01"]),
+    codeAlt: "code:plate-camera", fallback: "MV-05d", reduced: "poster",
+  },
+  "L20-poster": {
+    kind: "image", status: "accepted", src: "/media/films/voyage-d-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L20", 0, "f487f6dc-7405-4b3c-8296-4bfa96dbd1b1",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps MV-05d as the loop's poster"),
+    accept: cleanP3(["IC-PC-01"]), fallback: "MV-05d", reduced: "poster",
+  },
+  "L21": {
+    kind: "video", status: "accepted", src: "/media/films/iconic-deadeye-loop.mp4",
+    webm: "/media/films/iconic-deadeye-loop.webm", poster: "iconic-deadeye", endsOn: "iconic-deadeye",
+    width: 1280, height: 720, durationS: 6, alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job; declined_preset_id 24bae836 on every item", 10.5, "8f09d527-9b20-499e-8d1b-505e37f1b909",
+      "L21 living loop on iconic-deadeye (tier I; seam residual K=12; mp4 146506 B / webm 155644 B). PASS: birds 0.69 / 0.29/255 (MP4 / WebM), oak 0.95 / 0.44, homestead 0.21 / 0.05 (0-cr hold-out), fence 0.91 / 0.24; 0 flashes, silent; registration 0.969-0.978; lossless join 1.0000, WebM 0.9998; bytes 147 KB / 156 KB. Flag: near-still by design Motion: [object Object] FLAGS (4): see the json. Record: docs/build/media-staged/p3/accepted/iconic-deadeye-loop.json"),
+    accept: cleanP3(["IC-RD-02", "IC-RD-05"]),
+    codeAlt: "code:plate-camera", fallback: "iconic-deadeye", reduced: "poster",
+  },
+  "L21-poster": {
+    kind: "image", status: "accepted", src: "/media/films/iconic-deadeye-loop-poster.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 0 of L21", 0, "8f09d527-9b20-499e-8d1b-505e37f1b909",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps iconic-deadeye as the loop's poster"),
+    accept: cleanP3(["IC-RD-02", "IC-RD-05"]), fallback: "iconic-deadeye", reduced: "poster",
+  },
+  "L22": {
+    kind: "video", status: "accepted", src: "/media/films/films-idiots-loop.mp4",
+    webm: "/media/films/films-idiots-loop.webm", poster: "F-3I", endsOn: "F-3I",
+    width: 1680, height: 720, durationS: 6.542, alt: null,
+    provenance: hfP3("minimax_h3 2K, 21:9, 6 s (no sound switch: the master carries one AAC stream, stripped with -an), start_image = end_image = the plate job; 2944x1248 24 fps output (158 frames, 6.583 s); declined_preset_id 24bae836; use_unlim false. Charged 12 credits at 2026-09-30 23:14:30 UTC (transactions)", 12, "0d55d8ed-af05-4635-94e9-1dee6d55689e",
+      "L22 living loop on F-3I (tier I (21:9 inset); seam residual K=12; mp4 388028 B / webm 360298 B). PASS (lake-only cinemagraph). Supersedes films-idiots-loop.FAIL.json (renamed .FAIL.superseded.json). Motion: [object Object] FLAGS (6): see the json. Record: docs/build/media-staged/p3/accepted/films-idiots-loop.json"),
+    accept: cleanP3(["IC-3I-10"]),
+    codeAlt: "code:plate-camera", fallback: "F-3I", reduced: "poster",
+  },
+  "L22-poster": {
+    kind: "image", status: "accepted", src: "/media/films/films-idiots-loop-poster.webp",
+    width: 1920, height: 823, alt: null,
+    provenance: hfP3("frame 0 of L22", 0, "0d55d8ed-af05-4635-94e9-1dee6d55689e",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps F-3I as the loop's poster"),
+    accept: cleanP3(["IC-3I-10"]), fallback: "F-3I", reduced: "poster",
+  },
+  "L23": {
+    kind: "video", status: "accepted", src: "/media/films/films-hp-loop.mp4",
+    webm: "/media/films/films-hp-loop.webm", poster: "F-HP", endsOn: "F-HP",
+    width: 1680, height: 720, durationS: 6.542, alt: null,
+    provenance: hfP3("minimax_h3 2K, 21:9, 6 s (no sound switch: the master carries an AAC stream, stripped with -an), start_image = end_image = the plate job; 2944x1248 24 fps output (158 frames, 6.583 s); declined_preset_id 24bae836 on every item", 12, "f3b9136b-2ded-4021-a1f4-cbe01147b51e",
+      "L23 living loop on F-HP (tier I (21:9 inset); seam residual K=12; mp4 118191 B / webm 143601 B). PASS (0-cr cinemagraph hold-out; the raw clip FAILS the glow line): ink + paper 0.06 / 0.00/255 (MP4 / WebM), window 0.40 / 0.37, flames 1.7-4.3 % with 0 reversals/s, whole-frame luma 0.8 %; 0 flashes, silent (-an); registration 0.974-0.975 … Motion: [object Object] FLAGS (3): see the json. Record: docs/build/media-staged/p3/accepted/films-hp-loop.json"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-01"]),
+    codeAlt: "code:plate-camera", fallback: "F-HP", reduced: "poster",
+  },
+  "L23-poster": {
+    kind: "image", status: "accepted", src: "/media/films/films-hp-loop-poster.webp",
+    width: 1920, height: 823, alt: null,
+    provenance: hfP3("frame 0 of L23", 0, "f3b9136b-2ded-4021-a1f4-cbe01147b51e",
+      "frame 0 of the loop (= the pinned plate frame src[0]): the registration record; code keeps F-HP as the loop's poster"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-01"]), fallback: "F-HP", reduced: "poster",
+  },
+  "SEQ-HALL": {
+    kind: "sequence", status: "accepted", src: "/media/films/seq-hall/", frames: 72,
+    width: 1280, height: 720, poster: "iconic-hall", endsOn: "SEQ-HALL-end", alt: null,
+    provenance: hfP3("kling3_0 pro 16:9, 5 s, sound off, start_image = the plate job only (no end image), cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 -> 72 webp frames", 8.75, "1cdc1d90-0ad3-45b3-901c-d1933b0b5443",
+      "push-in #3 DEFAULT (card-ignite.push): a 72-frame dolly along the tables toward the high table; frame 000 registers to iconic-hall at 0.968; loop.mjs sequence 72 x 1280 q50 (000 at q80), 3655680 B, max frame 83944 B. FLAG: over the 1.6 MB sequence budget (spec 12.2; desktop only, fetched within one viewport; 36-frame / 960 w options in the json). The ALT is code (crane-up on L02). Record: docs/build/media-staged/p3/accepted/seq-hall.json"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]),
+    fallback: "iconic-hall", reduced: "poster",
+  },
+  "SEQ-HALL-end": {
+    kind: "image", status: "accepted", src: "/media/films/seq-hall-end.webp",
+    width: 1920, height: 1080, alt: null,
+    provenance: hfP3("frame 120 of SEQ-HALL (the Kling master)", 0, "1cdc1d90-0ad3-45b3-901c-d1933b0b5443",
+      "the push's settled frame (SSIM 0.9767 vs master frame 120, 0.97 vs frame 071), 1920 w q80 (the master is 1920x1080)"),
+    accept: cleanP3(["IC-HP-03", "IC-HP-16"]), fallback: "iconic-hall", reduced: "poster",
   },
 } satisfies Record<string, MediaDef>;
 

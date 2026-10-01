@@ -1,0 +1,236 @@
+{
+ "proposedMediaId": "L22",
+ "sourceMediaId": "F-3I",
+ "plate": "public/media/films/films-idiots.webp",
+ "plateJob": "a4ec7e96-84d8-4d8a-a6b9-b71c6547e72f",
+ "job": "5d249862-96db-4b48-9a08-81983c1bb558",
+ "model": "minimax_h3 2K, 21:9, 6 s (no sound switch: the master carries an AAC stream, stripped with -an), start_image = end_image = the plate job; 2944x1248 24 fps output (158 frames, 6.583 s); declined_preset_id 24bae836 on every item",
+ "credits": 12,
+ "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The blue lake ripples gently and the mountains' reflection wavers; a faint haze drifts slowly along the pale mountains. The yellow scooter stays perfectly still and shows no badge or plate; the pebbled shore stays still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+ "promptFile": "media-src/p3/prompts/L22-films-idiots.prompt.txt",
+ "generateLog": "docs/build/media/p3/B6.md",
+ "checkLog": "docs/build/media/p3/B6.md#check-step",
+ "master": "media-src/p3/masters/L22-films-idiots-5d249862.mp4 (kept; 4163631 bytes, 158 frames, 6.583 s, 2944x1248, 1 AAC stream)",
+ "tier": "I (21:9 inset)",
+ "host": "films screen, 3 Idiots (F-3I is the screen DEFAULT; no other loop exists for it)",
+ "hostRank": "films screens (rank 1 of 3, the same rank as L13 express)",
+ "verdict": "FAIL",
+ "reason": "Not restrained: the clip changes the plate far more than any loop the lane has passed, in three ways, once per 6.5 s loop. (1) Haze wash: the mountains fade and return (zone x.35-.95 y.20-.48 mean luma 162 -> 179, contrast (std) 42 -> 29 = -31 %, mean |dY| vs frame 0 up to 16.7/255 at frame ~79) and the mountain reflection washes out with them (15.4/255); whole-frame mean |dY| peaks at 8.7/255 and the whole-frame luma range is 4.2 %. (2) Concentric ripple rings appear from an off-frame point at the lower left around frame 40, spread across the lower lake and die out by ~130: a repeating \"stone dropped in the water\" event every 6.5 s, not ambient motion. (3) Static zones and smoothness: the pebbled shore (a STILL element of the prompt) reads 7.2/255, the tight scooter box 12.3/255 (the lake and the light behind and around it; the scooter itself does not move), and the consecutive-SSIM floor is 0.978-0.979 (spec 6.4: >= .99). Sizes are also over the I targets (MP4 0.79 MB, WebM 0.89 MB vs 0.8 / 0.4 MB).",
+ "hardLimits": "all pass: no people, figures, riders, faces or hands (full frames 0/25/50/75/100% and 200% scooter crops); the scooter shows no badge or plate and does not move (tracked <= 0.03 px in B6; unchanged shape at 200%); no text or symbols; 0 flashes/s (whole + tiles), red share 4e-5; per-16x16-block flicker max 1.38 reversals/s (limit 4; block swings up to 56 luma = the haze wash and the rings); 0 audio streams after -an",
+ "geometry": {
+  "finding": "the MiniMax master is the WHOLE plate stretched non-uniformly to 2944x1248 (ECC affine vs the 2520x1080 still, cc 0.998: x scale 1.1667, y scale 1.1553, plate origin at master x 1.48 / y 0.23, far corner 2942.4 / 1247.7). Nothing is cropped; 2.359:1 vs the plate's 2.333:1 is a 1.1 % horizontal stretch.",
+  "delivery": "full-frame resize to 1680x720 (exact 7:3), optionally after crop=2940:1248:2:0 (the footprint); never the native 1698x720 aspect and never loop.mjs tier I (its 16:9 fill-crop cuts the sides). The check encodes below used the full-frame resize: registration 0.951-0.953, phase 0.50 px.",
+  "audio": "master 1 AAC stream -> 0 audio streams on both encodes (-an)"
+ },
+ "checks": {
+  "master": {
+   "bytes": 4163631,
+   "frames": 158,
+   "durationS": 6.583,
+   "width": 2944,
+   "height": 1248,
+   "codec": "h264",
+   "firstVsPlate": 0.9528,
+   "lastVsPlate": 0.9523,
+   "join": 0.9877,
+   "joinRgb": 0.9732,
+   "joinPercentile": 0.4522,
+   "consecutiveMin": 0.9783,
+   "consecutiveMinAt": 120,
+   "consecutiveMedian": 0.9904,
+   "staticMaxMeanAbsDelta": {
+    "scooter box x.695-.90 y.40-.79 (B6; includes the lake behind it)": 16,
+    "pebbled shore x.30-.70 y.72-1 (prompt STILL)": 7.17,
+    "scooter tight x.72-.88 y.44-.76": 12.39,
+    "mountains x.35-.95 y.20-.48 (informative)": 16.69
+   },
+   "flashPerS": {
+    "whole": 0,
+    "tiles": 0
+   },
+   "redShareMax": 4e-05,
+   "lumaRangePct": 4.16,
+   "light": [
+    {
+     "zone": "mountains x.35-.95 y.20-.48 (haze wash)",
+     "meanLuma": 168.78,
+     "ptpPct": 9.72,
+     "reversalsPerS": 0.15,
+     "dominantHz": 0.15
+    },
+    {
+     "zone": "mountain reflection x.10-.68 y.50-.68",
+     "meanLuma": 154.75,
+     "ptpPct": 9.82,
+     "reversalsPerS": 0.15,
+     "dominantHz": 0.15
+    }
+   ],
+   "phaseShiftPx": [
+    0.498,
+    0.154
+   ],
+   "audioStreams": 1,
+   "pass": {
+    "registration": true,
+    "join": true,
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": false
+   }
+  },
+  "seamLossless": {
+   "join": 0.9998,
+   "joinRgb": 0.9995,
+   "consecutive": {
+    "min": 0.9783,
+    "minAt": 120,
+    "p05": 0.9805,
+    "median": 0.9904
+   },
+   "joinMinusMedian": 0.0095,
+   "joinPercentile": 1,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "encodedForTheCheck": {
+   "mp4": {
+    "bytes": 786813,
+    "frames": 157,
+    "durationS": 6.542,
+    "width": 1680,
+    "height": 720,
+    "codec": "h264",
+    "firstVsPlate": 0.9511,
+    "lastVsPlate": 0.9519,
+    "join": 0.989,
+    "joinRgb": 0.9757,
+    "joinPercentile": 0.4551,
+    "consecutiveMin": 0.9794,
+    "consecutiveMinAt": 120,
+    "consecutiveMedian": 0.991,
+    "staticMaxMeanAbsDelta": {
+     "scooter box x.695-.90 y.40-.79 (B6; includes the lake behind it)": 15.93,
+     "pebbled shore x.30-.70 y.72-1 (prompt STILL)": 7.3,
+     "scooter tight x.72-.88 y.44-.76": 12.32,
+     "mountains x.35-.95 y.20-.48 (informative)": 16.64
+    },
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 4e-05,
+    "lumaRangePct": 4.16,
+    "light": [
+     {
+      "zone": "mountains x.35-.95 y.20-.48 (haze wash)",
+      "meanLuma": 168.81,
+      "ptpPct": 9.73,
+      "reversalsPerS": 0.15,
+      "dominantHz": 0.15
+     },
+     {
+      "zone": "mountain reflection x.10-.68 y.50-.68",
+      "meanLuma": 154.87,
+      "ptpPct": 9.78,
+      "reversalsPerS": 0.15,
+      "dominantHz": 0.15
+     }
+    ],
+    "phaseShiftPx": [
+     0.497,
+     0.146
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": true,
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "webm": {
+    "bytes": 888850,
+    "frames": 157,
+    "durationS": 6.542,
+    "width": 1680,
+    "height": 720,
+    "codec": "vp9",
+    "firstVsPlate": 0.9528,
+    "lastVsPlate": 0.9529,
+    "join": 1,
+    "joinRgb": 0.9999,
+    "joinPercentile": 1,
+    "consecutiveMin": 0.9791,
+    "consecutiveMinAt": 103,
+    "consecutiveMedian": 0.9899,
+    "staticMaxMeanAbsDelta": {
+     "scooter box x.695-.90 y.40-.79 (B6; includes the lake behind it)": 15.86,
+     "pebbled shore x.30-.70 y.72-1 (prompt STILL)": 7.2,
+     "scooter tight x.72-.88 y.44-.76": 12.23,
+     "mountains x.35-.95 y.20-.48 (informative)": 16.67
+    },
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 4e-05,
+    "lumaRangePct": 4.13,
+    "light": [
+     {
+      "zone": "mountains x.35-.95 y.20-.48 (haze wash)",
+      "meanLuma": 168.82,
+      "ptpPct": 9.76,
+      "reversalsPerS": 0.15,
+      "dominantHz": 0.15
+     },
+     {
+      "zone": "mountain reflection x.10-.68 y.50-.68",
+      "meanLuma": 154.86,
+      "ptpPct": 9.74,
+      "reversalsPerS": 0.15,
+      "dominantHz": 0.15
+     }
+    ],
+    "phaseShiftPx": [
+     0.493,
+     0.141
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": true,
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "tool": "loop.mjs seam --k=12 --method=residual --keep-intermediate, then enc219.sh <seam> <scratch>/films-idiots-loop 26 30 (1680x720 full-frame resize; scratch only, not staged)"
+  },
+  "series": "per-frame zone means (master resized to 1680x720), every 10th frame of mean |dY| vs frame 0: mountains 0.0 0.8 0.9 1.7 5.9 11.2 14.7 16.6 16.9 16.6 14.5 9.7 4.2 1.3 1.3 1.3; reflection 0.0 1.3 4.1 8.4 11.5 14.5 15.3 14.9 13.9 12.9 11.1 7.4 4.3 3.0 2.8 2.2; lower-left lake 0.0 2.0 3.3 4.0 5.0 5.0 5.2 6.1 6.9 7.0 7.3 7.7 7.7 6.8 3.9 2.7"
+ },
+ "salvageConsidered": "A 0-credit hold-out of the sky, mountains, reflection, shore and scooter would leave only the ring event (the part that reads as an event), so it was not built. No boomerang (flowing water).",
+ "retake": {
+  "model": "minimax_h3 2K, 21:9, 6 s, start_image = end_image = plate job a4ec7e96 (12 credits; Kling has no 21:9); decline the IN THE DARK preset intercept (24bae836); deliver with -an",
+  "why": "MiniMax over-delivers where Kling under-delivers: the \"faint haze drifts along the mountains\" clause became a whole-range wash and \"the lake ripples\" became ring events. Ask for water-only motion, name the mountains, sky, light and contrast as fixed, and forbid rings and haze explicitly.",
+  "prompt": "Animate the supplied image with very gentle, continuous motion on the water only, while preserving the exact composition, framing, colours, lighting and contrast. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Fine, low ripples drift slowly and evenly across the whole lake from left to right for the entire clip, and the mirror reflection of the mountains wavers softly in them while keeping its shape, colour and brightness. The sky, the mountains and the light stay exactly as they are, with no haze, mist or fading; the yellow scooter stays perfectly still and shows no badge or plate; the pebbled shore stays still. Nothing touches or breaks the water: no rings, splashes or drops. One uninterrupted shot; the ripples keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker, exposure or contrast change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "accept": "mountains x.35-.95 y.20-.48 <= 1/255 and contrast change <= 5 %; reflection x.10-.68 y.50-.68 luma ptp <= 3 %; shore x.30-.70 y.72-1 <= 1/255; scooter tight x.72-.88 y.44-.76 <= 1/255 (a scooter hold-out is allowed); no concentric rings in lake crops at 0/25/50/75/100%; consecutive min >= .99; ripple flow visible (lake p99.9 >= ~2 px) without events; seam residual K=12 if the raw join >= .98 (else blend K=24 --rotate=auto); deliver 1680x720 from the plate footprint, -an; MP4 <= 0.8 MB, WebM <= 0.4 MB.",
+  "recommendation": "Ties L13 express on host rank (both films-screen DEFAULTs); the plan keeps L13 as the one contingency on a tie. Differences for the lane owner: L13 has failed near-still twice as a recipe family (start=end Kling, see B8 finding), while L22's failure is excess motion from a different model; the 3 Idiots screen has no living loop at all, while the HP screen now has L23 (cinemagraph) as a living ALT. If neither is retaken, the code ALT (depth + camera) is the 3 Idiots screen DEFAULT."
+ },
+ "finalVerdict": "FAIL (first take). One retake is allowed by the plan if the lane owner picks it for the rank-7 contingency; otherwise the code ALT (depth + camera) becomes the 3 Idiots screen DEFAULT.",
+ "supersededBy": {
+  "record": "films-idiots-loop.json",
+  "job": "0d55d8ed-af05-4635-94e9-1dee6d55689e",
+  "batch": "B9 (docs/build/media/p3/B9.md)",
+  "verdict": "the retake PASSES as a lake-only cinemagraph; this first-take FAIL is kept for the record"
+ }
+}

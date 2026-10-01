@@ -26,10 +26,24 @@
 
    ?skip                → skip every skippable moment (intro, scenes, …)
    ?skip=intro,scene    → skip only the named moments
+   Phase 3 adds the names "smooth" (no Lenis), "gl" (no WebGL tier) and
+   "stage" (no persistent stage) — see `SkipName`.
+
+   PHASE 3 GATES (PHASE3-PLAN §3.1): DESKTOP_WIDE / DESKTOP_FINE are the full
+   media queries every desktop-only piece keys on (never Tailwind `lg:`);
+   `useDesktopWide()` / `useDesktopFine()` are their hydration-safe hooks
+   (false on the server and during hydration). `motionOffNow()` and
+   `bootGateOn()` are NON-HOOK readers for effects, event handlers and lazy
+   chunks only: never call them during render.
    ========================================================================== */
 
 import { useSyncExternalStore } from "react";
 import { readSession, writeSession } from "./session";
+
+/** Named skippable moments (`?skip=a,b`). Phase 3 adds "smooth", "gl" and
+ *  "stage". `shouldSkip()` still accepts any string (unknown names are
+ *  simply never read). */
+export type SkipName = "intro" | "hero" | "scene" | "smooth" | "gl" | "stage";
 
 export type SkipFlags = {
   /** Bare `?skip` (or `?skip=all`): skip everything skippable. */
@@ -259,4 +273,61 @@ export function useSaveData(): boolean {
 /** `?skip` flags for the current page (no flags on the server). */
 export function useSkipFlags(): SkipFlags {
   return useSyncExternalStore(subscribePopState, skipSnapshot, () => NO_SKIP);
+}
+
+/* — Phase 3 desktop gates (PHASE3-PLAN §3.1; SPEC §3.1–§3.2) ———————————— */
+
+/** Wide desktop: ≥ 64rem. Layout-free desktop pieces (type, split grids). */
+export const DESKTOP_WIDE = "(min-width: 64rem)";
+
+/** Wide desktop with a precise hovering pointer: every Phase-3 motion piece
+ *  (Lenis, the stage, GL, toys, hotspots) keys on this full query. */
+export const DESKTOP_FINE = "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+
+/** DESKTOP_WIDE, hydration-safe (false on the server / during hydration). */
+export function useDesktopWide(): boolean {
+  return useMediaQuery(DESKTOP_WIDE);
+}
+
+/** DESKTOP_FINE, hydration-safe (false on the server / during hydration). */
+export function useDesktopFine(): boolean {
+  return useMediaQuery(DESKTOP_FINE);
+}
+
+/** NON-HOOK: motion is off right now (live OS reduced motion OR the Pause
+ *  toggle). For effects, handlers and lazy chunks, never for render. true
+ *  where there is no window (nothing may animate there). */
+export function motionOffNow(): boolean {
+  if (!hasMatchMedia()) return true;
+  return reducedMotion.getSnapshot() || pausedSnapshot();
+}
+
+/** NON-HOOK: call `fn` whenever motion may have turned off or on (the OS
+ *  reduced-motion preference changed, or the Pause toggle flipped); read
+ *  `motionOffNow()` inside it. Synchronous with the change (no React render
+ *  in between), so smooth scroll and the ladder can stop within one task.
+ *  Returns the unsubscribe; a no-op where there is no window. */
+export function onMotionOffChange(fn: () => void): () => void {
+  if (!hasMatchMedia()) return noop;
+  const offOs = reducedMotion.subscribe(fn);
+  pauseListeners.add(fn);
+  return () => {
+    offOs();
+    pauseListeners.delete(fn);
+  };
+}
+
+/** NON-HOOK: the boot gate is on — `html.js`, the view did not START paused
+ *  (`html[data-motion-boot="paused"]`, set once by the pre-paint boot
+ *  script), DESKTOP_FINE and no reduced-motion preference. The CSS twin is
+ *  the `boot:` variant in globals.css; every layout difference keys on it. */
+export function bootGateOn(): boolean {
+  if (typeof document === "undefined" || !hasMatchMedia()) return false;
+  const root = document.documentElement;
+  return (
+    root.classList.contains("js") &&
+    root.dataset.motionBoot !== PAUSED &&
+    window.matchMedia(DESKTOP_FINE).matches &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+  );
 }

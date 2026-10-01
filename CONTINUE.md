@@ -43,15 +43,17 @@
     - (b) The hero name takes the **Pirates lettering**. It stays the one `h1` and must stay legible: test it at 1440 and 1024.
     - (c) No cut toys come back. He likes the eggs as triaged: **12 eggs, 3 per world**.
   - Record a desktop baseline with `tools/capture/motion.js` (`intro` and `desktop` runs). If Aryan is around, ask him for a real Chrome performance recording from his laptop. It is optional; don't block on it.
-- [ ] **P3-1. Spec and plan.** Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
+- [x] **P3-1. Spec and plan.** DONE 2026-09-30 (cloud): `docs/build/PHASE3-SPEC.md` (7 reader maps → spec → director/engineer/completeness critics → revised) and `docs/build/PHASE3-PLAN.md` (W1.0 contracts → wave 1 foundation → wave 2 engines → wave 3 hosts, 6 builders each with one owner per shared file; media lane; critic loop). Turn IDEAS section O into `docs/build/PHASE3-SPEC.md`.
   - Include a beat map of the whole page: one star per screen, no dead screen over 100vh.
   - Include the list of 12 eggs (3 per world), one toy per act, and the loop list (about 25 plates).
   - Include the performance budget, the font choices with licences, and the sound list.
   - Then write `docs/build/PHASE3-PLAN.md`: tasks with file ownership, so builders can run in parallel.
 - [ ] **P3-2. Foundation.**
+  - W1.0 contracts DONE 2026-09-30 (cloud): lenis + gsap installed, every PHASE3-PLAN §3 API as a working stub, validator loader + `scripts/checks/*`, `app/p3/*.css` partials, `tools/capture/p3-probes.mjs` + probe stubs. Home page identical to 5aa4587 at 1440/390/rm (every frame difference is within the capture's own run-to-run noise); check, eslint, build green.
   - Lenis + GSAP ScrollTrigger: smooth scroll, off for reduced motion and Pause, phones native unless testing says otherwise.
   - The persistent stage: sticky media behind the content, and split-screen reading sections.
   - Extend the manifest and validator with beats (warn on gaps over 100vh).
+  - W1 INTEGRATED 2026-10-01 (cloud, not yet gated): the six wave-1 builders (SCROLL, STAGE, BEATS, RASTER, INTRO, TYPE) merged with their W1 handoffs; 19 living loops (L01 L02 L05 L06 L08–L12 L14–L23) + SEQ-HALL + the six re-seams + marks registered (SEQ-PEARL failed Check L2: the code push on L01 is push-in #1's DEFAULT); tsc, check, eslint, build green; RELEASE fails only on unsigned copy, Check-L2 `aryan:pending` and the deferred `systems.pencil.body` (W2). Next: the W1 gate captures/probes (PHASE3-PLAN §10.1 #5, §10.2), then tick P3-2/P3-3/P3-4.
 - [ ] **P3-3. Intro to hero hand-off fix** (IDEAS section J), plus the opening title sequence. Measure before and after.
 - [ ] **P3-4. Typography per world** (IDEAS section I): iconic header + legible body per world. Research data stays in Geist.
 - [ ] **P3-5. Every plate moves.** Depth parallax + virtual camera (code). Living loops (Higgsfield, in parallel). 3 to 4 scroll-scrubbed push-in sequences.

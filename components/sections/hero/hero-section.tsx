@@ -29,6 +29,7 @@ import {
   unionBox,
 } from "@/components/sections/hero/focal";
 import { heroBootHtml } from "@/components/sections/hero/hero-boot";
+import { DirectorsCutButton } from "@/components/director/directors-cut-button";
 import {
   HeroStage,
   type HeroGeo,
@@ -48,7 +49,10 @@ import {
  *
  * The h1 is two spans with a real space (the accessible name is `site.name`)
  * and `tabindex=-1`: the prologue lands focus on it (SPEC §5.3 "end"), with
- * no ring drawn on this non-interactive target.
+ * no ring drawn on this non-interactive target. Phase 3 (§P(b), PHASE3-SPEC
+ * §5.4): its step is `type-name`, the name in the hero world's face (Pirata
+ * One) at ≥ 64rem only, mixed case — the one "display" lettering entry
+ * (lib/film.ts `name`, validator #10); below 64rem it is type-display.
  *
  * VARIANTS (M1.5; lib/variants.ts host "hero"): the server resolves BOTH
  * sides of every media piece and HeroStage picks with useVariant() (the
@@ -202,13 +206,16 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
   const cap = captionOf("cap.hero");
   const caption = cap ? <SceneCaption k="cap.hero" place="under" className="mt-0 sm:mt-0" /> : null;
 
+  // `data-house-type`: the lead and the identity line stay Geist at every
+  // width (PHASE3-SPEC §5.1); the h1 is the name step, `type-name` (Pirata
+  // One at ≥ 64rem, mixed case, preloaded; type-display below — §5.4).
   const column = (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start" data-house-type="">
       {showCredit ? <p className="type-meta mb-tier-group text-fg-muted">{credit.text}</p> : null}
       <h1
         id={titleId}
         tabIndex={-1}
-        className="type-display w-fit text-fg outline-none focus-visible:outline-none"
+        className="type-name w-fit text-fg outline-none focus-visible:outline-none"
       >
         <span className="block">{first}</span> <span className="block">{rest.join(" ")}</span>
       </h1>
@@ -222,13 +229,18 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
         ))}
       </p>
       {href ? (
-        <a
-          href={href}
-          className="type-meta mt-tier-group inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent"
-        >
-          {label}
-          {arrow ? <span aria-hidden="true">{arrow}</span> : null}
-        </a>
+        // the CTA row (Phase 3): the CTA, then the director's-cut button
+        // (W3-CINEMA; renders nothing until then, so the row is the CTA's box)
+        <div className="mt-tier-group flex flex-wrap items-center gap-3" data-hero-cta-row="">
+          <a
+            href={href}
+            className="type-meta inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent"
+          >
+            {label}
+            {arrow ? <span aria-hidden="true">{arrow}</span> : null}
+          </a>
+          <DirectorsCutButton />
+        </div>
       ) : null}
     </div>
   );

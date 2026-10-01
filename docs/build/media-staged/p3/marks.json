@@ -1,0 +1,167 @@
+{
+ "schema": "p3-marks/1",
+ "measuredBy": "M-AUX (PHASE3-PLAN \u00a79.3 (a)), 2026-09-30",
+ "source": "public/media/films/<file>.webp, 2560x1440 (the shipped plates), measured at full resolution",
+ "units": "0-1 plate fractions, [x of width, y of height], the lib/media.ts marks tuple format. A line mark is [0, y] (as the existing horizon marks). wheelR is [rx/width, ry/height]: the axis-aligned half-extents of the wheel's OUTER rim, so wheel +/- wheelR is its bounding box in the same units (a scalar radius does not fit the tuple type; ry = the radius as a fraction of plate height).",
+ "files": {
+  "MV-10": "frontier-dusk.webp",
+  "MV-10-alt": "frontier-dusk-alt.webp",
+  "iconic-deadeye": "iconic-deadeye.webp",
+  "iconic-camp": "iconic-camp.webp",
+  "iconic-camp-alt": "iconic-camp-alt.webp",
+  "iconic-hall": "iconic-hall.webp",
+  "iconic-hall-alt": "iconic-hall-alt.webp"
+ },
+ "marks": {
+  "MV-10": {
+   "horizon": [
+    0,
+    0.333
+   ]
+  },
+  "MV-10-alt": {
+   "horizon": [
+    0,
+    0.333
+   ]
+  },
+  "iconic-deadeye": {
+   "horizon": [
+    0,
+    0.44
+   ]
+  },
+  "iconic-camp": {
+   "lake": [
+    0,
+    0.378
+   ],
+   "wheel": [
+    0.8883,
+    0.5667
+   ],
+   "wheelR": [
+    0.0375,
+    0.0722
+   ]
+  },
+  "iconic-camp-alt": {
+   "lake": [
+    0,
+    0.369
+   ],
+   "wheel": [
+    0.4344,
+    0.5837
+   ],
+   "wheelR": [
+    0.0195,
+    0.0517
+   ]
+  },
+  "iconic-hall": {
+   "tableL": [
+    0.398,
+    0.6385
+   ],
+   "tableR": [
+    0.636,
+    0.6385
+   ]
+  },
+  "iconic-hall-alt": {
+   "tableL": [
+    0.321,
+    0.6306
+   ],
+   "tableR": [
+    0.632,
+    0.6306
+   ]
+  }
+ },
+ "previous2000pxEstimates": {
+  "MV-10": {
+   "horizon": [
+    0,
+    0.33
+   ]
+  },
+  "iconic-camp": {
+   "lake": [
+    0,
+    0.378
+   ],
+   "wheel": [
+    0.888,
+    0.565
+   ],
+   "wheelR": "0.062 (of height)"
+  },
+  "iconic-hall": {
+   "tableL": [
+    0.4,
+    0.638
+   ],
+   "tableR": [
+    0.637,
+    0.638
+   ]
+  }
+ },
+ "details": {
+  "MV-10.horizon": "the valley floor's far edge at the mountains' foot (the haze glow band). Per 4%-column bands over x .50-.98: glow peak median .3354, mountain-foot edge (strongest dark-to-bright Sobel-y) median .3313; visually the line sits on the foot of the ranges. The land line tilts from about .32 at x .55 to .345 at x .95; .333 is the band median. Ridge skyline (not used): .22-.30. The far tree line in the valley: .368.",
+  "MV-10-alt.horizon": "the alt differs from MV-10 only in the left tree mass; the right half measures the same to within .0007 (glow .3358, foot .3313).",
+  "iconic-deadeye.horizon": "the mountains' foot where the rolling foothills begin (bright-to-dark row edge at .437-.442 over x .40-.55 and .80-.88; .453 over x .73-.80). Alternatives the builder may prefer: the ridge skyline against the sky .37-.39 (strongest edge), the flat fields' far edge .48.",
+  "iconic-camp.lake": "the lake's far waterline (dark far shore above, lit water below): strongest positive Sobel-y row at y 543-546 px over x .20-.40 (median .3778); flat across the open water.",
+  "iconic-camp.wheel": "the fully visible wagon wheel at the right (hub-side of the tent). Rim fitted as a rotated ellipse by maximising the radial gradient along the rim (tent-occluded arc 330-100 deg excluded): centre (2274, 816) px, rx 90, ry 98.5 px at -7.5 deg on the felloe mid-line; outer rim confirmed by luma profiles (top edge y 712, left edge x 2179). Outer half-extents 96 x 104 px -> wheelR [.0375, .0722]. The iron hub sits at [.8932, .5681] (perspective: 0.005 right of the rim centre). The 2000-px estimate (r .062) was about 14% small.",
+  "iconic-camp-alt.lake": "far waterline: y 525 px at x .19-.22 rising to 532-534 px over x .33-.52; median .3698 -> .369.",
+  "iconic-camp-alt.wheel": "two full wagon wheels (similar size). Chosen: the RIGHT wheel (smaller, so the front wheel by wagon convention; unoccluded; nearer frame centre): outer ellipse centre [.4344, .5837], half-extents [.0195, .0517]; hub [.4354, .5851]. The other wheel, if a builder prefers it: centre [.3623, .5840], half-extents [.0227, .0556], hub [.3664, .5851].",
+  "iconic-hall.tableL/tableR": "the high table's top edge = its lit lip: row luma peaks at y 919-920 px and drops to the dark apron at 921 over x .42-.62 -> .6385. Ends from the apron's dark band (rows 922-927) against the lit wall: left x 1018 px (.398), right x 1629 px (.636). The existing highTable mark [.5, .63] could become [.517, .6385] (the table's centre) if a builder wants it consistent.",
+  "iconic-hall-alt.tableL/tableR": "lit lip y 906-909 px, apron dark from 910 -> .6306. Ends from the apron band (rows 911-916): left x 821 (.321), right x 1619 (.632). The existing highTable [.47, .64] could become [.4765, .6306]."
+ },
+ "matchRowRegistration": {
+  "MATCH_ROW": 0.47,
+  "coverBoxFrameHeights": 1.3444,
+  "formula": "frame row = y*Hc - (Hc-1)*pos, Hc = 1.3444*zoom; pos = (y*Hc - .47)/(Hc - 1)",
+  "plates": {
+   "MV-10": {
+    "line": 0.333,
+    "posY_at_zoom1": -0.0648,
+    "note": "pos < 0: the line cannot reach MATCH_ROW at zoom 1; at pos 0 it needs zoom 1.0499"
+   },
+   "MV-10-alt": {
+    "line": 0.333,
+    "posY_at_zoom1": -0.0648,
+    "note": "pos < 0: the line cannot reach MATCH_ROW at zoom 1; at pos 0 it needs zoom 1.0499"
+   },
+   "iconic-deadeye": {
+    "line": 0.44,
+    "posY_at_zoom1": 0.3529,
+    "note": "reachable at zoom 1"
+   },
+   "iconic-camp": {
+    "line": 0.378,
+    "posY_at_zoom1": 0.1108,
+    "note": "reachable at zoom 1"
+   },
+   "iconic-camp-alt": {
+    "line": 0.369,
+    "posY_at_zoom1": 0.0757,
+    "note": "reachable at zoom 1"
+   },
+   "iconic-hall": {
+    "line": 0.6385,
+    "posY_at_zoom1": 1.1278,
+    "note": "pos > 1 at zoom 1; at pos 1 it needs zoom 1.0906 (spec \u00a77.2 had 1.089 for .638)"
+   },
+   "iconic-hall-alt": {
+    "line": 0.6306,
+    "posY_at_zoom1": 1.097,
+    "note": "pos > 1 at zoom 1; at pos 1 it needs zoom 1.0672 (spec \u00a77.2 had 1.089 for .638)"
+   }
+  }
+ },
+ "overlays": "docs/build/media-staged/p3/marks-overlays/<plate id>.webp (1280x720, marks drawn, for the assembler's eye check)",
+ "accuracy": "lines +/-2 px at 2560 (+/-.0015); table ends +/-3 px; wheel centres +/-3 px, half-extents +/-4 px"
+}

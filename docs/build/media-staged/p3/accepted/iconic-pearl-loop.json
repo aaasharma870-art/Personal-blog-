@@ -1,0 +1,540 @@
+{
+  "proposedMediaId": "L01",
+  "kind": "living loop (P3 media lane, batch B1), new: not registered yet",
+  "sourceMediaId": "iconic-pearl",
+  "plate": "public/media/films/iconic-pearl.webp",
+  "plateJob": "4273a1be-64f7-4c66-aabf-5b44710d490c",
+  "job": "7adcbc7e-4ca8-413b-b16e-5400ea0dd79d",
+  "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the plate); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 14,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The tattered black sails billow slowly and settle; the lit stern windows and deck lanterns glow and dim very softly; the moon path shimmers on the water; the pale wake foams gently and returns; the hull rises and falls a hair on the swell. The masts, rigging and hull outline hold their shape; the small flag stays plain and dark with no symbol; the sky stays still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L01-iconic-pearl.prompt.txt",
+  "master": "media-src/p3/masters/L01-iconic-pearl-7adcbc7e.mp4 (Kling original, 8036582 bytes, 193 frames, 1920x1080, 24 fps, 0 audio)",
+  "files": {
+    "mp4": "iconic-pearl-loop.mp4",
+    "webm": "iconic-pearl-loop.webm",
+    "poster": "iconic-pearl-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 192,
+  "durationS": 8.0,
+  "bytes": {
+    "mp4": 1947462,
+    "webm": 1202049,
+    "poster": 89690
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L01-iconic-pearl-7adcbc7e.mp4 <out>/iconic-pearl-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 75,
+    "note": "K=12 per the map/PHASE3-SPEC ('residual K12'); the WebM CRF is 30 (dark plate: no contour banding in the fog/cloud gradients at 4x gain)"
+  },
+  "seamCheckLossless": {
+    "join": 0.9992,
+    "joinRgb": 0.9986,
+    "consecutive": {
+      "min": 0.9969,
+      "minAt": 105,
+      "p05": 0.9978,
+      "median": 0.9986
+    },
+    "joinMinusMedian": 0.0006,
+    "joinPercentile": 0.9947,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": "static: ensign sky/flag area (0.895,0.26)-(0.94,0.40) and the left sky (0,0)-(0.35,0.55); light: stern windows (0.84,0.56)-(0.915,0.63), stern lantern (0.915,0.53)-(0.935,0.60), deck lantern (0.57,0.53)-(0.59,0.57), moon path (0.35,0.78)-(0.45,0.95). Anchors by template tracking (40-64 px patches, subpixel) vs frame 0 and vs the plate.",
+  "before": {
+    "master": {
+      "bytes": 8036582,
+      "frames": 193,
+      "durationS": 8.042,
+      "firstVsPlate": 0.9888,
+      "lastVsPlate": 0.9863,
+      "join": 0.9941,
+      "joinRgb": 0.9848,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9969,
+      "consecutiveMedian": 0.9986,
+      "static": [
+        {
+          "rect": [
+            0.895,
+            0.26,
+            0.94,
+            0.4
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.57
+        },
+        {
+          "rect": [
+            0,
+            0,
+            0.35,
+            0.55
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.46
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.29,
+      "light": [
+        {
+          "rect": [
+            0.84,
+            0.56,
+            0.915,
+            0.63
+          ],
+          "ptpPct": 2,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        },
+        {
+          "rect": [
+            0.915,
+            0.53,
+            0.935,
+            0.6
+          ],
+          "ptpPct": 1.35,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        },
+        {
+          "rect": [
+            0.57,
+            0.53,
+            0.59,
+            0.57
+          ],
+          "ptpPct": 1.05,
+          "reversalsPerS": 0,
+          "dominantHz": 0.87
+        },
+        {
+          "rect": [
+            0.35,
+            0.78,
+            0.45,
+            0.95
+          ],
+          "ptpPct": 7.58,
+          "reversalsPerS": 0.12,
+          "dominantHz": 0.25
+        }
+      ],
+      "phaseShiftPx": [
+        0.022,
+        0.007
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 1947462,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9864,
+      "lastVsPlate": 0.9862,
+      "join": 0.9941,
+      "joinRgb": 0.9869,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9967,
+      "consecutiveMedian": 0.9986,
+      "static": [
+        {
+          "rect": [
+            0.895,
+            0.26,
+            0.94,
+            0.4
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.63
+        },
+        {
+          "rect": [
+            0,
+            0,
+            0.35,
+            0.55
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.5
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.27,
+      "light": [
+        {
+          "rect": [
+            0.84,
+            0.56,
+            0.915,
+            0.63
+          ],
+          "ptpPct": 1.6,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0.915,
+            0.53,
+            0.935,
+            0.6
+          ],
+          "ptpPct": 1.13,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0.57,
+            0.53,
+            0.59,
+            0.57
+          ],
+          "ptpPct": 0.97,
+          "reversalsPerS": 0,
+          "dominantHz": 0.38
+        },
+        {
+          "rect": [
+            0.35,
+            0.78,
+            0.45,
+            0.95
+          ],
+          "ptpPct": 7.47,
+          "reversalsPerS": 0.13,
+          "dominantHz": 0.25
+        }
+      ],
+      "phaseShiftPx": [
+        0.022,
+        -0.003
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 1202049,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9875,
+      "lastVsPlate": 0.9873,
+      "join": 0.9997,
+      "joinRgb": 0.9995,
+      "joinPercentile": 0.9947,
+      "consecutiveMin": 0.9964,
+      "consecutiveMedian": 0.9985,
+      "static": [
+        {
+          "rect": [
+            0.895,
+            0.26,
+            0.94,
+            0.4
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.44
+        },
+        {
+          "rect": [
+            0,
+            0,
+            0.35,
+            0.55
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.17
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.15,
+      "light": [
+        {
+          "rect": [
+            0.84,
+            0.56,
+            0.915,
+            0.63
+          ],
+          "ptpPct": 1.59,
+          "reversalsPerS": 0,
+          "dominantHz": 0.38
+        },
+        {
+          "rect": [
+            0.915,
+            0.53,
+            0.935,
+            0.6
+          ],
+          "ptpPct": 0.93,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0.57,
+            0.53,
+            0.59,
+            0.57
+          ],
+          "ptpPct": 0.7,
+          "reversalsPerS": 0,
+          "dominantHz": 0.38
+        },
+        {
+          "rect": [
+            0.35,
+            0.78,
+            0.45,
+            0.95
+          ],
+          "ptpPct": 7.38,
+          "reversalsPerS": 0.13,
+          "dominantHz": 0.25
+        }
+      ],
+      "phaseShiftPx": [
+        0.021,
+        -0.002
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "anchors": {
+    "limit": "mastTop / ensign must not move > 2 px (map §3)",
+    "mp4": [
+      {
+        "name": "mastTop",
+        "at": [
+          0.61,
+          0.05
+        ],
+        "maxShiftPx": 0.14,
+        "plateOffsetPx": [
+          0.01,
+          0.03
+        ]
+      },
+      {
+        "name": "crowsNest",
+        "at": [
+          0.615,
+          0.075
+        ],
+        "maxShiftPx": 0.18,
+        "plateOffsetPx": [
+          0.03,
+          0.03
+        ]
+      },
+      {
+        "name": "mizzenTop",
+        "at": [
+          0.755,
+          0.14
+        ],
+        "maxShiftPx": 0.16,
+        "plateOffsetPx": [
+          -0.0,
+          0.01
+        ]
+      },
+      {
+        "name": "ensignBase",
+        "at": [
+          0.908,
+          0.456
+        ],
+        "maxShiftPx": 0.08,
+        "plateOffsetPx": [
+          0.01,
+          0.06
+        ]
+      },
+      {
+        "name": "boomEnd",
+        "at": [
+          0.928,
+          0.447
+        ],
+        "maxShiftPx": 0.13,
+        "plateOffsetPx": [
+          0.0,
+          0.04
+        ]
+      },
+      {
+        "name": "lantern",
+        "at": [
+          0.925,
+          0.565
+        ],
+        "maxShiftPx": 0.11,
+        "plateOffsetPx": [
+          -0.03,
+          -0.0
+        ]
+      }
+    ],
+    "webm": [
+      {
+        "name": "mastTop",
+        "at": [
+          0.61,
+          0.05
+        ],
+        "maxShiftPx": 0.18,
+        "plateOffsetPx": [
+          0.01,
+          0.04
+        ]
+      },
+      {
+        "name": "crowsNest",
+        "at": [
+          0.615,
+          0.075
+        ],
+        "maxShiftPx": 0.18,
+        "plateOffsetPx": [
+          0.02,
+          0.03
+        ]
+      },
+      {
+        "name": "mizzenTop",
+        "at": [
+          0.755,
+          0.14
+        ],
+        "maxShiftPx": 0.17,
+        "plateOffsetPx": [
+          -0.0,
+          0.02
+        ]
+      },
+      {
+        "name": "ensignBase",
+        "at": [
+          0.908,
+          0.456
+        ],
+        "maxShiftPx": 0.09,
+        "plateOffsetPx": [
+          0.03,
+          0.05
+        ]
+      },
+      {
+        "name": "boomEnd",
+        "at": [
+          0.928,
+          0.447
+        ],
+        "maxShiftPx": 0.12,
+        "plateOffsetPx": [
+          0.01,
+          0.04
+        ]
+      },
+      {
+        "name": "lantern",
+        "at": [
+          0.925,
+          0.565
+        ],
+        "maxShiftPx": 0.09,
+        "plateOffsetPx": [
+          -0.03,
+          -0.01
+        ]
+      }
+    ],
+    "result": "max 0.18 px (mastTop, crow's nest, mizzenTop, ensignBase, boom end, stern lantern) on both encodes; plate offset <= 0.06 px. The ensign head (0.908, 0.30) is open sky: its zone mean |dY| is 0.44 (WebM) / 0.63 (MP4) /255. Note: components/sections/act-card/frames/opening-plate.tsx no longer draws the code Jolly Roger ('No flag'), so the ensign test is kept for the record only."
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx": {
+      "sails": {
+        "p99": 0.66,
+        "p999": 1.49,
+        "gt2": 0.0,
+        "gt4": 0.0
+      },
+      "water": {
+        "p99": 31.3,
+        "p999": 41.7,
+        "gt2": 0.8391,
+        "gt4": 0.7648
+      },
+      "whole": {
+        "p99": 22.55,
+        "p999": 33.48,
+        "gt2": 0.1419,
+        "gt4": 0.1252
+      }
+    },
+    "reads": "the moon path, the aqua wake and the lantern reflections move clearly (water p99 31 px); the sails barely move (p99.9 1.5 px), so 'billow' is not delivered, but the loop reads alive and the masts/rigging/hull hold; lanterns and stern windows breathe 1-2% (0 reversals/s)"
+  },
+  "visualChecks": "L2 sweep of the master at frames 0/48/96/144/192 (plate side by side) with 125-400% crops: stern + windows + lantern, ensign/flagstaff area, bow and bowsprit (the pale cutwater shape and the deck silhouette are in the accepted plate and unchanged), crow's nests/mast tops, wake/moon path. No people, figures, faces, hands, no flag, no text/letters/symbols/logos, no new objects; the 86 'new highlight' blobs are all on the water (y >= 0.83: wave glints and wake foam). No lightning/flash (0 flashes/s whole frame and 4x4 tiles, red share 0). Wrap: slit-scans at x .38 (moon path) and x .62 (sails) are continuous across the wrap on the WebM and the MP4 (the MP4 shows only the IDR texture refresh); wrap strip (frames 190,191 | 0,1) continuous; x8 wrap diff = water motion + codec blocks only. VP9 CRF 30 at 4x gain: no banding.",
+  "flags": [
+    "MP4 1.95 MB is above the S 1.6 MB target but inside the sea/rain 2.5 MB target (moving water detail); the WebM is 1.20 MB (62% of the MP4). Serve the WebM first.",
+    "MP4 pass.join = 'codec' (the H.264 IDR texture refresh, 0.9941 vs median 0.9986); the motion seam is an ordinary step losslessly (0.9992, pct 0.99) and on the WebM (0.9997, pct 0.99).",
+    "The sails move less than the prompt asked (<= 1.5 px); the water carries the motion."
+  ],
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS"
+}

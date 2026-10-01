@@ -1,0 +1,646 @@
+{
+ "proposedMediaId": "L03",
+ "sourceMediaId": "iconic-camp",
+ "plate": "public/media/films/iconic-camp.webp",
+ "plateJob": "3c420eac-b80f-44ff-beae-c89b4e4bb3cb",
+ "job": "5e4be5fd-4af5-47ff-bb0d-4913d1961bce",
+ "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the plate); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+ "credits": 14,
+ "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The campfire's flames sway and a thin smoke column rises and drifts; a few embers float upward and fade; the lit wall tent's glow breathes slowly (no more than 15%); the lake surface glints. The three horses stand still apart from one slow tail swish; the wagon, tents, pot and tripod stay still; no figures. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+ "master": "media-src/p3/masters/L03-iconic-camp-5e4be5fd.mp4 (kept; 6561554 bytes, 193 frames)",
+ "tier": "S",
+ "verdict": "FAIL",
+ "reason": "Motion not delivered: the loop is a near-still. The campfire flames, the smoke column, the embers and the lake are frozen; nothing the MOTION sentence asks for is visible. Measured on the lossless seam: optical-flow displacement vs frame 0, max over the loop, fire core p99.9 0.24 px, smoke 0.27 px, lake 0.63 px, horses 0.30 px (whole frame p99.9 1.8 px, 0% of pixels > 4 px); fire-core mean |dY| max 2.3/255; fire-light zone ptp 0.5-0.9%. The flame shapes at frames 0/24/48/.../168 (220% crops) are the same. For comparison the accepted campfire loop (MV-11L) has fire p99.9 18.9 px and 0.8% of pixels > 4 px. Shipping it would cost 1.25 MB (MP4) / 0.50 MB (WebM) and a decode for a picture that looks like the poster.",
+ "hardLimits": "all pass: no people/figures/faces/hands (tent interior, wagon, fire, horses checked at 200-250% on 0/25/50/75/100%); no text/logos; 3 horses, 4 legs + 1 head each, consistent with the plate on every sampled frame (heads/legs tracked <= 0.16 px); 0 flashes/s (whole + tiles), red share 2.8e-4; fire/tent/lantern light ptp <= 1%, 0 reversals/s; 0 audio streams",
+ "checks": {
+  "master": {
+   "bytes": 6561554,
+   "frames": 193,
+   "durationS": 8.042,
+   "firstVsPlate": 0.9813,
+   "lastVsPlate": 0.9802,
+   "join": 0.9946,
+   "joinRgb": 0.9856,
+   "joinPercentile": 0,
+   "consecutiveMin": 0.9985,
+   "consecutiveMedian": 0.9998,
+   "static": [
+    {
+     "rect": [
+      0.8,
+      0.3,
+      1,
+      0.64
+     ],
+     "maxMeanAbsDeltaVsFirst": 0.97
+    },
+    {
+     "rect": [
+      0.01,
+      0.42,
+      0.3,
+      0.67
+     ],
+     "maxMeanAbsDeltaVsFirst": 1.37
+    }
+   ],
+   "flashPerS": {
+    "whole": 0,
+    "tiles": 0
+   },
+   "redShareMax": 0.00023,
+   "lumaRangePct": 0.98,
+   "light": [
+    {
+     "rect": [
+      0.47,
+      0.62,
+      0.6,
+      0.74
+     ],
+     "ptpPct": 0.85,
+     "reversalsPerS": 0,
+     "dominantHz": 0.12
+    },
+    {
+     "rect": [
+      0.5,
+      0.63,
+      0.57,
+      0.71
+     ],
+     "ptpPct": 0.82,
+     "reversalsPerS": 0,
+     "dominantHz": 0.12
+    },
+    {
+     "rect": [
+      0.63,
+      0.4,
+      0.76,
+      0.6
+     ],
+     "ptpPct": 0.72,
+     "reversalsPerS": 0,
+     "dominantHz": 0.12
+    },
+    {
+     "rect": [
+      0.705,
+      0.42,
+      0.72,
+      0.46
+     ],
+     "ptpPct": 0.98,
+     "reversalsPerS": 0,
+     "dominantHz": 0.37
+    }
+   ],
+   "phaseShiftPx": [
+    -0.007,
+    0.027
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "seamLossless": {
+   "join": 0.9993,
+   "joinRgb": 0.9987,
+   "consecutive": {
+    "min": 0.9985,
+    "minAt": 11,
+    "p05": 0.9989,
+    "median": 0.9998
+   },
+   "joinMinusMedian": -0.0005,
+   "joinPercentile": 0.2474,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "encodedForTheCheck": {
+   "mp4": {
+    "bytes": 1252202,
+    "frames": 192,
+    "durationS": 8,
+    "firstVsPlate": 0.9791,
+    "lastVsPlate": 0.9796,
+    "join": 0.9939,
+    "joinRgb": 0.9856,
+    "joinPercentile": 0,
+    "consecutiveMin": 0.9988,
+    "consecutiveMedian": 0.9997,
+    "static": [
+     {
+      "rect": [
+       0.8,
+       0.3,
+       1,
+       0.64
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.06
+     },
+     {
+      "rect": [
+       0.01,
+       0.42,
+       0.3,
+       0.67
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.33
+     }
+    ],
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 0.00028,
+    "lumaRangePct": 0.89,
+    "light": [
+     {
+      "rect": [
+       0.47,
+       0.62,
+       0.6,
+       0.74
+      ],
+      "ptpPct": 0.71,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     },
+     {
+      "rect": [
+       0.5,
+       0.63,
+       0.57,
+       0.71
+      ],
+      "ptpPct": 0.77,
+      "reversalsPerS": 0,
+      "dominantHz": 0.25
+     },
+     {
+      "rect": [
+       0.63,
+       0.4,
+       0.76,
+       0.6
+      ],
+      "ptpPct": 0.72,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     },
+     {
+      "rect": [
+       0.705,
+       0.42,
+       0.72,
+       0.46
+      ],
+      "ptpPct": 0.98,
+      "reversalsPerS": 0,
+      "dominantHz": 0.38
+     }
+    ],
+    "phaseShiftPx": [
+     -0.012,
+     0.024
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": "codec",
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "webm": {
+    "bytes": 498774,
+    "frames": 192,
+    "durationS": 8,
+    "firstVsPlate": 0.9795,
+    "lastVsPlate": 0.9794,
+    "join": 0.9999,
+    "joinRgb": 0.9998,
+    "joinPercentile": 0.3474,
+    "consecutiveMin": 0.9989,
+    "consecutiveMedian": 1,
+    "static": [
+     {
+      "rect": [
+       0.8,
+       0.3,
+       1,
+       0.64
+      ],
+      "maxMeanAbsDeltaVsFirst": 0.63
+     },
+     {
+      "rect": [
+       0.01,
+       0.42,
+       0.3,
+       0.67
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.03
+     }
+    ],
+    "flashPerS": {
+     "whole": 0,
+     "tiles": 0
+    },
+    "redShareMax": 0.00022,
+    "lumaRangePct": 0.66,
+    "light": [
+     {
+      "rect": [
+       0.47,
+       0.62,
+       0.6,
+       0.74
+      ],
+      "ptpPct": 0.47,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     },
+     {
+      "rect": [
+       0.5,
+       0.63,
+       0.57,
+       0.71
+      ],
+      "ptpPct": 0.66,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     },
+     {
+      "rect": [
+       0.63,
+       0.4,
+       0.76,
+       0.6
+      ],
+      "ptpPct": 0.33,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     },
+     {
+      "rect": [
+       0.705,
+       0.42,
+       0.72,
+       0.46
+      ],
+      "ptpPct": 0.48,
+      "reversalsPerS": 0,
+      "dominantHz": 0.13
+     }
+    ],
+    "phaseShiftPx": [
+     -0.012,
+     0.024
+    ],
+    "audioStreams": 0,
+    "pass": {
+     "registration": true,
+     "join": true,
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "tool": "seam --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=28 (scratch only, not staged; poster would be 113732 bytes at q50, over 100 KiB)"
+  },
+  "motionFlowPx": {
+   "fireCore": {
+    "p99": 0.23,
+    "p999": 0.24,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "smoke": {
+    "p99": 0.25,
+    "p999": 0.27,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "lake": {
+    "p99": 0.57,
+    "p999": 0.63,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "horseTails": {
+    "p99": 0.27,
+    "p999": 0.3,
+    "gt2": 0.0,
+    "gt4": 0.0
+   },
+   "whole": {
+    "p99": 1.27,
+    "p999": 1.83,
+    "gt2": 0.0005,
+    "gt4": 0.0
+   }
+  }
+ },
+ "retake": {
+  "model": "kling3_0 pro 16:9 8 s, sound off, start_image = end_image = iconic-camp job 3c420eac (14 credits); decline the preset intercept as in B1",
+  "why": "B1's PREFIX ('extremely restrained') plus a long STILL list plus 'every moving element completes exactly one slow, even cycle' let Kling satisfy the pin by freezing the fire. The MV-11L wording that produced a visibly moving fire named the fire as the only moving element and asked for continuous motion.",
+  "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion in the campfire, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The campfire's flames dance and sway continuously for the whole clip, licking up around the base of the hanging pot; a thin wisp of pale smoke rises steadily from the fire and drifts slowly to the right; a few small embers float upward and fade. The firelight on the ground and on the lit wall tent varies by no more than about fifteen percent and never flickers faster than twice a second. The three horses at the rail, the tents, the covered wagon, the pot, the tripod, the lake and the sky stay still; each horse keeps four legs and one head. One uninterrupted shot; the flames and the smoke keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, bursts, sparks toward the camera, whole-frame flicker or exposure change. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "accept": "fire core flow p99.9 >= ~4 px (MV-11L 18.9 px) with the fire-lit ground glow <= 15% and <= 4 reversals/s; horses 4 legs / 1 head at 200% on 0/25/50/75/100%; seam residual K=12 if the raw join >= 0.98, else blend K=12 --rotate=auto --plate; never boomerang (smoke)."
+ },
+ "retake1": {
+  "batch": "B8 (docs/build/media/p3/B8.md)",
+  "job": "065d55a7-47c6-40c7-83e1-1d23724a6566",
+  "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image 3c420eac, end_image 3c420eac]; declined_preset_id 24bae836; use_unlim false",
+  "credits": 14,
+  "prompt": "this file's retake.prompt, verbatim",
+  "master": "media-src/p3/masters/L03r-iconic-camp-065d55a7.mp4 (6622525 bytes, 193 frames, 8.042 s, 1920x1080 24 fps, 0 audio)",
+  "verdict": "FAIL",
+  "reason": "Motion not delivered again: a near-still. Flow (Farneback optical flow vs frame 0 at 960x540 on every 4th frame, reported as max-over-frames p99.9 magnitude in 1920-px units (scratchpad/p3/b8/flow.py)): fire core 0.32 px, smoke 0.35 px, lake 0.93 px, horses 0.42 px, whole frame 0.47 px, 0% of pixels > 4 px (first take on the same measure: fire 0.32, smoke 0.38, lake 0.82, horses 0.54). Accept rule was fire p99.9 >= ~4 px. Fire crops at frames 0/48/96/144/192 (200%) show the same flame shapes; a x8 difference of frame 96 vs 0 shows only edge shimmer. Master consecutive SSIM min/median 0.9985/0.9998 (first take 0.9985/0.9998).",
+  "hardLimits": "all pass: 3 horses, 4 legs + 1 head each and unchanged at 200% on 0/25/50/75/100%; no people/figures/text; 0 flashes (whole + tiles), red share 2.2e-4; fire/tent light ptp <= 1.1%, 0 reversals/s; 0 audio streams",
+  "checks": {
+   "master": {
+    "bytes": 6622525,
+    "frames": 193,
+    "durationS": 8.042,
+    "audioStreams": 0,
+    "ssim": {
+     "firstVsPlate": 0.9813,
+     "lastVsPlate": 0.9804,
+     "join": 0.9947,
+     "joinRgb": 0.986,
+     "consecutive": {
+      "min": 0.9985,
+      "minAt": 11,
+      "p05": 0.999,
+      "median": 0.9998
+     },
+     "joinMinusMedian": -0.0051,
+     "joinPercentile": 0
+    },
+    "static": [
+     {
+      "rect": [
+       0.8,
+       0.3,
+       1,
+       0.64
+      ],
+      "maxMeanAbsDeltaVsFirst": 0.92,
+      "maxMeanAbsDeltaStep": 0.24
+     },
+     {
+      "rect": [
+       0.01,
+       0.42,
+       0.3,
+       0.67
+      ],
+      "maxMeanAbsDeltaVsFirst": 1.33,
+      "maxMeanAbsDeltaStep": 0.53
+     }
+    ],
+    "flash": {
+     "wholeMaxPerSecond": 0,
+     "wholeTransitions": 0,
+     "tilesMaxPerSecond": 0,
+     "worstTile": 0,
+     "redShareMax": 0.00022
+    },
+    "luma": {
+     "min": 41.44,
+     "max": 41.74,
+     "range": 0.3,
+     "rangePct": 0.72
+    },
+    "light": [
+     {
+      "rect": [
+       0.47,
+       0.62,
+       0.6,
+       0.74
+      ],
+      "meanLuma": 59.74,
+      "ptpPct": 0.85,
+      "reversalsPerS": 0,
+      "dominantHz": 0.12
+     },
+     {
+      "rect": [
+       0.5,
+       0.63,
+       0.57,
+       0.71
+      ],
+      "meanLuma": 97.15,
+      "ptpPct": 0.9,
+      "reversalsPerS": 0,
+      "dominantHz": 0.12
+     },
+     {
+      "rect": [
+       0.63,
+       0.4,
+       0.76,
+       0.6
+      ],
+      "meanLuma": 50.31,
+      "ptpPct": 0.66,
+      "reversalsPerS": 0,
+      "dominantHz": 0.12
+     },
+     {
+      "rect": [
+       0.705,
+       0.42,
+       0.72,
+       0.46
+      ],
+      "meanLuma": 104.2,
+      "ptpPct": 1.11,
+      "reversalsPerS": 0,
+      "dominantHz": 0.12
+     }
+    ],
+    "phaseShiftPx": {
+     "dx": -0.005,
+     "dy": 0.027,
+     "note": "px at 1920 wide (measured at 960x540 x2)"
+    },
+    "pass": {
+     "registration": true,
+     "join": "codec",
+     "smooth": true,
+     "static": false,
+     "flash": true,
+     "light": true,
+     "silent": true
+    }
+   },
+   "flow": {
+    "fire": 0.32,
+    "smoke": 0.35,
+    "lake": 0.93,
+    "horses": 0.42,
+    "whole": 0.47,
+    "pct_gt4px_max": 0.0,
+    "frames": 193
+   },
+   "flowFirstTake": {
+    "fire": 0.32,
+    "smoke": 0.38,
+    "lake": 0.82,
+    "horses": 0.54,
+    "whole": 0.5,
+    "pct_gt4px_max": 0.0,
+    "frames": 193
+   }
+  },
+  "why": "B8 evidence: all three start=end Kling v3.0 pro jobs submitted with the FAIL-JSON 'gentle but clearly visible, continuous' wording (L03r, L04r, L07) came back as near-stills again (0.3-0.6 px in the named motion zones), numerically the same as the first takes. The wording change did not fix the failure mode on these busy daylight plates."
+ },
+ "finalVerdict": "FAIL confirmed (near-still: the fire, smoke and embers do not move; flow as B8). Second failure: no further retake. The code ALT (depth + camera, code:plate-camera) is the DEFAULT for the voices host and the ignite OUT still. Flag for Aryan.",
+ "checkStepB9": {
+  "batch": "B9 (docs/build/media/p3/B9.md section 1), 0 credits",
+  "what": "the full check step on the retake master, as for B3-B6: residual seam, check on both encodes with --plate/--static/--light, L2 sweep on the WebM at 0/25/50/75/100% + crops, wrap strips and slit-scans. Check encodes are in the session scratchpad only, not staged.",
+  "seamArgs": "--k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=26",
+  "tier": "S",
+  "seamCheckLossless": {
+   "join": 0.9993,
+   "joinRgb": 0.9988,
+   "consecutive": {
+    "min": 0.9985,
+    "minAt": 11,
+    "p05": 0.9989,
+    "median": 0.9998
+   },
+   "joinMinusMedian": -0.0005,
+   "joinPercentile": 0.2632,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "checkZones": "static rects [horses x.01-.30 y.42-.67, right x.80-1 y.30-.64]; light [fire-lit ground, fire core, tent, lantern]",
+  "mp4": {
+   "bytes": 1248960,
+   "frames": 192,
+   "durationS": 8,
+   "width": 1920,
+   "height": 1080,
+   "codec": "h264",
+   "firstVsPlate": 0.979,
+   "lastVsPlate": 0.9797,
+   "join": 0.994,
+   "joinPercentile": 0,
+   "consecutiveMin": 0.9988,
+   "consecutiveMedian": 0.9997,
+   "static": [
+    1.31,
+    1.04
+   ],
+   "light": [
+    [
+     0.69,
+     0
+    ],
+    [
+     0.77,
+     0
+    ],
+    [
+     0.52,
+     0
+    ],
+    [
+     1.29,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "webm": {
+   "bytes": 586714,
+   "frames": 192,
+   "durationS": 8,
+   "width": 1920,
+   "height": 1080,
+   "codec": "vp9",
+   "firstVsPlate": 0.9799,
+   "lastVsPlate": 0.9799,
+   "join": 0.9999,
+   "joinPercentile": 0.3158,
+   "consecutiveMin": 0.9989,
+   "consecutiveMedian": 1,
+   "static": [
+    0.98,
+    0.57
+   ],
+   "light": [
+    [
+     0.6,
+     0
+    ],
+    [
+     0.66,
+     0
+    ],
+    [
+     0.24,
+     0
+    ],
+    [
+     0.58,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": true,
+    "smooth": true,
+    "static": true,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "visual": "slit x.535 y.45-.75 (through the fire) +-48 frames: perfectly horizontal streaks (no flame motion) and no seam at the wrap",
+  "l2": "WebM frames 0/25/50/75/100% + 200% crops: no people, figures, riders, faces, hands, text or symbols; horses (L03r, L04r) 4 legs + 1 head each; the drone board (L07) shows chips and traces only",
+  "verdict": "FAIL confirmed (near-still: the fire, smoke and embers do not move; flow as B8). Second failure: no further retake. The code ALT (depth + camera, code:plate-camera) is the DEFAULT for the voices host and the ignite OUT still. Flag for Aryan."
+ }
+}

@@ -22,6 +22,15 @@ export type EggId =
   | "aal-izz-well"
   | "dead-eye"
   | "snitch"
+  /* Phase 3 hunt eggs (PHASE3-SPEC §9.1; lib/hunt.ts). The first two are
+     today's page-triggered eggs, named so the hunt can count them. */
+  | "hidden-kraken"
+  | "quadcopter-lift"
+  | "aztec-coin"
+  | "worthy-pen"
+  | "eagle-eye"
+  | "fossil-bone"
+  | "campfire-flare"
   /** "Turn off / on easter eggs" (session; always available). */
   | "eggs-off"
   | "eggs-on";
@@ -47,6 +56,13 @@ const REGISTRY_ID: Record<EggId, string> = {
   "aal-izz-well": "aal-izz-well",
   "dead-eye": "dead-eye",
   snitch: "snitch",
+  "hidden-kraken": "hidden-kraken",
+  "quadcopter-lift": "quadcopter-lift",
+  "aztec-coin": "aztec-coin",
+  "worthy-pen": "worthy-pen",
+  "eagle-eye": "eagle-eye",
+  "fossil-bone": "fossil-bone",
+  "campfire-flare": "campfire-flare",
   "eggs-off": "*",
   "eggs-on": "*",
 };

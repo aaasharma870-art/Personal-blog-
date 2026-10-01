@@ -6,6 +6,10 @@ import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { JourneyChart, Waypoint, WaypointLabel } from "@/components/site/journey-chart";
 import { legHeading } from "@/components/worlds/pirates/voyage-chart";
+import { beatAttrs } from "@/lib/beats";
+
+/** The voyage's two beats on the static steps (spec §2.3 B10 step 1, B11 step 3). */
+const STEP_BEATS: Readonly<Record<number, string>> = { 0: "B10", 2: "B11" };
 
 /* ============================================================================
    JourneyStack — the Journey's SERVER / no-JS truth (journey-voyage.BAR §3
@@ -62,6 +66,7 @@ export function JourneyStack({
           <article
             key={s.marker}
             id={`journey-step-${i + 1}`}
+            {...(STEP_BEATS[i] ? beatAttrs(STEP_BEATS[i], { weight: 2 }) : {})}
             aria-labelledby={`journey-step-${i + 1}-title`}
             className="grid grid-cols-1 gap-tier-group border-t border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
           >

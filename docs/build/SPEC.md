@@ -2,6 +2,8 @@
 ### The Reading Line × three films and a game · binding design spec (v2, 2026-09-28)
 
 > Aryan's site is one film in four acts. Direction 3, "The Reading Line", is the camera: the huge static name, one bracket `[ ]`, one reading line, native scroll. Three films and a game are the light. **Pirates of the Caribbean** lights the crossing, **3 Idiots** lights the workshop, **Red Dead Redemption 2** lights the frontier, and **Harry Potter** lights the ending. Harry Potter also opens the page: a castle across a black lake, floating candles, a riderless broom and a play screen that swears "I solemnly swear that I am up to no good." The broom carries you out over the sea toward the Black Pearl's stern lantern and sets you down in front of the name. One curve, **the Line**, runs through everything. It is drawn in brass at sea, in blueprint in the workshop, in graphite on the trail and in ink that kindles into light at the end. The last line of the page is "Mischief managed."
+>
+> **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** desktop scroll is **Lenis + GSAP ScrollTrigger** (one clock; native scrollbar, keyboard and anchors intact; off on phones, touch, reduced motion and Pause, where native scroll stays): PHASE3-SPEC §3.1. The "no WebGL" clause stands until the contained WebGL layer ships (PHASE3-SPEC §3.3, wave 2). The name: the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5). Every superseded rule is listed in PHASE3-SPEC Appendix A.
 
 **Status:** SPEC **v2**. It replaces v1 (kept verbatim at `build/SPEC.v1.md`). Phase 0 (the typed manifest `lib/page.ts` → `lib/sections.ts` → `components/sections/registry.ts` → `SectionFrame`; `lib/media.ts`; `lib/flags.ts`; `npm run check`) is merged at `bcff748` on `design/three-films`, and Phase 1 foundation work has started (`lib/worlds.ts` with an `rdr2` placeholder, DESIGN v2 tokens and motion, SectionFrame v1.5 with `data-world`, the Pause toggle, DecoderLock; `8dc3059`). Nothing else in this spec is built.
 **Media status (OBSERVED 2026-09-28 18:45 ET):** accepted: MV-01 (hero sea **with the Black Pearl** and its stern lantern), MV-02, IN-01 (play screen **with the castle, floating candles and a real-looking broom**), IN-01m; in progress: IN-02 (draft route A), MV-03. Balance 1,086.5 → **113.5 spent** of the new 950 cap (MEDIA-PLAN v2 §0; the LEDGER logs runs 1–3 = 43, the rest is Step 2 in flight).
@@ -38,13 +40,13 @@
 | **A-5** | **Red Dead Redemption 2 is a fourth world** alongside Harry Potter, Pirates of the Caribbean and 3 Idiots | Aryan (binding, 2026-09-28) | §1–§3, SM-14…SM-16, §9, §12 |
 | **A-6** | **Iconic override:** "you can copy what we need — it's a personal website, not commercial use." Real iconography (castle, candles, broom, Marauder's Map, Lumos/Nox, the Pearl, Jack's compass, "Aal izz well", the quadcopter, Arthur's journal, Dead Eye, WANTED, tips, campfire…) is allowed and encouraged, **recreated by us**; titles, names and lines may appear in copy, cards, loaders and credits | Aryan (binding) | Laws 2 and 4, §9.4, §10.2, §10.3, §15; ICONS.md |
 | **A-7** | **The five hard limits** (H1 likeness · H2 ripped files and logo replicas in the public repo · H3 the fan-tribute line · H4 research honesty · H5 a11y/perf) are the only remaining "never" | Aryan / Claude (binding) | §15 |
-| **A-8** | Film-/game-evoking display fonts for **act titles, loaders and easter eggs only**, self-hosted and licence-checked; never the name, body or research data | Aryan (binding) | §9.7; DESIGN v3 §2.1 |
+| **A-8** | Film-/game-evoking display fonts for **act titles, loaders and easter eggs only**, self-hosted and licence-checked; never the name, body or research data | Aryan (binding) | §9.7; DESIGN v3 §2.1 · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5). |
 | **A-9** | Media budget: **program cap 950 credits including what is already spent**; reserve kept ≥ ~200 (the floor is 250) | Workflow directive; Aryan countersigns at G0 (RD-6) | MEDIA-PLAN v2 §0 |
 | D-1 | Huge name YES: `display` `clamp(4.5rem,11vw,10.5rem)` | Aryan | §6 |
 | D-2 | One primary CTA YES: "View the quant portfolio ↓" → `#work` | Aryan | §6 |
 | D-3 | Retire the old "max polish" layer YES; the film layer replaces it with meaning | Aryan | §11.3 |
 | D-4 | A warm paper plane for Writing YES (`#ebe0c6` and its proven inks). **v2:** the plane is kept and re-hosted as the RDR2 journal page (RD-1; option B keeps it as HP parchment) | Aryan | SM-11; DESIGN v3 §1.3.2 |
-| D-5 | Up to **2** longer cinematic scroll moments (≤ 60vh each, desktop fine pointer only, static elsewhere): Card I→II and Card III→IV | Aryan | SM-5, SM-10 |
+| D-5 | Up to **2** longer cinematic scroll moments (≤ 60vh each, desktop fine pointer only, static elsewhere): Card I→II and Card III→IV | Aryan | SM-5, SM-10 · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the long-card budget is `film.cardTravel` (PHASE3-SPEC D3-1): ≤ 110vh per card, ≤ 400vh in all, desktop-fine only; validator #3 / #4 are retired (`scripts/checks/travel.mjs`). |
 | D-6 | The kill-list keeps equal quiet at rest. **v2:** Dead Eye is opt-in only and leaves the ledger as it found it | Aryan | SM-8, §10.3 |
 | N1 | Harry Potter play screen + broom flight intro overlay. **v2:** castle, Black Lake, floating candles, a real-looking riderless broom, the oath line | Aryan (binding, mid-design) | §5, `bars/intro.BAR.md` |
 | N2 | **Four** themed loaders, used for real loads and as scroll-driven, non-blocking loading-reel interstitials | Aryan (binding, mid-design) | §8, `bars/loaders.BAR.md` |
@@ -647,6 +649,8 @@ Every new string has a status:
 | `pause.tooltip` | proposed | "Nox — pause motion" / "Lumos — resume motion" |
 
 ### 9.7 World display fonts: lettering (A-8)
+
+> **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the scope below is widened: the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5). Validator #10 is now "class allow + data deny" (FONTS.md §P3.5).
 **Scope (the only places a world face may appear):** act titles (card lower bars; the Journey cartouche "THE CROSSING"), **loaders** (the `route` card's title lettering; never text inside a loader SVG) and **easter eggs** (the Marauder's Map, the 404 variants, egg toasts). **Never:** the name, body, Meta, labels, verdicts, metrics, tips, quotes, figure labels or any research data (Geist / Geist Mono / Newsreader only).
 
 | World | Face | Licence (verify the file) | Ship mode | Strings |
@@ -657,7 +661,7 @@ Every new string has a status:
 | rdr2 (egg only) | Rye (Google Fonts) | OFL 1.1 | A | the Dead Eye toast header "DEAD EYE" (optional); "WANTED" only if FT-1 extends the scope |
 | hp | **IM Fell English / English SC** (Igino Marini) | OFL 1.1 | A | "The Light" (Card III→IV); LD-HP route card; the Marauder's Map room labels; the 404 map |
 
-- **Budget:** ≤ 1 display face per viewport, counted as one of the ≤ 3 type styles; never smaller than the `title` step; AA on its fill; each woff2 subset only the glyphs used; `font-display: optional`, `preload: false`, loaded by the owning component only (never on the LCP path); all display fonts ≤ 24 KB total; each outline SVG ≤ 3 KB.
+- **Budget:** ≤ 1 display face per viewport, counted as one of the ≤ 3 type styles; never smaller than the `title` step; AA on its fill; each woff2 subset only the glyphs used; `font-display: optional`, `preload: false`, loaded by the owning component only (never on the LCP path); all display fonts ≤ 24 KB total; each outline SVG ≤ 3 KB. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the ≤ 24 KB / never-preloaded rule is replaced by the FONTS.md §P3 budgets: phones fetch today's 54,336 B exactly; the name's ASCII+ file is preloaded at ≥ 64rem.)
 - **Mode C (never):** the RDR2 "Redemption" custom face, Hapna and mod "RDR2 font packs" (ripped), *Lipstick* (the 3 Idiots poster face, commercial), the HP logo lettering, the POTC wordmark, any font extracted from game or film files.
 - **Data:** `lib/film.ts` `lettering: [{ id, text, face, mode, slot: "act-title" | "loader" | "egg" }]`. The validator fails a `lettering` entry whose slot is outside the scope unless `fontScope.extended` is set by Aryan (FT-1), and fails any tracked `.ttf/.otf/.woff/.woff2` without its licence file beside it (H2).
 - **Fallback:** a missing outline or font → the act title renders in Newsreader `title` (fixture L). Nothing depends on a display face.
@@ -830,7 +834,7 @@ Every new string has a status:
 ## 11. The Reading Line: what is retained, and what changes
 
 ### 11.1 Retained unchanged
-- The **huge static SSR name** (D-1), now read as the film's title. One `h1`, never animated, never crossed by light, never set in a display face.
+- The **huge static SSR name** (D-1), now read as the film's title. One `h1`, never animated, never crossed by light, never set in a display face. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** still one static `h1`, never animated, never crossed by light; at ≥ 64rem it is set in Pirata One, mixed case: FONTS.md §P3.1.)
 - The **bracket `[ ]`**, still the only framing device and still aqua. Its uses (≤ 1 per viewport):
   - ① the intro Play (the aperture spent on Play) or, when the intro didn't play, the hero aperture
   - ② the Lens Index tracker
@@ -840,7 +844,7 @@ Every new string has a status:
 - The **noise → order seam** (IceCut: ragged mask, ±40%·p², 3 px aqua line only mid-wipe), at Card I→II.
 - The **writing index** (drafts are not links) and the **contact resolution** (dome seam, invitation, magnetic Copy email plus mailto).
 - **Type:** the 8-step scale; Geist / Geist Mono / Newsreader for everything except the scoped world lettering (A-8, §9.7); ≤ 3 styles per viewport; one Meta label system.
-- **Motion:** native scroll; 3 registers plus 2 shapes (bracket, dome); poster-first media; one decoder; no WebGL; transform, opacity and clip-path only.
+- **Motion:** native scroll; 3 registers plus 2 shapes (bracket, dome); poster-first media; one decoder; no WebGL; transform, opacity and clip-path only. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** desktop scroll is **Lenis + GSAP ScrollTrigger** (one clock; native scrollbar, keyboard and anchors intact; off on phones, touch, reduced motion and Pause, where native scroll stays): PHASE3-SPEC §3.1. The "no WebGL" clause stands until the contained WebGL layer ships (PHASE3-SPEC §3.3, wave 2).)
 - **Honesty architecture:** the Sharpe-2.0 rule, limitations beside claims, `SYNTHETIC • ILLUSTRATIVE` adjacent, ratios never animated, drafts never links.
 
 ### 11.2 What changes
@@ -1017,6 +1021,8 @@ Variants stay **structural**; the world supplies the skin through `slots.dressin
 - **Remove the movie layer:** `film.enabled = false`. Every world is `house`; no intro, cards, films chapter, eggs, lettering, quotes or credits film rows; loaders become `plain`; it renders **exactly Direction 3 minus its sculpture pack**.
 
 ### 12.5 Validator additions (`scripts/check-manifest.mjs`, run in `npm run check` and CI)
+
+> **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the validator is a loader (`scripts/check-manifest.mjs` imports every `scripts/checks/*.mjs`); #3 / #4 are retired for `travel.mjs` (`film.cardTravel`); #10 is "class allow + data deny" (FONTS.md §P3.5); beats checks 1–14 live in `scripts/checks/beats.mjs` (PHASE3-SPEC §3.4).
 **Errors:**
 1. Acts are contiguous; **≤ 4 film/game worlds; ≤ 4 major world changes** (the prologue flight counts).
 2. Exactly one `hero`, first, with `act: null`. `credits`, if present, is last, and `contact` is the last section before it. ≤ 1 `films`.
@@ -1092,7 +1098,7 @@ Variants stay **structural**; the world supplies the skin through `slots.dressin
 | Image sequence | JV 72 × WebP 1280 w ≤ 3 MB, desktop only, fetched within 1 viewport |
 | Posters | the hero 200–350 KB; others lazy; MV-10 is never the LCP (below the fold) |
 | Canvas | singleton; DPR ≤ 2; paused offscreen and on hidden tabs; skipped when `hardwareConcurrency < 4` (static fallback) |
-| Display fonts | ≤ 24 KB total woff2 subsets + ≤ 3 KB per outline SVG; `display: optional`; never preloaded; never on the LCP path |
+| Display fonts | ≤ 24 KB total woff2 subsets + ≤ 3 KB per outline SVG; `display: optional`; never preloaded; never on the LCP path · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** FONTS.md §P3 budgets (name preloaded at ≥ 64rem; phones unchanged) |
 | Eggs | lazy on trigger; ≤ 6 KB gz each (the Map ≤ 10 KB gz); 0 bytes when `eggs.enabled = false` |
 | JS for the film layer | worlds and cards code-split per world; `film.enabled=false` drops them from the bundle |
 
@@ -1133,7 +1139,7 @@ Variants stay **structural**; the world supplies the skin through `slots.dressin
 | F-4 | Writing covers W-01…05 | **Dropped** (the journal vignettes are code); re-open only with RD-1 = B |
 | F-5 | Sign off the §9.6 proposed microcopy **and every quote** (R-4) | Required before production |
 | F-6 | Write the four reasons (or leave them silent) | Silent until written |
-| F-7 | Page sticky budget 150vh (the D-5 consequence) | Yes |
+| F-7 | Page sticky budget 150vh (the D-5 consequence) | Yes · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the long-card budget is `film.cardTravel` (PHASE3-SPEC D3-1): ≤ 110vh per card, ≤ 400vh in all, desktop-fine only; validator #3 / #4 are retired (`scripts/checks/travel.mjs`). |
 | F-8 | Journey image sequence (≈ 66 credits planned) vs four stills | Sequence |
 | RD-1 | Writing as Arthur's journal (A) or HP parchment (B) | **A** |
 | RD-2 | Act III title and verb ("The Frontier" / "The Trail" / "The Reckoning"; "Reflection") | The Frontier / Reflection |

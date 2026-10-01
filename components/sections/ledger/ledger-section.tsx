@@ -127,11 +127,16 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
         )}
       </header>
 
-      <LedgerIndex rows={rows} choice={variantChoiceOf(entry)} />
+      {/* the ledger DATA (rows, verdicts, figures, the caveat) is a research
+          island: no world type role reaches it (P3-4, PHASE3-SPEC §5.5);
+          display: contents, so no box changes. The head above is Kalam. */}
+      <div className="contents" data-research="">
+        <LedgerIndex rows={rows} choice={variantChoiceOf(entry)} />
 
-      <p className="mt-tier-group max-w-body type-small text-fg-muted">
-        Tuning to a backtest usually enlarges your future loss.
-      </p>
+        <p className="mt-tier-group max-w-body type-small text-fg-muted">
+          Tuning to a backtest usually enlarges your future loss.
+        </p>
+      </div>
     </IdiotsSection>
   );
 }

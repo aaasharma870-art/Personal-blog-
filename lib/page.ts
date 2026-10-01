@@ -27,6 +27,8 @@ import type { MediaId } from "./media";
 import type { ToneId, WorldId } from "./worlds";
 import type { ActId, Intensity } from "./film";
 import type { VariantChoice } from "./variants";
+import type { Beat, EstVh, Tempo } from "./beats";
+import type { StageSpec } from "./stage";
 
 /** Ground plane a section sits on (DESIGN v3 §1.3.4). SectionFrame emits it
  *  as `data-tone`; it selects --bg / --surface-* / --fg … from the world. */
@@ -98,6 +100,20 @@ type Base<T extends string, P> = {
    *  host ("hero" for the hero, else its id). Not to be confused with
    *  `props.variant` of a story (its structural layout). */
   variant?: VariantChoice;
+  /* — Phase 3 (PHASE3-SPEC §3.2, §3.4; B1-BEATS fills them) — */
+  /** The persistent stage behind / beside this section (desktop only).
+   *  Plates only (DP-5: the stage asks `loopFor(cue.media)`). */
+  stage?: StageSpec;
+  /** The section's beats (spec §2.3; lib/beats.ts explains `at` / `span`:
+   *  viewport-top scroll offset in vh from the section top @1440). Every
+   *  enabled section has them; the validator (scripts/checks/beats.mjs)
+   *  checks rations, spans, gaps and pacing. */
+  beats?: readonly Beat[];
+  /** Reading tempo (spec §2.1): slow 90 px/s, medium 110, brisk 150. */
+  tempo?: Tempo;
+  /** Height in viewports @1440 (d) / @1024 (t): seeded from spec §2.2,
+   *  re-measured by `node tools/capture/beats.mjs <base> --write`. */
+  estVh?: EstVh;
   props: P;
 };
 
@@ -212,6 +228,13 @@ export const page: readonly SectionEntry[] = [
     tone: "deep",
     motion: "signature",
     variant: "default",
+    stage: { mode: "own" },
+    tempo: "slow",
+    estVh: { d: 1, t: 1 },
+    beats: [
+      // B00 / B01 (the prologue) live in lib/film.ts `prologue.beats`
+      { id: "B02", at: 0, span: 100, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+    ],
     props: {
       cta: { label: "View the quant portfolio ↓", to: "work" },
       media: "MV-01",
@@ -231,6 +254,25 @@ export const page: readonly SectionEntry[] = [
     act: "act-1",
     numbered: true,
     nav: { label: "About", primary: true },
+    // backdrop over the stage (spec §3.2): cue 1 continues the act-1 program
+    // block's still; cue 2 at the pillars crossfades (≥ 40vh) to MV-05a
+    // (its loop by loopFor), ending before the journey h2 (the B09 match cut)
+    stage: {
+      mode: "backdrop",
+      scrim: { text: 0.86, image: 0.45, imageZone: "gutters" },
+      cues: [
+        { media: "iconic-pearl", camera: "drift", depth: true, weather: "spray" },
+        { at: "about-pillars", media: "MV-05a", camera: "drift" },
+      ],
+    },
+    tempo: "medium",
+    estVh: { d: 1.473, t: 1.941 },
+    beats: [
+      { id: "B07", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B08", at: 0, span: 50, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
+      { id: "B08-invite", at: 50, span: 22.9, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      { id: "B09", at: 72.9, span: 66, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B09-window", feature: "P3-2" },
+    ],
     props: { variant: "split" },
   },
   {
@@ -241,6 +283,15 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Journey", primary: true },
+    stage: { mode: "own" },
+    tempo: "medium",
+    estVh: { d: 3.173, t: 3.144 },
+    beats: [
+      { id: "B09-window", at: 0, span: 10, kind: "match-cut", timing: "scroll", feature: "P3-2" },
+      { id: "B10", at: 0, span: 106.2, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B11", at: 106.2, span: 105.6, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B12", at: 211.8, span: 101, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
+    ],
     props: {
       variant: "voyage",
       stills: ["MV-05a", "MV-05b", "MV-05c", "MV-05d"],
@@ -270,6 +321,14 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Work", primary: true },
+    stage: { mode: "own" },
+    tempo: "brisk",
+    estVh: { d: 2.593, t: 2.713 },
+    beats: [
+      { id: "B16", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B17", at: 0, span: 100.1, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      { id: "B18", at: 100.1, span: 54.6, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+    ],
     // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
     // "generic architecture"): Virus's astronaut pen on his desk — the
     // OTHER pen plate from the kill-list's (platePick swaps sides per
@@ -282,6 +341,17 @@ export const page: readonly SectionEntry[] = [
     act: "act-2",
     numbered: true,
     nav: { label: "Trading_Algos", keywords: ["flagship", "research", "futures"] },
+    // split, window right (spec §3.2): the corridor, panning left, chalk dust
+    stage: { mode: "split", side: "right", cues: [{ media: "iconic-corridor", camera: "pan-l", weather: "chalk" }] },
+    tempo: "brisk",
+    estVh: { d: 2.134, t: 2.928 },
+    beats: [
+      { id: "B19", at: -100, span: 100, kind: "stage-cue", timing: "scroll", star: true, weight: 1, feature: "P3-2" },
+      { id: "B20", at: 0, span: 95.4, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      { id: "B20-rack", at: 0, span: 95.4, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
+      { id: "B21", at: 95.4, span: 50, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
+      { id: "B21-circle", at: 145.4, span: 33.5, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+    ],
     props: { projectId: "trading-algos", cover: "code:schematic-trading-algos" },
   },
   {
@@ -290,6 +360,23 @@ export const page: readonly SectionEntry[] = [
     act: "act-2",
     numbered: true,
     nav: { label: "Optuna", keywords: ["pipeline", "screener", "optimizer"] },
+    // head own (MachineBoard), body split right from the approach (spec §3.2)
+    stage: {
+      mode: "split",
+      side: "right",
+      cues: [
+        { at: "optuna-screener-approach", media: "iconic-ice", camera: "push" },
+        { at: "optuna-screener-metrics", media: "iconic-corridor-alt", camera: "drift", depth: true },
+      ],
+    },
+    tempo: "brisk",
+    estVh: { d: 4.94, t: 6.564 },
+    beats: [
+      { id: "B22", at: 0, span: 83.2, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      { id: "B23", at: 83.2, span: 88.9, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B23-rack", at: 83.2, span: 88.9, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
+      { id: "B24", at: 172.1, span: 80.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+    ],
     props: {
       projectId: "optuna-screener",
       cover: "code:schematic-optuna",
@@ -303,6 +390,12 @@ export const page: readonly SectionEntry[] = [
     type: "experiment",
     act: "act-2",
     tone: "raised",
+    stage: { mode: "opaque" }, // H4: no film here
+    tempo: "brisk",
+    estVh: { d: 1.258, t: 1.338 },
+    beats: [
+      { id: "B25", at: 0, span: 111.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-7" },
+    ],
     props: { demo: "backtest" },
   },
   {
@@ -311,6 +404,13 @@ export const page: readonly SectionEntry[] = [
     act: "act-2",
     numbered: true,
     nav: { label: "Systems", primary: true },
+    stage: { mode: "own" },
+    tempo: "brisk",
+    estVh: { d: 2.358, t: 2.419 },
+    beats: [
+      { id: "B26", at: 0, span: 97.7, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      { id: "B27", at: 97.7, span: 119.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+    ],
     props: { source: "capabilities", media: "iconic-drone" },
   },
   {
@@ -333,6 +433,13 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
+    stage: { mode: "opaque" }, // the head inset keeps its own plate
+    tempo: "brisk",
+    estVh: { d: 2.358, t: 2.784 },
+    beats: [
+      { id: "B28", at: 0, span: 96.8, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      { id: "B29", at: 96.8, span: 94.4, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
+    ],
     // head: VIRUS'S ASTRONAUT PEN (iconic-pen; ALT iconic-pen-alt)
     props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
   },
@@ -345,6 +452,23 @@ export const page: readonly SectionEntry[] = [
     world: "house",
     tone: "deep",
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
+    stage: { mode: "own" },
+    tempo: "slow",
+    estVh: { d: 6.056, t: 5.816 },
+    // each screen's title + finale belong to that film's world (rations)
+    beats: [
+      { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+      { id: "B31", at: 0, span: 55.5, kind: "title", timing: "time", star: true, weight: 1, world: "pirates", feature: "P3-7" },
+      { id: "B31-finale", at: 55.5, span: 55.5, kind: "signature", timing: "time", star: true, weight: 1, world: "pirates", feature: "existing" },
+      { id: "B31-bars", at: 100, span: 40, kind: "letterbox", timing: "scroll", feature: "P3-6" },
+      { id: "B32", at: 111, span: 66.7, kind: "title", timing: "time", star: true, weight: 1, world: "idiots", feature: "P3-7" },
+      { id: "B32-finale", at: 177.7, span: 66.6, kind: "signature", timing: "time", star: true, weight: 2, world: "idiots", feature: "existing" },
+      { id: "B33", at: 244.3, span: 66.7, kind: "title", timing: "time", star: true, weight: 1, world: "rdr2", feature: "P3-7" },
+      { id: "B33-finale", at: 311, span: 66.7, kind: "signature", timing: "time", star: true, weight: 2, world: "rdr2", feature: "existing" },
+      { id: "B34", at: 377.7, span: 66.6, kind: "title", timing: "time", star: true, weight: 1, world: "hp", feature: "P3-7" },
+      { id: "B34-finale", at: 444.3, span: 66.7, kind: "signature", timing: "time", star: true, weight: 2, world: "hp", feature: "existing" },
+      { id: "B35", at: 511, span: 81.7, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B35-sun", feature: "P3-6" },
+    ],
     props: { order: "acts" },
   },
 
@@ -357,6 +481,25 @@ export const page: readonly SectionEntry[] = [
     motion: "signature",
     variant: "default",
     nav: { label: "Beyond", primary: true },
+    // own band + the lower half split, window LEFT from Activities (spec
+    // §3.2): MV-10 pushing toward the sun, golden into dusk (lib/sky.ts)
+    stage: {
+      mode: "split",
+      side: "left",
+      cues: [{ at: "beyond-activities", media: "MV-10", camera: "push", grade: "golden" }],
+    },
+    tempo: "medium",
+    estVh: { d: 4.864, t: 5.678 },
+    beats: [
+      // B39: the breath after the act-3 card (quiet only): the FrontierBand drift
+      { id: "B39-drift", at: -100, span: 100, kind: "stage-cue", timing: "scroll", feature: "existing" },
+      { id: "B40", at: 0, span: 98.3, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B41", at: 98.3, span: 100, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B42", at: 198.3, span: 100, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
+      { id: "B42-rack", at: 198.3, span: 100, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
+      { id: "B43", at: 298.3, span: 59.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      { id: "B43-wanted", at: 358.2, span: 59.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+    ],
     props: {
       variant: "notes",
       media: "MV-10",
@@ -371,6 +514,14 @@ export const page: readonly SectionEntry[] = [
     tone: "paper",
     numbered: true,
     nav: { label: "Writing", primary: true },
+    stage: { mode: "opaque" }, // paper
+    tempo: "medium",
+    estVh: { d: 2.871, t: 3.117 },
+    beats: [
+      { id: "B44", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      { id: "B45", at: 96.9, span: 100, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
+      { id: "B46", at: 196.9, span: 97.9, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
+    ],
     props: { source: "writing", preview: "vignette" },
   },
   {
@@ -385,6 +536,13 @@ export const page: readonly SectionEntry[] = [
       paletteLabel: "Testimonials",
       keywords: ["teachers", "voices", "quotes", "recommendations"],
     },
+    stage: { mode: "own" }, // campSticky; no letterbox, no subtitle
+    tempo: "slow",
+    estVh: { d: 1.602, t: 2.01 },
+    beats: [
+      { id: "B47", at: 0, span: 154.8, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "P3-5" },
+      { id: "B47-fireflies", at: 50, span: 104.8, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+    ],
     props: { source: "testimonials", media: "iconic-camp", altMedia: "MV-11", loop: "MV-11L" },
   },
 
@@ -395,6 +553,15 @@ export const page: readonly SectionEntry[] = [
     act: "act-4",
     numbered: true,
     nav: { label: "Principles", primary: true },
+    stage: { mode: "opaque" }, // the map sheet
+    tempo: "medium",
+    estVh: { d: 2.989, t: 3.183 },
+    beats: [
+      { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+      { id: "B53", at: 0, span: 98.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B54", at: 98.4, span: 94.5, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B55", at: 192.9, span: 65.7, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
+    ],
     props: {},
   },
   {
@@ -405,6 +572,12 @@ export const page: readonly SectionEntry[] = [
     act: "act-4",
     tone: "deep",
     nav: { label: "Contact" },
+    stage: { mode: "own" },
+    tempo: "medium",
+    estVh: { d: 1, t: 1 },
+    beats: [
+      { id: "B56", at: 0, span: 100, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+    ],
     props: { media: "MV-08", loop: "MV-09" },
   },
 
@@ -416,6 +589,20 @@ export const page: readonly SectionEntry[] = [
     act: null,
     world: "house",
     tone: "deep",
+    // backdrop: the roll over the last shot (MV-08 → its loop, push 1 → 1.06)
+    stage: {
+      mode: "backdrop",
+      scrim: { text: 0.86, image: 0.45, imageZone: "gutters" },
+      cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
+    },
+    tempo: "slow",
+    estVh: { d: 2.266, t: 2.568 },
+    beats: [
+      // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
+      { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B58: "Mischief managed" → the post-credits scene in the +60vh tail
+      { id: "B58", at: 101, span: 75.6, kind: "post-credits", timing: "time", star: true, weight: 3, feature: "P3-8" },
+    ],
     props: {},
   },
 ];

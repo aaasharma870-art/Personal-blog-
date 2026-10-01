@@ -1,0 +1,554 @@
+{
+  "proposedMediaId": "L22",
+  "kind": "new P3 living loop (staged, not registered) -- rank-7 contingency retake",
+  "sourceMediaId": "F-3I",
+  "plate": "public/media/films/films-idiots.webp",
+  "plateJob": "a4ec7e96-84d8-4d8a-a6b9-b71c6547e72f",
+  "job": "0d55d8ed-af05-4635-94e9-1dee6d55689e",
+  "firstTake": {
+    "job": "5d249862-96db-4b48-9a08-81983c1bb558",
+    "record": "films-idiots-loop.FAIL.superseded.json (FAIL: haze wash, ring events, consecutive floor 0.978)"
+  },
+  "model": "minimax_h3 2K, 21:9, 6 s (no sound switch: the master carries one AAC stream, stripped with -an), start_image = end_image = the plate job; 2944x1248 24 fps output (158 frames, 6.583 s); declined_preset_id 24bae836; use_unlim false. Charged 12 credits at 2026-09-30 23:14:30 UTC (transactions)",
+  "credits": 12,
+  "prompt": "Animate the supplied image with very gentle, continuous motion on the water only, while preserving the exact composition, framing, colours, lighting and contrast. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Fine, low ripples drift slowly and evenly across the whole lake from left to right for the entire clip, and the mirror reflection of the mountains wavers softly in them while keeping its shape, colour and brightness. The sky, the mountains and the light stay exactly as they are, with no haze, mist or fading; the yellow scooter stays perfectly still and shows no badge or plate; the pebbled shore stays still. Nothing touches or breaks the water: no rings, splashes or drops. One uninterrupted shot; the ripples keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker, exposure or contrast change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "the first take FAIL JSON retake.prompt, verbatim (job params echo it)",
+  "generateLog": "docs/build/media/p3/B9.md",
+  "checkLog": "docs/build/media/p3/B9.md#4-rank-7-contingency-l22-films-idiots-retake",
+  "master": "media-src/p3/masters/L22r-films-idiots-0d55d8ed.mp4 (MiniMax original, 3664926 bytes, 158 frames, 6.583 s, 2944x1248, 1 AAC stream)",
+  "files": {
+    "mp4": "films-idiots-loop.mp4",
+    "webm": "films-idiots-loop.webm",
+    "poster": "films-idiots-loop-poster.webp"
+  },
+  "width": 1680,
+  "height": 720,
+  "fps": 24,
+  "frames": 157,
+  "durationS": 6.542,
+  "bytes": {
+    "mp4": 388028,
+    "webm": 360298,
+    "poster": 101146
+  },
+  "tier": "I (21:9 inset)",
+  "rawVerdict": "PASS on motion and restraint (the first take failures are gone: mountains 1.21/255 vs 16.8, contrast -1.3 % vs -31 %, whole-frame luma range 0.9 % vs 4.2 %, consecutive floor 0.9942 vs 0.978, no rings, no haze), FAIL on static zones only: Kling-style texture boil on the pebbles (pure-shore rects 4.75 / 3.95 /255), the scooter box 2.37 (lake behind it + edge boil; phase-correlated scooter shift <= 0.4 px), sky 1.55, rocks 1.99",
+  "prePatch": {
+    "what": "0-credit cinemagraph hold-out (the L05/L15/L17/L21/L23 precedent): frame 0 (the pinned plate frame) is composited over everything EXCEPT the lake water, so only the water (ripples, the wavering mountain reflection and the soft lap at the waterline) keeps moving",
+    "why": "every non-water zone the prompt names as still (sky, mountains, far shore line, right rocks, scooter, pebbles) read 1.2-4.8/255 of texture boil on the raw clip; the hold makes them 0 and leaves the one motion the prompt asked for",
+    "mask": "lake = pixels below the far shore line (half-res row 309 of 624; the bright shore line is rows 302-304) that are smooth (7x7 local std < 5) or blue (B > R+10), not yellow (R > B+40) or dark (Y < 45), components >= 1500 half-res px, holes filled, plus every pixel below the shore line whose blurred max |dY| over the clip exceeds 6 (the wave reach over the waterline pebbles), closed 15 px, dilated 4 half-res px, minus the scooter silhouette dilated 3 half-res px (always held). Moving share 31.2 %, held 68.8 %",
+    "featherSigmaPx": 6,
+    "units": "2944x1248 master px",
+    "script": "scratchpad p3/b9/l22mask.py (mask) + p3/b9/hold3.py (hold2.py generalised to a mask image)",
+    "output": "media-src/p3/masters/L22r-films-idiots-0d55d8ed-lakeonly.mkv (FFV1 lossless, 158 frames, 2944x1248, no audio, gitignored)",
+    "boundary": "bands 4-16 px inside the held area / inside the moving lake (720p): MP4 0.22 / 5.42, WebM 0.14 / 5.00 mean |dY| (band.py); the waterline at 150 % mid-loop shows no hold edge"
+  },
+  "geometry": {
+    "finding": "ECC affine of master frame 0 vs the 2520x1080 plate (cc 0.998): x scale 1.1673, y scale 1.1538, plate origin at master x 1.47 / y 1.83, far corner 2942.9 / 1247.6. The whole plate, stretched; nothing cropped.",
+    "delivery": "FULL-FRAME resize 2944x1248 -> 1680x720 (no pre-crop). Tested: crop=2938:1248:2:0 (the L23 footprint) gave registration 0.943 / phase -1.25 px; crop=2941:1246:1:2 without exact=1 gave 0.935 / -1.55 px (ffmpeg rounds odd yuv420p offsets); crop=2941:1246:1:2:exact=1 gave 0.957 / -0.25 px; full frame gave 0.9586 / +0.32 px (best).",
+    "audio": "master 1 AAC stream -> 0 audio streams on both encodes (-an)",
+    "script": "scratchpad p3/m56/enc219.sh (the loop.mjs deliver() encoder args) with no pre-crop; poster = frame 0 at 1920x823 (sharp q75)"
+  },
+  "tool": "hold3.py <master> media-src/p3/masters/L22r-films-idiots-0d55d8ed-lakeonly.mkv <lake mask> 6; node tools/media/loop.mjs seam <lakeonly.mkv> <scratch> --k=12 --tier=I --method=residual --keep-intermediate (the lossless seam; its tier-I 16:9 encodes are discarded); enc219.sh <seam.mkv> docs/build/media-staged/p3/accepted/films-idiots-loop 26 34",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 26,
+    "crfWebm": 34,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 75,
+    "crfNote": "WebM CRF 34 (not 32) to meet the tier-I 0.4 MB target: CRF 32 = 410,660 B, CRF 34 = 360,298 B; bright daylight plate, the held sky shows no banding at 1x"
+  },
+  "seamCheckLossless": {
+    "join": 0.9999,
+    "joinRgb": 0.9997,
+    "consecutive": {
+      "min": 0.995,
+      "minAt": 86,
+      "p05": 0.9954,
+      "median": 0.9975
+    },
+    "joinMinusMedian": 0.0024,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)",
+      "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)",
+      "scooter tight x.72-.88 y.44-.76",
+      "sky x0-1 y0-.18",
+      "rocks right x.88-1 y.44-.62",
+      "dry pebbles A x.56-.72 y.78-1 (pure shore)",
+      "dry pebbles B x.72-1 y.80-1 (pure shore)"
+    ],
+    "light": [
+      "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+      "lower-left lake x0-.33 y.68-1 (informative)"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 3664926,
+      "frames": 158,
+      "durationS": 6.583,
+      "width": 2944,
+      "height": 1248,
+      "codec": "h264",
+      "firstVsPlate": 0.9583,
+      "lastVsPlate": 0.9562,
+      "join": 0.9885,
+      "joinRgb": 0.9757,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9942,
+      "consecutiveMinAt": 72,
+      "consecutiveMedian": 0.9971,
+      "staticMaxMeanAbsDelta": {
+        "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 1.21,
+        "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 7.55,
+        "scooter tight x.72-.88 y.44-.76": 2.37,
+        "sky x0-1 y0-.18": 1.55,
+        "rocks right x.88-1 y.44-.62": 1.99,
+        "dry pebbles A x.56-.72 y.78-1 (pure shore)": 4.75,
+        "dry pebbles B x.72-1 y.80-1 (pure shore)": 3.95
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 4e-05,
+      "lumaRangePct": 0.9,
+      "light": [
+        {
+          "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+          "ptpPct": 1,
+          "reversalsPerS": 0,
+          "dominantHz": 0.3
+        },
+        {
+          "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+          "ptpPct": 4.24,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        }
+      ],
+      "phaseShiftPx": [
+        0.326,
+        0
+      ],
+      "audioStreams": 1,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": false
+      },
+      "note": "raw MiniMax master, full frame (1 AAC stream)"
+    },
+    "unpatchedEncodes": {
+      "mp4Crf26": {
+        "bytes": 672459,
+        "frames": 157,
+        "durationS": 6.542,
+        "width": 1680,
+        "height": 720,
+        "codec": "h264",
+        "firstVsPlate": 0.9567,
+        "lastVsPlate": 0.9568,
+        "join": 0.9905,
+        "joinRgb": 0.9797,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.9951,
+        "consecutiveMinAt": 90,
+        "consecutiveMedian": 0.9978,
+        "staticMaxMeanAbsDelta": {
+          "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 1.22,
+          "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 7.42,
+          "scooter tight x.72-.88 y.44-.76": 2.44,
+          "sky x0-1 y0-.18": 1.41,
+          "rocks right x.88-1 y.44-.62": 2.08,
+          "dry pebbles A x.56-.72 y.78-1 (pure shore)": 4.95,
+          "dry pebbles B x.72-1 y.80-1 (pure shore)": 4.13
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 4e-05,
+        "lumaRangePct": 0.85,
+        "light": [
+          {
+            "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+            "ptpPct": 0.93,
+            "reversalsPerS": 0,
+            "dominantHz": 0.31
+          },
+          {
+            "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+            "ptpPct": 4.21,
+            "reversalsPerS": 0,
+            "dominantHz": 0.31
+          }
+        ],
+        "phaseShiftPx": [
+          0.324,
+          -0.017
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": true,
+          "silent": true
+        }
+      },
+      "webmCrf34": {
+        "bytes": 528671,
+        "frames": 157,
+        "durationS": 6.542,
+        "width": 1680,
+        "height": 720,
+        "codec": "vp9",
+        "firstVsPlate": 0.9585,
+        "lastVsPlate": 0.9585,
+        "join": 0.9999,
+        "joinRgb": 0.9998,
+        "joinPercentile": 0.9936,
+        "consecutiveMin": 0.993,
+        "consecutiveMinAt": 79,
+        "consecutiveMedian": 0.9976,
+        "staticMaxMeanAbsDelta": {
+          "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 0.84,
+          "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 7.5,
+          "scooter tight x.72-.88 y.44-.76": 2.07,
+          "sky x0-1 y0-.18": 1.41,
+          "rocks right x.88-1 y.44-.62": 1.49,
+          "dry pebbles A x.56-.72 y.78-1 (pure shore)": 4.77,
+          "dry pebbles B x.72-1 y.80-1 (pure shore)": 3.76
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 4e-05,
+        "lumaRangePct": 0.86,
+        "light": [
+          {
+            "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+            "ptpPct": 0.94,
+            "reversalsPerS": 0,
+            "dominantHz": 0.31
+          },
+          {
+            "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+            "ptpPct": 4.22,
+            "reversalsPerS": 0,
+            "dominantHz": 0.31
+          }
+        ],
+        "phaseShiftPx": [
+          0.322,
+          -0.009
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": true,
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": true,
+          "silent": true
+        }
+      }
+    },
+    "unpatchedLosslessSeamJoin": {
+      "join": 0.9998,
+      "joinRgb": 0.9994,
+      "consecutive": {
+        "min": 0.9942,
+        "minAt": 72,
+        "p05": 0.9951,
+        "median": 0.9971
+      },
+      "joinMinusMedian": 0.0026,
+      "joinPercentile": 1,
+      "pass": {
+        "join": true,
+        "smooth": true
+      }
+    }
+  },
+  "after": {
+    "lossless": {
+      "bytes": 26808710,
+      "frames": 157,
+      "durationS": 6.542,
+      "width": 2944,
+      "height": 1248,
+      "codec": "h264",
+      "firstVsPlate": 0.9583,
+      "lastVsPlate": 0.9582,
+      "join": 0.9999,
+      "joinRgb": 0.9997,
+      "joinPercentile": 1,
+      "consecutiveMin": 0.995,
+      "consecutiveMinAt": 86,
+      "consecutiveMedian": 0.9975,
+      "staticMaxMeanAbsDelta": {
+        "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 0,
+        "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 5.33,
+        "scooter tight x.72-.88 y.44-.76": 0.18,
+        "sky x0-1 y0-.18": 0,
+        "rocks right x.88-1 y.44-.62": 0.23,
+        "dry pebbles A x.56-.72 y.78-1 (pure shore)": 0.18,
+        "dry pebbles B x.72-1 y.80-1 (pure shore)": 0
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 3e-05,
+      "lumaRangePct": 0.52,
+      "light": [
+        {
+          "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+          "ptpPct": 1,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        },
+        {
+          "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+          "ptpPct": 4.23,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        }
+      ],
+      "phaseShiftPx": [
+        0.326,
+        0
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "note": "the lossless residual seam of the hold master (x264 qp0, 2944x1248)"
+    },
+    "mp4": {
+      "bytes": 388028,
+      "frames": 157,
+      "durationS": 6.542,
+      "width": 1680,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9565,
+      "lastVsPlate": 0.9568,
+      "join": 0.9954,
+      "joinRgb": 0.9897,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9956,
+      "consecutiveMinAt": 86,
+      "consecutiveMedian": 0.9979,
+      "staticMaxMeanAbsDelta": {
+        "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 0.08,
+        "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 5.27,
+        "scooter tight x.72-.88 y.44-.76": 0.21,
+        "sky x0-1 y0-.18": 0.15,
+        "rocks right x.88-1 y.44-.62": 0.32,
+        "dry pebbles A x.56-.72 y.78-1 (pure shore)": 0.28,
+        "dry pebbles B x.72-1 y.80-1 (pure shore)": 0.11
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 3e-05,
+      "lumaRangePct": 0.51,
+      "light": [
+        {
+          "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+          "ptpPct": 0.92,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        },
+        {
+          "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+          "ptpPct": 4.27,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        }
+      ],
+      "phaseShiftPx": [
+        0.32,
+        -0.016
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 360298,
+      "frames": 157,
+      "durationS": 6.542,
+      "width": 1680,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9585,
+      "lastVsPlate": 0.9585,
+      "join": 0.9999,
+      "joinRgb": 0.9997,
+      "joinPercentile": 0.9551,
+      "consecutiveMin": 0.9932,
+      "consecutiveMinAt": 79,
+      "consecutiveMedian": 0.9977,
+      "staticMaxMeanAbsDelta": {
+        "mountains x.35-.95 y.20-.48 (FAIL-JSON accept: <= 1/255)": 0.05,
+        "shore rect x.30-.70 y.72-1 (FAIL-JSON accept; NOTE: its left part is lake water, see flags)": 5.29,
+        "scooter tight x.72-.88 y.44-.76": 0.11,
+        "sky x0-1 y0-.18": 0.05,
+        "rocks right x.88-1 y.44-.62": 0.16,
+        "dry pebbles A x.56-.72 y.78-1 (pure shore)": 0.22,
+        "dry pebbles B x.72-1 y.80-1 (pure shore)": 0.06
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 3e-05,
+      "lumaRangePct": 0.5,
+      "light": [
+        {
+          "zone": "reflection x.10-.68 y.50-.68 (accept: ptp <= 3 %)",
+          "ptpPct": 0.92,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        },
+        {
+          "zone": "lower-left lake x0-.33 y.68-1 (informative)",
+          "ptpPct": 4.25,
+          "reversalsPerS": 0,
+          "dominantHz": 0.31
+        }
+      ],
+      "phaseShiftPx": [
+        0.322,
+        -0.009
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopP999Px2520(final WebM)": {
+      "lake": 65.09,
+      "reflection": 16.41,
+      "mountains": 0.21,
+      "dryShore": 1.22,
+      "scooter": 0.4
+    },
+    "flowLakeSeriesEvery4thFrame": [
+      0.9,
+      1.3,
+      1.3,
+      3.1,
+      4.1,
+      12.1,
+      7.4,
+      4.8,
+      7.5,
+      9.0,
+      15.2,
+      65.1,
+      6.0,
+      42.9,
+      30.5,
+      13.6,
+      8.3,
+      7.8,
+      11.0,
+      8.5,
+      7.3,
+      7.4,
+      8.2,
+      7.2,
+      9.4,
+      12.6,
+      6.6,
+      6.4,
+      10.1,
+      5.3,
+      5.8,
+      5.1,
+      6.3,
+      7.1,
+      5.3,
+      4.2,
+      1.9,
+      1.0,
+      0.2
+    ],
+    "reads": "fine low ripples drift across the lake for the whole loop and the mountain reflection wavers softly (reflection luma ptp 0.9 %); around frames 36-60 one soft, darker wavelet rolls diagonally into the lower-left shore and laps the waterline (lower-left lake luma ptp 4.2 %, block flicker max 1.22 reversals/s, no rings). Farneback spikes (65 px) at frames ~44-56 are the aperture problem on smooth water as that wavelet passes, not a jump: the slit-scan at x.20 shows continuous diagonal streaks."
+  },
+  "l2Sweep": "Raw master frames 0/25/50/75/100% (1260 px) + lower-lake crops at 100 % + waterline crops at frames 0/20/40/44/48/56/80/120/157; final WebM frames 0/25/50/75/100% (1680 px), lake/shore crops at 200 %, scooter at 200 % of 1680 (frame 78): no people, figures, riders, faces or hands; the scooter shows no badge, lettering or number plate (two small plain chrome trims on the legshield, as in the plate); no text or symbols anywhere; no rings, splashes or new objects; 0 flashes/s whole frame and tiles, red share 3e-5; 0 audio streams.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) at x.20 (lake, y.5-1) on both codecs and at x.62 (reflection -> waterline -> pebbles, y.40-.80) on the WebM: continuous ripple streaks and a steady waterline, no vertical seam at the tick; wrap strips continuous. Hold boundary invisible at 150 %.",
+  "flags": [
+    "Rank-7 contingency choice: L22 was retaken instead of L13 express (same host rank: films screens). Reasons: the 3 Idiots screen had no living loop at all while the HP screen already has L23; the start = end Kling recipe that L13 would reuse returned near-stills 4 times in a row (L03, L04 first takes; L03r, L04r, L07 in B8), while MiniMax over-delivers and the FAIL JSON prompt directly named the fix. Cost 12 (the plan allows <= 12). L13 stays FAIL; its code ALT is the HP screen DEFAULT (L23 is the living media ALT).",
+    "0-credit cinemagraph: frame 0 held over sky, mountains, far shore, rocks, scooter and dry pebbles; only the lake moves.",
+    "The FAIL-JSON shore rect x.30-.70 y.72-1 still reads 5.3/255 because its left third is lake water (the lower-left lake reaches x.45 at the bottom edge) plus the waterline where the wavelet laps; the pure-pebble rects read 0.06-0.28/255. Judged as water motion, not shore motion.",
+    "One soft wavelet laps the lower-left shore once per 6.5 s loop: judged natural and restrained (no rings, no splash). Aryan to watch this join and the lap in real time (spec 6.4).",
+    "Registration 0.957 (MP4) / 0.9585 (WebM): MiniMax re-renders the plate (frame 0 vs plate 0.958 on the raw master); >= .95 but the poster -> video fade should stay 600 ms.",
+    "MP4 pass.join = true (0.9954), lossless 0.9999, WebM 0.9999. Serve the WebM first."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/films-idiots-loop.mp4",
+    "webm": "/media/films/films-idiots-loop.webm",
+    "poster": "F-3I plate (films-idiots.webp)",
+    "endsOn": "films-idiots.webp",
+    "durationS": 6.542,
+    "width": 1680,
+    "height": 720,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code:plate-camera",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "loopPoster": "films-idiots-loop-poster.webp (frame 0 of the loop at 1920x823, registration record)",
+    "provenance": "hf(minimax_h3 2K 21:9 6 s, start=end a4ec7e96, 12 cr, job 0d55d8ed, notes: retake of 5d249862; water-only prompt; 0-cr lake-only hold-out of frame 0; full-frame resize to 1680x720; -an)"
+  },
+  "alt": "code:plate-camera (depth + camera on the F-3I still)",
+  "verdict": "PASS (lake-only cinemagraph). Supersedes films-idiots-loop.FAIL.json (renamed .FAIL.superseded.json)."
+}

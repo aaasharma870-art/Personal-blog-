@@ -1,11 +1,16 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Search, X } from "lucide-react";
-import { useReducedMotion } from "@/lib/flags";
+import { DESKTOP_WIDE, useDesktopFine, useReducedMotion } from "@/lib/flags";
+import { emit } from "@/lib/events";
+import { track } from "@/lib/analytics";
+import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
+import { markWorldFontsReady } from "@/lib/world-fonts";
 import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
 import {
@@ -29,6 +34,14 @@ import { useMotionPreference } from "@/components/providers/motion-provider";
 import { OPEN_PALETTE_EVENT } from "@/components/site/command-palette";
 import { useActiveSection } from "@/components/site/use-active-section";
 import { recordVisit } from "@/components/eggs/egg-bus";
+import { HuntChip } from "@/components/eggs/hunt-chip";
+import { SoundToggle } from "@/components/audio/sound-toggle";
+
+/** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
+ *  menu opens on DESKTOP_FINE (plan DP-17). */
+const ChapterSelect = dynamic(() => import("@/components/site/chapter-select").then((m) => m.ChapterSelect), {
+  ssr: false,
+});
 
 /* ============================================================================
    HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
@@ -176,15 +189,47 @@ function ActLabel() {
   );
 }
 
+/* — The fast lane (spec §11.3, DP-14; P3-10 #3): at DESKTOP_WIDE the Work
+   pill reads "Skip to the research" (fastlane.label, proposed + unsigned)
+   and jumps to #work through the cut — world fonts ready, focus moved, the
+   director's cut and any game stopped (`fastlane`), never a 20-screen glide.
+   Below 64rem it stays "Work", a native anchor (phones unchanged). Both
+   labels are server markup; CSS (`dw:`) picks one, so SSR is identical for
+   every visitor. Off the home page (the 404) it is a plain /#work link. — */
+const FAST_LANE = copyText("fastlane.label");
+const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
+
+function runFastLane(href: string): void {
+  void markWorldFontsReady("idiots");
+  emit("fastlane");
+  track("fast_lane");
+  void scrollToTarget(href, { immediate: true, cut: true, focus: true, history: "push" });
+}
+
 function WorkPill({ base, href }: { base: string; href: string }) {
   const active = useContext(ActiveContext);
+  const onClick = (e: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (base || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!window.matchMedia(DESKTOP_WIDE).matches) return; // "Work": today's native anchor
+    e.preventDefault();
+    runFastLane(href);
+  };
   return (
     <a
       href={`${base}${href}`}
+      data-fast-lane=""
+      onClick={onClick}
       aria-current={active === href.slice(1) ? "location" : undefined}
       className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
     >
-      Work
+      {FAST_LANE_SHOWN ? (
+        <>
+          <span className="dw:hidden">Work</span>
+          <span className="hidden dw:inline">{FAST_LANE.text}</span>
+        </>
+      ) : (
+        "Work"
+      )}
     </a>
   );
 }
@@ -256,6 +301,7 @@ const FIRST_LINK_ID = navGroups.flatMap((g) => g.items)[0]?.id;
 
 export function Header() {
   const reduce = useReducedMotion();
+  const fine = useDesktopFine();
   const pathname = usePathname();
   // the page's anchors live on the home page: off it, prefix "/" (the 404)
   const base = pathname === "/" || pathname === null ? "" : "/";
@@ -285,10 +331,10 @@ export function Header() {
     if (restoreFocus) window.setTimeout(() => menuButtonRef.current?.focus(), 0);
   }, []);
 
-  // while open: lock scroll, focus the first link, Esc closes
+  // while open: lock scroll (body + Lenis), focus the first link, Esc closes
   useEffect(() => {
     if (!open) return;
-    document.body.style.overflow = "hidden";
+    lockScroll("menu");
     const t = window.setTimeout(() => {
       sheetRef.current?.querySelector<HTMLElement>("[data-menu-first]")?.focus();
     }, 20);
@@ -302,7 +348,7 @@ export function Header() {
     return () => {
       window.clearTimeout(t);
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll("menu");
     };
   }, [open, closeMenu]);
 
@@ -337,6 +383,8 @@ export function Header() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           {workHref ? <WorkPill base={base} href={workHref} /> : null}
+          <HuntChip />
+          <SoundToggle />
           <PauseWithTooltip />
           <button
             ref={menuButtonRef}
@@ -362,6 +410,7 @@ export function Header() {
             aria-modal="true"
             aria-label="Menu"
             onKeyDown={onSheetKey}
+            data-lenis-prevent=""
             {...planeAttrs("deep", "house")}
             className="fixed inset-0 z-(--z-menu) overflow-y-auto bg-bg text-fg"
             initial={{ opacity: 0 }}
@@ -382,6 +431,7 @@ export function Header() {
             </div>
 
             <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
+              {fine ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
               <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
                 {navGroups.map((g) => {
                   const cardLink = g.href && cardsPresent.has(g.href.slice(1)) ? g.href : null;

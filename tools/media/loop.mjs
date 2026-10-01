@@ -1,73 +1,86 @@
 #!/usr/bin/env node
 /**
- * tools/media/loop.mjs — seamless-loop build + acceptance checks for the film loops.
+ * tools/media/loop.mjs — seamless-loop build + acceptance checks for the film loops (Phase 3).
  *
  * Replaces the old tools/join.py, vcheck.py and laneB_vloop.py (never committed).
- * Node 22 ESM. Needs ffmpeg 7 (no ffprobe needed; FFMPEG env or /usr/local/bin/ffmpeg)
- * and sharp (repo devDependency). python3 + cv2 is optional (phase shift in `check`).
- * Every ffmpeg call runs with -threads 2 (FFMPEG_THREADS to override).
+ * Node 22 ESM. Needs ffmpeg 7 (no ffprobe needed; FFMPEG env or /usr/local/bin/ffmpeg) and sharp
+ * (repo devDependency). python3 + cv2 is optional (phase shift in `check`). Every ffmpeg call runs
+ * with -threads 2 (FFMPEG_THREADS overrides). Temp files go to LOOP_TMP or the OS temp dir.
+ * Run from the repo root: node tools/media/loop.mjs <subcommand> ...   Findings: docs/build/media/p3/tools.md
  *
- * SUBCOMMANDS
- *
- *   seam <master.mp4> <out-base> --k=12|24 --tier=S|I
- *        [--crf-mp4=22|26] [--crf-webm=32] [--curve=linear|smooth]
- *        [--rotate=0|auto|<n>] [--plate=<still>] [--keep-intermediate]
- *     Tail->head blend seam (media-loops map §4; NOT xfade). With N source frames:
+ * ── seam <master.mp4> <out-base> --k=12|24 --tier=S|I [options] ─────────────────────────────────
+ *   Writes <out-base>.mp4 (H.264 High yuv420p, +faststart, -an), <out-base>.webm (VP9 -b:v 0,
+ *   -row-mt 1, -an) and <out-base>-poster.webp (output frame 0, 1920 w, q80, stepped down to stay
+ *   <= 100 KB). Tier S = 1920x1080, tier I = 1280x720. Prints a JSON summary whose `seamCheck` is
+ *   the motion-seam verdict measured on the lossless intermediate (x264 -qp 0).
+ *   --method=blend (default; the media-loops map §4 recipe, NOT xfade). N source frames:
  *       out = src[K..N-K-1] ++ blend(src[N-K+i] -> src[i], w = i/(K-1)), i = 0..K-1
- *     so the last output frame IS src[K-1] and the first is src[K]: the wrap is one
- *     natural frame step. Output length N-K frames (8.04 s @ K=24 -> 7.04 s).
- *     The seam is rendered once to a lossless intermediate (x264 -qp 0), then encoded:
- *       <out-base>.mp4         H.264 High yuv420p, GOP 48, +faststart, -an
- *       <out-base>.webm        VP9 -b:v 0 -crf, -row-mt 1, GOP 48, -an
- *       <out-base>-poster.webp frame 0, 1920 w, q80 (steps down to stay <= 100 KB)
- *     Tier S = 1920x1080 (mp4 CRF 22), tier I = 1280x720 (mp4 CRF 26). WebM CRF 32.
- *     --rotate=auto (needs --plate) cyclically rotates the loop so frame 0 is the output
- *     frame closest to the plate (best poster->video registration; the loop is unchanged).
- *     Use K=12 for slow scenes, K=24 for busy ones (sea, rain). Prints a JSON summary.
+ *     The last output frame IS src[K-1] and the first is src[K], so the wrap is one natural step.
+ *     N-K frames (8.04 s -> 7.04 s at K=24). The pinned plate frames src[0] / src[N-1] are dropped,
+ *     so frame 0 no longer matches the plate (MV-03: 0.988 -> 0.911): add --rotate=auto --plate=.
+ *   --method=residual (RECOMMENDED for Kling start=end pinned masters whose raw join is >= 0.98):
+ *       out = src[0..N-2], the last K frames get + w*(src[0]-src[N-1]), w = (i+1)/(K+1) (16-bit)
+ *     Frame 0 stays the pinned plate frame (poster/match-cut registration kept), N-1 frames (8.00 s),
+ *     no dissolve; the wrap N-2 -> 0 is one natural step. Re-seams of MV-03/MV-11L/MV-09: lossless
+ *     join = an ordinary step (percentile 0.03-0.47) with registration 0.988/0.992/0.996.
+ *   --k             blend/ramp length in frames: 12 (0.5 s) for slow scenes, 24 for busy (sea, rain)
+ *   --curve=smooth  smoothstep weights for --method=blend (default linear)
+ *   --rotate=auto --plate=<still>  rotate the loop so frame 0 is the frame closest to the plate
+ *                   (the loop itself is unchanged); --rotate=<n> rotates by n frames
+ *   --crf-mp4=      default 22 (S) / 26 (I); 22-24 for detailed plates (sea, rain), 23-26 calm/dark
+ *   --crf-webm=     default 32; use 26-30 on dark plates and <= 20 on near-black gradients (halo
+ *                   banding shows at gain above ~26, e.g. last-light)
+ *   --gop-mp4= --gop-webm=  default: ONE keyframe per loop. A loop always restarts on frame 0 (an
+ *                   IDR), so 2 s GOPs only add a texture pulse every keyframe and cost bytes
+ *                   (campfire MP4 0.85 -> 0.44 MB); in VP9 a 48 GOP also makes the wrap pop (MV-03
+ *                   WebM join 0.986 -> 0.997). --gop-mp4=48 restores the map's recipe.
+ *   --tail-boost=2  x264 rate zones ramp the last 0.75 s to b=2: mb-tree starves the frames nothing
+ *                   references, so the tail is softer than the IDR head (1 = off). ~+10% bytes.
+ *   --keep-intermediate  keep the lossless seam .mkv (path in the summary)
  *
- *   boomerang <master.mp4> <out-base> --tier=S|I [--crf-mp4] [--crf-webm]
- *     Forward src[0..N-1] then reverse src[N-2..1] (2N-2 frames, no held frames at the
- *     turns). ONLY for oscillating motion (bob, hover, sway, haze breathing) — never
- *     fire, smoke, steam, rain, flowing water or falling dust. Same outputs as `seam`.
+ * ── boomerang <master.mp4> <out-base> --tier=S|I [--crf-mp4= --crf-webm= --gop-*=] ───────────────
+ *   Forward src[0..N-1] then reverse src[N-2..1]: 2N-2 frames, no held frame at either turn, frame
+ *   0 = the pinned plate frame. ONLY for oscillating motion (bob, hover, sway, haze breathing);
+ *   never fire, smoke, steam, rain, flowing water or falling dust (reversal reads as a rewind).
  *
- *   check <video> [--plate=<still>] [--static=x0,y0,x1,y1 ...] [--light=x0,y0,x1,y1 ...]
- *     Prints JSON. Rects are fractions of the frame (0..1); repeat the flag for more.
- *       ssim.firstVsPlate / lastVsPlate  frame 0 / N-1 vs the plate, both at 960x540
- *       ssim.join                        frame N-1 -> frame 0 (the loop wrap). All SSIM is
- *                                        ffmpeg `ssim` "All" on yuv420p at 960x540 (the LOG /
- *                                        vcheck convention); joinRgb is the same on RGB planes
- *                                        (gbrp), which is what the map's 0.952 figure used
- *       ssim.consecutive                 min / p05 / median over every n -> n+1 step,
- *                                        and where the join ranks among them
- *       static[]                         max over frames of mean |Y_t - Y_0| (0-255 luma),
- *                                        and max consecutive mean |Y_t - Y_t-1|
- *       flash                            WCAG-style general flashes (opposing relative-
- *                                        luminance swings >= 0.10, darker < 0.80): max per
- *                                        any 1 s window, whole frame + worst 4x4 tile;
- *                                        max saturated-red pixel share
- *       luma                             whole-frame mean luma (0-255) min/max/range/%
- *       light[]                          zone mean luma: peak-to-trough %, reversals/s
- *                                        (5% hysteresis), dominant frequency (Hz)
- *       audioStreams, frames, fps, durationS, bytes, width, height, codec
- *       phaseShiftPx                     frame 0 vs plate (cv2.phaseCorrelate), if python3
- *       pass{}                           each rule of map §4 as a boolean
+ * ── check <video> [--plate=<still>] [--static=x0,y0,x1,y1 ...] [--light=x0,y0,x1,y1 ...] ─────────
+ *   Prints JSON. Rects are fractions of the frame (0..1); repeat a flag for more rects.
+ *   ssim.*          ffmpeg `ssim` "All" on yuv420p at 960x540 (the LOG / vcheck convention):
+ *                   firstVsPlate / lastVsPlate, join (frame N-1 -> 0), consecutive min / p05 /
+ *                   median over every n -> n+1 step, joinPercentile (share of steps <= the join).
+ *                   joinRgb = the join on RGB planes (gbrp), harsher on chroma grain; the map's
+ *                   "0.952 / 0.970 / 0.975" shipped-join figures were RGB-style numbers.
+ *   static[]        max over frames of mean |Y_t - Y_0| (0-255 luma; limit 1) + max step |Y_t - Y_t-1|
+ *   flash           WCAG-style general flashes (opposing relative-luminance swings >= 0.10 with the
+ *                   darker < 0.80) as the max count in any 1 s window, whole frame and worst 4x4
+ *                   tile (limit 3); redShareMax = max share of saturated-red pixels in a frame
+ *   luma            whole-frame mean luma min / max / range / range %
+ *   light[]         zone mean luma: ptpPct (glow, limit 15), reversalsPerS (5% hysteresis; limit 4
+ *                   = 2 Hz flicker), dominantHz (DFT peak of the detrended series)
+ *   audioStreams, frames (exact, via framecrc), fps, durationS, bytes, width, height, codec
+ *   phaseShiftPx    frame 0 vs plate (cv2.phaseCorrelate, 1920-px units), when python3 has cv2
+ *   pass{}          registration (>= 0.95 both ends), join, smooth (min step >= 0.9), static,
+ *                   flash, light, silent. join = true when >= 0.97 and no worse than the worst
+ *                   natural step; "codec" for an H.264 wrap onto the IDR within 0.015 of the median
+ *                   step (texture refresh, not motion: read seam's seamCheck or the WebM's join).
+ *   --glow-max=15 --rev-max=4  light-zone limits (4 reversals/s = the 2 Hz flicker rule)
  *
- *   frames <video> <outdir> [--at=0,25,50,75,100] [--crop=x0,y0,x1,y1] [--scale=2]
- *          [--wrap=3]
- *     PNG frames at the given percentages (frame index round(p/100*(N-1))). --crop adds a
- *     crop of each frame enlarged by --scale (100-200% crops for the L2 sweep). --wrap=w
- *     adds wrap.png (frames N-w..N-1 | 0..w-1 side by side), wrap-crop.png (same with the
- *     crop) and wrap-diff.png (|last - first| x 8) to eyeball the join.
+ * ── frames <video> <outdir> [--at=0,25,50,75,100] [--crop=x0,y0,x1,y1 --scale=2] [--wrap=3]
+ *           [--slit=x,y0,y1 ... --slit-span=36] ──────────────────────────────────────────────────
+ *   PNG frames at the given percentages (index round(p/100*(N-1))). --crop adds a crop of each
+ *   frame enlarged by --scale (100-200% crops for the L2 sweep). --wrap=w adds <base>-wrap.png
+ *   (frames N-w..N-1 | 0..w-1), <base>-wrap-crop.png and <base>-wrap-diff.png (|last-first| x 8).
+ *   --slit=x,y0,y1 adds <base>-slit.png: column x of the last/first `span` frames side by side
+ *   (8 px per frame, wrap marked by ticks). Motion reads as streaks; a jump shows as a vertical
+ *   seam at the centre — the best still-image test of a join.
  *
- *   sequence <master.mp4> <outdir> [--frames=72] [--width=1280] [--quality=75]
- *     Evenly spaced WebP frame sequence 000.webp..071.webp (like films/voyage-seq/)
- *     for scroll-scrubbed push-ins.
+ * ── sequence <master.mp4> <outdir> [--frames=72] [--width=1280] [--quality=75] ──────────────────
+ *   Evenly spaced WebP sequence 000.webp..071.webp (like films/voyage-seq/) for scrubbed push-ins.
  *
  * EXAMPLES
- *   node tools/media/loop.mjs seam media-src/p3/masters/L01.mp4 out/iconic-pearl-loop --k=12 --tier=S
- *   node tools/media/loop.mjs check out/iconic-pearl-loop.mp4 --plate=public/media/films/iconic-pearl.webp \
- *        --static=0,0,0.45,1
- *   node tools/media/loop.mjs frames out/iconic-pearl-loop.mp4 /tmp/l01 --crop=0.6,0.3,0.9,0.7 --wrap=3
+ *   node tools/media/loop.mjs seam media-src/p3/masters/L01.mp4 out/iconic-pearl-loop --k=12 --tier=S --method=residual
+ *   node tools/media/loop.mjs check out/iconic-pearl-loop.webm --plate=public/media/films/iconic-pearl.webp --static=0,0,0.45,1
+ *   node tools/media/loop.mjs frames out/iconic-pearl-loop.mp4 /tmp/l01 --crop=0.6,0.3,0.9,0.7 --wrap=3 --slit=0.7,0.3,0.7
  */
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -209,11 +222,44 @@ function rotateGraph(inLabel, R, fps, outLabel) {
   );
 }
 
-function encodeArgs(kind, crf, fps) {
+/**
+ * Encoder args. GOP defaults to ONE keyframe per loop for both codecs (--gop-mp4 / --gop-webm =
+ * a number restores e.g. the map's 48). Measured on the re-seams (docs/build/media/p3/tools.md):
+ * a 2 s GOP adds a texture "pulse" at every keyframe and costs bytes (campfire 0.85 -> 0.44 MB),
+ * and in VP9 the tail drifts off the keyframe texture so the wrap pops (MV-03 join 0.986 ->
+ * 0.997 with one keyframe). A loop always restarts at frame 0 (an IDR), so nothing needs the
+ * 2 s random-access points.
+ */
+function encodeArgs(kind, crf, fps, { frames = 0, tailBoost = 2, gopMp4 = 0, gopWebm = 0 } = {}) {
   const common = ["-an", "-sn", "-dn", "-map_metadata", "-1", "-r", String(fps), "-pix_fmt", "yuv420p", "-threads", THREADS];
-  if (kind === "mp4")
-    return [...common, "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", String(crf), "-g", "48", "-keyint_min", "48", "-sc_threshold", "0", "-movflags", "+faststart"];
-  return [...common, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", String(crf), "-row-mt", "1", "-cpu-used", "2", "-deadline", "good", "-g", "48"];
+  const loopGop = Math.max(48, frames + 1);
+  if (kind === "mp4") {
+    // x264 mb-tree starves the last frames of the stream (nothing references them), so the
+    // P-frame tail is softer than the IDR head and the wrap reads as a texture pop. Rate zones
+    // ramp the last 0.75 s up to b=tailBoost (1/3 steps, no visible zone edge): the join rises to
+    // keyframe-step level for ~+10% bytes (MV-03: 0.9875 -> 0.9904).
+    const tb = Number(tailBoost);
+    const n = Math.min(18, Math.floor(frames / 8));
+    const zones = [];
+    if (frames && tb > 1 && n >= 3) {
+      const step = Math.floor(n / 3);
+      for (let k = 0; k < 3; k++) {
+        const z0 = frames - n + k * step;
+        const z1 = k === 2 ? frames - 1 : z0 + step - 1;
+        zones.push(`${z0},${z1},b=${(1 + ((tb - 1) * (k + 1)) / 3).toFixed(2)}`);
+      }
+    }
+    const g = Number(gopMp4) > 0 ? Number(gopMp4) : loopGop;
+    return [
+      ...common,
+      "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", String(crf),
+      "-g", String(g), "-keyint_min", String(g), "-sc_threshold", "0",
+      ...(zones.length ? ["-x264-params", `zones=${zones.join("/")}`] : []),
+      "-movflags", "+faststart",
+    ];
+  }
+  const g = Number(gopWebm) > 0 ? Number(gopWebm) : loopGop;
+  return [...common, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", String(crf), "-row-mt", "1", "-cpu-used", "2", "-deadline", "good", "-g", String(g)];
 }
 
 async function writePoster(pngPath, outPath) {
@@ -229,14 +275,14 @@ async function writePoster(pngPath, outPath) {
 }
 
 /** Encode <out-base>.mp4/.webm/-poster.webp from a lossless intermediate. */
-async function deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R = 0, src }) {
+async function deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R = 0, src, frames, tailBoost, gopMp4, gopWebm }) {
   const [W, H] = TIERS[tier];
   const graph = `${rotateGraph("0:v", R, fps, "rot")};[rot]format=yuv420p${scaleFilter(src, W, H)}[v]`;
   fs.mkdirSync(path.dirname(path.resolve(outBase)), { recursive: true });
   const mp4 = `${outBase}.mp4`;
   const webm = `${outBase}.webm`;
-  ff(["-threads", THREADS, "-i", inter, "-filter_complex", graph, "-map", "[v]", ...encodeArgs("mp4", crfMp4, fps), mp4]);
-  ff(["-threads", THREADS, "-i", inter, "-filter_complex", graph, "-map", "[v]", ...encodeArgs("webm", crfWebm, fps), webm]);
+  ff(["-threads", THREADS, "-i", inter, "-filter_complex", graph, "-map", "[v]", ...encodeArgs("mp4", crfMp4, fps, { frames, tailBoost, gopMp4 }), mp4]);
+  ff(["-threads", THREADS, "-i", inter, "-filter_complex", graph, "-map", "[v]", ...encodeArgs("webm", crfWebm, fps, { frames, gopWebm }), webm]);
   const dir = path.dirname(inter);
   const png = path.join(dir, "poster.png");
   ff(["-threads", THREADS, "-i", inter, "-vf", `select='eq(n\\,${R})'`, "-frames:v", "1", "-fps_mode", "passthrough", png]);
@@ -253,6 +299,9 @@ function tierOpts(opt) {
     tier,
     crfMp4: Number(opt["crf-mp4"] ?? (tier === "S" ? 22 : 26)),
     crfWebm: Number(opt["crf-webm"] ?? 32),
+    tailBoost: Number(opt["tail-boost"] ?? 2),
+    gopMp4: Number(opt["gop-mp4"] ?? 0),
+    gopWebm: Number(opt["gop-webm"] ?? 0),
   };
 }
 
@@ -263,23 +312,37 @@ async function cmdSeam(pos, opt) {
   const N = src.frames;
   const K = Number(opt.k ?? 12);
   if (!(K >= 2 && 2 * K < N)) die(`--k=${K} needs 2 <= K and 2K < N (${N})`);
-  const { tier, crfMp4, crfWebm } = tierOpts(opt);
+  const { tier, crfMp4, crfWebm, tailBoost, gopMp4, gopWebm } = tierOpts(opt);
   const fps = src.fps;
   const curve = opt.curve === "smooth" ? "smooth" : "linear";
+  const method = opt.method === "residual" ? "residual" : "blend";
   const t = `min(1\\,N/${K - 1})`;
   const w = curve === "smooth" ? `(${t})*(${t})*(3-2*(${t}))` : t;
   const graph =
-    `[0:v]split=3[s1][s2][s3];` +
-    `[s1]select='between(n\\,${K}\\,${N - K - 1})',setpts=N/${fps}/TB[body];` +
-    `[s2]select='gte(n\\,${N - K})',setpts=N/${fps}/TB[tail];` +
-    `[s3]select='lt(n\\,${K})',setpts=N/${fps}/TB[head];` +
-    `[tail][head]blend=all_expr='A+(B-A)*${w}'[mix];` +
-    `[body][mix]concat=n=2:v=1,format=yuv420p[v]`;
+    method === "blend"
+      ? `[0:v]split=3[s1][s2][s3];` +
+        `[s1]select='between(n\\,${K}\\,${N - K - 1})',setpts=N/${fps}/TB[body];` +
+        `[s2]select='gte(n\\,${N - K})',setpts=N/${fps}/TB[tail];` +
+        `[s3]select='lt(n\\,${K})',setpts=N/${fps}/TB[head];` +
+        `[tail][head]blend=all_expr='A+(B-A)*${w}'[mix];` +
+        `[body][mix]concat=n=2:v=1,format=yuv420p[v]`
+      : // residual ramp: keep src[0..N-2] (frame 0 stays the pinned plate frame) and add
+        // w*(src[0]-src[N-1]) to the last K kept frames, w = (i+1)/(K+1), so the virtual frame
+        // N-1 would equal src[0] and the wrap N-2 -> 0 is one natural step. 16-bit maths.
+        `[0:v]format=yuv420p16le,split=4[s1][s2][s3][s4];` +
+        `[s1]select='lt(n\\,${N - 1 - K})',setpts=N/${fps}/TB[body];` +
+        `[s2]select='between(n\\,${N - 1 - K}\\,${N - 2})',setpts=N/${fps}/TB[tail];` +
+        `[s3]select='eq(n\\,0)',loop=loop=${K - 1}:size=1:start=0,setpts=N/${fps}/TB[f0];` +
+        `[s4]select='eq(n\\,${N - 1})',loop=loop=${K - 1}:size=1:start=0,setpts=N/${fps}/TB[fl];` +
+        `[f0][fl]blend=all_expr='(A-B)/2+32768'[dif];` +
+        `[tail][dif]blend=all_expr='A+(B-32768)*2*(N+1)/${K + 1}'[tailc];` +
+        `[body][tailc]concat=n=2:v=1,format=yuv420p[v]`;
+  const outFrames = method === "blend" ? N - K : N - 1;
   const dir = tmpDir("seam");
   const inter = path.join(dir, "seam.mkv");
   ff(["-threads", THREADS, "-i", master, "-filter_complex", graph, "-map", "[v]", "-an", "-r", String(fps), "-c:v", "libx264", "-qp", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p", inter]);
   const interInfo = probe(inter);
-  if (interInfo.frames !== N - K) die(`seam produced ${interInfo.frames} frames, expected ${N - K}`);
+  if (interInfo.frames !== outFrames) die(`seam produced ${interInfo.frames} frames, expected ${outFrames}`);
 
   let R = 0;
   let rotateInfo = null;
@@ -289,22 +352,38 @@ async function cmdSeam(pos, opt) {
     R = s.indexOf(Math.max(...s));
     rotateInfo = { mode: "auto", frame: R, ssimAtFrame: r4(s[R]), ssimAtFrame0: r4(s[0]) };
   } else if (opt.rotate !== undefined && opt.rotate !== true) {
-    R = Number(opt.rotate) % (N - K);
+    R = Number(opt.rotate) % outFrames;
     rotateInfo = { mode: "fixed", frame: R };
   }
-  const out = await deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R, src });
+  // the motion-seam verdict is taken on the lossless intermediate (the encodes add codec texture)
+  const lossless = await cmdCheck([inter], {}, { print: false });
+  const seamCheck = { ...lossless.ssim, pass: { join: lossless.pass.join, smooth: lossless.pass.smooth } };
+  delete seamCheck.firstVsPlate;
+  delete seamCheck.lastVsPlate;
+  const out = await deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R, src, frames: outFrames, tailBoost, gopMp4, gopWebm });
   const summary = {
     op: "seam",
     master: src,
+    method,
     k: K,
-    curve,
+    curve: method === "blend" ? curve : "linear-residual",
     tier,
     crfMp4,
     crfWebm,
+    tailBoost,
+    gopMp4: gopMp4 || "loop",
+    gopWebm: gopWebm || "loop",
     rotate: rotateInfo,
-    outFrames: N - K,
-    // map an output frame back to its source: body = src[K+j]; mix i = blend(src[N-K+i], src[i])
-    firstOutputFrameIs: R === 0 ? `src[${K}]` : R < N - 2 * K ? `src[${K + R}]` : `blend(src[${N - K + (R - (N - 2 * K))}] -> src[${R - (N - 2 * K)}])`,
+    outFrames,
+    seamCheck,
+    // map output frame 0 back to the source. blend: body = src[K+j], mix i = blend(src[N-K+i] -> src[i]);
+    // residual: out[j] = src[j] (+ ramped residual in the last K)
+    firstOutputFrameIs:
+      method === "residual"
+        ? `src[${R}]${R >= N - 1 - K ? " + residual" : ""}`
+        : R < N - 2 * K
+          ? `src[${K + R}]`
+          : `blend(src[${N - K + (R - (N - 2 * K))}] -> src[${R - (N - 2 * K)}])`,
     ...out,
   };
   if (opt["keep-intermediate"]) summary.intermediate = inter;
@@ -318,7 +397,7 @@ async function cmdBoomerang(pos, opt) {
   if (!master || !outBase) die("usage: boomerang <master.mp4> <out-base> --tier=S|I");
   const src = probe(master);
   const N = src.frames;
-  const { tier, crfMp4, crfWebm } = tierOpts(opt);
+  const { tier, crfMp4, crfWebm, tailBoost, gopMp4, gopWebm } = tierOpts(opt);
   const fps = src.fps;
   const graph =
     `[0:v]split=2[f][r];` +
@@ -330,8 +409,8 @@ async function cmdBoomerang(pos, opt) {
   ff(["-threads", THREADS, "-i", master, "-filter_complex", graph, "-map", "[v]", "-an", "-r", String(fps), "-c:v", "libx264", "-qp", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p", inter]);
   const interInfo = probe(inter);
   if (interInfo.frames !== 2 * N - 2) die(`boomerang produced ${interInfo.frames} frames, expected ${2 * N - 2}`);
-  const out = await deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R: 0, src });
-  const summary = { op: "boomerang", master: src, tier, crfMp4, crfWebm, outFrames: 2 * N - 2, ...out };
+  const out = await deliver(inter, outBase, { tier, crfMp4, crfWebm, fps, R: 0, src, frames: 2 * N - 2, tailBoost, gopMp4, gopWebm });
+  const summary = { op: "boomerang", master: src, tier, crfMp4, crfWebm, tailBoost, gopMp4: gopMp4 || "loop", gopWebm: gopWebm || "loop", outFrames: 2 * N - 2, ...out };
   fs.rmSync(dir, { recursive: true, force: true });
   console.log(JSON.stringify(summary, null, 2));
   return summary;
@@ -585,7 +664,7 @@ async function cmdCheck(pos, opt, { print = true } = {}) {
   const cMed = q(consec, 0.5);
   const joinRank = consec.filter((v) => v <= join).length / consec.length;
   const glowMax = Number(opt["glow-max"] ?? 15);
-  const revMax = Number(opt["rev-max"] ?? 2);
+  const revMax = Number(opt["rev-max"] ?? 4);
   const result = {
     file: video,
     ...info,
@@ -609,7 +688,16 @@ async function cmdCheck(pos, opt, { print = true } = {}) {
   result.pass = {
     registration: plate ? firstVsPlate >= 0.95 && lastVsPlate >= 0.95 : null,
     // the wrap must read as an ordinary step: >= 0.97 and no worse than the worst natural step
-    join: join >= 0.97 && join >= cMin - 0.001,
+    // "codec": an H.264 wrap lands on the IDR at frame 0, which refreshes texture the P-frame tail
+    // had smoothed; within 0.015 of the median step that is codec texture, not a motion jump (grainy
+    // sea at 720p CRF 26 measures ~0.012). The
+    // motion verdict is seam's seamCheck (lossless) or the WebM's join.
+    join:
+      join >= 0.97 && join >= cMin - 0.001
+        ? true
+        : info.codec === "h264" && join >= 0.97 && join >= cMed - 0.015
+          ? "codec"
+          : false,
     smooth: cMin >= 0.9,
     static: an.static.every((s) => s.maxMeanAbsDeltaVsFirst <= 1),
     flash: an.flash.wholeMaxPerSecond <= 3 && an.flash.tilesMaxPerSecond <= 3,
@@ -651,9 +739,50 @@ async function strip(buffers, tileW) {
     .toBuffer();
 }
 
+/**
+ * Slit-scan across the wrap: column x (fraction) of frames N-span..N-1 then 0..span-1, each
+ * frame drawn `w` px wide, rows y0..y1. Motion reads as continuous streaks; a jump at the wrap
+ * shows as a vertical seam at the centre (marked by ticks top and bottom only).
+ */
+async function slitScan(video, N, spec, span, outPath) {
+  const [x, y0 = 0, y1 = 1] = String(spec).split(",").map(Number);
+  const W = CHECK_W * 2, H = CHECK_H * 2; // 1920x1080 working raster
+  const cx = Math.min(W - 1, Math.round(x * W));
+  const cy0 = Math.round(y0 * H), cy1 = Math.max(cy0 + 2, Math.round(y1 * H));
+  const h = cy1 - cy0;
+  const s = Math.min(span, Math.floor(N / 2));
+  const r = spawnSync(
+    FFMPEG,
+    ["-hide_banner", "-v", "error", "-threads", THREADS, "-i", video, "-vf", `scale=${W}:${H},crop=1:${h}:${cx}:${cy0},select='lt(n\\,${s})+gte(n\\,${N - s})'`, "-fps_mode", "passthrough", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+    { maxBuffer: 64 * 1024 * 1024 },
+  );
+  if (r.status !== 0) die(`slit failed: ${r.stderr}`);
+  const col = h * 3;
+  const cols = [];
+  for (let o = 0; o + col <= r.stdout.length; o += col) cols.push(r.stdout.subarray(o, o + col));
+  if (cols.length !== 2 * s) die(`slit got ${cols.length} columns, expected ${2 * s}`);
+  const order = [...cols.slice(s), ...cols.slice(0, s)]; // tail then head
+  const w = 8, gapTick = 6;
+  const outW = order.length * w;
+  const outH = h + 2 * gapTick;
+  const buf = Buffer.alloc(outW * outH * 3, 0);
+  for (let i = 0; i < order.length; i++)
+    for (let y = 0; y < h; y++)
+      for (let k = 0; k < w; k++) {
+        const d = ((y + gapTick) * outW + i * w + k) * 3;
+        order[i].copy(buf, d, y * 3, y * 3 + 3);
+      }
+  for (const yy of [0, 1, 2, outH - 3, outH - 2, outH - 1]) {
+    const d = (yy * outW + s * w) * 3;
+    buf[d] = 255; buf[d + 1] = 0; buf[d + 2] = 255;
+  }
+  await sharp(buf, { raw: { width: outW, height: outH, channels: 3 } }).png().toFile(outPath);
+  return outPath;
+}
+
 async function cmdFrames(pos, opt) {
   const [video, outdir] = pos;
-  if (!video || !outdir) die("usage: frames <video> <outdir> [--at=0,25,50,75,100] [--crop=x0,y0,x1,y1] [--scale=2] [--wrap=3]");
+  if (!video || !outdir) die("usage: frames <video> <outdir> [--at=0,25,50,75,100] [--crop=x0,y0,x1,y1] [--scale=2] [--wrap=3] [--slit=x,y0,y1 --slit-span=36]");
   const info = probe(video);
   const N = info.frames;
   fs.mkdirSync(outdir, { recursive: true });
@@ -698,6 +827,10 @@ async function cmdFrames(pos, opt) {
     const wd = path.join(outdir, `${base}-wrap-diff.png`);
     await sharp(d, { raw: { width: a.info.width, height: a.info.height, channels: a.info.channels } }).png().toFile(wd);
     written.push(wd);
+  }
+  for (const [k, spec] of asList(opt.slit).entries()) {
+    const out = path.join(outdir, `${base}-slit${k ? k + 1 : ""}.png`);
+    written.push(await slitScan(video, N, spec, Number(opt["slit-span"] ?? 36), out));
   }
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(JSON.stringify({ video, frames: N, written }, null, 2));

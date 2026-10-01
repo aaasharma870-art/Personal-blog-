@@ -1,0 +1,690 @@
+{
+  "proposedMediaId": "L23",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "F-HP",
+  "plate": "public/media/films/films-hp.webp",
+  "plateJob": "0b8c414a-1f0f-4e70-b694-a22b320482f4",
+  "job": "f3b9136b-2ded-4021-a1f4-cbe01147b51e",
+  "model": "minimax_h3 2K, 21:9, 6 s (no sound switch: the master carries an AAC stream, stripped with -an), start_image = end_image = the plate job; 2944x1248 24 fps output (158 frames, 6.583 s); declined_preset_id 24bae836 on every item",
+  "credits": 12,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The candle flames above the paper flicker softly and slowly; the ink lines glisten as if still wet. The ink branches keep their shape and never become letters or a map; the paper, the candles and the far window stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L23-films-hp.prompt.txt",
+  "generateLog": "docs/build/media/p3/B6.md",
+  "checkLog": "docs/build/media/p3/B6.md#check-step",
+  "master": "media-src/p3/masters/L23-films-hp-f3b9136b.mp4 (MiniMax original, 1669748 bytes, 158 frames, 6.583 s, 2944x1248, 1 AAC stream)",
+  "files": {
+    "mp4": "films-hp-loop.mp4",
+    "webm": "films-hp-loop.webm",
+    "poster": "films-hp-loop-poster.webp"
+  },
+  "width": 1680,
+  "height": 720,
+  "fps": 24,
+  "frames": 157,
+  "durationS": 6.542,
+  "bytes": {
+    "mp4": 118191,
+    "webm": 143601,
+    "poster": 54764
+  },
+  "tier": "I (21:9 inset)",
+  "rawVerdict": {
+    "verdict": "FAIL (not staged)",
+    "reason": "the \"ink glisten\" came out as a burst of blue-white light: the ink core brightens 53 -> 139 luma (+160 %, ptp 96-99 % vs the 15 % glow line) from frame ~24, holds to ~72 and collapses in ~0.7 s; blue-white glints then run along the branches. The spill lifts the whole frame (luma range 10.3 %, an exposure pulse on a dark plate) and the far window (+13 %). That breaks the SUFFIX (\"no bursts ... exposure change\") and the glow <= 15 % check, every 6.5 s. Hard limits still pass: the branches keep their shape (no letters or map), no figures, 0 WCAG flashes (whole + tiles), candles <= 4.5 % with 0 reversals/s.",
+    "checks": {
+      "master": {
+        "bytes": 1669748,
+        "frames": 158,
+        "durationS": 6.583,
+        "width": 2944,
+        "height": 1248,
+        "codec": "h264",
+        "firstVsPlate": 0.9637,
+        "lastVsPlate": 0.9643,
+        "join": 0.9906,
+        "joinRgb": 0.9608,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.9977,
+        "consecutiveMinAt": 0,
+        "consecutiveMedian": 0.9995,
+        "staticMaxMeanAbsDelta": {
+          "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 11.43,
+          "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 2.52
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 1e-05,
+        "lumaRangePct": 10.85,
+        "light": [
+          {
+            "zone": "candle flame A x.45-.49 y.02-.10",
+            "meanLuma": 45.15,
+            "ptpPct": 4.49,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "candle flame B x.61-.65 y.05-.13",
+            "meanLuma": 51.14,
+            "ptpPct": 4.53,
+            "reversalsPerS": 0,
+            "dominantHz": 0.46
+          },
+          {
+            "zone": "big right candle x.96-1 y.43-.60",
+            "meanLuma": 108.44,
+            "ptpPct": 4.03,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "low candle x.88-.94 y.85-1",
+            "meanLuma": 77.17,
+            "ptpPct": 2.63,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink core x.745-.785 y.60-.68",
+            "meanLuma": 87.99,
+            "ptpPct": 99.04,
+            "reversalsPerS": 0.3,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink wide x.55-.94 y.54-.80",
+            "meanLuma": 72.6,
+            "ptpPct": 13.69,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "whole frame",
+            "meanLuma": 17.12,
+            "ptpPct": 10.85,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          }
+        ],
+        "phaseShiftPx": [
+          1.47,
+          0.177
+        ],
+        "audioStreams": 1,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": false,
+          "silent": false
+        }
+      },
+      "mp4": {
+        "bytes": 384526,
+        "frames": 157,
+        "durationS": 6.542,
+        "width": 1680,
+        "height": 720,
+        "codec": "h264",
+        "firstVsPlate": 0.9628,
+        "lastVsPlate": 0.9634,
+        "join": 0.9922,
+        "joinRgb": 0.966,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.998,
+        "consecutiveMinAt": 0,
+        "consecutiveMedian": 0.9996,
+        "staticMaxMeanAbsDelta": {
+          "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 11.3,
+          "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 2.35
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 1e-05,
+        "lumaRangePct": 10.18,
+        "light": [
+          {
+            "zone": "candle flame A x.45-.49 y.02-.10",
+            "meanLuma": 45.09,
+            "ptpPct": 3.86,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "candle flame B x.61-.65 y.05-.13",
+            "meanLuma": 51.08,
+            "ptpPct": 3.83,
+            "reversalsPerS": 0,
+            "dominantHz": 0.31
+          },
+          {
+            "zone": "big right candle x.96-1 y.43-.60",
+            "meanLuma": 108.27,
+            "ptpPct": 3.95,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "low candle x.88-.94 y.85-1",
+            "meanLuma": 77.06,
+            "ptpPct": 2.38,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink core x.745-.785 y.60-.68",
+            "meanLuma": 88.28,
+            "ptpPct": 97.48,
+            "reversalsPerS": 0.31,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink wide x.55-.94 y.54-.80",
+            "meanLuma": 72.36,
+            "ptpPct": 13.09,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "whole frame",
+            "meanLuma": 17.03,
+            "ptpPct": 10.18,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          }
+        ],
+        "phaseShiftPx": [
+          1.468,
+          0.143
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": false,
+          "silent": true
+        }
+      },
+      "webm": {
+        "bytes": 555563,
+        "frames": 157,
+        "durationS": 6.542,
+        "width": 1680,
+        "height": 720,
+        "codec": "vp9",
+        "firstVsPlate": 0.9639,
+        "lastVsPlate": 0.9639,
+        "join": 0.9999,
+        "joinRgb": 0.9988,
+        "joinPercentile": 0.8846,
+        "consecutiveMin": 0.9975,
+        "consecutiveMinAt": 39,
+        "consecutiveMedian": 0.9997,
+        "staticMaxMeanAbsDelta": {
+          "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 11.36,
+          "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 2.34
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 1e-05,
+        "lumaRangePct": 10.48,
+        "light": [
+          {
+            "zone": "candle flame A x.45-.49 y.02-.10",
+            "meanLuma": 45.02,
+            "ptpPct": 3.92,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "candle flame B x.61-.65 y.05-.13",
+            "meanLuma": 51.04,
+            "ptpPct": 4.34,
+            "reversalsPerS": 0,
+            "dominantHz": 0.46
+          },
+          {
+            "zone": "big right candle x.96-1 y.43-.60",
+            "meanLuma": 108.31,
+            "ptpPct": 4.01,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "low candle x.88-.94 y.85-1",
+            "meanLuma": 77.06,
+            "ptpPct": 2.55,
+            "reversalsPerS": 0,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink core x.745-.785 y.60-.68",
+            "meanLuma": 88.34,
+            "ptpPct": 98.21,
+            "reversalsPerS": 0.31,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "ink wide x.55-.94 y.54-.80",
+            "meanLuma": 72.4,
+            "ptpPct": 13.52,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          },
+          {
+            "zone": "whole frame",
+            "meanLuma": 17.01,
+            "ptpPct": 10.48,
+            "reversalsPerS": 0.15,
+            "dominantHz": 0.15
+          }
+        ],
+        "phaseShiftPx": [
+          1.466,
+          0.152
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": true,
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": false,
+          "silent": true
+        }
+      }
+    }
+  },
+  "prePatch": {
+    "what": "0-credit cinemagraph hold-out (an extension of the L05/L15/L17 hold-outs): frame 0 (the pinned plate frame) is composited over everything EXCEPT the eight main candle flames, so only those flames keep moving",
+    "why": "removes the ink burst, the exposure pulse and the window change while keeping the one motion the prompt got right (the flames: flow p99 2.5-4.5 px, glow ptp 1.7-4.3 %, 0 reversals/s, 0.15 Hz)",
+    "shapes": [
+      "ellipse:2885,665,75,110",
+      "ellipse:2662,1135,60,80",
+      "ellipse:1857,135,40,70",
+      "ellipse:1384,74,32,48",
+      "ellipse:2649,268,30,48",
+      "ellipse:2804,58,22,36",
+      "ellipse:1612,350,16,28",
+      "ellipse:2916,292,14,22"
+    ],
+    "units": "2944x1248 master px (flames located as luma > 170 blobs on frame 0)",
+    "dilatePx": 10,
+    "featherSigmaPx": 8,
+    "heldSharePct": 97.57,
+    "script": "scratchpad p3/m56/hold2.py (hold.py generalised to any frame size, with --invert)",
+    "output": "media-src/p3/masters/L23-films-hp-f3b9136b-flamesonly.mkv (FFV1 lossless, 158 frames, 2944x1248, no audio, gitignored)",
+    "boundary": "bands 4-16 px inside the held area / inside the flame ellipses (720p): MP4 0.36 / 12.64, WebM 0.34 / 12.88 mean |dY|; flame crops at 300% on frames 0/20/.../156 show every flame and its halo inside its ellipse, no clipped tip"
+  },
+  "geometry": {
+    "finding": "the MiniMax master is the WHOLE plate stretched non-uniformly to 2944x1248 (ECC affine on frame 0 vs the 2520x1080 plate, cc 0.997: x scale 1.1663, y scale 1.1535, plate origin at master x 2.53 / y 0.47, far corner at 2940.2 / 1247.4). Nothing is cropped.",
+    "delivery": "crop=2938:1248:2:0 (the plate footprint) then a full-frame resize to 1680x720 (exact 7:3 = the 2520x1080 still). Not the native 1698x720 aspect (keeps a 1.1 % horizontal stretch) and not the tool's 16:9 fill-crop (loop.mjs tier I would cut the sides to 1280x720). Registration rose 0.963 -> 0.974 and the phase shift 1.46 -> -0.11 px with the crop.",
+    "audio": "master has 1 AAC stream; both encodes carry 0 audio streams (-an)",
+    "script": "scratchpad p3/m56/enc219.sh (the loop.mjs deliver() encoder args: one keyframe per loop, x264 tail-boost zones 139-144 b=1.33 / 145-150 b=1.67 / 151-156 b=2.00, VP9 -b:v 0 row-mt cpu-used 2 good); poster = frame 0 resized to 1920x823 (sharp, q80)"
+  },
+  "tool": "loop.mjs seam media-src/p3/masters/L23-films-hp-f3b9136b-flamesonly.mkv <scratch> --k=12 --tier=I --method=residual --keep-intermediate (the lossless seam), then enc219.sh <seam.mkv> docs/build/media-staged/p3/accepted/films-hp-loop 26 24 crop=2938:1248:2:0",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 26,
+    "crfWebm": 24,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": null,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 80,
+    "crfNote": "near-black plate: WebM CRF 24; the room at 6x gain shows no contour banding (a faint blotch left of the paper is in the MiniMax frame 0 itself, invisible at 1x)"
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 1,
+    "consecutive": {
+      "min": 1,
+      "minAt": 0,
+      "p05": 1,
+      "median": 1
+    },
+    "joinMinusMedian": 0,
+    "joinPercentile": 0.9808,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)",
+      "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)",
+      "dark left x0-.40 (informative)"
+    ],
+    "light": [
+      "candle flame A x.45-.49 y.02-.10",
+      "candle flame B x.61-.65 y.05-.13",
+      "big right candle x.96-1 y.43-.60",
+      "low candle x.88-.94 y.85-1",
+      "ink core x.745-.785 y.60-.68",
+      "ink wide x.55-.94 y.54-.80",
+      "whole frame"
+    ]
+  },
+  "before": {
+    "holdMaster": {
+      "bytes": 93074822,
+      "frames": 158,
+      "durationS": 6.583,
+      "width": 2944,
+      "height": 1248,
+      "codec": "ffv1",
+      "firstVsPlate": 0.9637,
+      "lastVsPlate": 0.9639,
+      "join": 0.9998,
+      "joinRgb": 0.9995,
+      "joinPercentile": 0,
+      "consecutiveMin": 1,
+      "consecutiveMinAt": 0,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 0,
+        "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 0.4,
+        "dark left x0-.40 (informative)": 0
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 0.88,
+      "light": [
+        {
+          "zone": "candle flame A x.45-.49 y.02-.10",
+          "meanLuma": 45.01,
+          "ptpPct": 4.31,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "candle flame B x.61-.65 y.05-.13",
+          "meanLuma": 50.94,
+          "ptpPct": 4.44,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "big right candle x.96-1 y.43-.60",
+          "meanLuma": 108.42,
+          "ptpPct": 3.94,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "low candle x.88-.94 y.85-1",
+          "meanLuma": 76.98,
+          "ptpPct": 2.2,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "ink core x.745-.785 y.60-.68",
+          "meanLuma": 62.48,
+          "ptpPct": 0,
+          "reversalsPerS": 0,
+          "dominantHz": 9.87
+        },
+        {
+          "zone": "ink wide x.55-.94 y.54-.80",
+          "meanLuma": 69.51,
+          "ptpPct": 0,
+          "reversalsPerS": 0,
+          "dominantHz": 9.87
+        },
+        {
+          "zone": "whole frame",
+          "meanLuma": 16.41,
+          "ptpPct": 0.88,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        }
+      ],
+      "phaseShiftPx": [
+        1.47,
+        0.177
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 118191,
+      "frames": 157,
+      "durationS": 6.542,
+      "width": 1680,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9742,
+      "lastVsPlate": 0.9743,
+      "join": 0.9994,
+      "joinRgb": 0.9917,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9997,
+      "consecutiveMinAt": 0,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 0.06,
+        "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 0.4,
+        "dark left x0-.40 (informative)": 0.01
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 0.82,
+      "light": [
+        {
+          "zone": "candle flame A x.45-.49 y.02-.10",
+          "meanLuma": 45.04,
+          "ptpPct": 3.46,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "candle flame B x.61-.65 y.05-.13",
+          "meanLuma": 50.92,
+          "ptpPct": 3.51,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "big right candle x.96-1 y.43-.60",
+          "meanLuma": 108.03,
+          "ptpPct": 3.89,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "low candle x.88-.94 y.85-1",
+          "meanLuma": 77.26,
+          "ptpPct": 1.75,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "ink core x.745-.785 y.60-.68",
+          "meanLuma": 62.6,
+          "ptpPct": 0.06,
+          "reversalsPerS": 0,
+          "dominantHz": 0.61
+        },
+        {
+          "zone": "ink wide x.55-.94 y.54-.80",
+          "meanLuma": 69.55,
+          "ptpPct": 0.03,
+          "reversalsPerS": 0,
+          "dominantHz": 5.96
+        },
+        {
+          "zone": "whole frame",
+          "meanLuma": 16.41,
+          "ptpPct": 0.82,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        }
+      ],
+      "phaseShiftPx": [
+        -0.111,
+        0.157
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 143601,
+      "frames": 157,
+      "durationS": 6.542,
+      "width": 1680,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9752,
+      "lastVsPlate": 0.9752,
+      "join": 0.9999,
+      "joinRgb": 0.9998,
+      "joinPercentile": 0.0449,
+      "consecutiveMin": 0.9999,
+      "consecutiveMinAt": 19,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "ink + paper x.55-.94 y.54-.80 (map: the ink branches keep their shape)": 0,
+        "far window x.70-.90 y0-.42 (prompt: stays still; its right edge holds one masked flame)": 0.37,
+        "dark left x0-.40 (informative)": 0
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.86,
+      "light": [
+        {
+          "zone": "candle flame A x.45-.49 y.02-.10",
+          "meanLuma": 44.99,
+          "ptpPct": 4.27,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "candle flame B x.61-.65 y.05-.13",
+          "meanLuma": 50.87,
+          "ptpPct": 4.09,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "big right candle x.96-1 y.43-.60",
+          "meanLuma": 108.02,
+          "ptpPct": 3.98,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "low candle x.88-.94 y.85-1",
+          "meanLuma": 77.28,
+          "ptpPct": 2.17,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        },
+        {
+          "zone": "ink core x.745-.785 y.60-.68",
+          "meanLuma": 62.63,
+          "ptpPct": 0,
+          "reversalsPerS": 0,
+          "dominantHz": 8.25
+        },
+        {
+          "zone": "ink wide x.55-.94 y.54-.80",
+          "meanLuma": 69.55,
+          "ptpPct": 0,
+          "reversalsPerS": 0,
+          "dominantHz": 8.25
+        },
+        {
+          "zone": "whole frame",
+          "meanLuma": 16.4,
+          "ptpPct": 0.86,
+          "reversalsPerS": 0,
+          "dominantHz": 0.15
+        }
+      ],
+      "phaseShiftPx": [
+        -0.116,
+        0.15
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    }
+  },
+  "motion": {
+    "reads": "candle flames sway and flicker softly (raw-master flow p99 2.5-4.5 px; per-16x16-block flicker max 0.15 reversals/s); everything else is the plate. A cinemagraph."
+  },
+  "l2Sweep": "Raw master frames 0/25/50/75/100% (+ paper at ~70%): the ink keeps its branching shape, never letters or a map; no figures, faces or hands; the castle in the far window unchanged. Final WebM frames 0/25/50/75/100% + paper crops at 100% and flame crops at 300%: the paper and ink are the plate (held), eight flames move inside their ellipses, no new objects; 0 flashes/s, red share 1e-5.",
+  "visualChecks": "Slit-scans across the wrap (+-36 frames) through the big right flame (x.98) on both codecs: continuous flame streaks, no seam; wrap strips continuous.",
+  "flags": [
+    "0-credit cinemagraph: only the candle flames move; the requested ink glisten is dropped because the clip rendered it as a light burst (raw FAIL above). If Aryan wants the glowing ink, it needs a retake; the raw master is kept.",
+    "MiniMax 21:9 geometry: deliver 1680x720 from the plate footprint (see geometry); durationS 6.542 (157 frames).",
+    "Host: the HP films screen ALT (iconic-express/L13 is its DEFAULT and has failed)."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/films-hp-loop.mp4",
+    "webm": "/media/films/films-hp-loop.webm",
+    "poster": "F-HP plate (films-hp.webp)",
+    "endsOn": "films-hp.webp",
+    "durationS": 6.542,
+    "width": 1680,
+    "height": 720,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "codeAlt": "code:plate-camera",
+    "checkL2": "claude:2026-09-30+aryan:pending",
+    "loopPoster": "films-hp-loop-poster.webp (frame 0 of the loop at 1920x823, registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (0-cr cinemagraph hold-out; the raw clip FAILS the glow line): ink + paper 0.06 / 0.00/255 (MP4 / WebM), window 0.40 / 0.37, flames 1.7-4.3 % with 0 reversals/s, whole-frame luma 0.8 %; 0 flashes, silent (-an); registration 0.974-0.975; lossless join 1.0000, WebM 0.9999; bytes 118 KB / 144 KB"
+}

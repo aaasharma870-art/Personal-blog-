@@ -1,0 +1,441 @@
+{
+  "proposedMediaId": "L14",
+  "kind": "new P3 living loop (staged, not registered)",
+  "sourceMediaId": "iconic-pearl-alt",
+  "plate": "public/media/films/iconic-pearl-alt.webp",
+  "plateJob": "c2967ce4-6951-4ea3-b003-2f194f54b2ec",
+  "job": "c1ebe370-ecb3-455f-aae8-16ff33d605af",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, cfg_scale 0.5, enhance_prompt false, 1920x1080 24 fps output, start_image = end_image = the plate job",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The tattered black sails billow and settle; the moon path shimmers; the aqua wake foams and returns. The stern finial and the ship outline hold their shape; no flag or symbol appears. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L14-iconic-pearl-alt.prompt.txt",
+  "generateLog": "docs/build/media/p3/B4.md",
+  "master": "media-src/p3/masters/L14-iconic-pearl-alt-c1ebe370.mp4 (Kling original, 6100918 bytes, 145 frames, 6.042 s, 0 audio)",
+  "files": {
+    "mp4": "iconic-pearl-alt-loop.mp4",
+    "webm": "iconic-pearl-alt-loop.webm",
+    "poster": "iconic-pearl-alt-loop-poster.webp"
+  },
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "frames": 121,
+  "durationS": 5.042,
+  "bytes": {
+    "mp4": 294548,
+    "webm": 387363,
+    "poster": 86142
+  },
+  "tier": "I",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L14-iconic-pearl-alt-c1ebe370.mp4 docs/build/media-staged/p3/accepted/iconic-pearl-alt-loop --k=24 --tier=I --method=blend --rotate=auto --plate=public/media/films/iconic-pearl-alt.webp --crf-mp4=26 --crf-webm=30",
+  "seam": {
+    "method": "blend",
+    "k": 24,
+    "crfMp4": 26,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "rotate": {
+      "mode": "auto",
+      "frame": 108,
+      "ssimAtFrame": 0.9654,
+      "ssimAtFrame0": 0.9581
+    },
+    "firstOutputFrameIs": "blend(src[132] -> src[11])",
+    "posterQuality": 75,
+    "whyNotResidual": "tools.md §5 fallback ('the pinned frame shows a visible bounce'): Kling snaps the crisp, branched aqua wake back to the plate only in the first and last ~16 frames. In the master the wake zone (x.70-1 y.85-1) reads luma 20.0 at f0, falls to ~16 by f16, stays ~16 to f128 and climbs back to 19.5 at f144 (ptp 24.7 %, aqua-pixel count 7.3k -> 12.0k). A residual loop keeps both snapped ends next to the wrap, so the wake surges once per 6 s for ~1.3 s, centred on the loop point (wake detail 3.4x the median at the wrap): a visible loop marker and over the 15 % glow line if the bioluminescent wake counts as a glow. blend K=24 drops src[0..23] and src[121..144] except inside the dissolve: wake ptp 6.8-7.3 %."
+  },
+  "seamCheckLossless": {
+    "join": 0.9929,
+    "joinRgb": 0.9871,
+    "consecutive": {
+      "min": 0.992,
+      "minAt": 67,
+      "p05": 0.9926,
+      "median": 0.9939
+    },
+    "joinMinusMedian": -0.001,
+    "joinPercentile": 0.075,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "calm sky left x0-.33 y0-.75 (B4 pre-check)",
+      "stern finial x.86-.94 y.26-.40 (map: the stern finial holds)"
+    ],
+    "light": [
+      "stern windows x.79-.94 y.50-.56",
+      "stern lantern x.94-.96 y.46-.51",
+      "deck lantern x.65-.67 y.51-.55",
+      "moon path x.38-.46 y.80-1",
+      "aqua wake x.70-1 y.85-1"
+    ],
+    "marks (lib/media.ts iconic-pearl-alt marks, provisional)": [
+      "ensign x.91-.95 y.19-.39",
+      "mastTop x.65-.69 y.02-.08",
+      "mizzenTop x.525-.565 y.17-.23"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 6100918,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9888,
+      "lastVsPlate": 0.9865,
+      "join": 0.9943,
+      "joinRgb": 0.9848,
+      "joinPercentile": 0.7222,
+      "consecutiveMin": 0.992,
+      "consecutiveMinAt": 91,
+      "consecutiveMedian": 0.9939,
+      "staticMaxMeanAbsDelta": {
+        "calm sky left x0-.33 y0-.75 (B4 pre-check)": 0.37,
+        "stern finial x.86-.94 y.26-.40 (map: the stern finial holds)": 0.73
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 2.28,
+      "light": {
+        "stern windows x.79-.94 y.50-.56": {
+          "ptpPct": 2.14,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "stern lantern x.94-.96 y.46-.51": {
+          "ptpPct": 1.55,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        "deck lantern x.65-.67 y.51-.55": {
+          "ptpPct": 1.03,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        "moon path x.38-.46 y.80-1": {
+          "ptpPct": 9.92,
+          "reversalsPerS": 0.83,
+          "dominantHz": 0.17
+        },
+        "aqua wake x.70-1 y.85-1": {
+          "ptpPct": 24.99,
+          "reversalsPerS": 0.17,
+          "dominantHz": 0.33
+        }
+      },
+      "phaseShiftPx": [
+        0.008,
+        0.026
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "masterMarksZones": {
+      "ensign": 0.42,
+      "mastTop": 0.81,
+      "mizzenTop": 2.04,
+      "note": "mizzenTop 2.04 is cloud texture next to the pinned frame (the mast does not move: anchor <= 0.12 px); not a map static zone"
+    },
+    "wakeSeries": {
+      "zoneLumaF0": 20.02,
+      "zoneLumaF16to128": "15.9-17.0",
+      "zoneLumaF144": 19.53,
+      "ptpPct": 24.7,
+      "aquaPxMinMax": [
+        6963,
+        12032
+      ]
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 294548,
+      "frames": 121,
+      "durationS": 5.042,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "firstVsPlate": 0.9606,
+      "lastVsPlate": 0.9605,
+      "join": 0.9919,
+      "joinRgb": 0.9799,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9936,
+      "consecutiveMinAt": 82,
+      "consecutiveMedian": 0.9951,
+      "staticMaxMeanAbsDelta": {
+        "calm sky left x0-.33 y0-.75 (B4 pre-check)": 0.3,
+        "stern finial x.86-.94 y.26-.40 (map: the stern finial holds)": 0.34
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.61,
+      "light": {
+        "stern windows x.79-.94 y.50-.56": {
+          "ptpPct": 0.37,
+          "reversalsPerS": 0,
+          "dominantHz": 0.4
+        },
+        "stern lantern x.94-.96 y.46-.51": {
+          "ptpPct": 0.47,
+          "reversalsPerS": 0,
+          "dominantHz": 0.2
+        },
+        "deck lantern x.65-.67 y.51-.55": {
+          "ptpPct": 0.4,
+          "reversalsPerS": 0,
+          "dominantHz": 0.4
+        },
+        "moon path x.38-.46 y.80-1": {
+          "ptpPct": 7.97,
+          "reversalsPerS": 0.4,
+          "dominantHz": 0.2
+        },
+        "aqua wake x.70-1 y.85-1": {
+          "ptpPct": 7.31,
+          "reversalsPerS": 0.6,
+          "dominantHz": 0.4
+        }
+      },
+      "phaseShiftPx": [
+        -0.014,
+        0.126
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 387363,
+      "frames": 121,
+      "durationS": 5.042,
+      "width": 1280,
+      "height": 720,
+      "codec": "vp9",
+      "firstVsPlate": 0.9632,
+      "lastVsPlate": 0.9629,
+      "join": 0.9961,
+      "joinRgb": 0.9918,
+      "joinPercentile": 0.9417,
+      "consecutiveMin": 0.9923,
+      "consecutiveMinAt": 79,
+      "consecutiveMedian": 0.9947,
+      "staticMaxMeanAbsDelta": {
+        "calm sky left x0-.33 y0-.75 (B4 pre-check)": 0.11,
+        "stern finial x.86-.94 y.26-.40 (map: the stern finial holds)": 0.09
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 0.52,
+      "light": {
+        "stern windows x.79-.94 y.50-.56": {
+          "ptpPct": 0.24,
+          "reversalsPerS": 0,
+          "dominantHz": 1.98
+        },
+        "stern lantern x.94-.96 y.46-.51": {
+          "ptpPct": 0.46,
+          "reversalsPerS": 0,
+          "dominantHz": 5.95
+        },
+        "deck lantern x.65-.67 y.51-.55": {
+          "ptpPct": 0.07,
+          "reversalsPerS": 0,
+          "dominantHz": 0.79
+        },
+        "moon path x.38-.46 y.80-1": {
+          "ptpPct": 8.06,
+          "reversalsPerS": 0.4,
+          "dominantHz": 0.2
+        },
+        "aqua wake x.70-1 y.85-1": {
+          "ptpPct": 6.8,
+          "reversalsPerS": 0.2,
+          "dominantHz": 0.4
+        }
+      },
+      "phaseShiftPx": [
+        -0.009,
+        0.124
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      }
+    },
+    "marksZones": {
+      "mp4": {
+        "ensign": 0.26,
+        "mastTop": 0.19,
+        "mizzenTop": 0.62
+      },
+      "webm": {
+        "ensign": 0.09,
+        "mastTop": 0.17,
+        "mizzenTop": 0.72
+      }
+    },
+    "wakeSeries": {
+      "webmZoneLumaPtpPct": 6.6,
+      "webmAquaPxMinMax": [
+        7111,
+        8290
+      ],
+      "webmWakeDetailPtpPct": 89.5
+    }
+  },
+  "anchors": {
+    "method": "template tracking (40-48 px patches, subpixel) vs frame 0 and vs the plate",
+    "master": {
+      "finial": 0.08,
+      "sternLantern": 0.16,
+      "railShapeA(.709,.49)": 0.1,
+      "upperDeckB(.751,.43)": 0.21,
+      "sternRailC(.772,.411)": 0.11,
+      "mainmastTop": 0.13,
+      "bowsprit": 0.09,
+      "mizzenTop": 0.12,
+      "ensign": 0.15,
+      "ensignBase": 0.09,
+      "stern": 0.07
+    },
+    "webm": {
+      "mastTop": 0.07,
+      "mizzenTop": 0.0,
+      "ensign": 0.05,
+      "ensignBase": 0.02,
+      "stern": 0.02,
+      "finial": 0.01
+    },
+    "mp4": {
+      "mastTop": 0.09,
+      "mizzenTop": 0.02,
+      "ensign": 0.15,
+      "ensignBase": 0.04,
+      "stern": 0.02,
+      "finial": 0.02
+    },
+    "plateToFrame0Px": "<= 0.59 px (ensign patch, WebM; MP4 <= 0.30); every mark < 2 px",
+    "unit": "max |shift| px at 1920"
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx(master)": {
+      "water": {
+        "p99": 25.39,
+        "p999": 26.98
+      },
+      "wake": {
+        "p99": 26.31
+      },
+      "moonpath": {
+        "p99": 26.95
+      },
+      "sails": {
+        "p99": 0.35,
+        "p999": 0.52
+      },
+      "sky": {
+        "p99": 0.18
+      },
+      "stern": {
+        "p99": 0.3
+      }
+    },
+    "reads": "the moon path, the lantern reflections and the aqua wake move clearly; the sails barely move (p99.9 0.52 px), so 'billow' is not delivered; hull, masts, rigging and finial hold (<= 0.21 px)"
+  },
+  "l2Sweep": "Master frames 0/25/50/75/100% full frame + plate side by side; 200% crops of the stern gallery + finial, the waist rail + lantern, 100% sails/mast tops, bow/bowsprit, 150% water/wake; final WebM/MP4 frames 0/25/50/75/100%. No people, figures, faces or hands appear; the small dark shapes along the waist and quarter-deck rails are plate content, identical to the plate and static (<= 0.21 px), the finial keeps its carved urn/bird shape (no face). No flag or ensign appears (ensign zone <= 0.42/255), no text/letters/symbols/logos, no new objects. No lightning or flash (0 flashes/s whole frame and 4x4 tiles, red share 0).",
+  "visualChecks": "Slit-scans across the wrap (loop.mjs frames --slit, +-36 frames) at x.42 (moon path) and x.80 (wake) on the MP4 and the WebM: continuous streaks, no vertical seam. Wrap strip (N-2, N-1 | 0, 1) continuous; x8 wrap-diff = water only. VP9 CRF 30 / x264 CRF 26 sky at 5x gain: no contour banding. Frame 0 is a mid-dissolve frame (blend(src[132] -> src[11])): the wake reads a little softer than the plate's branched wake (visible only in the 600 ms poster->video fade).",
+  "runnerUp": {
+    "what": "the same master with --method=residual --k=24 (frame 0 = the pinned plate frame, 144 f, 6.00 s); kept in scratch only, not staged",
+    "seamCheckLossless": {
+      "join": 0.9978,
+      "joinRgb": 0.996,
+      "consecutive": {
+        "min": 0.992,
+        "minAt": 91,
+        "p05": 0.9928,
+        "median": 0.9939
+      },
+      "joinMinusMedian": 0.0039,
+      "joinPercentile": 0.9859,
+      "pass": {
+        "join": true,
+        "smooth": true
+      }
+    },
+    "mp4": {
+      "bytes": 370877,
+      "firstVsPlate": 0.9801,
+      "join": 0.9904,
+      "wakePtpPct": 24.72,
+      "passLight": false
+    },
+    "webm": {
+      "bytes": 459589,
+      "firstVsPlate": 0.9857,
+      "join": 0.9982,
+      "joinPercentile": 0.993,
+      "wakePtpPct": 24.34,
+      "passLight": false
+    },
+    "rejectedBecause": "the wake surge at the wrap (zone ptp 24 %, detail 3.4x median) marks the loop point every 6 s; WebM 460 KB is over the 0.4 MB I target"
+  },
+  "flags": [
+    "Seam method is blend + rotate=auto, not residual (tools.md §5 fallback; reason in seam.whyNotResidual). Cost: frame 0 is not the plate frame (registration 0.961 MP4 / 0.963 WebM vs 0.980-0.986 for residual; >= 0.95 passes) and the loop is 5.04 s (121 f), so lib/media.ts durationS = 5.042.",
+    "MP4 pass.join = 'codec' (IDR texture refresh, 0.9919 vs median 0.9951); the lossless seam is an ordinary step (0.9929, percentile 0.075) and the WebM join is 0.9961 (percentile 0.94). Serve the WebM first.",
+    "The sails barely move (p99.9 0.52 px): the water carries the motion, as in L01.",
+    "L01 (iconic-pearl-loop, residual, already staged) has the same wake snap at its wrap (WebM wake-zone ptp 19.3 %, measured here for comparison); the L01 record does not measure it. For the lane owner.",
+    "2.39:1 crop host: if the crop is centred, the bottom ~13 % (most of the wake) is cut; the moon path stays in frame."
+  ],
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/iconic-pearl-alt-loop.mp4",
+    "webm": "/media/films/iconic-pearl-alt-loop.webm",
+    "poster": "iconic-pearl-alt plate (iconic-pearl-alt.webp)",
+    "endsOn": "iconic-pearl-alt.webp",
+    "durationS": 5.042,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "iconic-pearl-alt-loop-poster.webp (frame 0 of the loop, registration record)",
+    "registrationNote": "frame 0 = blend(src[132] -> src[11]), SSIM 0.961 (MP4) / 0.963 (WebM) vs the plate; ship marks <= 0.59 px from the plate"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (blend seam): no figures/flags/text; ship and marks still (<= 0.21 px; MP4/WebM finial 0.34/0.09, ensign 0.26/0.09, mastTop 0.19/0.17, mizzenTop 0.62/0.72 /255); 0 flashes; glow <= 8.1 %, <= 0.6 reversals/s; silent; registration 0.961/0.963; lossless join 0.9929 (ordinary step), WebM 0.9961; bytes 295 KB / 387 KB"
+}

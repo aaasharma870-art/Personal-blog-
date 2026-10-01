@@ -1,0 +1,49 @@
+/* ============================================================================
+   app/p3/foundation.css: smooth scroll, scroll locks, the fast lane (P3-2).
+   OWNER: B1-SCROLL (PHASE3-PLAN §4.6, DP-10). Only the owner edits this file.
+   Imported by app/layout.tsx after ./intro.css, so it cascades after the
+   base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
+   ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
+   stage-live, the --z-* scale) live in app/globals.css.
+   ========================================================================== */
+
+/* — Lenis (spec §3.1). lenis.css is NOT imported; these are the three rules
+     the page needs. `html.lenis` exists only while the one instance lives
+     (DESKTOP_FINE, motion on, home page); phones never match. — */
+
+/* Without this, Lenis's ResizeObserver on the `h-full` <html> never fires
+   and its scroll limit goes stale (the post-credits tail out of reach after
+   collapses toggle or fonts swap). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+/* Lenis owns the smoothing; html { scroll-behavior: smooth } stays for the
+   native path (phones, Pause/RM set auto themselves). */
+html.lenis {
+  scroll-behavior: auto;
+}
+
+/* Nested scrollers (menu sheet, palette, map dialog) scroll natively and
+   never chain into the locked page. */
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* — The cut (spec §11.3; components/director/cut-overlay.tsx): a fixed deep
+     layer at --z-cut, under the header (--z-header 40) so the fast lane
+     stays visible through it. Opacity only, animated by WAAPI; hidden at
+     rest so it never paints, never takes a pointer. — */
+.cut-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cut);
+  background: var(--house-deep);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.cut-overlay[data-cut="on"] {
+  visibility: visible;
+}

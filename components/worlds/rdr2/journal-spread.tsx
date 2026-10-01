@@ -20,7 +20,7 @@ import {
   VIGNETTE_AT,
   type Stroke,
 } from "@/components/worlds/rdr2/journal-sketches";
-import { GraphiteFilter, RD_PIECES, useFid } from "@/components/worlds/rdr2/kit";
+import { RD_PIECES, bakedGraphite } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 
 /* ============================================================================
@@ -49,6 +49,12 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    inline at 64 px (drawn static); under reduced motion the desktop page
    keeps the landscape and never swaps (W16: hover frames identical).
    The right page is aria-hidden: its meaning is each entry's title.
+
+   RASTER (P3-2, spec §12.1 #5): the right page's graphite is BAKED — plain
+   strokes under the static paper-tooth mask (kit.tsx bakedGraphite), each
+   SVG on its own layer — so a draw-on or a page turn never re-runs a live
+   filter. The inline vignettes (< 1024) keep their live filter and are not
+   rendered at all once a desktop page is up.
    ========================================================================== */
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
@@ -86,15 +92,16 @@ function drawProps(phase: EnterPhase, l: Pick<Stroke, "t" | "dur">) {
   };
 }
 
+/** The page's graphite (viewBox 400 × 500): baked tooth, its own layer. */
+const PAGE_GRAPHITE = bakedGraphite(400);
+const PAGE_SVG = cn("overflow-visible will-change-transform", s.graphiteBaked);
+
 /** The page's furniture: static pencil marks (never animated). */
-function Furniture({ fid }: { fid: string }) {
+function Furniture() {
   const c = FURNITURE.clipping;
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="absolute inset-0 size-full overflow-visible will-change-transform">
-      <defs>
-        <GraphiteFilter id={`jf-${fid}`} />
-      </defs>
-      <g filter={`url(#jf-${fid})`} fill="none" strokeLinecap="round" className="stroke-(--world-line)">
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("absolute inset-0 size-full", PAGE_SVG)} style={PAGE_GRAPHITE}>
+      <g fill="none" strokeLinecap="round" className="stroke-(--world-line)">
         <path d={FURNITURE.margin} strokeWidth={0.8} strokeOpacity={0.55} />
         <path d={FURNITURE.marginHatch} strokeWidth={0.7} strokeOpacity={0.45} />
         <path d={FURNITURE.date} strokeWidth={1} strokeOpacity={0.7} />
@@ -109,13 +116,10 @@ function Furniture({ fid }: { fid: string }) {
   );
 }
 
-function Landscape({ phase, fid }: { phase: EnterPhase; fid: string }) {
+function Landscape({ phase }: { phase: EnterPhase }) {
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible will-change-transform" data-motif="journal-landscape">
-      <defs>
-        <GraphiteFilter id={`jl-${fid}`} />
-      </defs>
-      <g filter={`url(#jl-${fid})`} fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-landscape">
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
         {LANDSCAPE.map((l) => (
           <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />
         ))}
@@ -131,7 +135,6 @@ function Landscape({ phase, fid }: { phase: EnterPhase; fid: string }) {
 
 /** One entry's vignette at page scale, drawn the first time it shows. */
 function PageVignette({ index, still }: { index: number; still: boolean }) {
-  const fid = useFid();
   const [fresh] = useState(() => !still && !drawnOnce.has(index));
   useEffect(() => {
     drawnOnce.add(index);
@@ -146,11 +149,8 @@ function PageVignette({ index, still }: { index: number; still: boolean }) {
         }
       : { initial: false as const, animate: { pathLength: 1 } };
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="size-full overflow-visible will-change-transform" data-motif="journal-vignette">
-      <defs>
-        <GraphiteFilter id={`jv-${fid}`} />
-      </defs>
-      <g filter={`url(#jv-${fid})`}>
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
+      <g>
         <g transform={VIGNETTE_AT}>
           {v.fill ? (
             <motion.path
@@ -183,11 +183,10 @@ function PageVignette({ index, still }: { index: number; still: boolean }) {
 function RightPage({ active, leafing, reduced }: { active: number | null; leafing: boolean; reduced: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.4 });
-  const fid = useFid();
-  const leaf = active == null ? <Landscape phase={phase} fid={fid} /> : <PageVignette index={active} still={reduced} />;
+  const leaf = active == null ? <Landscape phase={phase} /> : <PageVignette index={active} still={reduced} />;
   return (
     <div ref={ref} className={s.page} data-page-active={active ?? "landscape"}>
-      <Furniture fid={fid} />
+      <Furniture />
       {leafing ? (
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -209,7 +208,7 @@ function RightPage({ active, leafing, reduced }: { active: number | null; leafin
             animate={{ opacity: active == null ? 1 : 0 }}
             transition={{ duration: dur.preview, ease }}
           >
-            <Landscape phase={phase} fid={fid} />
+            <Landscape phase={phase} />
           </motion.div>
           <AnimatePresence initial={false}>
             {active != null ? (
@@ -305,9 +304,10 @@ export function JournalSpread({
                   <h3 className="mt-tier-pair type-title text-fg">{post.title}</h3>
                   <p className="mt-tier-group max-w-body type-body text-fg-muted">{post.angle}</p>
                 </div>
-                {/* one page (< 1024): the entry's sketch inline */}
+                {/* one page (< 1024): the entry's sketch inline (hidden on
+                    the desktop spread, so not rendered once it is up) */}
                 <div className="pt-1 lg:hidden">
-                  <JournalVignette index={i} className="size-16" />
+                  {desktop ? null : <JournalVignette index={i} className="size-16" />}
                 </div>
               </div>
             </Rise>

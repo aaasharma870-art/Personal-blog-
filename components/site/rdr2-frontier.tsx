@@ -1,6 +1,7 @@
 import { beyond, site } from "@/lib/content";
 import { copyText, copyVisible, hrefOfId } from "@/lib/sections";
 import { cn } from "@/lib/utils";
+import { beatAttrs } from "@/lib/beats";
 import { Meta } from "@/components/site/world-kit";
 
 /* ============================================================================
@@ -110,7 +111,7 @@ export function TrailMap({ className }: { className?: string }) {
   const caption = copyText("beyond.map.caption");
   if (!copyVisible(caption)) return null; // the honesty label is mandatory
   return (
-    <figure className={cn("w-full", className)} data-motif="trail-map">
+    <figure className={cn("w-full", className)} data-motif="trail-map" {...beatAttrs("B41", { weight: 2 })}>
       <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-hidden rounded-[4px]">
         <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" focusable="false" preserveAspectRatio="xMidYMid slice">
           <g fill="none" strokeLinecap="round" strokeLinejoin="round">

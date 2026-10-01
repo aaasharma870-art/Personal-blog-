@@ -1,0 +1,253 @@
+{
+  "proposedMediaId": "L24",
+  "sourceMediaId": "MV-10-alt",
+  "plate": "public/media/films/frontier-dusk-alt.webp",
+  "plateJob": "c249b137-3f83-4bc7-9f0f-33ce136af6ce",
+  "pinnedInput": "uploaded media d3da408a-171f-4fa1-9068-59e8ca18db06 (the 2560x1440 web still decoded to PNG; B6)",
+  "job": "247f4eff-aadd-42c7-875b-17d66cbce351",
+  "model": "kling3_0 pro 16:9, 6 s, sound off, start_image = end_image = uploaded media d3da408a; declined_preset_id 24bae836",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Tall grass and the oak's leaves sway in a warm breeze; the river glints; a soft heat haze shimmers low on the horizon; the riderless horse flicks its tail and mane once. The horse keeps four legs and one head and does not walk; the sun disc and the dark left side stay still. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "the L04 prompt verbatim (map: \"as L04\")",
+  "generateLog": "docs/build/media/p3/B6.md",
+  "checkLog": "docs/build/media/p3/B6.md#check-step",
+  "master": "media-src/p3/masters/L24-frontier-dusk-alt-247f4eff.mp4 (kept; 3822857 bytes, 145 frames, 6.042 s, 0 audio)",
+  "tier": "I",
+  "host": "beyond ALT (\"dead-eye-release\"; map: cut first)",
+  "hostRank": "below every ranked host (not a films screen, head or journey beat)",
+  "verdict": "FAIL",
+  "reason": "Motion not delivered: the same near-still as L04 and its retake L04r (the same prompt family on the sibling plate). Farneback flow vs frame 0, max over the loop (960x540, 1920-px units, sun-hold master): grass p99.9 0.38 px, oak leaves 0.39 px, river 0.39 px, horizon haze 0.58 px, horse 1.19 px, whole frame 0.73 px (0 % of pixels > 2 px); zone luma ptp <= 1.1 %. The horse at 300% on frames 0/25/50/75/100% keeps the same pose apart from a hair of tail. A viewer would not see the breeze, the glint or the tail flick. By the L04 rule (the breeze is the point of the frontier plate) this is a FAIL, not a near-still PASS.",
+  "hardLimits": "all pass: one horse with 4 legs + 1 head and its saddle, no rider, grazing in place, does not walk (300% crops); no people, figures, text or flares; left 45% 0.41/255; the sun disc holds its shape and place (diff crops at 300% after removing a +1.6 luma level step: grain only); 0 flashes/s, red share 1e-5; 0 audio streams",
+  "sunDisc": "the raw master sun zone reads 1.94/255 because the pinned frame 0 is ~1.6 luma darker in the sky than frames 4-144 (a Kling level step at the pin, whole-frame 50.27 -> 50.50 over 4 frames), not disc motion. A 0-cr sun hold-out (frame 0 over ellipse 1565,232,56,34 at 1920 px, dilate 6, sigma 8; media-src/p3/masters/L24-frontier-dusk-alt-247f4eff-sunhold.mkv) brings it to 0.03 (master) / 0.41 (MP4) / 0.38 (WebM); band 4-16 px inside / outside 0.32 / 1.36 (MP4). Kept for the record; it does not fix the motion.",
+  "checks": {
+    "master": {
+      "bytes": 3822857,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9876,
+      "lastVsPlate": 0.9882,
+      "join": 0.9953,
+      "joinRgb": 0.9773,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9979,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "left 45% x0-.45 y.25-.75 (map)": 0.41,
+        "sun disc x.79-.84 y.19-.24 (map)": 1.94,
+        "horse x.68-.75 y.52-.62 (informative: the requested tail/mane flick)": 2.28
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 0.74,
+      "light": null,
+      "phaseShiftPx": [
+        -0.01,
+        0.026
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "sunHoldMaster": {
+      "bytes": 103764355,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "ffv1",
+      "firstVsPlate": 0.9876,
+      "lastVsPlate": 0.9882,
+      "join": 0.9953,
+      "joinRgb": 0.9774,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9979,
+      "consecutiveMinAt": 1,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "left 45% x0-.45 y.25-.75 (map)": 0.41,
+        "sun disc x.79-.84 y.19-.24 (map)": 0.03,
+        "horse x.68-.75 y.52-.62 (informative: the requested tail/mane flick)": 2.28,
+        "valley + river x.32-.60 y.30-.55 (informative)": 1.11
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 1e-05,
+      "lumaRangePct": 0.73,
+      "light": null,
+      "phaseShiftPx": [
+        -0.01,
+        0.026
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": false,
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": null,
+        "silent": true
+      }
+    },
+    "seamLossless": {
+      "join": 1,
+      "joinRgb": 0.9998,
+      "consecutive": {
+        "min": 0.9979,
+        "minAt": 1,
+        "p05": 0.9989,
+        "median": 0.9997
+      },
+      "joinMinusMedian": 0.0003,
+      "joinPercentile": 1,
+      "pass": {
+        "join": true,
+        "smooth": true
+      }
+    },
+    "encodedForTheCheck": {
+      "mp4": {
+        "bytes": 200663,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1280,
+        "height": 720,
+        "codec": "h264",
+        "firstVsPlate": 0.9767,
+        "lastVsPlate": 0.9795,
+        "join": 0.9929,
+        "joinRgb": 0.9736,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.9982,
+        "consecutiveMinAt": 1,
+        "consecutiveMedian": 0.9998,
+        "staticMaxMeanAbsDelta": {
+          "left 45% x0-.45 y.25-.75 (map)": 0.43,
+          "sun disc x.79-.84 y.19-.24 (map)": 0.41,
+          "horse x.68-.75 y.52-.62 (informative: the requested tail/mane flick)": 2.01,
+          "valley + river x.32-.60 y.30-.55 (informative)": 1.09
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 1e-05,
+        "lumaRangePct": 0.62,
+        "light": null,
+        "phaseShiftPx": [
+          -0.02,
+          0.023
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": null,
+          "silent": true
+        }
+      },
+      "webm": {
+        "bytes": 147684,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1280,
+        "height": 720,
+        "codec": "vp9",
+        "firstVsPlate": 0.9815,
+        "lastVsPlate": 0.9815,
+        "join": 0.9998,
+        "joinRgb": 0.9989,
+        "joinPercentile": 0.0634,
+        "consecutiveMin": 0.9989,
+        "consecutiveMinAt": 59,
+        "consecutiveMedian": 1,
+        "staticMaxMeanAbsDelta": {
+          "left 45% x0-.45 y.25-.75 (map)": 0.16,
+          "sun disc x.79-.84 y.19-.24 (map)": 0.38,
+          "horse x.68-.75 y.52-.62 (informative: the requested tail/mane flick)": 1.81,
+          "valley + river x.32-.60 y.30-.55 (informative)": 0.66
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 0,
+        "lumaRangePct": 0.72,
+        "light": null,
+        "phaseShiftPx": [
+          -0.01,
+          0.024
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": true,
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": null,
+          "silent": true
+        }
+      },
+      "tool": "seam <sunhold.mkv> --k=12 --tier=I --method=residual --crf-mp4=26 --crf-webm=30 (scratch only, not staged; 201 KB / 148 KB)"
+    },
+    "motionFlowPx": {
+      "horse": {
+        "p99": 1.1587,
+        "p999": 1.1866
+      },
+      "grass": {
+        "p99": 0.3032,
+        "p999": 0.378
+      },
+      "oakLeaves": {
+        "p99": 0.2886,
+        "p999": 0.3898
+      },
+      "river": {
+        "p99": 0.297,
+        "p999": 0.3883
+      },
+      "horizonHaze": {
+        "p99": 0.4483,
+        "p999": 0.576
+      },
+      "left45": {
+        "p99": 0.2467,
+        "p999": 0.3215
+      },
+      "whole": {
+        "p99": 0.3253,
+        "p999": 0.7307
+      }
+    }
+  },
+  "retake": {
+    "recommendation": "NOT recommended. The same recipe failed three times as a family: L04 (B1), L04r with the livelier breeze prompt (B8), and L24. The host is the lowest-ranked (beyond ALT, map \"cut first\"). The code ALT (depth + camera) stays the beyond ALT.",
+    "ifEverRetaken": {
+      "model": "kling3_0 pro 16:9, 6 s, sound off, start_image ONLY = uploaded media d3da408a (no end pin; B8 finding: the start = end pin is what lets Kling return a still); 10.5 credits; decline 24bae836",
+      "prompt": "Animate the supplied image with gentle but clearly visible, continuous natural motion, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. A warm evening breeze moves steadily through the scene: the tall golden grass on the slope sways in slow, visible waves, and the sunlit leaves along the right edge of the oak's canopy rustle and sway; the river's surface glints and shimmers; a faint heat haze shimmers low over the far valley. The riderless saddled horse keeps grazing on the same spot, swishing its tail slowly from side to side. The horse keeps four legs and one head and does not walk or turn; the sun disc, the mountains, the sky and the dark left side of the frame (the shadowed oak and hillside) stay still. One uninterrupted shot; the grass and the leaves keep moving all the way through. No cuts, flashes, lightning, bursts, lens flares, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+      "accept": "grass/leaf flow p99.9 >= ~3-4 px; left 45% x y .25-.75 <= 1/255; sun disc <= 1/255 (sun hold-out allowed); horse 4 legs / 1 head at 200-400% and does not walk; seam blend --k=24 --rotate=auto --plate (no end pin, so no residual); registration >= .95"
+    }
+  },
+  "finalVerdict": "FAIL. No retake recommended; the code ALT (depth + camera) is the beyond ALT."
+}

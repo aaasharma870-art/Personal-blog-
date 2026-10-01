@@ -1,0 +1,121 @@
+/* ============================================================================
+   app/p3/type.css: typography per world (P3-4).
+   OWNER: B1-TYPE (PHASE3-PLAN §4.6, DP-10). Only the owner edits this file.
+   Imported by app/layout.tsx after ./intro.css, so it cascades after the
+   base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
+   ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
+   stage-live, the --z-* scale) live in app/globals.css.
+
+   The faces, tokens and per-world roles are in app/globals.css ("world
+   type"). This file holds the rules that keep them where they belong, all
+   DESKTOP_WIDE (≥ 64rem) only, like every world-type var:
+   1. the research guard: data is always Geist / Geist Mono (§5.5);
+   2. house-type islands: chrome, the hero column, act cards, the intro;
+   3. heads: non-data h3s, weight 400 single-cut faces (no synthesis),
+      Kalam's line box ≥ 1.05;
+   4. Cormorant is never set in a muted ink (its hairlines).
+   ========================================================================== */
+
+@media (min-width: 64rem) {
+  /* — 1. Research guard (PHASE3-SPEC §5.1 "data", §5.5). Data islands carry
+       data-research (metric tiles, the experiment, the kill-list rows, the
+       chapter's figures and caveats …); numbers, tables and research figures
+       are caught by class / element as well. Heads inside them are Geist,
+       the prose steps fall back to Geist. tools/capture/probes/
+       research-font.mjs asserts it. — */
+  [data-research],
+  .tnum,
+  .tabular-nums,
+  .font-mono,
+  .type-meta,
+  table,
+  [data-figure],
+  [data-board],
+  [data-gauntlet-js] {
+    --world-font-head: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    --world-head-scale: initial;
+    --world-head-lh: initial;
+    --world-head-track: initial;
+    --world-head-weight: initial;
+    --world-font-body: initial;
+    --world-font-lead: initial;
+    --world-font-hand: initial;
+    --world-body-size: initial;
+    --world-body-lh: initial;
+    --world-body-track: initial;
+    --world-small-size: initial;
+    --world-small-lh: initial;
+    --world-lead-size: initial;
+    --world-lead-lh: initial;
+    --world-lead-track: initial;
+  }
+
+  /* — 2. House type (today's steps, no world role): the hero column (the
+       lead and identity line stay Geist; the h1 is type-name), act cards
+       (their act titles and captions letter through font-world-act /
+       .world-face-*, their subtitles stay Geist), the prologue, the site
+       header, figure labels and every control. `data-house-type` is the
+       opt-out hook for chrome (fast lane, hunt chip, sound, director's cut). — */
+  [data-house-type],
+  [data-hero],
+  [data-act-card],
+  #intro,
+  #intro-caps,
+  header[data-world],
+  figcaption,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [role="tab"],
+  [role="tablist"],
+  [role="tabpanel"],
+  [role="dialog"],
+  [role="status"],
+  [role="menu"] {
+    --world-font-head: initial;
+    --world-head-scale: initial;
+    --world-head-lh: initial;
+    --world-head-track: initial;
+    --world-head-weight: initial;
+    --world-font-body: initial;
+    --world-font-lead: initial;
+    --world-font-hand: initial;
+    --world-body-size: initial;
+    --world-body-lh: initial;
+    --world-body-track: initial;
+    --world-small-size: initial;
+    --world-small-lh: initial;
+    --world-lead-size: initial;
+    --world-lead-lh: initial;
+    --world-lead-track: initial;
+  }
+
+  /* — 3. Heads. Non-data h3s on the heading step take the world head (the
+       h4s of the gauntlet and the demo are data and keep it). Family,
+       tracking and weight only: a host's own size utilities still win. — */
+  :where(h3).type-heading {
+    font-family: var(--world-font-head, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: var(--world-head-track, var(--text-heading--letter-spacing));
+    font-weight: var(--world-head-weight, var(--text-heading--font-weight));
+  }
+  /* every world head is a single-weight cut: never a faux bold or italic */
+  [data-world]:not([data-world="house"]) :is(.type-chapter, .type-title, h3.type-heading) {
+    font-synthesis: none;
+  }
+  /* Kalam's extents (asc 1.063 / desc .531 em) need a line box ≥ 1.05:
+     the lettered act title and the films' lettered lines */
+  [data-world="idiots"] .lettered-title,
+  .lettered-title.world-face-idiots {
+    line-height: 1.05;
+  }
+
+  /* — 4. Cormorant Garamond's hairlines read only in ink (--fg): its prose
+       never takes the muted ink (PHASE3-SPEC §5.2). Scoped to the Pirates
+       sections' prose steps, outside every house-type and research island. — */
+  [data-section][data-world="pirates"]
+    :is(.type-body, .type-lead, .type-small):not([data-research], [data-house-type], :is([data-research], [data-house-type], [data-hero], [data-act-card], figcaption, button) *) {
+    --fg-muted: var(--fg);
+  }
+}

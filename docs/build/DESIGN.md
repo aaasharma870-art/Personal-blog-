@@ -32,7 +32,7 @@ One curve, the Line, is drawn in each world's material. Hierarchy comes from sca
   - **PROPOSED:** `SYN` (SYNTHESIS) · `SPEC` · `PROP` (new here).
   - **A PROP value is a starting value** to tune by eye against `/lab` frame sequences at 1440, 390 and reduced motion.
 - **Tokens only.** Components contain no raw hex, rgba or px; the validator and `impeccable audit` check this. World values live under `[data-world]` selectors in `app/globals.css`.
-- **Fonts.** Every build prompt names them: **"Geist (next/font), Geist Mono, Newsreader."** v3: the only other families are the **scoped world display faces** of §2.1.1 (act titles, loaders, easter eggs; never the name, body or research data), loaded only by their owning components.
+- **Fonts.** Every build prompt names them: **"Geist (next/font), Geist Mono, Newsreader."** v3: the only other families are the **scoped world display faces** of §2.1.1 (act titles, loaders, easter eggs; never the name, body or research data), loaded only by their owning components. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5).)
 - **v2 / v3 markers.** A **v2** tag marks a change from v1; a **v3** tag marks a change from v2; unmarked rows are v1 unchanged.
 
 ---
@@ -204,9 +204,11 @@ Worlds recolour **only the tone planes, inside the near-black band**. Sections r
 | **Geist Mono** | `--font-geist-mono` | 400 | `meta` only: the one label system | JetBrains Mono, IBM Plex Mono; `ui-monospace` |
 | **Newsreader** | `--font-newsreader` | 400 (500 optional on `title`); italic 400 | `title` only | Source Serif 4, Literata; Georgia |
 
-**v3 (A-8): the v2 novelty-font ban is lifted for three slots only.** Film-/game-evoking display faces may set **act titles, loaders and easter eggs**. Everything else (the name, body, lead, Meta, labels, verdicts, metrics, figure labels, tips, quotes, chrome and all research data) stays Geist / Geist Mono / Newsreader. Hand-made quality on content still comes from SVG path irregularity (`chalkRough`, the R-1 graphite filter) and **motion** (ink or pencil drawing itself), never from a typeface.
+**v3 (A-8): the v2 novelty-font ban is lifted for three slots only.** Film-/game-evoking display faces may set **act titles, loaders and easter eggs**. Everything else (the name, body, lead, Meta, labels, verdicts, metrics, figure labels, tips, quotes, chrome and all research data) stays Geist / Geist Mono / Newsreader. Hand-made quality on content still comes from SVG path irregularity (`chalkRough`, the R-1 graphite filter) and **motion** (ink or pencil drawing itself), never from a typeface. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5).)
 
 **2.1.1 World display faces (lettering)** — SPEC §9.7 is the authority; this is the look contract.
+
+> **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the world roles and the name's face are in FONTS.md §P3 (PHASE3-SPEC §5); this table stays the look contract for the lettering slots.
 
 | World | Face | Licence | Ship mode | Used for | Treatment |
 |---|---|---|---|---|---|
@@ -216,7 +218,7 @@ Worlds recolour **only the tone planes, inside the near-black band**. Sections r
 | rdr2 (egg) | Rye | OFL 1.1 | A | "DEAD EYE" toast header (optional); "WANTED" only if FT-1 | ink or `--paper-fg` fill |
 | hp | IM Fell English / English SC | OFL 1.1 | A | Card III→IV "The Light"; LD-HP route card; the Marauder's Map room labels and 404 | `--w-ink-contour` (8.94 on hp canvas) or `--paper-fg` on the Map's parchment |
 
-- **Budget:** ≤ 1 display face per viewport, counted as one of the ≤ 3 styles; never smaller than `title`; AA on its fill (text ≥ 4.5 or, at `title` size and above, the large-text 3:1 minimum; every row above clears 4.5); total woff2 ≤ 24 KB; each outline SVG ≤ 3 KB.
+- **Budget:** ≤ 1 display face per viewport, counted as one of the ≤ 3 styles; never smaller than `title`; AA on its fill (text ≥ 4.5 or, at `title` size and above, the large-text 3:1 minimum; every row above clears 4.5); total woff2 ≤ 24 KB; each outline SVG ≤ 3 KB. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** budgets per FONTS.md §P3.)
 - **Loading:** `next/font/local`, `preload: false`, `display: "optional"` (a miss renders Newsreader; no layout shift, fixture L). The owning component imports its face; no global `@font-face` for display faces.
 - **Accessibility:** outlined lettering sits inside the real heading as `<span class="sr-only">text</span><svg aria-hidden="true">…</svg>`; self-hosted faces render real text.
 - **Never (mode C):** the RDR2 "Redemption" face, Hapna, mod font packs, *Lipstick*, the HP logo lettering, the POTC wordmark, or any font extracted from film or game files; any title of a work set in a lookalike face.
@@ -370,7 +372,7 @@ Computed at QA widths (CALC): display 158 / 113 / 72 / 72 · chapter 86 / 61 / 4
 | **`springSettle`** (v2) | `{260, 22, .9}`: **ζ 0.72, 3.8% overshoot**, t63 104 ms, settle 347 ms | CALC. **Kimi's `{260,17,.9}` overshoots 12.2%**, not "≈ 4%", so damping is raised | **The Settle (3I-06):** non-interactive entrances in **Act II only** (the board frame, schematic panels, gauge). Scale .96 → 1 or y 8 → 0 |
 | **`springPlayful`** (v2) | `{180, 14, 1.1}`: ζ 0.50, 16.4% overshoot, settle 631 ms | CALC (Kimi `{180,11,1.1}` = 26% overshoot, settle 656 ms: too loose) | Decorative motifs only: gear teeth nudge on gauge complete, waypoint tick pop. Never text, never controls |
 | **`springNeedle`** (v2) | `{55, 8}`: ζ 0.54, 13.3% overshoot, settle 781 ms | CALC (KIMI PC-01) | The instrument needle's underdamped **hunt and settle** (Journey, LD-PC, films finale). Decorative, aria-hidden. "Spin the long way": target = bearing + 360·k |
-| `scrollBudget` (v3) | `{stickyMaxVh 30, longCardMaxVh 60, maxLongCards 2, pageStickyMaxVh 150, mobileStickyMaxVh 0, maxSignature 6, maxScenes 2, maxWorlds 4, maxWorldChanges 4}` | SPEC v2 | Read by the validator |
+| `scrollBudget` (v3) | `{stickyMaxVh 30, longCardMaxVh 60, maxLongCards 2, pageStickyMaxVh 150, mobileStickyMaxVh 0, maxSignature 6, maxScenes 2, maxWorlds 4, maxWorldChanges 4}` | SPEC v2 | Read by the validator · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the long-card budget is `film.cardTravel` (PHASE3-SPEC D3-1): ≤ 110vh per card, ≤ 400vh in all, desktop-fine only; validator #3 / #4 are retired (`scripts/checks/travel.mjs`). |
 | **`aalIzzWell`** (v3) | `springSettle` fired twice, 180 ms apart: y 8 → 0, then 4 → 0 ("two soft pats") | PROP (IC-3I-03) | Act II **non-interactive** entrances only; never on controls, never on an error state |
 | **`candle.*`** (v3) | `bobPx 4` · `bobHz .15–.25` · sizes 3 · `restMs 5000` | PROP (IC-HP-03) | Intro candle sprites; Card III→IV arrivals |
 | **`develop.*`** (v3) | mask threshold = remap(p, a, b) (R-2) · `borderS .5` · `breatheHz .4` (indeterminate 10–22%) | STUDY R-2 | Card II→III, LD-RD, tintype photos (static p = 1) |
@@ -612,7 +614,7 @@ Computed at QA widths (CALC): display 158 / 113 / 72 / 72 · chapter 86 / 61 / 4
 - SSR `opacity:0`; hydration swaps; always-on loops
 
 ### 11.4 Reference-copying traps (v1, plus the v2 amendment)
-- **v1 traps still hold:** Lusion's global ribbon, virtual scroll or wheel hijack, auto-scroll assist, competing hero reveals, Dennis name marquees, Obys 11 px UI, Igloo `//` or HUD, audio, overscroll navigation, a live NYSE clock, unsourced claims, and generated media showing people, text or charts.
+- **v1 traps still hold:** Lusion's global ribbon, virtual scroll or wheel hijack, auto-scroll assist, competing hero reveals, Dennis name marquees, Obys 11 px UI, Igloo `//` or HUD, audio, overscroll navigation, a live NYSE clock, unsourced claims, and generated media showing people, text or charts. (**Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** Lenis smooth scroll on desktop is not a hijack: it keeps the native scrollbar, keyboard, anchors and `[data-lenis-prevent]` areas, and is off on touch, reduced motion and Pause; PHASE3-SPEC §3.1. Auto-scroll assist stays banned.)
 - **Content-gating loaders, amended by N1:** the prologue overlay is permitted **only** under all of the following. Otherwise it is a banned gate:
   - (a) SSR content beneath is complete, and no-JS never sees it
   - (b) Skip, Esc and scroll dismiss it in ≤ 0.4 s

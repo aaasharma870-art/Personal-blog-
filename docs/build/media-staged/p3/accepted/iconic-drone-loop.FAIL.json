@@ -1,0 +1,241 @@
+{
+ "proposedMediaId": "L07",
+ "sourceMediaId": "iconic-drone",
+ "plate": "public/media/films/iconic-drone.webp",
+ "plateJob": "69cafb24-6ff8-4408-a81f-0ab89821ebfe",
+ "job": "536ce219-7204-49ea-86b4-e02f9ce1793a",
+ "model": "kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image 69cafb24, end_image 69cafb24] (start = end = the plate job); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836; use_unlim false",
+ "credits": 10.5,
+ "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The small quadcopter hovers in place in mid-air, bobbing slowly and gently a few pixels up and down, its four rotors staying a steady, soft translucent blur; the leaves of the courtyard trees stir in a light breeze; sun flecks shift softly on the stone and on the lawn. The quadcopter stays at the same spot and the same size and does not fly away, turn or tilt; the green circuit board keeps only its pads and traces, with no markings; the colonnade, the columns, the buildings and the lawn stay still. One uninterrupted shot; the quadcopter keeps hovering and the leaves keep moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+ "promptSource": "Map \u00a73 L07 MOTION/STILL (the photographed drone stays on the plate; the toy is the chalk sprite, spec \u00a79.2 / Appendix B #14) in the FAIL-JSON retake framing ('gentle but clearly visible, continuous motion ... first and last frames match') instead of the 'extremely restrained' PREFIX, after three near-still failures (L03, L04, L13). Rotors asked to stay 'a steady, soft translucent blur' to guard the 2 Hz rule; 'no glyphs' phrased as 'keeps only its pads and traces, with no markings'.",
+ "generateLog": "docs/build/media/p3/B8.md",
+ "master": "media-src/p3/masters/L07-iconic-drone-536ce219.mp4 (4024054 bytes, 145 frames, 6.042 s, 1920x1080 24 fps, 0 audio)",
+ "tier": "I",
+ "verdict": "FAIL",
+ "reason": "Motion not delivered: a near-still. The quadcopter does not hover or bob: phase correlation on its body gives dy within -0.17..0 px over the whole clip; flow (Farneback optical flow vs frame 0 at 960x540 on every 4th frame, reported as max-over-frames p99.9 magnitude in 1920-px units (scratchpad/p3/b8/flow.py)): drone 0.59 px, body 0.47 px, rotor discs 0.34/0.50 px, trees 0.40 px, lawn 0.38 px, whole frame 0.73 px, 0% of pixels > 4 px. The x8 difference of frame 72 vs 0 shows only the drone's outline (sub-pixel) and leaf shimmer. Master consecutive SSIM min/median 0.9985/0.9999.",
+ "hardLimits": "all pass: no people/figures/faces/hands (full frames and a 200% drone crop at 0/25/50/75/100%); the green board shows the plate's chips and traces only, no glyphs or lettering; rotors stay soft blur discs (light ptp 0.6%, 0 reversals/s, no strobing); 0 flashes (whole + tiles), red share 3e-5; 0 audio streams",
+ "checks": {
+  "master": {
+   "bytes": 4024054,
+   "frames": 145,
+   "durationS": 6.042,
+   "audioStreams": 0,
+   "ssim": {
+    "firstVsPlate": 0.9924,
+    "lastVsPlate": 0.992,
+    "join": 0.9966,
+    "joinRgb": 0.9935,
+    "consecutive": {
+     "min": 0.9985,
+     "minAt": 1,
+     "p05": 0.9993,
+     "median": 0.9999
+    },
+    "joinMinusMedian": -0.0033,
+    "joinPercentile": 0
+   },
+   "static": [
+    {
+     "rect": [
+      0,
+      0,
+      0.33,
+      0.7
+     ],
+     "maxMeanAbsDeltaVsFirst": 1.14,
+     "maxMeanAbsDeltaStep": 0.39
+    },
+    {
+     "rect": [
+      0.38,
+      0.12,
+      0.5,
+      0.35
+     ],
+     "maxMeanAbsDeltaVsFirst": 1.14,
+     "maxMeanAbsDeltaStep": 0.48
+    }
+   ],
+   "flash": {
+    "wholeMaxPerSecond": 0,
+    "wholeTransitions": 0,
+    "tilesMaxPerSecond": 0,
+    "worstTile": 0,
+    "redShareMax": 3e-05
+   },
+   "luma": {
+    "min": 120.51,
+    "max": 121.27,
+    "range": 0.77,
+    "rangePct": 0.63
+   },
+   "light": [
+    {
+     "rect": [
+      0.38,
+      0.39,
+      0.52,
+      0.435
+     ],
+     "meanLuma": 139.68,
+     "ptpPct": 0.62,
+     "reversalsPerS": 0,
+     "dominantHz": 0.17
+    },
+    {
+     "rect": [
+      0.73,
+      0.38,
+      0.89,
+      0.43
+     ],
+     "meanLuma": 145.5,
+     "ptpPct": 0.66,
+     "reversalsPerS": 0,
+     "dominantHz": 0.17
+    }
+   ],
+   "phaseShiftPx": {
+    "dx": 0.006,
+    "dy": 0.026,
+    "note": "px at 1920 wide (measured at 960x540 x2)"
+   },
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "flow": {
+   "drone": 0.59,
+   "trees": 0.4,
+   "colonnade": 0.84,
+   "lawn": 0.38,
+   "whole": 0.73,
+   "pct_gt4px_max": 0.0,
+   "frames": 145
+  }
+ },
+ "retake": {
+  "rank": "Not the \u00a79.3 rank-7 contingency (films screens outrank the systems band; that stays L13). Recorded for the plan owner only.",
+  "model": "kling3_0 pro 16:9 6 s, sound off, start_image = 69cafb24 ONLY (no end_image), then 'node tools/media/loop.mjs boomerang <master> <out> --tier=I' (boomerang is allowed for L07's hover; frame 0 stays the plate). 10.5 credits.",
+  "why": "B8 evidence: all three start=end Kling v3.0 pro jobs submitted with the FAIL-JSON 'gentle but clearly visible, continuous' wording (L03r, L04r, L07) came back as near-stills again (0.3-0.6 px in the named motion zones), numerically the same as the first takes. The wording change did not fix the failure mode on these busy daylight plates. The end-frame pin is the common factor; L07 is the one loop where boomerang makes the pin unnecessary.",
+  "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The small quadcopter hovers in place in mid-air, bobbing slowly and gently a few pixels up and down, its four rotors staying a steady, soft translucent blur; the leaves of the courtyard trees stir in a light breeze; sun flecks shift softly on the stone and on the lawn. The quadcopter stays at the same spot and the same size and does not fly away, turn or tilt; the green circuit board keeps only its pads and traces, with no markings; the colonnade, the columns, the buildings and the lawn stay still. One uninterrupted shot; the quadcopter keeps hovering in place and the leaves keep moving all the way through. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "accept": "drone body bob visible (phase-correlated dy peak-to-peak >= ~3 px) while it stays within ~4 px of its plate position and size; rotors stay a blur (no strobing, light reversals <= 4/s); the board shows no glyphs at 200%; boomerang tier I; 0 flashes."
+ },
+ "finalVerdict": "FAIL confirmed (no hover). Not retaken (the rank-7 contingency went to a films screen, L22). The code ALT (drift 1 -> 1.02 + depth, spec 6.1) is the systems band DEFAULT. The start-only + boomerang retake recorded in this file stays an option for a later budget. Flag for Aryan.",
+ "checkStepB9": {
+  "batch": "B9 (docs/build/media/p3/B9.md section 1), 0 credits",
+  "what": "the full check step on the retake master, as for B3-B6: residual seam, check on both encodes with --plate/--static/--light, L2 sweep on the WebM at 0/25/50/75/100% + crops, wrap strips and slit-scans. Check encodes are in the session scratchpad only, not staged.",
+  "seamArgs": "--k=12 --tier=I --method=residual (defaults CRF 26 / 32)",
+  "tier": "I",
+  "seamCheckLossless": {
+   "join": 1,
+   "joinRgb": 1,
+   "consecutive": {
+    "min": 0.9985,
+    "minAt": 1,
+    "p05": 0.9993,
+    "median": 0.9999
+   },
+   "joinMinusMedian": 0.0001,
+   "joinPercentile": 1,
+   "pass": {
+    "join": true,
+    "smooth": true
+   }
+  },
+  "checkZones": "static rects [colonnade x0-.33 y0-.70, x.38-.50 y.12-.35]; light [rotor discs L, R]",
+  "mp4": {
+   "bytes": 209584,
+   "frames": 144,
+   "durationS": 6,
+   "width": 1280,
+   "height": 720,
+   "codec": "h264",
+   "firstVsPlate": 0.9843,
+   "lastVsPlate": 0.9854,
+   "join": 0.9949,
+   "joinPercentile": 0,
+   "consecutiveMin": 0.9989,
+   "consecutiveMedian": 0.9999,
+   "static": [
+    1.06,
+    1.09
+   ],
+   "light": [
+    [
+     0.55,
+     0
+    ],
+    [
+     0.61,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": "codec",
+    "smooth": true,
+    "static": false,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "webm": {
+   "bytes": 176308,
+   "frames": 144,
+   "durationS": 6,
+   "width": 1280,
+   "height": 720,
+   "codec": "vp9",
+   "firstVsPlate": 0.9886,
+   "lastVsPlate": 0.9886,
+   "join": 1,
+   "joinPercentile": 0.4296,
+   "consecutiveMin": 0.9994,
+   "consecutiveMedian": 1,
+   "static": [
+    0.72,
+    0.83
+   ],
+   "light": [
+    [
+     0.67,
+     0
+    ],
+    [
+     0.65,
+     0
+    ]
+   ],
+   "flashPerS": [
+    0,
+    0
+   ],
+   "audioStreams": 0,
+   "pass": {
+    "registration": true,
+    "join": true,
+    "smooth": true,
+    "static": true,
+    "flash": true,
+    "light": true,
+    "silent": true
+   }
+  },
+  "visual": "slit x.45 y.25-.55 (through the drone body) +-48 frames: horizontal streaks (no bob) and no seam",
+  "l2": "WebM frames 0/25/50/75/100% + 200% crops: no people, figures, riders, faces, hands, text or symbols; horses (L03r, L04r) 4 legs + 1 head each; the drone board (L07) shows chips and traces only",
+  "verdict": "FAIL confirmed (no hover). Not retaken (the rank-7 contingency went to a films screen, L22). The code ALT (drift 1 -> 1.02 + depth, spec 6.1) is the systems band DEFAULT. The start-only + boomerang retake recorded in this file stays an option for a later budget. Flag for Aryan."
+ }
+}

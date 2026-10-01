@@ -3,6 +3,10 @@ import { SectionFrame } from "@/components/sections/SectionFrame";
 import { rendererFor } from "@/components/sections/registry";
 import { ActCardSection } from "@/components/sections/act-card/act-card-section";
 import { enabledSections, numberOf, pageItems, type PageItem } from "@/lib/sections";
+import { StageGate } from "@/components/stage/stage-gate";
+import { LetterboxBars } from "@/components/stage/letterbox-bars";
+import { StageLayers } from "@/components/stage/stage-layers";
+import { PageHydrated } from "@/components/site/page-hydrated";
 
 /** The home page is the manifest (lib/page.ts), rendered in the derived
  *  order `pageItems` (lib/sections.ts): every enabled section, with an act
@@ -49,10 +53,26 @@ const isCredits = (item: PageItem) => item.kind === "section" && item.entry.type
 export default function Home() {
   return (
     <>
-      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+      {/* Phase 3 (PHASE3-SPEC §3.2; B1-STAGE): the persistent stage (fixed,
+          --z-stage 0: client-only, desktop-only, lazy at ladder step 3), the
+          letterbox bars (--z-bars) and the fixed layers (game HUD, stop pill,
+          toasts, the cut: <StageLayers/>) sit before <main>. <main> and the
+          credits <footer> are `relative z-(--z-main)` (1): above the stage,
+          below every fixed layer and the header. Fixed-layer audit
+          (2026-09-30): nothing inside <main> is position:fixed (the egg
+          toast, the Map, the palette and the menu render from the layout,
+          at --z-menu), so the stacking context changes nothing on screen. */}
+      <StageGate />
+      <LetterboxBars />
+      <StageLayers />
+      <main id="main" tabIndex={-1} className="relative z-(--z-main) flex-1 outline-none">
         {pageItems.filter((item) => !isCredits(item)).map(hydrateApart)}
       </main>
       {pageItems.filter(isCredits).map(hydrateApart)}
+      {/* the LAST Suspense child: it hydrates after every section (B1-INTRO) */}
+      <Suspense fallback={null}>
+        <PageHydrated />
+      </Suspense>
     </>
   );
 }

@@ -1,0 +1,372 @@
+{
+  "proposedMediaId": "L11",
+  "kind": "living loop (P3 media lane, batch B3), new: not registered yet",
+  "sourceMediaId": "MV-07",
+  "plate": "public/media/films/lights-line.webp",
+  "plateJob": "5155788f-adb3-410a-bd57-b462456ba723",
+  "pinnedInput": "the plate job 5155788f (start = end)",
+  "job": "a2d361aa-ee8b-4b80-b434-7e1049676303",
+  "model": "kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. The ribbon of floating candles bobs very slowly and the flames flicker softly; faint stars twinkle in the tall windows. The dark hall on the left stays dark and still; the ribbon of candles keeps its exact curving path and shape; no new candles or lights appear. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "B3 generate step prompt parts (map \u00a73 PREFIX + MOTION + STILL + SUFFIX, B3.md 'Settings'); the job params hold the same text (not re-read here: no Higgsfield calls in the check stage)",
+  "generateLog": "docs/build/media/p3/B3.md",
+  "master": "media-src/p3/masters/lights-line-a2d361aa.mp4 (Kling original, 1821578 bytes, 145 frames, 6.042 s, 1920x1080, 24 fps, 0 audio)",
+  "files": {
+    "mp4": "lights-line-loop.mp4",
+    "webm": "lights-line-loop.webm",
+    "poster": "lights-line-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 144,
+  "durationS": 6.0,
+  "bytes": {
+    "mp4": 551100,
+    "webm": 294655,
+    "poster": 70154
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/lights-line-a2d361aa.mp4 <out>/lights-line-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=22",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 22,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0] (the pinned plate frame)",
+    "posterQuality": 80,
+    "note": "residual, not boomerang: the raw join is 0.9964 and the lossless seam join is 1.0000, so the 2x-length boomerang the map allows is not needed. WebM CRF 22 for the near-black plate (tools.md: 20-26); the halos show no contour banding at 6x gain."
+  },
+  "seamCheckLossless": {
+    "join": 1,
+    "joinRgb": 1,
+    "consecutive": {
+      "min": 0.9992,
+      "minAt": 131,
+      "p05": 0.9995,
+      "median": 0.9999
+    },
+    "joinMinusMedian": 0.0001,
+    "joinPercentile": 1,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": {
+    "static": [
+      "left 40% x0-.40 full height (binding, map + B3.md)"
+    ],
+    "light": [
+      "candle ribbon x.45-.92 y.33-.62",
+      "foreground candles x.03-.18 y.65-1",
+      "left ribbon + candles x.03-.40 y.33-.72",
+      "right window + candles x.88-.97 y.10-.75"
+    ]
+  },
+  "before": {
+    "master": {
+      "bytes": 1821578,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9914,
+      "lastVsPlate": 0.9915,
+      "join": 0.9964,
+      "joinRgb": 0.9854,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9993,
+      "consecutiveMedian": 0.9999,
+      "staticMaxMeanAbsDelta": {
+        "left 40% x0-.40 full height (binding, map + B3.md)": 0.44
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 3e-05,
+      "lumaRangePct": 1.48,
+      "phaseShiftPx": [
+        0.018,
+        -0.088
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.45,
+            0.33,
+            0.92,
+            0.62
+          ],
+          "ptpPct": 1.45,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.03,
+            0.65,
+            0.18,
+            1
+          ],
+          "ptpPct": 0.7,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.03,
+            0.33,
+            0.4,
+            0.72
+          ],
+          "ptpPct": 0.77,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        }
+      ]
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 551100,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.99,
+      "lastVsPlate": 0.9905,
+      "join": 0.9963,
+      "joinRgb": 0.9885,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9992,
+      "consecutiveMedian": 0.9998,
+      "staticMaxMeanAbsDelta": {
+        "left 40% x0-.40 full height (binding, map + B3.md)": 0.48
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 4e-05,
+      "lumaRangePct": 1.51,
+      "phaseShiftPx": [
+        0.014,
+        -0.088
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.45,
+            0.33,
+            0.92,
+            0.62
+          ],
+          "ptpPct": 1.43,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.03,
+            0.65,
+            0.18,
+            1
+          ],
+          "ptpPct": 0.57,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.03,
+            0.33,
+            0.4,
+            0.72
+          ],
+          "ptpPct": 0.91,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        {
+          "rect": [
+            0.88,
+            0.1,
+            0.97,
+            0.75
+          ],
+          "ptpPct": 2.58,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    },
+    "webm": {
+      "bytes": 294655,
+      "frames": 144,
+      "durationS": 6,
+      "width": 1920,
+      "height": 1080,
+      "codec": "vp9",
+      "firstVsPlate": 0.9908,
+      "lastVsPlate": 0.9908,
+      "join": 1,
+      "joinRgb": 0.9999,
+      "joinPercentile": 0.4296,
+      "consecutiveMin": 0.9996,
+      "consecutiveMedian": 1,
+      "staticMaxMeanAbsDelta": {
+        "left 40% x0-.40 full height (binding, map + B3.md)": 0.21
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 3e-05,
+      "lumaRangePct": 0.93,
+      "phaseShiftPx": [
+        0.014,
+        -0.095
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.45,
+            0.33,
+            0.92,
+            0.62
+          ],
+          "ptpPct": 1.11,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        },
+        {
+          "rect": [
+            0.03,
+            0.65,
+            0.18,
+            1
+          ],
+          "ptpPct": 0.46,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        {
+          "rect": [
+            0.03,
+            0.33,
+            0.4,
+            0.72
+          ],
+          "ptpPct": 0.79,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        {
+          "rect": [
+            0.88,
+            0.1,
+            0.97,
+            0.75
+          ],
+          "ptpPct": 2.03,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    }
+  },
+  "flames": {
+    "largeFlames": {
+      "count": 22,
+      "lumaPtpPctMax": 4.35,
+      "brightAreaPtpPctMax": 26.8,
+      "reversalsPerSMax": 1.82,
+      "centroidTravelPxMax": 0.31,
+      "note": "the 7 large foreground flames: luma ptp 0.5-0.8%, bright area ptp <= 4%, 0 reversals/s, centroid travel <= 0.28 px"
+    },
+    "ribbonFlames": {
+      "count": 361,
+      "lumaPtpPct": {
+        "median": 3.47,
+        "p90": 5.85,
+        "max": 9.77
+      },
+      "peakPixelDelta": {
+        "median": 8,
+        "p90": 18,
+        "max": 32
+      },
+      "reversalsPerS": {
+        "median": 0.0,
+        "max": 1.16
+      },
+      "note": "blobs >= 140/255 of 4-400 px on frame 0, bbox + 3 px, 3% hysteresis"
+    },
+    "comparison": "shipped MV-09 last-light loop, same method: flame luma ptp 1.4-1.9%, bright area ptp 8-29%, travel <= 0.32 px"
+  },
+  "ribbon": "The ribbon holds its curve (it matches LINE_D): whole-frame flow p99.9 <= 0.28 px, ribbon flames travel <= 0.31 px, phase shift vs the plate 0.09 px.",
+  "motion": "Near-still. The candles do not bob (flow p99.9 <= 0.28 px anywhere) and the large flames do not visibly flicker (luma ptp <= 0.8%); the only motion is a faint, slow shimmer of the small ribbon flames (median 3.5%, max 9.8% peak-to-trough, <= 1.2 reversals/s) and of their floor reflections; the stars in the windows are unchanged. Whole-frame luma range 0.9-1.5%.",
+  "l2Sweep": "Lossless seam frames 0/25/50/75/100%: right window + candles x.84-1 y0-.85 at 125% and 2.5x gain, left window + candles x0-.16 y0-.85 at 125% and 2.5x gain, ribbon x.50-.92 y.30-.62 at 119% and 1.5x gain; halos x0-.25 y.55-1 at 6x gain on both encodes (smooth, no banding). No new candles or lights; windows show only stars and tracery. No people, figures, riders, faces or hands; no text, letters, numbers, logos, symbols or flags; no new objects; no lightning or flashes (0 WCAG flashes/s whole frame and 4x4 tiles).",
+  "visualChecks": "Slit-scans across the wrap (x .70 y .35-.60 through the ribbon; x .054 y .62-.80 through a foreground flame) at 3x gain, +-36 frames: WebM continuous; MP4 continuous apart from the IDR texture refresh at the tick. Wrap strips continuous.",
+  "flags": [
+    "Near-still (like the B2 L05/L08 passes and the shipped MV-09): it passes every limit and keeps the ribbon exactly on LINE_D, but a viewer will barely see it move. The code ALT (parallax) may read as more alive; Aryan to judge in real time. A livelier retake prompt is in retakeIfWanted.",
+    "MP4 pass.join = \"codec\" (0.9963 vs median 0.9998); lossless and WebM joins 1.0000. Serve the WebM first."
+  ],
+  "retakeIfWanted": {
+    "model": "kling3_0 pro 16:9 6 s, sound off, start_image = end_image = MV-07 job 5155788f (10.5 credits); decline the IN THE DARK preset intercept (24bae836)",
+    "why": "B1 diagnosis: \"extremely restrained\" + \"one slow, even cycle\" + a pinned end let Kling freeze calm plates. Name one visible primary motion and ask for it continuously.",
+    "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion in the candle flames, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Every candle flame along the floating ribbon flickers and sways softly and continuously, each out of step with its neighbours, and the large candles in the foreground flicker gently; their warm reflections on the polished floor shimmer; a few faint stars in the tall windows twinkle slowly. The ribbon of candles keeps its exact curving path and every candle stays in place; the dark hall on the left stays dark and still; no new candles or lights appear. One uninterrupted shot; the flames keep flickering all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; no flame flickers faster than twice a second and the overall glow varies by no more than about fifteen percent. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+    "accept": "ribbon flames visibly flicker (flame luma ptp >= ~15% on many flames, <= 4 reversals/s); ribbon centroid travel <= 2 px (LINE_D); left 40% <= 1/255; glow <= 15%; boomerang only if the flames read as a bob"
+  },
+  "manifestProposal": {
+    "kind": "video",
+    "src": "/media/films/lights-line-loop.mp4",
+    "webm": "/media/films/lights-line-loop.webm",
+    "poster": "MV-07 plate (lights-line.webp)",
+    "endsOn": "lights-line.webp",
+    "durationS": 6,
+    "reduced": "poster",
+    "playOn": "desktop",
+    "loopPoster": "lights-line-loop-poster.webp (frame 0 = src[0], registration record)"
+  },
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS, flagged near-still: left 40% still (0.21 WebM / 0.48 MP4 /255), ribbon holds LINE_D (<= 0.3 px), glow <= 2.6% with 0 reversals/s, 0 flashes, silent; lossless and WebM joins 1.0000, MP4 join \"codec\". Only a faint ribbon-flame shimmer moves."
+}

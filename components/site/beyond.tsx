@@ -10,6 +10,7 @@ import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import { FrontierBand } from "@/components/worlds/rdr2/frontier-band";
 import { Satchel } from "@/components/worlds/rdr2/satchel";
 import { WantedBoard } from "@/components/worlds/rdr2/wanted-board";
+import { StageSplit } from "@/components/stage/stage-window";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 import type { SectionProps } from "@/components/sections/types";
 
@@ -39,7 +40,23 @@ import type { SectionProps } from "@/components/sections/types";
  *     the two warm families never share a viewport (B2).
  * In any world whose `notes` dressing is not `frontier` the same notes
  * render plain (SPEC §12.4).
+ *
+ * Phase 3 (PHASE3-SPEC §3.2; B1-STAGE): the lower half is `split` with the
+ * window LEFT. When the entry's StageSpec is split, the notes after the
+ * first (Activities → Creative; Athletics keeps its wide trail map above)
+ * sit beside a sticky stage window (MV-10, the push toward the sun) in the
+ * empty column under the headings, under the boot gate only; each note's
+ * grid is `split-stack` (it stacks in the narrow column at 1024). The
+ * stage's cue anchor is the Activities note, `#beyond-activities` (each
+ * note article is `#<id>-<first word of its kicker>`). Anything else:
+ * today's DOM.
  */
+
+/** A note's anchor: `beyond-athletics`, `beyond-activities`, … */
+function noteAnchor(section: string, kicker: string): string {
+  const word = kicker.toLowerCase().match(/[a-z0-9]+/)?.[0] ?? "note";
+  return `${section}-${word}`;
+}
 
 /** Confirmed Beyond facts for the handbill, verbatim content.ts item heads
  *  (B7). Community stays off it on purpose: a WANTED bill is no place for
@@ -130,6 +147,53 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
     />
   );
 
+  const note = (b: (typeof beyond)[number], i: number) => {
+    const noteId = `${entry.id}-note-${i + 1}`;
+    const athletics = frontier && b.kicker === "Athletics";
+    const creative = frontier && b.kicker === "Creative";
+    return (
+      <Rise
+        as="article"
+        key={b.kicker}
+        id={noteAnchor(entry.id, b.kicker)}
+        className="split-stack grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
+      >
+        <div className="lg:col-span-4">
+          <Meta fields={[b.kicker]} />
+          <h3 id={noteId} className="mt-tier-pair type-heading text-fg">
+            {b.title}
+          </h3>
+          {athletics ? (
+            <div className="mt-tier-group hidden max-w-[24rem] lg:block">
+              <ShoePrints />
+            </div>
+          ) : null}
+        </div>
+        <div className="lg:col-span-8">
+          <dl aria-labelledby={noteId} className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
+            {b.items.map((it) => (
+              <div key={it.head}>
+                <dt className="type-body text-fg">{it.head}</dt>
+                <dd className="mt-1 type-small text-fg-muted">{it.body}</dd>
+              </div>
+            ))}
+          </dl>
+          {/* the frontier map runs the full width of the facts' column
+              (ART-DIRECTOR #15: a small box in the left column left
+              the right two thirds empty) */}
+          {athletics ? <TrailMap className="mt-tier-block hidden lg:block" /> : null}
+          {creative ? (
+            <Satchel
+              choice={choice}
+              className="mt-tier-block"
+              caption={<SceneCaption k="cap.beyond.satchel" place="head" />}
+            />
+          ) : null}
+        </div>
+      </Rise>
+    );
+  };
+
   return (
     <WorldSection entry={entry} labelledBy={titleId} className={cn(band && "overflow-x-clip")}>
       {band ? (
@@ -147,51 +211,8 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
       )}
 
       <div className="mt-tier-block border-t border-rule">
-        {beyond.map((b, i) => {
-          const noteId = `${entry.id}-note-${i + 1}`;
-          const athletics = frontier && b.kicker === "Athletics";
-          const creative = frontier && b.kicker === "Creative";
-          return (
-            <Rise
-              as="article"
-              key={b.kicker}
-              className="grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
-            >
-              <div className="lg:col-span-4">
-                <Meta fields={[b.kicker]} />
-                <h3 id={noteId} className="mt-tier-pair type-heading text-fg">
-                  {b.title}
-                </h3>
-                {athletics ? (
-                  <div className="mt-tier-group hidden max-w-[24rem] lg:block">
-                    <ShoePrints />
-                  </div>
-                ) : null}
-              </div>
-              <div className="lg:col-span-8">
-                <dl aria-labelledby={noteId} className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
-                  {b.items.map((it) => (
-                    <div key={it.head}>
-                      <dt className="type-body text-fg">{it.head}</dt>
-                      <dd className="mt-1 type-small text-fg-muted">{it.body}</dd>
-                    </div>
-                  ))}
-                </dl>
-                {/* the frontier map runs the full width of the facts' column
-                    (ART-DIRECTOR #15: a small box in the left column left
-                    the right two thirds empty) */}
-                {athletics ? <TrailMap className="mt-tier-block hidden lg:block" /> : null}
-                {creative ? (
-                  <Satchel
-                    choice={choice}
-                    className="mt-tier-block"
-                    caption={<SceneCaption k="cap.beyond.satchel" place="head" />}
-                  />
-                ) : null}
-              </div>
-            </Rise>
-          );
-        })}
+        {beyond.slice(0, 1).map((b, i) => note(b, i))}
+        <StageSplit entry={entry}>{beyond.slice(1).map((b, i) => note(b, i + 1))}</StageSplit>
       </div>
 
       {handbill && board ? (

@@ -1,0 +1,279 @@
+{
+  "proposedMediaId": "L13",
+  "sourceMediaId": "iconic-express",
+  "plate": "public/media/films/iconic-express.webp",
+  "plateJob": "4c065bde-7166-496b-a481-6c34465683ab (plus the local OpenCV Telea retouch)",
+  "pinnedInput": "uploaded retouched 2560x1440 web still, media d5d4bc0f-cce9-41d9-a20b-ab5758ac6351",
+  "job": "d3066e76-7eeb-4f1e-a110-c2acc5f3264d",
+  "model": "kling3_0 pro, 16:9, 6 s, sound off, medias = [start_image X, end_image X] (start = end); API echo mode pro, cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 10.5,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. White steam rolls from the engine's chimney and drifts back along the train; mist drifts over the loch; the water ripples. The train stays exactly in place on the viaduct and does not move forward; the carriages show no lettering, numbers or emblems. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptSource": "B3 generate step prompt parts (map \u00a73 PREFIX + MOTION + STILL + SUFFIX, B3.md 'Settings'); the job params hold the same text (not re-read here: no Higgsfield calls in the check stage)",
+  "generateLog": "docs/build/media/p3/B3.md",
+  "master": "media-src/p3/masters/iconic-express-d3066e76.mp4 (Kling original, 5194596 bytes, 145 frames, 6.042 s, 1920x1080, 24 fps, 0 audio)",
+  "tier": "S",
+  "verdict": "FAIL",
+  "reason": "Motion not delivered: the loop is a still. The steam plume, the mist and the loch are frozen; nothing the MOTION sentence asks for is visible. Measured on the master: optical flow vs frame 0, max over the loop, whole frame p99.9 0.223 px (0% of pixels > 1 px), steam 0.265 px, loch 0.279 px, train 0.177 px; the per-pixel change vs frame 0 after a sigma-2 blur peaks at 3.58/255 anywhere in the frame (p99 2.51); a x8 difference image at frames 36/72/108 shows only edge boil. The steam plume is the plate's hero motion, so this is the B1 L03 failure (a frozen fire), not a calm plate: shipping it would cost 1.00 MB (MP4) / 0.35 MB (WebM) and a decode for a picture that looks like the poster.",
+  "hardLimits": "all pass: no people/figures/faces/hands (carriages at 200% and engine/tender/cab at 260% on frames 0/72/144, full frames on 0/25/50/75/100%, x8 diff images at 36/72/108); no lettering or numbers on the carriages, tender or cab (the plate's small gold carriage-end ornaments and lining are unchanged in every frame, and they are in the retouched plate too); the train does not move (phase shift [0.024, -0.068] px, flow p99 0.156 px); 0 flashes/s whole frame and tiles, red share <= 1.2e-4; glow ptp 0.5-0.6%; 0 audio streams",
+  "checks": {
+    "master": {
+      "bytes": 5194596,
+      "frames": 145,
+      "durationS": 6.042,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "firstVsPlate": 0.9844,
+      "lastVsPlate": 0.9848,
+      "join": 0.995,
+      "joinRgb": 0.9902,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9975,
+      "consecutiveMedian": 0.9997,
+      "staticMaxMeanAbsDelta": {
+        "train x.46-.87 y.47-.63 (STILL: stays in place; informative)": 1.44,
+        "carriages x.46-.70 y.50-.57": 1.41,
+        "viaduct x.18-.46 y.40-.90": 1.43
+      },
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0.00011,
+      "lumaRangePct": 0.4,
+      "phaseShiftPx": [
+        -0.01,
+        0.01
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": true,
+        "silent": true
+      },
+      "light": [
+        {
+          "rect": [
+            0.25,
+            0.33,
+            0.85,
+            0.52
+          ],
+          "ptpPct": 0.59,
+          "reversalsPerS": 0,
+          "dominantHz": 0.17
+        }
+      ]
+    },
+    "zonesMaster": {
+      "train": {
+        "absMax": 1.492,
+        "blurAbsMax": 0.743,
+        "signedMin": -0.131,
+        "signedMax": 0.282,
+        "shiftMaxPx1920": [
+          0.024,
+          -0.068
+        ],
+        "flowP99Max": 0.156
+      },
+      "carr": {
+        "absMax": 1.474,
+        "blurAbsMax": 0.674,
+        "signedMin": -0.504,
+        "signedMax": 0.161,
+        "shiftMaxPx1920": [
+          -0.052,
+          -0.07
+        ],
+        "flowP99Max": 0.162
+      },
+      "viaduct": {
+        "absMax": 1.519,
+        "blurAbsMax": 0.615,
+        "signedMin": -0.417,
+        "signedMax": 0.026,
+        "shiftMaxPx1920": [
+          0.1,
+          -0.061
+        ],
+        "flowP99Max": 0.194
+      },
+      "steam": {
+        "absMax": 1.408,
+        "blurAbsMax": 0.831,
+        "signedMin": 0.0,
+        "signedMax": 0.701,
+        "shiftMaxPx1920": [
+          0.078,
+          -0.07
+        ],
+        "flowP99Max": 0.178
+      },
+      "loch": {
+        "absMax": 1.278,
+        "blurAbsMax": 0.925,
+        "signedMin": 0.0,
+        "signedMax": 0.9,
+        "shiftMaxPx1920": [
+          0.063,
+          -0.05
+        ],
+        "flowP99Max": 0.218
+      },
+      "hills": {
+        "absMax": 1.238,
+        "blurAbsMax": 0.813,
+        "signedMin": -0.78,
+        "signedMax": 0.0,
+        "shiftMaxPx1920": [
+          0.057,
+          -0.061
+        ],
+        "flowP99Max": 0.191
+      }
+    },
+    "seamLossless": {
+      "join": 1,
+      "joinRgb": 1,
+      "consecutive": {
+        "min": 0.9975,
+        "minAt": 1,
+        "p05": 0.9985,
+        "median": 0.9997
+      },
+      "joinMinusMedian": 0.0003,
+      "joinPercentile": 1,
+      "pass": {
+        "join": true,
+        "smooth": true
+      }
+    },
+    "encodedForTheCheck": {
+      "note": "seam --method=residual --k=12 --tier=S --crf-mp4=23 --crf-webm=30, in the scratchpad, not staged",
+      "mp4": {
+        "bytes": 1000583,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "firstVsPlate": 0.9816,
+        "lastVsPlate": 0.9835,
+        "join": 0.9943,
+        "joinRgb": 0.9898,
+        "joinPercentile": 0,
+        "consecutiveMin": 0.9978,
+        "consecutiveMedian": 0.9997,
+        "staticMaxMeanAbsDelta": {
+          "train x.46-.87 y.47-.63 (STILL: stays in place; informative)": 1.53,
+          "carriages x.46-.70 y.50-.57": 1.5,
+          "viaduct x.18-.46 y.40-.90": 1.31
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 0.00012,
+        "lumaRangePct": 0.59,
+        "phaseShiftPx": [
+          -0.013,
+          0.011
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": "codec",
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": true,
+          "silent": true
+        },
+        "light": [
+          {
+            "rect": [
+              0.25,
+              0.33,
+              0.85,
+              0.52
+            ],
+            "ptpPct": 0.6,
+            "reversalsPerS": 0,
+            "dominantHz": 0.17
+          }
+        ]
+      },
+      "webm": {
+        "bytes": 350491,
+        "frames": 144,
+        "durationS": 6,
+        "width": 1920,
+        "height": 1080,
+        "codec": "vp9",
+        "firstVsPlate": 0.9815,
+        "lastVsPlate": 0.9815,
+        "join": 1,
+        "joinRgb": 1,
+        "joinPercentile": 0.9437,
+        "consecutiveMin": 0.9988,
+        "consecutiveMedian": 1,
+        "staticMaxMeanAbsDelta": {
+          "train x.46-.87 y.47-.63 (STILL: stays in place; informative)": 1.06,
+          "carriages x.46-.70 y.50-.57": 0.97,
+          "viaduct x.18-.46 y.40-.90": 1.07
+        },
+        "flashPerS": {
+          "whole": 0,
+          "tiles": 0
+        },
+        "redShareMax": 8e-05,
+        "lumaRangePct": 0.48,
+        "phaseShiftPx": [
+          -0.012,
+          0.004
+        ],
+        "audioStreams": 0,
+        "pass": {
+          "registration": true,
+          "join": true,
+          "smooth": true,
+          "static": false,
+          "flash": true,
+          "light": true,
+          "silent": true
+        },
+        "light": [
+          {
+            "rect": [
+              0.25,
+              0.33,
+              0.85,
+              0.52
+            ],
+            "ptpPct": 0.52,
+            "reversalsPerS": 0,
+            "dominantHz": 0.17
+          }
+        ]
+      }
+    },
+    "trainZoneNote": "the train rects read 1.3-1.5 (MP4) / 0.97-1.07 (WebM) /255: texture boil on the detailed carriages and viaduct (blurred |dY| <= 0.74, flow <= 0.16 px), not movement. A retake that passes on motion may need the L10-style 0-credit hold-out on the carriage bodies below the steam line to meet <= 1/255."
+  },
+  "retake": {
+    "model": "kling3_0 pro 16:9 6 s, sound off, start_image = end_image = the uploaded retouched still (media d5d4bc0f-cce9-41d9-a20b-ab5758ac6351, reusable) (10.5 credits); decline the IN THE DARK preset intercept (24bae836) if it appears",
+    "why": "Same failure mode as B1 L03/L04: \"extremely restrained\" + \"every moving element completes exactly one slow, even cycle\" + a pinned end frame let Kling satisfy the loop by freezing the steam. Name the steam as the one clearly visible, continuous motion.",
+    "prompt": "Animate the supplied image with gentle but clearly visible, continuous motion in the steam, while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Thick white steam keeps pouring from the engine's chimney for the whole clip, rolling and billowing upward and drifting slowly back over the train in soft, visible puffs that thin out as they trail away; low mist drifts slowly across the far hillsides; the loch's surface shimmers with faint ripples. The locomotive and carriages stay exactly in place on the viaduct and do not move forward; the viaduct, hills and sky stay still; the carriages, tender and cab stay plain with no lettering, numbers or emblems. One uninterrupted shot; the steam keeps moving all the way through, and the first and last frames match the supplied image. No cuts, flashes, lightning, bursts, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+    "accept": "steam flow p99.9 >= ~3-4 px across the plume on most frames; engine mark (.86, .58) and the carriages tracked <= 2 px (train in place); carriages/tender/cab plain at 200% on 0/25/50/75/100%; no flashes; seam residual K=12 (K=24 if the plume makes the raw join < 0.98); train bodies <= 1/255 (hold-out below the steam line if needed)"
+  },
+  "contingencyB9": {
+    "batch": "B9",
+    "decision": "not retaken: the one rank-7 contingency went to L22 films-idiots (same host rank). Reasons: the HP screen already has a living media ALT (L23 films-hp, cinemagraph) while the 3 Idiots screen had none; this file's retake recipe (Kling start = end, \"gentle but clearly visible\" wording) returned near-stills on all three B8 jobs (L03r, L04r, L07). No second retake exists for L13 under the plan.",
+    "finalVerdict": "FAIL (first take, not retaken). The code ALT (depth + camera) is the HP films screen DEFAULT; L23 (films-hp-loop) is its living media ALT. Flag for Aryan."
+  },
+  "finalVerdict": "FAIL (first take, not retaken). The code ALT (depth + camera) is the HP films screen DEFAULT; L23 (films-hp-loop) is its living media ALT. Flag for Aryan."
+}

@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T13:03:03.919Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "spotlight"
+    ]
+  },
+  "results": {
+    "spotlight": {
+      "pass": false,
+      "failed": [
+        "pause"
+      ],
+      "tests": {
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 502
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 2
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 622
+        },
+        "pause": {
+          "pass": false,
+          "answer": "skip",
+          "ms": 177
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 1,
+            "free": 1
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 18803,
+          "y": 9024,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 20338,
+          "y": 10176,
+          "ev": "free",
+          "id": "B19"
+        }
+      ],
+      "ms": 60070,
+      "console": []
+    }
+  }
+}

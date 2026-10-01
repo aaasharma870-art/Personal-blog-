@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { animate, motion, useMotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { readSession } from "@/lib/session";
 import { dur, ease, easeClip, easeDraw, springSettle } from "@/lib/motion";
@@ -17,12 +17,28 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
    always lives in HTML beside it. Motion: server HTML = the final frame; a
    mark hides only while offscreen (useEnterOnce) and draws once; reduced
    motion / Pause = static.
+   RASTER (P3-2, spec §12.1 #8): the chalk filter never sits on a moving
+   element. Whatever moves (the settling board, the lifting quadcopter)
+   moves a PROMOTED wrapper, so the filtered chalk inside is drawn once into
+   its layer and the layer moves; the promotion lasts only while it moves.
    ========================================================================== */
 
-/** The shared chalk roughness filter (one per SVG; pass a unique id). */
-export function ChalkFilter({ id }: { id: string }) {
+/** The shared chalk roughness filter (one per SVG; pass a unique id).
+ *  `region` (user units) fixes the filter region instead of the default
+ *  bbox-relative one — for a group whose bbox grows as it draws (a few
+ *  small marks would otherwise clip their own stroke caps). */
+export function ChalkFilter({
+  id,
+  region,
+}: {
+  id: string;
+  region?: { x: number; y: number; width: number; height: number };
+}) {
+  const box = region
+    ? { filterUnits: "userSpaceOnUse" as const, ...region }
+    : { x: "-5%", y: "-20%", width: "110%", height: "140%" };
   return (
-    <filter id={id} x="-5%" y="-20%" width="110%" height="140%">
+    <filter id={id} {...box}>
       <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n" />
       <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" />
     </filter>
@@ -42,16 +58,17 @@ export function useSvgId(prefix: string): string {
  * soft pats", hand on heart) with the frame's scale .96 → 1. Never on a
  * control (the frame has none of its own focus), never on an error.
  * `entrance="wipe"` is the ALT: a felt duster wipes the frame on from the
- * left (clip, easeClip / dur.hero) instead of settling.
+ * left (easeClip / dur.hero) instead of settling — the frame (clipped to
+ * its box) slides in from the left while its content counter-slides, so
+ * the edge moves by two transforms, never an animated clip-path.
  * Server / hydration / in view at mount / motion off: the final frame.
  * The IntersectionObserver watches an UNCLIPPED, untransformed wrapper; the
  * clip / transform live on the inner frame (ART-DIRECTOR #1: an observer on
  * the element carrying a zero-area clip-path may never report "entered").
- * `className` styles the inner frame.
+ * `className` styles the inner frame. It is promoted (will-change) only
+ * while armed or moving: the chalk inside is drawn once, then the layer
+ * moves (spec §12.1 #8).
  */
-const CLIP_OPEN = "inset(0% 0% 0% 0%)";
-const CLIP_WIPED = "inset(0% 100% 0% 0%)";
-
 export function SettleFrame({
   children,
   className,
@@ -71,18 +88,23 @@ export function SettleFrame({
   const y = useMotionValue(0);
   const scale = useMotionValue(1);
   const opacity = useMotionValue(1);
-  const clipPath = useMotionValue(CLIP_OPEN);
+  /** wipe: 1 = wiped off (the frame a full width left of its box) → 0. */
+  const wiped = useMotionValue(0);
+  const frameX = useTransform(wiped, (w) => `${(-w * 100).toFixed(3)}%`);
+  const contentX = useTransform(wiped, (w) => `${(w * 100).toFixed(3)}%`);
+  const [done, setDone] = useState(false);
+  const wipe = entrance === "wipe";
 
   useLayoutEffect(() => {
     if (phase === "static") {
       y.jump(0);
       scale.jump(1);
       opacity.jump(1);
-      clipPath.jump(CLIP_OPEN);
+      wiped.jump(0);
       return;
     }
     if (phase === "armed") {
-      if (entrance === "wipe") clipPath.jump(CLIP_WIPED);
+      if (wipe) wiped.jump(1);
       else {
         y.jump(8);
         scale.jump(0.96);
@@ -91,32 +113,58 @@ export function SettleFrame({
       return;
     }
     // entered
-    if (entrance === "wipe") {
-      const a = animate(clipPath, CLIP_OPEN, { duration: dur.hero, ease: easeClip });
-      return () => a.stop();
+    let live = true;
+    const settled = () => {
+      if (live) setDone(true);
+    };
+    if (wipe) {
+      const a = animate(wiped, 0, { duration: dur.hero, ease: easeClip });
+      a.finished.then(settled);
+      return () => {
+        live = false;
+        a.stop();
+      };
     }
     const fade = animate(opacity, 1, { duration: dur.base, ease });
     const grow = animate(scale, 1, { type: "spring", ...springSettle });
     const pat1 = animate(y, 0, { type: "spring", ...springSettle });
     let pat2: { stop: () => void } | null = null;
+    let t = 0;
     // the second soft pat: a small downward kick that settles again
-    const t = window.setTimeout(() => {
-      pat2 = animate(y, 0, { type: "spring", ...springSettle, velocity: 90 });
-    }, 180);
+    const second = new Promise<unknown>((resolve) => {
+      t = window.setTimeout(() => {
+        if (!live) return;
+        const kick = animate(y, 0, { type: "spring", ...springSettle, velocity: 90 });
+        pat2 = kick;
+        kick.finished.then(resolve);
+      }, 180);
+    });
+    Promise.all([fade.finished, grow.finished, pat1.finished, second]).then(settled);
     return () => {
+      live = false;
       window.clearTimeout(t);
       fade.stop();
       grow.stop();
       pat1.stop();
       pat2?.stop();
     };
-  }, [phase, entrance, y, scale, opacity, clipPath]);
+  }, [phase, wipe, y, scale, opacity, wiped]);
 
+  const moving = phase === "armed" || (phase === "entered" && !done);
   return (
     <div ref={ref} data-entrance={entrance}>
-      <motion.div className={className} style={entrance === "wipe" ? { clipPath } : { y, scale, opacity }}>
-        {children}
-      </motion.div>
+      {wipe ? (
+        // the old inset(0) clip at rest, as an overflow clip on the frame
+        <motion.div className={cn(className, "overflow-clip", moving && "will-change-transform")} style={{ x: frameX }}>
+          <motion.div className={cn(moving && "will-change-transform")} style={{ x: contentX }}>
+            {children}
+          </motion.div>
+        </motion.div>
+      ) : (
+        <motion.div className={cn(className, moving && "will-change-[transform,opacity]")} style={{ y, scale, opacity }}>
+          {children}
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -178,9 +226,12 @@ export function ChalkLoop({ on, children, className }: { on: boolean; children: 
  */
 export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; className?: string }) {
   const reduced = useReducedMotion();
-  // the <svg> itself moves (its CSS px are screen px: an 8 px lift at any
-  // rendered size)
-  const ref = useRef<SVGSVGElement>(null);
+  // a WRAPPER moves (its CSS px are screen px: an 8 px lift at any rendered
+  // size), never the filtered <svg>: promoted while it lifts or settles, the
+  // chalk is drawn once into its layer (spec §12.1 #8)
+  const ref = useRef<HTMLSpanElement>(null);
+  /** Lifted (or on its way up)? A reset at rest moves nothing. */
+  const up = useRef(false);
   const fid = useSvgId("chalk-quad");
   useEffect(() => {
     const el = ref.current;
@@ -188,9 +239,19 @@ export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; class
     // "Turn off easter eggs" (the palette, session) stops the lift too
     if (reduced || (liftKey > 0 && readSession("eggs-off") === "1")) {
       el.style.transform = "";
+      el.style.willChange = "";
+      up.current = false;
       return;
     }
-    const a = animate(el, { y: liftKey > 0 ? -8 : 0 }, { duration: liftKey > 0 ? 0.36 : dur.base, ease });
+    const lift = liftKey > 0;
+    if (!lift && !up.current) return;
+    up.current = lift;
+    // promoted for the move only (React never sets this span's style)
+    el.style.willChange = "transform";
+    const a = animate(el, { y: lift ? -8 : 0 }, { duration: lift ? 0.36 : dur.base, ease });
+    a.finished.then(() => {
+      if (ref.current === el) el.style.willChange = "";
+    });
     return () => a.stop();
   }, [liftKey, reduced]);
   // rotors: centre points; arms cross at the body
@@ -201,37 +262,38 @@ export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; class
     [106, 50],
   ];
   return (
-    <svg
-      ref={ref}
-      viewBox="0 0 120 84"
-      aria-hidden="true"
-      focusable="false"
-      className={cn("h-auto overflow-visible", className)}
-      data-egg="quadcopter"
-    >
-      <defs>
-        <ChalkFilter id={fid} />
-      </defs>
-      <g filter={`url(#${fid})`} className="stroke-(--w-chalk)" fill="none" strokeWidth={2} strokeLinecap="round">
-        {/* arms */}
-        <path d="M22 30 L60 42 L98 30 M14 52 L60 42 L106 52" />
-        {/* motors + rotor discs (ellipses read as spinning blades) */}
-        {rotors.map(([x, y]) => (
-          <g key={`${x}-${y}`}>
-            <path d={`M${x} ${y + 2} L${x} ${y + 7}`} />
-            <ellipse cx={x} cy={y} rx={15} ry={3.4} strokeOpacity={0.85} />
-          </g>
-        ))}
-        {/* the body: a board with a strapped battery on top */}
-        <rect x={46} y={36} width={28} height={12} rx={2} />
-        <path d="M49 36 L49 30 L71 30 L71 36 M56 30 L56 36 M64 30 L64 36" strokeOpacity={0.9} />
-        {/* the camera stub and landing legs */}
-        <rect x={56} y={50} width={8} height={6} rx={1} />
-        <path d="M48 48 L44 60 M72 48 L76 60 M40 60 L48 60 M72 60 L80 60" strokeOpacity={0.8} />
-        {/* a loose wire, the jugaad tell */}
-        <path d="M74 40 C82 44 80 50 86 50" strokeOpacity={0.6} strokeWidth={1.4} />
-      </g>
-    </svg>
+    <span ref={ref} className={cn("inline-block", className)}>
+      <svg
+        viewBox="0 0 120 84"
+        aria-hidden="true"
+        focusable="false"
+        className="block h-auto w-full overflow-visible"
+        data-egg="quadcopter"
+      >
+        <defs>
+          <ChalkFilter id={fid} />
+        </defs>
+        <g filter={`url(#${fid})`} className="stroke-(--w-chalk)" fill="none" strokeWidth={2} strokeLinecap="round">
+          {/* arms */}
+          <path d="M22 30 L60 42 L98 30 M14 52 L60 42 L106 52" />
+          {/* motors + rotor discs (ellipses read as spinning blades) */}
+          {rotors.map(([x, y]) => (
+            <g key={`${x}-${y}`}>
+              <path d={`M${x} ${y + 2} L${x} ${y + 7}`} />
+              <ellipse cx={x} cy={y} rx={15} ry={3.4} strokeOpacity={0.85} />
+            </g>
+          ))}
+          {/* the body: a board with a strapped battery on top */}
+          <rect x={46} y={36} width={28} height={12} rx={2} />
+          <path d="M49 36 L49 30 L71 30 L71 36 M56 30 L56 36 M64 30 L64 36" strokeOpacity={0.9} />
+          {/* the camera stub and landing legs */}
+          <rect x={56} y={50} width={8} height={6} rx={1} />
+          <path d="M48 48 L44 60 M72 48 L76 60 M40 60 L48 60 M72 60 L80 60" strokeOpacity={0.8} />
+          {/* a loose wire, the jugaad tell */}
+          <path d="M74 40 C82 44 80 50 86 50" strokeOpacity={0.6} strokeWidth={1.4} />
+        </g>
+      </svg>
+    </span>
   );
 }
 

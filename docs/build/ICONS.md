@@ -211,7 +211,7 @@ All "Lands on" entries below assume Option A.
 | **IC-HP-12** | **The Golden Snitch** | Flat SVG (a gold body plus two blurred wing strokes); flight on random béziers, transform only | EGG in `credits`: once per session at 60% in view it darts ≤ 4 s, then rests beside "↑ Back to the opening". It is a real `<button aria-label="Catch the snitch">`. Catching it adds the row `SEEKER — you` | EGG | RM or Pause: it only rests, still catchable. Never follows the cursor or covers text. No score |
 | **IC-HP-13** | **The Patronus stag** | Canvas particles (≤ 400) sampling our own stag outline, silver-blue `#b9d9f2`, about 70% light and 30% form. It forms from ribbons (HP-07), crosses the dark and dissolves into the flame (≤ 3 s) | EGG: palette "Expecto patronum" while `contact` is in view | EGG | Only when no other canvas is alive. Disabled under RM (the palette says why). Principles ribbons stay abstract |
 | **IC-HP-14** | **A wax seal**: our own AS monogram, not the crest | SVG disc with an irregular rim, `--hp-oxblood` | `writing`: a 14 px seal beside each static `DRAFT` chip, so drafts read as "sealed letters" | TEXTURE | The DRAFT word stays; the seal is aria-hidden. ≤ 5 seals. No acceptance-letter parody |
-| **IC-HP-15** | **Time-Turner**: an hourglass in nested rings | SVG; it turns 3 times (600 ms) on activation, then native scroll to `#top` | `credits`: the icon of "↑ Back to the opening" | TEXTURE | The link text stays literal; the icon is aria-hidden; no spin under RM |
+| **IC-HP-15** | **Time-Turner**: an hourglass in nested rings | SVG; it turns 3 times (600 ms) on activation, then native scroll to `#top` | `credits`: the icon of "↑ Back to the opening" | TEXTURE | The link text stays literal; the icon is aria-hidden; no spin under RM · **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the jump is `scrollToTarget("#top")` (Lenis on desktop, native elsewhere; PHASE3-SPEC §3.1) |
 | **IC-HP-16** | **The enchanted ceiling**: a vast dark hall whose ceiling dissolves into a starry sky, candles hovering | MV-07 rev (Higgsfield): an empty hall, candles densest along the Line's curve, the architecture barely visible at the edges | card →HP (the swap at p > .8), F-HP films screen | HERO | No people, no house banners. The Line must still pass the overlay diff against `LINE_D`. Our composition, never the film's wide shot |
 | **IC-HP-17** | **Owl post**: one owl crossing the moon | A tiny silhouette in IN-02 at 1–2 s, or an SVG in the code flight | `intro` (optional) | EGG | One bird, far away. Drop it if the video model deforms it (animals are a known failure) |
 
@@ -393,6 +393,8 @@ All "Lands on" entries below assume Option A.
 ---
 
 ## 9. Fonts: allowed faces and how they ship
+
+> **Phase 3 override (W1, 2026-10-01; PHASE3-SPEC Appendix A):** the name is set in Pirata One (`type-name`, preloaded at ≥ 64rem) and each world has head / body / lead faces at ≥ 64rem only; research data stays Geist / Geist Mono (`[data-research]`); budgets, loading and validator rules in **FONTS.md §P3** (PHASE3-SPEC §5).
 **Scope:** act titles (card lower bars), loaders (route-card lettering only; never text inside loader SVGs), eggs, the Map, the Journey cartouche, the WANTED header and journal headings.
 
 **Never used for:** the name, body, Meta, labels, verdicts, metrics, content text or any research data. Those stay Geist / Geist Mono / Newsreader.

@@ -1,9 +1,10 @@
 import { Play } from "lucide-react";
 import { captionOf } from "@/lib/sections";
 import { FilmQuote } from "@/components/site/film-quote";
-import { SceneCaption } from "@/components/primitives/scene-caption";
+import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
+import { beatAttrs } from "@/lib/beats";
 import { BROOM_SVG } from "./broom";
-import type { IntroModel } from "./intro-model";
+import type { IntroModel, IntroTitles } from "./intro-model";
 
 /* ============================================================================
    PROLOGUE OVERLAY (SPEC v2 §5; bars/intro.BAR.md) — server-rendered markup,
@@ -48,7 +49,38 @@ import type { IntroModel } from "./intro-model";
                timeline scaled to its length. aria-hidden (it narrates a
                visual). Hidden by CSS until the controller animates it, so
                no JS / reduced motion / Pause / ?skip / Skip never show it.
+   - OPENING TITLES (P3-3, PHASE3-SPEC §4.3): inside #intro-caps (so they
+     outlive the overlay), in the T1 caption slot bottom-right, ≥ 640 ×
+     ≥ 32rem tall only. Both sides of intro.titles are in the markup and the
+     controller animates one (WAAPI opacity + transform; never React, never
+     an attribute): DEFAULT #intro-titles, three cards on one spot in
+     sequence; ALT #intro-roll, the same three lines as a short credit roll
+     through a feathered window. Existing strings only (`titles.1..3`); the
+     act title is the registered lettering through <Lettered>. aria-hidden
+     like the captions. Played path only: no JS / RM / Pause / ?skip /
+     seen / a dismissal never show them.
+   - FAST LANE (PHASE3-SPEC §11.3): "Skip to the research" in the skip row,
+     DESKTOP_WIDE only (app/intro.css). The controller treats it as
+     dismiss() then the jump (IntroBridge: scrollToTarget). A real link to
+     the research, so it works before the controller is up (the head
+     script dismisses; the browser follows the hash).
    ========================================================================== */
+
+/** One title string at a time, in the slot's Meta caps. */
+function TitleLines({ titles, prefix }: { titles: IntroTitles; prefix: string }) {
+  const t3 = titles.three;
+  return (
+    <>
+      <p className={`${prefix} type-meta`}>{titles.one}</p>
+      <p className={`${prefix} type-meta`}>{titles.two}</p>
+      <p className={`${prefix} ${prefix}--act type-meta`}>
+        {t3.before}
+        <Lettered world={t3.world} text={t3.act} className="intro-title__act" />
+        {t3.after}
+      </p>
+    </>
+  );
+}
 
 export function IntroOverlay({ model }: { model: IntroModel }) {
   const json = JSON.stringify(model.config).replace(/</g, "\\u003c");
@@ -63,10 +95,14 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
       aria-modal="true"
       aria-labelledby="intro-title"
       aria-describedby="intro-desc"
+      // B00: the (living) play screen (PHASE3-PLAN §8)
+      {...beatAttrs("B00", { weight: 2 })}
     >
-      {/* Controller-owned: the canvas and the video are appended here. */}
+      {/* Controller-owned: the canvas and the video are appended here.
+          B01: the flight → hold → reveal (the titles follow in #intro-caps) */}
       <div
         id="intro-stage"
+        {...beatAttrs("B01", { weight: 3 })}
         aria-hidden="true"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: BROOM_SVG }}
@@ -123,6 +159,16 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
       </div>
 
       <div className="intro-top">
+        {model.fastLane ? (
+          <a
+            id="intro-fastlane"
+            href={model.fastLane.href}
+            data-fast-lane=""
+            className="intro-skip intro-fastlane type-meta"
+          >
+            {model.fastLane.label}
+          </a>
+        ) : null}
         <button type="button" id="intro-skip" className="intro-skip type-meta">
           {model.skip}
         </button>
@@ -194,6 +240,19 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
         >
           <SceneCaption k="cap.intro.flight.pc" place="under" className="mt-0 sm:mt-0" />
         </div>
+        {/* P3-3 opening titles (both intro.titles sides; app/intro.css) */}
+        {model.titles ? (
+          <>
+            <div id="intro-titles" data-world={model.titles.three.world} data-tone="deep">
+              <TitleLines titles={model.titles} prefix="intro-title" />
+            </div>
+            <div id="intro-roll" data-world={model.titles.three.world} data-tone="deep">
+              <div className="intro-roll__col">
+                <TitleLines titles={model.titles} prefix="intro-roll__line" />
+              </div>
+            </div>
+          </>
+        ) : null}
       </div>
     ) : null}
     </>

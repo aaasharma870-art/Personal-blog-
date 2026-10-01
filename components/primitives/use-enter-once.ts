@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import type { RefObject } from "react";
-import { useReducedMotion } from "@/lib/flags";
+import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import { viewportOnce } from "@/lib/motion";
+import { spotlight } from "@/lib/spotlight";
+import type { BeatWeight } from "@/lib/beats";
 
 /**
  * useEnterOnce — the R1 "enter-once" driver shared by MaskReveal and the
@@ -29,6 +31,14 @@ import { viewportOnce } from "@/lib/motion";
  * clip-path, so it may never report "entered" and the element stays shut
  * (ART-DIRECTOR #1). Observe an unclipped wrapper; clip an inner element
  * (film-frame.tsx, chalk.tsx SettleFrame).
+ *
+ * `star` (PHASE3-SPEC §3.8, a time star of the beat map): on DESKTOP_FINE an
+ * armed element asks the spotlight before it enters. "play" → "entered";
+ * "skip" (another star owns the screen for over 1.5 s) → "static", i.e. the
+ * end state with no animation. Elsewhere (phones, tablets) it enters as
+ * before, without asking; motion off stays "static". The host should also
+ * carry `beatAttrs(star.id, { weight })` (lib/beats.ts) so the spotlight can
+ * drop a request whose host has left the viewport.
  */
 export type EnterPhase = "static" | "armed" | "entered";
 
@@ -37,17 +47,21 @@ const THRESHOLDS = Array.from({ length: 21 }, (_, i) => i / 20);
 
 export function useEnterOnce(
   ref: RefObject<Element | null>,
-  { amount = viewportOnce.amount }: { amount?: number } = {},
+  { amount = viewportOnce.amount, star }: { amount?: number; star?: { id: string; weight: BeatWeight } } = {},
 ): EnterPhase {
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<EnterPhase>("static");
   const [done, setDone] = useState(false);
+  const starId = star?.id;
+  const starWeight = star?.weight ?? 1;
 
   useEffect(() => {
     if (reduced || done) return;
     const el = ref.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
     let first = true;
+    let asking = false;
+    let cancelled = false;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry) return;
@@ -71,16 +85,32 @@ export function useEnterOnce(
           entry.intersectionRatio >= amount ||
           entry.intersectionRect.height >= viewportH * amount;
         if (entry.isIntersecting && enough) {
+          io.disconnect();
+          if (starId && window.matchMedia(DESKTOP_FINE).matches) {
+            // one star at a time: wait for the spotlight (≤ 1.5 s), or skip
+            asking = true;
+            void spotlight.request(starId, { weight: starWeight }).then((answer) => {
+              asking = false;
+              if (cancelled) return;
+              setPhase(answer === "play" ? "entered" : "static");
+              setDone(true);
+            });
+            return;
+          }
           setPhase("entered");
           setDone(true);
-          io.disconnect();
         }
       },
       { threshold: THRESHOLDS.includes(amount) ? THRESHOLDS : [...THRESHOLDS, amount] },
     );
     io.observe(el);
-    return () => io.disconnect();
-  }, [ref, amount, reduced, done]);
+    return () => {
+      cancelled = true;
+      io.disconnect();
+      // torn down while still waiting: withdraw (a granted hold runs out alone)
+      if (asking && starId) spotlight.release(starId);
+    };
+  }, [ref, amount, reduced, done, starId, starWeight]);
 
   if (reduced) return "static";
   return phase;

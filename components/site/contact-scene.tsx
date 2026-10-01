@@ -395,6 +395,9 @@ function Monogram({ phase, variant, initials }: { phase: EnterPhase; variant: Va
       className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 sm:gap-3"
       data-motif="bracket-monogram"
       data-resolved={resolved ? "" : undefined}
+      data-beat="B56"
+      data-beat-star=""
+      data-beat-weight="2"
     >
       {bracket("l")}
       <span className={letter}>{first}</span>

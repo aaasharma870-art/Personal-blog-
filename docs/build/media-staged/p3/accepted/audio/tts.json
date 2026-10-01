@@ -1,0 +1,317 @@
+{
+ "batch": "B9 (docs/build/media/p3/B9.md section 3; SOUNDS draft in docs/build/media/p3/tts.md)",
+ "model": "qwen_audio_tts (Qwen Audio 3.0 TTS Flash), preset voice \"Nora\" (d081b915-6623-4a44-bacf-80d0f1c90a03), instruction \"a hushed, breathy whisper\", language en, ogg_opus 48 kHz mono, seeds 11 / 22",
+ "chain": "decode Ogg Opus to PCM (sample-accurate: the Ogg timestamps have gaps, so ffmpeg pts-based timings overstate the length; the API durations match the decoded sample counts) -> atrim [speech start - 30 ms, speech end + 80 ms] (speech = 30 ms frames within 40 dB of the loudest) -> afade in 10 ms / out 40 ms -> 2-pass loudnorm I=-22 LUFS, TP=-6 dBTP, LRA=11, linear -> libopus 48 kbps VBR (application audio, 20 ms frames) in WebM + libmp3lame 96 kbps CBR mono 48 kHz, metadata stripped",
+ "lines": {
+  "tts-lumos": {
+   "text": "Lumos",
+   "take": "lumos-t2-afe8f6c2",
+   "job": "afe8f6c2-a862-41ef-ab20-66a8a0b605ad",
+   "takesCompared": {
+    "lumos-t1-5e1a4d56": {
+     "job": "5e1a4d56-ffcc-49b9-864d-e6b835329015",
+     "durS": 0.88,
+     "speechStartS": 0.02,
+     "speechEndS": 0.69,
+     "peakDbfs": -4.940000057220459,
+     "rmsDbfs": -16.489999771118164,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.66,
+     "meanPeriodicity": 0.573
+    },
+    "lumos-t2-afe8f6c2": {
+     "job": "afe8f6c2-a862-41ef-ab20-66a8a0b605ad",
+     "durS": 1.06,
+     "speechStartS": 0.02,
+     "speechEndS": 0.84,
+     "peakDbfs": -4.860000133514404,
+     "rmsDbfs": -17.15999984741211,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.59,
+     "meanPeriodicity": 0.552
+    }
+   },
+   "trimS": [
+    0.0,
+    0.92
+   ],
+   "lengthS": 0.92,
+   "loudnormPass1": {
+    "input_i": "-16.57",
+    "input_tp": "-4.85",
+    "input_lra": "0.00",
+    "input_thresh": "-27.32",
+    "target_offset": "0.03"
+   },
+   "loudnormPass2": {
+    "output_i": "-22.03",
+    "output_tp": "-10.28",
+    "normalization_type": "linear"
+   },
+   "files": {
+    "webm": {
+     "bytes": 6269,
+     "duration": "00:00:00.93",
+     "samplePeakDbfs": -10.317581,
+     "integratedLufs": -22.0,
+     "truePeakDbtp": -10.3
+    },
+    "mp3": {
+     "bytes": 11808,
+     "duration": "00:00:00.96",
+     "samplePeakDbfs": -10.732796,
+     "integratedLufs": -22.4,
+     "truePeakDbtp": -10.7
+    }
+   }
+  },
+  "tts-nox": {
+   "text": "Nox",
+   "take": "nox-t1-a9a83966",
+   "job": "a9a83966-1a20-4f6d-8e8b-77f56987f930",
+   "takesCompared": {
+    "nox-t1-a9a83966": {
+     "job": "a9a83966-1a20-4f6d-8e8b-77f56987f930",
+     "durS": 0.821,
+     "speechStartS": 0.06,
+     "speechEndS": 0.62,
+     "peakDbfs": -2.440000057220459,
+     "rmsDbfs": -18.84000015258789,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.38,
+     "meanPeriodicity": 0.394
+    },
+    "nox-t2-fdee498a": {
+     "job": "fdee498a-f211-47b1-996e-6d77d1643fa0",
+     "durS": 0.821,
+     "speechStartS": 0.07,
+     "speechEndS": 0.6,
+     "peakDbfs": -2.5,
+     "rmsDbfs": -18.829999923706055,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.39,
+     "meanPeriodicity": 0.398
+    }
+   },
+   "trimS": [
+    0.03,
+    0.7
+   ],
+   "lengthS": 0.67,
+   "loudnormPass1": {
+    "input_i": "-18.08",
+    "input_tp": "-2.44",
+    "input_lra": "0.00",
+    "input_thresh": "-28.08",
+    "target_offset": "0.02"
+   },
+   "loudnormPass2": {
+    "output_i": "-22.02",
+    "output_tp": "-6.35",
+    "normalization_type": "linear"
+   },
+   "files": {
+    "webm": {
+     "bytes": 4475,
+     "duration": "00:00:00.68",
+     "samplePeakDbfs": -6.536001,
+     "integratedLufs": -22.2,
+     "truePeakDbtp": -6.5
+    },
+    "mp3": {
+     "bytes": 8640,
+     "duration": "00:00:00.70",
+     "samplePeakDbfs": -6.791878,
+     "integratedLufs": -22.4,
+     "truePeakDbtp": -6.8
+    }
+   }
+  },
+  "tts-solemn": {
+   "text": "I solemnly swear that I am up to no good",
+   "take": "swear-t2-39bd753f",
+   "job": "39bd753f-d341-40ff-a32c-e61cd40ff851",
+   "takesCompared": {
+    "swear-t1-ddb4209f": {
+     "job": "ddb4209f-a52e-4021-b8fc-b31f0c2517e0",
+     "durS": 4.42,
+     "speechStartS": 0.26,
+     "speechEndS": 4.07,
+     "peakDbfs": -0.3100000023841858,
+     "rmsDbfs": -15.5,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.69,
+     "meanPeriodicity": 0.591
+    },
+    "swear-t2-39bd753f": {
+     "job": "39bd753f-d341-40ff-a32c-e61cd40ff851",
+     "durS": 3.821,
+     "speechStartS": 0.26,
+     "speechEndS": 3.53,
+     "peakDbfs": -0.03999999910593033,
+     "rmsDbfs": -15.859999656677246,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.65,
+     "meanPeriodicity": 0.576
+    }
+   },
+   "trimS": [
+    0.23,
+    3.61
+   ],
+   "lengthS": 3.38,
+   "loudnormPass1": {
+    "input_i": "-15.86",
+    "input_tp": "-0.02",
+    "input_lra": "0.40",
+    "input_thresh": "-25.86",
+    "target_offset": "0.14"
+   },
+   "loudnormPass2": {
+    "output_i": "-21.94",
+    "output_tp": "-6.18",
+    "normalization_type": "linear"
+   },
+   "files": {
+    "webm": {
+     "bytes": 21494,
+     "duration": "00:00:03.39",
+     "samplePeakDbfs": -6.434555,
+     "integratedLufs": -22.0,
+     "truePeakDbtp": -6.4
+    },
+    "mp3": {
+     "bytes": 41184,
+     "duration": "00:00:03.41",
+     "samplePeakDbfs": -6.609698,
+     "integratedLufs": -22.4,
+     "truePeakDbtp": -6.6
+    }
+   }
+  },
+  "tts-mischief": {
+   "text": "Mischief managed",
+   "take": "mischief-t1-0b0c9df0",
+   "job": "0b0c9df0-961b-4021-a53f-32bcd0526638",
+   "takesCompared": {
+    "mischief-t1-0b0c9df0": {
+     "job": "0b0c9df0-961b-4021-a53f-32bcd0526638",
+     "durS": 2.14,
+     "speechStartS": 0.28,
+     "speechEndS": 1.8,
+     "peakDbfs": -3.069999933242798,
+     "rmsDbfs": -16.979999542236328,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.53,
+     "meanPeriodicity": 0.52
+    },
+    "mischief-t2-36f75d27": {
+     "job": "36f75d27-6828-4f0e-a3fd-d02441a8190e",
+     "durS": 2.14,
+     "speechStartS": 0.28,
+     "speechEndS": 1.8,
+     "peakDbfs": -3.069999933242798,
+     "rmsDbfs": -16.979999542236328,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.53,
+     "meanPeriodicity": 0.52
+    }
+   },
+   "trimS": [
+    0.25,
+    1.88
+   ],
+   "lengthS": 1.63,
+   "loudnormPass1": {
+    "input_i": "-16.12",
+    "input_tp": "-3.07",
+    "input_lra": "0.00",
+    "input_thresh": "-26.44",
+    "target_offset": "-0.00"
+   },
+   "loudnormPass2": {
+    "output_i": "-22.00",
+    "output_tp": "-8.95",
+    "normalization_type": "linear"
+   },
+   "files": {
+    "webm": {
+     "bytes": 10741,
+     "duration": "00:00:01.64",
+     "samplePeakDbfs": -8.97212,
+     "integratedLufs": -22.0,
+     "truePeakDbtp": -9.0
+    },
+    "mp3": {
+     "bytes": 20160,
+     "duration": "00:00:01.66",
+     "samplePeakDbfs": -9.388398,
+     "integratedLufs": -22.4,
+     "truePeakDbtp": -9.4
+    }
+   }
+  },
+  "tts-parley": {
+   "text": "Parley",
+   "take": "parley-t1-becf8e10",
+   "job": "becf8e10-a8cf-4d4f-82f7-6280da4a059e",
+   "takesCompared": {
+    "parley-t1-becf8e10": {
+     "job": "becf8e10-a8cf-4d4f-82f7-6280da4a059e",
+     "durS": 0.64,
+     "speechStartS": 0.02,
+     "speechEndS": 0.49,
+     "peakDbfs": -0.3199999928474426,
+     "rmsDbfs": -18.290000915527344,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.53,
+     "meanPeriodicity": 0.504
+    },
+    "parley-t2-92d16a74": {
+     "job": "92d16a74-0d1d-453c-8355-5d75944527a2",
+     "durS": 0.64,
+     "speechStartS": 0.02,
+     "speechEndS": 0.49,
+     "peakDbfs": -0.3199999928474426,
+     "rmsDbfs": -18.290000915527344,
+     "clipped(|x|>=0.999)": 0,
+     "voicedShare(ac>0.5)": 0.53,
+     "meanPeriodicity": 0.504
+    }
+   },
+   "trimS": [
+    0.0,
+    0.57
+   ],
+   "lengthS": 0.57,
+   "loudnormPass1": {
+    "input_i": "-16.80",
+    "input_tp": "-0.32",
+    "input_lra": "0.00",
+    "input_thresh": "-26.80",
+    "target_offset": "0.50"
+   },
+   "loudnormPass2": {
+    "output_i": "-22.50",
+    "output_tp": "-6.00",
+    "normalization_type": "linear"
+   },
+   "files": {
+    "webm": {
+     "bytes": 3967,
+     "duration": "00:00:00.58",
+     "samplePeakDbfs": -6.274795,
+     "integratedLufs": -22.6,
+     "truePeakDbtp": -6.3
+    },
+    "mp3": {
+     "bytes": 7488,
+     "duration": "00:00:00.60",
+     "samplePeakDbfs": -6.43148,
+     "integratedLufs": -22.9,
+     "truePeakDbtp": -6.4
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T13:12:22.320Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "loaf"
+    ]
+  },
+  "results": {
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 9,
+      "over": 4,
+      "worstDur": 810,
+      "worstWork": 147,
+      "loafs": [
+        {
+          "dur": 810,
+          "block": 103,
+          "work": 147,
+          "top": {
+            "d": 145,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 1646
+        },
+        {
+          "dur": 450,
+          "block": 0,
+          "work": 3,
+          "top": null,
+          "t": 595
+        },
+        {
+          "dur": 355,
+          "block": 0,
+          "work": 8,
+          "top": {
+            "d": 6,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3tsl4njztm8lt.js",
+            "fn": "v"
+          },
+          "t": 1052
+        },
+        {
+          "dur": 322,
+          "block": 48,
+          "work": 94,
+          "top": {
+            "d": 92,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 2677
+        },
+        {
+          "dur": 225,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 1413
+        },
+        {
+          "dur": 212,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2463
+        },
+        {
+          "dur": 129,
+          "block": 52,
+          "work": 98,
+          "top": {
+            "d": 97,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 262
+        },
+        {
+          "dur": 100,
+          "block": 50,
+          "work": 94,
+          "top": {
+            "d": 94,
+            "inv": "IdleRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/2ihssomsxg640.js",
+            "fn": "r"
+          },
+          "t": 158
+        },
+        {
+          "dur": 83,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 444
+        }
+      ],
+      "ladderMs": {
+        "1": 158,
+        "2": 1737,
+        "3": 2677
+      },
+      "lenis": true,
+      "ms": 18203,
+      "console": []
+    }
+  }
+}

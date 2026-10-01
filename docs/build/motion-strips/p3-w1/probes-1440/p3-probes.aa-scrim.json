@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T12:40:46.963Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": false,
+      "liveBoxes": 590,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 116,
+            "worst": {
+              "ratio": 1,
+              "text": "NW",
+              "y": 2481,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 2481,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2481,
+                "text": "NE",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2481,
+                "text": "SW",
+                "ratio": 1,
+                "min": 4.5
+              }
+            ],
+            "failCount": 3
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 179,
+            "worst": {
+              "ratio": 6.37,
+              "text": "Pirates of the Caribbean: The Curse of the Black",
+              "y": 41583,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 139,
+            "worst": {
+              "ratio": 1,
+              "text": "NW",
+              "y": 2093,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 1709,
+                "text": "NW",
+                "ratio": 4.2,
+                "min": 4.5
+              },
+              {
+                "y": 2093,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2093,
+                "text": "NE",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2477,
+                "text": "NW",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 2477,
+                "text": "NE",
+                "ratio": 1,
+                "min": 4.5
+              }
+            ],
+            "failCount": 5
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 156,
+            "worst": {
+              "ratio": 6.46,
+              "text": "2018",
+              "y": 39574,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 76267,
+      "console": []
+    }
+  }
+}

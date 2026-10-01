@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T13:01:39.885Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "loaf"
+    ]
+  },
+  "results": {
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 9,
+      "over": 9,
+      "worstDur": 832,
+      "worstWork": 121,
+      "loafs": [
+        {
+          "dur": 832,
+          "block": 81,
+          "work": 121,
+          "top": {
+            "d": 118,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/3dewhjypacr5m.js",
+            "fn": "t"
+          },
+          "t": 1609
+        },
+        {
+          "dur": 437,
+          "block": 82,
+          "work": 1,
+          "top": null,
+          "t": 2450
+        },
+        {
+          "dur": 385,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 649
+        },
+        {
+          "dur": 295,
+          "block": 0,
+          "work": 4,
+          "top": null,
+          "t": 1308
+        },
+        {
+          "dur": 260,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 1041
+        },
+        {
+          "dur": 214,
+          "block": 0,
+          "work": 5,
+          "top": null,
+          "t": 2891
+        },
+        {
+          "dur": 199,
+          "block": 143,
+          "work": 99,
+          "top": {
+            "d": 98,
+            "inv": "IdleRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/2ihssomsxg640.js",
+            "fn": "r"
+          },
+          "t": 223
+        },
+        {
+          "dur": 127,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 517
+        },
+        {
+          "dur": 69,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 153
+        }
+      ],
+      "ladderMs": {
+        "1": 223,
+        "2": 1792,
+        "3": 2945
+      },
+      "lenis": true,
+      "ms": 18103,
+      "console": []
+    }
+  }
+}

@@ -1,0 +1,581 @@
+{
+  "proposedMediaId": "L02",
+  "kind": "living loop (P3 media lane, batch B1), new: not registered yet",
+  "sourceMediaId": "iconic-hall",
+  "plate": "public/media/films/iconic-hall.webp",
+  "plateJob": "1ef4355e-d82b-4513-a273-1cbdebbd8755",
+  "job": "ba931cc6-a5b6-4ada-a891-e29e5c5c0364",
+  "model": "kling3_0 pro, 16:9, 8 s, sound off, medias = [start_image X, end_image X] (start = end = the plate); API echo cfg_scale 0.5, enhance_prompt false; declined_preset_id 24bae836 on every batch item",
+  "credits": 14,
+  "prompt": "Animate the supplied image with extremely restrained, continuous ambient motion while preserving the exact composition, framing, colours and lighting. Camera locked on a tripod: zero orbit, dolly, pan, zoom, shake or focus pull. Hundreds of floating candles bob very slowly up and down, each out of step with the others, their small flames flickering softly; faint clouds drift across the starry ceiling and return. The long tables, gold plates, high table and tall central window stay perfectly still; no new light sources. One uninterrupted shot. Every moving element completes exactly one slow, even cycle and eases back to its original shape, so the first and last frames are identical. No cuts, flashes, lightning, bursts, sparkles toward the camera, whole-frame flicker or exposure change; nothing flickers faster than twice a second. No people, figures, riders, faces, hands, text, letters, symbols, logos or new objects appear. No audio.",
+  "promptFile": "media-src/p3/prompts/L02-iconic-hall.prompt.txt",
+  "master": "media-src/p3/masters/L02-iconic-hall-ba931cc6.mp4 (Kling original, 5188866 bytes, 193 frames, 1920x1080, 24 fps, 0 audio)",
+  "files": {
+    "mp4": "iconic-hall-loop.mp4",
+    "webm": "iconic-hall-loop.webm",
+    "poster": "iconic-hall-loop-poster.webp"
+  },
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "frames": 192,
+  "durationS": 8.0,
+  "bytes": {
+    "mp4": 1170700,
+    "webm": 492722,
+    "poster": 100360
+  },
+  "tier": "S",
+  "tool": "node tools/media/loop.mjs seam media-src/p3/masters/L02-iconic-hall-ba931cc6.mp4 <out>/iconic-hall-loop --k=12 --tier=S --method=residual --crf-mp4=23 --crf-webm=30",
+  "seam": {
+    "method": "residual",
+    "k": 12,
+    "crfMp4": 23,
+    "crfWebm": 30,
+    "gopMp4": "loop",
+    "gopWebm": "loop",
+    "tailBoost": 2,
+    "firstOutputFrameIs": "src[0]",
+    "posterQuality": 65,
+    "note": "poster 100360 bytes (<= 100 KiB, stepped to q65)"
+  },
+  "seamCheckLossless": {
+    "join": 0.9994,
+    "joinRgb": 0.999,
+    "consecutive": {
+      "min": 0.9985,
+      "minAt": 1,
+      "p05": 0.999,
+      "median": 0.9997
+    },
+    "joinMinusMedian": -0.0003,
+    "joinPercentile": 0.2474,
+    "pass": {
+      "join": true,
+      "smooth": true
+    }
+  },
+  "checkZones": "static (binding, map §3 'lineStart (.08, .30) static'): lineStart box (0.07,0.28)-(0.09,0.32) and the wall left of it (0.02,0.25)-(0.07,0.35); light: candle field (0.30,0.05)-(0.70,0.55), high-table candelabra (0.43,0.59)-(0.62,0.64), the single plate candle flame 34 px right of lineStart (0.092,0.285)-(0.104,0.315), upper 60% of the frame.",
+  "before": {
+    "master": {
+      "bytes": 5188866,
+      "frames": 193,
+      "durationS": 8.042,
+      "firstVsPlate": 0.9868,
+      "lastVsPlate": 0.9863,
+      "join": 0.9953,
+      "joinRgb": 0.9867,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9985,
+      "consecutiveMedian": 0.9997,
+      "static": [
+        {
+          "rect": [
+            0.07,
+            0.28,
+            0.09,
+            0.32
+          ],
+          "maxMeanAbsDeltaVsFirst": 1.15
+        },
+        {
+          "rect": [
+            0.02,
+            0.25,
+            0.07,
+            0.35
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.72
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.81,
+      "light": [
+        {
+          "rect": [
+            0.3,
+            0.05,
+            0.7,
+            0.55
+          ],
+          "ptpPct": 2.57,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        },
+        {
+          "rect": [
+            0.43,
+            0.59,
+            0.62,
+            0.64
+          ],
+          "ptpPct": 0.8,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        {
+          "rect": [
+            0.092,
+            0.285,
+            0.104,
+            0.315
+          ],
+          "ptpPct": 76.3,
+          "reversalsPerS": 2.86,
+          "dominantHz": 0.12
+        },
+        {
+          "rect": [
+            0,
+            0,
+            1,
+            0.6
+          ],
+          "ptpPct": 2.47,
+          "reversalsPerS": 0,
+          "dominantHz": 0.12
+        }
+      ],
+      "phaseShiftPx": [
+        -0.001,
+        0.026
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    }
+  },
+  "after": {
+    "mp4": {
+      "bytes": 1170700,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9844,
+      "lastVsPlate": 0.9853,
+      "join": 0.9946,
+      "joinRgb": 0.9857,
+      "joinPercentile": 0,
+      "consecutiveMin": 0.9985,
+      "consecutiveMedian": 0.9996,
+      "static": [
+        {
+          "rect": [
+            0.07,
+            0.28,
+            0.09,
+            0.32
+          ],
+          "maxMeanAbsDeltaVsFirst": 1.16
+        },
+        {
+          "rect": [
+            0.02,
+            0.25,
+            0.07,
+            0.35
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.83
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.53,
+      "light": [
+        {
+          "rect": [
+            0.3,
+            0.05,
+            0.7,
+            0.55
+          ],
+          "ptpPct": 2.24,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0.43,
+            0.59,
+            0.62,
+            0.64
+          ],
+          "ptpPct": 0.98,
+          "reversalsPerS": 0,
+          "dominantHz": 0.5
+        },
+        {
+          "rect": [
+            0.092,
+            0.285,
+            0.104,
+            0.315
+          ],
+          "ptpPct": 76.37,
+          "reversalsPerS": 2.88,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0,
+            0,
+            1,
+            0.6
+          ],
+          "ptpPct": 2.14,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      ],
+      "phaseShiftPx": [
+        -0.007,
+        0.025
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": "codec",
+        "smooth": true,
+        "static": false,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    },
+    "webm": {
+      "bytes": 492722,
+      "frames": 192,
+      "durationS": 8,
+      "firstVsPlate": 0.9847,
+      "lastVsPlate": 0.9847,
+      "join": 0.9999,
+      "joinRgb": 0.9992,
+      "joinPercentile": 0.5737,
+      "consecutiveMin": 0.9989,
+      "consecutiveMedian": 0.9998,
+      "static": [
+        {
+          "rect": [
+            0.07,
+            0.28,
+            0.09,
+            0.32
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.92
+        },
+        {
+          "rect": [
+            0.02,
+            0.25,
+            0.07,
+            0.35
+          ],
+          "maxMeanAbsDeltaVsFirst": 0.23
+        }
+      ],
+      "flashPerS": {
+        "whole": 0,
+        "tiles": 0
+      },
+      "redShareMax": 0,
+      "lumaRangePct": 1.32,
+      "light": [
+        {
+          "rect": [
+            0.3,
+            0.05,
+            0.7,
+            0.55
+          ],
+          "ptpPct": 2.03,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0.43,
+            0.59,
+            0.62,
+            0.64
+          ],
+          "ptpPct": 0.7,
+          "reversalsPerS": 0,
+          "dominantHz": 0.25
+        },
+        {
+          "rect": [
+            0.092,
+            0.285,
+            0.104,
+            0.315
+          ],
+          "ptpPct": 76.52,
+          "reversalsPerS": 2.88,
+          "dominantHz": 0.13
+        },
+        {
+          "rect": [
+            0,
+            0,
+            1,
+            0.6
+          ],
+          "ptpPct": 1.91,
+          "reversalsPerS": 0,
+          "dominantHz": 0.13
+        }
+      ],
+      "phaseShiftPx": [
+        -0.002,
+        0.024
+      ],
+      "audioStreams": 0,
+      "pass": {
+        "registration": true,
+        "join": true,
+        "smooth": true,
+        "static": true,
+        "flash": true,
+        "light": false,
+        "silent": true
+      }
+    }
+  },
+  "anchors": {
+    "mp4": [
+      {
+        "name": "lineStart",
+        "at": [
+          0.08,
+          0.3
+        ],
+        "maxShiftPx": 0.27,
+        "plateOffsetPx": [
+          0.12,
+          -0.01
+        ]
+      },
+      {
+        "name": "window",
+        "at": [
+          0.52,
+          0.33
+        ],
+        "maxShiftPx": 0.08,
+        "plateOffsetPx": [
+          -0.0,
+          0.04
+        ]
+      },
+      {
+        "name": "highTable",
+        "at": [
+          0.5,
+          0.63
+        ],
+        "maxShiftPx": 0.08,
+        "plateOffsetPx": [
+          -0.02,
+          -0.0
+        ]
+      }
+    ],
+    "webm": [
+      {
+        "name": "lineStart",
+        "at": [
+          0.08,
+          0.3
+        ],
+        "maxShiftPx": 0.32,
+        "plateOffsetPx": [
+          0.1,
+          0.07
+        ]
+      },
+      {
+        "name": "window",
+        "at": [
+          0.52,
+          0.33
+        ],
+        "maxShiftPx": 0.08,
+        "plateOffsetPx": [
+          -0.0,
+          0.01
+        ]
+      },
+      {
+        "name": "highTable",
+        "at": [
+          0.5,
+          0.63
+        ],
+        "maxShiftPx": 0.07,
+        "plateOffsetPx": [
+          -0.02,
+          -0.0
+        ]
+      }
+    ],
+    "result": "lineStart point max 0.32 px (48 px patch); window 0.08 px; high table 0.08 px"
+  },
+  "stillZonesInformational": {
+    "note": "STILL-sentence zones (tables, high table, window, lower-left) measured for the record: their structure does not move (tracking <= 0.1 px); the residual |dY| is floating candles in front of the window, candle reflections on the plates and the candelabra flames.",
+    "mp4": [
+      {
+        "rect": [
+          0.1,
+          0.72,
+          0.9,
+          1
+        ],
+        "maxMeanAbsDeltaVsFirst": 0.98
+      },
+      {
+        "rect": [
+          0.4,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "maxMeanAbsDeltaVsFirst": 1.65
+      },
+      {
+        "rect": [
+          0.49,
+          0.25,
+          0.56,
+          0.6
+        ],
+        "maxMeanAbsDeltaVsFirst": 1.45
+      },
+      {
+        "rect": [
+          0,
+          0.62,
+          0.2,
+          1
+        ],
+        "maxMeanAbsDeltaVsFirst": 0.47
+      }
+    ],
+    "webm": [
+      {
+        "rect": [
+          0.1,
+          0.72,
+          0.9,
+          1
+        ],
+        "maxMeanAbsDeltaVsFirst": 0.58
+      },
+      {
+        "rect": [
+          0.4,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "maxMeanAbsDeltaVsFirst": 1.27
+      },
+      {
+        "rect": [
+          0.49,
+          0.25,
+          0.56,
+          0.6
+        ],
+        "maxMeanAbsDeltaVsFirst": 0.94
+      },
+      {
+        "rect": [
+          0,
+          0.62,
+          0.2,
+          1
+        ],
+        "maxMeanAbsDeltaVsFirst": 0.2
+      }
+    ]
+  },
+  "flames": {
+    "master": {
+      "flames": 78,
+      "ptpPct": {
+        "p50": 17.8,
+        "p90": 135.6,
+        "max": 212.8
+      },
+      "revPerS": {
+        "p50": 0.0,
+        "p90": 0.99,
+        "max": 3.11,
+        "over4": 0
+      },
+      "pooled": {
+        "ptpPct": 26.86,
+        "revPerS": 0.0,
+        "domHz": 0.12
+      }
+    },
+    "webm": {
+      "flames": 79,
+      "ptpPct": {
+        "p50": 17.0,
+        "p90": 135.3,
+        "max": 211.7
+      },
+      "revPerS": {
+        "p50": 0.0,
+        "p90": 0.65,
+        "max": 3.38,
+        "over4": 0
+      },
+      "pooled": {
+        "ptpPct": 26.4,
+        "revPerS": 0.0,
+        "domHz": 0.12
+      }
+    },
+    "reads": "79 flame zones (12x16 px at the frame-0 flame peaks): max 3.38 reversals/s (<= 4, i.e. <= 2 Hz), none over the limit; zone ptp includes the candles bobbing out of their fixed zones (up to ~15 px). Hall glow (candle field / upper 60%) ptp 1.9-2.6%, 0 reversals/s. No new light sources (0 new bright blobs away from frame-0 lights)."
+  },
+  "motion": {
+    "flowVsFrame0MaxOverLoopPx": {
+      "candles": {
+        "p99": 13.23,
+        "p999": 19.17,
+        "gt2": 0.0661,
+        "gt4": 0.0466
+      },
+      "whole": {
+        "p99": 9.86,
+        "p999": 20.94,
+        "gt2": 0.0321,
+        "gt4": 0.0222
+      }
+    },
+    "reads": "candles bob out of step (p99 13 px, up to ~20 px) and their flames flicker softly; the ceiling clouds move only with the candles in front of them"
+  },
+  "visualChecks": "L2 sweep of the master at frames 0/48/96/144/192 (plate side by side): high table + chairs + candelabra at 250%, the tall window at 200%, lineStart wall + candles at 300%, full frames. No people, figures, faces, hands, banners, crests, text/letters/symbols/logos or new objects; no lightning in the window (0 flashes/s whole frame and tiles, red share 0). Wrap: slit-scans at x .098 (the lineStart candle) and x .40 (candle field) continuous across the wrap on the WebM and the MP4. VP9 CRF 30 ceiling at 3x gain: stars kept, no banding.",
+  "flags": [
+    "lineStart static zone: the point does not move (<= 0.32 px) and the box reads 0.92/255 on the WebM (pass), but 1.16/255 on the MP4 (lossless source 1.15/255, master 1.15/255): 0.16 over the 1/255 line. Cause: the box's right edge catches the halo of the plate candle at (0.098, 0.306), whose flame shrinks to a stub and comes back once per loop (frames ~56-150, flame-core ptp 76%, 2.9 reversals/s = 1.4 Hz). It is a slow luminance dip (signed mean -0.7/255), not motion. Serve the WebM first; the builder should know a plate candle 34 px right of lineStart dims once per loop.",
+    "The tool's pass.light is false on every file only because the flame-core zone (0.092-0.104) is scored against the 15% glow limit; the glow zones pass (<= 2.6%) and the flicker rate passes (<= 2 Hz).",
+    "MP4 pass.join = 'codec' (IDR texture refresh); lossless join 0.9994 (pct 0.25), WebM join 0.9999 (pct 0.57)."
+  ],
+  "alt": "code ALT (parallax)",
+  "verdict": "PASS (flagged: lineStart MP4 zone 1.16/255, see flags)"
+}

@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { useReducedMotion } from "@/lib/flags";
 import { easeClip } from "@/lib/motion";
 import { copyVisible } from "@/lib/sections";
+import { lockScroll, unlockScroll } from "@/lib/smooth-scroll";
 import { planeAttrs } from "@/lib/worlds";
 import { FilmQuote, quoteAttribution } from "@/components/site/film-quote";
 import { FilmTitle, Lettered } from "@/components/primitives/scene-caption";
@@ -51,10 +52,10 @@ export default function MaraudersMapDialog({
     if (el instanceof HTMLElement) window.setTimeout(() => el.focus(), 0);
   }, [onClose]);
 
-  // focus in (the first room), scroll lock, Esc
+  // focus in (the first room), scroll lock (body + Lenis), Esc
   useEffect(() => {
     opener.current = document.activeElement;
-    document.body.style.overflow = "hidden";
+    lockScroll("map");
     const t = window.setTimeout(() => sheet.current?.querySelector<HTMLElement>("[data-room]")?.focus(), 30);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -66,7 +67,7 @@ export default function MaraudersMapDialog({
     return () => {
       window.clearTimeout(t);
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll("map");
     };
   }, [close]);
 
@@ -97,6 +98,7 @@ export default function MaraudersMapDialog({
       {...planeAttrs("deep", "hp")}
       className="fixed inset-0 z-(--z-menu) overflow-y-auto bg-bg/90 text-fg"
       data-egg="marauders-map"
+      data-lenis-prevent=""
     >
       <div
         ref={sheet}
