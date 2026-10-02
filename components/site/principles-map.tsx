@@ -13,6 +13,7 @@ import {
 import { beatAttrs } from "@/lib/beats";
 import { principles, type Principle } from "@/lib/content";
 import { film } from "@/lib/film";
+import { useReducedMotion } from "@/lib/flags";
 import { copyVisible } from "@/lib/sections";
 import { dur, ease, easeClip } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ import { PatronusRibbons } from "@/components/site/hp-ink";
 import { Lettered } from "@/components/primitives/scene-caption";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { Footprint } from "@/components/worlds/hp/footprints";
+import type { ScrubBody } from "@/components/worlds/hp/principle-body";
 import { InkWall, MapBanner, MapTrail, Stairs, Turret } from "@/components/worlds/hp/map-ink";
 import { CandleField, spotsIn } from "@/components/worlds/hp/hall-ceiling";
 import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
@@ -58,6 +60,15 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
      down with each door's two steps darker, the YOU banner at the first
      door.
 
+   PHASE 3 (W3-HP): the unfold is the B52 time star (weight 1, a breath)
+   and asks the spotlight first (`skip` = the sheet simply lies flat; the
+   walk stays scroll-driven either way); room 05's body arrives
+   server-rendered with the B55 scrubbed sentence (worlds/hp/principle-body);
+   the `hp-map` egg's hint ("I solemnly swear…", aria-hidden, desktop only,
+   absolute: no layout; worlds/hp/map-hint) hangs under the banner. On
+   desktop the wand cursor's bloom gets its own layer on this sheet, under
+   the ink and the words (components/worlds/hp/wand-cursor.tsx, lazy).
+
    Our own drawing: rooms and corridors come from THIS page's list, never
    the film's castle plan; the prints are ours (worlds/hp/footprints). All
    ink is SVG on CSS variables (never currentColor). Everything here is
@@ -74,6 +85,9 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
    jump). The 40 prints and the active room's ink carry no will-change: a
    print is a 14 px opacity write (a tiny repaint).
    ========================================================================== */
+
+/** The unfold's time star (spec §2.3 B52: "map unfold", signature · t · 1). */
+const B52 = { id: "B52", weight: 1 } as const;
 
 /** The door (and the passage to it) sits at this fraction of a room's height. */
 const DOOR = 0.3;
@@ -237,14 +251,30 @@ function useRoomWalks(listRef: RefObject<HTMLOListElement | null>, n: number): r
   return walks;
 }
 
-export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: ReactNode }) {
+export function PrinciplesMap({
+  ribbons,
+  head,
+  scrub,
+  hint,
+}: {
+  ribbons: boolean;
+  head: ReactNode;
+  scrub?: ScrubBody;
+  hint?: ReactNode;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.15 });
+  const reduced = useReducedMotion();
+  // B52 (spec §2.3): the unfold is a weight-1 time star — on DESKTOP_FINE it
+  // waits for the spotlight (≤ 1.5 s); "skip" lays the sheet flat at once
+  const phase = useEnterOnce(ref, { amount: 0.15, star: B52 });
   const folded = phase === "armed";
-  // Mounted offscreen with motion on → the walk is scroll-driven. Otherwise
-  // (server, hydration, reduced motion / Pause, in view at mount) → static.
-  const live = phase !== "static";
+  // Mounted offscreen with motion on → the walk is scroll-driven, whatever
+  // the spotlight answered for the unfold. Otherwise (server, hydration,
+  // reduced motion / Pause, in view at mount) → static.
+  const [wasArmed, setWasArmed] = useState(false);
+  if (phase === "armed" && !wasArmed) setWasArmed(true);
+  const live = !reduced && (phase !== "static" || wasArmed);
   const walks = useRoomWalks(listRef, principles.length);
   // the two outer panels are their own layers only while they can move
   // (armed, then the unfold): their scaleX is then a compositor property
@@ -261,7 +291,7 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
   return (
     <div
       ref={ref}
-      {...beatAttrs("B52", { weight: 1 })}
+      {...beatAttrs(B52.id, { weight: B52.weight })}
       data-tone="paper"
       data-world="hp"
       data-motif="marauders-map"
@@ -313,7 +343,7 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
       <motion.div className="relative" initial={false} animate={{ opacity: folded ? 0 : 1 }} transition={arrive(0.35)}>
         <SheetFrame />
         <div className="relative px-2 pb-6 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
-          <TitleRow />
+          <TitleRow hint={hint} />
           {/* the head is the Map's first room: the hall the corridor leaves from */}
           <div className="relative mt-6 px-3 py-7 sm:mt-8 sm:px-8 sm:py-9">
             <HallWalls />
@@ -327,7 +357,15 @@ export function PrinciplesMap({ ribbons, head }: { ribbons: boolean; head: React
           </div>
           <ol ref={listRef} aria-label="Operating principles" className="relative">
             {principles.map((p, i) => (
-              <MapRoom key={p.n} p={p} index={i} walk={walks[i]!} live={live} ribbons={ribbons} />
+              <MapRoom
+                key={p.n}
+                p={p}
+                index={i}
+                walk={walks[i]!}
+                live={live}
+                ribbons={ribbons}
+                body={scrub?.at === i ? scrub.node : undefined}
+              />
             ))}
           </ol>
         </div>
@@ -353,7 +391,7 @@ function SheetFrame() {
 /* — the title: the lettered banner between two towers and two trails ———— */
 const TITLE = film.copy["principles.map.title"];
 
-function TitleRow() {
+function TitleRow({ hint }: { hint?: ReactNode }) {
   return (
     <div className="relative">
       <Turret size={64} seed={1} className="absolute -left-6 -top-6 hidden lg:block" />
@@ -383,6 +421,7 @@ function TitleRow() {
           />
         </MapBanner>
       ) : null}
+      {hint}
     </div>
   );
 }
@@ -426,6 +465,7 @@ function MapRoom({
   walk,
   live,
   ribbons,
+  body,
 }: {
   p: Principle;
   index: number;
@@ -433,6 +473,8 @@ function MapRoom({
   walk: MotionValue<number>;
   live: boolean;
   ribbons: boolean;
+  /** A server-rendered body (room 05: the B55 scrub), else the plain text. */
+  body?: ReactNode;
 }) {
   const [inRoom, setInRoom] = useState(false);
   useMotionValueEvent(walk, "change", (v) => setInRoom(v >= DOOR && v < 0.999));
@@ -494,7 +536,7 @@ function MapRoom({
           <div className="sm:col-span-7">
             <h3 className="type-title text-fg max-sm:hyphens-auto max-sm:[overflow-wrap:break-word]">{p.title}</h3>
             {ribbons ? <PatronusRibbons className="mt-tier-pair" /> : null}
-            <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>
+            {body ?? <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>}
           </div>
           {p.thinker ? <Meta className="sm:col-span-3 sm:text-right" fields={[p.thinker]} /> : null}
         </div>

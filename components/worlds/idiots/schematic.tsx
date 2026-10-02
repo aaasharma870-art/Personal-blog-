@@ -7,8 +7,8 @@ import { dur, ease, easeDraw, springPlayful, springSettle } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
-import type { EnterPhase } from "@/components/primitives/use-enter-once";
-import { useDrawPhase } from "@/components/site/world-motion";
+import type { BeatWeight } from "@/lib/beats";
+import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
 
 /* ============================================================================
    BLUEPRINT SCHEMATIC (SPEC v2 SM-7, IC-3I-04 jugaad register, IC-3I-11
@@ -287,6 +287,9 @@ function Drawing({ layout, phase, alt, className }: { layout: Layout; phase: Ent
  * BlueprintSchematic — the <figure> on the blueprint panel: the Meta FIG
  * label (true values) as its caption, the drawing (horizontal ≥ 1024,
  * vertical below), and an optional `after` slot inside the figure.
+ * `star` (PHASE3-SPEC §3.8): the ink-on is a time star of the beat map
+ * (trading-algos' FIG. 1, B20): on DESKTOP_FINE it waits for the spotlight;
+ * "skip" = drawn. The host carries `beatAttrs(star.id)`.
  */
 export function BlueprintSchematic({
   fig,
@@ -296,6 +299,7 @@ export function BlueprintSchematic({
   after,
   className,
   compact = false,
+  star,
 }: {
   /** The Meta FIG label, e.g. "FIG. 1 • Trading_Algos- • 4 stages". */
   fig: string;
@@ -307,9 +311,11 @@ export function BlueprintSchematic({
   className?: string;
   /** Always the vertical stack (a narrow column, e.g. systems). */
   compact?: boolean;
+  /** The draw is this time star (through the spotlight). */
+  star?: { id: string; weight: BeatWeight };
 }) {
   const ref = useRef<HTMLElement>(null);
-  const phase = useDrawPhase(ref, 0.35);
+  const phase = useEnterOnce(ref, { amount: 0.35, star });
   const variant = useVariant(choice, pieceKey);
   const alt = variant === "alt";
   return (

@@ -5,6 +5,7 @@ import { Meta, SectionHead, WorldSection } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { FirelightRead } from "@/components/site/rdr2-graphite";
 import { SceneCaption } from "@/components/primitives/scene-caption";
+import { EggHotspot } from "@/components/eggs/egg-hotspot";
 import { CampfireStage } from "@/components/worlds/rdr2/campfire-stage";
 import type { SectionProps } from "@/components/sections/types";
 
@@ -28,6 +29,10 @@ import type { SectionProps } from "@/components/sections/types";
  * embers rise. Retired: spotlight cards, tilt, monogram chips, giant quote
  * glyphs and the stale backdrop (SPEC §11.3). No faces anywhere (H1).
  * Any world whose `quotes` dressing is not `campfire` renders the plain list.
+ *
+ * Phase 3 (B47): the camp drifts toward the fire, the night veil, the lead
+ * quote read into firelight, fireflies; rd-fire's ≥ 44 px hotspot "Warm your
+ * hands by the fire" sits on the fire (DESKTOP_FINE; the stage places it).
  */
 const LEAD_QUOTE = "font-serif text-lead leading-[1.4] font-normal italic tracking-[-0.01em] lg:text-heading lg:leading-[1.35]";
 
@@ -71,6 +76,7 @@ export function Testimonials({ entry, number }: SectionProps<"quotes">) {
           caption={<SceneCaption k="cap.voices" place="head" />}
           captionUnder={<SceneCaption k="cap.voices" place="under" />}
           altCaption={<SceneCaption k="cap.voices.alt" place="under" />}
+          fireSpot={<EggHotspot hunt="rd-fire" label="egg.hunt.hint.rd-fire" className="size-16" />}
         />
       </WorldSection>
     );

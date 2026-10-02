@@ -7,6 +7,7 @@ import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { FilmTitle } from "@/components/primitives/scene-caption";
 import { FilmQuote } from "@/components/site/film-quote";
 import { Meta, Sep } from "@/components/site/world-kit";
+import { FILM_BEATS } from "@/components/sections/films/film-beats";
 import { FilmFrame } from "@/components/sections/films/film-frame";
 
 /* ============================================================================
@@ -54,6 +55,7 @@ export function FilmScreen({
   world,
   years,
   prev,
+  first,
   last,
   choice,
   bearing,
@@ -61,6 +63,8 @@ export function FilmScreen({
   world: CaptionWorld;
   years: string;
   prev: WorldId;
+  /** The first screen: the house lights go down on it (B30). */
+  first: boolean;
   last: boolean;
   choice: VariantChoice;
   bearing: number;
@@ -88,9 +92,26 @@ export function FilmScreen({
       />
 
       <Meta fields={[numeral ? `Act ${numeral}` : null, spec.verb, years]} />
-      <FilmTitle world={world} as="h3" id={titleId} className="mt-tier-pair type-title text-fg" />
+      {/* the film title arrives in character (spec §8.2; B31–B34, a time
+          star through the spotlight on desktop; static elsewhere) */}
+      <FilmTitle
+        world={world}
+        as="h3"
+        id={titleId}
+        className="mt-tier-pair type-title text-fg"
+        inCharacter
+        beat={FILM_BEATS[world].title}
+      />
 
-      <FilmFrame world={world} choice={choice} bearing={bearing} gates={gauntlet.length} className="mt-tier-group" />
+      <FilmFrame
+        world={world}
+        choice={choice}
+        bearing={bearing}
+        gates={gauntlet.length}
+        lights={first}
+        carry={last}
+        className="mt-tier-group"
+      />
 
       {world === "idiots" ? (
         // the 3 Idiots finale's text equivalent: the gates it draws, in order

@@ -1,10 +1,11 @@
 "use client";
 
-import { useId } from "react";
+import { lazy, Suspense, useEffect, useId, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { motion } from "motion/react";
 import { journey } from "@/lib/content";
-import { useReducedMotion } from "@/lib/flags";
+import { motionOffNow, useReducedMotion } from "@/lib/flags";
+import { EGG_EVENT } from "@/components/eggs/egg-bus";
 import { easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { AztecMedallion } from "@/components/worlds/pirates/aztec-medallion";
@@ -40,8 +41,19 @@ import {
        reached).
    The interactive layer (links / tabs) is the host's `children`, positioned
    with <Waypoint>. Everything drawn here is aria-hidden; the facts are text.
+
+   PHASE 3 (W3-PIRATES; PHASE3-SPEC §9.1 #4–#5, spec §2.3 B11):
+   - `coin`: the `pc-coin` hotspot (server <EggHotspot>, a ≥ 44 px button
+     over the medallion, DESKTOP_FINE only by CSS). Its `aztec-coin` egg
+     mounts the lazy moon sweep (coin-moon.tsx) over the chart's brass layer
+     (never text): 1.2 s; under reduced motion / Pause an instant swap held
+     until the next press or Esc.
+   - `marginal`: the faint "parley?" hint by the brass X (server, inside
+     <EggHint egg="parley">; aria-hidden, desktop only).
    ========================================================================== */
 
+/** The coin's moonlight (lazy: loaded on the first press). */
+const CoinMoon = lazy(() => import("@/components/worlds/pirates/coin-moon"));
 /** Rhumb lines radiating from the rose, clipped to the chart. */
 const RHUMBS = Array.from({ length: 16 }, (_, k) => {
   const a = (k * 22.5 * Math.PI) / 180;
@@ -71,6 +83,8 @@ export function JourneyChart({
   medallionClassName,
   className,
   children,
+  coin = null,
+  marginal = null,
 }: {
   /** The needle's target bearing. */
   heading: number;
@@ -91,10 +105,28 @@ export function JourneyChart({
   className?: string;
   /** The waypoint layer (links or tabs), positioned with <Waypoint>. */
   children?: ReactNode;
+  /** The `pc-coin` hotspot (server-rendered <EggHotspot>). */
+  coin?: ReactNode;
+  /** The "parley?" marginal by the X (server-rendered, in <EggHint>). */
+  marginal?: ReactNode;
 }) {
   const reduced = useReducedMotion();
   const draw = reduced ? { duration: 0 } : { duration: 0.9, ease: easeDraw };
   const clip = `journey-chart-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
+  // pc-coin: each press of the coin sweeps the moonlight once (a held
+  // moonlit swap under reduced motion / Pause: the next press ends it)
+  const hasCoin = coin !== null;
+  const [moon, setMoon] = useState<{ n: number; hold: boolean } | null>(null);
+  useEffect(() => {
+    if (!hasCoin) return;
+    const onEgg = (e: Event) => {
+      if ((e as CustomEvent<{ id?: string } | undefined>).detail?.id !== "aztec-coin") return;
+      setMoon((m) => (m?.hold ? null : { n: (m?.n ?? 0) + 1, hold: motionOffNow() }));
+    };
+    window.addEventListener(EGG_EVENT, onEgg);
+    return () => window.removeEventListener(EGG_EVENT, onEgg);
+  }, [hasCoin]);
 
   return (
     <div className={cn("relative", className)} data-chart-plot={plot}>
@@ -176,14 +208,6 @@ export function JourneyChart({
           ))}
         </svg>
 
-        {/* Jack's compass at the rose (the harbour) */}
-        <div
-          className="pointer-events-none absolute"
-          style={{ ...pct(ROSE), transform: `translate(-50%, -${CASE_CENTER_PCT})` }}
-        >
-          <JackCompass heading={heading} lid={lid} huntOnEnter={hunt} className={compassClassName} />
-        </div>
-
         {/* the cursed medallion by the break */}
         <div
           className="pointer-events-none absolute"
@@ -192,7 +216,40 @@ export function JourneyChart({
           <AztecMedallion cursed={cursed} className={medallionClassName} />
         </div>
 
+        {/* pc-coin: the moonlight over the brass layer (over the medallion, under the labels) */}
+        {moon ? (
+          <Suspense fallback={null}>
+            <CoinMoon key={moon.n} hold={moon.hold} medallionClassName={medallionClassName} onDone={() => setMoon(null)} />
+          </Suspense>
+        ) : null}
+
+        {/* Jack's compass at the rose (the harbour) */}
+        <div
+          className="pointer-events-none absolute"
+          style={{ ...pct(ROSE), transform: `translate(-50%, -${CASE_CENTER_PCT})` }}
+        >
+          <JackCompass heading={heading} lid={lid} huntOnEnter={hunt} className={compassClassName} />
+        </div>
+
         {children}
+
+        {/* the coin's hotspot, over the medallion */}
+        {coin ? (
+          <div className="absolute" style={{ ...pct(MEDALLION_AT), transform: "translate(-50%, -50%)" }}>
+            {coin}
+          </div>
+        ) : null}
+
+        {/* "parley?" in the margin above the brass X */}
+        {marginal ? (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute"
+            style={{ ...pct(WAYPOINTS[NOW_INDEX] ?? [0, 0]), transform: "translate(-62%, -190%) rotate(-7deg)" }}
+          >
+            {marginal}
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useMotionValue, useMotionValueEvent, useSpring } from "motion/react";
+import { useMotionValue, useMotionValueEvent, useSpring, type MotionValue } from "motion/react";
+import type { BeatWeight } from "@/lib/beats";
 import { useReducedMotion } from "@/lib/flags";
 import { springNeedle } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -39,9 +40,31 @@ import { nearestTurn } from "@/components/worlds/pirates/voyage-chart";
    Size: pass a width class (`w-[72px]`); the height follows the viewBox
    (100 × 144). The CASE centre sits at CASE_CENTER of the box, so centre it
    on a point with `translate(-50%, -CASE_CENTER_PCT)`.
+
+   PHASE 3 (W3-PIRATES). `star`: the entry spin is a time star of the beat
+   map's B08 row (PHASE3-SPEC §3.8): on DESKTOP_FINE it asks the spotlight
+   (useEnterOnce), "skip" = it simply points. `onApi`: the About toy ("Spin
+   Jack's compass", spec §9.2 #1; the lazy compass-toy.tsx) drives the
+   drawing through it: the needle spring and its goal, the lid, and the
+   CASE group (lid, hinge, case, dial), which a drag rotates about the case
+   centre while the needle keeps its bearing (IC-PC-03). Nothing here runs
+   per frame in React: the motion values write the DOM.
    ========================================================================== */
 
 export type CompassLid = "open" | "ajar" | "shut";
+
+/** What the toy drives (components/worlds/pirates/use-compass-spin.ts). */
+export type CompassApi = {
+  svg: SVGSVGElement;
+  /** The drawn needle angle (the spring that follows `target`). */
+  needle: MotionValue<number>;
+  /** The needle spring's goal (springNeedle). */
+  target: MotionValue<number>;
+  /** The case + lid + dial group (rotate it about 0 0, the case centre). */
+  caseEl: SVGGElement | null;
+  /** Swing the lid (`jump`: set it at once, no spring). */
+  lid(s: CompassLid, jump?: boolean): void;
+};
 
 /** The lid's foreshortening (scaleY about the hinge) per state. */
 const LID_SCALE: Record<CompassLid, number> = { open: 0.5, ajar: 0.24, shut: 0.07 };
@@ -125,6 +148,8 @@ export function JackCompass({
   lid = "ajar",
   huntOnEnter = false,
   flash = false,
+  star,
+  onApi,
   className,
 }: {
   /** Target bearing (° clockwise from north) on the chart it sits on. */
@@ -134,13 +159,18 @@ export function JackCompass({
   huntOnEnter?: boolean;
   /** The IC-PC-09 moon tip flash (the parent times it). */
   flash?: boolean;
+  /** The entry spin asks the spotlight as this time star (desktop). */
+  star?: { id: string; weight: BeatWeight };
+  /** The toy's handle (set after mount, null on unmount). */
+  onApi?: (api: CompassApi | null) => void;
   className?: string;
 }) {
   const reduced = useReducedMotion();
   const svgRef = useRef<SVGSVGElement>(null);
   const needleRef = useRef<SVGGElement>(null);
   const lidRef = useRef<SVGGElement>(null);
-  const phase = useEnterOnce(svgRef, { amount: 0.6 });
+  const caseRef = useRef<SVGGElement>(null);
+  const phase = useEnterOnce(svgRef, { amount: 0.6, star: huntOnEnter ? star : undefined });
 
   const target = useMotionValue(heading);
   const needle = useSpring(target, springNeedle);
@@ -167,7 +197,9 @@ export function JackCompass({
   useEffect(() => {
     const was = lastPhase.current;
     lastPhase.current = phase;
-    if (reduced) {
+    // reduced motion, or the spotlight said "skip" (armed → static): it
+    // simply points, with no hunt
+    if (reduced || (huntOnEnter && was === "armed" && phase === "static")) {
       target.jump(heading);
       needle.jump(heading);
       return;
@@ -182,6 +214,19 @@ export function JackCompass({
     const goal = nearestTurn(needle.get(), heading);
     target.set(huntOnEnter && was === "armed" && phase === "entered" ? goal + 360 : goal);
   }, [heading, phase, huntOnEnter, reduced, target, needle]);
+
+  // The toy's handle.
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!onApi || !svg) return;
+    const lidTo = (l: CompassLid, jump?: boolean) => {
+      if (!jump) return lidTarget.set(LID_SCALE[l]);
+      lidTarget.jump(LID_SCALE[l]);
+      lidScale.jump(LID_SCALE[l]);
+    };
+    onApi({ svg, needle, target, caseEl: caseRef.current, lid: lidTo });
+    return () => onApi(null);
+  }, [onApi, needle, target, lidTarget, lidScale]);
 
   // The lid.
   useEffect(() => {
@@ -207,44 +252,47 @@ export function JackCompass({
       strokeLinecap="square"
       strokeLinejoin="miter"
     >
-      {/* THE LID (behind the case): its inner face is the star chart */}
-      <g ref={lidRef} transform={initialLid}>
-        <path d={LID} className="fill-bg stroke-(--w-brass)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
-        <path d={LID_INNER} className="stroke-(--w-brass)" strokeOpacity={0.55} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
-        <circle cx={0} cy={LID_CY} r={34} className="stroke-(--w-moon)" strokeOpacity={0.5} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
+      {/* the case group (the toy's drag turns it; the needle keeps its bearing) */}
+      <g ref={caseRef} data-compass-case="">
+        {/* THE LID (behind the case): its inner face is the star chart */}
+        <g ref={lidRef} transform={initialLid}>
+          <path d={LID} className="fill-bg stroke-(--w-brass)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+          <path d={LID_INNER} className="stroke-(--w-brass)" strokeOpacity={0.55} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
+          <circle cx={0} cy={LID_CY} r={34} className="stroke-(--w-moon)" strokeOpacity={0.5} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
+          <path
+            d={CONSTELLATION}
+            transform={`translate(0 ${LID_CY})`}
+            className="stroke-(--w-moon)"
+            strokeOpacity={0.7}
+            strokeWidth={0.6}
+            vectorEffect="non-scaling-stroke"
+          />
+          {STARS.map(([x, y, r]) => (
+            <circle key={`${x},${y}`} cx={x} cy={LID_CY + y} r={r} className="fill-(--w-moon)" />
+          ))}
+          {/* the lid's own north star (brass) */}
+          <path
+            d={`M0 ${f(LID_CY - 29)} L1.6 ${f(LID_CY - 24.6)} L0 ${f(LID_CY - 20.2)} L-1.6 ${f(LID_CY - 24.6)} Z`}
+            className="fill-(--w-brass)"
+          />
+        </g>
+
+        {/* the hinge: two knuckles on the case's top flat */}
         <path
-          d={CONSTELLATION}
-          transform={`translate(0 ${LID_CY})`}
-          className="stroke-(--w-moon)"
-          strokeOpacity={0.7}
-          strokeWidth={0.6}
+          d={`M-19 ${f(HINGE_Y - 1.8)} H-8 M8 ${f(HINGE_Y - 1.8)} H19`}
+          className="stroke-(--w-brass)"
+          strokeWidth={2.4}
           vectorEffect="non-scaling-stroke"
         />
-        {STARS.map(([x, y, r]) => (
-          <circle key={`${x},${y}`} cx={x} cy={LID_CY + y} r={r} className="fill-(--w-moon)" />
-        ))}
-        {/* the lid's own north star (brass) */}
-        <path
-          d={`M0 ${f(LID_CY - 29)} L1.6 ${f(LID_CY - 24.6)} L0 ${f(LID_CY - 20.2)} L-1.6 ${f(LID_CY - 24.6)} Z`}
-          className="fill-(--w-brass)"
-        />
+
+        {/* THE CASE */}
+        <path d={CASE} className="fill-bg stroke-(--w-brass)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+        <path d={CASE_INNER} className="stroke-(--w-brass)" strokeOpacity={0.55} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
+        <circle r={37.5} className="stroke-(--w-moon)" strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
+        <path d={TICKS} className="stroke-(--w-moon)" strokeWidth={0.9} vectorEffect="non-scaling-stroke" />
+        <path d={STAR} className="stroke-(--w-storm)" strokeWidth={0.9} vectorEffect="non-scaling-stroke" />
+        <path d={FLEUR} className="stroke-(--w-brass)" strokeWidth={1.1} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
       </g>
-
-      {/* the hinge: two knuckles on the case's top flat */}
-      <path
-        d={`M-19 ${f(HINGE_Y - 1.8)} H-8 M8 ${f(HINGE_Y - 1.8)} H19`}
-        className="stroke-(--w-brass)"
-        strokeWidth={2.4}
-        vectorEffect="non-scaling-stroke"
-      />
-
-      {/* THE CASE */}
-      <path d={CASE} className="fill-bg stroke-(--w-brass)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
-      <path d={CASE_INNER} className="stroke-(--w-brass)" strokeOpacity={0.55} strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
-      <circle r={37.5} className="stroke-(--w-moon)" strokeWidth={0.75} vectorEffect="non-scaling-stroke" />
-      <path d={TICKS} className="stroke-(--w-moon)" strokeWidth={0.9} vectorEffect="non-scaling-stroke" />
-      <path d={STAR} className="stroke-(--w-storm)" strokeWidth={0.9} vectorEffect="non-scaling-stroke" />
-      <path d={FLEUR} className="stroke-(--w-brass)" strokeWidth={1.1} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
 
       {/* THE RED ARROW (pivots at the origin = the case centre) */}
       <g ref={needleRef} transform={initialNeedle} data-needle-group="">

@@ -6,3 +6,19 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* — trading-algos: THE HOMEMADE DRONE beside the board's caption
+     (components/site/idiots-chalk.tsx ChalkDrone, placed by
+     components/sections/chapter/chapter-section.tsx) — inside the boot-gated split
+     the ICE board spans the whole grid (`[data-stage-wide]`, opaque ground),
+     but the drone rises ABOVE that block, into the sticky window column,
+     where its chalk would sit on the corridor plate (deferred-handoffs #14).
+     Under the boot gate, in a split, it is not drawn; everywhere else (no
+     split: RM, a paused boot, touch, phones, no JS) it stays as today. The
+     gate keys on the boot-time state only (never on a runtime toggle of
+     <html>), and the subject is the drone, never <html>. — */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) .stage-split [data-chalk="drone"] {
+    display: none;
+  }
+}

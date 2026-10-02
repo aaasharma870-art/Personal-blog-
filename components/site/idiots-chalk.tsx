@@ -3,9 +3,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
-import type { BeatAttrs } from "@/lib/beats";
+import type { BeatAttrs, BeatWeight } from "@/lib/beats";
 import { dur, easeDraw } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { drawn, faded, useDrawPhase } from "@/components/site/world-motion";
 import { DRONE_LOCAL_D } from "@/components/sections/act-card/frames/board-fig";
 
@@ -88,7 +89,9 @@ export function loopPath(w: number, h: number, room = Infinity): { d: string; vw
  * never restyled). `block` for a paragraph, inline for a phrase. A host
  * whose circle is a page beat passes `{...beatAttrs(id, star)}` (B21's
  * caveat circle, B24's "anything > 2.0" circle): the attributes land on the
- * circled wrapper.
+ * circled wrapper, and a STAR's draw waits for the spotlight on
+ * DESKTOP_FINE (PHASE3-SPEC §3.8; "skip" = drawn at once). Phones and
+ * touch draw as before.
  */
 export function RanchoCircle({
   children,
@@ -102,7 +105,9 @@ export function RanchoCircle({
 } & Partial<BeatAttrs>) {
   const ref = useRef<HTMLSpanElement>(null);
   const box = useBox(ref);
-  const phase = useDrawPhase(ref, 0.6);
+  const starId = beat["data-beat-star"] !== undefined ? beat["data-beat"] : undefined;
+  const weight = (Number(beat["data-beat-weight"]) || 1) as BeatWeight;
+  const phase = useEnterOnce(ref, { amount: 0.6, star: starId ? { id: starId, weight } : undefined });
   const fid = useId().replace(/:/g, "");
   const Wrap = block ? "div" : "span";
   const loop = box ? loopPath(box.w, box.h, box.room) : null;

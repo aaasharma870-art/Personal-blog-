@@ -3,12 +3,15 @@
 import { useRef } from "react";
 import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { useMediaQuery, useReducedMotion } from "@/lib/flags";
-import { resolveVariant, type MediaId } from "@/lib/media";
+import { markOf, resolveVariant, type MediaId } from "@/lib/media";
 import { spanUnit } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import type { CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { RD_PIECES } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
@@ -25,6 +28,16 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    DEFAULT "ride-in": the plate pushes toward the low sun as you read down
    (scale 1 → 1.08 on scroll, origin at the sun; transform only, desktop +
    motion on).
+   PHASE 3 (P3-5, spec §6.1 row MV-10; B39 the breath after the card): the
+   plate is a <LivePlate>. MV-10 has no passing loop (L04 failed), so it is
+   the CODE path: the virtual camera CONTINUES the tintype card's push
+   toward the sun from the card's end scale, 1.04 → 1.08 over the band's
+   passage (about `marks.sun`), with depth
+   parallax on the registered horizon. Both variants (the ALT's Dead Eye
+   layer sits over the moving plate and releases as before). The static
+   framing for everyone else (phones, touch, reduced motion, no JS, the
+   server) is unchanged: the P3-0 ×1.2 close-up; under the boot gate the
+   band starts at ×1 and the camera owns the scale, so nothing pops.
    ALT "dead-eye-release": the band arrives in the Dead Eye grade the ALT
    card settled on (iconic-deadeye, red-sepia, frozen) and releases into
    the golden hour (MV-10-alt) as it comes into view — mark first, fire
@@ -37,8 +50,12 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    ========================================================================== */
 
 const DESKTOP = "(min-width: 64rem)";
-/** The band's framing: closer than the card's plate (see `push`). */
+/** The band's static framing (P3-0): closer than the card's plate (the
+ *  plate's own copy lives in rdr2.module.css .bandZoom, where the boot gate
+ *  hands the scale to the camera; the ALT's Dead Eye layer keeps it). */
 const BAND_ZOOM = 1.2;
+/** The card's end scale continued (spec §6.1): 1.04 → 1.08 toward the sun. */
+const PUSH: readonly [number, number] = [1.04, 1.08];
 
 export function FrontierBand({
   media,
@@ -68,10 +85,6 @@ export function FrontierBand({
   const desktop = useMediaQuery(DESKTOP);
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  // M2 critic 3 #9: the band is the card's plate CONTINUED, not repeated —
-  // it opens already pushed in toward the river and the horse (×1.2), then
-  // rides on (×1.28), so the reader never sees the card's picture twice
-  const push = useTransform(scrollYProgress, [0, 1], [BAND_ZOOM, BAND_ZOOM + 0.08]);
   // spanUnit (lib/motion.ts): unpadded, the Dead Eye layer came back after .46
   const grade = useTransform(scrollYProgress, ...spanUnit([0.1, 0.46], [1, 0]));
   const released = useTransform(grade, (o) => 1 - o);
@@ -81,6 +94,10 @@ export function FrontierBand({
   const plate = resolveVariant(media, v)?.id ?? media;
   const mobile = mediaMobile ? (resolveVariant(mediaMobile, v)?.id ?? mediaMobile) : null;
   const deadEyeLive = alt && live && Boolean(deadEye);
+  // B39: the camera continues the card's push toward the sun (both variants).
+  // Its focal is the plate's `sun` mark as is: the band's cover crop moves
+  // it by < .005 of the box at 1024–1440, invisible in a 4 % push.
+  const camera: CameraSpec = { kind: "push", scale: PUSH, focal: markOf(media, "sun") ?? undefined, driver: "flow" };
 
   return (
     <div
@@ -89,12 +106,12 @@ export function FrontierBand({
       data-piece={RD_PIECES.band}
       data-variant={v}
     >
-      <div className={s.bandPlate} aria-hidden="true">
-        <motion.div className={s.bandLayer} style={{ scale: live && !alt ? push : BAND_ZOOM }}>
-          <MediaFrame media={plate} layout="fill" sizes="100vw" playOn="never" />
-        </motion.div>
+      <div className={s.bandPlate} aria-hidden="true" {...beatAttrs("B39-drift")}>
+        <div className={cn(s.bandLayer, s.bandZoom)}>
+          <LivePlate media={plate} camera={camera} sizes="100vw" className="size-full" />
+        </div>
         {deadEyeLive && deadEye ? (
-          <motion.div className={s.bandLayer} style={{ opacity: grade }}>
+          <motion.div className={s.bandLayer} style={{ opacity: grade, scale: BAND_ZOOM }}>
             <MediaFrame media={deadEye} layout="fill" sizes="100vw" playOn="never" loader={false} />
             <div className={s.deadeyeVignette} />
           </motion.div>

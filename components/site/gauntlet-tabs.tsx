@@ -1,15 +1,17 @@
 "use client";
 
-import { useId, useState, useSyncExternalStore } from "react";
+import { lazy, Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Play } from "lucide-react";
-import { useReducedMotion } from "@/lib/flags";
+import { beatAttrs } from "@/lib/beats";
+import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
 import { dur, ease } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import { eggsSessionOff, triggerEgg } from "@/components/eggs/egg-bus";
 import {
   GauntletBoard,
   RUN_HYPOTHESES,
@@ -19,6 +21,9 @@ import {
 } from "@/components/worlds/idiots/gauntlet-board";
 
 type Step = { n: string; title: string; body: string };
+
+/** The Run invite (B18; desktop only, lazy: components/worlds/idiots/run-invite.tsx). */
+const RunInvite = lazy(() => import("@/components/worlds/idiots/run-invite"));
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -37,10 +42,23 @@ function useHydrated(): boolean {
  * **Run** sends seeded, labelled-illustrative hypotheses through the real
  * gates (the verb); the tally settles in HTML with Rancho's circle and one
  * polite announcement that says "illustrative".
- *   Reduced motion / Pause: the settled tally, chalk drawn, no Run.
+ *   Reduced motion / Pause: the settled tally, chalk drawn; Run settles at
+ *     once (no dots travel, no lift) and still counts (spec §9.1 #8).
  *   No JS: every gate as a list (the <noscript> block) + the static board;
  *   no Run button, no dead tabs.
  *   < 1024: the tablist, then the words, then the board (1:1 below 640).
+ * PHASE 3 (W3-IDIOTS):
+ *   - `3i-quad` (spec §9.1 #8): the first Run of the view that clears a
+ *     hypothesis through every gate fires `triggerEgg("quadcopter-lift")`
+ *     (the hunt counts it, the toast and the rotor spin-up play from the
+ *     egg runtime); skipped while the eggs are off for the session. The
+ *     doodle lifts on every clearing Run (gauntlet-board.tsx).
+ *   - the Run invite (B18, a toy-invite time star, spec §2.3): the Run slot
+ *     carries the beat; on DESKTOP_FINE with motion on and before the first
+ *     Run, a lazy chunk asks the spotlight (needsIdle) and plays ONE pulse
+ *     (`work.invite` DEFAULT "pulse": a chalk ring breathes out of the
+ *     button; ALT "nudge": the ▶ steps forward twice). Never on phones,
+ *     under RM / Pause, or after the visitor has run it.
  */
 export function GauntletTabs({
   steps,
@@ -62,13 +80,25 @@ export function GauntletTabs({
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
   const reduce = useReducedMotion();
+  const fine = useDesktopFine();
   const hydrated = useHydrated();
   const variant = useVariant(choice, "work.board");
+  const inviteVariant = useVariant(choice, "work.invite");
   const n = steps.length;
   const { state: live, start } = useGauntletRun(n);
-  // motion off: the settled frame, chalk drawn, no Run (derived, so a run
-  // in flight simply shows its final frame)
-  const run: RunState = reduce ? { phase: "settled", step: n, runs: 0 } : live;
+  // motion off: the settled frame, chalk drawn (derived, so a run in flight
+  // simply shows its final frame); a Run under motion off settles at once
+  const run: RunState = reduce ? { phase: "settled", step: n, runs: live.runs } : live;
+  const slotRef = useRef<HTMLDivElement>(null);
+
+  // 3i-quad: the first clearing Run of the view counts (spec §9.1 #8)
+  const counted = useRef(false);
+  useEffect(() => {
+    if (counted.current || live.phase !== "settled" || live.runs < 1) return;
+    if (!quadcopter || clearedOf(n) < 1 || eggsSessionOff()) return;
+    counted.current = true;
+    triggerEgg("quadcopter-lift");
+  }, [live.phase, live.runs, n, quadcopter]);
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const labelId = `gauntlet-label-${uid}`;
   const panelId = `gauntlet-panel-${uid}`;
@@ -113,7 +143,7 @@ export function GauntletTabs({
       : running
         ? `Gate ${pad(Math.max(0, Math.min(run.step, n - 1)) + 1)} / ${pad(n)}`
         : `${RUN_HYPOTHESES} illustrative hypotheses • not yet run`;
-  const canRun = hydrated && !reduce;
+  const canRun = hydrated;
 
   return (
     <div className="grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
@@ -177,24 +207,36 @@ export function GauntletTabs({
           </AnimatePresence>
         </div>
 
-        {/* the verb (reserved slot: no layout shift when it appears) */}
-        <div className="mt-tier-group min-h-11">
+        {/* the verb (reserved slot: no layout shift when it appears); the
+            slot is the B18 invite's host */}
+        <div ref={slotRef} className="mt-tier-group min-h-11" {...beatAttrs("B18", { weight: 1 })}>
           {canRun ? (
             <button
               type="button"
               onClick={() => {
-                if (!running) start();
+                if (!running) start(reduce);
               }}
               aria-disabled={running || undefined}
               aria-describedby={labelId}
               className={cn(
-                "inline-flex min-h-11 items-center gap-2 rounded-control px-4 type-small text-fg shadow-[inset_0_0_0_1px_var(--rule)] transition-colors duration-(--dur-micro) hover:bg-surface-1",
+                "relative inline-flex min-h-11 items-center gap-2 rounded-control px-4 type-small text-fg shadow-[inset_0_0_0_1px_var(--rule)] transition-colors duration-(--dur-micro) hover:bg-surface-1",
                 running && "text-fg-muted",
               )}
             >
-              <Play className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
+              <Play className="size-3.5" strokeWidth={1.5} aria-hidden="true" data-run-glyph="" />
               {running ? "Running…" : run.runs > 0 ? "Run again" : `Run ${RUN_HYPOTHESES} illustrative hypotheses`}
+              {/* the invite's chalk ring (B18 DEFAULT): invisible at rest */}
+              <span
+                aria-hidden="true"
+                data-run-ring=""
+                className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 shadow-[inset_0_0_0_1.5px_var(--w-chalk)]"
+              />
             </button>
+          ) : null}
+          {canRun && fine && !reduce && live.runs === 0 ? (
+            <Suspense fallback={null}>
+              <RunInvite host={slotRef} variant={inviteVariant} />
+            </Suspense>
           ) : null}
         </div>
         <p aria-live="polite" className="sr-only">

@@ -25,6 +25,7 @@ import { InkFold, SeekerRow, Snitch } from "@/components/eggs/snitch";
 import { HuntCredits } from "@/components/eggs/hunt-credits";
 import { PostCredits } from "@/components/site/post-credits";
 import { StageScrim } from "@/components/stage/scrim";
+import { Collapse } from "@/components/primitives/collapse";
 import { typeCredits } from "@/lib/fonts";
 
 /* ============================================================================
@@ -67,6 +68,15 @@ import { typeCredits } from "@/lib/fonts";
    - LIBRARIES (new row, the boot gate only: GSAP and Lenis load only on a
      desktop with a fine pointer and motion on, so the row says so only
      where it is true).
+   - COLLAPSE (spec §11.5, D3-9; W3-CINEMA): the long lists — lines quoted,
+     the generated-imagery provenance, the type and libraries rows — sit in
+     one native <details> ("credits.more.summary"), closed at ≥ 64rem and
+     expanded in flow on phones (the 390 roll is unchanged, order
+     included). The H3 fan-tribute line, "To be continued.", the last line
+     and "Built with AI assistance" stay visible outside it (on desktop the
+     AI row is lifted out of the disclosure; one copy per device).
+   - THE SNITCH's dart is the credits' star B57 (snitch.tsx asks the
+     spotlight on desktop).
    ========================================================================== */
 
 /** The film faces the site ships (PHASE3-SPEC §5.2; `typeCredits` in
@@ -154,6 +164,69 @@ export function Footer({ entry }: SectionProps<"credits">) {
   const fromWorld = on && prev ? worldOf(prev) : "house";
   const scrim = entry.stage?.mode === "backdrop" ? entry.stage.scrim : undefined;
   const libraries = copyText("credits.libraries");
+  const ai = on && copyVisible(credits.ai) ? credits.ai.text : null;
+  const moreSummary = copyText("credits.more.summary");
+  const more = copyVisible(moreSummary) ? moreSummary.text : null;
+  const moreRows = (
+    <dl className="mx-auto max-w-[56rem]">
+      {lines.length ? (
+        <Row role="Lines quoted">
+          <span className="block space-y-tier-pair">
+            {lines.map((g) => (
+              <span key={g.work} className="block">
+                <span className="text-fg-muted">{g.work}: </span>
+                {g.ids.map((id, i) => (
+                  <span key={id}>
+                    {i > 0 ? <Dot /> : null}
+                    <FilmQuote id={id} rendition="line" attribution="credits" />
+                  </span>
+                ))}
+              </span>
+            ))}
+          </span>
+        </Row>
+      ) : null}
+      {models.length ? (
+        <Row role="Original generated imagery">
+          Higgsfield ({models.join(", ")})<Dot />our own prompts; the only image inputs were frames made for this
+          page<Dot />no film stills or game screenshots
+        </Row>
+      ) : null}
+      {/* phones: in its place inside the (expanded) disclosure */}
+      {ai ? (
+        <Row role="Built with AI assistance" className={more ? "dw:hidden" : undefined}>
+          {ai}
+        </Row>
+      ) : null}
+      <Row role="Type">
+        Geist<Dot />Geist Mono<Dot />Newsreader
+        {faces.length ? (
+          <span className="dw:hidden">
+            <Dot />
+            {faces.join(", ")} (SIL Open Font License 1.1)
+          </span>
+        ) : null}
+        {faces.length ? (
+          <span className="hidden dw:inline">
+            <Dot />
+            {DESKTOP_FACES.join(", ")} (SIL Open Font License 1.1)
+          </span>
+        ) : null}
+      </Row>
+      {/* shown by the boot gate only (app/p3/stage.css); copy key
+          "credits.libraries" (proposed, unsigned: validator #10) */}
+      {copyVisible(libraries) ? (
+        <Row role="Libraries" className="credits-libraries">
+          {libraries.text.split(" · ").map((part, i) => (
+            <Fragment key={part}>
+              {i ? <Dot /> : null}
+              {part}
+            </Fragment>
+          ))}
+        </Row>
+      ) : null}
+    </dl>
+  );
 
   return (
     <footer
@@ -176,7 +249,15 @@ export function Footer({ entry }: SectionProps<"credits">) {
           Credits
         </h2>
 
-        <dl className="mx-auto mt-tier-block max-w-[56rem] border-b border-rule">
+        {/* PHASE 3 (spec §11.5, D3-9; W3-CINEMA): the long provenance /
+            quote lists sit in ONE native <details>, closed at ≥ 64rem;
+            phones show it expanded in flow (app/p3/words.css), so the 390
+            roll keeps today's order. "Built with AI assistance" stays
+            visible: on desktop it is lifted out of the disclosure (its
+            own <dl>, `hidden dw:block`), on phones it keeps its place
+            inside (`dw:hidden`) — one copy per device. The fan-tribute
+            line (H3), "To be continued." and the last line stay outside. */}
+        <dl className="mx-auto mt-tier-block max-w-[56rem]">
           <Row role="A personal research journal by">{site.name}</Row>
           <Row role="Research, systems & writing">{site.name}</Row>
           {on && worksInUse.length ? (
@@ -195,57 +276,24 @@ export function Footer({ entry }: SectionProps<"credits">) {
               </span>
             </Row>
           ) : null}
-          {lines.length ? (
-            <Row role="Lines quoted">
-              <span className="block space-y-tier-pair">
-                {lines.map((g) => (
-                  <span key={g.work} className="block">
-                    <span className="text-fg-muted">{g.work}: </span>
-                    {g.ids.map((id, i) => (
-                      <span key={id}>
-                        {i > 0 ? <Dot /> : null}
-                        <FilmQuote id={id} rendition="line" attribution="credits" />
-                      </span>
-                    ))}
-                  </span>
-                ))}
-              </span>
-            </Row>
-          ) : null}
-          {models.length ? (
-            <Row role="Original generated imagery">
-              Higgsfield ({models.join(", ")})<Dot />our own prompts; the only image inputs were frames made for this
-              page<Dot />no film stills or game screenshots
-            </Row>
-          ) : null}
-          {on && copyVisible(credits.ai) ? <Row role="Built with AI assistance">{credits.ai.text}</Row> : null}
-          <Row role="Type">
-            Geist<Dot />Geist Mono<Dot />Newsreader
-            {faces.length ? (
-              <span className="dw:hidden">
-                <Dot />
-                {faces.join(", ")} (SIL Open Font License 1.1)
-              </span>
-            ) : null}
-            {faces.length ? (
-              <span className="hidden dw:inline">
-                <Dot />
-                {DESKTOP_FACES.join(", ")} (SIL Open Font License 1.1)
-              </span>
-            ) : null}
-          </Row>
-          {/* shown by the boot gate only (app/p3/stage.css); copy key
-              "credits.libraries" (proposed, unsigned: validator #10) */}
-          {copyVisible(libraries) ? (
-            <Row role="Libraries" className="credits-libraries">
-              {libraries.text.split(" · ").map((part, i) => (
-                <Fragment key={part}>
-                  {i ? <Dot /> : null}
-                  {part}
-                </Fragment>
-              ))}
-            </Row>
-          ) : null}
+        </dl>
+        {ai && more ? (
+          <dl className="mx-auto hidden max-w-[56rem] dw:block">
+            <Row role="Built with AI assistance">{ai}</Row>
+          </dl>
+        ) : null}
+        {more ? (
+          <Collapse
+            summary={more}
+            className="mx-auto max-w-[56rem] dw:border-t dw:border-rule"
+            summaryClassName="mx-auto py-tier-group"
+          >
+            {moreRows}
+          </Collapse>
+        ) : (
+          moreRows
+        )}
+        <dl className="mx-auto max-w-[56rem] border-b border-rule">
           <SeekerRow />
           <HuntCredits />
         </dl>

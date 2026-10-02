@@ -1,15 +1,19 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import type { BeatWeight } from "@/lib/beats";
 import type { CaptionKey } from "@/lib/film";
-import { altOf, defaultOf, isOwnUsable, resolveMedia, type FocalBox, type MediaId } from "@/lib/media";
+import { useDesktopFine } from "@/lib/flags";
+import { altOf, defaultOf, isOwnUsable, markOf, resolveMedia, type FocalBox, type MediaId } from "@/lib/media";
 import { dur, ease, easeClip, springSettle } from "@/lib/motion";
 import type { HeadPlate } from "@/lib/page";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import type { CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
@@ -51,6 +55,25 @@ import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter
      - lid-lift's clip (was an animated inset() clip-path) is the frame
        sliding up from below its own clipped box while its content
        counter-slides: the same moving edge, on two transforms.
+
+   PHASE 3 (W3-IDIOTS; PHASE3-SPEC §6.1, §2.3, §9.1):
+     - every plate is a <LivePlate> (the facade: first load renders the
+       still; on DESKTOP_FINE with motion on the plates engine plays the
+       registered loop via loopFor, or the code depth + camera on the
+       `plates.loops` ALT). `camera` is the host's §6.1 row; `registered`
+       overlays ride the camera with the plate (the board's chalk, the
+       pen's circle); `overlay` stays put above it (controls, the hotspot).
+       Loops: L18 work head (iconic-pen-alt) / L17 its ALT side and the
+       kill-list inset (iconic-pen) / L16 + L08 the machine board.
+     - `enterAt` (the work HeadBand, B16 row: "settles as it enters";
+       DESKTOP_FINE only, phones keep today's trigger): the entrance starts
+       as the band's TOP crosses ≈ that fraction of the viewport (.9), and
+       slow-settle is no longer armed at opacity 0: the plate is there as it
+       rises into view, already at 1.07×, and settles.
+     - `star`: the entrance is a time star of the beat map through the
+       spotlight (the machine board, B22); "skip" = the final frame.
+     - PenInset: the `3i-pen` hotspot over the pen (DESKTOP_FINE only) and
+       Rancho's circle round the pen when the egg fires for the worthy.
    ========================================================================== */
 
 /* — plate choice (lib/media.ts variants) ————————————————————————————— */
@@ -102,8 +125,20 @@ const SHADE = { dark: 0.68, grey: 0.3 } as const;
 
 type Run = { stop: () => void; finished: Promise<unknown> };
 
-function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntranceKind, amount: number) {
-  const phase = useEnterOnce(ref, { amount });
+function usePlateEntrance(
+  ref: RefObject<HTMLDivElement | null>,
+  kind: PlateEntranceKind,
+  { amount, star, enterAt }: { amount: number; star?: { id: string; weight: BeatWeight }; enterAt?: number },
+) {
+  // the line trigger is a desktop fix (spec §2.4 D3): phones, touch and
+  // tablets keep today's area trigger and armed-at-0 settle. On the line,
+  // a band (always taller than 10 % of the viewport) enters once 1 − line
+  // of the viewport shows it (useEnterOnce's "amount of the viewport" rule),
+  // i.e. as its top crosses `line` (≈ .93–.9 for the 21:9 head band: its
+  // own-area share, 10 %, can be met a few px earlier)
+  const fine = useDesktopFine();
+  const line = enterAt !== undefined && fine ? enterAt : null;
+  const phase = useEnterOnce(ref, { amount: line === null ? amount : Math.round((1 - line) * 1000) / 1000, star });
   const frameOpacity = useMotionValue(1);
   const frameY = useMotionValue(0);
   const frameScale = useMotionValue(1);
@@ -137,7 +172,10 @@ function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntr
     if (phase === "armed") {
       captionOpacity.jump(0);
       if (kind === "slow-settle") {
-        frameOpacity.jump(0);
+        // on the line trigger never armed at opacity 0 (spec §2.4 D3: no
+        // empty first Work screen): the plate rises into view at 1.07× and
+        // settles as it enters
+        frameOpacity.jump(line === null ? 0 : 1);
         imageScale.jump(1.07);
       } else if (kind === "light-sweep") {
         shade.jump(1);
@@ -159,7 +197,7 @@ function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntr
     let live = true;
     let capDelay = 0.6;
     if (kind === "slow-settle") {
-      run.push(animate(frameOpacity, 1, { duration: dur.reveal, ease }));
+      if (line === null) run.push(animate(frameOpacity, 1, { duration: dur.reveal, ease }));
       run.push(animate(imageScale, 1, { duration: 1.6, ease }));
       capDelay = 0.9;
     } else if (kind === "light-sweep") {
@@ -197,7 +235,7 @@ function usePlateEntrance(ref: RefObject<HTMLDivElement | null>, kind: PlateEntr
       if (timer !== null) window.clearTimeout(timer);
       run.forEach((a) => a.stop());
     };
-  }, [phase, kind, frameOpacity, frameY, frameScale, lid, imageScale, shade, sweepX, sweepOpacity, captionOpacity]);
+  }, [phase, kind, line, frameOpacity, frameY, frameScale, lid, imageScale, shade, sweepX, sweepOpacity, captionOpacity]);
 
   // promoted only while it can move: armed (so the first frame is ready)
   // and while it plays
@@ -227,9 +265,13 @@ export function PlateBand({
   caption,
   captionClassName,
   overlay,
+  registered,
   after,
   className,
   amount = 0.3,
+  camera,
+  star,
+  enterAt,
 }: {
   /** The resolved plate to show (see headPlateOf / platePick). */
   plate: MediaId | null;
@@ -241,15 +283,28 @@ export function PlateBand({
   /** Classes for the caption's wrapper (e.g. to align a bleed band's
    *  caption to the page column). */
   captionClassName?: string;
-  /** Painted over the plate, inside its box (chalk on the board …). */
+  /** Painted over the plate, inside its box, NOT moved by the camera
+   *  (controls, a hotspot). */
   overlay?: Slot;
+  /** Registered to the plate: inside the LivePlate's camera group, so it
+   *  rides the camera with the picture (chalk on the board, the pen's
+   *  circle). Positioned against the plate box. */
+  registered?: Slot;
   /** In the frame after the plate box (in flow below 640). */
   after?: Slot;
   className?: string;
   amount?: number;
+  /** The plate's virtual camera (spec §6.1 row); none = the LivePlate
+   *  default (a loop stays still; the code path drifts). */
+  camera?: CameraSpec;
+  /** The entrance is this time star (spotlight; useEnterOnce `star`). */
+  star?: { id: string; weight: BeatWeight };
+  /** DESKTOP_FINE: enter as the top crosses ≈ this fraction of the viewport
+   *  (and slow-settle is never armed at opacity 0). */
+  enterAt?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const e = usePlateEntrance(ref, entrance, amount);
+  const e = usePlateEntrance(ref, entrance, { amount, star, enterAt });
   const s = SHAPE[shape];
   const lidLift = entrance === "lid-lift";
   // lid-lift: the frame rides a full height below its clipped box and the
@@ -276,7 +331,13 @@ export function PlateBand({
     <>
       <div className={cn("relative overflow-hidden bg-(--world-deep)", s.box)}>
         <motion.div className={cn("absolute inset-0", imageMoves && "will-change-transform")} style={imageStyle}>
-          {plate ? <MediaFrame media={plate} layout="fill" sizes={sizes} /> : null}
+          {plate ? (
+            <LivePlate media={plate} camera={camera} sizes={sizes} className="size-full">
+              {renderSlot(registered, e.phase)}
+            </LivePlate>
+          ) : (
+            renderSlot(registered, e.phase)
+          )}
         </motion.div>
         {sweeping ? (
           <>
@@ -357,6 +418,11 @@ export function PlateBand({
  * page column. DEFAULT entrance slow-settle, ALT light-sweep (bars of warm
  * light rake across as it comes up). Decorative plate (alt="" in the
  * manifest): the caption carries the meaning.
+ * PHASE 3 (spec §6.1 row "iconic-pen-alt L18 (work head)": settle 1.07 → 1,
+ * started at 90 % entry; §2.4 D3): the entrance starts as the band's top
+ * crosses 90 % of the viewport and the plate is never armed at opacity 0;
+ * the L18 loop (L17 on the ALT side) plays through LivePlate. No camera of
+ * its own: the settle IS its move.
  */
 export function HeadBand({
   spec,
@@ -381,6 +447,7 @@ export function HeadBand({
       entrance={variant === "alt" ? "light-sweep" : "slow-settle"}
       shape="bleed"
       sizes="100vw"
+      enterAt={0.9}
       className={className}
       caption={<SceneCaption k={captionKey} place="bl" />}
       captionClassName="px-gutter sm:absolute sm:inset-y-0 sm:left-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:right-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:px-0"
@@ -388,12 +455,24 @@ export function HeadBand({
   );
 }
 
+/* — the pen (the `3i-pen` egg, spec §9.1 #9): desktop only, lazy ———————— */
+
+const PenHotspot = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenHotspot })));
+const PenWin = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenWin })));
+
 /**
  * PenInset — the kill-list's header plate: Virus's astronaut pen in its open
  * velvet case (iconic-pen; ALT iconic-pen-alt). 16:9 inset beside the h2
  * (≥ 45 % of the content width at 1440), the caption UNDER it so it never
  * covers the pen and never sits on a row (O-5: the film cue lives at the
  * head only). DEFAULT entrance pats (two soft pats), ALT lid-lift.
+ * PHASE 3 (W3-IDIOTS): the L17 loop (L18 on the ALT side) with a slow drift
+ * 1 → 1.02 about the pen (spec §6.1 "iconic-pen L17 (kill-list head)"); the
+ * `3i-pen` egg: a transparent ≥ 44 px <EggHotspot> over the pen
+ * (DESKTOP_FINE only; Enter / Space), and Rancho's circle round the pen
+ * when the egg fires for the worthy (every ledger row read, or Dead Eye won:
+ * lib/hunt worthyOfPen). Its toast ("Worthy." / "Read the whole ledger.")
+ * and count come from the egg runtime.
  */
 export function PenInset({
   spec,
@@ -409,13 +488,36 @@ export function PenInset({
   className?: string;
 }) {
   const variant = useVariant(choice, pieceKey);
+  const plate = platePick(spec.media, variant);
+  // the egg exists only where its hotspot can be used (DESKTOP_FINE): the
+  // hotspot and the circle load in their own chunk, after hydration
+  const fine = useDesktopFine();
+  const egg = fine && plate !== null;
+  const camera: CameraSpec | undefined = plate
+    ? { kind: "drift", scale: [1, 1.02], focal: markOf(plate, "pen") ?? [0.5, 0.5], driver: "flow" }
+    : undefined;
   return (
     <PlateBand
-      plate={platePick(spec.media, variant)}
+      plate={plate}
       entrance={variant === "alt" ? "lid-lift" : "pats"}
       shape="inset"
       sizes="(min-width: 64rem) 50vw, 100vw"
       className={className}
+      camera={camera}
+      registered={
+        egg ? (
+          <Suspense fallback={null}>
+            <PenWin plate={plate} />
+          </Suspense>
+        ) : null
+      }
+      overlay={
+        egg ? (
+          <Suspense fallback={null}>
+            <PenHotspot plate={plate} />
+          </Suspense>
+        ) : null
+      }
       caption={<SceneCaption k={captionKey} place="under" />}
     />
   );

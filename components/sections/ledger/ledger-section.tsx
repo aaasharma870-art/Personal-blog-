@@ -1,11 +1,16 @@
 import { LedgerIndex, type LedgerRow } from "@/components/site/ledger-reckoning";
 import { Meta } from "@/components/site/world-kit";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
-import { SceneCaption } from "@/components/primitives/scene-caption";
+import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { PenInset } from "@/components/worlds/idiots/plate-band";
+import { PhysicalWord } from "@/components/words/physical-word";
+import { DeadEyeCall } from "@/components/games/dead-eye/dead-eye-call";
+import { EyeRing } from "@/components/games/dead-eye/eye-ring";
+import { deadEyeCopy } from "@/components/games/copy";
 import { featuredProjects, killList, survivors } from "@/lib/content";
 import { variantChoiceOf } from "@/lib/sections";
+import { effectiveVariant } from "@/lib/variants";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -26,10 +31,22 @@ import type { SectionProps } from "@/components/sections/types";
    mask from the rows' measured span, CSS vars written by the list); then
    T5 crossfades the idiots canvas into the intermission's deep over the
    last 30vh.
-   DEAD EYE (SM-17): opt-in; its runtime is components/eggs/dead-eye.ts
-   (palette + typed word). The list keeps its DOM contract (data-verdict /
-   data-reason / data-name) and grades its lens figure while it runs.
+   DEAD EYE (PHASE3-SPEC §9.2 #3, a real game now; W3-GAMES): the Meta pill
+   "DEAD EYE" (Rye, our eye-ring glyph) joins the header's Meta row
+   (components/games/dead-eye/dead-eye-call.tsx; DESKTOP_FINE only, by the
+   full media query: phones keep today's header), and the typed word and
+   the palette call the same round. The list keeps its DOM contract
+   (data-verdict / data-reason / data-name) and grades its lens figure while
+   a round runs. The section carries two EMPTY, hidden layers for a round
+   (`[data-deadeye-layer]`): the grade at z −1 (an opacity overlay on the
+   media layer, below every word: B6) and the marks at z 1; a round fills
+   them and empties them on exit. B28 (the invite) is the pill's.
+   PHASE 3 WORDS: the intro's "Killed" is the act's physical word (B29, an
+   ember strike drawn once through the spotlight; words.physical).
    ========================================================================== */
+
+/** The kill-list intro, verbatim (the physical word wraps its "Killed"). */
+const INTRO = "Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.";
 
 /** Rows from `include`, in order, verbatim from content.ts (lens BAR §9). */
 function rowsOf(include: readonly ("flagships" | "survivors" | "killed")[]): LedgerRow[] {
@@ -94,6 +111,9 @@ function rowsOf(include: readonly ("flagships" | "survivors" | "killed")[]): Led
 export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
   const titleId = `${entry.id}-title`;
   const rows = rowsOf(entry.props.include);
+  const choice = variantChoiceOf(entry);
+  const game = deadEyeCopy();
+  const meta = <Meta fields={[number, "The reckoning", `${survivors.length} survived the full process`]} />;
 
   return (
     <IdiotsSection
@@ -103,21 +123,39 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
       grid
       gridMask="linear-gradient(to bottom, color-mix(in srgb, black 50%, transparent) 0%, color-mix(in srgb, black 50%, transparent) var(--ledger-grid-a, 25%), transparent var(--ledger-grid-b, 88%))"
       fadeOut
+      layers={
+        game ? (
+          <>
+            <div aria-hidden="true" data-deadeye-layer="grade" className="pointer-events-none absolute inset-0 overflow-hidden" style={{ zIndex: -1 }} hidden />
+            <div aria-hidden="true" data-deadeye-layer="marks" className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} hidden />
+          </>
+        ) : undefined
+      }
     >
       <header className="grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:items-start lg:gap-x-6">
         <div className="min-w-0 lg:col-span-6 lg:pt-tier-group">
-          <Meta fields={[number, "The reckoning", `${survivors.length} survived the full process`]} />
+          {game ? (
+            <div className="game-row">
+              {meta}
+              <DeadEyeCall copy={game} choice={choice}>
+                <EyeRing className="size-5" />
+                <Lettered world="rdr2" text={game.pill} />
+              </DeadEyeCall>
+            </div>
+          ) : (
+            meta
+          )}
           <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg">
             The kill-list
           </MaskReveal>
           <p className="mt-tier-group max-w-body type-body text-fg-muted">
-            Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.
+            <PhysicalWord text={INTRO} word="Killed" kind="strike" beat="B29" variant={effectiveVariant(choice, "words.physical", "")} />
           </p>
         </div>
         {entry.props.head ? (
           <PenInset
             spec={entry.props.head}
-            choice={variantChoiceOf(entry)}
+            choice={choice}
             pieceKey="kill-list.head"
             captionKey="cap.kill-list"
             className="lg:col-span-6"
@@ -131,7 +169,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
           island: no world type role reaches it (P3-4, PHASE3-SPEC §5.5);
           display: contents, so no box changes. The head above is Kalam. */}
       <div className="contents" data-research="">
-        <LedgerIndex rows={rows} choice={variantChoiceOf(entry)} />
+        <LedgerIndex rows={rows} choice={choice} />
 
         <p className="mt-tier-group max-w-body type-small text-fg-muted">
           Tuning to a backtest usually enlarges your future loss.

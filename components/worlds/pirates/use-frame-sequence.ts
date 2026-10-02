@@ -13,7 +13,8 @@ import type { SeqHandle, SeqState } from "@/components/stage/stage";
    url list, so a variant switch starts clean.
 
    TWO MODES.
-   - LEGACY (no `window`; JV until W3-PIRATES migrates it): ≤ 6 in flight,
+   - LEGACY (no `window`; no caller left since W3-PIRATES moved JV to the
+     window mode, kept for the API): ≤ 6 in flight,
      every frame `decode()`d into an <img> kept in `frames.current[i]`;
      `decoded / total` is real progress; `ready` once every frame decoded; a
      failed frame leaves the host on its stills.

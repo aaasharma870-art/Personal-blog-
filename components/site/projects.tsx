@@ -10,6 +10,7 @@ import { gauntlet } from "@/lib/content";
 import { film } from "@/lib/film";
 import { quotes } from "@/lib/quotes";
 import { copyVisible, variantChoiceOf } from "@/lib/sections";
+import { effectiveVariant } from "@/lib/variants";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -37,6 +38,12 @@ import type { SectionProps } from "@/components/sections/types";
    Variants (lib/variants.ts `work.board`): default "rail-run" (the board
    settles in two soft pats, hand on heart), alt "marking-sheet" (a duster
    wipes the board on; the Run marks a chalk grading sheet).
+   PHASE 3 (W3-IDIOTS; PHASE3-SPEC §2.3 B16–B18): the head band settles as
+   it enters (top at 90 %, never armed at opacity 0) over its L18 loop; the
+   h2 is Act II's one title arriving IN CHARACTER (chalked; B16, through the
+   spotlight; `words.title-idiots`); the board is the B17 star over the L09
+   living beam; the Run carries the B18 invite and the `3i-quad` egg
+   (gauntlet-tabs.tsx).
    ========================================================================== */
 
 export function Projects({ entry, number }: SectionProps<"gauntlet">) {
@@ -56,6 +63,8 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
 
   const choice = variantChoiceOf(entry);
   const head = entry.props.head;
+  // the manifest's variant for the in-character title (server: no ?variant=)
+  const titleVariant = effectiveVariant(choice, "words.title-idiots", "", film.defaultVariant);
 
   return (
     <IdiotsSection
@@ -82,6 +91,10 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
         label={entry.nav?.label ?? "Work"}
         title="Led by what survived scrutiny."
         intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
+        inCharacter
+        world="idiots"
+        beat="B16"
+        variant={titleVariant}
       />
 
       <Rise className="mt-tier-group max-w-body">

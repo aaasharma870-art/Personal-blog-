@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { captionKeyFor } from "@/lib/sections";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
+import type { ScrubBody } from "@/components/worlds/hp/principle-body";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { PrinciplesMap } from "@/components/site/principles-map";
 import { PrinciplesLumos } from "@/components/site/principles-lumos";
@@ -26,10 +27,16 @@ export function PrinciplesStage({
   choice,
   ribbons,
   head,
+  scrub,
+  hint,
 }: {
   choice: VariantChoice;
   ribbons: boolean;
   head: ReactNode;
+  /** Room 05's body with the B55 scrubbed sentence (server-rendered). */
+  scrub?: ScrubBody;
+  /** The `hp-map` egg's hint per choreography (server-rendered). */
+  hint?: { map: ReactNode; ceiling: ReactNode };
 }) {
   const variant = useVariant(choice, "principles.map");
   const alt = variant === "alt";
@@ -44,7 +51,11 @@ export function PrinciplesStage({
   );
   return (
     <div data-variant={variant} data-principles-stage="">
-      {alt ? <PrinciplesLumos ribbons={ribbons} head={headRow} /> : <PrinciplesMap ribbons={ribbons} head={headRow} />}
+      {alt ? (
+        <PrinciplesLumos ribbons={ribbons} head={headRow} scrub={scrub} hint={hint?.ceiling} />
+      ) : (
+        <PrinciplesMap ribbons={ribbons} head={headRow} scrub={scrub} hint={hint?.map} />
+      )}
     </div>
   );
 }

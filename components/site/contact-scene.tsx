@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { motion } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { useReducedMotion } from "@/lib/flags";
 import { getMedia, markOf, resolveVariant, type MediaId } from "@/lib/media";
 import { dur, easeClip, easeDraw } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import { CameraGroup, usePlateEngine, type CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { maskIntersect, maskStyle } from "@/components/primitives/mask-style";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -58,7 +61,35 @@ import {
    glow.
    Static (server HTML, reduced motion, no JS, in view at mount): resolved
    bracket, the ALT's trail laid down, no flare.
+
+   PHASE 3 (W3-HP):
+   - THE PLATE MOVES (spec §6.1, P3-5): DEFAULT a <LivePlate> on MV-08 — the
+     registered loop (loopFor: MV-09, re-seamed) plays on DESKTOP_FINE with
+     motion on, under a slow drift 1 → 1.02 about the flame (so the
+     monogram and the flare stay registered); ALT keeps its own calmer loop
+     (MV-09-alt, the piece's media) under the same drift (CameraGroup).
+     Phones, reduced motion, Pause: the still, identity transform.
+   - THE BRACKET CLOSE is the B56 time star (weight 2): on DESKTOP_FINE it
+     asks the spotlight first; "skip" = resolved at once.
+   - THE CANDLE TOY + THE WAND (spec §9.2 #4): the hall's ceiling field is a
+     toy field (CandleField `toy`, every candle lit by default). The two
+     desktop modules (worlds/hp/wand-cursor.tsx, worlds/hp/candle-toy.tsx)
+     are lazy chunks mounted here on DESKTOP_FINE with motion on, after the
+     intro's quiet window (`usePlateEngine`, the plate facades' gate; DP-13):
+     server, phones, touch, reduced motion and Pause never load or keep them.
+     All lit → the toy calls `flare` → the same single flare as a copy.
+     Variant pieces (read inside the chunks; registry entries handed off to
+     lib/variants.ts): `contact.candles` (DEFAULT "wand-relight", ALT
+     "ember-catch") and `contact.wand` (DEFAULT "tip-bloom", ALT
+     "trailing-light").
    ========================================================================== */
+
+/** The bracket close (spec §2.3 B56: "bracket close", signature · t · 2). */
+const B56 = { id: "B56", weight: 2 } as const;
+
+/** Act IV's desktop toys (lazy chunks; see the header). */
+const WandCursor = lazy(() => import("@/components/worlds/hp/wand-cursor"));
+const CandleToy = lazy(() => import("@/components/worlds/hp/candle-toy"));
 
 /** The flame's centre on each plate (0–1), measured on the accepted file
  *  (sharp, 2026-09-29: the > 200 luminance centroid of the flame; x .860–
@@ -124,7 +155,8 @@ function HallField() {
           className="inset-x-0 top-0 h-[72%]"
           style={maskIntersect(LEFT_FADE, "linear-gradient(to bottom, transparent 4%, #000 14%, #000 58%, transparent)")}
         />
-        <CandleField spots={HALL} className="inset-0" />
+        {/* the candle toy's field: all lit until the wand arms it */}
+        <CandleField spots={HALL} className="inset-0" toy />
       </div>
       <div aria-hidden="true" className="relative -mx-gutter h-32 sm:h-40 lg:hidden" data-motif="great-hall-ceiling">
         <NightSky className="inset-0" stops={[[0, "0%"], [0.85, "30%"], [0.6, "75%"], [0, "100%"]]} />
@@ -216,6 +248,7 @@ export function ContactScene({
     lastFlare.current = now;
     setFlare((n) => n + 1);
   }, [reduced]);
+  const toys = usePlateEngine();
 
   return (
     <div
@@ -239,6 +272,13 @@ export function ContactScene({
         <SceneCaption k="cap.contact" place="under" className="lg:pr-gutter" />
         <LastLightTrail variant={variant} />
       </div>
+      {toys ? (
+        <Suspense fallback={null}>
+          <WandCursor choice={choice} />
+          {/* every candle lit → the same single flare as a copy */}
+          <CandleToy choice={choice} flare={onCopied} />
+        </Suspense>
+      ) : null}
     </div>
   );
 }
@@ -257,7 +297,8 @@ function LastLightPlate({
   initials: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.4 });
+  // B56: the bracket close asks the spotlight on DESKTOP_FINE ("skip" = resolved)
+  const phase = useEnterOnce(ref, { amount: 0.4, star: B56 });
   const asset = getMedia(plateId);
   const cw = CROP.x1 - CROP.x0;
   const ch = CROP.y1 - CROP.y0;
@@ -273,6 +314,10 @@ function LastLightPlate({
     top: `${((-CROP.y0 / ch) * 100).toFixed(3)}%`,
   };
   const at: CSSProperties = { left: `${(bx * 100).toFixed(3)}%`, top: `${(by * 100).toFixed(3)}%` };
+  // spec §6.1 (MV-08/MV-09, contact): a drift 1 → 1.02 over the passage,
+  // about the flame, so the monogram and the flare never leave it
+  const drift = useMemo<CameraSpec>(() => ({ kind: "drift", scale: [1, 1.02], focal: [fx, fy], driver: "flow" }), [fx, fy]);
+  const sizes = "(min-width: 64rem) 90vw, 250vw";
 
   return (
     <div
@@ -283,14 +328,16 @@ function LastLightPlate({
       data-motif="last-light"
     >
       <div style={inner}>
-        <MediaFrame
-          media={loopId}
-          poster={plateId}
-          layout="fill"
-          playOn="desktop"
-          loop
-          sizes="(min-width: 64rem) 90vw, 250vw"
-        />
+        {variant === "alt" ? (
+          // ALT: the piece's own calmer loop (MV-09-alt) over the plate
+          <CameraGroup spec={drift} className="absolute inset-0">
+            <MediaFrame media={loopId} poster={plateId} layout="fill" playOn="desktop" loop sizes={sizes} />
+          </CameraGroup>
+        ) : (
+          // DEFAULT: the plate; its registered loop (MV-09) plays through the
+          // plates engine (one decoder; RM / Pause / phones: the still)
+          <LivePlate media={plateId} camera={drift} depth={false} sizes={sizes} className="size-full" />
+        )}
       </div>
 
       {flare > 0 ? (
@@ -395,9 +442,7 @@ function Monogram({ phase, variant, initials }: { phase: EnterPhase; variant: Va
       className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 sm:gap-3"
       data-motif="bracket-monogram"
       data-resolved={resolved ? "" : undefined}
-      data-beat="B56"
-      data-beat-star=""
-      data-beat-weight="2"
+      {...beatAttrs(B56.id, { weight: B56.weight })}
     >
       {bracket("l")}
       <span className={letter}>{first}</span>

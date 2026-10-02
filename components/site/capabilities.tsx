@@ -1,4 +1,4 @@
-import { capabilities, featuredProjects } from "@/lib/content";
+import { capabilities, featuredProjects, gauntlet } from "@/lib/content";
 import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -10,6 +10,15 @@ import { actCards, acts, copyText, copyVisible, enabledSections, variantChoiceOf
 import { beatAttrs } from "@/lib/beats";
 import type { CopyKey } from "@/lib/film";
 import type { SectionProps } from "@/components/sections/types";
+import { droneCopy } from "@/components/games/copy";
+import chalkDrone from "@/assets/p3/games/drone-chalk.png";
+import blueprintDrone from "@/assets/p3/games/drone-blueprint.png";
+
+/** The drone game's two baked sprites (assets/p3/games/, DP-6). */
+const SPRITES = {
+  default: { src: chalkDrone.src, width: chalkDrone.width, height: chalkDrone.height },
+  alt: { src: blueprintDrone.src, width: blueprintDrone.width, height: blueprintDrone.height },
+};
 
 /**
  * Systems — the capabilities matrix (Act II, idiots canvas; SPEC v2 §3 row 7,
@@ -27,6 +36,13 @@ import type { SectionProps } from "@/components/sections/types";
  *      pencil?", and a footnote that checks the film's legend.
  * The graph grid thins here toward open air and keeps thinning through the
  * kill-list to 0 at its last row (3I-07): this section takes it 6 % → 3 %.
+ *
+ * PHASE 3 (W3-GAMES): the band hosts FLY THE HOMEMADE DRONE (PHASE3-SPEC
+ * §9.2 #2): its strings are resolved here, on the server (the seven gate
+ * lines carry the gauntlet's titles VERBATIM), and handed to the band, so no
+ * client chunk reads lib/content for them. B26 (the take-off invite) is the
+ * band's; B27 (the FIG ink) stays on the FIG column below and its ink-on is
+ * a time star through the spotlight (BlueprintSchematic `star`).
  */
 const COLS = [
   ["Methods", "methods"],
@@ -67,6 +83,8 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           choice={choice}
           caption={<SceneCaption k="cap.systems" place="bl" />}
           className="mb-tier-block"
+          game={droneCopy(gauntlet.map((g) => g.title))}
+          sprites={SPRITES}
         />
       ) : null}
 
@@ -121,6 +139,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
               spec={{ chain }}
               choice={choice}
               pieceKey="systems.fig"
+              star={{ id: "B27", weight: 2 }}
             />
           </ChalkboardFrame>
           <Meta className="mt-tier-group" fields={meta} />

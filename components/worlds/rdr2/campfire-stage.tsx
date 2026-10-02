@@ -10,11 +10,14 @@ import { dur, easeClip } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import type { CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
+import { WeatherLayer } from "@/components/stage/weather-layer";
 import { Rise } from "@/components/site/world-motion";
 import { FirelightRead } from "@/components/site/rdr2-graphite";
-import { RD_PIECES } from "@/components/worlds/rdr2/kit";
+import { RD_PIECES, RdDesktop, coverPoint } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 
 /* ============================================================================
@@ -47,8 +50,26 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    Colour changes are overlays on MEDIA only (opacity); no DOM glow.
    RASTER (P3-2, spec §12.1 #6): the sticky camp is never repainted while
    it scrolls — the plate's feather is a baked wash (no mask) and the two
-   veils change opacity only, each on its own layer. B46 (the camp's
-   fade-up out of the journal's dusk) is this stage.
+   veils change opacity only, each on its own layer.
+
+   PHASE 3 (PHASE3-PLAN §7.4; spec §2.3 B47, §6.1 row iconic-camp, §9.1 #12):
+   - B47 is this stage, a SCROLL star (registered by the lazy desktop
+     extras, kit.tsx <RdDesktop>): the camp DRIFTS toward the fire, 1 →
+     1.04 over the read range, about `marks.fire` through the cover crop
+     (a <LivePlate> on the CODE path: iconic-camp has no passing loop; its
+     lake line gives the depth); no letterbox, no subtitle. The night veil,
+     the lead quote read into firelight and the fireflies (B47-fireflies, a
+     WeatherLayer on the image side only, never over the quotes) ride it.
+     The fire stays put under the push (it is the scale's origin), so the
+     veil's hole, the hotspot and the flare stay on it.
+   - rd-fire: a ≥ 44 px EggHotspot on the fire (DESKTOP_FINE; 0.8 s hover
+     dwell or a click / key), present under reduced motion too (the toast);
+     the flare and embers are the lazy extras'. The ALT band shows it only
+     once its plate carries a `fire` mark (MV-11 has none yet).
+   - B46 (the camp's fade-up out of the journal's dusk) moved to writing.tsx's
+     dusk (it is declared on the writing item); the fade-up veil stays here.
+   - ALT: the band is a <LivePlate> of MV-11, so MV-11L (registered to it)
+     plays through loopFor; the `plates.loops` ALT drifts the still instead.
    ========================================================================== */
 
 const DESKTOP = "(min-width: 64rem)";
@@ -57,17 +78,25 @@ const OPEN = "inset(0% 0% 0% 0%)";
 
 export type Voice = { key: string; quote: ReactNode; cite: ReactNode };
 
-/** Where the plate's fire lands inside the sticky host (px), given the
+type FirePoint = {
+  /** px inside the host */
+  x: number;
+  y: number;
+  /** the same point as a fraction of the plate box (the camera's focal) */
+  f: readonly [number, number];
+};
+
+/** Where the plate's fire lands inside the host (px), given the
  *  object-fit: cover crop MediaFrame applies (object-position = focal). */
 function useFirePoint(
-  live: boolean,
+  on: boolean,
   media: MediaId,
   hostRef: RefObject<HTMLDivElement | null>,
   plateRef: RefObject<HTMLDivElement | null>,
-): { x: number; y: number } | null {
-  const [pt, setPt] = useState<{ x: number; y: number } | null>(null);
+): FirePoint | null {
+  const [pt, setPt] = useState<FirePoint | null>(null);
   useEffect(() => {
-    if (!live) return;
+    if (!on) return;
     const host = hostRef.current;
     const plate = plateRef.current;
     const asset = resolveMedia(media);
@@ -77,39 +106,38 @@ function useFirePoint(
       const h = host.getBoundingClientRect();
       const r = plate.getBoundingClientRect();
       if (!r.width || !r.height) return;
-      const k = Math.max(r.width / asset.width, r.height / asset.height);
-      const w = asset.width * k;
-      const ht = asset.height * k;
-      const [fx, fy] = asset.focal ?? [0.5, 0.5];
-      setPt({
-        x: r.left - h.left + (r.width - w) * fx + mark[0] * w,
-        y: r.top - h.top + (r.height - ht) * fy + mark[1] * ht,
-      });
+      const [fx, fy] = coverPoint(asset, mark, r.width, r.height);
+      const k = (n: number) => Math.round(n * 1000) / 1000;
+      setPt({ x: r.left - h.left + fx * r.width, y: r.top - h.top + fy * r.height, f: [k(fx), k(fy)] });
     });
     ro.observe(host);
     return () => ro.disconnect();
-  }, [live, media, hostRef, plateRef]);
-  return live ? pt : null;
+  }, [on, media, hostRef, plateRef]);
+  return on ? pt : null;
 }
+
+/** The camp's drift toward the fire over the read range (spec §6.1). */
+const CAMP_DRIFT = [1, 1.04] as const;
 
 export function CampfireStage({
   choice,
   media,
   altMedia,
-  loop,
   head,
   lead,
   rest,
   caption,
   captionUnder,
   altCaption,
+  fireSpot,
 }: {
   choice: VariantChoice;
   /** DEFAULT plate (iconic-camp). */
   media: MediaId;
   /** ALT still (MV-11). */
   altMedia?: MediaId;
-  /** ALT loop (MV-11L, registered to MV-11). */
+  /** ALT loop (MV-11L, registered to MV-11): kept for the manifest; the
+   *  LivePlate finds it through loopFor(MV-11). */
   loop?: MediaId;
   head: ReactNode;
   /** The lead figure (already read into firelight). */
@@ -122,6 +150,8 @@ export function CampfireStage({
   captionUnder?: ReactNode;
   /** cap.voices.alt, place "under". */
   altCaption?: ReactNode;
+  /** rd-fire: the server-rendered EggHotspot, placed on the fire. */
+  fireSpot?: ReactNode;
 }) {
   const v = useVariant(choice, RD_PIECES.fire);
   const reduced = useReducedMotion();
@@ -138,10 +168,26 @@ export function CampfireStage({
   // … then night falls on it as you read down, except around the fire.
   const { scrollYProgress: read } = useScroll({ target: stageRef, offset: ["start start", "end end"] });
   const night = useTransform(read, [0, 1], [0, 0.62]);
-  const fire = useFirePoint(live && !alt, media, hostRef, plateRef);
-  const nightGround = fire
-    ? `radial-gradient(circle at ${fire.x.toFixed(0)}px ${fire.y.toFixed(0)}px, transparent 0, transparent 3.5rem, var(--bg) 17rem)`
-    : null;
+  // the fire (desktop, motion or not: the rd-fire hotspot sits on it)
+  const fire = useFirePoint(desktop, alt && altMedia ? altMedia : media, hostRef, plateRef);
+  const nightGround =
+    live && !alt && fire
+      ? `radial-gradient(circle at ${fire.x.toFixed(0)}px ${fire.y.toFixed(0)}px, transparent 0, transparent 3.5rem, var(--bg) 17rem)`
+      : null;
+  // B47: the drift toward the fire over the read range (the scale's origin)
+  const fireMark = markOf(resolveMedia(media)?.id ?? media, "fire");
+  const campCam: CameraSpec = {
+    kind: "drift",
+    scale: CAMP_DRIFT,
+    focal: (!alt ? fire?.f : undefined) ?? fireMark ?? undefined,
+    driver: "progress",
+  };
+  const spot =
+    fire && fireSpot ? (
+      <div data-fire-spot="" className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: fire.x, top: fire.y }}>
+        {fireSpot}
+      </div>
+    ) : null;
 
   const bandRef = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(bandRef, { amount: 0.3 });
@@ -173,18 +219,26 @@ export function CampfireStage({
 
   if (alt && altMedia) {
     return (
-      <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B46", { weight: 1 })}>
-        <div ref={bandRef} className={s.fireBand}>
+      <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B47", { weight: 2 })}>
+        <RdDesktop part="voices" />
+        <div ref={(el) => { bandRef.current = el; hostRef.current = el; }} className={s.fireBand}>
           <motion.div
+            ref={plateRef}
             className={s.fireMedia}
             aria-hidden="true"
             initial={false}
             animate={{ clipPath: phase === "armed" ? LETTERBOX : OPEN }}
             transition={phase === "entered" ? { duration: dur.hero, ease: easeClip } : { duration: 0 }}
           >
-            <MediaFrame media={loop ?? altMedia} poster={altMedia} layout="fill" sizes="100vw" playOn="desktop" />
+            <div data-fire-plate="" className="absolute inset-0">
+              <LivePlate media={altMedia} sizes="100vw" className="size-full" />
+            </div>
             <div className={s.fireScrim} />
+            <div className="absolute inset-y-0 right-0" style={{ left: "56%" }} {...beatAttrs("B47-fireflies")}>
+              <WeatherLayer kind="fireflies" zone="image" />
+            </div>
           </motion.div>
+          {spot}
           <div className={s.fireCopy}>
             {head}
             <div className={s.fireMobile}>
@@ -201,7 +255,8 @@ export function CampfireStage({
   }
 
   return (
-    <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B46", { weight: 1 })}>
+    <div ref={stageRef} className={s.campStage} data-piece={RD_PIECES.fire} data-variant={v} {...beatAttrs("B47", { weight: 2 })}>
+      <RdDesktop part="voices" />
       <div className={s.campCopy}>
         {head}
         {caption ? <div className={s.campHeadCaption}>{caption}</div> : null}
@@ -215,8 +270,8 @@ export function CampfireStage({
       {/* the camp, behind the quotes (z -1; after them in reading order) */}
       <div className={s.campBackdrop}>
         <div ref={hostRef} className={s.campSticky}>
-          <div ref={plateRef} className={s.campPlate}>
-            <MediaFrame media={media} layout="fill" sizes="100vw" playOn="never" />
+          <div ref={plateRef} className={s.campPlate} data-fire-plate="">
+            <LivePlate media={media} camera={campCam} progress={read} sizes="100vw" className="size-full" />
           </div>
           <div className={s.campScrim} aria-hidden="true" />
           {live ? (
@@ -229,6 +284,11 @@ export function CampfireStage({
               <motion.div className={s.duskVeil} aria-hidden="true" style={{ opacity: fadeUp }} />
             </>
           ) : null}
+          {/* fireflies at dusk: the camp's side only, never over the quotes */}
+          <div className="absolute inset-y-0 right-0" style={{ left: "52%" }} {...beatAttrs("B47-fireflies")}>
+            <WeatherLayer kind="fireflies" zone="image" />
+          </div>
+          {spot}
         </div>
       </div>
     </div>
