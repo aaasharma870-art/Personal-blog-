@@ -64,6 +64,8 @@ export function HuntChip() {
         type="button"
         className="hunt-chip type-meta"
         aria-label={name.text}
+        // a hover hint for the bare "0/12" (W2 visual LOW 10): the same line
+        title={name.text}
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
         data-hunt-chip=""

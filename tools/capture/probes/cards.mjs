@@ -67,7 +67,9 @@ export default async function probe(page, ctx) {
       for (const k of ["impact", "transition:meet"]) window.addEventListener(k, (e) => window.__cardEvents.push({ k, d: e.detail, y: Math.round(scrollY) }));
     });
     await ctx.goto("/?skip=intro,smooth&debug=cards");
-    await sleep(1500);
+    // the pin chunk mounts 0.8–1.6 s after load headless: wait for all four drivers
+    await page.waitForFunction(() => Object.keys(window.__cards ?? {}).length >= 4, null, { timeout: 15000, polling: 100 }).catch(() => {});
+    await sleep(500);
     const geo = await geometry(page);
 
     if (want("pins")) {
@@ -138,6 +140,8 @@ export default async function probe(page, ctx) {
       await at(g, 0);
       await sleep(900);
       await at(g, 0.45);
+      // +60 ms after p_raw has moved (headless delivers the scroll late)
+      await page.waitForFunction((k) => (window.__cards?.[k]?.raw() ?? 0) > 0.4, g.kind, { timeout: 3000, polling: 10 }).catch(() => {});
       await sleep(60);
       const early = await state(g.kind);
       await sleep(1200);

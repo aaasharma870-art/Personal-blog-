@@ -42,7 +42,7 @@ precision highp float;
 uniform sampler2D uFrom,uTo,uNoise,uTitle;
 uniform vec2 uRes,uCenter,uRadius,uFlash;
 uniform vec4 uCoverFrom,uCoverTo,uGradeFrom,uGradeTo,uShape,uTitleXf,uInset;
-uniform float uP,uRow,uMorph,uSpin,uKraken,uInsetR;
+uniform float uP,uRow,uMorph,uSpin,uKraken,uInsetR,uFade;
 uniform int uShapeFrom,uShapeTo;
 uniform vec3 uDeep;
 out vec4 o;
@@ -83,7 +83,7 @@ return mix(c,ink,(1.-S(-e,e,d))*uShape.w);}
 
 const MAIN = `
 void main(){uv=vec2(gl_FragCoord.x/uRes.x,1.-gl_FragCoord.y/uRes.y);A=uRes.x/uRes.y;
-vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clamp(c.rgb,0.,1.)*c.a,c.a);}`;
+vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clamp(c.rgb,0.,1.)*c.a,c.a)*uFade;}`;
 
 /** Each flavour: `vec4 fl()` (≤ ~25 lines). t = uP. */
 const FL: Record<GlFlavour, string> = {

@@ -135,10 +135,16 @@ export function uniformsFor(s: GlCardSpec, d: Draw, g: Geo, l: Live): Uniforms {
     // radius (frame heights); full frame when the card has none
     uInset: s.inset ? [s.inset.x, s.inset.y, s.inset.x + s.inset.w, s.inset.y + s.inset.h] : [0, 0, 1, 1],
     uInsetR: s.inset?.r ?? 0,
+    uFade: 1,
   };
   if (d.kind === "clear") return u;
   u.uP = d.t;
   if (d.kind === "title") return u;
+  // the settle (.45–.50): the settled pass fades to clear, so the DOM's own
+  // settled frame (FIG. 0, the circle, the embers, the sun: layers GL does
+  // not draw) comes up under it instead of popping in at .50 (W2 gate)
+  const [a1, b0] = [s.a.range[1], s.b.range[0]];
+  if (b0 > a1 && l.p > a1) u.uFade = 1 - ss(a1, b0, l.p);
 
   const t = d.t;
   switch (d.pass.flavour) {
