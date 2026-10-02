@@ -14,9 +14,9 @@
 //             hook is [data-collapse]); app/p3/words.css has no [class*=…] / [class^=…] and no
 //             html.lenis / .lenis-* rule (W1 lesson).
 //   hosts     no more hosts than the spec allows (8 in-character, 4 scrub, 2 physical, 2 fly).
-// WARNING (W3 wires the hosts): fewer hosts than that. The W3 assembler promotes it to a
-// release gate (`gate`) once the hosts land; until then a missing host only means the plain
-// text renders (DP-9 keeps RELEASE red on Aryan's two lists only).
+// RELEASE GATE (W3 gate, 2026-10-02: every host has landed): fewer hosts than that. A
+// <FilmTitle inCharacter beat={FILM_BEATS[…].title}> fed from the per-film table
+// (components/sections/films/film-beats.ts) counts once per film title in that table.
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -34,7 +34,8 @@ const wholeWord = (text, word) => new RegExp(`(^|[^A-Za-z0-9'’])${word.replace
 /** Source without comments (a usage named in a comment does not count). */
 const uncommented = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`])\/\/.*$/gm, "$1");
 
-export default async function run({ ROOT, err, warn, page, content, readFile, uiFiles }) {
+export default async function run({ ROOT, RELEASE, err, warn, gate: ctxGate, page, content, readFile, uiFiles }) {
+  const gate = ctxGate ?? ((m) => (RELEASE ? err(m) : warn(`[release gate] ${m}`)));
   const data = await import(pathToFileURL(path.join(ROOT, "components", "words", "words-data.ts")).href);
   const get = (p) => p.split(/[.[\]]/).filter(Boolean).reduce((o, k) => (o == null ? o : o[k]), content);
   const beats = new Map();
@@ -120,17 +121,27 @@ export default async function run({ ROOT, err, warn, page, content, readFile, ui
   if (/\[class[*^]=/.test(css)) err("words: app/p3/words.css uses a [class*=…] / [class^=…] selector (W1 rule)");
   if (/html\.lenis|\.lenis-/.test(css)) err("words: app/p3/words.css keys on Lenis's html classes (W1 rule)");
 
-  /* — hosts (W3 wires them; too many is an error, too few a warning) ———— */
+  /* — hosts (too many is an error, too few a release gate since W3) ———————— */
   const hosts = sources.filter(({ rel }) => /\.tsx$/.test(rel) && !/^components\/words\//.test(rel) && !/^app\/lab\//.test(rel));
   const count = (re) => hosts.reduce((n, { src }) => n + (uncommented(src).match(re)?.length ?? 0), 0);
+  // the films screens render one FilmTitle per film from FILM_BEATS (B31–B34)
+  let filmTable = "";
+  try {
+    filmTable = uncommented(readFile("components/sections/films/film-beats.ts") ?? "");
+  } catch {
+    filmTable = "";
+  }
+  const filmTitles = new Set([...filmTable.matchAll(/\btitle:\s*["'](B\d+)["']/g)].map((m) => m[1])).size;
+  const tableHosts = count(/<FilmTitle\b[^>]*?\binCharacter\b[^>]*?\bbeat=\{\s*FILM_BEATS\[/gs);
   const used = {
-    inCharacter: count(/<(?:SectionHead|FilmTitle|SceneCaption|Lettered)\b[^>]*?\binCharacter\b/gs) + count(/<InCharacterTitle\b/g),
+    inCharacter:
+      count(/<(?:SectionHead|FilmTitle|SceneCaption|Lettered)\b[^>]*?\binCharacter\b/gs) + count(/<InCharacterTitle\b/g) + tableHosts * Math.max(0, filmTitles - 1),
     scrub: count(/<ScrubSentence\b/g),
     physical: count(/<PhysicalWord\b/g),
     fly: count(/<FlyThrough\b/g),
   };
   for (const [k, max] of Object.entries(HOSTS)) {
     if (used[k] > max) err(`words: ${used[k]} ${k} hosts in components/app (the spec allows ${max})`);
-    else if (used[k] < max) warn(`words: ${used[k]} of ${max} ${k} hosts wired (W3 hosts; spec §8)`);
+    else if (used[k] < max) gate(`words: ${used[k]} of ${max} ${k} hosts wired (spec §8; every host landed in W3)`);
   }
 }

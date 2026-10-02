@@ -9,7 +9,6 @@ import { JournalVignette, NibTitle } from "@/components/site/rdr2-graphite";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { EggHotspot } from "@/components/eggs/egg-hotspot";
 import { FlyThrough } from "@/components/words/fly-through";
-import { HORSE_FRAMES } from "@/components/words/sprites/horse-frames";
 import { JournalSpread } from "@/components/worlds/rdr2/journal-spread";
 import { RdDesktop } from "@/components/worlds/rdr2/kit";
 import type { SectionProps } from "@/components/sections/types";
@@ -46,7 +45,7 @@ import type { SectionProps } from "@/components/sections/types";
  * Phase 3 (PHASE3-PLAN §7.4, §8):
  *   - B44 the NibTitle (a time star through the spotlight);
  *   - B45 the graphite horse fly-through (Muybridge, 1878, public domain;
- *     HORSE_FRAMES) along the journal page's bottom edge, ≤ 1.2 s, once,
+ *     HORSE_FRAMES, loaded lazily by the words binder) along the journal page's bottom edge, ≤ 1.2 s, once,
  *     on scroll-idle (server markup; the words binder plays it);
  *   - rd-bone: the bone's hotspot (EggHotspot) over the landscape's bone;
  *     its pencilled note (copy egg.bone.note) is drawn by the lazy desktop
@@ -96,7 +95,7 @@ export function Writing({ entry, number }: SectionProps<"index">) {
           choice={variantChoiceOf(entry)}
           caption={<SceneCaption k="cap.writing" place="head" />}
           head={head(true)}
-          fly={<FlyThrough kind="horse" frames={HORSE_FRAMES} beat="B45" path={HORSE_PATH} />}
+          fly={<FlyThrough kind="horse" lazyFrames="horse" beat="B45" path={HORSE_PATH} />}
           bone={<EggHotspot hunt="rd-bone" label="egg.hunt.name.rd-bone" />}
         />
       ) : (

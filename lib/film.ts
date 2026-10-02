@@ -634,6 +634,9 @@ const copy = {
   "toy.deadeye.score": p3("{n}/5 marked · {s} s of Dead Eye left"),
   "toy.deadeye.fire": p3("Fire"),
   "toy.deadeye.release": p3("Release"),
+  /* W3-GAMES best-score lines (optional; shown only once these keys exist) */
+  "toy.drone.best": p3("Best {s} s"),
+  "toy.deadeye.best": p3("Best {n}/5 · {s} s"),
   "toy.candles.lumos": p3("Lumos"),
   "toy.candles.done": p3("The hall is lit."),
   /* sound (PHASE3-SPEC §10.4) */
@@ -897,7 +900,7 @@ export const film = {
         { id: "B04-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
         { id: "B04-spray", at: 45, span: 45, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
         // the program block (a backdrop sibling of the pin): the breath
-        { id: "B06", at: 90, span: 76, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+        { id: "B06", at: 90, span: 74.8, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       ],
     },
     {

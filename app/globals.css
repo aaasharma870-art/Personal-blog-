@@ -358,6 +358,7 @@
   --z-stage: 0;
   --z-main: 1;
   --z-bars: 20;
+  --z-carry: 22;
   --z-game-hud: 25;
   --z-stop: 30;
   --z-toast: 32;

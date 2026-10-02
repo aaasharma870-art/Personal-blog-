@@ -140,8 +140,9 @@ function snapshotPage(): PageSnapshot {
   return {
     cards,
     hostOf,
-    deadEye:
-      Boolean(document.getElementById("kill-list")) && window.matchMedia("(pointer: fine) and (min-width: 64rem)").matches,
+    // The game's own gate (components/eggs/dead-eye.ts): the kill-list, the
+    // DEAD EYE pill (#deadeye-call) and the full DESKTOP_FINE query.
+    deadEye: fine && Boolean(document.getElementById("kill-list")) && Boolean(document.getElementById("deadeye-call")),
     intro: typeof intro?.replay === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     eggsOff: eggsSessionOff(),
     fine,

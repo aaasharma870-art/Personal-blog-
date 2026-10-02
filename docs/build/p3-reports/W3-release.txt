@@ -1,0 +1,179 @@
+
+> personal-website@0.1.0 check
+> tsc --noEmit && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-manifest.mjs
+
+  beats: 80 declared (60 stars) on 20 items; page ≈ 4952.2vh @1440, 5366.9vh @1024 (RELEASE: gaps, overlaps and pacing are errors)
+  hunt: 12 eggs (pirates 3, idiots 3, rdr2 3, hp 3), 4 spells
+check-manifest: 19 entries (16 enabled, 10 numbered: about journey work trading-algos optuna-screener systems beyond writing voices principles); 141 media assets, 25 manifest media refs
+  acts: act-1 opening —→pirates "The Crossing" | act-2 seam(long) pirates→idiots "The Workshop" | act-3 tintype idiots→rdr2 "The Frontier" | act-4 ignite(long) rdr2→hp "The Light"
+  AA: 348 cells, tightest text cell 4.65 (color-muted on idi-overlay); fixtures: A default, D film off, E films off, F journey off, G grade, I rdr2 removed, J writing→IV, live
+  variants: 14 hosts in use, 30 pieces, 30 with an ALT; copy: branchPreview off, 0 drafts + 0 proposed + 0 quotes unsigned
+  warn  media "MV-01": its alternate "MV-01-alt" is received (resolveVariant plays the default)
+  warn  media "MV-06": its alternate "MV-06-alt" is received (resolveVariant plays the default)
+  warn  variants: film still(s) with no alternate (fine for derived plates): IN-01-empty, IN-01m-empty, L01-poster, L02-poster, L05-poster, L06-poster, L08-poster, L09-poster, L10-poster, L11-poster, L12-poster, L14-poster, L15-poster, L16-poster, L17-poster, L18-poster, L19-poster, L20-poster, L21-poster, L22-poster, L23-poster, SEQ-HALL, SEQ-HALL-end
+  warn  "trading-algos": nav label "Trading_Algos" is 13 chars (> 12)
+  warn  variants: work.head.alt plays "iconic-pen", which is not a registered media alternate (variantOf)
+  warn  variants: beyond.band.alt plays "iconic-deadeye", which is not a registered media alternate (variantOf)
+  warn  variants: voices.fire.alt plays "MV-11", which is not a registered media alternate (variantOf)
+  warn  variants: voices.fire.alt plays "MV-11L", which is not a registered media alternate (variantOf)
+  warn  copy.beyond.handbill.reward: confirmed copy still carries draft alternates
+  warn  pirates.reason: confirmed copy still carries draft alternates
+  warn  idiots.reason: confirmed copy still carries draft alternates
+  warn  rdr2.reason: confirmed copy still carries draft alternates
+  warn  hp.reason: confirmed copy still carries draft alternates
+  warn  quote Q-PC-1 is COMMUNITY-sourced: verify it in the work before "confirmed"
+  warn  quote Q-PC-3 is COMMUNITY-sourced: verify it in the work before "confirmed"
+  warn  quote Q-3I-3 is COMMUNITY-sourced: verify it in the work before "confirmed"
+  warn  quote Q-RD-1 is COMMUNITY-sourced: verify it in the work before "confirmed"
+  warn  quote Q-RD-2 is COMMUNITY-sourced: verify it in the work before "confirmed"
+  warn  #9 sound: /audio/tts-mischief.webm is 10741 B (spec §10.4: a TTS line ≤ 10 KB)
+  warn  #9 sound: /audio/tts-solemn.webm is 21494 B (spec §10.4: a TTS line ≤ 10 KB)
+  error media "L01": Check L2 awaits Aryan's countersignature
+  error media "L01-poster": Check L2 awaits Aryan's countersignature
+  error media "L02": Check L2 awaits Aryan's countersignature
+  error media "L02-poster": Check L2 awaits Aryan's countersignature
+  error media "L05": Check L2 awaits Aryan's countersignature
+  error media "L05-poster": Check L2 awaits Aryan's countersignature
+  error media "L06": Check L2 awaits Aryan's countersignature
+  error media "L06-poster": Check L2 awaits Aryan's countersignature
+  error media "L08": Check L2 awaits Aryan's countersignature
+  error media "L08-poster": Check L2 awaits Aryan's countersignature
+  error media "L09": Check L2 awaits Aryan's countersignature
+  error media "L09-poster": Check L2 awaits Aryan's countersignature
+  error media "L10": Check L2 awaits Aryan's countersignature
+  error media "L10-poster": Check L2 awaits Aryan's countersignature
+  error media "L11": Check L2 awaits Aryan's countersignature
+  error media "L11-poster": Check L2 awaits Aryan's countersignature
+  error media "L12": Check L2 awaits Aryan's countersignature
+  error media "L12-poster": Check L2 awaits Aryan's countersignature
+  error media "L14": Check L2 awaits Aryan's countersignature
+  error media "L14-poster": Check L2 awaits Aryan's countersignature
+  error media "L15": Check L2 awaits Aryan's countersignature
+  error media "L15-poster": Check L2 awaits Aryan's countersignature
+  error media "L16": Check L2 awaits Aryan's countersignature
+  error media "L16-poster": Check L2 awaits Aryan's countersignature
+  error media "L17": Check L2 awaits Aryan's countersignature
+  error media "L17-poster": Check L2 awaits Aryan's countersignature
+  error media "L18": Check L2 awaits Aryan's countersignature
+  error media "L18-poster": Check L2 awaits Aryan's countersignature
+  error media "L19": Check L2 awaits Aryan's countersignature
+  error media "L19-poster": Check L2 awaits Aryan's countersignature
+  error media "L20": Check L2 awaits Aryan's countersignature
+  error media "L20-poster": Check L2 awaits Aryan's countersignature
+  error media "L21": Check L2 awaits Aryan's countersignature
+  error media "L21-poster": Check L2 awaits Aryan's countersignature
+  error media "L22": Check L2 awaits Aryan's countersignature
+  error media "L22-poster": Check L2 awaits Aryan's countersignature
+  error media "L23": Check L2 awaits Aryan's countersignature
+  error media "L23-poster": Check L2 awaits Aryan's countersignature
+  error media "SEQ-HALL": Check L2 awaits Aryan's countersignature
+  error media "SEQ-HALL-end": Check L2 awaits Aryan's countersignature
+  error #9 sound: tts-lumos (/audio/tts-lumos.mp3, /audio/tts-lumos.webm) awaits Aryan: its SOUNDS.md rows say "to confirm"
+  error #9 sound: tts-mischief (/audio/tts-mischief.mp3, /audio/tts-mischief.webm) awaits Aryan: its SOUNDS.md rows say "to approve", "to confirm"
+  error #9 sound: tts-nox (/audio/tts-nox.mp3, /audio/tts-nox.webm) awaits Aryan: its SOUNDS.md rows say "to confirm"
+  error #9 sound: tts-parley (/audio/tts-parley.mp3, /audio/tts-parley.webm) awaits Aryan: its SOUNDS.md rows say "to confirm"
+  error #9 sound: tts-solemn (/audio/tts-solemn.mp3, /audio/tts-solemn.webm) awaits Aryan: its SOUNDS.md rows say "to approve", "to confirm"
+  error [P3 #10] unsigned copy: 102 string(s) await Aryan's signature (102 wired into the page, 0 not yet); sign each by removing `unsigned` in lib/film.ts:
+      copy.titles.1 · "A RESEARCH JOURNAL IN {ACTS} ACTS" · components/intro/intro-model.ts
+      copy.titles.2 · "AFTER {WORKS}" · components/intro/intro-model.ts
+      copy.titles.3 · "ACT I • {ACT} ↓" · components/intro/intro-model.ts
+      copy.systems.pencil.body.p3 · "The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change." · components/site/capabilities.tsx
+      copy.systems.meta.scroll · "Smooth scroll on desktop (Lenis)" · components/site/capabilities.tsx
+      copy.systems.meta.native · "Native scroll on phones and with reduced motion" · components/site/capabilities.tsx
+      copy.systems.meta.css · "CSS + SVG first" · components/site/capabilities.tsx
+      copy.systems.meta.webgl · "WebGL, where supported, only for scene changes" · components/site/capabilities.tsx
+      copy.fastlane.label · "Skip to the research" · components/intro/intro-model.ts, components/site/header.tsx
+      copy.optuna.appendix.summary · "Where the discipline started · Automated 0DTE Options Bots · a paper portfolio on a no-code platform; not a proven edge" · app/lab/p3/words/page.tsx, components/sections/chapter/chapter-section.tsx
+      copy.about.philosophy.summary · "The philosophy note" · app/lab/p3/words/page.tsx, components/site/about-bio.tsx
+      copy.credits.more.summary · "More credits: media, fonts and quotes" · components/site/footer.tsx
+      copy.credits.libraries · "On desktop: GSAP (standard no-charge licence) · Lenis (MIT)" · components/site/footer.tsx
+      copy.egg.hunt.chip · "{n}/12" · components/eggs/hunt-chip.tsx
+      copy.egg.hunt.chip.name · "Easter-egg hunt: {n} of 12 found. Show hints" · components/eggs/hunt-chip.tsx
+      copy.egg.hunt.toast · "Egg {n} of 12 · {name}" · components/eggs/egg-runtime.tsx
+      copy.egg.hunt.panel.title · "The egg hunt" · components/eggs/hunt-panel.tsx
+      copy.egg.hunt.reset · "Reset the egg hunt" · components/eggs/hunt-panel.tsx, components/eggs/palette-dialog.tsx
+      copy.egg.hunt.reset.confirm · "Reset the hunt? Every egg found so far is forgotten." · components/eggs/hunt-panel.tsx, components/eggs/palette-dialog.tsx
+      copy.egg.hunt.off · "Turn off easter eggs" · components/eggs/hunt-panel.tsx
+      copy.egg.hunt.complete · "12 / 12" · components/eggs/egg-runtime.tsx
+      copy.egg.hunt.found · "Found" · components/eggs/hunt-panel.tsx
+      copy.egg.hunt.unfound · "Not found yet" · components/eggs/hunt-panel.tsx
+      copy.egg.hunt.reset.cancel · "Cancel" · components/eggs/hunt-panel.tsx
+      copy.egg.hunt.name.hp-map · "The Marauder's Map" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.hp-lumos · "Lumos and Nox" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.hp-snitch · "The Golden Snitch" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.pc-parley · "The right of parley" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.pc-coin · "The cursed coin" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.pc-kraken · "The kraken" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.3i-aal · "The chalk heart" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.3i-quad · "The quadcopter doodle" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.name.3i-pen · "The astronaut pen" · components/eggs/hunt-rows.ts, components/worlds/idiots/pen-egg.tsx
+      copy.egg.hunt.name.rd-eagle · "The eagle eye" · components/eggs/hunt-rows.ts, components/site/rdr2-frontier.tsx
+      copy.egg.hunt.name.rd-bone · "The fossil bone" · components/eggs/hunt-rows.ts, components/site/writing.tsx
+      copy.egg.hunt.name.rd-fire · "The campfire" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.hp-map · "I solemnly swear…" · components/eggs/hunt-rows.ts, components/worlds/hp/map-hint.tsx
+      copy.egg.hunt.hint.hp-snitch · "Something golden waits by the way back to the opening" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.pc-parley · "parley?" · components/eggs/hunt-rows.ts, components/site/journey.tsx
+      copy.egg.hunt.hint.pc-coin · "Hold the coin to the moonlight" · components/eggs/hunt-rows.ts, components/site/journey.tsx
+      copy.egg.hunt.hint.pc-kraken · "HERE BE MONSTERS" · components/eggs/hunt-rows.ts, components/sections/act-card/act-card-section.tsx
+      copy.egg.hunt.hint.3i-aal · "A chalk heart on the board's ledge" · components/eggs/hunt-rows.ts, components/worlds/idiots/chalk-heart.tsx
+      copy.egg.hunt.hint.3i-quad · "Clear a hypothesis through all seven gates" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.3i-pen · "Kept for the one who proves worthy." · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.rd-eagle · "An eye at the start of the trail" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.rd-bone · "Something half-buried in the journal's hills" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.hint.rd-fire · "Warm your hands by the fire" · components/eggs/hunt-rows.ts, components/site/testimonials.tsx
+      copy.egg.hunt.credit.hp-map · "Solemn swearer — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.hp-lumos · "Light-bringer — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.hp-snitch · "Seeker — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.pc-parley · "Parley negotiator — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.pc-coin · "Moonlight witness — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.pc-kraken · "Kraken spotter — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.3i-aal · "Hand on heart — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.3i-quad · "Test pilot — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.3i-pen · "Worthy of the pen — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.rd-eagle · "Eagle eye — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.rd-bone · "Bone collector — you" · components/eggs/hunt-rows.ts
+      copy.egg.hunt.credit.rd-fire · "Warmed by the fire — you" · components/eggs/hunt-rows.ts
+      copy.egg.console · "12 eggs hide on this page (on a desktop browser)" · components/eggs/egg-host.tsx
+      copy.egg.parley.fallback · "Parley granted — the terms are at Contact." · components/eggs/egg-runtime.tsx
+      copy.egg.quad.toast · "It flies. Take it up in Systems." · components/eggs/egg-runtime.tsx
+      copy.egg.pen.read · "Kept for the one who proves worthy. Read the whole ledger." · components/eggs/egg-runtime.tsx
+      copy.egg.pen.win · "Worthy." · components/eggs/egg-runtime.tsx
+      copy.egg.bone.note · "another bone for the collector" · components/site/writing.tsx
+      copy.egg.fire.toast · "The fire flares, then settles." · components/eggs/egg-runtime.tsx
+      copy.toy.compass.label · "Spin Jack's compass" · components/site/about.tsx
+      copy.toy.drone.cmd · "Fly the homemade drone" · components/eggs/palette-dialog.tsx, components/games/copy.ts
+      copy.toy.drone.pill · "▲ Take off" · components/games/copy.ts
+      copy.toy.drone.gate · "Gate {n} of 7 · {title}" · components/games/copy.ts
+      copy.toy.drone.next · "Next: the kill-list ↓" · components/games/copy.ts
+      copy.toy.drone.score · "{n}/7 gates · {s} s" · components/games/copy.ts
+      copy.toy.drone.rm · "Motion is off: here is the flight plan" · components/games/copy.ts
+      copy.toy.drone.help · "Arrow keys or WASD to fly, or drag with the pointer. Esc lands." · components/games/copy.ts
+      copy.toy.deadeye.pill · "DEAD EYE" · components/games/copy.ts
+      copy.toy.deadeye.survivor · "Survived: not a target" · components/games/copy.ts
+      copy.toy.deadeye.score · "{n}/5 marked · {s} s of Dead Eye left" · components/games/copy.ts
+      copy.toy.deadeye.fire · "Fire" · components/games/copy.ts
+      copy.toy.deadeye.release · "Release" · components/games/copy.ts
+      copy.toy.drone.best · "Best {s} s" · components/games/copy.ts
+      copy.toy.deadeye.best · "Best {n}/5 · {s} s" · components/games/copy.ts
+      copy.toy.candles.lumos · "Lumos" · components/site/contact-finale.tsx
+      copy.toy.candles.done · "The hall is lit." · components/site/contact-finale.tsx, components/worlds/hp/candle-toy.tsx
+      copy.sound.name · "Sound" · components/audio/sound-toggle.tsx
+      copy.sound.on · "Sound on" · components/audio/sound-toggle.tsx
+      copy.sound.off · "Sound off" · components/audio/sound-toggle.tsx
+      copy.sound.disabled · "Sound follows motion: resume motion to hear it" · components/audio/sound-toggle.tsx
+      copy.dc.button · "▶ Director's cut" · components/director/directors-cut-button.tsx, components/director/directors-cut.ts, components/site/chapter-select.tsx
+      copy.dc.sound · "(sound on)" · components/director/directors-cut-button.tsx, components/site/chapter-select.tsx
+      copy.dc.stop · "■ Stop" · components/director/directors-cut.ts
+      copy.dc.speed · "2×" · components/director/directors-cut.ts
+      copy.dc.act · "Act {n}/4" · components/director/directors-cut.ts
+      copy.dc.cmd · "Play the director's cut" · components/eggs/palette-dialog.tsx
+      copy.dc.paused · "Motion is paused" · components/director/directors-cut-button.tsx, components/site/chapter-select.tsx
+      copy.chapter.heading · "Chapters" · components/site/chapter-select.tsx
+      copy.chapter.prologue · "Prologue" · components/site/chapter-select.tsx
+      copy.palette.play · "Play" · components/eggs/palette-dialog.tsx
+      copy.palette.hints · "Show egg hints" · components/eggs/palette-dialog.tsx
+      acts.act-1.logline · "Where I started, and the course I've been correcting ever since." · components/sections/act-card/act-card-section.tsx
+      acts.act-2.logline · "What I build, how I try to break it, and what didn't survive." · components/sections/act-card/act-card-section.tsx
+      acts.act-3.logline · "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work." · components/sections/act-card/act-card-section.tsx
+      acts.act-4.logline · "What I believe about doing this work honestly, and where to find me." · components/sections/act-card/act-card-section.tsx
+check-manifest: FAILED with 46 error(s)

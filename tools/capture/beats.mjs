@@ -11,7 +11,8 @@
 // It prints the gaps (> 100vh between consecutive beats), the competing stars (a scroll star = its box,
 // a time star = its top ± 50vh; one spec row or one card set piece never competes with itself), the
 // scroll-star spans (< 300 px), the pacing breaches (a weight > 1 star in the viewport after a
-// weight-3 one) and the DECLARED-BUT-MISSING ids (in lib/page.ts / lib/film.ts, not in the DOM), plus
+// weight-3 one; a `scrub-sentence` star spans its height + 40vh, its scrub range; for the gaps, a
+// beat inside a position: sticky box spans its box + the sticky travel) and the DECLARED-BUT-MISSING ids (in lib/page.ts / lib/film.ts, not in the DOM), plus
 // any undeclared data-beat ids. Exit 1 on a gap > 100vh or a scroll-star span < 300 px (unless
 // --report-only). --write updates `estVh` in lib/page.ts (sections) and lib/film.ts (acts[]): d from the
 // 1440 run, t from the 1024 run, 3 decimals. --out writes beats.json there.
@@ -96,18 +97,36 @@ async function measure(width) {
       const r = el.getBoundingClientRect();
       return { top: r.top + y0, bottom: r.bottom + y0, h: r.height };
     };
+    // a beat inside a position: sticky box rides it down to its containing block's content
+    // bottom: for the GAPS its page range is its box at scrollY 0 plus that travel (W3 gate;
+    // B45 on the journal's sticky page, the split windows' racks, the pinned cards' layers).
+    // Competing stars and spans keep the box at scrollY 0 (comparable with W1/W2).
+    const stickyTravel = (el) => {
+      for (let a = el; a && a !== document.body; a = a.parentElement) {
+        if (getComputedStyle(a).position !== "sticky" || !a.parentElement) continue;
+        const p = a.parentElement;
+        const pb = p.getBoundingClientRect().bottom - (parseFloat(getComputedStyle(p).paddingBottom) || 0);
+        return Math.max(0, pb - a.getBoundingClientRect().bottom);
+      }
+      return 0;
+    };
     const itemTops = ids.map((id) => {
       const el = document.getElementById(id);
       return { id, top: el ? box(el).top : null };
     });
     const beats = [...document.querySelectorAll("[data-beat]")]
       .filter((el) => el.getClientRects().length > 0)
-      .map((el) => ({
-        id: el.getAttribute("data-beat"),
-        star: el.hasAttribute("data-beat-star"),
-        weight: Number(el.getAttribute("data-beat-weight")) || null,
-        ...box(el),
-      }));
+      .map((el) => {
+        const b = box(el);
+        const sticky = stickyTravel(el);
+        return {
+          id: el.getAttribute("data-beat"),
+          star: el.hasAttribute("data-beat-star"),
+          weight: Number(el.getAttribute("data-beat-weight")) || null,
+          ...b,
+          stickyPx: Math.round(sticky),
+        };
+      });
     const sl = window.__spotlight;
     return {
       scrollHeight: document.documentElement.scrollHeight,
@@ -142,9 +161,9 @@ function analyse(m) {
   let end = -Infinity;
   let last = null;
   for (const b of beats) {
-    if (last && b.top - end > vh) out.gaps.push({ after: last.id, before: b.id, vh: toVh(b.top - end) });
-    if (b.bottom > end) {
-      end = b.bottom;
+    if (last && b.top - end > vh) out.gaps.push({ after: last.id, before: b.id, vh: toVh(b.top - end), fromVh: toVh(end), toVh: toVh(b.top) });
+    if (b.bottom + (b.stickyPx ?? 0) > end) {
+      end = b.bottom + (b.stickyPx ?? 0);
       last = b;
     }
   }
@@ -160,7 +179,10 @@ function analyse(m) {
       if (o > vh / 100) out.competing.push({ a: a.id, b: b.id, vh: toVh(o) });
     }
   }
-  for (const b of stars) if (timing(b) === "scroll" && b.h < 300) out.spans.push({ id: b.id, px: Math.round(b.h) });
+  // a scrub sentence (components/words/bind/scrub.ts) scrubs while its top travels from 92 % of the
+  // viewport to its bottom at 52 %: its scroll span is its height + 40vh, not its inline box (W3 gate)
+  const span = (b) => (declared.get(b.id)?.kind === "scrub-sentence" ? b.h + 0.4 * vh : b.h);
+  for (const b of stars) if (timing(b) === "scroll" && span(b) < 300) out.spans.push({ id: b.id, px: Math.round(span(b)) });
   for (const h of stars.filter((b) => b.weight === 3)) {
     const breath = [occ(h)[1], occ(h)[1] + vh];
     for (const b of stars) {
@@ -173,7 +195,7 @@ function analyse(m) {
     for (const e of m.spotlight.log) counts[e.ev] = (counts[e.ev] ?? 0) + 1;
     out.spotlight = { counts, log: m.spotlight.log };
   } else out.spotlight = null;
-  out.beats = beats.map((b) => ({ id: b.id, star: b.star, weight: b.weight, topVh: toVh(b.top), hPx: Math.round(b.h) }));
+  out.beats = beats.map((b) => ({ id: b.id, star: b.star, weight: b.weight, topVh: toVh(b.top), hPx: Math.round(b.h), ...(b.stickyPx ? { stickyPx: b.stickyPx } : {}) }));
   out.pageErrors = m.errors;
   return out;
 }

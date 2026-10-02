@@ -28,8 +28,8 @@ import { useLetterboxScene, type LetterboxSceneOptions } from "@/components/stag
    `[data-warm-point]`, DEFAULT and ALT). As the act-3 tintype card rises
    (its top from 80% of the viewport to the top: 80vh of scroll, ≥ 40vh),
    the point lifts off the plate and descends — a fixed sprite in the
-   stage's "game-hud" layer (above the page, below the header; no game runs
-   here) — and settles on the card's sun mark, which is itself sinking onto
+   stage's "carry" layer (--z-carry 22: above the bars, below the game HUD
+   and the header) — and settles on the card's sun mark, which is itself sinking onto
    the plate's sun as the card arrives (tintype.tsx, `pin.enter`). Both
    halves are on screen together; at the meet the carried point fades into
    the card's sun. Reversible by position (scrolling back puts it back on
@@ -155,7 +155,7 @@ function WarmCarry() {
   }, [el]);
 
   return (
-    <StageLayerPortal layer="game-hud">
+    <StageLayerPortal layer="carry">
       <div
         ref={setEl}
         aria-hidden="true"

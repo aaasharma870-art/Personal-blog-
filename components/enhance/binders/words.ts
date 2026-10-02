@@ -41,7 +41,7 @@ import type { Variant } from "@/lib/variants";
 import { Run, exposeDebug, liveNow, note, type Restore } from "@/components/words/bind/shared";
 import { armTitle, playTitle, titleHold, titleWorldOf, type TitleWorld } from "@/components/words/bind/titles";
 import { PHYSICAL_MS, armPhysical, playPhysical, syncPhysicalVariant } from "@/components/words/bind/physical";
-import { playFly } from "@/components/words/bind/fly";
+import { loadFlyFrames, playFly } from "@/components/words/bind/fly";
 import { Scrub } from "@/components/words/bind/scrub";
 
 type Kind = "title" | "physical" | "fly";
@@ -114,13 +114,18 @@ class TimeStar implements Item {
     this.state = "asking";
     note("ask", this.key);
     const fly = this.kind === "fly";
-    void spotlight
-      .request(this.id, { weight: weightOf(this.el, fly ? 2 : 1), needsIdle: fly || undefined, durationMs: this.hold() })
-      .then((answer) => {
-        if (this.state !== "asking") return;
-        if (answer === "play" && liveNow()) void this.play();
-        else this.settle("static", answer === "skip" ? "spotlight skip" : "motion off");
-      });
+    // a lazy fly zone (the horse) loads its frames first (bind/fly.ts)
+    void (fly ? loadFlyFrames(this.el) : Promise.resolve(true)).then((ok) => {
+      if (this.state !== "asking") return;
+      if (!ok) return this.settle("static", "no frames");
+      void spotlight
+        .request(this.id, { weight: weightOf(this.el, fly ? 2 : 1), needsIdle: fly || undefined, durationMs: this.hold() })
+        .then((answer) => {
+          if (this.state !== "asking") return;
+          if (answer === "play" && liveNow()) void this.play();
+          else this.settle("static", answer === "skip" ? "spotlight skip" : "motion off");
+        });
+    });
   }
 
   /** Plays now (the spotlight's grant, or a lab replay). */

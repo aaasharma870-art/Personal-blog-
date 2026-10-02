@@ -1,0 +1,2969 @@
+{
+  "base": "http://localhost:3161",
+  "path": "/?skip=intro,smooth&debug=spotlight",
+  "date": "2026-10-02T23:14:43.762Z",
+  "results": [
+    {
+      "width": 1440,
+      "pageVh": 4952.1,
+      "heights": {
+        "top": 1,
+        "act-1": 2.648,
+        "about": 1.211,
+        "journey": 3.264,
+        "act-2": 2.1,
+        "work": 2.593,
+        "trading-algos": 2.087,
+        "optuna-screener": 3.23,
+        "experiment": 1.14,
+        "systems": 2.404,
+        "kill-list": 2.358,
+        "films": 6.056,
+        "act-3": 1.9,
+        "beyond": 4.805,
+        "writing": 2.91,
+        "voices": 1.602,
+        "act-4": 2.1,
+        "principles": 2.989,
+        "contact": 1.06,
+        "credits": 2.065
+      },
+      "gaps": [
+        {
+          "after": "B29",
+          "before": "B30",
+          "vh": 159.4,
+          "fromVh": 2205.6,
+          "toVh": 2365
+        },
+        {
+          "after": "B56",
+          "before": "B57",
+          "vh": 167.1,
+          "fromVh": 4684.1,
+          "toVh": 4851.2
+        }
+      ],
+      "competing": [
+        {
+          "a": "B06",
+          "b": "B07",
+          "vh": 9.4
+        },
+        {
+          "a": "B07",
+          "b": "B08",
+          "vh": 10.9
+        },
+        {
+          "a": "B07",
+          "b": "B08-invite",
+          "vh": 55.2
+        },
+        {
+          "a": "B08-invite",
+          "b": "B09",
+          "vh": 2.4
+        },
+        {
+          "a": "B08-invite",
+          "b": "B12",
+          "vh": 16.4
+        },
+        {
+          "a": "B09",
+          "b": "B12",
+          "vh": 40
+        },
+        {
+          "a": "B12",
+          "b": "B10",
+          "vh": 7.5
+        },
+        {
+          "a": "B16",
+          "b": "B17",
+          "vh": 11.1
+        },
+        {
+          "a": "B17",
+          "b": "B18",
+          "vh": 38
+        },
+        {
+          "a": "B18",
+          "b": "B19",
+          "vh": 19.5
+        },
+        {
+          "a": "B18",
+          "b": "B20",
+          "vh": 17
+        },
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 89.9
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 55.6
+        },
+        {
+          "a": "B21",
+          "b": "B22",
+          "vh": 5.5
+        },
+        {
+          "a": "B22",
+          "b": "B23",
+          "vh": 10.7
+        },
+        {
+          "a": "B25",
+          "b": "B26",
+          "vh": 10.8
+        },
+        {
+          "a": "B28",
+          "b": "B29",
+          "vh": 80
+        },
+        {
+          "a": "B42",
+          "b": "B43",
+          "vh": 7.2
+        },
+        {
+          "a": "B44",
+          "b": "B45",
+          "vh": 30.5
+        },
+        {
+          "a": "B52",
+          "b": "B53",
+          "vh": 77
+        },
+        {
+          "a": "B57",
+          "b": "B58",
+          "vh": 71.8
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 18,
+          "free": 10,
+          "request": 32,
+          "wait": 3,
+          "grant": 6,
+          "skip": 26,
+          "end": 6
+        },
+        "log": [
+          {
+            "t": 1929,
+            "y": 1080,
+            "ev": "own",
+            "id": "B03",
+            "weight": 3
+          },
+          {
+            "t": 1997,
+            "y": 1620,
+            "ev": "own",
+            "id": "B04",
+            "weight": 3
+          },
+          {
+            "t": 2184,
+            "y": 2160,
+            "ev": "free",
+            "id": "B04"
+          },
+          {
+            "t": 2424,
+            "y": 3240,
+            "ev": "own",
+            "id": "B08",
+            "weight": 1
+          },
+          {
+            "t": 2434,
+            "y": 3240,
+            "ev": "request",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 2435,
+            "y": 3240,
+            "ev": "wait",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 2441,
+            "y": 3240,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 2443,
+            "y": 3240,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 2645,
+            "y": 4320,
+            "ev": "free",
+            "id": "B08"
+          },
+          {
+            "t": 2645,
+            "y": 4320,
+            "ev": "grant",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "waited 203 ms"
+          },
+          {
+            "t": 2652,
+            "y": 4320,
+            "ev": "skip",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3360,
+            "y": 7560,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3
+          },
+          {
+            "t": 3464,
+            "y": 8100,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3
+          },
+          {
+            "t": 3651,
+            "y": 9180,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3757,
+            "y": 9720,
+            "ev": "request",
+            "id": "B16",
+            "weight": 1
+          },
+          {
+            "t": 3846,
+            "y": 10260,
+            "ev": "request",
+            "id": "B17",
+            "weight": 2
+          },
+          {
+            "t": 3847,
+            "y": 10260,
+            "ev": "end",
+            "id": "B08-compass",
+            "why": "held"
+          },
+          {
+            "t": 3847,
+            "y": 10260,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 1 ms"
+          },
+          {
+            "t": 3950,
+            "y": 10800,
+            "ev": "request",
+            "id": "B18",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 3951,
+            "y": 10800,
+            "ev": "skip",
+            "id": "B16",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4043,
+            "y": 11340,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 4132,
+            "y": 11880,
+            "ev": "skip",
+            "id": "B18",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4132,
+            "y": 11880,
+            "ev": "request",
+            "id": "B20",
+            "weight": 2
+          },
+          {
+            "t": 4226,
+            "y": 12420,
+            "ev": "request",
+            "id": "B21-circle",
+            "weight": 1
+          },
+          {
+            "t": 4305,
+            "y": 12960,
+            "ev": "own",
+            "id": "B21",
+            "weight": 1
+          },
+          {
+            "t": 4316,
+            "y": 12960,
+            "ev": "skip",
+            "id": "B20",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4404,
+            "y": 13500,
+            "ev": "free",
+            "id": "B21"
+          },
+          {
+            "t": 4416,
+            "y": 13500,
+            "ev": "skip",
+            "id": "B21-circle",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4416,
+            "y": 13500,
+            "ev": "request",
+            "id": "B22",
+            "weight": 2
+          },
+          {
+            "t": 4492,
+            "y": 14040,
+            "ev": "request",
+            "id": "B23",
+            "weight": 1
+          },
+          {
+            "t": 4591,
+            "y": 14580,
+            "ev": "skip",
+            "id": "B22",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4591,
+            "y": 14580,
+            "ev": "skip",
+            "id": "B23",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4672,
+            "y": 15120,
+            "ev": "request",
+            "id": "B24",
+            "weight": 1
+          },
+          {
+            "t": 4857,
+            "y": 16200,
+            "ev": "skip",
+            "id": "B24",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4857,
+            "y": 16200,
+            "ev": "request",
+            "id": "B25",
+            "weight": 1
+          },
+          {
+            "t": 5040,
+            "y": 17280,
+            "ev": "request",
+            "id": "B26",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 5051,
+            "y": 17280,
+            "ev": "end",
+            "id": "B17",
+            "why": "held"
+          },
+          {
+            "t": 5051,
+            "y": 17280,
+            "ev": "grant",
+            "id": "B25",
+            "weight": 1,
+            "why": "waited 194 ms"
+          },
+          {
+            "t": 5223,
+            "y": 18360,
+            "ev": "request",
+            "id": "B27",
+            "weight": 2
+          },
+          {
+            "t": 5223,
+            "y": 18360,
+            "ev": "skip",
+            "id": "B26",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5326,
+            "y": 18900,
+            "ev": "request",
+            "id": "B28",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 5407,
+            "y": 19440,
+            "ev": "request",
+            "id": "B29",
+            "weight": 1
+          },
+          {
+            "t": 5495,
+            "y": 19980,
+            "ev": "skip",
+            "id": "B29",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5495,
+            "y": 19980,
+            "ev": "skip",
+            "id": "B27",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5495,
+            "y": 19980,
+            "ev": "skip",
+            "id": "B28",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5702,
+            "y": 21060,
+            "ev": "own",
+            "id": "B30",
+            "weight": 3
+          },
+          {
+            "t": 5877,
+            "y": 21600,
+            "ev": "free",
+            "id": "B30"
+          },
+          {
+            "t": 5899,
+            "y": 21600,
+            "ev": "request",
+            "id": "B31",
+            "weight": 1
+          },
+          {
+            "t": 5920,
+            "y": 22140,
+            "ev": "request",
+            "id": "B31-finale",
+            "weight": 1
+          },
+          {
+            "t": 6072,
+            "y": 22680,
+            "ev": "request",
+            "id": "B32",
+            "weight": 1
+          },
+          {
+            "t": 6073,
+            "y": 22680,
+            "ev": "skip",
+            "id": "B31",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6093,
+            "y": 23220,
+            "ev": "skip",
+            "id": "B31-finale",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6093,
+            "y": 23220,
+            "ev": "request",
+            "id": "B32-finale",
+            "weight": 2
+          },
+          {
+            "t": 6186,
+            "y": 23760,
+            "ev": "skip",
+            "id": "B32",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6261,
+            "y": 23760,
+            "ev": "end",
+            "id": "B25",
+            "why": "held"
+          },
+          {
+            "t": 6261,
+            "y": 23760,
+            "ev": "grant",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "waited 168 ms"
+          },
+          {
+            "t": 6281,
+            "y": 24300,
+            "ev": "request",
+            "id": "B33-finale",
+            "weight": 2
+          },
+          {
+            "t": 6282,
+            "y": 24300,
+            "ev": "request",
+            "id": "B33",
+            "weight": 1
+          },
+          {
+            "t": 6374,
+            "y": 24840,
+            "ev": "skip",
+            "id": "B33",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6751,
+            "y": 25399,
+            "ev": "request",
+            "id": "B34",
+            "weight": 1
+          },
+          {
+            "t": 6751,
+            "y": 25399,
+            "ev": "skip",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6768,
+            "y": 25920,
+            "ev": "request",
+            "id": "B34-finale",
+            "weight": 2
+          },
+          {
+            "t": 6868,
+            "y": 26460,
+            "ev": "own",
+            "id": "B35",
+            "weight": 1
+          },
+          {
+            "t": 6874,
+            "y": 26460,
+            "ev": "skip",
+            "id": "B34",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6948,
+            "y": 27000,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3
+          },
+          {
+            "t": 6954,
+            "y": 27000,
+            "ev": "skip",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7138,
+            "y": 28080,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3
+          },
+          {
+            "t": 7241,
+            "y": 28620,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 7246,
+            "y": 28620,
+            "ev": "request",
+            "id": "B40",
+            "weight": 1
+          },
+          {
+            "t": 7418,
+            "y": 29700,
+            "ev": "own",
+            "id": "B41",
+            "weight": 2
+          },
+          {
+            "t": 7423,
+            "y": 29700,
+            "ev": "skip",
+            "id": "B40",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7461,
+            "y": 29700,
+            "ev": "end",
+            "id": "B32-finale",
+            "why": "held"
+          },
+          {
+            "t": 7500,
+            "y": 30240,
+            "ev": "free",
+            "id": "B41"
+          },
+          {
+            "t": 7705,
+            "y": 31320,
+            "ev": "own",
+            "id": "B42",
+            "weight": 1
+          },
+          {
+            "t": 7712,
+            "y": 31320,
+            "ev": "request",
+            "id": "B43",
+            "weight": 2
+          },
+          {
+            "t": 7713,
+            "y": 31320,
+            "ev": "wait",
+            "id": "B43",
+            "weight": 2,
+            "why": "owned by B42"
+          },
+          {
+            "t": 7791,
+            "y": 31860,
+            "ev": "free",
+            "id": "B42"
+          },
+          {
+            "t": 7792,
+            "y": 31860,
+            "ev": "grant",
+            "id": "B43",
+            "weight": 2,
+            "why": "waited 79 ms"
+          },
+          {
+            "t": 7798,
+            "y": 31860,
+            "ev": "request",
+            "id": "B43-wanted",
+            "weight": 2
+          },
+          {
+            "t": 7976,
+            "y": 32940,
+            "ev": "request",
+            "id": "B44",
+            "weight": 2
+          },
+          {
+            "t": 8072,
+            "y": 33480,
+            "ev": "skip",
+            "id": "B44",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8072,
+            "y": 33480,
+            "ev": "skip",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8203,
+            "y": 33480,
+            "ev": "request",
+            "id": "B45",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 8400,
+            "y": 35100,
+            "ev": "own",
+            "id": "B46",
+            "weight": 1
+          },
+          {
+            "t": 8484,
+            "y": 35640,
+            "ev": "own",
+            "id": "B47",
+            "weight": 2
+          },
+          {
+            "t": 8490,
+            "y": 35640,
+            "ev": "skip",
+            "id": "B45",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8787,
+            "y": 37260,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3
+          },
+          {
+            "t": 8895,
+            "y": 37800,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3
+          },
+          {
+            "t": 8997,
+            "y": 37800,
+            "ev": "end",
+            "id": "B43",
+            "why": "held"
+          },
+          {
+            "t": 9140,
+            "y": 38880,
+            "ev": "free",
+            "id": "B50"
+          },
+          {
+            "t": 9156,
+            "y": 38880,
+            "ev": "request",
+            "id": "B53",
+            "weight": 1
+          },
+          {
+            "t": 9156,
+            "y": 38880,
+            "ev": "grant",
+            "id": "B53",
+            "weight": 1,
+            "why": "waited 0 ms"
+          },
+          {
+            "t": 9160,
+            "y": 38880,
+            "ev": "request",
+            "id": "B52",
+            "weight": 1
+          },
+          {
+            "t": 9485,
+            "y": 41040,
+            "ev": "own",
+            "id": "B55",
+            "weight": 1
+          },
+          {
+            "t": 9586,
+            "y": 41580,
+            "ev": "free",
+            "id": "B55"
+          },
+          {
+            "t": 9596,
+            "y": 41580,
+            "ev": "request",
+            "id": "B56",
+            "weight": 2
+          },
+          {
+            "t": 9690,
+            "y": 42120,
+            "ev": "skip",
+            "id": "B52",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9788,
+            "y": 42660,
+            "ev": "request",
+            "id": "B57",
+            "weight": 2
+          },
+          {
+            "t": 9789,
+            "y": 42660,
+            "ev": "skip",
+            "id": "B56",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9813,
+            "y": 42660,
+            "ev": "skip",
+            "id": "B57",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 10058,
+            "y": 43762,
+            "ev": "end",
+            "id": "B53",
+            "why": "held"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 900
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 125.3,
+          "hPx": 536,
+          "stickyPx": 810
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 365
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 184.9,
+          "hPx": 136,
+          "stickyPx": 810
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 405
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 673
+        },
+        {
+          "id": "B07",
+          "star": true,
+          "weight": 1,
+          "topVh": 380.6,
+          "hPx": 194
+        },
+        {
+          "id": "B08",
+          "star": true,
+          "weight": 1,
+          "topVh": 419.6,
+          "hPx": 148
+        },
+        {
+          "id": "B08-invite",
+          "star": true,
+          "weight": 1,
+          "topVh": 425.4,
+          "hPx": 207
+        },
+        {
+          "id": "B09",
+          "star": true,
+          "weight": 1,
+          "topVh": 473.1,
+          "hPx": 360
+        },
+        {
+          "id": "B09-window",
+          "star": false,
+          "weight": null,
+          "topVh": 509,
+          "hPx": 362,
+          "stickyPx": 2003
+        },
+        {
+          "id": "B12",
+          "star": true,
+          "weight": 2,
+          "topVh": 509,
+          "hPx": 152,
+          "stickyPx": 2003
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 551.5,
+          "hPx": 558
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 675.5,
+          "hPx": 558
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 834.6,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 862.3,
+          "hPx": 446
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 894.1,
+          "hPx": 164,
+          "stickyPx": 990
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 911.8,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 917.3,
+          "hPx": 495
+        },
+        {
+          "id": "B16",
+          "star": true,
+          "weight": 1,
+          "topVh": 1112.9,
+          "hPx": 217
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1201.8,
+          "hPx": 548
+        },
+        {
+          "id": "B18",
+          "star": true,
+          "weight": 1,
+          "topVh": 1263.9,
+          "hPx": 44
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1294.3,
+          "hPx": 832,
+          "stickyPx": 816
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1294.3,
+          "hPx": 832,
+          "stickyPx": 816
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1346.8,
+          "hPx": 519
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1458.7,
+          "hPx": 109
+        },
+        {
+          "id": "B21",
+          "star": true,
+          "weight": 1,
+          "topVh": 1461.9,
+          "hPx": 49
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1503.1,
+          "hPx": 562
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1572.6,
+          "hPx": 832,
+          "stickyPx": 1219
+        },
+        {
+          "id": "B23",
+          "star": true,
+          "weight": 1,
+          "topVh": 1592.4,
+          "hPx": 22
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1727.7,
+          "hPx": 24
+        },
+        {
+          "id": "B25",
+          "star": true,
+          "weight": 1,
+          "topVh": 1850.9,
+          "hPx": 572
+        },
+        {
+          "id": "B26",
+          "star": true,
+          "weight": 1,
+          "topVh": 1940.1,
+          "hPx": 562
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2054,
+          "hPx": 908
+        },
+        {
+          "id": "B28",
+          "star": true,
+          "weight": 1,
+          "topVh": 2183.2,
+          "hPx": 44
+        },
+        {
+          "id": "B29",
+          "star": true,
+          "weight": 1,
+          "topVh": 2203.2,
+          "hPx": 22
+        },
+        {
+          "id": "B30",
+          "star": true,
+          "weight": 3,
+          "topVh": 2365,
+          "hPx": 360
+        },
+        {
+          "id": "B31",
+          "star": true,
+          "weight": 1,
+          "topVh": 2460.7,
+          "hPx": 60
+        },
+        {
+          "id": "B31-finale",
+          "star": true,
+          "weight": 1,
+          "topVh": 2470,
+          "hPx": 549
+        },
+        {
+          "id": "B31-bars",
+          "star": false,
+          "weight": null,
+          "topVh": 2480.5,
+          "hPx": 360
+        },
+        {
+          "id": "B32",
+          "star": true,
+          "weight": 1,
+          "topVh": 2595.2,
+          "hPx": 63
+        },
+        {
+          "id": "B32-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2604.9,
+          "hPx": 549
+        },
+        {
+          "id": "B33",
+          "star": true,
+          "weight": 1,
+          "topVh": 2734.4,
+          "hPx": 51
+        },
+        {
+          "id": "B33-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2742.7,
+          "hPx": 549
+        },
+        {
+          "id": "B34",
+          "star": true,
+          "weight": 1,
+          "topVh": 2870.9,
+          "hPx": 70
+        },
+        {
+          "id": "B34-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2881.3,
+          "hPx": 549
+        },
+        {
+          "id": "B35",
+          "star": true,
+          "weight": 1,
+          "topVh": 2976.3,
+          "hPx": 360
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3017.4,
+          "hPx": 536,
+          "stickyPx": 810
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3059.1,
+          "hPx": 365
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3061.8,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3091.2,
+          "hPx": 161,
+          "stickyPx": 810
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3104.1,
+          "hPx": 405
+        },
+        {
+          "id": "B39-drift",
+          "star": false,
+          "weight": null,
+          "topVh": 3199.1,
+          "hPx": 720
+        },
+        {
+          "id": "B40",
+          "star": true,
+          "weight": 1,
+          "topVh": 3215.8,
+          "hPx": 208
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3324.1,
+          "hPx": 312
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3366,
+          "hPx": 832,
+          "stickyPx": 965
+        },
+        {
+          "id": "B42",
+          "star": true,
+          "weight": 1,
+          "topVh": 3496.7,
+          "hPx": 65
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3525.7,
+          "hPx": 294
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3572.7,
+          "hPx": 756
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 3697.1,
+          "hPx": 101
+        },
+        {
+          "id": "B45",
+          "star": true,
+          "weight": 2,
+          "topVh": 3766.6,
+          "hPx": 96,
+          "stickyPx": 1380
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 3935.9,
+          "hPx": 312
+        },
+        {
+          "id": "B47",
+          "star": true,
+          "weight": 2,
+          "topVh": 3983.4,
+          "hPx": 1211
+        },
+        {
+          "id": "B47-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 3983.4,
+          "hPx": 900,
+          "stickyPx": 426
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4156.1,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4156.1,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4180.7,
+          "hPx": 446
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4215.6,
+          "hPx": 136,
+          "stickyPx": 990
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4230.2,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4235.7,
+          "hPx": 495
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4353.5,
+          "hPx": 2459
+        },
+        {
+          "id": "B53",
+          "star": true,
+          "weight": 1,
+          "topVh": 4376.5,
+          "hPx": 311
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4504.1,
+          "hPx": 373
+        },
+        {
+          "id": "B55",
+          "star": true,
+          "weight": 1,
+          "topVh": 4606.4,
+          "hPx": 82
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 4677.9,
+          "hPx": 56
+        },
+        {
+          "id": "B57",
+          "star": true,
+          "weight": 2,
+          "topVh": 4851.2,
+          "hPx": 44
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 4879.4,
+          "hPx": 540
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "width": 1024,
+      "pageVh": 5366.8,
+      "heights": {
+        "top": 1,
+        "act-1": 2.705,
+        "about": 1.633,
+        "journey": 3.22,
+        "act-2": 2.1,
+        "work": 2.713,
+        "trading-algos": 2.849,
+        "optuna-screener": 3.934,
+        "experiment": 1.201,
+        "systems": 2.419,
+        "kill-list": 2.784,
+        "films": 5.816,
+        "act-3": 1.9,
+        "beyond": 5.611,
+        "writing": 3.236,
+        "voices": 2.01,
+        "act-4": 2.1,
+        "principles": 3.183,
+        "contact": 1.025,
+        "credits": 2.23
+      },
+      "gaps": [
+        {
+          "after": "B29",
+          "before": "B30",
+          "vh": 199.5,
+          "fromVh": 2417.7,
+          "toVh": 2617.1
+        },
+        {
+          "after": "B56",
+          "before": "B57",
+          "vh": 178.5,
+          "fromVh": 5084.6,
+          "toVh": 5263.1
+        }
+      ],
+      "competing": [
+        {
+          "a": "B06",
+          "b": "B07",
+          "vh": 4.7
+        },
+        {
+          "a": "B07",
+          "b": "B08",
+          "vh": 2.7
+        },
+        {
+          "a": "B07",
+          "b": "B08-invite",
+          "vh": 35.8
+        },
+        {
+          "a": "B09",
+          "b": "B12",
+          "vh": 40
+        },
+        {
+          "a": "B12",
+          "b": "B10",
+          "vh": 7.1
+        },
+        {
+          "a": "B16",
+          "b": "B17",
+          "vh": 7.9
+        },
+        {
+          "a": "B17",
+          "b": "B18",
+          "vh": 16.7
+        },
+        {
+          "a": "B18",
+          "b": "B19",
+          "vh": 22.9
+        },
+        {
+          "a": "B18",
+          "b": "B20",
+          "vh": 1.9
+        },
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 70.1
+        },
+        {
+          "a": "B21",
+          "b": "B22",
+          "vh": 2.7
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 60.2
+        },
+        {
+          "a": "B25",
+          "b": "B26",
+          "vh": 4.1
+        },
+        {
+          "a": "B28",
+          "b": "B29",
+          "vh": 79.8
+        },
+        {
+          "a": "B42",
+          "b": "B43",
+          "vh": 5.3
+        },
+        {
+          "a": "B44",
+          "b": "B45",
+          "vh": 47.2
+        },
+        {
+          "a": "B52",
+          "b": "B53",
+          "vh": 73.4
+        },
+        {
+          "a": "B57",
+          "b": "B58",
+          "vh": 67
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 17,
+          "free": 11,
+          "request": 34,
+          "wait": 3,
+          "skip": 27,
+          "grant": 7,
+          "end": 7
+        },
+        "log": [
+          {
+            "t": 1816,
+            "y": 1383,
+            "ev": "own",
+            "id": "B04",
+            "weight": 3
+          },
+          {
+            "t": 1872,
+            "y": 1844,
+            "ev": "free",
+            "id": "B04"
+          },
+          {
+            "t": 2050,
+            "y": 2766,
+            "ev": "own",
+            "id": "B08",
+            "weight": 1
+          },
+          {
+            "t": 2056,
+            "y": 2766,
+            "ev": "request",
+            "id": "B07",
+            "weight": 1
+          },
+          {
+            "t": 2057,
+            "y": 2766,
+            "ev": "wait",
+            "id": "B07",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 2140,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 2141,
+            "y": 3227,
+            "ev": "wait",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 2141,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 2141,
+            "y": 3227,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 2142,
+            "y": 3227,
+            "ev": "skip",
+            "id": "B07",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2252,
+            "y": 3688,
+            "ev": "free",
+            "id": "B08"
+          },
+          {
+            "t": 2252,
+            "y": 3688,
+            "ev": "grant",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "waited 111 ms"
+          },
+          {
+            "t": 2380,
+            "y": 4149,
+            "ev": "skip",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2803,
+            "y": 5993,
+            "ev": "request",
+            "id": "B12",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 2878,
+            "y": 6454,
+            "ev": "skip",
+            "id": "B12",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2969,
+            "y": 6915,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3
+          },
+          {
+            "t": 3057,
+            "y": 7376,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3
+          },
+          {
+            "t": 3152,
+            "y": 7837,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3339,
+            "y": 8759,
+            "ev": "request",
+            "id": "B16",
+            "weight": 1
+          },
+          {
+            "t": 3442,
+            "y": 9220,
+            "ev": "request",
+            "id": "B17",
+            "weight": 2
+          },
+          {
+            "t": 3442,
+            "y": 9220,
+            "ev": "skip",
+            "id": "B16",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3460,
+            "y": 9220,
+            "ev": "end",
+            "id": "B08-compass",
+            "why": "held"
+          },
+          {
+            "t": 3461,
+            "y": 9220,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 19 ms"
+          },
+          {
+            "t": 3527,
+            "y": 9681,
+            "ev": "request",
+            "id": "B18",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 3617,
+            "y": 10142,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 3706,
+            "y": 10603,
+            "ev": "skip",
+            "id": "B18",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3706,
+            "y": 10603,
+            "ev": "request",
+            "id": "B20",
+            "weight": 2
+          },
+          {
+            "t": 3800,
+            "y": 11064,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 3889,
+            "y": 11525,
+            "ev": "skip",
+            "id": "B20",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3985,
+            "y": 11986,
+            "ev": "own",
+            "id": "B21",
+            "weight": 1
+          },
+          {
+            "t": 3994,
+            "y": 11986,
+            "ev": "request",
+            "id": "B21-circle",
+            "weight": 1
+          },
+          {
+            "t": 4070,
+            "y": 12447,
+            "ev": "free",
+            "id": "B21"
+          },
+          {
+            "t": 4080,
+            "y": 12447,
+            "ev": "request",
+            "id": "B22",
+            "weight": 2
+          },
+          {
+            "t": 4173,
+            "y": 12908,
+            "ev": "skip",
+            "id": "B21-circle",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4261,
+            "y": 13369,
+            "ev": "skip",
+            "id": "B22",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4261,
+            "y": 13369,
+            "ev": "request",
+            "id": "B23",
+            "weight": 1
+          },
+          {
+            "t": 4357,
+            "y": 13830,
+            "ev": "skip",
+            "id": "B23",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4441,
+            "y": 14291,
+            "ev": "request",
+            "id": "B24",
+            "weight": 1
+          },
+          {
+            "t": 4625,
+            "y": 15213,
+            "ev": "skip",
+            "id": "B24",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4661,
+            "y": 15213,
+            "ev": "end",
+            "id": "B17",
+            "why": "held"
+          },
+          {
+            "t": 4723,
+            "y": 15674,
+            "ev": "request",
+            "id": "B25",
+            "weight": 1
+          },
+          {
+            "t": 4723,
+            "y": 15674,
+            "ev": "grant",
+            "id": "B25",
+            "weight": 1,
+            "why": "waited 0 ms"
+          },
+          {
+            "t": 4807,
+            "y": 16135,
+            "ev": "request",
+            "id": "B26",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 4989,
+            "y": 17057,
+            "ev": "skip",
+            "id": "B26",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4990,
+            "y": 17057,
+            "ev": "request",
+            "id": "B27",
+            "weight": 2
+          },
+          {
+            "t": 5297,
+            "y": 17979,
+            "ev": "request",
+            "id": "B28",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 5394,
+            "y": 18440,
+            "ev": "request",
+            "id": "B29",
+            "weight": 1
+          },
+          {
+            "t": 5394,
+            "y": 18440,
+            "ev": "skip",
+            "id": "B27",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5492,
+            "y": 18901,
+            "ev": "skip",
+            "id": "B28",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5493,
+            "y": 18901,
+            "ev": "skip",
+            "id": "B29",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5791,
+            "y": 19823,
+            "ev": "own",
+            "id": "B30",
+            "weight": 3
+          },
+          {
+            "t": 5963,
+            "y": 20284,
+            "ev": "free",
+            "id": "B30"
+          },
+          {
+            "t": 5982,
+            "y": 20284,
+            "ev": "request",
+            "id": "B31",
+            "weight": 1
+          },
+          {
+            "t": 5984,
+            "y": 20284,
+            "ev": "end",
+            "id": "B25",
+            "why": "held"
+          },
+          {
+            "t": 5984,
+            "y": 20284,
+            "ev": "grant",
+            "id": "B31",
+            "weight": 1,
+            "why": "waited 3 ms"
+          },
+          {
+            "t": 6017,
+            "y": 20745,
+            "ev": "request",
+            "id": "B31-finale",
+            "weight": 1
+          },
+          {
+            "t": 6171,
+            "y": 21206,
+            "ev": "request",
+            "id": "B32",
+            "weight": 1
+          },
+          {
+            "t": 6195,
+            "y": 21667,
+            "ev": "request",
+            "id": "B32-finale",
+            "weight": 2
+          },
+          {
+            "t": 6235,
+            "y": 21667,
+            "ev": "skip",
+            "id": "B31-finale",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6396,
+            "y": 22128,
+            "ev": "skip",
+            "id": "B32",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6405,
+            "y": 22128,
+            "ev": "end",
+            "id": "B31",
+            "why": "held"
+          },
+          {
+            "t": 6405,
+            "y": 22128,
+            "ev": "grant",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "waited 210 ms"
+          },
+          {
+            "t": 6619,
+            "y": 22589,
+            "ev": "request",
+            "id": "B33",
+            "weight": 1
+          },
+          {
+            "t": 6619,
+            "y": 22589,
+            "ev": "request",
+            "id": "B33-finale",
+            "weight": 2
+          },
+          {
+            "t": 6721,
+            "y": 23050,
+            "ev": "skip",
+            "id": "B33",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6814,
+            "y": 23511,
+            "ev": "request",
+            "id": "B34",
+            "weight": 1
+          },
+          {
+            "t": 6815,
+            "y": 23511,
+            "ev": "skip",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6815,
+            "y": 23511,
+            "ev": "request",
+            "id": "B34-finale",
+            "weight": 2
+          },
+          {
+            "t": 6905,
+            "y": 23972,
+            "ev": "skip",
+            "id": "B34",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6984,
+            "y": 24433,
+            "ev": "own",
+            "id": "B35",
+            "weight": 1
+          },
+          {
+            "t": 6991,
+            "y": 24433,
+            "ev": "skip",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7082,
+            "y": 24894,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3
+          },
+          {
+            "t": 7171,
+            "y": 25355,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3
+          },
+          {
+            "t": 7268,
+            "y": 25816,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 7355,
+            "y": 26277,
+            "ev": "request",
+            "id": "B40",
+            "weight": 1
+          },
+          {
+            "t": 7460,
+            "y": 26738,
+            "ev": "skip",
+            "id": "B40",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7533,
+            "y": 27199,
+            "ev": "own",
+            "id": "B41",
+            "weight": 2
+          },
+          {
+            "t": 7606,
+            "y": 27199,
+            "ev": "end",
+            "id": "B32-finale",
+            "why": "held"
+          },
+          {
+            "t": 7634,
+            "y": 27660,
+            "ev": "free",
+            "id": "B41"
+          },
+          {
+            "t": 7819,
+            "y": 28582,
+            "ev": "own",
+            "id": "B42",
+            "weight": 1
+          },
+          {
+            "t": 7902,
+            "y": 29043,
+            "ev": "free",
+            "id": "B42"
+          },
+          {
+            "t": 7909,
+            "y": 29043,
+            "ev": "request",
+            "id": "B43",
+            "weight": 2
+          },
+          {
+            "t": 7909,
+            "y": 29043,
+            "ev": "grant",
+            "id": "B43",
+            "weight": 2,
+            "why": "waited 0 ms"
+          },
+          {
+            "t": 8010,
+            "y": 29502,
+            "ev": "request",
+            "id": "B43-wanted",
+            "weight": 2
+          },
+          {
+            "t": 8192,
+            "y": 30426,
+            "ev": "request",
+            "id": "B44",
+            "weight": 2
+          },
+          {
+            "t": 8291,
+            "y": 30887,
+            "ev": "skip",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8291,
+            "y": 30887,
+            "ev": "skip",
+            "id": "B44",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8382,
+            "y": 30887,
+            "ev": "request",
+            "id": "B45",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 8567,
+            "y": 32270,
+            "ev": "own",
+            "id": "B46",
+            "weight": 1
+          },
+          {
+            "t": 8668,
+            "y": 32731,
+            "ev": "own",
+            "id": "B47",
+            "weight": 2
+          },
+          {
+            "t": 8755,
+            "y": 33192,
+            "ev": "skip",
+            "id": "B45",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9040,
+            "y": 34575,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3
+          },
+          {
+            "t": 9111,
+            "y": 34575,
+            "ev": "end",
+            "id": "B43",
+            "why": "held"
+          },
+          {
+            "t": 9247,
+            "y": 35497,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3
+          },
+          {
+            "t": 9328,
+            "y": 35958,
+            "ev": "free",
+            "id": "B50"
+          },
+          {
+            "t": 9368,
+            "y": 35958,
+            "ev": "request",
+            "id": "B52",
+            "weight": 1
+          },
+          {
+            "t": 9369,
+            "y": 35958,
+            "ev": "grant",
+            "id": "B52",
+            "weight": 1,
+            "why": "waited 1 ms"
+          },
+          {
+            "t": 9437,
+            "y": 36419,
+            "ev": "request",
+            "id": "B53",
+            "weight": 1
+          },
+          {
+            "t": 9543,
+            "y": 36880,
+            "ev": "skip",
+            "id": "B53",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9817,
+            "y": 38263,
+            "ev": "own",
+            "id": "B55",
+            "weight": 1
+          },
+          {
+            "t": 9824,
+            "y": 38263,
+            "ev": "request",
+            "id": "B56",
+            "weight": 2
+          },
+          {
+            "t": 9918,
+            "y": 38724,
+            "ev": "free",
+            "id": "B55"
+          },
+          {
+            "t": 10027,
+            "y": 39185,
+            "ev": "skip",
+            "id": "B56",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 10124,
+            "y": 39646,
+            "ev": "request",
+            "id": "B57",
+            "weight": 2
+          },
+          {
+            "t": 10136,
+            "y": 39646,
+            "ev": "skip",
+            "id": "B57",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 10569,
+            "y": 40449,
+            "ev": "end",
+            "id": "B52",
+            "why": "held"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 768
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 129.7,
+          "hPx": 404,
+          "stickyPx": 691
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 311
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 182.3,
+          "hPx": 136,
+          "stickyPx": 691
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 346
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 619
+        },
+        {
+          "id": "B07",
+          "star": true,
+          "weight": 1,
+          "topVh": 385.3,
+          "hPx": 138
+        },
+        {
+          "id": "B08",
+          "star": true,
+          "weight": 1,
+          "topVh": 432.6,
+          "hPx": 210
+        },
+        {
+          "id": "B08-invite",
+          "star": true,
+          "weight": 1,
+          "topVh": 449.4,
+          "hPx": 207
+        },
+        {
+          "id": "B09",
+          "star": true,
+          "weight": 1,
+          "topVh": 523.1,
+          "hPx": 307
+        },
+        {
+          "id": "B09-window",
+          "star": false,
+          "weight": null,
+          "topVh": 554.2,
+          "hPx": 254,
+          "stickyPx": 1788
+        },
+        {
+          "id": "B12",
+          "star": true,
+          "weight": 2,
+          "topVh": 554.2,
+          "hPx": 107,
+          "stickyPx": 1788
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 597.1,
+          "hPx": 476
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 721.1,
+          "hPx": 476
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 883.5,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 905.8,
+          "hPx": 380
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 936.1,
+          "hPx": 151,
+          "stickyPx": 845
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 955.3,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 960.8,
+          "hPx": 422
+        },
+        {
+          "id": "B16",
+          "star": true,
+          "weight": 1,
+          "topVh": 1145.3,
+          "hPx": 154
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1237.4,
+          "hPx": 398
+        },
+        {
+          "id": "B18",
+          "star": true,
+          "weight": 1,
+          "topVh": 1320.7,
+          "hPx": 44
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1347.7,
+          "hPx": 700,
+          "stickyPx": 1324
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1347.7,
+          "hPx": 700,
+          "stickyPx": 1324
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1418.7,
+          "hPx": 413
+        },
+        {
+          "id": "B21",
+          "star": true,
+          "weight": 1,
+          "topVh": 1579,
+          "hPx": 49
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1592.9,
+          "hPx": 82
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1632.7,
+          "hPx": 398
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1692.8,
+          "hPx": 700,
+          "stickyPx": 1696
+        },
+        {
+          "id": "B23",
+          "star": true,
+          "weight": 1,
+          "topVh": 1748.6,
+          "hPx": 22
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1908,
+          "hPx": 24
+        },
+        {
+          "id": "B25",
+          "star": true,
+          "weight": 1,
+          "topVh": 2050.3,
+          "hPx": 572
+        },
+        {
+          "id": "B26",
+          "star": true,
+          "weight": 1,
+          "topVh": 2146.2,
+          "hPx": 398
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2251.6,
+          "hPx": 884
+        },
+        {
+          "id": "B28",
+          "star": true,
+          "weight": 1,
+          "topVh": 2394.6,
+          "hPx": 44
+        },
+        {
+          "id": "B29",
+          "star": true,
+          "weight": 1,
+          "topVh": 2414.8,
+          "hPx": 22
+        },
+        {
+          "id": "B30",
+          "star": true,
+          "weight": 3,
+          "topVh": 2617.1,
+          "hPx": 307
+        },
+        {
+          "id": "B31",
+          "star": true,
+          "weight": 1,
+          "topVh": 2713.5,
+          "hPx": 43
+        },
+        {
+          "id": "B31-finale",
+          "star": true,
+          "weight": 1,
+          "topVh": 2722.1,
+          "hPx": 388
+        },
+        {
+          "id": "B31-bars",
+          "star": false,
+          "weight": null,
+          "topVh": 2727.4,
+          "hPx": 307
+        },
+        {
+          "id": "B32",
+          "star": true,
+          "weight": 1,
+          "topVh": 2843.5,
+          "hPx": 45
+        },
+        {
+          "id": "B32-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2852.5,
+          "hPx": 388
+        },
+        {
+          "id": "B33",
+          "star": true,
+          "weight": 1,
+          "topVh": 2977.7,
+          "hPx": 36
+        },
+        {
+          "id": "B33-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2985.5,
+          "hPx": 388
+        },
+        {
+          "id": "B34",
+          "star": true,
+          "weight": 1,
+          "topVh": 3110.4,
+          "hPx": 50
+        },
+        {
+          "id": "B34-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 3120,
+          "hPx": 388
+        },
+        {
+          "id": "B35",
+          "star": true,
+          "weight": 1,
+          "topVh": 3205,
+          "hPx": 320
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3252.8,
+          "hPx": 404,
+          "stickyPx": 691
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3287.3,
+          "hPx": 311
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3290,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3318,
+          "hPx": 148,
+          "stickyPx": 691
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3332.3,
+          "hPx": 346
+        },
+        {
+          "id": "B39-drift",
+          "star": false,
+          "weight": null,
+          "topVh": 3427.3,
+          "hPx": 576
+        },
+        {
+          "id": "B40",
+          "star": true,
+          "weight": 1,
+          "topVh": 3447.2,
+          "hPx": 148
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3565,
+          "hPx": 332
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3616.7,
+          "hPx": 700,
+          "stickyPx": 1221
+        },
+        {
+          "id": "B42",
+          "star": true,
+          "weight": 1,
+          "topVh": 3778.2,
+          "hPx": 41
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3819.5,
+          "hPx": 298
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3875.1,
+          "hPx": 707
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 4004.6,
+          "hPx": 72
+        },
+        {
+          "id": "B45",
+          "star": true,
+          "weight": 2,
+          "topVh": 4057.4,
+          "hPx": 96,
+          "stickyPx": 1500
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 4271.4,
+          "hPx": 312
+        },
+        {
+          "id": "B47",
+          "star": true,
+          "weight": 2,
+          "topVh": 4322.7,
+          "hPx": 1379
+        },
+        {
+          "id": "B47-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4322.7,
+          "hPx": 768,
+          "stickyPx": 693
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4541.6,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4541.6,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4563,
+          "hPx": 380
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4594.2,
+          "hPx": 144,
+          "stickyPx": 845
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4612.5,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4618,
+          "hPx": 422
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4733.7,
+          "hPx": 2281
+        },
+        {
+          "id": "B53",
+          "star": true,
+          "weight": 1,
+          "topVh": 4760.3,
+          "hPx": 154
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4896,
+          "hPx": 332
+        },
+        {
+          "id": "B55",
+          "star": true,
+          "weight": 1,
+          "topVh": 5010.7,
+          "hPx": 51
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 5077.3,
+          "hPx": 56
+        },
+        {
+          "id": "B57",
+          "star": true,
+          "weight": 2,
+          "topVh": 5263.1,
+          "hPx": 44
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 5296.1,
+          "hPx": 461
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}
