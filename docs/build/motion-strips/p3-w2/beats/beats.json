@@ -1,0 +1,1099 @@
+{
+  "base": "http://localhost:3161",
+  "path": "/?skip=intro,smooth&debug=spotlight",
+  "date": "2026-10-02T17:48:43.842Z",
+  "results": [
+    {
+      "width": 1440,
+      "pageVh": 5226.8,
+      "heights": {
+        "top": 1,
+        "act-1": 2.648,
+        "about": 1.473,
+        "journey": 3.173,
+        "act-2": 2.1,
+        "work": 2.593,
+        "trading-algos": 2.134,
+        "optuna-screener": 4.94,
+        "experiment": 1.258,
+        "systems": 2.404,
+        "kill-list": 2.358,
+        "films": 6.056,
+        "act-3": 1.9,
+        "beyond": 4.805,
+        "writing": 2.871,
+        "voices": 1.602,
+        "act-4": 2.1,
+        "principles": 2.989,
+        "contact": 1,
+        "credits": 2.865
+      },
+      "gaps": [
+        {
+          "after": "B06",
+          "before": "B10",
+          "vh": 203.8
+        },
+        {
+          "after": "B14",
+          "before": "B17",
+          "vh": 229.5
+        },
+        {
+          "after": "B24",
+          "before": "B27",
+          "vh": 506.3
+        },
+        {
+          "after": "B27",
+          "before": "B35-sun",
+          "vh": 862.5
+        },
+        {
+          "after": "B38",
+          "before": "B41",
+          "vh": 175
+        },
+        {
+          "after": "B44",
+          "before": "B46",
+          "vh": 271.2
+        },
+        {
+          "after": "B56",
+          "before": "B58",
+          "vh": 272.3
+        }
+      ],
+      "competing": [
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 89.9
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 50.9
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [
+        "B07",
+        "B08",
+        "B08-invite",
+        "B09",
+        "B09-window",
+        "B12",
+        "B16",
+        "B18",
+        "B21",
+        "B23",
+        "B25",
+        "B26",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B31-finale",
+        "B31-bars",
+        "B32",
+        "B32-finale",
+        "B33",
+        "B33-finale",
+        "B34",
+        "B34-finale",
+        "B35",
+        "B39-drift",
+        "B40",
+        "B42",
+        "B45",
+        "B47",
+        "B47-fireflies",
+        "B53",
+        "B55",
+        "B57"
+      ],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 9,
+          "free": 5
+        },
+        "log": [
+          {
+            "t": 1379,
+            "y": 1080,
+            "ev": "own",
+            "id": "B03",
+            "weight": 3
+          },
+          {
+            "t": 1470,
+            "y": 1620,
+            "ev": "own",
+            "id": "B04",
+            "weight": 3
+          },
+          {
+            "t": 1579,
+            "y": 2160,
+            "ev": "free",
+            "id": "B04"
+          },
+          {
+            "t": 2604,
+            "y": 7560,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3
+          },
+          {
+            "t": 2681,
+            "y": 8100,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3
+          },
+          {
+            "t": 2867,
+            "y": 9180,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3248,
+            "y": 11340,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 3525,
+            "y": 12960,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 6512,
+            "y": 29160,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3
+          },
+          {
+            "t": 6595,
+            "y": 29700,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3
+          },
+          {
+            "t": 6696,
+            "y": 30240,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 8166,
+            "y": 38880,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3
+          },
+          {
+            "t": 8378,
+            "y": 39960,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3
+          },
+          {
+            "t": 8484,
+            "y": 40500,
+            "ev": "free",
+            "id": "B50"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 900
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 125.3,
+          "hPx": 536
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 365
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 184.9,
+          "hPx": 136
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 405
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 673
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 568.6,
+          "hPx": 558
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 692.6,
+          "hPx": 558
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 851.7,
+          "hPx": 536
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 879.4,
+          "hPx": 446
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 911.2,
+          "hPx": 164
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 928.9,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 934.4,
+          "hPx": 495
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1218.9,
+          "hPx": 548
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1311.4,
+          "hPx": 832
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1311.4,
+          "hPx": 832
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1363.9,
+          "hPx": 519
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1475.8,
+          "hPx": 109
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1524.8,
+          "hPx": 562
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1594.4,
+          "hPx": 832
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1749.5,
+          "hPx": 24
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2258.5,
+          "hPx": 908
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3221.9,
+          "hPx": 536
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3263.6,
+          "hPx": 365
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3266.3,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3295.8,
+          "hPx": 161
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3308.6,
+          "hPx": 405
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3528.6,
+          "hPx": 312
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3570.5,
+          "hPx": 832
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3730.2,
+          "hPx": 294
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3777.2,
+          "hPx": 756
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 3901.6,
+          "hPx": 101
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 4184,
+          "hPx": 1211
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4356.7,
+          "hPx": 536
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4356.7,
+          "hPx": 536
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4381.4,
+          "hPx": 446
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4416.3,
+          "hPx": 136
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4430.9,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4436.4,
+          "hPx": 495
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4554.2,
+          "hPx": 2459
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4704.8,
+          "hPx": 373
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 4875.5,
+          "hPx": 56
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 5154,
+          "hPx": 540
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "width": 1024,
+      "pageVh": 5740.6,
+      "heights": {
+        "top": 1,
+        "act-1": 2.705,
+        "about": 1.941,
+        "journey": 3.144,
+        "act-2": 2.1,
+        "work": 2.713,
+        "trading-algos": 2.928,
+        "optuna-screener": 6.564,
+        "experiment": 1.338,
+        "systems": 2.419,
+        "kill-list": 2.784,
+        "films": 5.816,
+        "act-3": 1.9,
+        "beyond": 5.476,
+        "writing": 3.117,
+        "voices": 2.01,
+        "act-4": 2.1,
+        "principles": 3.183,
+        "contact": 1,
+        "credits": 3.169
+      },
+      "gaps": [
+        {
+          "after": "B06",
+          "before": "B10",
+          "vh": 249.8
+        },
+        {
+          "after": "B11",
+          "before": "B14-chalk",
+          "vh": 100.4
+        },
+        {
+          "after": "B14",
+          "before": "B17",
+          "vh": 221.6
+        },
+        {
+          "after": "B20",
+          "before": "B21-circle",
+          "vh": 120.3
+        },
+        {
+          "after": "B23-rack",
+          "before": "B24",
+          "vh": 124.1
+        },
+        {
+          "after": "B24",
+          "before": "B27",
+          "vh": 617.2
+        },
+        {
+          "after": "B27",
+          "before": "B35-sun",
+          "vh": 886.1
+        },
+        {
+          "after": "B38",
+          "before": "B41",
+          "vh": 187.7
+        },
+        {
+          "after": "B42-rack",
+          "before": "B43",
+          "vh": 111.7
+        },
+        {
+          "after": "B44",
+          "before": "B46",
+          "vh": 296.8
+        },
+        {
+          "after": "B56",
+          "before": "B58",
+          "vh": 304.1
+        }
+      ],
+      "competing": [
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 70.1
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 52.3
+        }
+      ],
+      "spans": [
+        {
+          "id": "B41",
+          "px": 229
+        }
+      ],
+      "pacing": [],
+      "missing": [
+        "B07",
+        "B08",
+        "B08-invite",
+        "B09",
+        "B09-window",
+        "B12",
+        "B16",
+        "B18",
+        "B21",
+        "B23",
+        "B25",
+        "B26",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B31-finale",
+        "B31-bars",
+        "B32",
+        "B32-finale",
+        "B33",
+        "B33-finale",
+        "B34",
+        "B34-finale",
+        "B35",
+        "B39-drift",
+        "B40",
+        "B42",
+        "B45",
+        "B47",
+        "B47-fireflies",
+        "B53",
+        "B55",
+        "B57"
+      ],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 10,
+          "free": 6
+        },
+        "log": [
+          {
+            "t": 1523,
+            "y": 922,
+            "ev": "own",
+            "id": "B03",
+            "weight": 3
+          },
+          {
+            "t": 1626,
+            "y": 1383,
+            "ev": "own",
+            "id": "B04",
+            "weight": 3
+          },
+          {
+            "t": 1711,
+            "y": 1844,
+            "ev": "free",
+            "id": "B04"
+          },
+          {
+            "t": 2512,
+            "y": 5532,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3
+          },
+          {
+            "t": 2553,
+            "y": 5993,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 2744,
+            "y": 6915,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3
+          },
+          {
+            "t": 2827,
+            "y": 7376,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3
+          },
+          {
+            "t": 3010,
+            "y": 8298,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3376,
+            "y": 10142,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1
+          },
+          {
+            "t": 3661,
+            "y": 11525,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 7041,
+            "y": 27199,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3
+          },
+          {
+            "t": 7141,
+            "y": 27660,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3
+          },
+          {
+            "t": 7322,
+            "y": 28582,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 9011,
+            "y": 36880,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3
+          },
+          {
+            "t": 9099,
+            "y": 37341,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3
+          },
+          {
+            "t": 9309,
+            "y": 38263,
+            "ev": "free",
+            "id": "B50"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 768
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 129.7,
+          "hPx": 404
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 311
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 182.3,
+          "hPx": 136
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 346
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 619
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 620.4,
+          "hPx": 476
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 744.4,
+          "hPx": 476
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 906.8,
+          "hPx": 404
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 929,
+          "hPx": 380
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 959.4,
+          "hPx": 151
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 978.5,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 984,
+          "hPx": 422
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1260.6,
+          "hPx": 398
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1371,
+          "hPx": 700
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1371,
+          "hPx": 700
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1442,
+          "hPx": 413
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1616.1,
+          "hPx": 82
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1663.8,
+          "hPx": 398
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1723.9,
+          "hPx": 700
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1939.2,
+          "hPx": 24
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2559.5,
+          "hPx": 884
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3560.7,
+          "hPx": 404
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3595.2,
+          "hPx": 311
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3597.9,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3625.9,
+          "hPx": 148
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3640.2,
+          "hPx": 346
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3872.9,
+          "hPx": 229
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3911.1,
+          "hPx": 700
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 4113.9,
+          "hPx": 298
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 4169.5,
+          "hPx": 707
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 4299,
+          "hPx": 72
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 4605.2,
+          "hPx": 1379
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4824.1,
+          "hPx": 404
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4824.1,
+          "hPx": 404
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4845.5,
+          "hPx": 380
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4876.7,
+          "hPx": 144
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4895,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4900.5,
+          "hPx": 422
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 5016.2,
+          "hPx": 2281
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 5178.5,
+          "hPx": 332
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 5358.5,
+          "hPx": 56
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 5670,
+          "hPx": 461
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}

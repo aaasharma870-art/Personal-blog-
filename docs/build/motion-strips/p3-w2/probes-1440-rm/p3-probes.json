@@ -1,0 +1,581 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": true,
+    "path": "/?skip=intro",
+    "date": "2026-10-02T19:19:41.768Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "cards",
+      "hunt",
+      "plates-live",
+      "sound",
+      "spotlight"
+    ]
+  },
+  "results": {
+    "cards": {
+      "pass": true,
+      "checks": {
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 7728,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "rm": {
+          "pass": true,
+          "chip": "flex",
+          "tail": 0,
+          "toast": "Lumos: your system asks for reduced motion, so the page stays still.Egg 1 of 12 · Lumos and Nox",
+          "bloom": false,
+          "veil": false,
+          "found": [
+            "hp-lumos"
+          ]
+        }
+      },
+      "ms": 2393,
+      "console": []
+    },
+    "plates-live": {
+      "pass": false,
+      "live": {
+        "samples": 179,
+        "maxPlaying": 0,
+        "plates": 15,
+        "byHow": {
+          "dead": 15
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 3,
+          "section:journey": 1,
+          "section:work": 1,
+          "section:systems": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 2040,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 1023,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "deadOther": [
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 1185,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1026,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1029,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1069,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 1073,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 1031,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 1029,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1020,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 1539,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-09",
+            "host": "section:contact",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 2040,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 1185,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 1023,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1026,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1029,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1069,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 1073,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 1031,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 1029,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1020,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 1539,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-09",
+            "host": "section:contact",
+            "ms": 1025,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "seq": {
+          "peakMB": 0,
+          "sampled": false
+        },
+        "requests": {
+          "count": 0,
+          "webm": 0,
+          "mp4": 0,
+          "urls": []
+        },
+        "codecPicks": null
+      },
+      "failures": [
+        "live: 4 W2 plate(s) on screen ≥ 1 s with no loop, camera or canvas",
+        "lab: the progress camera did not reach scale(1.35) at p 1",
+        "lab: the depth far band did not move",
+        "lab: a weather layer is missing or not running"
+      ],
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 0,
+          "weather": 0,
+          "stageRoot": false,
+          "moved": 0
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "",
+        "depthFarAt0": "",
+        "weather": [],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": null,
+            "states": [
+              "iconic-ice:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": null,
+            "states": [
+              "MV-05a:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": null,
+            "states": [
+              "iconic-corridor:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": null,
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": null,
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": null,
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": null,
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": null,
+            "states": [
+              "iconic-deadeye:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 81713,
+      "console": []
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": "true",
+          "described": "_r_1_",
+          "note": "Sound follows motion: resume motion to hear it",
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 33671,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "note": "not loaded under reduced motion (correct)",
+      "ms": 10386,
+      "console": []
+    }
+  }
+}

@@ -106,9 +106,16 @@ export default async function probe(page, ctx) {
       set("impacts", impacts.length === 4 && ["pirates", "idiots", "rdr2", "hp"].every((w) => per(w) === 1), { impacts, meets });
     }
 
+    // W2 measure fix: read the pin's LIVE top (the walk above mounts lazy sections, so the page above a
+    // card moves by −155…+287 px after `geo` was taken and the old target landed off p).
     const at = async (g, v) => {
-      const travel = g.h - g.stageH;
-      await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), Math.round(g.top + v * travel));
+      await page.evaluate(({ k, v }) => {
+        const pin = document.querySelector(`[data-act-card-pin="${k}"]`);
+        const stage = pin?.querySelector(":scope > [data-card-stage]");
+        if (!pin || !stage) return;
+        const top = pin.getBoundingClientRect().top + scrollY;
+        window.scrollTo({ top: Math.round(top + v * (pin.offsetHeight - stage.offsetHeight)), behavior: "instant" });
+      }, { k: g.kind, v });
     };
     const state = (kind) =>
       page.evaluate((k) => {

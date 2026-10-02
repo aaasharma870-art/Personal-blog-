@@ -1,0 +1,13 @@
+pausedReload early {"y":0,"H":41851,"attrs":{"lang":"en","class":"geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__vari"},"acts":[["act-1",900,1584,null],["act-2",6949,1422,null],["act-3",26584,900,null],["act-4",35294,1422,null],["journey",3781,3168,null],["work",8371,2292,null]]}
+pausedReload late  {"y":0,"H":38802,"attrs":{"lang":"en","class":"geist_deef94d5-module__Sms4YG__variable geist_mono_1bf8cbf6-module__FlyLvG__vari","data-motion":"paused"},"acts":[["act-1",900,1584,null],["act-2",4944,900,null],["act-3",24057,900,null],["act-4",32767,900,null],["journey",3781,1163,null],["work",5844,2292,null]]} cls 0.055001499154047714
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+page.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at eval (eval at evaluate (:290:30), <anonymous>:1:122)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at /tmp/claude-0/-home-user-Personal-blog-/7ca933b7-5e56-569a-94dd-f539ac2c18f0/scratchpad/p3/w2/v/pause.cjs:27:31
+
+Node.js v22.22.2
