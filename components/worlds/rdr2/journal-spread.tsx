@@ -12,6 +12,9 @@ import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter
 import { Rise } from "@/components/site/world-motion";
 import { JournalVignette } from "@/components/site/rdr2-graphite";
 import {
+  BONE,
+  BONE_AT,
+  BONE_SPOT,
   FURNITURE,
   HORSE,
   HORSE_AT,
@@ -55,6 +58,23 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    SVG on its own layer — so a draw-on or a page turn never re-runs a live
    filter. The inline vignettes (< 1024) keep their live filter and are not
    rendered at all once a desktop page is up.
+
+   PHASE 3 (PHASE3-PLAN §7.4; spec §2.3 B44–B45, §9.1 #11):
+   - DEFAULT: the vignettes ALSO swap as entries cross the reading line
+     (pointing at an entry still wins); the landscape is the page above
+     the first entry.
+   - B45: the graphite horse (Muybridge, 1878; components/words/sprites/
+     horse-frames.ts) gallops along the page's BOTTOM EDGE once, on
+     scroll-idle (the server's <FlyThrough>, passed in as `fly`, in a strip
+     riding the sticky page). It mounts once the first entry has crossed
+     the reading line, so it never plays over the head's NibTitle (B44).
+   - rd-bone: the fossil bone is drawn into the landscape; its hotspot
+     (the server's EggHotspot, `bone`) sits over it OUTSIDE the aria-hidden
+     page art. Pointing at it or focusing it brings the landscape back.
+     The pencilled note is drawn by the lazy desktop extras into
+     [data-bone-note] (page art).
+   - The vignette page carries its entry's head in the journal hand
+     ("Entry III": font-world-hand, ≤ 4 words per page; spec §5.2).
    ========================================================================== */
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
@@ -117,19 +137,22 @@ function Furniture() {
 }
 
 function Landscape({ phase }: { phase: EnterPhase }) {
+  const strokes = (list: readonly Stroke[]) =>
+    list.map((l) => <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />);
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-landscape">
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
-        {LANDSCAPE.map((l) => (
-          <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />
-        ))}
-        <g transform={HORSE_AT}>
-          {HORSE.map((l) => (
-            <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />
-          ))}
+    <>
+      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-landscape">
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
+          {strokes(LANDSCAPE)}
+          <g transform={HORSE_AT}>{strokes(HORSE)}</g>
+          <g transform={BONE_AT} data-motif="fossil-bone">
+            {strokes(BONE)}
+          </g>
         </g>
-      </g>
-    </svg>
+      </svg>
+      {/* rd-bone's pencilled note lands here (page art; rd-desktop.tsx) */}
+      <div data-bone-note="" className="absolute inset-0" />
+    </>
   );
 }
 
@@ -150,6 +173,10 @@ function PageVignette({ index, still }: { index: number; still: boolean }) {
       : { initial: false as const, animate: { pathLength: 1 } };
   return (
     <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
+      {/* the entry's head in the journal hand (≤ 4 words on the page) */}
+      <text x={50} y={96} fontSize={24} className="font-world-hand fill-(--world-line)">
+        {`Entry ${ROMAN[index] ?? index + 1}`}
+      </text>
       <g>
         <g transform={VIGNETTE_AT}>
           {v.fill ? (
@@ -180,52 +207,66 @@ function PageVignette({ index, still }: { index: number; still: boolean }) {
   );
 }
 
-function RightPage({ active, leafing, reduced }: { active: number | null; leafing: boolean; reduced: boolean }) {
+function RightPage({
+  active,
+  leafing,
+  reduced,
+  children,
+}: {
+  active: number | null;
+  leafing: boolean;
+  reduced: boolean;
+  /** Over the page, OUTSIDE its aria-hidden art (the bone's hotspot). */
+  children?: ReactNode;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.4 });
   const leaf = active == null ? <Landscape phase={phase} /> : <PageVignette index={active} still={reduced} />;
   return (
     <div ref={ref} className={s.page} data-page-active={active ?? "landscape"}>
-      <Furniture />
-      {leafing ? (
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active ?? "landscape"}
-            className={s.pageLayer}
-            initial={{ scaleX: 0.04, skewY: -2.5, opacity: 0.5 }}
-            animate={{ scaleX: 1, skewY: 0, opacity: 1 }}
-            exit={{ scaleX: 0.04, skewY: 2.5, opacity: 0.5 }}
-            transition={{ duration: 0.3, ease }}
-          >
-            {leaf}
-          </motion.div>
-        </AnimatePresence>
-      ) : (
-        <>
-          <motion.div
-            className={s.pageLayer}
-            initial={false}
-            animate={{ opacity: active == null ? 1 : 0 }}
-            transition={{ duration: dur.preview, ease }}
-          >
-            <Landscape phase={phase} />
-          </motion.div>
-          <AnimatePresence initial={false}>
-            {active != null ? (
-              <motion.div
-                key={active}
-                className={s.pageLayer}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: dur.preview, ease }}
-              >
-                <PageVignette index={active} still={reduced} />
-              </motion.div>
-            ) : null}
+      <div aria-hidden="true" className="absolute inset-0">
+        <Furniture />
+        {leafing ? (
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active ?? "landscape"}
+              className={s.pageLayer}
+              initial={{ scaleX: 0.04, skewY: -2.5, opacity: 0.5 }}
+              animate={{ scaleX: 1, skewY: 0, opacity: 1 }}
+              exit={{ scaleX: 0.04, skewY: 2.5, opacity: 0.5 }}
+              transition={{ duration: 0.3, ease }}
+            >
+              {leaf}
+            </motion.div>
           </AnimatePresence>
-        </>
-      )}
+        ) : (
+          <>
+            <motion.div
+              className={s.pageLayer}
+              initial={false}
+              animate={{ opacity: active == null ? 1 : 0 }}
+              transition={{ duration: dur.preview, ease }}
+            >
+              <Landscape phase={phase} />
+            </motion.div>
+            <AnimatePresence initial={false}>
+              {active != null ? (
+                <motion.div
+                  key={active}
+                  className={s.pageLayer}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: dur.preview, ease }}
+                >
+                  <PageVignette index={active} still={reduced} />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </>
+        )}
+      </div>
+      {children}
     </div>
   );
 }
@@ -235,6 +276,8 @@ export function JournalSpread({
   choice,
   caption,
   head,
+  fly,
+  bone,
 }: {
   entries: readonly JournalEntry[];
   choice: VariantChoice;
@@ -245,6 +288,10 @@ export function JournalSpread({
    *  section's first view (M2 fix round 3, blind D36: the sketch sat a
    *  screen lower, the first view was blank paper). */
   head?: ReactNode;
+  /** B45: the server's <FlyThrough kind="horse">, along the page's bottom edge. */
+  fly?: ReactNode;
+  /** rd-bone: the server's EggHotspot, placed over the bone. */
+  bone?: ReactNode;
 }) {
   const v = useVariant(choice, RD_PIECES.journal);
   const reduced = useReducedMotion();
@@ -252,12 +299,15 @@ export function JournalSpread({
   const listRef = useRef<HTMLOListElement>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [reading, setReading] = useState<number | null>(null);
+  const [entered, setEntered] = useState(false);
+  const [atBone, setAtBone] = useState(false);
   const leafing = v === "alt";
 
-  // ALT: the entry crossing the reading line (45 % down the viewport) turns
-  // the page; above the first entry the landscape is the open leaf.
+  // The entry crossing the reading line (45 % down the viewport) turns the
+  // page (ALT) or swaps the vignette (DEFAULT, B45 quiet); above the first
+  // entry the landscape is the open page.
   useEffect(() => {
-    if (!leafing || reduced || !desktop) return;
+    if (reduced || !desktop) return;
     const list = listRef.current;
     if (!list || typeof IntersectionObserver === "undefined") return;
     const rows = Array.from(list.querySelectorAll<HTMLElement>("[data-entry]"));
@@ -265,17 +315,19 @@ export function JournalSpread({
       (records) => {
         for (const r of records) {
           const i = Number((r.target as HTMLElement).dataset.entry);
-          if (r.isIntersecting) setReading(i);
-          else if (i === 0 && r.boundingClientRect.top > (r.rootBounds?.top ?? 0)) setReading(null);
+          if (r.isIntersecting) {
+            setReading(i);
+            setEntered(true);
+          } else if (i === 0 && r.boundingClientRect.top > (r.rootBounds?.top ?? 0)) setReading(null);
         }
       },
       { rootMargin: "-45% 0px -54% 0px" },
     );
     rows.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, [leafing, reduced, desktop]);
+  }, [reduced, desktop]);
 
-  const active = reduced || !desktop ? null : leafing ? reading : hovered;
+  const active = reduced || !desktop || atBone ? null : leafing ? reading : (hovered ?? reading);
 
   return (
     <div
@@ -315,10 +367,28 @@ export function JournalSpread({
         </ol>
       </div>
 
-      {/* the right page (≥ 1024): decorative; each entry's meaning is its title */}
-      <div className="hidden lg:block" aria-hidden="true">
+      {/* the right page (≥ 1024): decorative (its art is aria-hidden; each
+          entry's meaning is its title); the bone's hotspot is the one real
+          control on it */}
+      <div className="hidden lg:block">
         <div className="sticky top-[calc(var(--header-h)+2rem)] pt-tier-group">
-          <RightPage active={active} leafing={leafing} reduced={reduced} />
+          <RightPage active={active} leafing={leafing} reduced={reduced}>
+            {bone ? (
+              <div
+                className="absolute -translate-x-1/2 -translate-y-1/2"
+                style={{ left: `${BONE_SPOT[0] * 100}%`, top: `${BONE_SPOT[1] * 100}%` }}
+                onPointerEnter={() => setAtBone(true)}
+                onPointerLeave={() => setAtBone(false)}
+                onFocus={() => setAtBone(true)}
+                onBlur={() => setAtBone(false)}
+              >
+                {bone}
+              </div>
+            ) : null}
+          </RightPage>
+          {/* B45: the horse runs along the page's bottom edge (once the
+              reader is into the entries) */}
+          {fly && entered ? <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24">{fly}</div> : null}
         </div>
       </div>
     </div>

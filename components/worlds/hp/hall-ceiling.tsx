@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   CANDLE_LIT_SPRITE,
   CANDLE_SPRITE_SIZE,
+  CANDLE_UNLIT_SPRITE,
   CEILING_CLOUDS,
   CEILING_NIGHT,
   STAR_TILE,
@@ -69,15 +70,27 @@ export function spotsIn(
 
 /** A field of lit floating candles (absolute; the host sizes the box). The
  *  lit sprite (IC-HP-03, worlds/hp/sprites) is declared ONCE per field as
- *  an SVG symbol and every candle <use>s it: one image, many candles. */
+ *  an SVG symbol and every candle <use>s it: one image, many candles.
+ *
+ *  `toy` (the contact's candle toy, spec §9.2 #4): each candle also <use>s
+ *  the UNLIT taper under its lit sprite and carries its index
+ *  (`data-candle`), so it can go dark and light again one by one. The lit
+ *  state is per candle: `data-lit` present = lit. Server, hydration and
+ *  every visitor the toy never arms (phones, touch, reduced motion, Pause,
+ *  no JS) keep every candle lit: today's picture (the lit sprite covers the
+ *  taper). Only the toy (components/worlds/hp/candle-toy.tsx, lazy) clears
+ *  and sets `data-lit`; its own CSS (assets/p3/hp/hp-toys.css) hides the
+ *  lit layer of a dark candle. */
 export function CandleField({
   spots,
   className,
   style,
+  toy = false,
 }: {
   spots: readonly CandleSpot[];
   className?: string;
   style?: CSSProperties;
+  toy?: boolean;
 }) {
   const sym = `hp-candle-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const { w: SW, h: SH } = CANDLE_SPRITE_SIZE;
@@ -87,6 +100,11 @@ export function CandleField({
         <symbol id={sym} viewBox={`0 0 ${SW} ${SH}`}>
           <image href={CANDLE_LIT_SPRITE} width={SW} height={SH} />
         </symbol>
+        {toy ? (
+          <symbol id={`${sym}-u`} viewBox={`0 0 ${SW} ${SH}`}>
+            <image href={CANDLE_UNLIT_SPRITE} width={SW} height={SH} />
+          </symbol>
+        ) : null}
       </svg>
       {spots.map((c, i) => (
         <svg
@@ -99,8 +117,10 @@ export function CandleField({
           style={{ left: `${c.x.toFixed(2)}%`, top: `${c.y.toFixed(2)}%`, opacity: c.o }}
           data-motif="floating-candle"
           data-lit=""
+          data-candle={toy ? i : undefined}
         >
-          <use href={`#${sym}`} />
+          {toy ? <use href={`#${sym}-u`} /> : null}
+          <use href={`#${sym}`} className={toy ? "candle-lit" : undefined} />
         </svg>
       ))}
     </div>

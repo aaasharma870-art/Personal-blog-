@@ -1,3 +1,4 @@
+import { beatAttrs } from "@/lib/beats";
 import { film, type CaptionWorld } from "@/lib/film";
 import {
   acts,
@@ -29,6 +30,12 @@ import type { SectionProps } from "@/components/sections/types";
    which Card II→III's low sun takes over.
    Variant piece `films.screens` (DEFAULT "clip-finales", ALT
    "iris-marks"): film-frame.tsx / finales.tsx.
+   PHASE 3 (W3-CINEMA; PHASE3-SPEC §2.3 B30–B35): the house lights go down
+   on the first screen (the global letterbox bars, film-frame.tsx `lights`),
+   each film title arrives in character (film-screen.tsx, B31–B34), every
+   plate moves (LivePlate push 1 → 1.05, loops through loopFor), and the
+   last screen's warm point is carried onto the tintype's sun (B35: the
+   marker below, warm-carry.tsx).
    ========================================================================== */
 
 function capitalize(s: string): string {
@@ -68,12 +75,23 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
             world={w.world}
             years={w.years}
             prev={(i === 0 ? "house" : screens[i - 1].world) as WorldId}
+            first={i === 0}
             last={i === screens.length - 1}
             choice={choice}
             bearing={bearing}
           />
         ))}
       </div>
+      {/* B35 (the films half of the warm point → the tintype's sun; a
+          weight-1 scroll star): its spotlight box at the section's bottom
+          edge (warm-carry.tsx registers it and runs the carry) */}
+      <span
+        aria-hidden="true"
+        data-beat-scroll=""
+        className="pointer-events-none invisible absolute left-0 w-px"
+        style={{ bottom: "-20vh", height: "max(40vh, 320px)" }}
+        {...beatAttrs("B35", { weight: 1 })}
+      />
     </WorldSection>
   );
 }

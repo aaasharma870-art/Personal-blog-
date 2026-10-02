@@ -193,6 +193,7 @@ export function JournalVignette({ index, className }: { index: number; className
  */
 const NIB_WRITE = 1.3;
 const NIB_EASE = [0.45, 0.05, 0.55, 0.95] as const;
+const NIB_STAR = { id: "B44", weight: 2 } as const;
 
 export function NibTitle({
   id,
@@ -205,7 +206,8 @@ export function NibTitle({
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
   const nibRef = useRef<HTMLSpanElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.5 });
+  // B44: a time star through the spotlight (DESKTOP_FINE; elsewhere as before)
+  const phase = useEnterOnce(ref, { amount: 0.5, star: NIB_STAR });
   const fid = useFid();
   const armed = phase === "armed";
   const entered = phase === "entered";
@@ -228,7 +230,7 @@ export function NibTitle({
   }, [entered]);
 
   return (
-    <h2 ref={ref} id={id} className={cn("relative", className)} {...beatAttrs("B44", { weight: 2 })}>
+    <h2 ref={ref} id={id} className={cn("relative", className)} {...beatAttrs(NIB_STAR.id, NIB_STAR)}>
       <motion.span
         className="block"
         initial={false}

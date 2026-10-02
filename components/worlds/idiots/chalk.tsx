@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import type { BeatWeight } from "@/lib/beats";
 import { useReducedMotion } from "@/lib/flags";
-import { readSession } from "@/lib/session";
 import { dur, ease, easeClip, easeDraw, springSettle } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { eggsSessionOff, subscribeEggs } from "@/components/eggs/egg-bus";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 
 /* ============================================================================
@@ -68,20 +69,25 @@ export function useSvgId(prefix: string): string {
  * `className` styles the inner frame. It is promoted (will-change) only
  * while armed or moving: the chalk inside is drawn once, then the layer
  * moves (spec §12.1 #8).
+ * `star` (PHASE3-SPEC §3.8): the entrance is a time star of the beat map
+ * (the gauntlet board, B17): on DESKTOP_FINE it waits for the spotlight and
+ * a "skip" shows the settled frame. The host carries `beatAttrs(star.id)`.
  */
 export function SettleFrame({
   children,
   className,
   entrance = "settle",
   amount = 0.3,
+  star,
 }: {
   children: ReactNode;
   className?: string;
   entrance?: "settle" | "wipe";
   amount?: number;
+  star?: { id: string; weight: BeatWeight };
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount });
+  const phase = useEnterOnce(ref, { amount, star });
   // motion values, never React style: the server renders the final frame
   // (opacity 1, no transform, no clip), and the swap to the armed state
   // happens offscreen before paint.
@@ -215,29 +221,43 @@ export function ChalkLoop({ on, children, className }: { on: boolean; children: 
 
 /* — IC-3I-08: the chalk quadcopter doodle (the gauntlet egg) ———————————— */
 
+/** The rotors' centre points (the arms cross at the body). */
+const ROTORS: readonly (readonly [number, number])[] = [
+  [22, 26],
+  [98, 26],
+  [14, 50],
+  [106, 50],
+];
+
 /**
  * ChalkQuadcopter — a small unlabelled chalk doodle of a homemade
  * quadcopter (four rotors on crossed arms, a strapped battery, a board and
  * a camera stub; our own drawing, never a window, feed or sprite). It lifts
  * 8 px (≤ 400 ms) each time `liftKey` changes to a new positive value (a
- * Run that cleared all the gates), and settles back when it resets to 0.
- * aria-hidden; static under reduced motion. Sensitivity (IC-3I-08): no
- * label, no link to Aryan's own drone work.
+ * Run that cleared all the gates), its rotors blurring for 400 ms (PHASE3-
+ * SPEC §9.1 #8: a pre-drawn motion-blur layer faded by opacity, never a
+ * filter), and settles back when it resets to 0. aria-hidden; static under
+ * reduced motion and while the visitor has turned the eggs off for the
+ * session (egg-bus: the B1 fix, PHASE3-SPEC §13 P3-8 #9). Sensitivity
+ * (IC-3I-08): no label, no link to Aryan's own drone work.
  */
 export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; className?: string }) {
   const reduced = useReducedMotion();
+  // "Turn off easter eggs" (the palette / hunt panel, session), live
+  const eggsOff = useSyncExternalStore(subscribeEggs, eggsSessionOff, () => false);
   // a WRAPPER moves (its CSS px are screen px: an 8 px lift at any rendered
   // size), never the filtered <svg>: promoted while it lifts or settles, the
   // chalk is drawn once into its layer (spec §12.1 #8)
   const ref = useRef<HTMLSpanElement>(null);
+  const blurRef = useRef<SVGSVGElement>(null);
   /** Lifted (or on its way up)? A reset at rest moves nothing. */
   const up = useRef(false);
   const fid = useSvgId("chalk-quad");
   useEffect(() => {
     const el = ref.current;
+    const blur = blurRef.current;
     if (!el) return;
-    // "Turn off easter eggs" (the palette, session) stops the lift too
-    if (reduced || (liftKey > 0 && readSession("eggs-off") === "1")) {
+    if (reduced || (liftKey > 0 && eggsOff)) {
       el.style.transform = "";
       el.style.willChange = "";
       up.current = false;
@@ -249,50 +269,75 @@ export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; class
     // promoted for the move only (React never sets this span's style)
     el.style.willChange = "transform";
     const a = animate(el, { y: lift ? -8 : 0 }, { duration: lift ? 0.36 : dur.base, ease });
+    // the rotors spin up: their blur layer (its own, unfiltered SVG) shows
+    // for 400 ms, opacity only
+    const spin =
+      lift && blur && typeof blur.animate === "function"
+        ? blur.animate([{ opacity: 0 }, { opacity: 0.9, offset: 0.25 }, { opacity: 0.9, offset: 0.7 }, { opacity: 0 }], {
+            duration: 400,
+            easing: "linear",
+          })
+        : null;
     a.finished.then(() => {
       if (ref.current === el) el.style.willChange = "";
     });
-    return () => a.stop();
-  }, [liftKey, reduced]);
-  // rotors: centre points; arms cross at the body
-  const rotors: [number, number][] = [
-    [22, 26],
-    [98, 26],
-    [14, 50],
-    [106, 50],
-  ];
+    return () => {
+      a.stop();
+      spin?.cancel();
+    };
+  }, [liftKey, reduced, eggsOff]);
   return (
     <span ref={ref} className={cn("inline-block", className)}>
-      <svg
-        viewBox="0 0 120 84"
-        aria-hidden="true"
-        focusable="false"
-        className="block h-auto w-full overflow-visible"
-        data-egg="quadcopter"
-      >
-        <defs>
-          <ChalkFilter id={fid} />
-        </defs>
-        <g filter={`url(#${fid})`} className="stroke-(--w-chalk)" fill="none" strokeWidth={2} strokeLinecap="round">
-          {/* arms */}
-          <path d="M22 30 L60 42 L98 30 M14 52 L60 42 L106 52" />
-          {/* motors + rotor discs (ellipses read as spinning blades) */}
-          {rotors.map(([x, y]) => (
-            <g key={`${x}-${y}`}>
-              <path d={`M${x} ${y + 2} L${x} ${y + 7}`} />
-              <ellipse cx={x} cy={y} rx={15} ry={3.4} strokeOpacity={0.85} />
-            </g>
-          ))}
-          {/* the body: a board with a strapped battery on top */}
-          <rect x={46} y={36} width={28} height={12} rx={2} />
-          <path d="M49 36 L49 30 L71 30 L71 36 M56 30 L56 36 M64 30 L64 36" strokeOpacity={0.9} />
-          {/* the camera stub and landing legs */}
-          <rect x={56} y={50} width={8} height={6} rx={1} />
-          <path d="M48 48 L44 60 M72 48 L76 60 M40 60 L48 60 M72 60 L80 60" strokeOpacity={0.8} />
-          {/* a loose wire, the jugaad tell */}
-          <path d="M74 40 C82 44 80 50 86 50" strokeOpacity={0.6} strokeWidth={1.4} />
-        </g>
-      </svg>
+      <span className="relative block">
+        <svg
+          viewBox="0 0 120 84"
+          aria-hidden="true"
+          focusable="false"
+          className="block h-auto w-full overflow-visible"
+          data-egg="quadcopter"
+        >
+          <defs>
+            <ChalkFilter id={fid} />
+          </defs>
+          <g filter={`url(#${fid})`} className="stroke-(--w-chalk)" fill="none" strokeWidth={2} strokeLinecap="round">
+            {/* arms */}
+            <path d="M22 30 L60 42 L98 30 M14 52 L60 42 L106 52" />
+            {/* motors + rotor discs (ellipses read as spinning blades) */}
+            {ROTORS.map(([x, y]) => (
+              <g key={`${x}-${y}`}>
+                <path d={`M${x} ${y + 2} L${x} ${y + 7}`} />
+                <ellipse cx={x} cy={y} rx={15} ry={3.4} strokeOpacity={0.85} />
+              </g>
+            ))}
+            {/* the body: a board with a strapped battery on top */}
+            <rect x={46} y={36} width={28} height={12} rx={2} />
+            <path d="M49 36 L49 30 L71 30 L71 36 M56 30 L56 36 M64 30 L64 36" strokeOpacity={0.9} />
+            {/* the camera stub and landing legs */}
+            <rect x={56} y={50} width={8} height={6} rx={1} />
+            <path d="M48 48 L44 60 M72 48 L76 60 M40 60 L48 60 M72 60 L80 60" strokeOpacity={0.8} />
+            {/* a loose wire, the jugaad tell */}
+            <path d="M74 40 C82 44 80 50 86 50" strokeOpacity={0.6} strokeWidth={1.4} />
+          </g>
+        </svg>
+        {/* the rotor blur (hidden at rest): wider, broken discs in chalk */}
+        <svg
+          ref={blurRef}
+          viewBox="0 0 120 84"
+          aria-hidden="true"
+          focusable="false"
+          className="pointer-events-none absolute inset-0 size-full overflow-visible opacity-0"
+          data-egg="quadcopter-blur"
+        >
+          <g className="stroke-(--w-chalk)" fill="none" strokeLinecap="round">
+            {ROTORS.map(([x, y]) => (
+              <g key={`b-${x}-${y}`}>
+                <ellipse cx={x} cy={y} rx={18} ry={2.6} strokeWidth={1.2} strokeOpacity={0.55} strokeDasharray="7 4" />
+                <ellipse cx={x} cy={y} rx={12} ry={1.8} strokeWidth={0.9} strokeOpacity={0.35} strokeDasharray="4 5" />
+              </g>
+            ))}
+          </g>
+        </svg>
+      </span>
     </span>
   );
 }
@@ -305,8 +350,21 @@ export function ChalkQuadcopter({ liftKey, className }: { liftKey: number; class
  * chalk ledge holding one chalk stub and a felt duster. Pure CSS/SVG from
  * the world tokens (wood = brass into the board's deep). Decorative: the
  * panel inside carries the meaning.
+ * `ledge`: something resting ON the ledge (the optuna board's chalk heart,
+ * the `3i-aal` hotspot: server markup passed in by the chapter, so it costs
+ * no client JS). It renders after the aria-hidden strip, in the frame's own
+ * box (`relative`), and positions itself: the ledge's top is 0.5rem above
+ * the frame's bottom edge.
  */
-export function ChalkboardFrame({ children, className }: { children: ReactNode; className?: string }) {
+export function ChalkboardFrame({
+  children,
+  className,
+  ledge,
+}: {
+  children: ReactNode;
+  className?: string;
+  ledge?: ReactNode;
+}) {
   return (
     <div className={cn("relative", className)} data-motif="ice-board">
       {/* the wooden frame */}
@@ -347,6 +405,8 @@ export function ChalkboardFrame({ children, className }: { children: ReactNode; 
           <rect x="35" y="11" width="48" height="5" rx="1" className="fill-(--w-storm)" />
         </svg>
       </div>
+      {/* outside the aria-hidden strip: a control may rest on the ledge */}
+      {ledge}
     </div>
   );
 }

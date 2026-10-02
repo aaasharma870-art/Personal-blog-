@@ -9,8 +9,9 @@ import { resolveVariant, type MediaId } from "@/lib/media";
 import { dur, ease, easeDraw } from "@/lib/motion";
 import type { Variant } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import type { CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { maskIntersect } from "@/components/primitives/mask-style";
-import { MediaFrame } from "@/components/primitives/media-frame";
 import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "@/components/worlds/idiots/chalk";
 
 /* ============================================================================
@@ -46,7 +47,16 @@ import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "
    figure, so a Run step never redraws the plate, its slate lift or the
    chalk filter under it; the board frame moves only as a promoted layer
    (SettleFrame) and the quadcopter lifts its own wrapper.
+   PHASE 3 (W3-IDIOTS; spec §6.1 row MV-06, §2.3 B17): the plate is a
+   <LivePlate>: the L09 living beam plays on DESKTOP_FINE with motion on
+   (loopFor; RM / Pause / phones: the still). NO camera and no depth: the
+   chalk overlay is registered to the board, so the board never moves under
+   it (the `plates.loops` ALT is the plain still). The board's settle is the
+   B17 time star (SettleFrame `star`, through the spotlight).
    ========================================================================== */
+
+/** MV-06 never moves (spec §6.1: the gauntlet overlay is registered). */
+const BOARD_HOLD: CameraSpec = { kind: "hold", scale: [1, 1], driver: "flow" };
 
 /** Seeded, fixed run data: where each illustrative hypothesis stops (a gate
  *  index), or ≥ the gate count = cleared every gate. 12 hypotheses; 4 stop
@@ -66,8 +76,9 @@ export function clearedOf(gates: number): number {
 /**
  * useGauntletRun — the Run's clock (D3): anticipate on dur.micro, then one
  * step per gate at dur.base, then one more step to the finish. Timers only
- * while a run is live (0 work at rest; N20). `settle()` shows the settled
- * frame without a run (reduced motion).
+ * while a run is live (0 work at rest; N20). `start(true)` settles at once
+ * (reduced motion / Pause: the Run still counts, spec §9.1 #8 "counts on
+ * settle; no lift").
  */
 export function useGauntletRun(gates: number) {
   const [state, setState] = useState<RunState>({ phase: "idle", step: -1, runs: 0 });
@@ -79,8 +90,13 @@ export function useGauntletRun(gates: number) {
     [],
   );
 
-  const start = useCallback(() => {
+  const start = useCallback((instant = false) => {
     if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = null;
+    if (instant) {
+      setState((s) => ({ phase: "settled", step: gates, runs: s.runs + 1 }));
+      return;
+    }
     setState((s) => ({ phase: "anticipate", step: -1, runs: s.runs }));
     const tick = (step: number) => {
       if (step > gates) {
@@ -437,11 +453,17 @@ export function GauntletBoard({
     <figure className={cn("scene-caption-host", className)} data-choreo={choreo} {...beatAttrs("B17", { weight: 2 })}>
       {/* the caption sits UNDER the board (M2 finish, BLIND-1 D25): no scrim
           darkens the board, its wooden frame or the chalk ledge */}
-      <SettleFrame entrance={alt ? "wipe" : "settle"} className="relative sm:overflow-hidden sm:rounded-frame">
+      <SettleFrame
+        entrance={alt ? "wipe" : "settle"}
+        className="relative sm:overflow-hidden sm:rounded-frame"
+        star={{ id: "B17", weight: 2 }}
+      >
         {/* the plate: 1:1 below 640 (the board's dark left side stays in
-            frame), 16:9 above */}
+            frame), 16:9 above; the L09 living beam on desktop */}
         <div className="relative aspect-square overflow-hidden rounded-frame sm:aspect-video sm:rounded-none">
-          <MediaFrame media={plate} layout="fill" sizes="(min-width: 64rem) 60vw, 100vw" />
+          <div className="absolute inset-0">
+            <LivePlate media={plate} camera={BOARD_HOLD} depth={false} sizes="(min-width: 64rem) 60vw, 100vw" className="size-full" />
+          </div>
           {/* the board reads as the ICE chalkboard at a glance (D25): its
               near-black interior (mean rgb 12/22/18) is lifted to slate green
               by a screen blend, masked to the board left of the beam and

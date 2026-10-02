@@ -11,6 +11,10 @@
        page scale): a far ridge with hachures, rolling hills, a lake with
        ripples, pines, a small riderless saddled horse grazing by the shore,
        a dotted trail, grass, two birds. No figure, no rider (H1).
+     - BONE (Phase 3, the rd-bone egg, spec §9.1 #11): a fossil bone half-
+       buried at the foot of the far ridge, among its hachures, in a
+       slightly heavier line; its hotspot (a real <button> outside the
+       aria-hidden page) sits on BONE_SPOT.
      - VIGNETTES: one per journal entry (SPEC SM-11), in 64-unit art drawn
        at page scale: a balance scale · a town plan crossed with one
        graphite X (the Blackwater page; never ember) · a rail line · a
@@ -150,6 +154,31 @@ export const HORSE: readonly Stroke[] = [
   // the saddle and its blanket: riderless
   { d: "M-9 -10 L-8 -3 L10 -3 L11 -10 M-6 -11 C-4 -16 6 -16 8 -11 M-1 -4 V3 M-3 3 h4", w: 0.9, t: 1.85, dur: 0.35 },
 ];
+
+/** The fossil bone, half-buried at the foot of the far ridge (local units,
+ *  drawn at BONE_AT): one knob and the shaft above ground, the rest under a
+ *  hachured mound with the far knob's tip showing. Heavier than the
+ *  landscape's line (1.5 vs the ridge's 1.3), so it reads as a find. */
+export const BONE_AT = "translate(222 228) rotate(-8) scale(1.1)";
+export const BONE: readonly Stroke[] = [
+  {
+    d: "M2 -1.4 L-14.5 -1.4 C-15 -4.5 -19.5 -5 -19.5 -2.4 C-19.5 -0.8 -18 -0.3 -17.2 0 C-18 0.3 -19.5 0.8 -19.5 2.4 C-19.5 5 -15 4.5 -14.5 1.4 L2 1.4",
+    w: 1.5,
+    t: 1.3,
+    dur: 0.45,
+  },
+  {
+    d: "M-3 3.6 C2 -0.6 9 -2.4 16 -1.2 C20.5 -0.4 23.5 1.2 26 3 M5 -0.6 l-2.2 4.4 M9.4 -1.6 l-2.2 4.8 M13.6 -1.6 l-2 4.4 M17.8 -0.8 l-1.8 3.8 M21.8 0.6 l-1.4 3",
+    w: 0.9,
+    o: 0.75,
+    t: 1.45,
+    dur: 0.35,
+  },
+  { d: "M17.2 -1.6 C17.8 -4.8 21.6 -5.2 22.2 -2.4", w: 1.5, t: 1.6, dur: 0.2 },
+];
+/** The bone's visible middle on the page, as fractions of the 400 × 500
+ *  page (BONE_AT applied to local (-8.5, 0)): where its hotspot centres. */
+export const BONE_SPOT: readonly [number, number] = [0.532, 0.459];
 
 /* — the five entry vignettes (64-unit art) —————————————————————————————— */
 

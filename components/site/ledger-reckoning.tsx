@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FocusEvent, KeyboardEvent, PointerEvent } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { animate, motion, useMotionValue } from "motion/react";
-import { useReducedMotion } from "@/lib/flags";
+import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import { springFollow } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { useVariant } from "@/lib/use-variant";
@@ -34,13 +34,20 @@ import { LensFigure, type LensFigureKind, type LensRoute } from "@/components/se
    Mobile < 1024: no lens (a Meta line, the title, the detail; the centre-
    line row active). Reduced motion: the lens is open, every swap instant.
    No JS: the idle frame, fully legible.
-   DEAD EYE (SM-17): the egg's runtime is components/eggs/dead-eye.ts (the
-   palette + the typed word, lazy on trigger). This ledger keeps its DOM
-   CONTRACT — each killed <li> carries data-verdict="killed", its recorded
-   reason data-reason and its name data-name — and, while the run marks the
+   DEAD EYE (PHASE3-SPEC §9.2 #3, the game; components/games/dead-eye/,
+   lazy on a press of the header's pill, the typed word or the palette).
+   This ledger keeps its DOM CONTRACT — each killed <li> carries
+   data-verdict="killed", its recorded reason data-reason and its name
+   data-name — which the round reads (run.ts `killedRows`): it marks the
+   rows (`data-de`, `data-deadeye-struck`), walks focus over the killed
+   rows only and restores every attribute on exit. While a round marks the
    section (`data-deadeye` on #kill-list), the lens figure takes the Dead
    Eye plate as its media grade (an overlay layer over the figure, never a
-   filter). At rest nothing of the egg renders.
+   filter). At rest nothing of the game renders.
+   THE PEN (egg 9, 3i-pen): every row that reaches the reading line (the
+   viewport's centre line) or is activated counts as READ
+   (lib/hunt `recordLedgerRowRead`, imported lazily, DESKTOP_FINE only):
+   the pen is earned by reading the whole ledger, or by winning Dead Eye.
    RASTER (P3-2, spec §12.1 #4): the lens bracket and the index bar travel
    by transform only, each on its own layer — a spring step never repaints
    the ledger.
@@ -105,6 +112,19 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
 
   const active = activeOf(nav);
   const lensRow = active ?? nav.last;
+
+  // egg 9: a row on the reading line, or activated, has been READ (once per
+  // row per view; the store keeps it across views)
+  const read = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const key = active === null ? null : rows[active]?.key;
+    if (!key || read.current.has(key) || !window.matchMedia(DESKTOP_FINE).matches) return;
+    read.current.add(key);
+    void import("@/lib/hunt").then(
+      (m) => m.recordLedgerRowRead(key),
+      () => read.current.delete(key),
+    );
+  }, [active, rows]);
 
   /** Any activation opens a closed lens (the first one only). */
   const touch = useCallback((next: (n: Nav) => Nav) => {

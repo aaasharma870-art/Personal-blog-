@@ -11,6 +11,9 @@ import { FrontierBand } from "@/components/worlds/rdr2/frontier-band";
 import { Satchel } from "@/components/worlds/rdr2/satchel";
 import { WantedBoard } from "@/components/worlds/rdr2/wanted-board";
 import { StageSplit } from "@/components/stage/stage-window";
+import { ScrubSentence, splitAround } from "@/components/words/scrub-sentence";
+import { SCRUB_LINES } from "@/components/words/words-data";
+import { RdDesktop } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 import type { SectionProps } from "@/components/sections/types";
 
@@ -50,6 +53,18 @@ import type { SectionProps } from "@/components/sections/types";
  * stage's cue anchor is the Activities note, `#beyond-activities` (each
  * note article is `#<id>-<first word of its kicker>`). Anything else:
  * today's DOM.
+ *
+ * Phase 3 wave 3 (PHASE3-PLAN §7.4; W3-RDR2):
+ *   - B40: the h2 arrives in character (Rye poster press; ALT typewriter),
+ *     a time star through the spotlight (SectionHead inCharacter).
+ *   - B41: the TrailMap's fog lift is a SCROLL star (registered by the lazy
+ *     desktop extras, kit.tsx <RdDesktop>). Under the boot gate below 90rem
+ *     the map breaks out across the whole note (it measured 229 px tall at
+ *     1024 in the right column; a scroll star spans ≥ 300 px).
+ *   - rd-eagle: the eye-ring glyph at the trail's start (EggHotspot,
+ *     DESKTOP_FINE only); the effect is the desktop extras'.
+ *   - B42: Creative · Photography is the Act III scrubbed sentence (exact
+ *     string, SCRUB_LINES.B42; a reworded body renders plain).
  */
 
 /** A note's anchor: `beyond-athletics`, `beyond-activities`, … */
@@ -144,8 +159,24 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
       title="Discipline, service, and a trained eye."
       intro="The same temperament, away from the terminal."
       titleClassName={band ? "lg:text-title" : undefined}
+      inCharacter
+      world="rdr2"
+      beat="B40"
     />
   );
+  // B42: the Act III scrubbed sentence, the whole Photography body (exact)
+  const scrubbed = (body: string) => {
+    const parts = splitAround(body, SCRUB_LINES.B42.text);
+    return parts ? (
+      <>
+        {parts[0]}
+        <ScrubSentence text={parts[1]} beat="B42" />
+        {parts[2]}
+      </>
+    ) : (
+      body
+    );
+  };
 
   const note = (b: (typeof beyond)[number], i: number) => {
     const noteId = `${entry.id}-note-${i + 1}`;
@@ -171,17 +202,21 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
         </div>
         <div className="lg:col-span-8">
           <dl aria-labelledby={noteId} data-split-pairs="" className="grid grid-cols-1 gap-x-8 gap-y-tier-group sm:grid-cols-2">
-            {b.items.map((it) => (
+            {b.items.map((it, k) => (
               <div key={it.head}>
                 <dt className="type-body text-fg">{it.head}</dt>
-                <dd className="mt-1 type-small text-fg-muted">{it.body}</dd>
+                <dd className="mt-1 type-small text-fg-muted">{b.kicker === "Creative" && k === 0 ? scrubbed(it.body) : it.body}</dd>
               </div>
             ))}
           </dl>
           {/* the frontier map runs the full width of the facts' column
               (ART-DIRECTOR #15: a small box in the left column left
-              the right two thirds empty) */}
-          {athletics ? <TrailMap className="mt-tier-block hidden lg:block" /> : null}
+              the right two thirds empty); under the boot gate below 90rem
+              it breaks out across the whole note (B41 ≥ 300 px: the left
+              column is 4 of 12 plus half a gap of the 8-column cell) */}
+          {athletics ? (
+            <TrailMap className="mt-tier-block hidden lg:block boot:max-[90rem]:-ml-[calc(50%_+_0.75rem)] boot:max-[90rem]:w-[calc(150%_+_0.75rem)]" />
+          ) : null}
           {creative ? (
             <Satchel
               choice={choice}
@@ -196,6 +231,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
 
   return (
     <WorldSection entry={entry} labelledBy={titleId} className={cn(band && "overflow-x-clip")}>
+      {frontier ? <RdDesktop part="beyond" /> : null}
       {band ? (
         <FrontierBand
           media={band}

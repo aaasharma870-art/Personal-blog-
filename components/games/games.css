@@ -1,0 +1,384 @@
+/* ============================================================================
+   components/games/games.css — the two games' LAZY styles (PHASE3-SPEC
+   §9.2 #2, #3). OWNER: W3-GAMES. Imported only by the lazy game chunks
+   (drone/drone-game.tsx, dead-eye/dead-eye-hud.tsx), so it rides them and
+   never the first load (W2 rule 34). The pills' first-load rules live in
+   app/p3/games.css.
+   RULES (W2 rules 33–35): nothing here matches <html> (`html[data-game]` is a
+   JS flag only); no [class*=] selectors; motion is transform / opacity only;
+   the big layers (the board, the grade) are flat colours faded by opacity.
+   ========================================================================== */
+
+/* — THE HOMEMADE DRONE ———————————————————————————————————————————————— */
+
+/* the game's layer inside the band's picture box (above the plate, below
+   the pill row at z 3) */
+.drone-game {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* the plate dims to the slate "board" state: one flat layer over the plate
+   (the plate is never repainted), faded by opacity */
+.drone-board {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: color-mix(in oklab, var(--idi-overlay) 84%, transparent);
+}
+.drone-game[data-variant="alt"] .drone-board {
+  background: color-mix(in oklab, var(--bp-panel) 88%, transparent);
+}
+
+/* the seven gates: static chalk strokes (GateStroke grammar: posts and
+   crossbars); the next gate is the viewport's one aqua mark */
+.drone-course {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.drone-course g {
+  fill: none;
+  stroke: var(--w-chalk);
+  stroke-opacity: 0.8;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.drone-course g[data-state="next"] {
+  stroke: var(--accent);
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+.drone-course g[data-state="done"] {
+  stroke-opacity: 0.28;
+}
+.drone-game[data-variant="alt"] .drone-course g {
+  stroke: var(--w-bp-line);
+  stroke-dasharray: 7 5;
+}
+.drone-game[data-variant="alt"] .drone-course g[data-state="next"] {
+  stroke: var(--accent);
+  stroke-dasharray: none;
+}
+.drone-label {
+  position: absolute;
+  transform: translate(-50%, -125%);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  line-height: 1;
+  color: var(--w-chalk);
+  opacity: 0.85;
+}
+.drone-label[data-state="next"] {
+  color: var(--accent);
+  opacity: 1;
+}
+.drone-label[data-state="done"] {
+  opacity: 0.4;
+}
+.drone-game[data-variant="alt"] .drone-label[data-state="todo"],
+.drone-game[data-variant="alt"] .drone-label[data-state="done"] {
+  color: var(--w-bp-line);
+}
+
+/* the drone: one pre-rasterized sprite on its own layer, moved by one
+   transform per frame */
+.drone-sprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5.5%;
+  height: auto;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.drone-game[data-phase="flying"] .drone-sprite,
+.drone-game[data-phase="landing"] .drone-sprite {
+  will-change: transform;
+}
+
+/* the play field: the band itself, focusable while flying */
+.drone-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  border-radius: inherit;
+}
+.drone-field:active {
+  cursor: grabbing;
+}
+.drone-field:focus {
+  outline: none;
+}
+.drone-field:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+/* the panels in the band: the flight plan (motion off), the score */
+.drone-panel {
+  position: absolute;
+  top: 1rem;
+  max-width: min(26rem, 46%);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--idi-deep) 82%, transparent);
+  pointer-events: auto;
+}
+.drone-plan {
+  left: 1rem;
+}
+.drone-plan:focus {
+  outline: none;
+}
+.drone-plan:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.drone-plan li + li {
+  margin-top: 0.125rem;
+}
+.drone-result {
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.drone-next {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.drone-next:hover {
+  color: var(--accent);
+}
+
+/* the HUD, fixed in the game-hud stage layer (under the header) */
+.drone-hud {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--idi-deep) 86%, transparent);
+  color: var(--fg);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* — DEAD EYE —————————————————————————————————————————————————————————— */
+
+/* the grade: the server's empty layer in #kill-list (z −1, below every
+   word), filled by a round and faded by opacity on the host; flat colour
+   and static gradients only (never the section's background: B6) */
+[data-deadeye-layer="grade"] > .de-ground {
+  position: absolute;
+  inset: 0;
+  background: var(--rd-deadeye-bg);
+}
+/* the frozen frontier only at the outer edges: the reading column stays on
+   the plain graded ground (AA unchanged) */
+[data-deadeye-layer="grade"] > .de-plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  -webkit-mask-image: linear-gradient(to right, black 0, transparent 6%, transparent 94%, black 100%);
+  mask-image: linear-gradient(to right, black 0, transparent 6%, transparent 94%, black 100%);
+}
+[data-deadeye-layer="grade"] > .de-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--w-deadeye) 22%, transparent),
+    transparent 10%,
+    transparent 90%,
+    color-mix(in oklab, var(--w-deadeye) 22%, transparent)
+  );
+}
+
+/* the rows during a round (the section carries data-deadeye="on"):
+   survivors and flagships step to --fg-muted and are never targets; the
+   killed rows are the targets (the whole row) */
+#kill-list[data-deadeye="on"] li[data-de="dim"] :is(span, p, button, a) {
+  color: var(--fg-muted);
+}
+#kill-list[data-deadeye="on"] li[data-de="dim"],
+#kill-list[data-deadeye="on"] li[data-de="dim"] button {
+  cursor: default;
+}
+#kill-list[data-deadeye="on"] li[data-de="target"] {
+  cursor: pointer;
+}
+#kill-list[data-deadeye="on"] li[data-de="target"] h3 button {
+  color: var(--fg);
+}
+#kill-list[data-deadeye="on"] li[data-de="target"] [data-reason] {
+  color: var(--fg-muted);
+}
+/* the read: a struck row in full ink, its verbatim reason and its existing
+   post-mortem link with it; the row's own ember strike draws (180 ms) */
+#kill-list[data-deadeye="on"] li[data-deadeye-struck] :is(h3 button, [data-reason], a) {
+  color: var(--fg);
+}
+#kill-list[data-deadeye="on"] li[data-deadeye-struck] button > [data-name] + span {
+  scale: 1 1;
+  transition-duration: 180ms;
+}
+
+/* the marks (in the section's marks layer, placed by transform) */
+.de-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 14px;
+}
+.de-mark > i {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 18px;
+  height: 1.5px;
+  margin-top: -0.75px;
+  border-radius: 1px;
+  background: var(--color-ember);
+  transform-origin: 50% 50%;
+}
+.de-mark > i:first-child {
+  rotate: 45deg;
+}
+.de-mark > i:last-child {
+  rotate: -45deg;
+}
+.de-tally {
+  position: absolute;
+  left: 6px;
+  top: -2px;
+  width: 2px;
+  height: 18px;
+  border-radius: 1px;
+  background: var(--color-ember);
+  transform-origin: 50% 100%;
+}
+
+/* the HUD, fixed in the game-hud stage layer */
+.de-hud {
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.375rem 0.5rem 0.375rem 0.375rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--rd-deep) 90%, transparent);
+  color: var(--fg);
+  pointer-events: auto;
+  white-space: nowrap;
+}
+.de-read {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 17rem;
+}
+
+/* the core (IC-RD-09): a white ring that drains clockwise from 12 o'clock,
+   two half-discs turned by transform under the inner core */
+.de-core {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+}
+.de-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--color-ink) 16%, transparent);
+}
+.de-half {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+}
+.de-half-r {
+  left: 50%;
+}
+.de-half-l {
+  left: 0;
+}
+.de-fill {
+  position: absolute;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.de-half-r .de-fill {
+  left: -100%;
+  background: linear-gradient(to right, transparent 50%, var(--color-ink) 50%);
+}
+.de-half-l .de-fill {
+  left: 0;
+  background: linear-gradient(to right, var(--color-ink) 50%, transparent 50%);
+}
+.de-inner {
+  position: absolute;
+  inset: 4px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rd-deep);
+}
+.de-eye {
+  width: 62%;
+  height: 62%;
+  color: var(--color-ink);
+}
+
+.de-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--fg);
+  cursor: pointer;
+}
+.de-btn:hover {
+  border-color: var(--fg-muted);
+}
+.de-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

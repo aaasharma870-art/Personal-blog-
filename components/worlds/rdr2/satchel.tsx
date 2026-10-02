@@ -174,6 +174,8 @@ function KitIcon({ kit, phase, delay, fid, i }: { kit: Kit; phase: EnterPhase; d
   );
 }
 
+const SATCHEL_STAR = { id: "B43", weight: 2 } as const;
+
 export function Satchel({
   choice,
   caption,
@@ -186,7 +188,8 @@ export function Satchel({
 }) {
   const v = useVariant(choice, RD_PIECES.satchel);
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.45 });
+  // B43 (the satchel spill): a time star through the spotlight on DESKTOP_FINE
+  const phase = useEnterOnce(ref, { amount: 0.45, star: SATCHEL_STAR });
   const fid = useFid();
   const alt = v === "alt";
   const armed = phase === "armed";
@@ -205,7 +208,7 @@ export function Satchel({
     <figure
       ref={ref}
       className={cn("m-0", className)}
-      {...beatAttrs("B43", { weight: 2 })}
+      {...beatAttrs(SATCHEL_STAR.id, SATCHEL_STAR)}
       data-motif="satchel"
       data-piece={RD_PIECES.satchel}
       data-variant={v}

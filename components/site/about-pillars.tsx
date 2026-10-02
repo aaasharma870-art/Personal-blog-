@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { pillars } from "@/lib/content";
-import { useReducedMotion } from "@/lib/flags";
+import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { easeDraw } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
@@ -11,7 +11,7 @@ import type { VariantChoice } from "@/lib/variants";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { Rise } from "@/components/site/world-motion";
 import type { ReactNode } from "react";
-import { JackCompass, type CompassLid } from "@/components/worlds/pirates/jack-compass";
+import { JackCompass, type CompassApi, type CompassLid } from "@/components/worlds/pirates/jack-compass";
 
 /* ============================================================================
    The four pillars as four BEARINGS around JACK'S COMPASS (SPEC v2 §3 row 1,
@@ -35,12 +35,31 @@ import { JackCompass, type CompassLid } from "@/components/worlds/pirates/jack-c
        (desktop) and lighting its bearing, then returns to NW. Afterwards,
        hover / focus behave as the default.
    Reduced motion / Pause / already in view: the final state, static.
+
+   PHASE 3 (W3-PIRATES; PHASE3-SPEC §2.3 B08, §3.8, §9.2 #1):
+   - Both entrances are a time star of the B08 row ("B08-compass"): on
+     DESKTOP_FINE they ask the spotlight, which the scrubbed sentence (the
+     row's scroll star) owns while it crosses the middle 60 %; "skip" = the
+     final state, static. Phones and tablets enter as before.
+   - Pillar 02's body carries the Act I scrubbed sentence (`bodies`, built
+     on the server in about.tsx).
+   - THE TOY, "Spin Jack's compass" (DESKTOP_FINE only, lazy: compass-toy
+     .tsx + use-compass-spin.ts): a button over the compass (the SVG stays
+     aria-hidden). It drives the drawing through JackCompass's `onApi`; the
+     needle always comes to rest on a pillar bearing (`point`, lit in brass).
+     Its invite (B08-invite) is one needle twitch on scroll-idle.
    ========================================================================== */
 
 const BEARINGS = ["NW", "NE", "SW", "SE"] as const;
 const HEADINGS = [315, 45, 225, 135] as const;
 /** The alt's bearing sweep: lid opens at 0, bearings every 460 ms, home. */
 const SWEEP = { lid: 0, first: 520, every: 460, home: 520 } as const;
+
+/** The entrances' time star (the B08 row; not a declared beat of its own). */
+const ENTRY_STAR = { id: "B08-compass", weight: 1 } as const;
+
+/** The toy (desktop only): a lazy chunk, never on phones (DP-13). */
+const CompassToy = lazy(() => import("@/components/worlds/pirates/compass-toy"));
 
 /** Bearing lines from the case rim outward (desktop hub SVG, 280 × 280). */
 const RAYS = HEADINGS.map((deg) => {
@@ -52,20 +71,32 @@ const RAYS = HEADINGS.map((deg) => {
 export function AboutPillars({
   choice,
   caption = null,
+  bodies,
+  toy = null,
 }: {
   choice: VariantChoice;
   /** cap.about (server-rendered), shown under the compass below lg. */
   caption?: ReactNode;
+  /** The pillar bodies as server nodes (pillar 02 holds the B08 scrub);
+   *  default the plain `pillars[].body`. */
+  bodies?: readonly ReactNode[];
+  /** The toy's label (toy.compass.label); null = no toy. */
+  toy?: string | null;
 }) {
   const variant = useVariant(choice, "about.compass");
   const reduced = useReducedMotion();
+  const fine = useDesktopFine();
+  const alt = variant === "alt";
   const listRef = useRef<HTMLOListElement>(null);
-  const phase = useEnterOnce(listRef, { amount: 0.45 });
+  const phase = useEnterOnce(listRef, { amount: 0.45, star: alt ? ENTRY_STAR : undefined });
   const [aim, setAim] = useState<number | null>(null);
   // the alt's sweep: -1 = not started; 0–3 = taking bearing k; 4 = done
   const [sweep, setSweep] = useState(-1);
+  // the toy: the pillar the needle rests on, and "spinning" (hover waits)
+  const [point, setPoint] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [api, setApi] = useState<CompassApi | null>(null);
 
-  const alt = variant === "alt";
   const settled = reduced || phase === "static";
 
   useEffect(() => {
@@ -79,11 +110,12 @@ export function AboutPillars({
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [alt, phase, reduced]);
 
-  // what the compass does now
-  let heading: number = HEADINGS[aim ?? 0];
+  // what the compass does now (a spin owns the needle: hover waits)
+  const rest = busy ? point : (aim ?? point);
+  let heading: number = HEADINGS[rest] ?? 0;
   let lid: CompassLid = "open";
   let plotted = 4; // bearing lines drawn (alt)
-  let lit: number | null = aim ?? 0; // the pillar whose bearing is brass
+  let lit: number | null = rest; // the pillar whose bearing is brass
   if (alt && !settled) {
     if (phase === "armed" || sweep < 0) {
       lid = phase === "armed" ? "shut" : "open";
@@ -140,7 +172,27 @@ export function AboutPillars({
         <div className="lg:absolute lg:left-0 lg:top-0 lg:-translate-x-1/2 lg:-translate-y-[63.89%]">
           {/* ≥ 140 px (M2 critic 3 #11: at 75–120 px the caption named a
               compass too small to find) */}
-          <JackCompass heading={heading} lid={lid} huntOnEnter={!alt} className="w-36" />
+          <JackCompass
+            heading={heading}
+            lid={lid}
+            huntOnEnter={!alt}
+            star={ENTRY_STAR}
+            onApi={fine && toy ? setApi : undefined}
+            className="w-36"
+          />
+          {fine && toy && api ? (
+            <Suspense fallback={null}>
+              <CompassToy
+                api={api}
+                label={toy}
+                bearings={HEADINGS}
+                point={point}
+                alt={alt}
+                setPoint={setPoint}
+                setBusy={setBusy}
+              />
+            </Suspense>
+          ) : null}
         </div>
       </div>
       {/* below lg the compass leads the list, so its caption sits right
@@ -177,7 +229,7 @@ export function AboutPillars({
                 </span>
               </p>
               <h3 className="mt-tier-pair type-heading text-fg">{p.title}</h3>
-              <p className="mt-tier-pair type-body text-fg-muted">{p.body}</p>
+              <p className="mt-tier-pair type-body text-fg-muted">{bodies?.[i] ?? p.body}</p>
             </div>
           </Rise>
         ))}
