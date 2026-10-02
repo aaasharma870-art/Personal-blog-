@@ -1,0 +1,6 @@
+1440 top {"fps":60.4,"anims":4,"animTargets":["trail-fog absolute inset-0","hero-cap relative z-10 hidden sm:block","pointer-events-none absolute inset-0 bg-","rdr2-module__R8wI0W__duskVeil"],"videos":1}
+1440 act-1 {"fps":60.6,"anims":2,"animTargets":["trail-fog absolute inset-0","rdr2-module__R8wI0W__duskVeil"],"videos":1}
+1440 journey {"fps":60.3,"anims":2,"animTargets":["trail-fog absolute inset-0","rdr2-module__R8wI0W__duskVeil"],"videos":0}
+1024 top {"fps":60.1,"anims":4,"animTargets":["trail-fog absolute inset-0","hero-cap relative z-10 hidden sm:block","pointer-events-none absolute inset-0 bg-","rdr2-module__R8wI0W__duskVeil"],"videos":1}
+1024 act-1 {"fps":60.5,"anims":2,"animTargets":["trail-fog absolute inset-0","rdr2-module__R8wI0W__duskVeil"],"videos":1}
+1024 journey {"fps":60.4,"anims":2,"animTargets":["trail-fog absolute inset-0","rdr2-module__R8wI0W__duskVeil"],"videos":0}

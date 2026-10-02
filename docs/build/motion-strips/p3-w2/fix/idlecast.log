@@ -1,0 +1,5 @@
+# idlecast.cjs (scratch): idle fps under a CDP screencast, parked like motion.js's idle probe, 1440x900
+after default: top 50.1 (MV-03 playing) | act-1 19.8-20.1 (L01 playing) | journey 51.0
+after gl=off: act-1 18.9 (L01) | journey 59.7
+after skip=stage: act-1 18.8 (L01) | journey 56.4
+base (5aa4587): top 60.2 (no video playing) | act-1 60.4 | journey 39.1

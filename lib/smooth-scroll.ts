@@ -420,11 +420,46 @@ let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let deferredSince = 0;
 let userScrolled = false;
 let inputTracked = false;
-/** A hash on load (`/#act-2`, `/#work`) is held at its target through every
- *  refresh until the visitor scrolls, clicks or jumps themself (W2 gate:
- *  late layout, the Lenis start and the pins used to leave it at the
- *  browser's native jump, or at 0). */
-let hashHold = typeof window !== "undefined" && window.location.hash.length > 1;
+/** A hash on load (`/#act-2`, `/#work`) on the desktop motion path is held
+ *  at its target — first at `load`, then through every refresh — until the
+ *  visitor scrolls, clicks or jumps themself (W2 gate: late layout, the
+ *  Lenis start and the pins used to leave it at the browser's native jump,
+ *  or at 0). Phones and reduced motion keep the browser's own jump. */
+let hashHold = false;
+if (typeof window !== "undefined" && window.location.hash.length > 1) {
+  try {
+    hashHold = window.matchMedia(DESKTOP_FINE).matches && !motionOffNow();
+  } catch {
+    hashHold = false;
+  }
+  if (hashHold) {
+    const opts = { capture: true, passive: true } as const;
+    const drop = () => {
+      hashHold = false;
+      for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.removeEventListener(ev, drop, opts);
+      window.removeEventListener("keydown", onKey, opts);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (/^(PageUp|PageDown|ArrowUp|ArrowDown|Home|End| |Spacebar|Tab)$/.test(e.key)) drop();
+    };
+    for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.addEventListener(ev, drop, opts);
+    window.addEventListener("keydown", onKey, opts);
+    // a target the stream has not placed yet (its pin wrapper) is retried
+    // for up to 3 s; every later refresh re-lands it while it is held
+    const land = () => {
+      let n = 0;
+      const tryLand = () => {
+        if (!hashHold) return;
+        const el = resolveTarget(window.location.hash);
+        if (el && (!el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) reapplyHash();
+        else if (++n < 20) window.setTimeout(tryLand, 150);
+      };
+      requestAnimationFrame(tryLand);
+    };
+    if (document.readyState === "complete") land();
+    else window.addEventListener("load", land, { once: true });
+  }
+}
 
 /** Note any scroll the visitor makes themself (wheel, touch, keys), so the
  *  one-time hash re-apply never yanks them back. <SmoothScroll/> calls it
@@ -447,8 +482,8 @@ export function trackScrollInput(): void {
   window.addEventListener("touchmove", mark, { capture: true, passive: true });
   window.addEventListener("pointerdown", mark, { capture: true, passive: true });
   window.addEventListener("keydown", onKey, { capture: true, passive: true });
-  // the first refresh lands a hash on load (no ScrollTrigger is needed:
-  // the cards pin with CSS sticky)
+  // a refresh re-lands a held hash once the desktop chunk is in (no
+  // ScrollTrigger is needed: the cards pin with CSS sticky)
   if (hashHold) requestScrollRefresh();
 }
 

@@ -173,7 +173,24 @@ export default async function probe(page, ctx) {
         if (!g.id) continue;
         const p = await ctx.newPage({ viewport: ctx.vw });
         await p.goto(ctx.url(`/?skip=intro,smooth#${g.id}`), { waitUntil: "load" });
-        await sleep(2500);
+        // a streamed target (act-3 / act-4) is placed by the held-hash re-land
+        // once its chunk is in: poll up to 6 s and record when it landed
+        const t0 = Date.now();
+        await p
+          .waitForFunction(
+            ([id, land]) => {
+              const pin = document.querySelector(`#${id} > [data-act-card-pin]`);
+              const stage = pin?.querySelector(":scope > [data-card-stage]");
+              if (!pin || !stage) return false;
+              const top = pin.getBoundingClientRect().top + scrollY;
+              return Math.abs((scrollY - top) / (pin.offsetHeight - stage.offsetHeight) - land) <= 0.02;
+            },
+            [g.id, LAND],
+            { timeout: 6000, polling: 100 },
+          )
+          .catch(() => {});
+        const landedMs = Date.now() - t0;
+        await sleep(500);
         const m = await p.evaluate((id) => {
           const pin = document.querySelector(`#${id} > [data-act-card-pin]`);
           const stage = pin?.querySelector(":scope > [data-card-stage]");
@@ -182,7 +199,7 @@ export default async function probe(page, ctx) {
           const travel = pin.offsetHeight - stage.offsetHeight;
           return { p: +((scrollY - top) / travel).toFixed(3), travel };
         }, g.id);
-        rows.push({ card: g.kind, id: g.id, ...(m ?? {}), ok: m !== null && Math.abs(m.p - LAND) <= 0.02 });
+        rows.push({ card: g.kind, id: g.id, ...(m ?? {}), landedMs, ok: m !== null && Math.abs(m.p - LAND) <= 0.02 });
       }
       set("landAt", rows.every((r) => r.ok), { expected: LAND, rows });
     }

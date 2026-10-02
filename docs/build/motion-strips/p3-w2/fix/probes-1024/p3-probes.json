@@ -1,0 +1,2296 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-02T21:47:47.086Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "decoder",
+      "gl",
+      "hunt",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "plates-live"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 641,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 21,
+            "worst": {
+              "ratio": 7.34,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 2610,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 115,
+            "worst": {
+              "ratio": 3.78,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2833,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 7,
+            "liveBoxes": 165,
+            "worst": {
+              "ratio": 6.53,
+              "text": "Fan tribute — not affiliated with Warner Bros., ",
+              "y": 45115,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 22,
+            "worst": {
+              "ratio": 7.51,
+              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
+              "y": 2227,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 168,
+            "worst": {
+              "ratio": 4.05,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2462,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 7,
+            "liveBoxes": 150,
+            "worst": {
+              "ratio": 6.51,
+              "text": "Titles, names and quoted lines belong to their o",
+              "y": 42448,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 75811,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 443532,
+            "cssGz": 34736,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            443532
+          ],
+          "cssGz": [
+            29433,
+            34736
+          ],
+          "deltaJsGz": 4440,
+          "deltaCssGz": 5303,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17527,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "pins": {
+          "pass": true,
+          "rows": [
+            {
+              "kind": "opening",
+              "id": "act-1",
+              "top": 768,
+              "h": 1459,
+              "stageH": 768,
+              "sticky": true,
+              "vh": 768,
+              "nextId": "act-1-program",
+              "nextBackdrop": true,
+              "travel": 691,
+              "wantPx": 691,
+              "ok": true
+            },
+            {
+              "kind": "seam",
+              "id": "act-2",
+              "top": 6906,
+              "h": 1613,
+              "stageH": 768,
+              "sticky": true,
+              "vh": 768,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 845,
+              "wantPx": 845,
+              "ok": true
+            },
+            {
+              "kind": "tintype",
+              "id": "act-3",
+              "top": 27411,
+              "h": 1459,
+              "stageH": 768,
+              "sticky": true,
+              "vh": 768,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 691,
+              "wantPx": 691,
+              "ok": true
+            },
+            {
+              "kind": "ignite",
+              "id": "act-4",
+              "top": 36743,
+              "h": 1613,
+              "stageH": 768,
+              "sticky": true,
+              "vh": 768,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 845,
+              "wantPx": 845,
+              "ok": true
+            }
+          ],
+          "program": {
+            "nextId": "act-1-program",
+            "backdrop": true
+          }
+        },
+        "stars": {
+          "pass": true,
+          "stars": [
+            {
+              "card": "opening",
+              "id": "B03",
+              "star": true,
+              "h": 311
+            },
+            {
+              "card": "opening",
+              "id": "B04",
+              "star": true,
+              "h": 346
+            },
+            {
+              "card": "seam",
+              "id": "B13",
+              "star": true,
+              "h": 380
+            },
+            {
+              "card": "seam",
+              "id": "B14",
+              "star": true,
+              "h": 422
+            },
+            {
+              "card": "tintype",
+              "id": "B36",
+              "star": true,
+              "h": 311
+            },
+            {
+              "card": "tintype",
+              "id": "B38",
+              "star": true,
+              "h": 346
+            },
+            {
+              "card": "ignite",
+              "id": "B48",
+              "star": true,
+              "h": 380
+            },
+            {
+              "card": "ignite",
+              "id": "B50",
+              "star": true,
+              "h": 422
+            }
+          ]
+        },
+        "impacts": {
+          "pass": true,
+          "impacts": [
+            "pirates",
+            "idiots",
+            "rdr2",
+            "hp"
+          ],
+          "meets": [
+            "opening",
+            "seam",
+            "tintype",
+            "ignite"
+          ]
+        },
+        "damping": {
+          "pass": true,
+          "card": "seam",
+          "early": {
+            "raw": 0.4497,
+            "t": 0.075,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          },
+          "late": {
+            "raw": 0.4497,
+            "t": 0.4497,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          }
+        },
+        "scrub": {
+          "pass": true,
+          "rows": [
+            {
+              "card": "opening",
+              "p": 0.05,
+              "raw": 0.0507,
+              "t": 0.0507,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.22,
+              "raw": 0.22,
+              "t": 0.22,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.45,
+              "raw": 0.4501,
+              "t": 0.4501,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.5,
+              "raw": 0.5007,
+              "t": 0.5007,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.75,
+              "raw": 0.7496,
+              "t": 0.7496,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.9,
+              "raw": 0.9001,
+              "t": 0.9001,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.05,
+              "raw": 0.0497,
+              "t": 0.0497,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.22,
+              "raw": 0.2201,
+              "t": 0.2201,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.45,
+              "raw": 0.4497,
+              "t": 0.4497,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.5,
+              "raw": 0.4994,
+              "t": 0.4994,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.75,
+              "raw": 0.7503,
+              "t": 0.7503,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.9,
+              "raw": 0.8994,
+              "t": 0.8994,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.05,
+              "raw": 0.0507,
+              "t": 0.0507,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.22,
+              "raw": 0.22,
+              "t": 0.22,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.45,
+              "raw": 0.4501,
+              "t": 0.4501,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.5,
+              "raw": 0.5007,
+              "t": 0.5007,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.75,
+              "raw": 0.7511,
+              "t": 0.7511,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.9,
+              "raw": 0.9001,
+              "t": 0.9001,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.05,
+              "raw": 0.0509,
+              "t": 0.0509,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.22,
+              "raw": 0.2201,
+              "t": 0.2201,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.45,
+              "raw": 0.4509,
+              "t": 0.4509,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.5,
+              "raw": 0.5006,
+              "t": 0.5006,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.75,
+              "raw": 0.7503,
+              "t": 0.7503,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.9,
+              "raw": 0.9006,
+              "t": 0.9006,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            }
+          ]
+        },
+        "landAt": {
+          "pass": true,
+          "expected": 0.47,
+          "rows": [
+            {
+              "card": "opening",
+              "id": "act-1",
+              "p": 0.47,
+              "travel": 691,
+              "landedMs": 256,
+              "ok": true
+            },
+            {
+              "card": "seam",
+              "id": "act-2",
+              "p": 0.47,
+              "travel": 845,
+              "landedMs": 109,
+              "ok": true
+            },
+            {
+              "card": "tintype",
+              "id": "act-3",
+              "p": 0.47,
+              "travel": 691,
+              "landedMs": 91,
+              "ok": true
+            },
+            {
+              "card": "ignite",
+              "id": "act-4",
+              "p": 0.469,
+              "travel": 845,
+              "landedMs": 915,
+              "ok": true
+            }
+          ]
+        },
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 77033,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 84,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 654,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-1",
+          "stage",
+          "act-2",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L01",
+          "stage",
+          "L08",
+          "MV-09"
+        ],
+        "crossfadeSamples": 10,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 83290,
+      "console": []
+    },
+    "gl": {
+      "pass": false,
+      "checks": {
+        "lab": {
+          "pass": true,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 1933,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 368,
+              "draws": 9,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 1393,
+              "draws": 9,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 419,
+              "draws": 9,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 1125,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 420,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 1225,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 420,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 5318656,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 1152,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 1185,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 9438,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 9465,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 14560,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 18598,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 23381,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 27462,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 27481,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 32150,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 47.79999999888241,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 32417,
+              "ev": "settle",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 35989,
+              "ev": "disengage:now",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 36067,
+              "ev": "lost"
+            },
+            {
+              "t": 36085,
+              "ev": "restored"
+            },
+            {
+              "t": 37458,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 37658,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.400000000372529,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": false,
+          "per": {
+            "act-1": {
+              "engaged": true,
+              "shots": [
+                "page-act-1-p0.1.png",
+                "page-act-1-p0.3.png",
+                "page-act-1-p0.45.png",
+                "page-act-1-p0.8.png"
+              ]
+            },
+            "act-2": {
+              "engaged": true,
+              "shots": [
+                "page-act-2-p0.1.png",
+                "page-act-2-p0.3.png",
+                "page-act-2-p0.45.png",
+                "page-act-2-p0.8.png"
+              ]
+            },
+            "act-3": {
+              "engaged": true,
+              "shots": [
+                "page-act-3-p0.1.png",
+                "page-act-3-p0.3.png",
+                "page-act-3-p0.45.png",
+                "page-act-3-p0.8.png"
+              ]
+            },
+            "act-4": {
+              "engaged": true,
+              "shots": [
+                "page-act-4-p0.1.png",
+                "page-act-4-p0.3.png",
+                "page-act-4-p0.45.png",
+                "page-act-4-p0.8.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "midSwitches": [
+            {
+              "t": 21404,
+              "ev": "disengage",
+              "card": "seam",
+              "p": 0.8
+            },
+            {
+              "t": 30554,
+              "ev": "disengage",
+              "card": "tintype",
+              "p": 0.821
+            }
+          ],
+          "aborts": [],
+          "bytes": 10947681
+        },
+        "page.default": {
+          "pass": true,
+          "tier": "gl",
+          "on": 0,
+          "note": "context not probed yet (no card approached)"
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": "css",
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 107193,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "hydrate": {
+          "pass": true,
+          "text": "0/12"
+        },
+        "width": {
+          "pass": true,
+          "w0": 42.59375,
+          "w12": 42.609375
+        },
+        "typed": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ],
+          "toast": "Egg 1 of 12 · The right of parley",
+          "tick": true
+        },
+        "game": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "before": 1,
+          "n": 1,
+          "mid": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          },
+          "after": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          }
+        },
+        "lumos": {
+          "pass": true,
+          "bloom": true,
+          "running": true,
+          "found": [
+            "pc-parley",
+            "hp-lumos"
+          ]
+        },
+        "browse": {
+          "pass": true,
+          "empty": [
+            "cmd-egg-obliviate",
+            "cmd-egg-intro",
+            "cmd-egg-eggs-off",
+            "cmd-play-deadeye",
+            "cmd-play-hints",
+            "cmd-play-reset",
+            "cmd-play-dc"
+          ],
+          "solemn": [
+            "cmd-egg-map"
+          ],
+          "lumos": [
+            "cmd-egg-lumos"
+          ],
+          "map": []
+        },
+        "sync": {
+          "pass": true,
+          "chip": "3/12",
+          "n": 3
+        },
+        "obliviate": {
+          "pass": true,
+          "before": 3
+        },
+        "eggsoff": {
+          "pass": true,
+          "gone": true
+        },
+        "panel": {
+          "pass": true,
+          "slots": 12,
+          "expanded": "true",
+          "closed": true,
+          "focus": true
+        },
+        "hotspot": {
+          "pass": true,
+          "bound": true,
+          "short": false,
+          "long": true
+        },
+        "reset": {
+          "pass": true
+        },
+        "complete": {
+          "pass": true,
+          "done": true,
+          "gold": true,
+          "rows": 12,
+          "seeker": false
+        },
+        "tail": {
+          "pass": true,
+          "h": 0.5999959309895834,
+          "played": true,
+          "extended": true,
+          "again": false
+        },
+        "phone": {
+          "pass": true,
+          "chip": "none",
+          "tail": 0
+        }
+      },
+      "ms": 38635,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            930
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            5916,
+            180
+          ],
+          [
+            "DIV",
+            5166,
+            930
+          ],
+          [
+            "act-2-title",
+            5914,
+            44
+          ],
+          [
+            "work",
+            6096,
+            2365
+          ],
+          [
+            "trading-algos",
+            8461,
+            1786
+          ],
+          [
+            "optuna-screener",
+            10247,
+            3739
+          ],
+          [
+            "experiment",
+            13986,
+            1132
+          ]
+        ],
+        "heights": [
+          10466,
+          39854
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          12521,
+          10869
+        ],
+        "shift": 0,
+        "diff": [
+          [
+            "journey",
+            4764,
+            1204
+          ],
+          [
+            "act-2",
+            5967,
+            1890
+          ],
+          [
+            "SPAN",
+            5967,
+            270
+          ],
+          [
+            "SPAN",
+            7677,
+            180
+          ],
+          [
+            "DIV",
+            5967,
+            1890
+          ],
+          [
+            "act-2-title",
+            7710,
+            44
+          ],
+          [
+            "work",
+            7857,
+            2333
+          ],
+          [
+            "trading-algos",
+            10191,
+            1921
+          ],
+          [
+            "optuna-screener",
+            12111,
+            4446
+          ],
+          [
+            "experiment",
+            16558,
+            1132
+          ]
+        ],
+        "ok": false
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 18269,
+      "console": []
+    },
+    "lenis": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 44115,
+          "vh": 768,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 1
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 2754,
+          "y1": 2754
+        },
+        "fastlane": {
+          "pass": true,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 305,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 93,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 3,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 2754
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 56330,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 18,
+      "over": 18,
+      "worstDur": 123,
+      "worstWork": 8,
+      "loafs": [
+        {
+          "dur": 123,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1615
+        },
+        {
+          "dur": 112,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 653
+        },
+        {
+          "dur": 109,
+          "block": 0,
+          "work": 3,
+          "top": null,
+          "t": 182
+        },
+        {
+          "dur": 102,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2366
+        },
+        {
+          "dur": 95,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2268
+        },
+        {
+          "dur": 91,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1911
+        },
+        {
+          "dur": 85,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2840
+        },
+        {
+          "dur": 84,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2471
+        },
+        {
+          "dur": 81,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1745
+        },
+        {
+          "dur": 79,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 766
+        },
+        {
+          "dur": 79,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2692
+        },
+        {
+          "dur": 76,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 848
+        }
+      ],
+      "ladderMs": {
+        "1": 337,
+        "2": 653,
+        "3": 1804,
+        "4": 3358
+      },
+      "lenis": true,
+      "ms": 14504,
+      "console": []
+    },
+    "plates-live": {
+      "pass": true,
+      "live": {
+        "samples": 390,
+        "maxPlaying": 1,
+        "plates": 34,
+        "byHow": {
+          "loop": 8,
+          "camera": 15,
+          "canvas": 4,
+          "dead": 7
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 9,
+          "stage": 7,
+          "section:journey": 4,
+          "section:work": 2,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:kill-list": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [],
+        "deadOther": [
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1284,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1297,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 1328,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 1642,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1812,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1554,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 2582,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 3343,
+            "how": "loop",
+            "states": [
+              "playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 4636,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L01",
+            "host": "card",
+            "ms": 2062,
+            "how": "loop",
+            "states": [
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "stage-0",
+            "host": "stage",
+            "ms": 7231,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-1",
+            "host": "stage",
+            "ms": 5424,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 1386,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05b",
+            "host": "section:journey",
+            "ms": 1028,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05c",
+            "host": "section:journey",
+            "ms": 1055,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05d",
+            "host": "section:journey",
+            "ms": 1030,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 3856,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 2573,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 3598,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L08",
+            "host": "card",
+            "ms": 2064,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1290,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-06",
+            "host": "section:work",
+            "ms": 1538,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-2",
+            "host": "stage",
+            "ms": 4899,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1284,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-3",
+            "host": "stage",
+            "ms": 8454,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "stage-4",
+            "host": "stage",
+            "ms": 6666,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1279,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen",
+            "host": "section:kill-list",
+            "ms": 1282,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1297,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 1328,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 1642,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1812,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 1594,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 4928,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 3830,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-5",
+            "host": "stage",
+            "ms": 4363,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1554,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 2582,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 3116,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-09",
+            "host": "section:contact",
+            "ms": 2874,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing"
+            ]
+          },
+          {
+            "media": "stage-6",
+            "host": "stage",
+            "ms": 7710,
+            "how": "loop",
+            "states": []
+          }
+        ],
+        "seq": {
+          "peakMB": 87.9,
+          "sampled": true
+        },
+        "requests": {
+          "count": 6,
+          "webm": 6,
+          "mp4": 0,
+          "urls": [
+            "/media/films/hero-sea-loop.webm",
+            "/media/films/iconic-pearl-loop.webm",
+            "/media/films/voyage-a-loop.webm",
+            "/media/films/iconic-ice-loop.webm",
+            "/media/films/iconic-corridor-loop.webm",
+            "/media/films/last-light-loop.webm"
+          ]
+        },
+        "codecPicks": {
+          "/media/films/hero-sea-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-loop.mp4": "video/webm",
+          "/media/films/voyage-a-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-loop.mp4": "video/webm",
+          "/media/films/iconic-corridor-loop.mp4": "video/webm",
+          "/media/films/last-light-loop.mp4": "video/webm"
+        }
+      },
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 1,
+          "weather": 5,
+          "stageRoot": true,
+          "moved": 0
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "translate3d(0%, 0%, 0px) scale(1.35)",
+        "depthFarAt0": "translate3d(-0.9%, 0%, 0px) scale(1.018)",
+        "weather": [
+          {
+            "kind": "spray",
+            "dots": 14,
+            "running": 14
+          },
+          {
+            "kind": "chalk",
+            "dots": 12,
+            "running": 12
+          },
+          {
+            "kind": "fireflies",
+            "dots": 9,
+            "running": 9
+          },
+          {
+            "kind": "motes",
+            "dots": 12,
+            "running": 12
+          }
+        ],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": "loop",
+            "states": [
+              "iconic-ice:poster",
+              "L08:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": "loop",
+            "states": [
+              "MV-05a:poster",
+              "L06:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": "loop",
+            "states": [
+              "iconic-corridor:poster",
+              "L10:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": "depth",
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": "depth",
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": "still",
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": "still",
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": "loop",
+            "states": [
+              "iconic-deadeye:poster",
+              "L21:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 148546,
+      "console": []
+    }
+  }
+}
