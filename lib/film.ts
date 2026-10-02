@@ -634,6 +634,9 @@ const copy = {
   "toy.deadeye.score": p3("{n}/5 marked · {s} s of Dead Eye left"),
   "toy.deadeye.fire": p3("Fire"),
   "toy.deadeye.release": p3("Release"),
+  /* W3-GAMES best-score lines (optional; shown only once these keys exist) */
+  "toy.drone.best": p3("Best {s} s"),
+  "toy.deadeye.best": p3("Best {n}/5 · {s} s"),
   "toy.candles.lumos": p3("Lumos"),
   "toy.candles.done": p3("The hall is lit."),
   /* sound (PHASE3-SPEC §10.4) */
