@@ -6,10 +6,10 @@ import { animate, motion, useMotionValue, useMotionValueEvent, useTransform, typ
 import { getImageProps } from "next/image";
 import { beatAttrs } from "@/lib/beats";
 import { emit, on as onEvent } from "@/lib/events";
-import { motionOffNow } from "@/lib/flags";
+import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import type { GlTier } from "@/lib/gl/support";
 import type { GlCardSpec } from "@/lib/gl/types";
-import { impact } from "@/lib/impact";
+import { impact, trackImpactAnim } from "@/lib/impact";
 import { loopFor } from "@/lib/loops";
 import { isMediaId, resolveMedia } from "@/lib/media";
 import { cardPin } from "@/lib/motion";
@@ -143,7 +143,11 @@ export function CardP3(props: Props) {
   const active = pinned && live;
   const pushSpec = spec.push[choreo][push];
   useDebugHandle(spec.kind, pinned, raw, t, tierRef);
-  useDamping(raw, t, pinned);
+  const stars = useMemo(
+    () => spec.beats.filter((x) => x.weight != null).map((x) => [x.from, x.to] as const).sort((x, y) => x[0] - y[0]),
+    [spec.beats],
+  );
+  useDamping(raw, t, pinned, stars);
   usePhase(t, section, active);
   usePush(b, content, active, pushSpec);
   useIris(t, content, active, spec, choreo);
@@ -213,34 +217,56 @@ function useDebugHandle(kind: string, pinned: boolean, raw: MotionValue<number>,
   }, [kind, pinned, raw, t, tierRef]);
 }
 
-function useDamping(raw: MotionValue<number>, t: MotionValue<number>, on: boolean) {
+/** Cap a damped step (v → n) inside the scroll stars: at most a star's span
+ *  per `starMinS`, so a skimmer's fling still shows each star ≥ 400 ms
+ *  (spec P3-6 #2). Stars are sorted by `from`; walked in the step's
+ *  direction, the first one the step overlaps binds it. */
+function starCap(v: number, n: number, dt: number, stars: readonly (readonly [number, number])[]): number {
+  if (n === v || !stars.length) return n;
+  const fwd = n > v;
+  for (let k = 0; k < stars.length; k++) {
+    const [s0, s1] = stars[fwd ? k : stars.length - 1 - k];
+    const span = s1 - s0;
+    if (!(span > 0) || Math.max(v, n) <= s0 || Math.min(v, n) >= s1) continue;
+    const max = (span / cardPin.starMinS) * dt;
+    return fwd ? Math.min(n, Math.max(v, s0) + max) : Math.max(n, Math.min(v, s1) - max);
+  }
+  return n;
+}
+
+function useDamping(raw: MotionValue<number>, t: MotionValue<number>, on: boolean, stars: readonly (readonly [number, number])[]) {
   useEffect(() => {
     if (!on) return;
     let raf = 0;
     let last = 0;
     let snapUntil = 0;
+    let prevRaw = raw.get();
     const stop = () => {
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
       last = 0;
     };
+    const snap = (r: number) => {
+      stop();
+      t.set(r);
+    };
     const tick = (now: number) => {
       const r = raw.get();
-      const dt = last ? Math.min(0.064, (now - last) / 1000) : 1 / 60;
+      // real time, capped (a hidden tab's gap is not a fling)
+      const dt = last ? Math.min(cardPin.dtMax, (now - last) / 1000) : 1 / 60;
       last = now;
       const v = t.get();
-      let n = v + (r - v) * (1 - Math.exp(-cardPin.lambda * dt));
+      let n = starCap(v, v + (r - v) * (1 - Math.exp(-cardPin.lambda * dt)), dt, stars);
       if (Math.abs(r - n) <= cardPin.eps) n = r;
       t.set(n);
       if (n === r) stop();
       else raf = requestAnimationFrame(tick);
     };
     const follow = (r: number) => {
-      if (motionOffNow() || performance.now() < snapUntil) {
-        stop();
-        t.set(r);
-        return;
-      }
+      // a scrollbar drag, Home / End or a script's scrollTo: no catch-up
+      const jumped = Math.abs(r - prevRaw) >= cardPin.jump;
+      prevRaw = r;
+      if (motionOffNow() || jumped || performance.now() < snapUntil) return snap(r);
       if (!raf) raf = requestAnimationFrame(tick);
     };
     t.set(raw.get());
@@ -249,14 +275,19 @@ function useDamping(raw: MotionValue<number>, t: MotionValue<number>, on: boolea
       if (!d.immediate) return;
       // the jump scrolled synchronously; p_raw follows on the next scroll
       snapUntil = performance.now() + 400;
-      follow(raw.get());
+      snap(raw.get());
+    });
+    // Pause / reduced motion mid-run: the loop stops in the same task
+    const offMotion = onMotionOffChange(() => {
+      if (motionOffNow()) snap(raw.get());
     });
     return () => {
       offRaw();
       offJump();
+      offMotion();
       stop();
     };
-  }, [raw, t, on]);
+  }, [raw, t, on, stars]);
 }
 
 const phaseOf = (v: number) => (v >= cardPin.titleOut ? "e" : v >= cardPin.titleIn ? "m" : v >= cardPin.b[0] ? "b" : "a");
@@ -440,6 +471,7 @@ function chalkPuff(frame: HTMLElement) {
     );
     k.onfinish = done;
     k.oncancel = done;
+    trackImpactAnim(k);
   }
 }
 
@@ -475,10 +507,20 @@ function useKraken(
   useEffect(() => {
     if (spec.kind !== "seam") return;
     const sec = section.current;
-    const btn = sec?.querySelector<HTMLButtonElement>("[data-kraken]");
     let timer = 0;
     let running = false;
     let looked = false;
+    // every live swell piece, cancelled the moment motion goes off (§12.2)
+    const anims = new Set<Animation>();
+    let stopKraken: (() => void) | null = null;
+    let staticTimer = 0;
+    const track = (a: Animation | undefined): Animation | undefined => {
+      if (!a) return a;
+      anims.add(a);
+      const drop = () => anims.delete(a);
+      a.finished.then(drop, drop);
+      return a;
+    };
 
     const count = () => {
       // eggs off for the session (or off in the registry): the kraken still
@@ -492,7 +534,8 @@ function useKraken(
       const tip = tipRef.current;
       if (!tip) return;
       tip.setAttribute("data-shown", "static");
-      window.setTimeout(() => tip.removeAttribute("data-shown"), 4000);
+      window.clearTimeout(staticTimer);
+      staticTimer = window.setTimeout(() => tip.removeAttribute("data-shown"), 4000);
     };
 
     const swell = () => {
@@ -500,10 +543,14 @@ function useKraken(
       const mass = massRef.current;
       const plate = content.current;
       const ms = KRAKEN_MS;
-      void animate(kraken, [0, 1, 0], { duration: ms / 1000, ease: "easeInOut" });
+      const ctl = animate(kraken, [0, 1, 0], { duration: ms / 1000, ease: "easeInOut" });
+      stopKraken = () => {
+        ctl.stop();
+        kraken.set(0);
+      };
       if (tip && typeof tip.animate === "function") {
         tip.setAttribute("data-shown", "");
-        const a = tip.animate(
+        const a = track(tip.animate(
           [
             { transform: "translate(-50%, 40%) rotate(-6deg)", opacity: 0 },
             { transform: "translate(-50%, -18%) rotate(4deg)", opacity: 1, offset: 0.4 },
@@ -511,16 +558,18 @@ function useKraken(
             { transform: "translate(-50%, 45%) rotate(-8deg)", opacity: 0 },
           ],
           { duration: ms, easing: "cubic-bezier(0.45, 0, 0.55, 1)" },
-        );
-        a.onfinish = a.oncancel = () => tip.removeAttribute("data-shown");
+        ));
+        if (a) a.onfinish = a.oncancel = () => tip.removeAttribute("data-shown");
       }
       // css tier: the sea heaves (a transform on the frame's content) and
       // a dark mass rises under the foam (opacity); GL draws uKraken itself
-      mass?.animate([{ opacity: 0 }, { opacity: 0.42, offset: 0.45 }, { opacity: 0 }], { duration: ms, easing: "ease-in-out" });
+      track(mass?.animate([{ opacity: 0 }, { opacity: 0.42, offset: 0.45 }, { opacity: 0 }], { duration: ms, easing: "ease-in-out" }));
       if (plate && !plate.closest("[data-gl='on']")) {
-        plate.animate(
-          [{ transform: "scale(1)" }, { transform: "scale(1.022) translateY(-0.6%)", offset: 0.45 }, { transform: "scale(1)" }],
-          { duration: ms, easing: "ease-in-out", composite: "add" },
+        track(
+          plate.animate(
+            [{ transform: "scale(1)" }, { transform: "scale(1.022) translateY(-0.6%)", offset: 0.45 }, { transform: "scale(1)" }],
+            { duration: ms, easing: "ease-in-out", composite: "add" },
+          ),
         );
       }
     };
@@ -537,12 +586,18 @@ function useKraken(
         // past the storm: bring the card back to p .02 first, then play
         if (t.get() > cardPin.hook) {
           const pin = pinEl.current;
-          const stage = pin?.querySelector<HTMLElement>("[data-card-stage]");
-          if (pin && stage) {
-            const travel = Math.max(0, pin.offsetHeight - stage.offsetHeight);
+          if (pin) {
+            // p_raw's own range (the pin beyond one viewport)
+            const travel = Math.max(0, pin.offsetHeight - window.innerHeight);
             const top = pin.getBoundingClientRect().top + window.scrollY;
             await scrollToTarget(top + 0.02 * travel);
           }
+        }
+        // a Pause during the scroll-back: the static tip, as above
+        if (motionOffNow()) {
+          staticTip();
+          count();
+          return;
         }
         swell();
         count();
@@ -552,8 +607,12 @@ function useKraken(
       }
     };
 
-    const onClick = () => void play();
-    btn?.addEventListener("click", onClick);
+    // by delegation on the section: the button (inside an EggHint) may
+    // remount after this effect ran
+    const onClick = (e: MouseEvent) => {
+      if (e.target instanceof Element && e.target.closest("[data-kraken]")) void play();
+    };
+    sec?.addEventListener("click", onClick);
 
     // a long look: pinned on the storm (p ≤ .05) and still for 2.0 s
     const watch = () => {
@@ -563,16 +622,32 @@ function useKraken(
       const top = pinEl.current?.getBoundingClientRect().top ?? 1;
       if (top > 0.5) return;
       timer = window.setTimeout(() => {
+        // still eligible two seconds later (a Pause, the eggs turned off)
+        if (motionOffNow() || !liveRef.current || eggsSessionOff()) return;
         looked = true;
         void play();
       }, DWELL_MS);
     };
     const off = raw.on("change", watch);
     watch();
+    // Pause / reduced motion: every swell piece stops within the task
+    const offMotion = onMotionOffChange(() => {
+      if (!motionOffNow()) return;
+      window.clearTimeout(timer);
+      anims.forEach((a) => a.cancel());
+      anims.clear();
+      stopKraken?.();
+      stopKraken = null;
+      tipRef.current?.removeAttribute("data-shown");
+    });
     return () => {
       off();
+      offMotion();
       window.clearTimeout(timer);
-      btn?.removeEventListener("click", onClick);
+      window.clearTimeout(staticTimer);
+      anims.forEach((a) => a.cancel());
+      stopKraken?.();
+      sec?.removeEventListener("click", onClick);
     };
   }, [spec.kind, pinned, liveRef, raw, t, kraken, section, pinEl, content, tipRef, massRef]);
 }
@@ -622,12 +697,15 @@ function KrakenLayer({
 /** The act title as a mask, css tier (§8.1): a deep rect with the title
  *  cut out, faded in at p .68 (the frame outside the letters collapses to
  *  the world deep) and zoomed ×1 → ×6 about the title's mask origin by
- *  transform (no will-change: Chrome re-rasters it crisp), then crossfaded
- *  to the full frame (.92–1). aria-hidden: the card's h2 carries the text.
+ *  transform (no will-change: Chrome re-rasters it crisp) by p .88, then
+ *  faded out by state (300 ms) to the full frame. The world outside the
+ *  letters dims to a third (never black). aria-hidden: the h2 carries it.
  *  The SVG is stretched over the frame (preserveAspectRatio none): the
  *  pinned frame is always 2.39:1, the viewBox's own ratio. */
 const VB_W = 2390;
 const VB_H = 1000;
+/** The css title's zoom ends here; the mask is gone (by state) after it. */
+const TITLE_DONE = 0.88;
 type TitleFit = { size: number; base: number; origin: readonly [number, number] };
 /** The title's size and zoom origin, as the GL title sets it (lib/gl/plan.ts
  *  `titleXf`): cap = 20 % of the frame height, the ink ≤ 72 % of its width,
@@ -674,44 +752,52 @@ function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; 
       cancelled = true;
     };
   }, [origin, text]);
-  const opacity = useTransform(t, (v) => Math.min(remap(v, cardPin.titleIn, cardPin.titleIn + 0.06), 1 - remap(v, cardPin.titleOut, 1)));
+  const opacity = useTransform(t, (v) => remap(v, cardPin.titleIn, cardPin.titleIn + 0.06));
   const scale = useTransform(t, (v) => {
-    const k = remap(v, cardPin.titleIn, 1);
+    const k = remap(v, cardPin.titleIn, TITLE_DONE);
     // legible first, then the zoom accelerates (the GL title's t³ curve)
     return Math.pow(6, k * k * k);
   });
+  // the exit is a STATE, not a scrub (W2 gate): from TITLE_DONE the mask
+  // fades out over 300 ms and the clean plate holds to p 1, so a reader who
+  // stops in the tail never keeps a giant half-letter over the plate
+  const [out, setOut] = useState(() => t.get() >= TITLE_DONE);
+  useMotionValueEvent(t, "change", (v) => setOut(v >= TITLE_DONE));
   return (
-    <motion.svg
-      viewBox={`0 0 ${VB_W} ${VB_H}`}
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      focusable="false"
-      className="act-card-title-mask"
-      data-gl-replaced=""
-      style={{
-        opacity,
-        scale,
-        transformOrigin: `${(fit.origin[0] * 100).toFixed(2)}% ${(fit.origin[1] * 100).toFixed(2)}%`,
-      }}
-    >
-      <defs>
-        <mask id={`${id}m`} maskUnits="userSpaceOnUse" x={0} y={0} width={VB_W} height={VB_H}>
-          <rect width={VB_W} height={VB_H} fill="#fff" />
-          <text
-            ref={textRef}
-            x={VB_W / 2}
-            y={fit.base}
-            textAnchor="middle"
-            fontSize={fit.size}
-            fill="#000"
-            className="act-card-title-mask-text"
-          >
-            {text}
-          </text>
-        </mask>
-      </defs>
-      <rect width={VB_W} height={VB_H} fill="var(--bg)" mask={`url(#${id}m)`} />
-    </motion.svg>
+    <div className="act-card-title-mask-wrap" data-gl-replaced="" data-out={out ? "" : undefined}>
+      <motion.svg
+        viewBox={`0 0 ${VB_W} ${VB_H}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+        className="act-card-title-mask"
+        style={{
+          opacity,
+          scale,
+          transformOrigin: `${(fit.origin[0] * 100).toFixed(2)}% ${(fit.origin[1] * 100).toFixed(2)}%`,
+        }}
+      >
+        <defs>
+          <mask id={`${id}m`} maskUnits="userSpaceOnUse" x={0} y={0} width={VB_W} height={VB_H}>
+            <rect width={VB_W} height={VB_H} fill="#fff" />
+            <text
+              ref={textRef}
+              x={VB_W / 2}
+              y={fit.base}
+              textAnchor="middle"
+              fontSize={fit.size}
+              fill="#000"
+              className="act-card-title-mask-text"
+            >
+              {text}
+            </text>
+          </mask>
+        </defs>
+        {/* the world outside the letters dims to a third, never to black:
+            the camera dives INTO the title instead of cutting away (W2 judge) */}
+        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={0.68} mask={`url(#${id}m)`} />
+      </motion.svg>
+    </div>
   );
 }
 
@@ -756,12 +842,15 @@ function ShapeLayer({ t, shape }: { t: MotionValue<number>; shape: NonNullable<C
 /** Weather in the card frame (§7.7; WeatherLayer is W2-PLATES'): on over
  *  its beat's range, confined to the frame (never over text). */
 function WeatherCue({ w, t, live }: { w: PinWeather; t: MotionValue<number>; live: boolean }) {
-  const inRange = (v: number) => v >= w.range[0] && v <= w.range[1];
+  // inside the pin only (p > 0): a card still below the fold, or the hero
+  // above it, never pays for the frame's sprites (W2 gate: idle at the top)
+  const inRange = (v: number) => v > 0 && v >= w.range[0] && v <= w.range[1];
   const [on, setOn] = useState(() => inRange(t.get()));
   useMotionValueEvent(t, "change", (v) => setOn(inRange(v)));
   return (
     <div aria-hidden="true" className="act-card-weather" data-on={on && live ? "" : undefined} {...beatAttrs(w.beat)}>
-      {live ? <WeatherLayer kind={w.kind} zone="frame" /> : null}
+      {/* paused (not unmounted) outside its range: the 400 ms fade keeps its dots */}
+      {live ? <WeatherLayer kind={w.kind} zone="frame" run={on} /> : null}
     </div>
   );
 }
@@ -838,7 +927,7 @@ function SeqCanvas({
       ro.disconnect();
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [b, push, seq.box, urls, frameAt, fs.decoded, fs.ready]);
+  }, [b, push, seq.box, urls, frameAt, fs.decoded, fs.ready, fs.tick]);
   return <canvas ref={ref} aria-hidden="true" className="act-card-seq" data-seq={seq.id} />;
 }
 const EMPTY: readonly string[] = [];

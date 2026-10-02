@@ -55,6 +55,18 @@
 }
 /* the act title as a mask (css tier, §8.1): a deep rect with the title cut
    out, zoomed by transform (no will-change: re-rastered crisp) */
+/* the exit: a 300 ms fade by state (card-p3.tsx TITLE_DONE), never a
+   scrubbed half-letter held at rest */
+.act-card-title-mask-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+.act-card-title-mask-wrap[data-out] {
+  opacity: 0;
+}
 .act-card-title-mask {
   position: absolute;
   inset: 0;

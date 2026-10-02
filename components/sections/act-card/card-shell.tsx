@@ -3,7 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useDesktopFine, useMediaQuery, useMotionPausedAtBoot, useReducedMotion } from "@/lib/flags";
+import { useDesktopFine, useMediaQuery, useMotionPausedAtBoot, useOsReducedMotion, useReducedMotion } from "@/lib/flags";
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
 import type { Variant, VariantChoice } from "@/lib/variants";
@@ -245,7 +245,10 @@ export function CardShell({
   // reader (the spacer is not motion; P3-2 #11).
   const pausedAtBoot = useMotionPausedAtBoot();
   // Phase 3 pin mode (the boot gate's JS twin: CSS reserves the travel)
-  const p3 = travel > 0 && pin !== null && desktopFine && !pausedAtBoot;
+  // OS reduced motion too (the CSS gate's prefers-reduced-motion clause):
+  // the card is the static Phase-2 card, so no driver, GL or stars mount
+  const osReduced = useOsReducedMotion();
+  const p3 = travel > 0 && pin !== null && desktopFine && !pausedAtBoot && !osReduced;
   // the pin chunk's drivers (card-p3.tsx); the card goes live once they are in
   const [pinState, setPinState] = useState<PinState | null>(null);
   const pinNow = p3 ? pinState : null;

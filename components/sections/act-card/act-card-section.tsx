@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
 import type { ToneId, WorldId } from "@/lib/worlds";
+import { EggHint } from "@/components/eggs/egg-hint";
 import { FilmQuote } from "@/components/site/film-quote";
 import { FilmTitle, SceneCaption } from "@/components/primitives/scene-caption";
 import {
@@ -507,12 +508,16 @@ export function ActCardSection({
       ? { id: programCue.at, scrim: <StageScrim scrim={act.stage.scrim} /> }
       : null;
   const kraken =
-    krakenHint && visible(krakenHint) ? (
+    krakenHint && visible(krakenHint) && pinned ? (
       // pc-kraken (§9.1 #6): DESKTOP_FINE only (cards.css), bound by the pin
-      // chunk (card-p3.tsx); the frame it changes is right below
-      <button type="button" className="act-card-kraken type-meta" data-kraken="">
-        {krakenHint.text}
-      </button>
+      // chunk (card-p3.tsx, by delegation on the section); the frame it
+      // changes is right below. Only on a card that pins (else no chunk
+      // binds it), and gone with the eggs (P3-8 #2, W2 gate)
+      <EggHint egg="hidden-kraken">
+        <button type="button" className="act-card-kraken type-meta" data-kraken="">
+          {krakenHint.text}
+        </button>
+      </EggHint>
     ) : null;
   const same = (g: Ground | null, w: WorldId) => g !== null && g.world === w && g.tone === "deep";
 

@@ -14,9 +14,10 @@
      ScrollTrigger.update; reduced motion or Pause DESTROYS it within the
      same task (never stop(): a stopped Lenis freezes the page) and puts
      the ticker to sleep;
-   - while Lenis lives: the delegated same-page `#` link handler (bubble
-     phase: Time-Turner, journey waypoints, the map dialog keep their own
-     preventDefault), the keydown-capture and intro re-arm glide halts;
+   - the delegated same-page `#` link handler (bubble phase: Time-Turner,
+     journey waypoints, the map dialog keep their own preventDefault) on the
+     desktop motion path, with or without Lenis;
+   - while Lenis lives: the keydown-capture and intro re-arm glide halts;
    - registers the desktop chunks (Lenis, GSAP, the enhancer) and starts the
      warm-up prefetch (before warm, or at page idle) on DESKTOP_FINE;
    - refresh triggers: a ResizeObserver on <main>, `fonts.loadingdone`,
@@ -117,13 +118,11 @@ function startLenis(LenisCtor: typeof Lenis, { gsap, ScrollTrigger }: GsapKit): 
   const mo = new MutationObserver(() => {
     if (root.classList.contains("intro-armed")) haltGlide();
   });
-  window.addEventListener("click", onAnchorClick);
   window.addEventListener("keydown", onKey, true);
   mo.observe(root, { attributes: true, attributeFilter: ["class"] });
   requestScrollRefresh();
 
   return () => {
-    window.removeEventListener("click", onAnchorClick);
     window.removeEventListener("keydown", onKey, true);
     mo.disconnect();
     offScroll();
@@ -165,6 +164,18 @@ function useLenisInstance(enabled: boolean): void {
       kill();
     };
   }, [enabled]);
+}
+
+/** Same-page `#` links through scrollToTarget whenever the desktop motion
+ *  path is on, with or without Lenis (before it starts, `?skip=smooth`):
+ *  an act anchor lands at its `landAt`, not on the card's dark p 0 (W2
+ *  gate). Reduced motion / Pause: the browser's own jump. */
+function useAnchors(on: boolean): void {
+  useEffect(() => {
+    if (!on) return;
+    window.addEventListener("click", onAnchorClick);
+    return () => window.removeEventListener("click", onAnchorClick);
+  }, [on]);
 }
 
 /** Register the desktop chunks; prefetch them before warm (the play screen,
@@ -266,6 +277,7 @@ export default function SmoothScrollImpl(): null {
   const enabled = film.smoothScroll && motionDesk && home && introGone(phase) && !quiet && !skip && step1;
 
   useLenisInstance(enabled);
+  useAnchors(motionDesk && home);
   useDesktopPrefetch(motionDesk && home);
   useRefreshTriggers(motionDesk && home);
   useEnhancer(fine && home);

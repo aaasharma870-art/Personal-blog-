@@ -150,8 +150,6 @@
     align-items: flex-start;
     padding: 1rem var(--card-inset) 0;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 200ms linear;
     /* Geist 500, --fg on the bar's deep (AA by the plane's CALC) */
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
     font-weight: 500;
@@ -160,6 +158,13 @@
     letter-spacing: 0;
     color: var(--fg);
     text-align: center;
+  }
+  /* hidden until star (b): kept at (0,1,0) by :where() so cards-pin.css's
+     phase rules ([data-card-phase="b"] .act-card-subtitle, 0,2,0) win (W2
+     gate: at 0,4,1 the logline never showed) */
+  :where(html.js:not([data-motion-boot="paused"]) [data-act-card-pin]) .act-card-subtitle {
+    opacity: 0;
+    transition: opacity 200ms linear;
   }
   html.js:not([data-motion-boot="paused"]) [data-act-card-pin] .act-card-subtitle-line {
     max-width: min(44rem, 100%);

@@ -30,6 +30,9 @@ export type WeatherLayerProps = {
   kind: WeatherKind;
   zone?: "frame" | "image" | "window";
   count?: number;
+  /** false: the sprites stay built but paused (a card frame's weather
+   *  outside its beat's range: no compositor work while hidden). */
+  run?: boolean;
 };
 
 const Impl = lazy(() => import("./stage").then((m) => ({ default: m.WeatherImpl })));

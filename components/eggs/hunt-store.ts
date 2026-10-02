@@ -50,11 +50,17 @@ export type HuntStored = { v: 1; found: Partial<Record<HuntId, number>>; rows: s
 
 /** The view's copy when localStorage is blocked. */
 let memory: string | null = null;
+/** false once a read or a write threw (quota, an older Safari private
+ *  window): from then on the view reads its own copy, so a find counts and
+ *  toasts once even when only setItem fails (W2 gate). */
+let durable = true;
 
 function readRaw(): string | null {
+  if (!durable) return memory;
   try {
     return window.localStorage.getItem(KEY);
   } catch {
+    durable = false;
     return memory;
   }
 }
@@ -89,7 +95,7 @@ export function writeHunt(s: HuntStored | null): void {
     if (value === null) window.localStorage.removeItem(KEY);
     else window.localStorage.setItem(KEY, value);
   } catch {
-    /* memory only */
+    durable = false;
   }
   notify();
 }

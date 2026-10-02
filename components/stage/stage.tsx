@@ -627,7 +627,9 @@ export function WeatherImpl({
 
 /* — Sequence window (spec §6.2; use-frame-sequence.ts `{ window }`) ———— */
 
-export type SeqState = { fetched: number; failed: number; ready: boolean };
+/** `tick` counts the asked frame's arrivals (a host redraws on it: a frame
+ *  drawn from a neighbour is replaced once the exact one decodes). */
+export type SeqState = { fetched: number; failed: number; ready: boolean; tick: number };
 export type SeqHandle = { frameAt(i: number): ImageBitmap | null; drop(): void };
 
 type SeqBlobs = { blobs: (Blob | null)[]; done: number; failed: number; subs: Set<() => void> };
@@ -700,6 +702,7 @@ export function seqWindow(
   let ready = false;
   let dead = false;
   let queued = false;
+  let tick = 0;
   const bytesOf = (b: ImageBitmap) => b.width * b.height * 4;
   const free = (i: number) => {
     const b = bm.get(i);
@@ -715,7 +718,7 @@ export function seqWindow(
       seqDebug(null, 0);
     },
   };
-  const state = (): SeqState => ({ fetched: store.done - store.failed, failed: store.failed, ready });
+  const state = (): SeqState => ({ fetched: store.done - store.failed, failed: store.failed, ready, tick });
   const schedule = () => {
     if (queued || dead) return;
     queued = true;
@@ -753,6 +756,11 @@ export function seqWindow(
             bm.set(i, b);
             seqBytes += bytesOf(b);
             seqPeak = Math.max(seqPeak, seqBytes);
+            // the frame the host asked for: redraw it over the neighbour
+            if (i === asked) {
+              tick++;
+              report(state());
+            }
           }
           schedule();
         },

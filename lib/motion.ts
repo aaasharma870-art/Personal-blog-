@@ -310,6 +310,17 @@ export const cardPin = {
   /** Damping rate λ (1/s) and the snap epsilon. */
   lambda: 8,
   eps: 0.002,
+  /** The longest frame the damping integrates (s): the lag is in real time
+   *  on a slow frame, not in frames (W2 gate: at a 64 ms cap a 3 fps frame
+   *  rate left the card seconds behind). */
+  dtMax: 0.25,
+  /** A p_raw change this large in one scroll event is a jump (a scrollbar
+   *  drag, Home / End, a script): the damped p snaps to it. */
+  jump: 0.5,
+  /** Each scroll star shows for at least this long on a fling (s): the
+   *  damped p's speed inside a star is capped at its span / starMinS
+   *  (spec P3-6 #2). */
+  starMinS: 0.4,
   /** The subtitle's fades (s): in at p .50, out at `titleOut`. */
   subtitleFade: 0.2,
 } as const;

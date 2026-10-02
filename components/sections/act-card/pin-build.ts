@@ -182,15 +182,25 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
     if (kind === "opening" && toP_) {
       cTo = plainBox(toP_);
       const stern = (markOf(toP_.asset.id, "stern") as Pos | null) ?? [0.87, 0.6];
-      center = frac(cTo, stern);
+      const onStern = frac(cTo, stern);
+      // the hook's disc (r0 = 12 % of the diagonal, in frame heights) sits
+      // wholly inside the frame, its brass rim too: on the stern, pulled in
+      // from the edge (W2 gate: the frame shaved a D-shaped porthole)
+      const r0 = 0.12 * Math.hypot(A, 1);
+      const m = 0.015;
+      const c: Pos = [
+        Math.min(1 - r0 / A - m, Math.max(r0 / A + m, onStern[0])),
+        Math.min(1 - r0 - m, Math.max(r0 + m, onStern[1])),
+      ];
+      center = c;
       // the hero plate (outgoing) with its horizon on the disc's row
       const hero = plateOf(plates.from[v]);
-      cFrom = hero ? (reg(hero, ["horizon"], 1.2, A, center[1]) ?? plainBox(hero)) : null;
-      const c = center;
+      cFrom = hero ? (reg(hero, ["horizon"], 1.2, A, c[1]) ?? plainBox(hero)) : null;
       const far = Math.max(...[0, 1].flatMap((x) => [0, 1].map((y) => Math.hypot((c[0] - x) * A, c[1] - y))));
-      iris[v] = { center: c, r0: 0.12 * Math.hypot(A, 1), r1: far };
-      pv.default = { origin: center, scale: [1, 1.3], loop: true };
-      pv.alt = { origin: center, scale: [1, 1.15], rack: true, loop: true };
+      iris[v] = { center: c, r0, r1: far };
+      // the push still dives at the stern itself
+      pv.default = { origin: onStern, scale: [1, 1.3], loop: true };
+      pv.alt = { origin: onStern, scale: [1, 1.15], rack: true, loop: true };
     } else if (kind === "seam") {
       rFrom = reg(fromP, ["horizon"]);
       rTo = reg(toP_, ["ledgeL", "ledgeR"]);

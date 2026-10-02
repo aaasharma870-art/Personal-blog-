@@ -164,12 +164,14 @@ function cardPin(card: HTMLElement): HTMLElement {
 }
 
 /** The pinned travel of an act card in px: its pin wrapper's height beyond
- *  the sticky stage (0 when it does not pin: phones, reduced motion, no JS). */
+ *  one viewport (0 when it does not pin: phones, reduced motion, no JS).
+ *  The same range as the card's p_raw (CardShell's useScroll on the pin,
+ *  "start start" → "end end"), so `landAt` is the p the card shows even
+ *  when a short window lets the stage grow past 100svh (W2 gate). */
 function cardTravel(card: HTMLElement): number {
   const stage = card.querySelector<HTMLElement>("[data-card-stage], .act-card-stage");
   if (!stage || getComputedStyle(stage).position !== "sticky") return 0;
-  const pin = cardPin(card);
-  return Math.max(0, pin.offsetHeight - stage.offsetHeight);
+  return Math.max(0, cardPin(card).offsetHeight - window.innerHeight);
 }
 
 /** `#act-n` → the card's top + landAt × travel (spec §7.1: land on the new
@@ -316,6 +318,8 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
   const el = typeof t === "number" ? null : resolveTarget(t);
   if (typeof t !== "number" && !el) return;
   const seq = ++jumpSeq;
+  // an explicit jump supersedes the load-time hash
+  hashHold = false;
 
   // a closing modal (menu, palette, map) releases its lock first: Lenis's
   // start() would cancel a glide begun while it was stopped
@@ -414,9 +418,13 @@ function whenUnlocked(): Promise<void> {
 
 let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let deferredSince = 0;
-let refreshedWithTriggers = false;
 let userScrolled = false;
 let inputTracked = false;
+/** A hash on load (`/#act-2`, `/#work`) is held at its target through every
+ *  refresh until the visitor scrolls, clicks or jumps themself (W2 gate:
+ *  late layout, the Lenis start and the pins used to leave it at the
+ *  browser's native jump, or at 0). */
+let hashHold = typeof window !== "undefined" && window.location.hash.length > 1;
 
 /** Note any scroll the visitor makes themself (wheel, touch, keys), so the
  *  one-time hash re-apply never yanks them back. <SmoothScroll/> calls it
@@ -426,8 +434,10 @@ export function trackScrollInput(): void {
   inputTracked = true;
   const mark = () => {
     userScrolled = true;
+    hashHold = false;
     window.removeEventListener("wheel", mark, true);
     window.removeEventListener("touchmove", mark, true);
+    window.removeEventListener("pointerdown", mark, true);
     window.removeEventListener("keydown", onKey, true);
   };
   const onKey = (e: KeyboardEvent) => {
@@ -435,20 +445,31 @@ export function trackScrollInput(): void {
   };
   window.addEventListener("wheel", mark, { capture: true, passive: true });
   window.addEventListener("touchmove", mark, { capture: true, passive: true });
+  window.addEventListener("pointerdown", mark, { capture: true, passive: true });
   window.addEventListener("keydown", onKey, { capture: true, passive: true });
+  // the first refresh lands a hash on load (no ScrollTrigger is needed:
+  // the cards pin with CSS sticky)
+  if (hashHold) requestScrollRefresh();
 }
 
-/** After the first refresh that measured ScrollTriggers, put a hash target
- *  back where the browser's load-time jump put it (pins may have moved it),
- *  unless the visitor has scrolled away since. */
+/** At every refresh while the load-time hash is held: put its target where
+ *  scrollToTarget would (an act card at its `landAt`), instantly, with no
+ *  cut and no focus move (the browser's own hash jump moves neither). The
+ *  cards snap their damped p (`scroll:jump`). */
 function reapplyHash(): void {
-  const hash = window.location.hash;
-  if (!hash || hash === "#" || userScrolled) return;
-  const el = resolveTarget(hash);
+  if (!hashHold || userScrolled) {
+    hashHold = false;
+    return;
+  }
+  const el = resolveTarget(window.location.hash);
   if (!el) return;
   const y = clampY(targetY(el, "start"));
-  if (Math.abs(y - window.scrollY) > window.innerHeight * 1.5) return;
-  void scrollToTarget(el, { immediate: true, history: false });
+  if (Math.abs(y - window.scrollY) < 2) return;
+  const l = lenis;
+  if (l) l.scrollTo(y, { immediate: true, force: true });
+  else window.scrollTo({ top: y, behavior: "instant" });
+  gsapIfLoaded()?.ScrollTrigger.update();
+  emit("scroll:jump", { y, immediate: true });
 }
 
 function runRefresh(): void {
@@ -464,15 +485,13 @@ function runRefresh(): void {
   deferredSince = 0;
   l?.resize();
   const kit = gsapIfLoaded();
-  if (!kit) return;
-  // page order first (sections hydrate out of order, one Suspense each):
-  // refreshPriority ties fall back to each trigger's position on the page
-  kit.ScrollTrigger.sort();
-  kit.ScrollTrigger.refresh();
-  if (!refreshedWithTriggers && kit.ScrollTrigger.getAll().length) {
-    refreshedWithTriggers = true;
-    reapplyHash();
+  if (kit) {
+    // page order first (sections hydrate out of order, one Suspense each):
+    // refreshPriority ties fall back to each trigger's position on the page
+    kit.ScrollTrigger.sort();
+    kit.ScrollTrigger.refresh();
   }
+  reapplyHash();
 }
 
 /** Debounced (200 ms) re-measure after a layout change: `lenis.resize()`,

@@ -45,6 +45,8 @@ export type FrameSequence = {
   total: number;
   ready: boolean;
   failed: boolean;
+  /** WINDOW mode: changes when the asked frame decodes (redraw on it). */
+  tick?: number;
 };
 
 const CONCURRENCY = 6;
@@ -72,7 +74,7 @@ export function useFrameSequence(
     failed: 0,
   });
   const engine = useRef<SeqHandle | null>(null);
-  const [winState, setWinState] = useState<WinProgress>({ key: "", fetched: 0, failed: 0, ready: false });
+  const [winState, setWinState] = useState<WinProgress>({ key: "", fetched: 0, failed: 0, ready: false, tick: 0 });
 
   // LEGACY: every frame decoded into an <img>
   useEffect(() => {
@@ -133,7 +135,7 @@ export function useFrameSequence(
         engine.current = h;
       },
       () => {
-        if (live) setWinState({ key, fetched: 0, failed: 1, ready: false });
+        if (live) setWinState({ key, fetched: 0, failed: 1, ready: false, tick: 0 });
       },
     );
     return () => {
@@ -160,6 +162,7 @@ export function useFrameSequence(
       // a disabled window holds no bitmaps: never "ready" then
       ready: mine && enabled && winState.ready && urls.length > 0,
       failed: mine && winState.failed > 0,
+      tick: mine ? winState.tick : 0,
       frameAt,
     };
   }

@@ -13,12 +13,33 @@
    ========================================================================== */
 
 import { emit } from "./events";
-import { motionOffNow } from "./flags";
+import { motionOffNow, onMotionOffChange } from "./flags";
 import type { WorldId } from "./worlds";
 
 export type ImpactOptions = { el?: HTMLElement; shake?: number; flash?: number; bloomEv?: number };
 
 const fired = new Set<WorldId>();
+
+const live = new Set<Animation>();
+let watching = false;
+
+/** Track an impact-family animation (the shake, a pulse, the seam's chalk
+ *  puff): a Pause or reduced motion cancels every live one in the same task
+ *  (spec §12.2, ≤ 100 ms; W2 gate). */
+export function trackImpactAnim(a: Animation): Animation {
+  live.add(a);
+  const drop = () => live.delete(a);
+  a.finished.then(drop, drop);
+  if (!watching) {
+    watching = true;
+    onMotionOffChange(() => {
+      if (!motionOffNow()) return;
+      live.forEach((x) => x.cancel());
+      live.clear();
+    });
+  }
+  return a;
+}
 
 const SHAKE_MS = 280;
 const FLASH_MS = 120;
@@ -28,7 +49,7 @@ const BLOOM_MS = 180;
  *  the frame element itself carries no transform of its own). */
 function shake(el: HTMLElement, px: number): void {
   if (typeof el.animate !== "function" || !(px > 0)) return;
-  el.animate(
+  const a = el.animate(
     [
       { transform: "translate3d(0, 0, 0)" },
       { transform: `translate3d(${(-px).toFixed(2)}px, ${(px * 0.5).toFixed(2)}px, 0)`, offset: 0.12 },
@@ -38,6 +59,7 @@ function shake(el: HTMLElement, px: number): void {
     ],
     { duration: SHAKE_MS, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
   );
+  trackImpactAnim(a);
 }
 
 /** One overlay pulse inside `el` (removed when it ends). */
@@ -60,6 +82,7 @@ function pulse(el: HTMLElement, peak: number, ms: number, bloom: boolean): void 
   );
   a.onfinish = done;
   a.oncancel = done;
+  trackImpactAnim(a);
 }
 
 /** Fire `world`'s impact. true when it fired (first time this view, motion

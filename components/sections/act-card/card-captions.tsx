@@ -48,13 +48,24 @@ export type CaptionCue = {
   slot?: "frame";
 };
 
+/** A pinned card (Phase 3): the outgoing caption is gone BY the meet
+ *  (star (a)'s progress; the meet is at ≈ .49), so the new world's frame
+ *  never carries the old world's name (W2 gate, one caption per screen).
+ *  Passage cards (640–1023, 844×390) keep their own `out`, unchanged. */
+const PIN_OUT = [0.36, 0.46] as const;
+
 export function CardCaptions({ cues, align = "start" }: { cues: readonly CaptionCue[]; align?: "start" | "end" }) {
+  const pinMode = useCard().pin != null;
   if (!cues.length) return null;
   return (
     <div className={cn("grid [&>*]:[grid-area:1/1]", align === "end" ? "justify-items-end" : "justify-items-start")}>
-      {cues.map((c) => (
-        <Cue key={c.key} cue={c} />
-      ))}
+      {cues.map((c) =>
+        pinMode && c.slot === "frame" && c.out ? (
+          <Cue key={`${c.key}:pin`} cue={{ ...c, out: PIN_OUT }} />
+        ) : (
+          <Cue key={c.key} cue={c} />
+        ),
+      )}
     </div>
   );
 }

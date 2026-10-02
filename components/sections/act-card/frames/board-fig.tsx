@@ -280,7 +280,10 @@ export function BoardFig({
   const skew = `skewY(${angle.toFixed(2)}deg)`;
   // px per plate unit at 1440 wide (the live card): chalk ~2.5 px on screen
   const chalk = W * 0.0018;
-  const figLabel = `FIG. 0 • THE LINE • L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
+  // two chalk lines, not one: the single line ran off the board at 1024 and
+  // off the frame under the push at 1440 (W2 gate); the text is unchanged
+  const figHead = "FIG. 0 • THE LINE •";
+  const figTail = `L = ${LINE_FIG.length} • ${LINE_FIG.controlPoints} CONTROL POINTS`;
 
   const overlay = (
     <>
@@ -353,7 +356,9 @@ export function BoardFig({
         className="type-meta pointer-events-none absolute hidden origin-top-left whitespace-nowrap text-(--w-chalk) sm:block"
         style={{ ...pct(lab[0], lab[1]), transform: skew }}
       >
-        {figLabel}
+        {figHead}
+        <br />
+        {figTail}
       </p>
     </>
   );

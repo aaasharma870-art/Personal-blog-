@@ -76,6 +76,13 @@ export default function bind(root: Document): () => void {
   };
   const onUp = () => {
     if (holdEl) endHold();
+    // the release may land outside the button (no click follows): the
+    // swallow lives only until this press's own click (dispatched in the
+    // same task), so a later Enter / Space still fires (W2 gate)
+    const s = swallow;
+    if (s) window.setTimeout(() => {
+      if (swallow === s) swallow = null;
+    }, 0);
   };
 
   const onOver = (e: PointerEvent) => {
