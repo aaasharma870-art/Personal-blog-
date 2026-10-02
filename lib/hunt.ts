@@ -34,7 +34,6 @@ import {
   type HuntId,
   type HuntState,
 } from "@/components/eggs/hunt-store";
-import { featuredProjects, killList, survivors } from "./content";
 import { emit } from "./events";
 import { film } from "./film";
 
@@ -97,11 +96,21 @@ export function recordDeadEyeWin(): void {
   writeHunt(s);
 }
 
+/** The kill-list ledger's RENDERED rows (flagships + survivors + killed
+ *  ideas: components/site/ledger-reckoning.tsx `li[data-row]`). Read from
+ *  the DOM, never from lib/content: this module is lazy, but any client
+ *  import of a content export makes the shared first-load content module
+ *  ship that export too (+1.9 KB gz on "/", W2 assembly). */
+function ledgerRows(): number {
+  return document.querySelectorAll("[data-ledger] li[data-row]").length;
+}
+
 /** The pen counts only for the worthy: every ledger row read (`total`
- *  defaults to the kill-list ledger's rows: flagships + survivors + killed
- *  ideas; pass the rendered count if it differs) OR Dead Eye won. */
-export function worthyOfPen(total: number = featuredProjects.length + survivors.length + killList.length): boolean {
+ *  defaults to the ledger's rendered rows; pass the count if it differs)
+ *  OR Dead Eye won. */
+export function worthyOfPen(total?: number): boolean {
   if (typeof window === "undefined") return false;
   const s = readHunt();
-  return s.deadEye !== undefined || (total > 0 && s.rows.length >= total);
+  const n = total ?? ledgerRows();
+  return s.deadEye !== undefined || (n > 0 && s.rows.length >= n);
 }

@@ -131,6 +131,10 @@ export function uniformsFor(s: GlCardSpec, d: Draw, g: Geo, l: Live): Uniforms {
     uGradeFrom: ID4,
     uGradeTo: ID4,
     uTitleXf: l.titleXf ?? [0, 0, -1, -1],
+    // the inset plate window [x0, y0, x1, y1] (frame fractions) + its corner
+    // radius (frame heights); full frame when the card has none
+    uInset: s.inset ? [s.inset.x, s.inset.y, s.inset.x + s.inset.w, s.inset.y + s.inset.h] : [0, 0, 1, 1],
+    uInsetR: s.inset?.r ?? 0,
   };
   if (d.kind === "clear") return u;
   u.uP = d.t;
@@ -200,8 +204,12 @@ export function uniformsFor(s: GlCardSpec, d: Draw, g: Geo, l: Live): Uniforms {
         }
       }
       const pos = (s.card === "ignite" ? at("from", "wheel") : null) ?? centre ?? [0.5, s.row];
-      const rim = s.card === "ignite" ? at("from", "wheelR") : null;
-      const size = rim ? Math.max(0.03, Math.hypot((rim[0] - pos[0]) * A, rim[1] - pos[1])) : 0.1;
+      // wheelR is the wheel's RADIUS as a plate-fraction pair (x of the
+      // plate width, y of its height), not a point: scale it by the from
+      // cover box. uShape.z is the shape's unit radius in frame heights (the
+      // css tier's square box is twice this: pin-build.ts `2·max(…)`, .1–.3)
+      const rr = s.card === "ignite" ? g.mark("from", "wheelR") : null;
+      const size = rr ? Math.min(0.15, Math.max(0.05, rr[0] * cf[0] * A, rr[1] * cf[1])) : 0.1;
       let x = pos[0];
       let spin = 0;
       if (l.roll) {

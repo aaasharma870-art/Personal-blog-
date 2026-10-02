@@ -374,17 +374,17 @@ export const VARIANT_REGISTRY = {
   "words.scrub": {
     default: { name: "word-opacity", note: "One sentence per act brightens word by word as the reader scrolls it (per-word opacity scrub)." },
     alt: { name: "line-sweep", note: "A per-line clip sweep, scrubbed over the same range." },
-    files: ["components/words/scrub-sentence.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+    files: ["components/words/scrub-sentence.tsx", "components/words/bind/**", "components/enhance/binders/words.ts", "app/p3/words.css"],
   },
   "words.physical": {
     default: { name: "grain-ember", note: "One physical word per section at most: \"noise\" settles like grain, \"Killed\" is struck through with an ember." },
     alt: { name: "jitter-graphite", note: "\"noise\" only jitters its letters; \"Killed\" gets a graphite strike." },
-    files: ["components/words/physical-word.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+    files: ["components/words/physical-word.tsx", "components/words/bind/**", "components/enhance/binders/words.ts", "app/p3/words.css"],
   },
   "words.flythrough": {
     default: { name: "glide-gallop", note: "A gull glides through the voyage window's sky (Act I); a graphite horse gallops along the journal's bottom edge (Act III); image zones only, never across text." },
     alt: { name: "shadow-pass", note: "Only the sprite's shadow crosses the image zone." },
-    files: ["components/words/fly-through.tsx", "assets/p3/words/**", "app/p3/words.css"],
+    files: ["components/words/fly-through.tsx", "components/words/bind/**", "assets/p3/words/**", "app/p3/words.css"],
   },
 
   /* — Phase 3 intro titles + post-credits (SPEC §4.3, §9.4) — */

@@ -93,6 +93,13 @@ export type GlCardSpec = {
    *  front's origin row; the seam's shape row when `center` is absent. */
   row: number;
   cover: { from: CoverBox; to: CoverBox };
+  /** The plate's inset window in the frame (frame fractions; `r` = the
+   *  corner radius in frame-height units): the tintype's PLATE (the DOM
+   *  draws it inset with a bone border on the world deep). `develop` /
+   *  `deadeye` draw the deep outside it and settle on its 1 px bone line, so
+   *  the GL frame at a.range[1] equals the DOM's settled card. Absent →
+   *  full bleed (the bone border settles away). */
+  inset?: { x: number; y: number; w: number; h: number; r: number };
   /** The transition's focus (frame fractions): the iris disc centre; the
    *  Dead Eye chroma-split centre; the seam's carried shape. Absent → from
    *  the plate marks (above), else the frame centre on `row`. */

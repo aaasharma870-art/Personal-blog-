@@ -156,12 +156,20 @@ function resolveTarget(t: string | Element): Element | null {
   return id ? document.getElementById(id) : null;
 }
 
-/** The pinned travel of an act card in px: its height beyond the sticky
- *  stage (0 when it does not pin: phones, reduced motion, no JS). */
+/** The pin wrapper of an act card (the p target, W2-CARDS): the sticky
+ *  stage's own box. The opening's program block is a SIBLING after it
+ *  inside the section, so the section's height is not the travel. */
+function cardPin(card: HTMLElement): HTMLElement {
+  return card.querySelector<HTMLElement>(":scope > [data-act-card-pin]") ?? card;
+}
+
+/** The pinned travel of an act card in px: its pin wrapper's height beyond
+ *  the sticky stage (0 when it does not pin: phones, reduced motion, no JS). */
 function cardTravel(card: HTMLElement): number {
   const stage = card.querySelector<HTMLElement>("[data-card-stage], .act-card-stage");
   if (!stage || getComputedStyle(stage).position !== "sticky") return 0;
-  return Math.max(0, card.offsetHeight - stage.offsetHeight);
+  const pin = cardPin(card);
+  return Math.max(0, pin.offsetHeight - stage.offsetHeight);
 }
 
 /** `#act-n` → the card's top + landAt × travel (spec §7.1: land on the new
@@ -174,7 +182,7 @@ function landAtY(el: Element): number | null {
   if (landAt == null || !(landAt > 0)) return null;
   const travel = cardTravel(el);
   if (travel <= 0) return null;
-  return el.getBoundingClientRect().top + window.scrollY + Math.min(1, landAt) * travel;
+  return cardPin(el).getBoundingClientRect().top + window.scrollY + Math.min(1, landAt) * travel;
 }
 
 /** The page y that puts `el` where `block` says, with the native anchor

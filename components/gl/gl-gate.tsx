@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { MotionValue } from "motion/react";
 import { useCallback, useEffect, useRef } from "react";
 import { registerChunk, useLadder } from "@/lib/ladder";
+import { requestScrollRefresh } from "@/lib/smooth-scroll";
 import { useGlTier, type GlTier } from "@/lib/gl/support";
 import type { GlCardSpec } from "@/lib/gl/types";
 
@@ -63,6 +64,12 @@ export function GlGate({ spec, p, live, onTier }: GlGateProps) {
   useEffect(() => {
     if (tier && !on) report(tier === "gl" ? "css" : tier);
   }, [tier, on, report]);
+
+  // the GL layer mounting is a layout event for the scroll stack (Lenis +
+  // ScrollTrigger re-measure, debounced; the stage gate does the same)
+  useEffect(() => {
+    if (on) requestScrollRefresh();
+  }, [on]);
 
   return on ? <GlFrame spec={spec} p={p} onTier={report} /> : null;
 }

@@ -36,10 +36,9 @@ const COLS = [
 
 /** How this page is built, scoped to where each claim is true (PHASE3-SPEC
  *  §8.6; proposed + unsigned until Aryan signs). "systems.meta.webgl"
- *  ("WebGL, where supported, only for scene changes") joins this list in the
- *  commit that ships the WebGL layer (W2-GL handoff): until then the page has
- *  no WebGL and the line would be untrue. */
-const META: readonly CopyKey[] = ["systems.meta.scroll", "systems.meta.native", "systems.meta.css"];
+ *  ("WebGL, where supported, only for scene changes") joined in the commit
+ *  that ships the WebGL layer (W2 assembly). */
+const META: readonly CopyKey[] = ["systems.meta.scroll", "systems.meta.native", "systems.meta.css", "systems.meta.webgl"];
 
 export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   const titleId = `${entry.id}-title`;
@@ -52,7 +51,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   ];
   const choice = variantChoiceOf(entry);
   const pencilQ = copyText("systems.pencil.q");
-  const pencilBody = copyText("systems.pencil.body");
+  const pencilBody = copyText("systems.pencil.body.p3");
   const pencilNote = copyText("systems.pencil.footnote");
   const meta = META.map((k) => copyText(k)).filter(copyVisible).map((c) => c.text);
   return (
@@ -126,13 +125,13 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           </ChalkboardFrame>
           <Meta className="mt-tier-group" fields={meta} />
           {/* IC-3I-06: the space-pen wink, in our own words (not a quote);
-              lib/film.ts copy "systems.pencil.*" (proposed). Its body says
-              "no WebGL, just native scroll", which is untrue wherever Lenis
-              can run, so it is hidden under the boot gate (CSS, first paint,
-              no shift) until W2 renders "systems.pencil.body.p3" there. It
-              stays true, and shown, on phones, touch, RM and no-JS. */}
+              lib/film.ts copy "systems.pencil.*" (proposed). The body is the
+              Phase-3 line (PHASE3-SPEC §8.6: "on desktop, one small WebGL
+              layer only where the scenes change"), scoped so it is true on
+              every device, so it renders everywhere (the W1 line, "no WebGL,
+              just native scroll", was retired when WebGL shipped in W2). */}
           {copyVisible(pencilQ) && copyVisible(pencilBody) ? (
-            <p className="mt-tier-group max-w-body type-small text-fg-muted boot:hidden">
+            <p className="mt-tier-group max-w-body type-small text-fg-muted">
               <span className="text-fg">{pencilQ.text}</span> {pencilBody.text}
             </p>
           ) : null}

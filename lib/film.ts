@@ -518,10 +518,6 @@ const copy = {
        quote) and its footnote. The footnote is Claude's summary of the
        pen history: verify it before ship (SPEC). — */
   "systems.pencil.q": { text: "Why not just use a pencil?", status: "proposed" },
-  "systems.pencil.body": {
-    text: "The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
-    status: "proposed",
-  },
   "systems.pencil.footnote": {
     text: "The famous version of the pen story, where one side spends millions on a space pen while the other simply uses a pencil, is a myth. Pencil tips snap and graphite dust conducts, a hazard in orbit; the pressurised pen was developed privately, and both programmes ended up buying it.",
     status: "proposed",
@@ -540,10 +536,10 @@ const copy = {
   "titles.1": p3("A RESEARCH JOURNAL IN {ACTS} ACTS"),
   "titles.2": p3("AFTER {WORKS}"),
   "titles.3": p3("ACT I • {ACT} ↓"),
-  /* honesty copy (PHASE3-SPEC §8.6). The .p3 text REPLACES
-     "systems.pencil.body" once smooth scroll and WebGL have landed: until
-     then the page really is native scroll with no WebGL, so the old line
-     stays true and stays rendered (handoff to B1-BEATS / the assemblers). */
+  /* honesty copy (PHASE3-SPEC §8.6). The .p3 text REPLACED the M2
+     "systems.pencil.body" ("no WebGL, just native scroll", untrue once
+     smooth scroll and WebGL landed) in the W2 assembly; the old key is gone
+     (the honesty lint reads every copy string, rendered or not). */
   "systems.pencil.body.p3": p3(
     "The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change.",
   ),
@@ -880,8 +876,8 @@ export const film = {
       title: { text: "The Crossing", status: "proposed" },
       logline: loglines["act-1"],
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.519, 0.5], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       // pin wrapper 190vh (90 travel) + the program block ≈ 76vh
       estVh: { d: 1.757, t: 1.725 },
@@ -911,8 +907,8 @@ export const film = {
       logline: loglines["act-2"],
       epigraph: { text: "Treat every backtest as guilty until proven innocent.", status: "confirmed", source: "REPO" },
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.507, 0.505], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       estVh: { d: 1.58, t: 1.58 },
       beats: [
@@ -930,8 +926,8 @@ export const film = {
       logline: loglines["act-3"],
       tip: 2,
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.499, 0.457], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       estVh: { d: 1, t: 1 },
       beats: [
@@ -951,8 +947,8 @@ export const film = {
       logline: loglines["act-4"],
       epigraph: "Q-HP-3",
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.472, 0.469], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       estVh: { d: 1.58, t: 1.58 },
       beats: [

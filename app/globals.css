@@ -1118,25 +1118,6 @@ body {
   visibility: hidden;
 }
 
-/* Act cards — the pinned travel of the two long cards (seam, ignite; D-5
-   ≤ 60vh each), reserved in CSS so SSR already has it (CLS 0), and only
-   where it runs: ≥ 1024, a fine pointer, OS motion on. Elsewhere: 0 travel.
-   (A view that starts paused drops the attribute; a mid-session Pause keeps
-   the spacer so the page never reflows under the reader — CardShell.) */
-:root {
-  --act-card-travel: 58vh;
-}
-@media (min-width: 64rem) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  [data-act-card-long] {
-    min-height: calc(100svh + var(--act-card-travel));
-  }
-  [data-act-card-long] .act-card-stage {
-    position: sticky;
-    top: 0;
-    min-height: 100svh;
-  }
-}
-
 /* Act cards — the letterbox geometry (≥ 640; CardShell, M2 ART-DIRECTOR #5):
    the upper bar is ≥ header + 8rem and the lower ≥ 8.5rem (grid rows), so
    the FRAME may be at most 100svh − header − 17rem tall at 2.39:1 — full

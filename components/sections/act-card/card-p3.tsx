@@ -17,12 +17,16 @@ import { scrollToTarget } from "@/lib/smooth-scroll";
 import { spotlight } from "@/lib/spotlight";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
-import { triggerEgg } from "@/components/eggs/egg-bus";
+import { eggEnabled, eggsSessionOff, triggerEgg } from "@/components/eggs/egg-bus";
 import { GlGate } from "@/components/gl/gl-gate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { remap } from "@/components/primitives/loaders/line";
 import { CarriedShape } from "@/components/stage/carried-shape";
 import { WeatherLayer } from "@/components/stage/weather-layer";
+// the pin chunk's own layers (phases, GL-replaced layers, title mask, bars,
+// shape, weather, SEQ canvas, puff, kraken mass + tip): loaded with this
+// lazy chunk, not with the page (first-load CSS budget, W2 assembly)
+import "@/app/p3/cards-pin.css";
 import { useFrameSequence } from "@/components/worlds/pirates/use-frame-sequence";
 import { useCard, type PinState, type PinUi } from "@/components/sections/act-card/card-context";
 import type { CardPinSpec, PinWeather, PushSpec } from "@/components/sections/act-card/pin-spec";
@@ -477,6 +481,9 @@ function useKraken(
     let looked = false;
 
     const count = () => {
+      // eggs off for the session (or off in the registry): the kraken still
+      // shows itself, but nothing is triggered or counted (as the hotspots)
+      if (eggsSessionOff() || !eggEnabled("hidden-kraken")) return;
       triggerEgg("hidden-kraken");
       void import("@/lib/hunt").then((m) => m.markFound("pc-kraken")).catch(() => {});
     };
@@ -551,7 +558,7 @@ function useKraken(
     // a long look: pinned on the storm (p ≤ .05) and still for 2.0 s
     const watch = () => {
       window.clearTimeout(timer);
-      if (looked || !pinned || !liveRef.current || motionOffNow()) return;
+      if (looked || !pinned || !liveRef.current || motionOffNow() || eggsSessionOff()) return;
       if (raw.get() > cardPin.hook) return;
       const top = pinEl.current?.getBoundingClientRect().top ?? 1;
       if (top > 0.5) return;
@@ -831,7 +838,7 @@ function SeqCanvas({
       ro.disconnect();
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [b, push, seq.box, urls, frameAt, fs.decoded]);
+  }, [b, push, seq.box, urls, frameAt, fs.decoded, fs.ready]);
   return <canvas ref={ref} aria-hidden="true" className="act-card-seq" data-seq={seq.id} />;
 }
 const EMPTY: readonly string[] = [];
