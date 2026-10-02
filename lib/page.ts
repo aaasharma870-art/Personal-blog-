@@ -409,7 +409,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.358, t: 2.419 },
+    estVh: { d: 2.404, t: 2.419 },
     beats: [
       { id: "B26", at: 0, span: 97.7, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 97.7, span: 119.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -494,7 +494,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ at: "beyond-activities", media: "MV-10", camera: "push", depth: true, grade: "golden", weather: "fireflies" }],
     },
     tempo: "medium",
-    estVh: { d: 4.864, t: 5.678 },
+    estVh: { d: 4.805, t: 5.476 },
     beats: [
       // B39: the breath after the act-3 card (quiet only): the FrontierBand drift
       { id: "B39-drift", at: -100, span: 100, kind: "stage-cue", timing: "scroll", feature: "existing" },
@@ -601,7 +601,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
     },
     tempo: "slow",
-    estVh: { d: 2.266, t: 2.568 },
+    estVh: { d: 2.865, t: 3.169 },
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
