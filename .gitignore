@@ -71,3 +71,7 @@ next-env.d.ts
 /docs/build/m2-after2/*.png
 /docs/build/final-frames/qa/*.png
 /docs/build/final-frames/qa/supp/*.png
+
+# Phase 3 probe screenshots (raw PNG; summaries/JSON/JPG strips are committed instead)
+/docs/build/motion-strips/p3-w*/probes-*/**/*.png
+/docs/build/motion-strips/p3-w*/probes-*/*.png
