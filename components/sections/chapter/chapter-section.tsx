@@ -1,15 +1,21 @@
+import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { GithubMark } from "@/components/ui/icons";
 import { MetricTile } from "@/components/site/metric-tile";
 import { ChalkDrone, RanchoCircle } from "@/components/site/idiots-chalk";
 import { Meta } from "@/components/site/world-kit";
 import { SceneCaption } from "@/components/primitives/scene-caption";
+import { Collapse } from "@/components/primitives/collapse";
 import { ChalkboardFrame } from "@/components/worlds/idiots/chalk";
+import { LedgeHeart } from "@/components/worlds/idiots/chalk-heart";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { MachineBoard } from "@/components/worlds/idiots/machine-board";
 import { BlueprintSchematic, type SchematicSpec } from "@/components/worlds/idiots/schematic";
 import { Rise } from "@/components/site/world-motion";
 import { StageSplit } from "@/components/stage/stage-window";
+import { PhysicalWord } from "@/components/words/physical-word";
+import { ScrubSentence, splitAround } from "@/components/words/scrub-sentence";
+import { PHYSICAL_WORDS, SCRUB_LINES } from "@/components/words/words-data";
 import {
   earlierRepos,
   featuredProjects,
@@ -21,7 +27,7 @@ import {
 } from "@/lib/content";
 import type { ChapterAppendix } from "@/lib/page";
 import { beatAttrs } from "@/lib/beats";
-import { variantChoiceOf } from "@/lib/sections";
+import { copyText, copyVisible, variantChoiceOf } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -60,6 +66,23 @@ import type { SectionProps } from "@/components/sections/types";
    and metrics carry the cue anchors `<id>-approach` / `<id>-metrics`. The
    data islands (metric tiles, reported figures, caveats and limitations)
    are `data-research`: Geist only, whatever the world's faces (B1-TYPE).
+   PHASE 3 HOSTS (W3-IDIOTS; PHASE3-SPEC §8.3, §8.5, §9.1, §11.5, §2.3):
+   - B20: the trading-algos blueprint's ink-on is a time star (spotlight).
+   - B21: Act II's scroll-scrubbed sentence, the second sentence of
+     trading-algos "What I learned" (SCRUB_LINES.B21, verbatim; splitAround
+     null → plain text). Rancho's circle on the caveat follows (B21-circle).
+   - B23: the physical word "noise" in the optuna problem paragraph (one
+     grain settle; absent token → plain text).
+   - `3i-aal`: a chalk heart resting on the optuna board's ledge (an
+     EggHotspot, DESKTOP_FINE only; press and hold 600 ms / Enter).
+   - The optuna appendix collapses (native <details>, closed in SSR at
+     ≥ 64rem, expanded on phones): Option Alpha as ONE whole block, its
+     honest framing inside, under `optuna.appendix.summary` (which carries
+     that framing when closed); the supporting list; the earlier repos.
+     Never a metric, limitation or verdict; never a claim split from its
+     caveat.
+   - The chart-slot placeholders no longer render (spec §11.5; at every
+     width: an intended 390 change).
    ========================================================================== */
 
 /** Each flagship's schematic: nodes ONLY from content.ts approach/stack
@@ -137,7 +160,13 @@ function ChapterBody({
         </div>
         <div className="lg:col-span-5 lg:pt-tier-block">
           <Meta fields={["The problem"]} />
-          <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.problem}</p>
+          <p className="mt-tier-pair max-w-body type-body text-fg-muted">
+            {entry.id === PHYSICAL_WORDS.B23.host ? (
+              <PhysicalWord text={p.problem} word={PHYSICAL_WORDS.B23.word} kind={PHYSICAL_WORDS.B23.kind} beat="B23" />
+            ) : (
+              p.problem
+            )}
+          </p>
         </div>
       </div>
 
@@ -164,12 +193,14 @@ function ChapterBody({
                 <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
               </div>
             )}
-            <ChalkboardFrame>
+            {/* the optuna board's ledge holds the chalk heart (3i-aal) */}
+            <ChalkboardFrame ledge={isOptuna ? <LedgeHeart /> : null}>
               <BlueprintSchematic
                 fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
                 spec={s}
                 choice={variantChoiceOf(entry)}
                 pieceKey={`${entry.id}.schematic`}
+                star={entry.id === "trading-algos" ? { id: "B20", weight: 2 } : undefined}
               />
             </ChalkboardFrame>
             {/* (the pipeline's film cue is its head band, MachineBoard) */}
@@ -204,7 +235,7 @@ function ChapterBody({
       <div data-stage-block="" className="split-stack mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2 lg:gap-x-6">
         <div>
           <Meta fields={["What I learned"]} />
-          <p className="mt-tier-pair max-w-body type-body text-fg-muted">{p.learned}</p>
+          <Learned id={entry.id} text={p.learned} />
         </div>
         <div data-research="">
           <Meta fields={["Honest limitations"]} />
@@ -225,90 +256,153 @@ function ChapterBody({
       <div className="mt-tier-group">
         <Meta fields={["Stack", p.stack.join(" · ")]} />
       </div>
-      {/* Honest chart slot: a marked placeholder, never a fabricated curve. */}
-      <p className="mt-tier-group type-meta text-fg-ghost">[ chart slot — drop a real exported equity curve / report here ]</p>
+      {/* (the "[ chart slot … ]" placeholder no longer renders until a real
+          exported chart exists: PHASE3-SPEC §11.5, D3-9) */}
     </div>
   );
 }
 
-function OptionAlphaOrigin() {
+/** "What I learned": Act II's scroll-scrubbed sentence (B21) lives in the
+ *  trading-algos paragraph; the words around it, and every other chapter's
+ *  paragraph, render as plain text. */
+function Learned({ id, text }: { id: string; text: string }) {
+  const parts = id === SCRUB_LINES.B21.host ? splitAround(text, SCRUB_LINES.B21.text) : null;
   return (
-    <Rise as="article" className="border-t border-rule pt-tier-block">
-      <Meta fields={[optionAlpha.tag]} />
-      <h3 className="mt-tier-pair max-w-title type-title text-fg">{optionAlpha.name}</h3>
-      <a
-        href={optionAlpha.href}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="mt-tier-pair inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
-      >
-        <GithubMark className="size-4" />
-        <span className="normal-case">{optionAlpha.repo}</span>
-        <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
-      </a>
-      <div className="split-stack mt-tier-group grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
-        <p className="max-w-body type-body text-fg lg:col-span-6">{optionAlpha.summary}</p>
-        <div data-research="" className="space-y-tier-group lg:col-span-6">
-          <div>
-            <Meta fields={["Paper", "small sample"]} />
-            <p className="tnum mt-tier-pair type-body text-fg-muted">{optionAlpha.reported}</p>
-          </div>
-          <div>
-            <Meta fields={["Honest framing"]} />
-            <p className="mt-tier-pair type-body text-fg-muted">{optionAlpha.honest}</p>
+    <p className="mt-tier-pair max-w-body type-body text-fg-muted">
+      {parts ? (
+        <>
+          {parts[0]}
+          <ScrubSentence text={parts[1]} beat="B21" />
+          {parts[2]}
+        </>
+      ) : (
+        text
+      )}
+    </p>
+  );
+}
+
+/* — the optuna appendix (spec §11.5: collapsed at ≥ 64rem, closed in SSR;
+   phones keep today's expanded blocks, the summaries hidden) ——————————— */
+
+/** The supporting list's heading and the earlier repos' label: existing
+ *  strings, reused verbatim as their disclosures' summaries. */
+const SUPPORTING_TITLE = "Tools, pipelines, automation.";
+const EARLIER_LABEL = "Also on GitHub";
+
+/** One appendix disclosure. `summary` null (its copy may not render here):
+ *  the block renders open, as today, never hidden behind an empty line. */
+function AppendixCollapse({
+  summary,
+  className,
+  children,
+}: {
+  summary: string | null;
+  /** The block's own spacing (the details box carries it at every width). */
+  className: string;
+  children: ReactNode;
+}) {
+  if (!summary) return <div className={className}>{children}</div>;
+  return (
+    <Collapse
+      summary={summary}
+      className={className}
+      summaryClassName="max-w-body py-3 text-pretty"
+    >
+      {/* desktop: a breath between the summary and the opened block */}
+      <div className="dw:pt-tier-pair">{children}</div>
+    </Collapse>
+  );
+}
+
+function OptionAlphaOrigin() {
+  // the closed summary carries the block's honest framing itself (spec
+  // §11.5: "paper … no-code platform; not a proven edge"), so the claim and
+  // its caveat are never split; the whole block, caveat included, is inside
+  const summary = copyText("optuna.appendix.summary");
+  return (
+    <AppendixCollapse summary={copyVisible(summary) ? summary.text : null} className="border-t border-rule pt-tier-block dw:pt-tier-group">
+      <Rise as="article">
+        <Meta fields={[optionAlpha.tag]} />
+        <h3 className="mt-tier-pair max-w-title type-title text-fg">{optionAlpha.name}</h3>
+        <a
+          href={optionAlpha.href}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="mt-tier-pair inline-flex min-h-11 items-center gap-2 type-meta text-fg-muted transition-colors hover:text-fg"
+        >
+          <GithubMark className="size-4" />
+          <span className="normal-case">{optionAlpha.repo}</span>
+          <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
+        </a>
+        <div className="split-stack mt-tier-group grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+          <p className="max-w-body type-body text-fg lg:col-span-6">{optionAlpha.summary}</p>
+          <div data-research="" className="space-y-tier-group lg:col-span-6">
+            <div>
+              <Meta fields={["Paper", "small sample"]} />
+              <p className="tnum mt-tier-pair type-body text-fg-muted">{optionAlpha.reported}</p>
+            </div>
+            <div>
+              <Meta fields={["Honest framing"]} />
+              <p className="mt-tier-pair type-body text-fg-muted">{optionAlpha.honest}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </Rise>
+      </Rise>
+    </AppendixCollapse>
   );
 }
 
 function Supporting() {
   return (
-    <div className="border-t border-rule pt-tier-block">
-      <Meta fields={["Supporting work"]} />
-      <h3 className="mt-tier-pair type-title text-fg">Tools, pipelines, automation.</h3>
-      <ul aria-label="Supporting projects" className="mt-tier-block border-t border-rule">
-        {supportingProjects.map((s) => (
-          <li
-            key={s.repo}
-            className="grid grid-cols-1 gap-2 border-b border-rule py-5 sm:grid-cols-[16rem_1fr_auto] sm:items-baseline sm:gap-6"
-          >
-            <span className="font-mono text-meta tracking-[0.02em] text-fg">{s.repo}</span>
-            <p className="type-body text-fg-muted">{s.blurb}</p>
-            <a
-              href={s.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label={`${s.repo} on GitHub`}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center text-fg-muted transition-colors hover:text-fg"
+    <div>
+      <AppendixCollapse summary={SUPPORTING_TITLE} className="border-t border-rule pt-tier-block dw:pt-tier-group">
+        <Meta fields={["Supporting work"]} />
+        <h3 className="mt-tier-pair type-title text-fg">{SUPPORTING_TITLE}</h3>
+        <ul aria-label="Supporting projects" className="mt-tier-block border-t border-rule">
+          {supportingProjects.map((s) => (
+            <li
+              key={s.repo}
+              className="grid grid-cols-1 gap-2 border-b border-rule py-5 sm:grid-cols-[16rem_1fr_auto] sm:items-baseline sm:gap-6"
             >
-              <ArrowUpRight className="size-4" strokeWidth={1.5} aria-hidden="true" />
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-tier-group type-small text-fg-muted">
-        <span className="type-meta">Also on GitHub</span>{" "}
-        {earlierRepos.map((r, i) => (
-          <span key={r.repo}>
-            <a
-              href={r.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="font-mono text-fg underline decoration-rule underline-offset-4 transition-colors hover:decoration-current"
-            >
-              {r.repo}
-            </a>
-            <span> (early / idea-stage)</span>
-            {i < earlierRepos.length - 1 ? (
-              <span aria-hidden="true" className="text-fg-ghost">
-                {" • "}
-              </span>
-            ) : null}
-          </span>
-        ))}
-      </p>
+              <span className="font-mono text-meta tracking-[0.02em] text-fg">{s.repo}</span>
+              <p className="type-body text-fg-muted">{s.blurb}</p>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label={`${s.repo} on GitHub`}
+                className="inline-flex min-h-11 min-w-11 items-center justify-center text-fg-muted transition-colors hover:text-fg"
+              >
+                <ArrowUpRight className="size-4" strokeWidth={1.5} aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </AppendixCollapse>
+      <AppendixCollapse summary={EARLIER_LABEL} className="mt-tier-group">
+        <p className="type-small text-fg-muted">
+          <span className="type-meta">{EARLIER_LABEL}</span>{" "}
+          {earlierRepos.map((r, i) => (
+            <span key={r.repo}>
+              <a
+                href={r.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="font-mono text-fg underline decoration-rule underline-offset-4 transition-colors hover:decoration-current"
+              >
+                {r.repo}
+              </a>
+              <span> (early / idea-stage)</span>
+              {i < earlierRepos.length - 1 ? (
+                <span aria-hidden="true" className="text-fg-ghost">
+                  {" • "}
+                </span>
+              ) : null}
+            </span>
+          ))}
+        </p>
+      </AppendixCollapse>
     </div>
   );
 }

@@ -1,0 +1,130 @@
+[
+ {
+  "name": "opening-p0.05",
+  "settleMs": 514,
+  "raw": 0.051,
+  "t": 0.051,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "opening-p0.47",
+  "settleMs": 551,
+  "raw": 0.47,
+  "t": 0.47,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "opening-p0.75",
+  "settleMs": 569,
+  "raw": 0.75,
+  "t": 0.75,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "opening-p1",
+  "settleMs": 877,
+  "raw": 1,
+  "t": 0.99,
+  "phase": "e",
+  "sub": 0.67
+ },
+ {
+  "name": "seam-p0.05",
+  "settleMs": 1430,
+  "raw": 0.05,
+  "t": 0.05,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.47",
+  "settleMs": 880,
+  "raw": 0.47,
+  "t": 0.47,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.75",
+  "settleMs": 398,
+  "raw": 0.75,
+  "t": 0.75,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "seam-p1",
+  "settleMs": 446,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.05",
+  "settleMs": 571,
+  "raw": 0.051,
+  "t": 0.051,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.47",
+  "settleMs": 78,
+  "raw": 0.47,
+  "t": 0.47,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.75",
+  "settleMs": 659,
+  "raw": 0.751,
+  "t": 0.751,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "tintype-p1",
+  "settleMs": 733,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.05",
+  "settleMs": 670,
+  "raw": 0.051,
+  "t": 0.051,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.47",
+  "settleMs": 329,
+  "raw": 0.471,
+  "t": 0.439,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.75",
+  "settleMs": 388,
+  "raw": 0.75,
+  "t": 0.75,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "ignite-p1",
+  "settleMs": 713,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ }
+]

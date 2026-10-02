@@ -1,0 +1,186 @@
+/* ============================================================================
+   app/p3/cards-pin.css: the pinned cards' LAZY layers (P3-6, P3-7): the lower
+   bar's phases, the frame's Phase-3 layers and the kraken's mass and tip.
+   OWNER: W2-CARDS. Split out of cards.css by the W2 assembly (first-load CSS
+   budget, spec §12.1 / §13: ≤ +6 KB gz): every rule here styles DOM or
+   attributes that only the lazy pin chunk (card-p3.tsx, DESKTOP_FINE) adds,
+   so it is imported by card-p3.tsx and loads with that chunk. What the
+   server renders (the pin travel, the subtitle, the kraken button, the
+   iris rim's resting state) stays in cards.css. Same rules as cards.css:
+   no rule matches <html>, none keys on html.lenis*, no substring selectors.
+   ========================================================================== */
+
+/* — 3. The lower bar's states (card-p3.tsx `data-card-phase` on the live
+     pinned card: a < .50 ≤ b < .68 ≤ m < .92 ≤ e). The h2 + line and the
+     MOMENT caption carry star (a) and the settle; the logline subtitle
+     carries star (b), fading out (200 ms) as the mask opens the bars. The
+     static card (no phase: Pause, RM, not yet live) shows the settled bar.
+     title.mask ALT: the rising title returns at .68. Opacity / transform
+     only, by state, never scrubbed. — */
+[data-card-phase] .act-card-lower,
+[data-card-phase] .act-card-under {
+  transition:
+    opacity 200ms linear,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-card-phase="b"] .act-card-lower,
+[data-card-phase="m"] .act-card-lower,
+[data-card-phase="e"] .act-card-lower,
+[data-card-phase="b"] .act-card-under,
+[data-card-phase="m"] .act-card-under,
+[data-card-phase="e"] .act-card-under {
+  opacity: 0;
+}
+[data-card-phase="b"] .act-card-subtitle,
+[data-card-phase="m"] .act-card-subtitle {
+  opacity: 1;
+}
+[data-title-mask="alt"][data-card-phase="b"] .act-card-lower {
+  transform: translateY(0.75rem);
+}
+[data-title-mask="alt"][data-card-phase="m"] .act-card-lower,
+[data-title-mask="alt"][data-card-phase="e"] .act-card-lower {
+  opacity: 1;
+  transform: none;
+}
+[data-title-mask="alt"][data-card-phase="m"] .act-card-subtitle {
+  opacity: 0;
+}
+
+/* — 4. The frame's Phase-3 layers (card-p3.tsx; pin mode only: none of
+     them exists below it). GL draws its own version of every layer marked
+     `data-gl-replaced` (W2-GL sets data-gl="on" on the frame once engaged). — */
+[data-gl="on"] [data-gl-replaced] {
+  visibility: hidden;
+}
+/* the act title as a mask (css tier, §8.1): a deep rect with the title cut
+   out, zoomed by transform (no will-change: re-rastered crisp) */
+/* the exit: a 300 ms fade by state (card-p3.tsx TITLE_DONE), never a
+   scrubbed half-letter held at rest */
+.act-card-title-mask-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+.act-card-title-mask-wrap[data-out] {
+  opacity: 0;
+}
+.act-card-title-mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+.act-card-title-mask-text {
+  font-family: var(--world-font-head, var(--world-font-act, serif));
+  font-weight: var(--world-head-weight, 400);
+}
+/* title.mask ALT: plain bars opening (scaleY from the frame's edges) */
+.act-card-bars {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.act-card-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 14%;
+  background-color: var(--bg);
+}
+.act-card-bar[data-bar="top"] {
+  top: 0;
+  transform-origin: 50% 0;
+}
+.act-card-bar[data-bar="bottom"] {
+  bottom: 0;
+  transform-origin: 50% 100%;
+}
+/* the carried shape, css tier (§7.3): static, shown by state */
+.act-card-shape {
+  position: absolute;
+  aspect-ratio: 1;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+.act-card-shape[data-on] {
+  opacity: 0.9;
+}
+/* weather inside the frame (§7.7): never over a text column */
+.act-card-weather {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
+.act-card-weather[data-on] {
+  opacity: 1;
+}
+/* push-in #3: SEQ-HALL on the card canvas (under the GL layer) */
+.act-card-seq {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+/* the seam's impact: the chalk-dust puff */
+.act-card-puff {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.act-card-puff > span {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--w-chalk);
+  opacity: 0;
+}
+
+/* — 5. The kraken's css-tier mass under the foam and the tentacle tip
+     above the canvas (it wraps nothing, IC-PC-05); the button stays in
+     cards.css. — */
+.act-card-kraken-mass {
+  position: absolute;
+  width: 38%;
+  aspect-ratio: 2.2;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(4 10 12 / 0.85), rgb(4 10 12 / 0));
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.act-card-kraken-tip {
+  position: absolute;
+  width: 4.5%;
+  aspect-ratio: 0.5;
+  transform: translate(-50%, 40%);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.act-card-kraken-tip > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.act-card-kraken-tip[data-shown="static"] {
+  opacity: 1;
+  transform: translate(-50%, -12%);
+}

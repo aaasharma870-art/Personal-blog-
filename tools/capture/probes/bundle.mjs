@@ -11,7 +11,8 @@
 //                     chunks DO arrive afterwards (the ladder / prefetch: proves the markers are found when present)
 //  compare            with --compare=<baseUrl> (e.g. the pre-Phase-3 build on :3162): the HTML-referenced JS and
 //                     CSS of "/" grow ≤ 6 KB gz each (--budget=6144 to change)
-//  static.ric         no raw requestIdleCallback in app/, components/, lib/ outside lib/idle.ts
+//  static.ric         no raw requestIdleCallback in app/, components/, lib/ outside lib/idle.ts (and the
+//                     vanilla intro controller, which cannot import it)
 // Sizes are gzip -9 of the served bytes (measured here, not trusted from headers).
 import fs from "node:fs";
 import path from "node:path";
@@ -82,7 +83,11 @@ function scanRic() {
         if (e.name !== "node_modules" && !e.name.startsWith(".")) walk(p);
       } else if (/\.(tsx?|jsx?|mjs)$/.test(e.name)) {
         const rel = path.relative(ROOT, p).split(path.sep).join("/");
-        if (rel === "lib/idle.ts") continue;
+        // lib/idle.ts is the wrapper; components/intro/controller.js is the
+        // vanilla pre-hydration controller (served from public/intro, it
+        // cannot import lib/idle.ts): its one `afterLoad` mirrors the same
+        // chain (rIC → setTimeout), pre-Phase-3 code, an accepted exemption
+        if (rel === "lib/idle.ts" || rel === "components/intro/controller.js") continue;
         fs.readFileSync(p, "utf8")
           .split("\n")
           .forEach((line, i) => {

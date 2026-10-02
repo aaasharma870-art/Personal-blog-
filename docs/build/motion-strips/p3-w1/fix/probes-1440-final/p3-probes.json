@@ -1,0 +1,913 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T21:02:15.871Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "bundle",
+      "decoder",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "research-font",
+      "sound",
+      "spotlight"
+    ]
+  },
+  "results": {
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 440616,
+            "cssGz": 32856,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            440616
+          ],
+          "cssGz": [
+            29433,
+            32856
+          ],
+          "deltaJsGz": 1524,
+          "deltaCssGz": 3423,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17561,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 77,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 820,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "stage",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "stage",
+          "MV-09"
+        ],
+        "crossfadeSamples": 6,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 101708,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            930
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            5916,
+            180
+          ],
+          [
+            "DIV",
+            5166,
+            930
+          ],
+          [
+            "act-2-title",
+            5914,
+            44
+          ],
+          [
+            "work",
+            6096,
+            2365
+          ],
+          [
+            "trading-algos",
+            8461,
+            1786
+          ],
+          [
+            "optuna-screener",
+            10247,
+            3739
+          ],
+          [
+            "experiment",
+            13986,
+            1132
+          ]
+        ],
+        "heights": [
+          12744,
+          39813
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          11251,
+          11251
+        ],
+        "shift": 1,
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            1422
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            6408,
+            180
+          ],
+          [
+            "DIV",
+            5658,
+            930
+          ],
+          [
+            "act-2-title",
+            6405,
+            44
+          ],
+          [
+            "work",
+            6588,
+            2333
+          ],
+          [
+            "trading-algos",
+            8921,
+            1921
+          ],
+          [
+            "optuna-screener",
+            10842,
+            4446
+          ],
+          [
+            "experiment",
+            15288,
+            1132
+          ]
+        ],
+        "ok": false
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 17540,
+      "console": []
+    },
+    "lenis": {
+      "pass": false,
+      "failed": [
+        "fastlane"
+      ],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 43950,
+          "vh": 900,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 2
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 2389,
+          "y1": 2389
+        },
+        "fastlane": {
+          "pass": false,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 755,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 1,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 2389
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 56565,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": true,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 15,
+      "over": 0,
+      "worstDur": 472,
+      "worstWork": 6,
+      "loafs": [
+        {
+          "dur": 472,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 582
+        },
+        {
+          "dur": 342,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 186
+        },
+        {
+          "dur": 228,
+          "block": 0,
+          "work": 5,
+          "top": {
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/058gzlmolh0-t.js",
+            "fn": "v"
+          },
+          "t": 1701
+        },
+        {
+          "dur": 221,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1059
+        },
+        {
+          "dur": 195,
+          "block": 0,
+          "work": 6,
+          "top": {
+            "d": 5,
+            "inv": "MessagePort.onmessage",
+            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
+            "fn": "O"
+          },
+          "t": 2532
+        },
+        {
+          "dur": 141,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2387
+        },
+        {
+          "dur": 138,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 2102
+        },
+        {
+          "dur": 137,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1285
+        },
+        {
+          "dur": 137,
+          "block": 0,
+          "work": 5,
+          "top": {
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/058gzlmolh0-t.js",
+            "fn": "v"
+          },
+          "t": 1561
+        },
+        {
+          "dur": 137,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2243
+        },
+        {
+          "dur": 129,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1425
+        },
+        {
+          "dur": 109,
+          "block": 0,
+          "work": 6,
+          "top": {
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/058gzlmolh0-t.js",
+            "fn": "v"
+          },
+          "t": 1985
+        }
+      ],
+      "ladderMs": {
+        "1": 167,
+        "2": 1318,
+        "3": 2387,
+        "4": 3003,
+        "5": 3183
+      },
+      "lenis": true,
+      "ms": 15384,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 237,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1338,
+      "console": []
+    },
+    "sound": {
+      "pass": false,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [],
+          "bytes": 0,
+          "files": {
+            "tts-lumos": "missing",
+            "tts-nox": "missing",
+            "tts-solemn": "missing",
+            "tts-mischief": "missing",
+            "tts-parley": "missing"
+          },
+          "note": "no file in public/audio yet (404s): the engine plays nothing for the tts-* cues"
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 4
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 346
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 407
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 346
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 476
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 565
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980221190201862,
+            "rdr2": 0.27871965414007915,
+            "hp": 0.1907842761965422
+          }
+        },
+        "pause": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 2
+          },
+          "on": {
+            "ok": true,
+            "ms": 239
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 48
+          },
+          "on": {
+            "ok": true,
+            "ms": 10
+          }
+        },
+        "eggs.typed": {
+          "pass": false,
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike",
+            "projector-start"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": false,
+          "pause": {
+            "ok": true,
+            "ms": 1
+          },
+          "resumed": true,
+          "bell": false,
+          "ms": 2005,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": true,
+          "rmAt": 17198.400000000373,
+          "ms": 37,
+          "state": "suspended",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_l_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 53448,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "spotlight": {
+      "pass": true,
+      "failed": [],
+      "tests": {
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 502
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 634
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 1,
+            "free": 1
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 17510,
+          "y": 9900,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 19223,
+          "y": 11475,
+          "ev": "free",
+          "id": "B19"
+        }
+      ],
+      "ms": 52852,
+      "console": []
+    }
+  }
+}

@@ -19,22 +19,27 @@ import { useCard } from "@/components/sections/act-card/card-context";
 export function CardReveal({
   at,
   as = "span",
+  pinned = "rise",
   children,
   className,
 }: {
   at: number;
   /** "div" when the content is a block (a FilmQuote figure); else "span". */
   as?: "span" | "div";
+  /** Phase 3 pin mode (PHASE3-SPEC §7.1): "static" = up from arrival (the
+   *  film title in the upper bar: legible, no stamp); "rise" (default) =
+   *  rises at `at` of star (a) (the h2 and the epigraph / TIP). */
+  pinned?: "rise" | "static";
   children: ReactNode;
   className?: string;
 }) {
-  const { p, live } = useCard();
+  const { p, live, pin } = useCard();
   const [shown, setShown] = useState(() => p.get() >= at);
   useMotionValueEvent(p, "change", (v) => {
     const next = v >= at;
     if (next !== shown) setShown(next);
   });
-  const up = !live || shown;
+  const up = !live || shown || (pin != null && pinned === "static");
   const Outer = as;
   const Inner = as === "div" ? motion.div : motion.span;
   return (

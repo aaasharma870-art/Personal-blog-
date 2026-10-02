@@ -1,0 +1,12 @@
+1024x768 trading-algos 
+  start: win.top=198 h=700 hdr=68 winL=602 txtL=48 on=true imgs=1 ovf=0
+  middle: win.top=68 h=700 hdr=68 winL=602 txtL=48 on=true imgs=1 ovf=0
+  end: win.top=-9 h=700 hdr=68 winL=602 txtL=48 on=true imgs=1 ovf=0
+1024x768 optuna-screener 
+  start: win.top=230 h=700 hdr=68 winL=602 txtL=48 on=true imgs=1 ovf=0
+  middle: win.top=68 h=700 hdr=68 winL=602 txtL=48 on=true imgs=2 ovf=0
+  end: win.top=-9 h=700 hdr=68 winL=602 txtL=48 on=true imgs=4 ovf=0
+1024x768 beyond 
+  start: win.top=304 h=700 hdr=68 winL=48 txtL=453 on=true imgs=1 ovf=0
+  middle: win.top=68 h=700 hdr=68 winL=48 txtL=453 on=true imgs=2 ovf=0
+  end: win.top=-9 h=700 hdr=68 winL=48 txtL=453 on=true imgs=2 ovf=0

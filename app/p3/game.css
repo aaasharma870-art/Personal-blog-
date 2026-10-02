@@ -5,4 +5,147 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   Rules kept here (W1 lessons): desktop-only UI is shown by the FULL
+   DESKTOP_FINE media query (never `lg:`); layout keys only on the boot gate
+   (`html.js:not([data-motion-boot="paused"])`, set once at boot); no rule
+   matches <html> for a runtime-toggled class or attribute, none keys on
+   `html.lenis*`, no substring attribute selectors. Every-frame motion is
+   transform / opacity only. Reduced motion: no tick, no bloom, no hold ring
+   transition; the global Pause rule (html[data-motion="paused"], globals.css)
+   already stops CSS animations.
    ========================================================================== */
+
+/* — The hunt chip (spec §9.3): DESKTOP_FINE only ——————————————————————— */
+.hunt-chip-wrap {
+  display: none;
+  position: relative;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .hunt-chip-wrap {
+    display: inline-flex;
+  }
+}
+.hunt-chip {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.5rem;
+  border-radius: var(--radius-control);
+  color: var(--fg-muted);
+  transition: color var(--dur-micro) ease;
+  touch-action: manipulation;
+}
+.hunt-chip:hover,
+.hunt-chip:focus-visible,
+.hunt-chip[aria-expanded="true"] {
+  color: var(--fg);
+}
+.hunt-chip[data-complete] {
+  color: var(--w-ink-contour); /* Snitch gold at 12/12 */
+}
+/* the count box reserves "12/12": the count arriving never shifts the row */
+.hunt-chip-n {
+  display: inline-block;
+  /* five monospace glyphs + Meta's tracking after each */
+  min-width: calc(5ch + 5 * var(--text-meta--letter-spacing, 0.04em));
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.hunt-chip-n[data-tick] {
+  animation: hunt-tick 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes hunt-tick {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.14) translateY(-1px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* — The hunt panel, the Lumos / Nox veil + wand bloom and the post-credits
+     SCENE live in game-lazy.css, imported by the lazy modules that draw
+     them (hunt-panel.tsx, egg-runtime.tsx, post-credits-scene.tsx): the
+     first-load CSS budget (W2 assembly). — */
+
+/* — Egg hotspots (<EggHotspot>): DESKTOP_FINE only, ≥ 44 px ——————————— */
+/* the gate is unlayered (it must win over any utility a host adds) */
+.egg-hotspot {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .egg-hotspot {
+    display: inline-flex;
+  }
+}
+/* the defaults sit in the components layer, so a host's utilities
+   (`absolute left-[…]`, a size, a radius) position and shape it */
+@layer components {
+  .egg-hotspot {
+    position: relative;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+}
+.egg-hotspot[aria-disabled="true"] {
+  cursor: default;
+}
+/* the press-and-hold ring (the chalk heart): slow while held, instant on
+   release (a transition on transform / opacity only) */
+.egg-hotspot[data-egg-hold]::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  opacity: 0;
+  transform: scale(0.82);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+.egg-hotspot[data-egg-hold][data-holding]::after {
+  opacity: 0.85;
+  transform: scale(1);
+  transition:
+    opacity 600ms linear,
+    transform 600ms linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg-hotspot[data-egg-hold]::after,
+  .egg-hotspot[data-egg-hold][data-holding]::after {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hunt-chip-n[data-tick] {
+    animation: none;
+  }
+}
+
+/* — The post-credits tail + scene (spec §9.4, B58): the BOOT GATE only —— */
+.post-credits {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) .post-credits {
+    display: block;
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+    contain: layout paint;
+  }
+}

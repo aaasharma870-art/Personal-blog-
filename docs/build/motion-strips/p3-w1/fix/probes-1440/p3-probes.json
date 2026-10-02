@@ -1,0 +1,1758 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-01T19:12:54.560Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 630,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 117,
+            "worst": {
+              "ratio": 3.91,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2031,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 186,
+            "worst": {
+              "ratio": 6.58,
+              "text": "Built and documented by Aryan Sharma — treating ",
+              "y": 43357,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 165,
+            "worst": {
+              "ratio": 4.04,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 1709,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 6,
+            "liveBoxes": 162,
+            "worst": {
+              "ratio": 6.47,
+              "text": "Titles, names and quoted lines belong to their o",
+              "y": 40205,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 42334,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 440421,
+            "cssGz": 32856,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            440421
+          ],
+          "cssGz": [
+            29433,
+            32856
+          ],
+          "deltaJsGz": 1329,
+          "deltaCssGz": 3423,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17545,
+      "console": []
+    },
+    "cards": {
+      "skipped": true,
+      "ms": 4,
+      "console": []
+    },
+    "cinema": {
+      "skipped": true,
+      "ms": 7,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 79,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 1817,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "stage",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "stage",
+          "MV-09"
+        ],
+        "crossfadeSamples": 11,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 204738,
+      "console": []
+    },
+    "font-network": {
+      "pass": true,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": true,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "165.888px",
+          "fontSize": "172.8px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": 2105,
+        "beforeStep5": [
+          "25 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "25 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "26 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "87 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "544 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "beforeStep5Bad": [],
+        "legacyRequested": [],
+        "worldsAtRest": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "worldOrder": [
+          "2118 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "4840 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "4840 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "8521 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "8521 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "8883 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "8883 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 174960,
+        "lcp": {
+          "t": 184,
+          "el": "SPAN",
+          "size": 107550
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "lcp": null,
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [],
+      "ms": 30081,
+      "console": []
+    },
+    "games": {
+      "skipped": true,
+      "ms": 6,
+      "console": []
+    },
+    "gl": {
+      "pass": false,
+      "checks": {
+        "lab": {
+          "pass": false,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 1872,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 16,
+              "draws": 2,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 22,
+              "draws": 2,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 4,
+              "draws": 2,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 14,
+              "draws": 2,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 4,
+              "draws": 2,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 1319,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 29,
+              "draws": 2,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 7971136,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 1174,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 1197,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 10748,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 10759,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 15581,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 20250,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 25046,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 29596,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 29663,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 35030,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 22,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 39856,
+              "ev": "settle",
+              "card": "ignite",
+              "p": 1
+            },
+            {
+              "t": 39872,
+              "ev": "disengage:now",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 39923,
+              "ev": "lost"
+            },
+            {
+              "t": 39944,
+              "ev": "restored"
+            },
+            {
+              "t": 41185,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 41385,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.3999999994412065,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": true,
+          "skipped": true,
+          "note": "no card frame engaged: GlGate not mounted yet (W2-CARDS) or nothing reached ladder step 4",
+          "frames": [],
+          "tier": null
+        },
+        "page.default": {
+          "pass": true,
+          "tier": null,
+          "on": 0
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": null,
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 75317,
+      "console": []
+    },
+    "hunt": {
+      "skipped": true,
+      "ms": 4,
+      "console": []
+    },
+    "keyboard": {
+      "skipped": true,
+      "ms": 4,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            930
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            5916,
+            180
+          ],
+          [
+            "DIV",
+            5166,
+            930
+          ],
+          [
+            "act-2-title",
+            5914,
+            44
+          ],
+          [
+            "work",
+            6096,
+            2365
+          ],
+          [
+            "trading-algos",
+            8461,
+            1786
+          ],
+          [
+            "optuna-screener",
+            10247,
+            3739
+          ],
+          [
+            "experiment",
+            13986,
+            1132
+          ]
+        ],
+        "heights": [
+          12744,
+          39813
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          11284,
+          11284
+        ],
+        "shift": 1,
+        "diff": [
+          [
+            "journey",
+            3962,
+            1204
+          ],
+          [
+            "act-2",
+            5166,
+            1422
+          ],
+          [
+            "SPAN",
+            5166,
+            270
+          ],
+          [
+            "SPAN",
+            6408,
+            180
+          ],
+          [
+            "DIV",
+            5658,
+            930
+          ],
+          [
+            "act-2-title",
+            6405,
+            44
+          ],
+          [
+            "work",
+            6588,
+            2333
+          ],
+          [
+            "trading-algos",
+            8921,
+            1921
+          ],
+          [
+            "optuna-screener",
+            10842,
+            4446
+          ],
+          [
+            "experiment",
+            15288,
+            1132
+          ]
+        ],
+        "ok": false
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 17758,
+      "console": []
+    },
+    "lenis": {
+      "pass": false,
+      "failed": [
+        "fastlane",
+        "hash.load"
+      ],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 43597,
+          "vh": 900,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 2
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 2389,
+          "y1": 2389
+        },
+        "fastlane": {
+          "pass": false,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 1035,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": false,
+          "top": 8085,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 4,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 18130
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 61157,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": true,
+      "mode": "intro",
+      "metric": "work",
+      "max": 50,
+      "count": 19,
+      "over": 0,
+      "worstDur": 267,
+      "worstWork": 7,
+      "loafs": [
+        {
+          "dur": 267,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 472
+        },
+        {
+          "dur": 252,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 928
+        },
+        {
+          "dur": 235,
+          "block": 0,
+          "work": 3,
+          "top": null,
+          "t": 85
+        },
+        {
+          "dur": 232,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2809
+        },
+        {
+          "dur": 182,
+          "block": 0,
+          "work": 7,
+          "top": {
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/058gzlmolh0-t.js",
+            "fn": "v"
+          },
+          "t": 742
+        },
+        {
+          "dur": 180,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1914
+        },
+        {
+          "dur": 172,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1184
+        },
+        {
+          "dur": 160,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1567
+        },
+        {
+          "dur": 159,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2261
+        },
+        {
+          "dur": 156,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2101
+        },
+        {
+          "dur": 129,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2427
+        },
+        {
+          "dur": 126,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2680
+        }
+      ],
+      "ladderMs": {
+        "1": 322,
+        "2": 1472,
+        "3": 2708,
+        "4": 3185
+      },
+      "lenis": true,
+      "ms": 15460,
+      "console": []
+    },
+    "plates-live": {
+      "skipped": true,
+      "ms": 5,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 237,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1572,
+      "console": []
+    },
+    "sound": {
+      "pass": false,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [],
+          "bytes": 0,
+          "files": {
+            "tts-lumos": "missing",
+            "tts-nox": "missing",
+            "tts-solemn": "missing",
+            "tts-mischief": "missing",
+            "tts-parley": "missing"
+          },
+          "note": "no file in public/audio yet (404s): the engine plays nothing for the tts-* cues"
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 58
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 368
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 484
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 424
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 391
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 741
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980221190201862,
+            "rdr2": 0.27871960298937953,
+            "hp": 0.19078433494644342
+          }
+        },
+        "pause": {
+          "pass": false,
+          "off": {
+            "ok": true,
+            "ms": 328
+          },
+          "on": {
+            "ok": true,
+            "ms": 222
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 48
+          },
+          "on": {
+            "ok": true,
+            "ms": 8
+          }
+        },
+        "eggs.typed": {
+          "pass": false,
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike",
+            "projector-start"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": false,
+          "pause": {
+            "ok": true,
+            "ms": 89
+          },
+          "resumed": true,
+          "bell": false,
+          "ms": 2004,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": false,
+          "rmAt": 18030.799999999814,
+          "ms": null,
+          "state": "running",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_l_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_0_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 53926,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "split": {
+      "pass": false,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 10565,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 10565,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 10565,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 13113,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 13113,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 13113,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 29782,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 29782,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 29782,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ],
+        "1024x768": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 9721.671875,
+            "bottom": 11807.53125,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 231,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -166,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 12433,
+            "bottom": 16803.828125,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -155,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "373.812px 523.344px",
+            "top": 28499.046875,
+            "bottom": 30377.65625,
+            "windowLeft": 48,
+            "textLeft": 453,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -116,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          }
+        ]
+      },
+      "ms": 53313,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "failed": [],
+      "tests": {
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 505
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 407
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 554
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 2
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 1,
+            "free": 1
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 17147,
+          "y": 9900,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 18746,
+          "y": 11250,
+          "ev": "free",
+          "id": "B19"
+        }
+      ],
+      "ms": 52424,
+      "console": []
+    },
+    "words": {
+      "skipped": true,
+      "ms": 4,
+      "console": []
+    }
+  }
+}

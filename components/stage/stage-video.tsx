@@ -176,9 +176,13 @@ export function StageVideo({ host, loop, focal, play }: StageVideoProps): null {
           r.src = src;
         }
         fadeIn(r);
-        v.play().catch(() => {
-          // autoplay refused or the file failed: the poster stays
-          if (!cancelled) unload(r);
+        v.play().catch((err: unknown) => {
+          // autoplay refused or the file failed: the poster stays. An
+          // AbortError is a normal interruption (a higher claim paused the
+          // pending play()): keep the source and its frame (MediaFrame's rule)
+          if (cancelled) return;
+          if (err instanceof DOMException && err.name === "AbortError") return;
+          unload(r);
         });
       };
       pickCodec({ src: asset.src, webm: asset.webm, width: asset.width, height: asset.height })

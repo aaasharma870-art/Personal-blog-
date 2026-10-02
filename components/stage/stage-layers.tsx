@@ -1,8 +1,12 @@
 "use client";
 
-import { useSyncExternalStore, type ReactNode } from "react";
+import { lazy, Suspense, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { CutOverlay } from "@/components/director/cut-overlay";
+import { useDesktopFine } from "@/lib/flags";
+
+/* the cut is DESKTOP_FINE only (lib/smooth-scroll.ts runs it there alone):
+   its code loads there, after mount (DP-13) */
+const CutOverlay = lazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
 
 /* ============================================================================
    STAGE LAYERS (spec §3.2) — OWNER: B1-STAGE.
@@ -24,7 +28,7 @@ import { CutOverlay } from "@/components/director/cut-overlay";
    <StageLayerPortal layer> portals its children into that layer's container
    once it exists (after mount: nothing portals on the server, so SSR and
    hydration are unchanged). The director's-cut overlay (<CutOverlay/>,
-   B1-SCROLL) renders in the "cut" layer.
+   B1-SCROLL) renders in the "cut" layer on DESKTOP_FINE, lazily (DP-13).
    ========================================================================== */
 
 export type StageLayer = "cut" | "stop" | "game-hud" | "toast";
@@ -64,6 +68,7 @@ export function StageLayerPortal({ layer, children }: { layer: StageLayer; child
 
 /** The fixed layer containers + the director's-cut overlay in "cut". */
 export function StageLayers() {
+  const fine = useDesktopFine();
   return (
     <>
       {LAYERS.map(({ layer, z }) => (
@@ -78,9 +83,13 @@ export function StageLayers() {
           style={{ zIndex: z }}
         />
       ))}
-      <StageLayerPortal layer="cut">
-        <CutOverlay />
-      </StageLayerPortal>
+      {fine ? (
+        <StageLayerPortal layer="cut">
+          <Suspense fallback={null}>
+            <CutOverlay />
+          </Suspense>
+        </StageLayerPortal>
+      ) : null}
     </>
   );
 }

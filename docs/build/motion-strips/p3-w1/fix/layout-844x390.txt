@@ -1,0 +1,12 @@
+docH 39564 -> 39610 fontsLoaded+  fonts- 
+top: top 0->0 (Δ0) h Δ0 nodes 61->62
+about: top 1926.44->1926.44 (Δ0) h Δ0 nodes 102->103
+work: top 5785.59->5785.59 (Δ0) h Δ0 nodes 191->193
+trading-algos: top 8045.5->8045.5 (Δ0) h Δ0 nodes 206->212
+optuna-screener: top 9976.22->9976.22 (Δ0) h Δ0 nodes 348->356
+experiment: top 14251.81->14251.81 (Δ0) h Δ0 nodes 46->47
+systems: top 15194->15194 (Δ0) h Δ18.18 nodes 168->168 text@1372: "-WORLD × DATA-TONE⏎⏎NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL⏎⏎Why not just use a pencil?" -> "-WORLD × DATA-TONE⏎⏎SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH RE"
+kill-list: top 18198.77->18216.95 (Δ18.18) h Δ0 nodes 289->290
+beyond: top 25921.09->25939.28 (Δ18.19) h Δ0 nodes 303->308
+writing: top 29840.64->29858.83 (Δ18.19) h Δ0 nodes 195->183
+credits: top 37637.98->37656.17 (Δ18.19) h Δ27.19 nodes 125->133 text@976: "3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this p" -> "3.0, nano_banana_pro, minimax_h3) · our own prompts; the only image inputs were frames mad"

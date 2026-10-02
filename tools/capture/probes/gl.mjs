@@ -52,9 +52,23 @@ export default async function probe(page, ctx) {
       const per = {};
       if (want("lab")) {
         for (const id of cards) {
+          // W2 measure fix: after a card switch the PREVIOUS frame still carries data-gl="on" for ~150 ms, so
+          // engaged() resolved at once (4–17 ms) and p was stepped during the disengage → engage hand-over
+          // (2 draws). Wait for this card's own settle in the GL log, then for data-gl="on".
+          const n0 = await page.evaluate(() => (window.__gl?.log ?? []).length);
           await page.evaluate((id) => window.__glLab.card(id), id);
           const t0 = Date.now();
-          const on = await engaged(page);
+          const card = id.replace(/-alt$/, "");
+          const settled = await page
+            .waitForFunction(({ n0, card, first }) => {
+              const log = window.__gl?.log ?? [];
+              if (log.slice(n0).some((e) => e.ev === "settle" && e.card === card)) return true;
+              // the lab's first card may have settled before the switch (it is the default card)
+              const last = log.filter((e) => /^(engage|settle|disengage)/.test(e.ev)).pop();
+              return first && last?.ev === "settle" && last.card === card;
+            }, { n0, card, first: id === cards[0] }, { timeout: WAIT, polling: 50 })
+            .then(() => true, () => false);
+          const on = settled && (await engaged(page));
           const ms = Date.now() - t0;
           const d0 = (await gl(page)).draws ?? 0;
           const shots = [];

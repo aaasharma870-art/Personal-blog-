@@ -16,6 +16,7 @@ import { FilmQuote } from "@/components/site/film-quote";
 import { loopPath } from "@/components/site/idiots-chalk";
 import { drawn } from "@/components/site/world-motion";
 import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
+import { CameraGroup, type CameraSpec } from "@/components/primitives/camera";
 import type { EnterPhase } from "@/components/primitives/use-enter-once";
 import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk";
 import { PlateBand, coverRect, headPlateOf } from "@/components/worlds/idiots/plate-band";
@@ -54,7 +55,21 @@ import { PlateBox, plateOf, type Plate } from "@/components/sections/act-card/pl
    lines write on by a sliding clip window (two transforms, no animated
    clip-path) and the drone chalks in on its own layer, so the photograph
    under them is never redrawn per frame.
+   PHASE 3 (W3-IDIOTS; spec §6.1 row "iconic-ice-alt L16 (optuna head)",
+   §2.3 B22): the plate is a LivePlate (L16 living loop; L08 on the ALT
+   side) under a slow DRIFT 1.02 → 1 about the plate's focal point over the
+   band's passage, and the boardRect chalk rides it: the question and the
+   drone are registered overlays inside the plate's camera group, and the
+   answer (on the board ≥ 640) sits in a twin CameraGroup with the same
+   spec over the same box, so every chalk line stays on the board. Below
+   1024 (and under RM / Pause) nothing moves. The chalk-write is the B22
+   time star (through the spotlight; "skip" = written).
    ========================================================================== */
+
+/** The board's drift (spec §6.1): 1.02 → 1 over the band's passage. */
+function driftOf(focal: readonly [number, number]): CameraSpec {
+  return { kind: "drift", scale: [1.02, 1], focal, driver: "flow" };
+}
 
 /** The lecture's question (a registered lettering string: lib/film.ts). */
 const QUESTION = "What is a machine?";
@@ -318,6 +333,7 @@ export function MachineBoard({
   const fid = useSvgId("machine-u");
   const rect = id ? rectOf(id, "boardRect") : null;
   const circleOn = alt && quotes["Q-3I-3"].text.includes(CIRCLED);
+  const camera = driftOf((id ? getMedia(id).focal : null) ?? [0.5, 0.5]);
 
   // the board rect in the band box, ≥ 640 (21:9) and below (4:3)
   let vars: CSSProperties | undefined;
@@ -357,8 +373,10 @@ export function MachineBoard({
         entrance="none"
         shape="band"
         amount={0.4}
+        camera={camera}
+        star={{ id: "B22", weight: 2 }}
         caption={<SceneCaption k={captionKey} place="bl" />}
-        overlay={(phase) =>
+        registered={(phase) =>
           rect ? (
             <>
               <MachineDrone id={id} phase={phase} draw={!alt} />
@@ -405,19 +423,23 @@ export function MachineBoard({
         }
         after={(phase) => (
           // Rancho's answer: the registered line, through <FilmQuote>. On the
-          // board ≥ 640; in flow under the plate below. Its attribution Meta
-          // is lifted to a chalk-light grey so it stays AA on the board.
-          <div
-            ref={answerRef}
-            className="relative mt-tier-pair [--fg-muted:#d6dcd5] sm:absolute sm:top-(--ma-t-lg) sm:left-(--ma-l-lg) sm:mt-0 sm:w-(--ma-w-lg)"
-          >
-            <ChalkWrite phase={phase} write={!alt} delay={1.55} duration={1.5} block>
-              <p className="text-[clamp(1.125rem,0.9rem+1vw,1.5rem)] leading-[1.25] text-(--w-chalk) sm:text-[length:1.95cqw]">
-                <FilmQuote id="Q-3I-3" rendition="lettered" attribution="speaker" />
-              </p>
-            </ChalkWrite>
-            <PhraseCircle host={answerRef} phase={phase} on={circleOn} />
-          </div>
+          // board ≥ 640 (inside a twin of the plate's camera, over the same
+          // box, so it drifts with the board); in flow under the plate
+          // below. Its attribution Meta is lifted to a chalk-light grey so it
+          // stays AA on the board.
+          <CameraGroup spec={camera} className="relative sm:pointer-events-none sm:absolute sm:inset-0">
+            <div
+              ref={answerRef}
+              className="relative mt-tier-pair [--fg-muted:#d6dcd5] sm:pointer-events-auto sm:absolute sm:top-(--ma-t-lg) sm:left-(--ma-l-lg) sm:mt-0 sm:w-(--ma-w-lg)"
+            >
+              <ChalkWrite phase={phase} write={!alt} delay={1.55} duration={1.5} block>
+                <p className="text-[clamp(1.125rem,0.9rem+1vw,1.5rem)] leading-[1.25] text-(--w-chalk) sm:text-[length:1.95cqw]">
+                  <FilmQuote id="Q-3I-3" rendition="lettered" attribution="speaker" />
+                </p>
+              </ChalkWrite>
+              <PhraseCircle host={answerRef} phase={phase} on={circleOn} />
+            </div>
+          </CameraGroup>
         )}
       />
     </div>

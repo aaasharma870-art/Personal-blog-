@@ -214,7 +214,7 @@ export const VARIANT_REGISTRY = {
       name: "chart-unfold",
       note: "Card I: a folded chart opens (down, then out); a dotted trail makes landfall and climbs the program leg by leg; an X is inked on Act I. Phase 3: stays the DOM chart-unfold on the new p ranges.",
     },
-    files: ["components/sections/act-card/frames/opening.tsx", "components/sections/act-card/frames/opening-map.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+    files: ["components/sections/act-card/frames/opening.tsx", "components/sections/act-card/frames/opening-map.tsx", "app/p3/cards.css", "app/p3/cards-pin.css", "components/gl/**", "lib/gl/**"],
   },
   "card-seam.choreo": {
     default: {
@@ -225,7 +225,7 @@ export const VARIANT_REGISTRY = {
       name: "duster-erase",
       note: "Card I→II (pinned): a chalk duster wipes the storm off the board in five strokes, leaving chalk dust; FIG. 0 is written in chalk; Rancho's circle closes it (no aqua seam line). Phase 3: the WAVE out, then the DUSTER in.",
     },
-    files: ["components/sections/act-card/frames/seam.tsx", "components/sections/act-card/frames/seam-chalk.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+    files: ["components/sections/act-card/frames/seam.tsx", "components/sections/act-card/frames/seam-chalk.tsx", "app/p3/cards.css", "app/p3/cards-pin.css", "components/gl/**", "lib/gl/**"],
   },
   "card-tintype.choreo": {
     default: {
@@ -236,7 +236,7 @@ export const VARIANT_REGISTRY = {
       name: "dead-eye",
       note: "Card II→III: the Line is drawn across the frontier tintype, the plate takes the Dead Eye grade (media only), bone marks lock onto the four act points in turn, then resolve at once (mark first, fire once). Phase 3: the Dead Eye grade RAMPS in over the develop's range.",
     },
-    files: ["components/sections/act-card/frames/tintype.tsx", "components/sections/act-card/frames/tintype-deadeye.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+    files: ["components/sections/act-card/frames/tintype.tsx", "components/sections/act-card/frames/tintype-deadeye.tsx", "app/p3/cards.css", "app/p3/cards-pin.css", "components/gl/**", "lib/gl/**"],
   },
   "card-ignite.choreo": {
     default: {
@@ -247,7 +247,7 @@ export const VARIANT_REGISTRY = {
       name: "lumos-sweep",
       note: "Card III→IV (pinned): the campfire goes out, one wand-tip light is struck and sweeps the hall in a flourish; each floating candle catches as the light passes, the Line inks beneath it, and the light becomes the last warm point. Phase 3: the BURN out, then the LUMOS sweep in.",
     },
-    files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+    files: ["components/sections/act-card/frames/ignite.tsx", "components/sections/act-card/frames/ignite-lumos.tsx", "app/p3/cards.css", "app/p3/cards-pin.css", "components/gl/**", "lib/gl/**"],
   },
 
   /* — Phase 3 card push-ins, star (b) p .50–1 (SPEC §6.2; W2-CARDS).
@@ -265,7 +265,7 @@ export const VARIANT_REGISTRY = {
       name: "code-rack-l01",
       note: "A rack-focus crossfade on L01 from the soft to the sharp rung (opacity between the rungs, never a blur), then a shorter push 1 → 1.15 about the stern (transform only).",
     },
-    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+    files: ["components/sections/act-card/**", "app/p3/cards.css", "app/p3/cards-pin.css"],
   },
   "card-seam.push": {
     default: {
@@ -276,7 +276,7 @@ export const VARIANT_REGISTRY = {
       name: "rack-from-benches",
       note: "A rack-focus crossfade from the benches (opacity between the soft and sharp rungs, never a blur), then a shorter push 1 → 1.2.",
     },
-    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+    files: ["components/sections/act-card/**", "app/p3/cards.css", "app/p3/cards-pin.css"],
   },
   "card-ignite.push": {
     default: {
@@ -288,7 +288,7 @@ export const VARIANT_REGISTRY = {
       name: "code-crane-l02",
       note: "A code crane-up on the L02 loop (zoom 1.089 at the join → 1.25, focal .45).",
     },
-    files: ["components/sections/act-card/**", "app/p3/cards.css"],
+    files: ["components/sections/act-card/**", "app/p3/cards.css", "app/p3/cards-pin.css"],
   },
 
   /* — Phase 3 card title + carried shape (SPEC §7.1, §7.3, §8.1) — */
@@ -301,7 +301,7 @@ export const VARIANT_REGISTRY = {
       name: "rising-title",
       note: "The act title rises into place over the push while plain letterbox bars open (no mask).",
     },
-    files: ["components/sections/act-card/**", "app/p3/cards.css", "components/gl/**", "lib/gl/**"],
+    files: ["components/sections/act-card/**", "app/p3/cards.css", "app/p3/cards-pin.css", "components/gl/**", "lib/gl/**"],
   },
   "match.shape": {
     default: {
@@ -374,17 +374,17 @@ export const VARIANT_REGISTRY = {
   "words.scrub": {
     default: { name: "word-opacity", note: "One sentence per act brightens word by word as the reader scrolls it (per-word opacity scrub)." },
     alt: { name: "line-sweep", note: "A per-line clip sweep, scrubbed over the same range." },
-    files: ["components/words/scrub-sentence.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+    files: ["components/words/scrub-sentence.tsx", "components/words/bind/**", "components/enhance/binders/words.ts", "app/p3/words.css"],
   },
   "words.physical": {
     default: { name: "grain-ember", note: "One physical word per section at most: \"noise\" settles like grain, \"Killed\" is struck through with an ember." },
     alt: { name: "jitter-graphite", note: "\"noise\" only jitters its letters; \"Killed\" gets a graphite strike." },
-    files: ["components/words/physical-word.tsx", "components/enhance/binders/words.ts", "app/p3/words.css"],
+    files: ["components/words/physical-word.tsx", "components/words/bind/**", "components/enhance/binders/words.ts", "app/p3/words.css"],
   },
   "words.flythrough": {
     default: { name: "glide-gallop", note: "A gull glides through the voyage window's sky (Act I); a graphite horse gallops along the journal's bottom edge (Act III); image zones only, never across text." },
     alt: { name: "shadow-pass", note: "Only the sprite's shadow crosses the image zone." },
-    files: ["components/words/fly-through.tsx", "assets/p3/words/**", "app/p3/words.css"],
+    files: ["components/words/fly-through.tsx", "components/words/bind/**", "assets/p3/words/**", "app/p3/words.css"],
   },
 
   /* — Phase 3 intro titles + post-credits (SPEC §4.3, §9.4) — */
@@ -408,7 +408,7 @@ export const VARIANT_REGISTRY = {
       name: "ink-footprints",
       note: "Ink footprints walk to \"↑ Back to the opening\" and stop.",
     },
-    files: ["components/site/post-credits.tsx", "app/p3/game.css", "assets/p3/hunt/**"],
+    files: ["components/site/post-credits.tsx", "components/eggs/post-credits-scene.tsx", "app/p3/game.css", "app/p3/game-lazy.css", "assets/p3/hunt/**"],
   },
 
   /* — World loaders (host "loader-<kind>"; components/primitives/loaders/**) — */

@@ -1,0 +1,30 @@
+{
+ "consoleErrors": [],
+ "overflow": [],
+ "h1": {
+  "1440": 1
+ },
+ "hydration": [],
+ "cardFit": {
+  "default": [
+   {
+    "id": "act-2",
+    "h": 900,
+    "vh": 900,
+    "fits": true
+   },
+   {
+    "id": "act-3",
+    "h": 900,
+    "vh": 900,
+    "fits": true
+   },
+   {
+    "id": "act-4",
+    "h": 900,
+    "vh": 900,
+    "fits": true
+   }
+  ]
+ }
+}

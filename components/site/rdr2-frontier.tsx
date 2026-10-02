@@ -3,6 +3,7 @@ import { copyText, copyVisible, hrefOfId } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import { beatAttrs } from "@/lib/beats";
 import { Meta } from "@/components/site/world-kit";
+import { EggHotspot } from "@/components/eggs/egg-hotspot";
 
 /* ============================================================================
    RDR2 FRONTIER — Beyond's world objects (SPEC v2 SM-15; rdr2 STUDY R-4, R-5;
@@ -92,6 +93,20 @@ const PINE_PATH = PINES.map(([x, y, s]) => {
 /** The run: a dashed graphite trail from the bottom-left, past the lake, up
  *  into the foothills to a tent. */
 const TRAIL = "M30 246 C80 236 120 240 170 232 C220 224 238 222 262 222 C300 222 340 226 372 214 C404 202 420 186 452 190 C486 194 500 170 528 150";
+/** The trail cut at its curve joints: the rd-eagle effect lights them in
+ *  order, start → tent (components/worlds/rdr2/rd-desktop.tsx). */
+const TRAIL_SEGS = TRAIL.slice(1)
+  .split(" C")
+  .slice(1)
+  .reduce<{ at: string; d: string[] }>(
+    (acc, c) => {
+      const pts = c.trim().split(" ");
+      acc.d.push(`M${acc.at} C${c.trim()}`);
+      acc.at = `${pts[4]} ${pts[5]}`;
+      return acc;
+    },
+    { at: TRAIL.slice(1).split(" C")[0]!, d: [] },
+  ).d;
 const TENT = { x: 540, y: 146 };
 const TENT_PATH = `M${TENT.x - 10} ${TENT.y} L${TENT.x} ${TENT.y - 14} L${TENT.x + 10} ${TENT.y} Z M${TENT.x} ${TENT.y - 14} L${TENT.x - 2} ${TENT.y}`;
 /** The compass rose (no letters): a long N–S diamond, a short E–W one. */
@@ -106,38 +121,62 @@ const ROSE_PATH =
  * information; it decorates the Athletics note (RD-P3 "drawn only where
  * you've been"). ILLUSTRATIVE (its Meta label stays under it): no text,
  * no place names, no numbers, no real route.
+ * Phase 3: the figure is B41's scroll star (the fog lift); at the trail's
+ * start sits rd-eagle's eye-ring glyph, a real <button> outside the
+ * aria-hidden map (EggHotspot: DESKTOP_FINE only, our own IC-RD-09 inner
+ * glyph). The trail's heavier graphite copy, cut at its joints, waits at
+ * opacity 0 for the egg (graphite only: the map paper's own ink).
  */
 export function TrailMap({ className }: { className?: string }) {
   const caption = copyText("beyond.map.caption");
   if (!copyVisible(caption)) return null; // the honesty label is mandatory
   return (
     <figure className={cn("w-full", className)} data-motif="trail-map" {...beatAttrs("B41", { weight: 2 })}>
-      <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-hidden rounded-[4px]">
-        <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" focusable="false" preserveAspectRatio="xMidYMid slice">
-          <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-            {/* the neatline: a double rule, like a printed sheet */}
-            <rect x={8} y={8} width={W - 16} height={H - 16} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
-            <rect x={13} y={13} width={W - 26} height={H - 26} className="stroke-(--paper-pencil)" strokeWidth={0.6} />
-            <path d={CONTOURS} className="stroke-(--trail-map-contour)" strokeWidth={1.1} />
-            <path d={RIVER} className="stroke-(--trail-map-water)" strokeWidth={3.2} />
-            <path d={LAKE} className="fill-(--trail-map-water) stroke-(--trail-map-water)" fillOpacity={0.4} strokeWidth={1.6} />
-            <path d={FOOTHILLS} className="stroke-(--paper-pencil)" strokeOpacity={0.7} strokeWidth={1} />
-            {RANGE.map((pk) => (
-              <g key={pk.key}>
-                <path d={pk.face} className="fill-(--trail-map)" />
-                <path d={pk.hachures} className="stroke-(--paper-pencil)" strokeWidth={0.9} />
-                <path d={pk.flanks} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
+      <div className="relative">
+        <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-hidden rounded-[4px]">
+          <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" focusable="false" preserveAspectRatio="xMidYMid slice">
+            <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+              {/* the neatline: a double rule, like a printed sheet */}
+              <rect x={8} y={8} width={W - 16} height={H - 16} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
+              <rect x={13} y={13} width={W - 26} height={H - 26} className="stroke-(--paper-pencil)" strokeWidth={0.6} />
+              <path d={CONTOURS} className="stroke-(--trail-map-contour)" strokeWidth={1.1} />
+              <path d={RIVER} className="stroke-(--trail-map-water)" strokeWidth={3.2} />
+              <path d={LAKE} className="fill-(--trail-map-water) stroke-(--trail-map-water)" fillOpacity={0.4} strokeWidth={1.6} />
+              <path d={FOOTHILLS} className="stroke-(--paper-pencil)" strokeOpacity={0.7} strokeWidth={1} />
+              {RANGE.map((pk) => (
+                <g key={pk.key}>
+                  <path d={pk.face} className="fill-(--trail-map)" />
+                  <path d={pk.hachures} className="stroke-(--paper-pencil)" strokeWidth={0.9} />
+                  <path d={pk.flanks} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
+                </g>
+              ))}
+              <path d={PINE_PATH} className="stroke-(--paper-pencil)" strokeWidth={1} />
+              <path d={TRAIL} className="stroke-(--handbill-graphite)" strokeWidth={1.8} strokeDasharray="7 6" />
+              <path d={TENT_PATH} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
+              {/* rd-eagle: where someone went, lit in order (opacity 0 at rest) */}
+              <g className="stroke-(--handbill-graphite)" strokeWidth={3.4} strokeDasharray="10 4">
+                {TRAIL_SEGS.map((d, i) => (
+                  <path key={d} d={d} opacity={0} data-eagle-seg={i} />
+                ))}
+                <path d={TENT_PATH} opacity={0} strokeDasharray="none" strokeWidth={2.6} data-eagle-seg={TRAIL_SEGS.length} />
               </g>
-            ))}
-            <path d={PINE_PATH} className="stroke-(--paper-pencil)" strokeWidth={1} />
-            <path d={TRAIL} className="stroke-(--handbill-graphite)" strokeWidth={1.8} strokeDasharray="7 6" />
-            <path d={TENT_PATH} className="stroke-(--handbill-graphite)" strokeWidth={1.4} />
-            <circle cx={ROSE.x} cy={ROSE.y} r={20} className="stroke-(--paper-pencil)" strokeWidth={0.8} />
-            <path d={ROSE_PATH} className="fill-(--paper-pencil) stroke-(--handbill-graphite)" fillOpacity={0.35} strokeWidth={1} />
-          </g>
-        </svg>
-        {/* the fog: lifts left → right as you read (CSS only; none under RM) */}
-        <div className="trail-fog absolute inset-0" />
+              <circle cx={ROSE.x} cy={ROSE.y} r={20} className="stroke-(--paper-pencil)" strokeWidth={0.8} />
+              <path d={ROSE_PATH} className="fill-(--paper-pencil) stroke-(--handbill-graphite)" fillOpacity={0.35} strokeWidth={1} />
+            </g>
+          </svg>
+          {/* the fog: lifts left → right as you read (CSS only; none under RM) */}
+          <div className="trail-fog absolute inset-0" />
+        </div>
+        {/* rd-eagle (spec §9.1 #10): the eye ring at the trail's start */}
+        <div className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: "5.75%", top: "86.9%" }}>
+          <EggHotspot hunt="rd-eagle" label="egg.hunt.name.rd-eagle">
+            <svg viewBox="-12 -12 24 24" width={22} height={22} aria-hidden="true" focusable="false" fill="none" className="stroke-(--handbill-graphite)">
+              <circle r={10} strokeWidth={1.4} />
+              <path d="M-6.8 0Q0 -5.6 6.8 0Q0 5.6-6.8 0Z" strokeWidth={1.2} strokeLinejoin="round" />
+              <circle r={1.9} stroke="none" className="fill-(--handbill-graphite)" />
+            </svg>
+          </EggHotspot>
+        </div>
       </div>
       <figcaption className="mt-tier-pair">
         <Meta fields={[caption.text]} />

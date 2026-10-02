@@ -12,6 +12,7 @@ import { maskIntersect, maskStyle } from "@/components/primitives/mask-style";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { FloatingCandle } from "@/components/worlds/hp/floating-candle";
+import type { ScrubBody } from "@/components/worlds/hp/principle-body";
 import { CANDLE_FLAME_AT } from "@/components/worlds/hp/sprites";
 import {
   CandleField,
@@ -44,6 +45,13 @@ import {
    every text token ≥ 12 : 1. All light is sprites (Law 1). Static (server
    HTML, reduced motion / Pause, no JS, already in view): every candle lit,
    no spark.
+
+   PHASE 3 (W3-HP): the same beats as the Map (B52 on the stage, B54 on room
+   3), room 05's B55 scrubbed sentence (server-rendered,
+   worlds/hp/principle-body), the `hp-map` egg's hint under the ceiling band
+   (desktop only, absolute; worlds/hp/map-hint). On desktop the wand
+   cursor's bloom gets its own layer in this night sky, under the words and
+   softer (the light text sits on it): components/worlds/hp/wand-cursor.tsx.
    ========================================================================== */
 
 /** Across the page container, inside a full-bleed layer (100vw wide). */
@@ -65,13 +73,24 @@ const ROW_SIDE: readonly (readonly CandleSpot[])[] = principles.map((_, i) =>
   spotsIn(4, 61 + i * 7, { x0: 12, x1: 88, y0: 0, y1: 34 }, { w0: 14, w1: 24, o0: 0.6, o1: 1 }, "sm"),
 );
 
-export function PrinciplesLumos({ ribbons, head }: { ribbons: boolean; head: ReactNode }) {
+export function PrinciplesLumos({
+  ribbons,
+  head,
+  scrub,
+  hint,
+}: {
+  ribbons: boolean;
+  head: ReactNode;
+  scrub?: ScrubBody;
+  hint?: ReactNode;
+}) {
   return (
     <div className="relative" data-motif="enchanted-ceiling" {...beatAttrs("B52", { weight: 1 })}>
       <CeilingGround />
       {/* the ceiling band over the head (reaches up into the section's top padding) */}
       <div aria-hidden="true" className="relative h-24 sm:h-36">
         <CandleField spots={BAND} className="inset-x-0 bottom-0 top-[calc(-1*var(--section-pad))]" />
+        {hint}
       </div>
       <div className="relative">
         <CandleField spots={HEAD_SIDE} className="right-0 top-0 hidden h-[calc(100%-7.5rem)] w-[25rem] xl:block" />
@@ -79,7 +98,7 @@ export function PrinciplesLumos({ ribbons, head }: { ribbons: boolean; head: Rea
       </div>
       <ol aria-label="Operating principles" className="relative mt-tier-block border-t border-rule">
         {principles.map((p, i) => (
-          <LumosRow key={p.n} p={p} index={i} ribbons={ribbons} />
+          <LumosRow key={p.n} p={p} index={i} ribbons={ribbons} body={scrub?.at === i ? scrub.node : undefined} />
         ))}
       </ol>
     </div>
@@ -130,7 +149,7 @@ function CeilingGround() {
 /** B54 (ribbons converge, rooms 3–4): the third room carries the beat (as the Map). */
 const RIBBONS_BEAT_ROOM = 2;
 
-function LumosRow({ p, index, ribbons }: { p: Principle; index: number; ribbons: boolean }) {
+function LumosRow({ p, index, ribbons, body }: { p: Principle; index: number; ribbons: boolean; body?: ReactNode }) {
   const ref = useRef<HTMLLIElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.45 });
   const lit = phase !== "armed";
@@ -154,7 +173,7 @@ function LumosRow({ p, index, ribbons }: { p: Principle; index: number; ribbons:
       <div className="sm:col-span-7">
         <h3 className="type-title text-fg">{p.title}</h3>
         {ribbons ? <PatronusRibbons className="mt-tier-pair" /> : null}
-        <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>
+        {body ?? <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>}
       </div>
       {p.thinker ? <Meta className="sm:col-span-3 sm:text-right" fields={[p.thinker]} /> : null}
     </li>

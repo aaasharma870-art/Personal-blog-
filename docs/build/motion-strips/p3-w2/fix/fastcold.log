@@ -1,0 +1,6 @@
+# fastcold.cjs (scratch): cold fast-lane click 3 s after Lenis, focusedAt ms per run (3 runs each), 1440x900; then the LoAFs > 100 ms [start, dur, block]
+1440 default [169,167,163]
+1440 gl=off [196,167,165]
+1440 skip=stage [164,203,186]
+# every variant shows one 1.2-1.5 s LoAF starting at ~230 ms with 0 blocking (compositor wait: SwiftShader raster of the new viewport)
+# fast.cjs (warm, after a wheel scroll): 184 345 416 192 | 184 239 | 229 270 320

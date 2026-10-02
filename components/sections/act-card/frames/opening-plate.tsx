@@ -29,14 +29,21 @@ import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf } from "@/comp
  *       stern (and was clipped by the alt's crop); the plates carry the
  *       ship alone, which already passes blind at 0.8–0.9.
  *   The frame is aria-hidden (the card's h2 and caption carry it).
+ * Phase 3 PIN MODE (PHASE3-SPEC §7.1, §6.2; card-p3.tsx): no slit — the
+ *   Pirates spyglass IRIS, pre-opened to a 12 % disc on the lit stern (the
+ *   hook), opens to the far corner over star (a) (mask-on-transform on the
+ *   `[data-iris]` boxes below, which are plain frame-sized boxes otherwise);
+ *   push-in #1 is the frame's code push (CardShell's content box) with the
+ *   L01 loop from p .50 (PlateLayers).
  */
 
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
 const OPEN = { from: 0.15, to: 0.5 };
 
 export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId | null; alt?: boolean }) {
-  const { p, live } = useCard();
+  const { p, live, pin } = useCard();
   const plate = plateOf(id);
+  const PlateLayers = pin?.ui?.PlateLayers;
 
   // the aperture opens from the plate's horizon, as seen in the 2.39 frame
   const horizon = plate ? (anchor(plate, "horizon")?.[1] ?? 0.8) : 0.8;
@@ -59,14 +66,22 @@ export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId |
       data-variant-plate={alt ? "alt" : "default"}
       // the top feathers into the deep (≥ 640; static, every state)
       className="absolute inset-0 overflow-hidden sm:[mask-image:linear-gradient(to_bottom,transparent,#000_min(14vh,24%))]"
-      style={live ? { clipPath: clip } : undefined}
+      style={live && !pin ? { clipPath: clip } : undefined}
     >
-      {/* its own layer: the aperture's clip changes never re-draw the plate */}
-      <motion.div className={cn("absolute inset-0", live && "will-change-transform")} style={live ? { scale } : undefined}>
-        <PlateBox plate={plate}>
-          <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
-        </PlateBox>
-      </motion.div>
+      {/* the iris (pin mode; plain boxes otherwise): the disc's mask box and
+          the plate counter-scaled inside it */}
+      <div className="absolute inset-0" data-iris="">
+        <div className="absolute inset-0" data-iris-inner="">
+          {/* its own layer: the aperture's clip changes never re-draw the plate */}
+          <motion.div className={cn("absolute inset-0", live && "will-change-transform")} style={live ? { scale } : undefined}>
+            <PlateBox plate={plate}>
+              <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
+              {PlateLayers ? <PlateLayers plate={plate.asset.id} /> : null}
+            </PlateBox>
+          </motion.div>
+        </div>
+      </div>
+      <span aria-hidden="true" className="act-card-iris-rim" data-iris-rim="" />
     </motion.div>
   );
 }

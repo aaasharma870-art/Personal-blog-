@@ -5,4 +5,72 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   Every route loads this file, so it holds only what must be right before
+   any JS runs (the collapse, the static strike). The motion itself lives in
+   the lazy words binder (inline WAAPI, put back when it ends). No rule here
+   can match <html> or keys on a runtime toggle of <html>, except the one
+   Pause rule, whose subject is a pseudo-element.
    ========================================================================== */
+
+/* — Collapse (components/primitives/collapse.tsx; spec §11.5). Phones stay
+     expanded where ::details-content is supported; elsewhere a working
+     disclosure. Desktop animates the height (interpolate-size), reduced
+     motion and Pause toggle instantly. — */
+@media (max-width: 63.99rem) {
+  @supports selector(::details-content) {
+    [data-collapse] > summary {
+      display: none;
+    }
+    [data-collapse]::details-content {
+      display: contents;
+      content-visibility: visible;
+    }
+  }
+}
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  [data-collapse] {
+    interpolate-size: allow-keywords;
+  }
+  [data-collapse]::details-content {
+    height: 0;
+    overflow: clip;
+    overflow-clip-margin: 0.5rem;
+    transition:
+      height 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      content-visibility 240ms allow-discrete;
+  }
+  [data-collapse][open]::details-content {
+    height: auto;
+  }
+  :root[data-motion="paused"] [data-collapse]::details-content {
+    transition: none;
+  }
+}
+
+/* — The strike that stays (components/words/physical-word.tsx; spec §8.5):
+     DESKTOP_FINE only, with or without JS, so the binder's end state is the
+     no-JS state; phones and touch never show it. — */
+.w-strike {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  [data-words-kind="strike"] {
+    position: relative;
+  }
+  .w-strike {
+    display: block;
+    position: absolute;
+    left: -0.04em;
+    right: -0.04em;
+    top: 54%;
+    height: 1.5px;
+    background: var(--kill);
+    transform-origin: 0 50%;
+    pointer-events: none;
+  }
+  [data-words-variant="alt"] > .w-strike {
+    background: var(--w-graphite);
+    transform: rotate(-1.2deg);
+  }
+}

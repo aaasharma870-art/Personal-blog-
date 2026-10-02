@@ -1,0 +1,41 @@
+/* ============================================================================
+   assets/p3/hp/hp-toys.css: Act IV's desktop toys (PHASE3-SPEC §9.2 #4).
+   OWNER: W3-HP. LAZY: imported only by components/worlds/hp/wand-cursor.tsx
+   and candle-toy.tsx, so it loads with their chunk (DESKTOP_FINE, motion on,
+   after ladder step 2) and never on the first load (the app/p3/*-lazy.css
+   pattern; deferred-handoffs #34). Every rule styles a custom property or
+   an attribute that only those modules set; with them gone (Pause, reduced
+   motion, phones) every rule falls back to today's rendering.
+   No rule can match <html>; no [class*=] / [class^=] selector; nothing keys
+   on html.lenis* (deferred-handoffs #33).
+   ========================================================================== */
+
+/* — The wand cursor: non-interactive areas of Principles, Contact and the
+     act-4 hall (wand-cursor.tsx sets --wand-cursor on the three sections and
+     data-wand-in on #act-4 while the wand is over the hall's media). The
+     tip is the hotspot (3 3, inside the value). — */
+[data-world-section="principles"],
+[data-world-section="contact"],
+#act-4[data-wand-in] {
+  cursor: var(--wand-cursor, auto);
+}
+/* interactive elements keep their own cursor (zero specificity: any class
+   that sets a cursor still wins) */
+:where([data-world-section="principles"], [data-world-section="contact"], #act-4) :where(a[href]) {
+  cursor: pointer;
+}
+:where([data-world-section="principles"], [data-world-section="contact"], #act-4)
+  :where(button, summary, label, select, input, textarea, [role="button"]) {
+  cursor: auto;
+}
+
+/* — The candle toy (candle-toy.tsx marks the hall's field data-candle-toy
+     and clears / sets each candle's data-lit; hall-ceiling.tsx CandleField
+     `toy`). A dark candle shows its unlit taper; the crossfade's length and
+     the sweep's per-candle delay ride two custom properties. Opacity only. — */
+[data-candle-toy] .candle-lit {
+  transition: opacity var(--candle-fade, 300ms) ease-out var(--candle-delay, 0ms);
+}
+[data-candle-toy] [data-candle]:not([data-lit]) > .candle-lit {
+  opacity: 0;
+}

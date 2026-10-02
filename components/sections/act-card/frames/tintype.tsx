@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import { motion, useTransform } from "motion/react";
+import { beatAttrs } from "@/lib/beats";
 import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
@@ -9,14 +10,14 @@ import { DrawPath } from "@/components/primitives/loaders/kit";
 import { LINE, LINE_D, fitPath, fitPoint, remap, smooth01, type Box as LineBox } from "@/components/primitives/loaders/line";
 import { SUN_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
+import { PLATE, PLATE_ASPECT, VB } from "@/components/sections/act-card/frames/tintype-geo";
 import {
-  FRAME_ASPECT,
   PlateBox,
   anchor,
   coverBox,
   inBox,
   plateOf,
-  type Aspects,
+  type Box,
   type Plate,
   type Pos,
 } from "@/components/sections/act-card/plate";
@@ -54,6 +55,15 @@ import {
  * colour plate, the trail drawn, the border drawn (no hachures).
  * aria-hidden art.
  *
+ * Phase 3 PIN MODE (PHASE3-SPEC §7.1; CardShell): the css tier, run over
+ * star (a)'s develop (p .03–.45). The hook is the LATENT GHOST (the cover
+ * at .6, never black) with the warm point ALREADY on its sun mark: the sun
+ * sinks while the card rises (`pin.enter`, B35's tintype half), so it is on
+ * the plate's sun on arrival; the flash powder fires at p .03 (the impact,
+ * card-p3.tsx). The plate takes its registered crop (`reg`: the horizon on
+ * MATCH_ROW of the frame; zoom ≤ 1.1) under the boot gate; star (b) is the
+ * code push toward the sun (1 → 1.04, CardShell's content box).
+ *
  * MV-10 missing (`plate` null): the plate that develops is its MEDIA-PLAN
  * code alternative, a golden-hour frontier drawn in SVG gradients (sky haze
  * brightest at the far ridge under the low sun, two ridges, a dark grass
@@ -61,16 +71,9 @@ import {
  * Never a legacy still (the validator forbids it on a film card).
  */
 
-const VB = { w: 1000, h: 418 };
-/** Plate inset inside the frame (viewBox units) and its corner radius. */
-const PLATE = { x: 40, y: 22, w: 920, h: 374, r: 6 };
 /** The graphite trail across the plate's lower third (the Line, re-traced). */
 const TRAIL_BOX: LineBox = { x: 90, y: 250, w: 820, h: 120 };
-/** The PLATE box's aspect inside the card frame (3:2 / 2.39:1). */
-export const PLATE_ASPECT: Aspects = {
-  base: (FRAME_ASPECT.base * PLATE.w) / VB.w / (PLATE.h / VB.h),
-  sm: (FRAME_ASPECT.sm * PLATE.w) / VB.w / (PLATE.h / VB.h),
-};
+export { PLATE_ASPECT };
 /** The card's geometry, shared with the ALT (frames/tintype-deadeye.tsx). */
 export const TINTYPE = { VB, PLATE, TRAIL_BOX } as const;
 const TRAIL = fitPath(LINE_D, TRAIL_BOX);
@@ -94,13 +97,15 @@ export const SUN = { x: 0.78, from: 0.12, to: 0.36, size: 0.075 };
  *  2560 px file (09-29); the plate's own `sun` mark wins when present. */
 const PLATE_SUN: Partial<Record<MediaId, Pos>> = { "MV-10": [0.8125, 0.2185], "MV-10-alt": [0.8125, 0.2185] };
 
-/** The plate's sun in FRAME fractions (2.39), or the code sun's rest. */
-export function sunInFrame(plate: Plate | null): Pos {
+/** The plate's sun in FRAME fractions (2.39), or the code sun's rest.
+ *  `reg`: the plate's registered crop (pin mode), in PLATE-box fractions. */
+export function sunInFrame(plate: Plate | null, reg?: Box | null): Pos {
   const s = plate ? anchor(plate, "sun", PLATE_SUN[plate.asset.id] ?? null) : null;
   if (!plate || !s) return [SUN.x, SUN.to];
-  const q = inBox(coverBox(PLATE_ASPECT.sm, plate.ratio, plate.pos), s);
+  const q = inBox(reg ?? coverBox(PLATE_ASPECT.sm, plate.ratio, plate.pos), s);
   return [(PLATE.x + q[0] * PLATE.w) / VB.w, (PLATE.y + q[1] * PLATE.h) / VB.h];
 }
+
 
 
 const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
@@ -112,21 +117,24 @@ export const PLATE_STYLE = {
 };
 export const BORDER_D = `M${PLATE.x + PLATE.r} ${PLATE.y}H${PLATE.x + PLATE.w - PLATE.r}Q${PLATE.x + PLATE.w} ${PLATE.y} ${PLATE.x + PLATE.w} ${PLATE.y + PLATE.r}V${PLATE.y + PLATE.h - PLATE.r}Q${PLATE.x + PLATE.w} ${PLATE.y + PLATE.h} ${PLATE.x + PLATE.w - PLATE.r} ${PLATE.y + PLATE.h}H${PLATE.x + PLATE.r}Q${PLATE.x} ${PLATE.y + PLATE.h} ${PLATE.x} ${PLATE.y + PLATE.h - PLATE.r}V${PLATE.y + PLATE.r}Q${PLATE.x} ${PLATE.y} ${PLATE.x + PLATE.r} ${PLATE.y}Z`;
 
-export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
-  const { p, live } = useCard();
+export function TintypeFrame({ plate: id, reg = null }: { plate: MediaId | null; reg?: Box | null }) {
+  const { p, live, pin } = useCard();
   const ids = useId();
   const plate = plateOf(id);
-  const sun = sunInFrame(plate);
+  const sun = sunInFrame(plate, pin ? reg : null);
   const sunFrom = Math.max(-0.08, sun[1] - 0.24);
+  // pin mode: the sun sinks as the card rises (on its mark on arrival, B35)
+  const sunP = pin?.enter ?? p;
+  const latent = pin ? 0.6 : LATENT_COVER;
 
   const trail = useTransform(p, (v) => remap(v, 0, 0.25));
   const develop = useTransform(p, (v) => remap(v, DEVELOP.from, DEVELOP.to));
   const border = useTransform(p, (v) => remap(v, 0.78, 0.97));
   // the sun sinks by transform (the wrapper is frame-sized, so % = frame)
-  const sunY = useTransform(p, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, 0.22)) * 100).toFixed(3)}%`);
+  const sunY = useTransform(sunP, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, pin ? 1 : 0.22)) * 100).toFixed(3)}%`);
   // …and hands over to the photograph's own sun as the plate develops
   const sunOpacity = useTransform(p, (v) => (plate ? 1 - remap(v, 0.45, 0.72) : 1));
-  const cover = useTransform(develop, (d) => LATENT_COVER * (1 - smooth01(d)));
+  const cover = useTransform(develop, (d) => latent * (1 - smooth01(d)));
   // fixed: the sepia print lifts off the colour print
   const sepia = useTransform(p, (v) => 1 - remap(v, 0.45, 0.88));
   // the pencil scaffolding gives way to the photograph
@@ -141,7 +149,7 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
           the tintype (R-2 sepia, .act-tintype) above it while developing */}
       <div className="absolute overflow-hidden rounded-[6px]" style={PLATE_STYLE}>
         {plate ? (
-          <PlateBox plate={plate} aspect={PLATE_ASPECT}>
+          <PlateBox plate={plate} aspect={PLATE_ASPECT} reg={reg}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
         ) : (
@@ -152,7 +160,7 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
       </div>
       {plate && live ? (
         <motion.div className="act-tintype absolute overflow-hidden will-change-[opacity]" style={{ ...PLATE_STYLE, opacity: sepia }}>
-          <PlateBox plate={plate} aspect={PLATE_ASPECT}>
+          <PlateBox plate={plate} aspect={PLATE_ASPECT} reg={reg}>
             <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="(max-width: 639px) 100vw, 92vw" />
           </PlateBox>
         </motion.div>
@@ -169,7 +177,11 @@ export function TintypeFrame({ plate: id }: { plate: MediaId | null }) {
       {/* the low sun (a pre-rendered --w-dusk sprite: world media), sinking
           onto the photograph's sun; with no plate it stays (the code sun) */}
       {live || !plate ? (
-        <motion.div className={cn("pointer-events-none absolute inset-0", live && "will-change-[transform,opacity]")} style={live ? { y: sunY, opacity: sunOpacity } : undefined}>
+        <motion.div
+          className={cn("pointer-events-none absolute inset-0", live && "will-change-[transform,opacity]")}
+          style={live ? { y: sunY, opacity: sunOpacity } : undefined}
+          {...beatAttrs("B35-sun")}
+        >
           <span
             className="absolute block -translate-x-1/2 -translate-y-1/2"
             style={{ left: pct(sun[0]), top: pct(sun[1]), width: pct(SUN.size), aspectRatio: "1" }}

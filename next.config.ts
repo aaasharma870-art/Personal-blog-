@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
+/* The browser data diet (PHASE3-SPEC §12.1, "initial route ≤ +6 KB gz JS"):
+   the client copies of the four data modules every client component reaches
+   drop their documentation-only fields (media provenance notes, variant
+   notes, beats/tempo/estVh). Server renders, Node and tsc read the full
+   source. See scripts/build/browser-data-loader.cjs. */
 const nextConfig: NextConfig = {
+  turbopack: {
+    rules: {
+      "*.ts": {
+        condition: { all: ["browser", { path: /^lib\/(media|variants|page|film)\.ts$/ }] },
+        loaders: [require.resolve("./scripts/build/browser-data-loader.cjs")],
+        as: "*.ts",
+      },
+    },
+  },
   images: {
     // Serve modern formats; Next negotiates AVIF → WebP → source per request,
     // so the committed downsized PNG stills ship tiny to real browsers.

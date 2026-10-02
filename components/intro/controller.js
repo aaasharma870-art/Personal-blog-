@@ -323,6 +323,9 @@
     if (w.__introQueued === "play") { w.__introQueued = null; launch(); }
   }
 
+  /** After `load`, in an idle slice: the vanilla twin of lib/idle.ts
+   *  (rIC with a cap, else a timer). This script runs before React and
+   *  cannot import it; the bundle probe's static.ric check exempts it. */
   function afterLoad(fn) {
     var go = function () {
       if (w.requestIdleCallback) w.requestIdleCallback(fn, { timeout: 800 });
@@ -662,6 +665,7 @@
   function quietEnd() {
     if (quietSent) return;
     quietSent = true;
+    w.__introQuiet = 0;
     fire("intro:quiet-end");
   }
   /** Stop the captions (and the titles): at once (ms 0) or fading the box
@@ -748,11 +752,14 @@
    *  added time) and never gate anything: every animation is WAAPI,
    *  created in this one task (compositor; no React, no attribute), and
    *  any input, Pause, a reduced-motion change or a hidden tab ends them.
-   *  Played path only; ≥ 640 × ≥ 32rem tall (the slot), else the linger. */
+   *  Played path only; DESKTOP_FINE × ≥ 32rem tall (the slot), else the
+   *  linger. */
   function titles() {
     var T = C.titles, roll = VV["intro.titles"] === "alt";
     var box = d.getElementById(roll ? "intro-roll" : "intro-titles");
-    var slot = !!(w.matchMedia && w.matchMedia("(min-width: 40rem) and (min-height: 32rem)").matches);
+    // DESKTOP_FINE + ≥ 32rem tall (lib/flags.ts; spec §1.2: a tablet or any
+    // touch screen keeps today's 2.5 s linger, never the new cards)
+    var slot = !!(w.matchMedia && w.matchMedia("(min-width: 64rem) and (hover: hover) and (pointer: fine) and (min-height: 32rem)").matches);
     if (!T || !box || !slot || !capAnims.length || !capsFind()) return capsLinger();
     titling = true;
     mark("titles");
@@ -767,9 +774,12 @@
       add(box, [{ opacity: 0 }, { opacity: 0, offset: at(T.first), easing: e }, { opacity: 1, offset: at(T.first + T.enter) },
         { opacity: 1, offset: at(tot - T.exit), easing: e }, { opacity: 0 }]);
       // the column starts just below the window (top: 100%) and rolls up
-      // past its top; 9rem = the window's height (app/intro.css #intro-roll)
+      // until its LAST line sits in the window (its bottom 3rem above the
+      // window's bottom; 9rem = the window, app/intro.css #intro-roll) as
+      // the box starts to fade, then holds there: every line is read whole
+      // before the roll leaves (the W1 trace cut it at 73 %)
       add(box.firstElementChild, [{ transform: "translateY(0)" }, { transform: "translateY(0)", offset: at(T.first) },
-        { transform: "translateY(calc(-100% - 9rem))" }]);
+        { transform: "translateY(calc(-100% - 3rem))", offset: at(tot - T.exit) }, { transform: "translateY(calc(-100% - 3rem))" }]);
     } else {
       for (i = 0; i < box.children.length; i++) {
         var a = T.first + i * T.step, b = a + T.card, up = "translateY(" + y + "px)", gone = "translateY(" + -y + "px)";
@@ -912,21 +922,27 @@
   }
   function drop(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
   /** The hold's still without a main-thread copy: createImageBitmap crops
-   *  the visible (cover-fit) part of the paused frame and scales it to the
-   *  canvas off the main thread, and a "bitmaprenderer" canvas shows it
-   *  with no draw. `done(canvas)` runs once (stillOf as the fallback). */
+   *  the visible (cover-fit) part of the paused frame at the VIDEO's own
+   *  resolution (no resize: a resize made Chromium resample on the main
+   *  thread, ≈ 30 ms headless in the hand-off), and a "bitmaprenderer"
+   *  canvas of the bitmap's size shows it with no draw; CSS scales the
+   *  canvas to the viewport (#intro-film > canvas, the compositor).
+   *  `done(canvas)` runs once (stillOf as the fallback). */
   function grabStill(v, id, done) {
     var once = false, fin = function (c) { if (!once) { once = true; done(c); } };
-    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), m = v && v.videoWidth ? fit(v.videoWidth, v.videoHeight, (plate || C.plate).pos) : null;
+    var m = v && v.videoWidth ? fit(v.videoWidth, v.videoHeight, (plate || C.plate).pos) : null;
     if (!m || !w.createImageBitmap) return fin(stillOf(v, id));
-    var c = canvas(W * nd, H * nd), k = v.videoWidth / m.w;
-    c.id = id;
-    c.setAttribute("aria-hidden", "true");
+    var k = v.videoWidth / m.w;
+    var sx = M.max(0, M.round(-m.x * k)), sy = M.max(0, M.round(-m.y * k));
+    var sw = M.max(1, M.min(v.videoWidth - sx, M.round(W * k))), sh = M.max(1, M.min(v.videoHeight - sy, M.round(H * k)));
     later(function () { fin(stillOf(v, id)); }, 250); // never stranded on a slow bitmap
     try {
-      w.createImageBitmap(v, -m.x * k, -m.y * k, W * k, H * k, { resizeWidth: c.width, resizeHeight: c.height, resizeQuality: "medium" })
+      w.createImageBitmap(v, sx, sy, sw, sh)
         .then(function (bmp) {
           if (once) return;
+          var c = canvas(bmp.width, bmp.height);
+          c.id = id;
+          c.setAttribute("aria-hidden", "true");
           var r = c.getContext("bitmaprenderer");
           if (r) r.transferFromImageBitmap(bmp);
           else c.getContext("2d").drawImage(bmp, 0, 0);
@@ -1205,6 +1221,9 @@
       if (im && im.decode) im.decode().catch(noop);
     } catch { /* no decode() */ }
     prefetchLoop();
+    // durable too: lib/ladder.ts is a lazy desktop chunk that may evaluate
+    // after this event, so it reads window.__introQuiet at install
+    w.__introQuiet = 1;
     fire("intro:quiet");
   }
   /** (c): once the flight is fully buffered, fetch the hero loop (the
@@ -1932,7 +1951,13 @@
       setTimeout(function () {
         killVideo();
         if (!jump) focusLanding();
-        else if (!w.__introHydrated) try { w.location.hash = jump; } catch { /* stays on the hero */ }
+        else if (!w.__introHydrated) {
+          // an instant jump (html is `scroll-behavior: smooth`): the fast
+          // lane never glides through 20 screens (PHASE3-SPEC §11.3)
+          R.style.scrollBehavior = "auto";
+          try { w.location.hash = jump; } catch { /* stays on the hero */ }
+          w.requestAnimationFrame(function () { R.style.scrollBehavior = ""; });
+        }
       }, 0);
     };
     if (w.requestAnimationFrame) w.requestAnimationFrame(after); else after();

@@ -23,6 +23,9 @@
      uKraken        0 → 1 → 0 (`wave` only)
      uDeep          the world's deep (the card's --bg)
      uTitleXf       frame uv → title SDF uv (scale xy, offset zw)
+     uInset, uInsetR the plate's inset window [x0, y0, x1, y1] (frame
+                    fractions) and its corner radius (frame heights); full
+                    frame + 0 when the card has none (`PL()` = its SDF)
    Each flavour defines `vec4 fl()` (straight rgb + alpha); main() adds the
    carried shape, the flash, and writes premultiplied alpha.
    Frame uv: origin top-left, y down; textures are uploaded top row first,
@@ -38,8 +41,8 @@ const HEAD = `#version 300 es
 precision highp float;
 uniform sampler2D uFrom,uTo,uNoise,uTitle;
 uniform vec2 uRes,uCenter,uRadius,uFlash;
-uniform vec4 uCoverFrom,uCoverTo,uGradeFrom,uGradeTo,uShape,uTitleXf;
-uniform float uP,uRow,uMorph,uSpin,uKraken;
+uniform vec4 uCoverFrom,uCoverTo,uGradeFrom,uGradeTo,uShape,uTitleXf,uInset;
+uniform float uP,uRow,uMorph,uSpin,uKraken,uInsetR,uFade;
 uniform int uShapeFrom,uShapeTo;
 uniform vec3 uDeep;
 out vec4 o;
@@ -53,6 +56,11 @@ float D(vec2 a,vec2 b){return length((a-b)*vec2(A,1.));}
 vec3 F(vec2 q){return texture(uFrom,(q-uCoverFrom.zw)/uCoverFrom.xy).rgb;}
 vec3 T(vec2 q){return texture(uTo,(q-uCoverTo.zw)/uCoverTo.xy).rgb*uGradeFrom.rgb/uGradeTo.rgb*exp2(uGradeFrom.a-uGradeTo.a);}
 float L(vec3 c){return dot(c,vec3(.299,.587,.114));}
+float PL(){vec2 q=abs((uv-(uInset.xy+uInset.zw)*.5)*vec2(A,1.))-(uInset.zw-uInset.xy)*.5*vec2(A,1.)+uInsetR;
+return length(max(q,0.))+min(max(q.x,q.y),0.)-uInsetR;}
+float HI(){return step(1e-4,uInset.x+uInset.y+2.-uInset.z-uInset.w);}
+vec4 inset(vec3 c,float k){float d=PL(),h=.5/uRes.y,bw=mix(.05,HI()>0.?h:-.01,k);
+c=mix(c,vec3(.9,.85,.74),S(-bw-2.*h,-bw,d));return vec4(mix(c,uDeep,HI()*S(h,3.*h,d)),1.);}
 vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*vec2(4.,10.)+vec2(uP*3.,0.));float s=N(q*vec2(A,1.)*220.);
 return mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.8+.3*s),k);}
 `;
@@ -75,7 +83,7 @@ return mix(c,ink,(1.-S(-e,e,d))*uShape.w);}
 
 const MAIN = `
 void main(){uv=vec2(gl_FragCoord.x/uRes.x,1.-gl_FragCoord.y/uRes.y);A=uRes.x/uRes.y;
-vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clamp(c.rgb,0.,1.)*c.a,c.a);}`;
+vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clamp(c.rgb,0.,1.)*c.a,c.a)*uFade;}`;
 
 /** Each flavour: `vec4 fl()` (≤ ~25 lines). t = uP. */
 const FL: Record<GlFlavour, string> = {
@@ -108,17 +116,19 @@ float st=N(vec2(a*120.,b*3.)),s=clamp(t*1.6-i*.15,0.,1.),r=1.-S(-.04,.04,b-s*1.1
 vec3 c=mix(veil(uv,1.),T(uv),r)+(st-.5)*.14*r*(1.-t);return vec4(c,1.);}`,
 
   // RDR2 tintype develop: pow(luma, γ) outward from the horizon row, grain,
-  // sepia → golden hour; the bone border settles away
+  // sepia → golden hour; the bone border settles to the inset plate's 1 px
+  // line on the world deep (the DOM's settled tintype), or away full-bleed
   develop: `vec4 fl(){float t=uP;vec3 p=T(uv);float l=L(p),dv=clamp((t*1.25-abs(uv.y-uRow)*1.1+(fbm(G2()*4.)-.5)*.15)/.25,0.,1.);
 vec3 c=mix(vec3(.42,.36,.28)*(.55+.45*l),vec3(1.,.86,.66)*pow(l,mix(2.6,1.,dv))*1.05,dv);
 c=mix(c,p,S(.55,1.,t))+(N(G2()*300.+t*50.)-.5)*.09*(1.-t);
-vec2 e=min(uv,1.-uv)*vec2(A,1.);float bw=mix(.05,-.01,S(.83,1.,t));
-return vec4(mix(c,vec3(.9,.85,.74),1.-S(bw-.004,bw+.004,min(e.x,e.y))),1.);}`,
+return inset(c,S(.83,1.,t));}`,
 
-  // RDR2 Dead Eye (ALT): a red-sepia grade ramp + a radial chroma split
+  // RDR2 Dead Eye (ALT): a red-sepia grade ramp + a radial chroma split,
+  // inside the inset plate (its bone line draws in at the end)
   deadeye: `vec4 fl(){float t=uP,g=t*t*(3.-2.*t);vec2 d=uv-uCenter;float k=.012*sin(PI*t);
 vec3 c=vec3(T(uv-d*k).r,T(uv).g,T(uv+d*k).b);c=mix(vec3(.42,.36,.28)*(.55+.45*L(c)),c,g);
-return vec4(c*(1.-.35*g*S(.35,.9,D(uv,uCenter))),1.);}`,
+c*=1.-.35*g*S(.35,.9,D(uv,uCenter));float h=.5/uRes.y,d2=PL();
+c=mix(c,vec3(.9,.85,.74),HI()*S(.83,1.,t)*S(-3.*h,-h,d2));return vec4(mix(c,uDeep,HI()*S(h,3.*h,d2)),1.);}`,
 
   // RDR2 film burn OUT from the fire: an orange-white rim eats the frame
   burn: `vec4 fl(){float t=uP,d=D(uv,uCenter)+(fbm(G2()*4.+t*2.)-.5)*.22,r=mix(uRadius.x,uRadius.y,t*t),w=.05;

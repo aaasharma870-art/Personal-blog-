@@ -111,13 +111,25 @@ function install(): void {
       } else settleQuiet();
     }, 0);
   });
+  // This module is a lazy desktop chunk (the facades load it after
+  // hydration, DP-13), so the intro's events may predate it: the controller
+  // keeps the window's state on window.__introQuiet. A window still open
+  // after the overlay has gone is capped like one seen on `intro:end`.
+  if (window.__introQuiet === 1) {
+    quiet = true;
+    if (!introArmed()) {
+      quietCap = setTimeout(() => {
+        quiet = false;
+        settleQuiet();
+      }, QUIET_CAP_MS);
+    }
+  }
   if (quietOver()) settleQuiet();
   else quietMarked = false;
   void climb();
 }
 
-// Listen from module evaluation (before hydration), like intro-phase.ts, so
-// an early `intro:quiet` / `intro:end` is never missed.
+// Listen from module evaluation (whenever this chunk loads); see install().
 if (typeof window !== "undefined") install();
 
 /* — the quiet window ————————————————————————————————————————————————— */

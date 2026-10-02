@@ -1118,25 +1118,6 @@ body {
   visibility: hidden;
 }
 
-/* Act cards — the pinned travel of the two long cards (seam, ignite; D-5
-   ≤ 60vh each), reserved in CSS so SSR already has it (CLS 0), and only
-   where it runs: ≥ 1024, a fine pointer, OS motion on. Elsewhere: 0 travel.
-   (A view that starts paused drops the attribute; a mid-session Pause keeps
-   the spacer so the page never reflows under the reader — CardShell.) */
-:root {
-  --act-card-travel: 58vh;
-}
-@media (min-width: 64rem) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  [data-act-card-long] {
-    min-height: calc(100svh + var(--act-card-travel));
-  }
-  [data-act-card-long] .act-card-stage {
-    position: sticky;
-    top: 0;
-    min-height: 100svh;
-  }
-}
-
 /* Act cards — the letterbox geometry (≥ 640; CardShell, M2 ART-DIRECTOR #5):
    the upper bar is ≥ header + 8rem and the lower ≥ 8.5rem (grid rows), so
    the FRAME may be at most 100svh − header − 17rem tall at 2.39:1 — full
@@ -1240,8 +1221,14 @@ html[data-motion="paused"] .opening-vignette {
 .world-face-idiots { font-family: var(--font-world-idiots, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
 .world-face-rdr2 { font-family: var(--font-world-rdr2, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
 .world-face-hp { font-family: var(--font-world-hp, var(--font-newsreader)), var(--font-newsreader), Georgia, serif; }
-/* the fan faces are single-weight display cuts: never synthesize bold */
-[class*="world-face-"] { font-weight: 400; font-synthesis: none; }
+/* the fan faces are single-weight display cuts: never synthesize bold.
+   Named classes, never `[class*="world-face-"]`: a substring selector on
+   `class` made every class change on <html> restyle the whole document
+   (≈ 50–100 ms headless; the intro and Lenis toggle html classes). */
+.world-face-pirates,
+.world-face-idiots,
+.world-face-rdr2,
+.world-face-hp { font-weight: 400; font-synthesis: none; }
 
 /* SceneCaption: MOMENT • FILM, 22–32 px, the world face, a 24 px accent rule
    above ("museum label"). Colours come from the PLANE (--fg / --world-

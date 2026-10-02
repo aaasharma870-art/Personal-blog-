@@ -4,14 +4,13 @@ import { useMemo, useRef } from "react";
 import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
-import { MediaFrame } from "@/components/primitives/media-frame";
 import { DrawPath, hash01, useSvgAttr } from "@/components/primitives/loaders/kit";
 import { LINE, LINE_D, measurePath, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, FLAME_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { FIRE0_SPRITE } from "@/components/primitives/loaders/sprites-rd";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { CampLayer, EMBER_OUT, fireInFrame, hallAt } from "@/components/sections/act-card/frames/ignite";
-import { FRAME_ASPECT, plateOf } from "@/components/sections/act-card/plate";
+import { CampLayer, EMBER_OUT, HallPlate, fireInFrame, hallAt } from "@/components/sections/act-card/frames/ignite";
+import { FRAME_ASPECT, plateOf, type Box } from "@/components/sections/act-card/plate";
 
 /**
  * Card III→IV, ALT choreography "lumos-sweep" (lib/variants.ts
@@ -124,27 +123,44 @@ function frameToHall([fx, fy]: readonly [number, number]): { x: number; y: numbe
   return { x: VB.x + fx * VB.w, y: VB.y + fy * h - (h - VB.h) / 2 };
 }
 
-export function IgniteLumosFrame({ hall, camp = null }: { hall: MediaId | null; camp?: MediaId | null }) {
-  const { p, live } = useCard();
+export function IgniteLumosFrame({
+  hall,
+  camp = null,
+  reg = null,
+}: {
+  hall: MediaId | null;
+  camp?: MediaId | null;
+  /** Phase 3: the registered crops (the carried line; boot gate only). */
+  reg?: { camp?: Box | null; hall?: Box | null } | null;
+}) {
+  const { p, live, pin } = useCard();
   const one = useMotionValue(1);
   const campPlate = plateOf(camp);
+  const PlateLayers = pin?.ui?.PlateLayers;
+  const regCamp = pin ? (reg?.camp ?? null) : null;
   // the camp's fire in the hall's coordinates (null → the Line's start)
   const fire = useMemo(() => {
     const c = plateOf(camp);
-    const f = c ? fireInFrame(c) : null;
+    const f = c ? fireInFrame(c, regCamp) : null;
     return f ? frameToHall(f) : null;
-  }, [camp]);
+  }, [camp, regCamp]);
   const hallOpacity = useTransform(p, hallAt);
   const drawnOpacity = useTransform(p, (v) => 1 - remap(v, 0.82, 0.96));
 
-  const campLayer = live && campPlate ? <CampLayer plate={campPlate} p={p} /> : null;
+  const campLayer = live && campPlate ? <CampLayer plate={campPlate} p={p} reg={reg?.camp} /> : null;
 
   if (hall) {
     return (
       <div aria-hidden="true" data-frame="ignite-lumos" className="absolute inset-0">
         {campLayer}
-        <motion.div className={cn("absolute inset-0", live && "will-change-[opacity]")} style={live ? { opacity: hallOpacity } : undefined}>
-          <MediaFrame media={hall} layout="fill" playOn="never" sizes="100vw" />
+        <motion.div
+          className={cn("absolute inset-0", live && "will-change-[opacity]")}
+          style={live ? { opacity: hallOpacity } : undefined}
+          data-wand-zone=""
+        >
+          <HallPlate hall={hall} reg={reg?.hall}>
+            {PlateLayers ? <PlateLayers plate={hall} /> : null}
+          </HallPlate>
         </motion.div>
         {/* the drawn hall (candles, the light) over the photograph until the
             hall takes the frame */}

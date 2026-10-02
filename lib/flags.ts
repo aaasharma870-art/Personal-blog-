@@ -299,7 +299,10 @@ export function useDesktopFine(): boolean {
  *  where there is no window (nothing may animate there). */
 export function motionOffNow(): boolean {
   if (!hasMatchMedia()) return true;
-  return reducedMotion.getSnapshot() || pausedSnapshot();
+  // the Pause state first: right after a Pause click html[data-motion] has
+  // invalidated the whole document's style, and matchMedia() would force
+  // that restyle inside the click
+  return pausedSnapshot() || reducedMotion.getSnapshot();
 }
 
 /** NON-HOOK: call `fn` whenever motion may have turned off or on (the OS

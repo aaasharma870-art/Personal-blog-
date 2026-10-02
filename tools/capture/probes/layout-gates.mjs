@@ -103,7 +103,7 @@ export default async function probe(page, ctx) {
     const before = await p.evaluate(layoutSnapshot);
     const gateBefore = await p.evaluate(gateState);
     const y0 = await p.evaluate(() => Math.round(scrollY));
-    const button = p.locator('button[aria-label="Pause motion"]').first();
+    const button = p.locator('header [data-motion-toggle]').first();
     const found = (await button.count()) > 0;
     if (found) await button.click();
     await p.waitForTimeout(400);

@@ -19,11 +19,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DEFERRED = {
-  // PHASE3-PLAN W1 brief: today's wink stays until W2-GL ships, then the W2 assembler swaps
-  // in "systems.pencil.body.p3" and turns the "systems.meta.webgl" line on (handoff).
-  "copy.systems.pencil.body": "W2-GL swaps it for systems.pencil.body.p3 when the WebGL layer ships",
-};
+// (empty since the W2 assembly: "systems.pencil.body.p3" replaced the M2 wink and the
+// "systems.meta.webgl" line is on, in the commit that ships the WebGL layer)
+const DEFERRED = {};
 
 /** Where a denial is true: the visitor really has native scroll / no WebGL / no sound. */
 const DENIAL_SCOPE = /\b(?:on|for)\s+(?:phones?|mobiles?|touch(?:\s+screens?)?|tablets?|small screens)\b|\breduced[\s-]motion\b|\bpaused?\b|\bwithout javascript\b|\bno-js\b|\buntil you\b|\bby default\b|\bmuted\b/i;

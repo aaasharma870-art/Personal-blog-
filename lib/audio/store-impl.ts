@@ -70,9 +70,17 @@ export function init(h: Host): StoreImpl {
       engine?.setRunning(true, motionOffNow());
     } else {
       engine?.setRunning(false);
-      suspendTimer = window.setTimeout(() => {
-        if (!shouldRun() && ctx.state === "running") void ctx.suspend().catch(() => {});
-      }, SUSPEND_MS);
+      // Pause / OS reduced motion: suspend in this same task (the master is
+      // already silent). A deferred timer landed behind the whole-document
+      // restyle and re-render a Pause causes (W1 gate: 328 ms, and RM never
+      // within the probe's 400 ms); spec §12.2: ≤ 100 ms.
+      if (motionOffNow()) {
+        if (ctx.state === "running") void ctx.suspend().catch(() => {});
+      } else {
+        suspendTimer = window.setTimeout(() => {
+          if (!shouldRun() && ctx.state === "running") void ctx.suspend().catch(() => {});
+        }, SUSPEND_MS);
+      }
     }
   }
 

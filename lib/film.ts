@@ -518,10 +518,6 @@ const copy = {
        quote) and its footnote. The footnote is Claude's summary of the
        pen history: verify it before ship (SPEC). — */
   "systems.pencil.q": { text: "Why not just use a pencil?", status: "proposed" },
-  "systems.pencil.body": {
-    text: "The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
-    status: "proposed",
-  },
   "systems.pencil.footnote": {
     text: "The famous version of the pen story, where one side spends millions on a space pen while the other simply uses a pencil, is a myth. Pencil tips snap and graphite dust conducts, a hazard in orbit; the pressurised pen was developed privately, and both programmes ended up buying it.",
     status: "proposed",
@@ -540,10 +536,10 @@ const copy = {
   "titles.1": p3("A RESEARCH JOURNAL IN {ACTS} ACTS"),
   "titles.2": p3("AFTER {WORKS}"),
   "titles.3": p3("ACT I • {ACT} ↓"),
-  /* honesty copy (PHASE3-SPEC §8.6). The .p3 text REPLACES
-     "systems.pencil.body" once smooth scroll and WebGL have landed: until
-     then the page really is native scroll with no WebGL, so the old line
-     stays true and stays rendered (handoff to B1-BEATS / the assemblers). */
+  /* honesty copy (PHASE3-SPEC §8.6). The .p3 text REPLACED the M2
+     "systems.pencil.body" ("no WebGL, just native scroll", untrue once
+     smooth scroll and WebGL landed) in the W2 assembly; the old key is gone
+     (the honesty lint reads every copy string, rendered or not). */
   "systems.pencil.body.p3": p3(
     "The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change.",
   ),
@@ -561,6 +557,9 @@ const copy = {
   ),
   "about.philosophy.summary": p3("The philosophy note"),
   "credits.more.summary": p3("More credits: media, fonts and quotes"),
+  /* the credits LIBRARIES row (boot gate only: GSAP and Lenis load only on
+     DESKTOP_FINE with motion on); the parts split on " · " into <Dot/>s */
+  "credits.libraries": p3("On desktop: GSAP (standard no-charge licence) · Lenis (MIT)"),
   /* the egg hunt (PHASE3-SPEC §9; W2-HUNT). {n} = found count; {name} = the
      egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
      the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */
@@ -572,6 +571,10 @@ const copy = {
   "egg.hunt.reset.confirm": p3("Reset the hunt? Every egg found so far is forgotten."),
   "egg.hunt.off": p3("Turn off easter eggs"),
   "egg.hunt.complete": p3("12 / 12"),
+  /* the hunt panel's slot states (screen readers) and the reset's cancel */
+  "egg.hunt.found": p3("Found"),
+  "egg.hunt.unfound": p3("Not found yet"),
+  "egg.hunt.reset.cancel": p3("Cancel"),
   "egg.hunt.name.hp-map": p3("The Marauder's Map"),
   "egg.hunt.name.hp-lumos": p3("Lumos and Nox"),
   "egg.hunt.name.hp-snitch": p3("The Golden Snitch"),
@@ -873,11 +876,11 @@ export const film = {
       title: { text: "The Crossing", status: "proposed" },
       logline: loglines["act-1"],
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.519, 0.5], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       // pin wrapper 190vh (90 travel) + the program block ≈ 76vh
-      estVh: { d: 1.757, t: 1.725 },
+      estVh: { d: 2.648, t: 2.705 },
       // the program block reads over the stage (spec §3.2): the opening's exit
       // frame. SEQ-PEARL failed Check L2 (W1 assembler, 2026-10-01) and has no
       // end still, so the exit frame is iconic-pearl at the code push's end
@@ -904,10 +907,10 @@ export const film = {
       logline: loglines["act-2"],
       epigraph: { text: "Treat every backtest as guilty until proven innocent.", status: "confirmed", source: "REPO" },
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.507, 0.505], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 1.58, t: 1.58 },
+      estVh: { d: 2.1, t: 2.1 },
       beats: [
         { id: "B13", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
         { id: "B13-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
@@ -923,10 +926,10 @@ export const film = {
       logline: loglines["act-3"],
       tip: 2,
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.499, 0.457], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 1, t: 1 },
+      estVh: { d: 1.9, t: 1.9 },
       beats: [
         // the other half of the films' carried shape (B35): the card's sun
         // mark, on screen as the card rises (before the pin)
@@ -944,10 +947,10 @@ export const film = {
       logline: loglines["act-4"],
       epigraph: "Q-HP-3",
       variant: "default",
-      landAt: 0.45, // placeholder (W1.0); W2-CARDS sets the measured value
-      maskOrigin: [0.5, 0.5], // placeholder (W1.0); W2-CARDS
+      landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
+      maskOrigin: [0.472, 0.469], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 1.58, t: 1.58 },
+      estVh: { d: 2.1, t: 2.1 },
       beats: [
         { id: "B48", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
         // the RDR2 side of the burn (p < .1) keeps the camp's fireflies
@@ -991,10 +994,14 @@ export const film = {
       { id: "snitch", host: "credits", trigger: ["auto"], enabled: true },
       // Phase 3 (PHASE3-SPEC §3.6): off; not one of the 12 hunt eggs
       { id: "patronus", host: "contact", trigger: ["typed", "palette"], desktopOnly: true, enabled: false },
-      { id: "hidden-kraken", host: "act-2", trigger: ["media"], enabled: true },
-      { id: "parley", host: "global", trigger: ["palette"], enabled: true },
+      /* W2-HUNT (PHASE3-SPEC §9.1): the kraken's long look + its upper-bar
+         button; parley gains the typed word; aal lives on the optuna board
+         (the chalk heart) and is typed too. The 12 hunt eggs' own rows are
+         components/eggs/hunt-rows.ts (scripts/checks/hunt.mjs). */
+      { id: "hidden-kraken", host: "act-2", trigger: ["auto", "hotspot"], enabled: true },
+      { id: "parley", host: "global", trigger: ["palette", "typed"], enabled: true },
       { id: "quadcopter-lift", host: "work", trigger: ["auto"], enabled: true },
-      { id: "aal-izz-well", host: "global", trigger: ["palette"], enabled: true },
+      { id: "aal-izz-well", host: "optuna-screener", trigger: ["palette", "typed", "hotspot"], enabled: true },
       // Phase 3 (§9.1, §9.2): Dead Eye is the Act II/III toy, not a hunt egg
       { id: "dead-eye", host: "kill-list", trigger: ["palette", "typed"], desktopOnly: true, enabled: true, toy: true },
       { id: "console-line", host: "console", trigger: ["auto"], enabled: true },

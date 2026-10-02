@@ -2,14 +2,25 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { animate, motion, useMotionValue } from "motion/react";
-import { useReducedMotion } from "@/lib/flags";
+import { beatAttrs } from "@/lib/beats";
+import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import { easeDraw } from "@/lib/motion";
 import { copyVisible } from "@/lib/sections";
 import { hasRunThisSession, markRunThisSession } from "@/lib/session";
+import { spotlight } from "@/lib/spotlight";
 import { cn } from "@/lib/utils";
 import { useDrawPhase } from "@/components/site/world-motion";
 import { eggCopy } from "@/components/eggs/egg-copy";
-import { SNITCH_EVENT, catchSnitch, eggEnabled, eggsSessionOff, snitchCaught, subscribeEggs } from "@/components/eggs/egg-bus";
+import {
+  SNITCH_EVENT,
+  catchSnitch,
+  eggEnabled,
+  eggsSessionOff,
+  snitchCaught,
+  subscribeEggs,
+  triggerEgg,
+} from "@/components/eggs/egg-bus";
+import { HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
 
 /* ============================================================================
    THE SNITCH (IC-HP-12; SPEC v2 SM-13; eggs.BAR E8, E10, E14) — the credits'
@@ -22,9 +33,29 @@ import { SNITCH_EVENT, catchSnitch, eggEnabled, eggsSessionOff, snitchCaught, su
    credits row SEEKER — you. No score, ever (RD-P8). Reduced motion / Pause /
    "Turn off easter eggs": it only rests (still catchable).
    Our own drawing (a gold sphere, two feathered wings): no crest, no mark.
+   PHASE 3 (PHASE3-SPEC §3.6, §9.1 #3; W2-HUNT): the catch counts the hunt
+   egg hp-snitch (lib/hunt.ts markFound, loaded on the catch); the SEEKER
+   row reads the HUNT (localStorage), not this session's catch (B10), and
+   steps aside at 12/12, where THE HUNT block names the Seeker. The dart
+   fires `triggerEgg("snitch")` (the sound engine's wing flutter; the egg
+   host ignores it: an appearance never counts).
+   W3-CINEMA (PHASE3-SPEC §2.1, §3.8; B57): the dart is the credits' star,
+   the §2.1 exception — a weight-2 time star. On DESKTOP_FINE it asks the
+   spotlight first (`spotlight.request("B57", { weight: 2 })`): "play"
+   darts, "skip" (another star held the screen for 1.5 s) leaves it resting
+   and tries again next session; the hold is released when the dart lands.
+   Phones and tablets dart as before, without asking. The button carries
+   the beat (`data-beat="B57"`).
    ========================================================================== */
 
+/** Count the find (idempotent); the hunt actions load on the catch. */
+function countCatch(): void {
+  void import("@/lib/hunt").then((m) => m.markFound("hp-snitch"));
+}
+
 const RUN_KEY = "egg:snitch";
+/** The credits' star (lib/page.ts, the credits entry). */
+const STAR = "B57";
 /** The dart: offsets from the rest spot (px), right of the link row. */
 const DART_X = [0, 150, 250, 120, 230, 90, 170, 0];
 const DART_Y = [0, -46, -8, 28, -30, 14, -18, 0];
@@ -79,6 +110,8 @@ export function Snitch({ className }: { className?: string }) {
     const host = ref.current?.closest("footer") ?? ref.current?.parentElement;
     if (!host || typeof IntersectionObserver === "undefined") return;
     let stop: (() => void) | null = null;
+    let cancelled = false;
+    let asking = false;
     const io = new IntersectionObserver(
       ([e]) => {
         if (!e || !e.isIntersecting) return;
@@ -91,21 +124,43 @@ export function Snitch({ className }: { className?: string }) {
         const room = r ? window.innerWidth - r.right - 16 : 0;
         const k = Math.max(0, Math.min(1, room / Math.max(...DART_X)));
         if (k < 0.35) return; // no room to fly (a phone): it just rests
-        markRunThisSession(RUN_KEY);
-        setDarting(true);
-        const cx = animate(x, DART_X.map((v) => v * k), { duration: DART_S, ease: easeDraw });
-        const cy = animate(y, DART_Y, { duration: DART_S, ease: "easeInOut", onComplete: () => setDarting(false) });
-        stop = () => {
-          cx.stop();
-          cy.stop();
+        const dart = () => {
+          if (cancelled) return;
+          markRunThisSession(RUN_KEY);
+          setDarting(true);
+          triggerEgg("snitch");
+          const cx = animate(x, DART_X.map((v) => v * k), { duration: DART_S, ease: easeDraw });
+          const cy = animate(y, DART_Y, {
+            duration: DART_S,
+            ease: "easeInOut",
+            onComplete: () => {
+              setDarting(false);
+              spotlight.release(STAR);
+            },
+          });
+          stop = () => {
+            cx.stop();
+            cy.stop();
+            spotlight.release(STAR);
+          };
         };
+        // B57: one star at a time on desktop (the spotlight's hold covers
+        // the dart's first 1.2 s; released when it lands)
+        if (!window.matchMedia(DESKTOP_FINE).matches) return dart();
+        asking = true;
+        void spotlight.request(STAR, { weight: 2, durationMs: DART_S * 1000 }).then((a) => {
+          asking = false;
+          if (a === "play") dart();
+        });
       },
       { threshold: Array.from({ length: 11 }, (_, i) => i / 10) },
     );
     io.observe(host);
     return () => {
+      cancelled = true;
       io.disconnect();
       stop?.();
+      if (asking) spotlight.release(STAR);
     };
   }, [reduced, eggsOff, caught, x, y]);
 
@@ -129,6 +184,8 @@ export function Snitch({ className }: { className?: string }) {
       aria-label={label.text}
       onClick={() => {
         if (!caught) catchSnitch();
+        // also after a reset of the hunt, when this session already caught it
+        countCatch();
         setDarting(false);
       }}
       style={{ x, y }}
@@ -139,6 +196,7 @@ export function Snitch({ className }: { className?: string }) {
       )}
       data-egg="snitch"
       data-darting={darting ? "" : undefined}
+      {...beatAttrs(STAR, { weight: 2 })}
     >
       <SnitchArt flutter={darting} />
     </motion.button>
@@ -146,10 +204,12 @@ export function Snitch({ className }: { className?: string }) {
 }
 
 /** SEEKER — you: the credits row the caught Snitch adds (absent at rest and
- *  on the server: E1). Mirrors the roll's row grid. */
+ *  on the server: E1). It reads the hunt (B10), so it survives a reload and
+ *  Obliviate; at 12/12 THE HUNT block carries "Seeker — you" instead.
+ *  Mirrors the roll's row grid. */
 export function SeekerRow() {
-  const caught = useCaught();
-  if (!caught || !eggEnabled("snitch")) return null;
+  const { count, found } = useHuntState();
+  if (!found.has("hp-snitch") || count === HUNT_TOTAL || !eggEnabled("snitch")) return null;
   const role = eggCopy["credits.seeker.role"];
   const name = eggCopy["credits.seeker.name"];
   if (!copyVisible(role) || !copyVisible(name)) return null;

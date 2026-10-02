@@ -1,0 +1,7 @@
+ctxloaf 0 {"contextT":3045,"compiles":[{"t":3124,"flavour":"iris","moving":false},{"t":3158,"flavour":"title","moving":false}],"near":[{"s":2840,"d":128,"w":0,"top":[]}],"overByWork":0,"overByDur":1}
+ctxloaf 1 {"contextT":2523,"compiles":[{"t":2545,"flavour":"iris","moving":false},{"t":2582,"flavour":"title","moving":false}],"near":[{"s":2347,"d":125,"w":0,"top":[]}],"overByWork":0,"overByDur":1}
+kraken shots done {"gl":"on","draws":5}
+phaseb opening {"phase":"b","subOpacity":"1","subClip":"none","subText":"Where I started, and the course I've been correcting ever si","subRect":{"top":764,"height":136,"width":1440},"h2":{"text":"A research journal in four acts.","ariaHidden":null,"vis":"visible"}}
+phaseb seam {"phase":"b","subOpacity":"1","subClip":"none","subText":"What I build, how I try to break it, and what didn't survive","subRect":{"top":736,"height":164,"width":1440},"h2":{"text":"The Workshop","ariaHidden":null,"vis":"visible"}}
+phaseb tintype {"phase":"b","subOpacity":"1","subClip":"none","subText":"Life beyond the screen: the miles, the mat, the camera, and ","subRect":{"top":739,"height":161,"width":1440},"h2":{"text":"The Frontier","ariaHidden":null,"vis":"visible"}}
+phaseb ignite {"phase":"b","subOpacity":"1","subClip":"none","subText":"What I believe about doing this work honestly, and where to ","subRect":{"top":764,"height":136,"width":1440},"h2":{"text":"The Light","ariaHidden":null,"vis":"visible"}}

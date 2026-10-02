@@ -4,10 +4,13 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import { beatAttrs } from "@/lib/beats";
 import { journey } from "@/lib/content";
+import { useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
+import type { CameraSpec } from "@/components/primitives/camera";
+import { LivePlate } from "@/components/primitives/live-plate";
 import { Loader } from "@/components/primitives/loader";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { JourneyChart, Waypoint, WaypointLabel } from "@/components/site/journey-chart";
@@ -21,17 +24,19 @@ import {
 } from "@/components/worlds/pirates/voyage-chart";
 
 /* ============================================================================
-   THE VOYAGE — desktop (≥ 1024, fine pointer, motion on, no Save-Data):
-   SPEC v2 SM-4, bars/journey-voyage.BAR.md, RECOGNIZABILITY S06.
-   Left: the four real steps in normal flow (verbatim content.ts). Right: a
-   STICKY column (0 extra travel) holding, top to bottom,
+   THE VOYAGE — desktop (≥ 1024, fine pointer, no OS reduced motion, no
+   Save-Data): SPEC v2 SM-4, bars/journey-voyage.BAR.md, RECOGNIZABILITY S06.
+   A LAZY chunk (journey-experience.tsx; DP-13): phones never load it.
+   Left: the section head, then the four real steps in normal flow
+   (verbatim content.ts). Right: a STICKY column (0 extra travel) that
+   starts LEVEL WITH THE HEAD, holding, top to bottom,
      the cartouche THE CROSSING (the act title in Pirata One);
-     THE SEA — a 16:9 frame: the active step's still (MV-05a–d) until every
-       JV frame has decoded (+ the LD-PC mini loader after 400 ms with the
-       real decoded/72), then the canvas sequence; the step's CAPTION
+     THE SEA — a 16:9 frame: the active step's still (MV-05a–d) until the
+       JV sequence is ready (+ the LD-PC mini loader after 400 ms with the
+       real fetched/72), then the canvas sequence; the step's CAPTION
        ("PORT ROYAL HARBOUR AT NIGHT • PIRATES OF THE CARIBBEAN" …) sits
        bottom-left over the sea whenever the frame is STILL, and hides while
-       it moves (never over moving media);
+       it scrubs or sails;
      the CHART STRIP — the brass course through four waypoint links, Jack's
        compass at the rose, the ember tick at the break, the Aztec medallion,
        the brass X at Now.
@@ -52,8 +57,29 @@ import {
    waypoint link turns it to that waypoint and opens the lid on its star
    chart (IC-PC-03 "points to what you want most"); the medallion's
    moonlight sweep runs once when The break is first reached.
-   The canvas mounts only while the section is within one viewport (the
-   decoded frames stay cached), and frames are requested only then.
+
+   PHASE 3 (W3-PIRATES; PHASE3-SPEC §2.3 B09–B12, §6.1, §6.2):
+   - B09: the column arrives with the h2 showing JV frame 0 (= MV-05a, the
+     stage's last shot over the About): the match cut's window half
+     (`B09-window`, quiet; its pair B09 sits at the About's end).
+   - SEQUENCE WINDOW MODE (§6.2, P3-5 #6): the 72 frames stay compressed
+     Blobs; only ±12 frames around the asked index are decoded
+     (ImageBitmaps, ≤ 25 × 3.7 MB ≈ 92 MB; ≤ 1 sequence resident page-wide;
+     window.__seqMem). The window is decoded only within one viewport of
+     the section, with motion on; outside it the bitmaps are dropped.
+   - AT REST (§6.1 rows MV-05b L19, MV-05d L20; B11–B12 quiet): when the
+     sea rests on step 2's or step 4's beat, the plate's registered living
+     loop (fog drifting on Isla de Muerta's water; first light) swaps in
+     over the frame through <LivePlate> (loopFor; one decoder; poster first
+     = the very frame on the canvas, so the swap never pops) and fades out
+     as soon as the sea moves again. The `plates.loops` ALT (code) holds the
+     still: these hosts have no camera (§6.1 "none").
+   - B12: Act I's gull fly-through crosses the window's SKY (above the
+     horizon row; never a text column) once, on scroll-idle, at the
+     journey's end (the zone mounts on step 4; words binder + spotlight).
+   - Reduced motion / Pause mid-scroll: the layout stays (§12.2); the sea
+     shows the active step's still (no canvas, no loop, no sail), the
+     captions show, the compass simply points.
 
    RASTER (P3-2, spec §12.1 #3): the sticky column is never repainted while
    it scrolls. The sequence canvas is its own layer (a frame draw uploads
@@ -64,6 +90,8 @@ import {
 
 type Props = {
   variant: Variant;
+  /** The section head (server-rendered): the left column's top. */
+  head?: ReactNode;
   /** Poster stills per step (the DEFAULT set: JV and JV-alt both start on them). */
   stills: readonly MediaId[];
   /** Sequence frame urls ([] = the stills behaviour: crossfade at the beats). */
@@ -72,6 +100,11 @@ type Props = {
   captions: readonly ReactNode[];
   /** THE CROSSING (server-rendered lettering). */
   cartouche: ReactNode;
+  /** B12: the gull (server <FlyThrough>), flown in the window's sky. */
+  gull?: ReactNode;
+  /** pc-coin's hotspot and the "parley?" marginal (JourneyChart). */
+  coin?: ReactNode;
+  marginal?: ReactNode;
 };
 
 const easeInOut = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
@@ -79,23 +112,59 @@ const easeInOut = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2,
 /** The voyage scrub's two beats (spec §2.3 B10 steps 1–2, B11 steps 3–4). */
 const STEP_BEATS: Readonly<Record<number, string>> = { 0: "B10", 2: "B11" };
 
-export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouche }: Props) {
+/** The steps whose plate swaps in its living loop at rest (spec §6.1: MV-05b
+ *  L19, MV-05d L20). The others hold the frame. */
+const REST_LOOPS: ReadonlySet<number> = new Set([1, 3]);
+/** How near its beat the sea must rest for the loop (frames; ≈ 25 px each). */
+const REST_TOLERANCE = 3;
+/** The at-rest plates have no camera (§6.1 "none"): identity, never loaded. */
+const HOLD: CameraSpec = { kind: "hold", scale: [1, 1], driver: "sticky" };
+/** The decoded window: ±12 frames (spec §6.2). */
+const WINDOW = 12;
+const SIZES = "(min-width: 1280px) 42vw, 50vw";
+
+/** A frame's intrinsic size (an ImageBitmap, or an <img>). */
+function sizeOf(img: CanvasImageSource): [number, number] {
+  if (typeof HTMLImageElement !== "undefined" && img instanceof HTMLImageElement) {
+    return [img.naturalWidth || 1280, img.naturalHeight || 720];
+  }
+  const s = img as { width?: unknown; height?: unknown };
+  return [typeof s.width === "number" ? s.width : 1280, typeof s.height === "number" ? s.height : 720];
+}
+
+export function JourneyVoyage({
+  variant,
+  head = null,
+  stills,
+  frames: urls,
+  captions,
+  cartouche,
+  gull = null,
+  coin = null,
+  marginal = null,
+}: Props) {
   const n = journey.length;
+  const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
   const [reached, setReached] = useState(0);
   const [intent, setIntent] = useState<number | null>(null);
   const [near, setNear] = useState(false);
-  const [wanted, setWanted] = useState(false);
   const [moving, setMoving] = useState(false);
   const [sailing, setSailing] = useState(false);
+  /** The frame the sea rests on (null while it moves). */
+  const [rest, setRest] = useState<number | null>(null);
+  /** The step whose at-rest loop is mounted (-1 = none; it outlives its fade). */
+  const [loopStep, setLoopStep] = useState(-1);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawnFrame = useRef(-1);
+  /** The frame the sea wants now (the decode window centres on it). */
+  const index = useRef(0);
 
-  const seq = useFrameSequence(urls, wanted);
-  const live = seq.ready && near;
+  const seq = useFrameSequence(urls, near && !reduced, { window: WINDOW, index });
+  const live = seq.ready && near && !reduced;
   const beats = beatFrames(seq.total || 1, n);
   const beat = beats[active] ?? 0;
 
@@ -120,18 +189,14 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     return () => io.disconnect();
   }, []);
 
-  /* — near: within one viewport → request the frames (once) + mount the canvas — */
+  /* — near: within one viewport → decode the window + mount the canvas — */
   useEffect(() => {
     const el = rootRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        const hit = Boolean(e?.isIntersecting);
-        setNear(hit);
-        if (hit) setWanted(true);
-      },
-      { rootMargin: "100% 0px 100% 0px", threshold: 0 },
-    );
+    const io = new IntersectionObserver(([e]) => setNear(Boolean(e?.isIntersecting)), {
+      rootMargin: "100% 0px 100% 0px",
+      threshold: 0,
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -140,7 +205,7 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
    *  (read live from the articles' rects: nothing above the section can
    *  leave it stale), piecewise-linear between the beats — positional,
    *  never time-based: the same scrollY gives the same frame. */
-  const frameAt = useEffectEvent((): number => {
+  const scrubFrame = useEffectEvent((): number => {
     const root = stepsRef.current;
     const els = root ? root.querySelectorAll<HTMLElement>("[data-step]") : [];
     const c = Array.from(els, (el) => {
@@ -163,16 +228,19 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     return beats[beats.length - 1] ?? 0;
   });
 
-  /** Paint frame i (object-fit: cover) unless it is already on the canvas. */
+  /** Paint frame i (object-fit: cover) unless it is already on the canvas.
+   *  Window mode: frame i, else its nearest decoded neighbour (the exact one
+   *  repaints on `seq.tick`), else nothing yet. */
   const paint = useEffectEvent((i: number, force = false) => {
+    index.current = i;
     const c = canvasRef.current;
-    const img = seq.frames.current[i];
-    if (!c || !img || !c.width) return;
+    if (!c || !c.width) return;
     if (!force && i === drawnFrame.current) return;
+    const img = seq.frameAt(i);
+    if (!img) return;
     const ctx = c.getContext("2d");
     if (!ctx) return;
-    const iw = img.naturalWidth || 1280;
-    const ih = img.naturalHeight || 720;
+    const [iw, ih] = sizeOf(img);
     const s = Math.max(c.width / iw, c.height / ih);
     const sw = c.width / s;
     const sh = c.height / s;
@@ -197,7 +265,7 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
         c.width = w;
         c.height = h;
       }
-      const again = drawnFrame.current >= 0 ? drawnFrame.current : variant === "default" ? frameAt() : beat;
+      const again = drawnFrame.current >= 0 ? drawnFrame.current : variant === "default" ? scrubFrame() : beat;
       paint(again, true);
     };
     fit();
@@ -208,22 +276,33 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [live, variant]);
 
-  /* — DEFAULT: the scroll scrubs the sea — */
+  /* — window mode: the asked frame decoded → draw it over its neighbour — */
+  useEffect(() => {
+    if (live) paint(index.current, true);
+  }, [live, seq.tick]);
+
+  /* — DEFAULT: the scroll scrubs the sea; at rest the frame is noted — */
   useEffect(() => {
     if (!live || variant !== "default") return;
     let raf = 0;
     let idle = 0;
     const tick = () => {
       raf = 0;
-      paint(frameAt());
+      paint(scrubFrame());
+    };
+    const settle = () => {
+      setMoving(false);
+      setRest(index.current);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(tick);
       setMoving(true);
+      setRest(null);
       window.clearTimeout(idle);
-      idle = window.setTimeout(() => setMoving(false), 220);
+      idle = window.setTimeout(settle, 220);
     };
     tick();
+    idle = window.setTimeout(settle, 220);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -240,7 +319,10 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     if (from === to) {
       paint(to, true);
       // an interrupted sail may have stopped exactly on this beat
-      const r = requestAnimationFrame(() => setSailing(false));
+      const r = requestAnimationFrame(() => {
+        setSailing(false);
+        setRest(to);
+      });
       return () => cancelAnimationFrame(r);
     }
     const duration = Math.min(1400, Math.max(600, Math.abs(to - from) * 50));
@@ -249,23 +331,45 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
       if (t0 < 0) {
         t0 = now;
         setSailing(true);
+        setRest(null);
       }
       const k = Math.min(1, (now - t0) / duration);
       paint(Math.round(from + (to - from) * easeInOut(k)));
       if (k < 1) raf = requestAnimationFrame(step);
-      else setSailing(false);
+      else {
+        setSailing(false);
+        setRest(to);
+      }
     });
     // ART-DIRECTOR #2: the ALT captions never came back at rest. A sail can
     // end without its last frame (cancelled by the next cue, throttled rAF in
     // a background tab), so the sea is declared at rest after the sail's own
     // duration + 100 ms whatever happened to the loop, and the caption
     // returns on the held beat.
-    const rest = window.setTimeout(() => setSailing(false), duration + 100);
+    const restT = window.setTimeout(() => {
+      setSailing(false);
+      setRest(to);
+    }, duration + 100);
     return () => {
       cancelAnimationFrame(raf);
-      window.clearTimeout(rest);
+      window.clearTimeout(restT);
     };
   }, [beat, live, variant]);
+
+  /* — at rest on step 2 or 4: the plate's living loop (fades out on move) — */
+  const restStep = live && rest !== null ? beats.findIndex((b) => Math.abs(b - rest) <= REST_TOLERANCE) : -1;
+  const restLoop = REST_LOOPS.has(restStep) && stills[restStep] ? restStep : -1;
+  useEffect(() => {
+    if (restLoop >= 0) {
+      const r = requestAnimationFrame(() => setLoopStep(restLoop));
+      return () => cancelAnimationFrame(r);
+    }
+    // keep the outgoing loop mounted through its 300 ms fade
+    const t = window.setTimeout(() => setLoopStep(-1), 320);
+    return () => window.clearTimeout(t);
+  }, [restLoop]);
+  const loopShown = restLoop >= 0 && loopStep === restLoop;
+  const loopStill = loopStep >= 0 ? stills[loopStep] : undefined;
 
   const onWaypoint = (e: MouseEvent<HTMLAnchorElement>, j: number) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -277,57 +381,59 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
     void scrollToTarget(art, { block: "center", focus: true, history: "replace" });
   };
 
-  // At rest the caption shows: the stills path (frames not decoded yet, or
-  // the section out of range) never moves; the scrub hides it only while
-  // scrolling, the sail only while sailing.
-  const showCaption = !seq.ready || !live || (variant === "default" ? !moving : !sailing);
+  // At rest the caption shows: the stills path (frames not decoded yet, the
+  // section out of range, motion off) never moves; the scrub hides it only
+  // while scrolling, the sail only while sailing.
+  const showCaption = !live || (variant === "default" ? !moving : !sailing);
   const heading = intent !== null ? bearingTo(intent) : legHeading(active);
   const alt = variant === "alt";
 
   return (
-    <div
-      ref={rootRef}
-      className="mt-tier-block grid grid-cols-12 gap-x-6"
-      data-voyage={variant}
-      data-active-step={active + 1}
-    >
-      {/* ── the four steps, in normal flow ───────────────────────────── */}
-      <div ref={stepsRef} className="col-span-6 xl:col-span-5">
-        {journey.map((s, i) => (
-          <article
-            key={s.marker}
-            id={`journey-step-${i + 1}`}
-            {...(STEP_BEATS[i] ? beatAttrs(STEP_BEATS[i], { weight: 2 }) : {})}
-            data-step={i}
-            aria-labelledby={`journey-step-${i + 1}-title`}
-            className="flex min-h-[62vh] scroll-mt-[30vh] flex-col justify-center border-t border-rule py-tier-block first:border-t-0"
-          >
-            <p className="type-meta text-fg-muted">
-              <span className="tnum">{String(i + 1).padStart(2, "0")}</span>
-              <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
-              <span>{s.marker}</span>
-            </p>
-            <h3
-              id={`journey-step-${i + 1}-title`}
-              tabIndex={-1}
-              className={cn(
-                "mt-tier-pair type-heading transition-colors duration-(--dur-micro) motion-off:transition-none",
-                i === active ? "text-fg" : "text-fg-muted",
-              )}
+    <div ref={rootRef} className="grid grid-cols-12 gap-x-6" data-voyage={variant} data-active-step={active + 1}>
+      {/* ── the head, then the four steps, in normal flow ─────────────── */}
+      <div className="col-span-6 xl:col-span-5">
+        {head}
+        <div ref={stepsRef} className="mt-tier-block">
+          {journey.map((s, i) => (
+            <article
+              key={s.marker}
+              id={`journey-step-${i + 1}`}
+              {...(STEP_BEATS[i] ? beatAttrs(STEP_BEATS[i], { weight: 2 }) : {})}
+              data-step={i}
+              aria-labelledby={`journey-step-${i + 1}-title`}
+              className="flex min-h-[62vh] scroll-mt-[30vh] flex-col justify-center border-t border-rule py-tier-block first:border-t-0"
             >
-              {s.title}
-            </h3>
-            <p className="mt-tier-pair max-w-body type-body text-fg-muted">{s.body}</p>
-          </article>
-        ))}
+              <p className="type-meta text-fg-muted">
+                <span className="tnum">{String(i + 1).padStart(2, "0")}</span>
+                <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+                <span>{s.marker}</span>
+              </p>
+              <h3
+                id={`journey-step-${i + 1}-title`}
+                tabIndex={-1}
+                className={cn(
+                  "mt-tier-pair type-heading transition-colors duration-(--dur-micro) motion-off:transition-none",
+                  i === active ? "text-fg" : "text-fg-muted",
+                )}
+              >
+                {s.title}
+              </h3>
+              <p className="mt-tier-pair max-w-body type-body text-fg-muted">{s.body}</p>
+            </article>
+          ))}
+        </div>
       </div>
 
-      {/* ── the sticky column: cartouche · the sea · the chart ────────── */}
+      {/* ── the sticky column, level with the head: cartouche · sea · chart ── */}
       <div className="col-span-6 xl:col-start-7">
         <div className="sticky top-[calc(var(--header-h)+1.5rem)]">
           {cartouche}
 
-          <div className="scene-caption-host relative mt-tier-pair aspect-video max-h-[calc(100svh-var(--header-h)-24rem)] w-full overflow-hidden rounded-frame bg-(--world-deep)">
+          <div
+            className="scene-caption-host relative mt-tier-pair aspect-video max-h-[calc(100svh-var(--header-h)-24rem)] w-full overflow-hidden rounded-frame bg-(--world-deep)"
+            data-voyage-window=""
+            {...beatAttrs("B09-window")}
+          >
             {/* the stills: the active step's, crossfading (steps reached so far) */}
             {stills.map((id, i) =>
               i <= Math.max(reached, active) ? (
@@ -338,19 +444,39 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
                     i === active ? "opacity-100" : "opacity-0",
                   )}
                 >
-                  <MediaFrame media={id} layout="fill" sizes="(min-width: 1280px) 42vw, 50vw" loader={false} />
+                  <MediaFrame media={id} layout="fill" sizes={SIZES} loader={false} />
                 </div>
               ) : null,
             )}
 
-            {/* the sequence (desktop only, mounted within one viewport), on
-                its own layer: a scrubbed frame never repaints the column */}
+            {/* the sequence (motion on, within one viewport), on its own
+                layer: a scrubbed frame never repaints the column */}
             {live ? (
               <canvas
                 ref={canvasRef}
                 aria-hidden="true"
                 className="absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-change-transform data-drawn:opacity-100 motion-off:transition-none"
               />
+            ) : null}
+
+            {/* at rest on step 2 / 4: the plate's living loop over the frame */}
+            {loopStill ? (
+              <div
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-300 motion-off:transition-none",
+                  loopShown ? "opacity-100" : "opacity-0",
+                )}
+                data-rest-loop={loopStep + 1}
+              >
+                <LivePlate media={loopStill} camera={HOLD} depth={false} sizes={SIZES} className="size-full" />
+              </div>
+            ) : null}
+
+            {/* B12: the gull, in the sky above the horizon row only */}
+            {gull && active === NOW_INDEX ? (
+              <div className="pointer-events-none absolute inset-x-0 top-0" style={{ height: "42%" }}>
+                {gull}
+              </div>
             ) : null}
 
             {/* the caption veil, ONE layer that fades when the sea moves (at
@@ -384,15 +510,10 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
               ))}
             </div>
 
-            {/* real loading: the LD-PC mini, after 400 ms, real decoded / 72 */}
-            {wanted && !seq.ready && !seq.failed && seq.total > 0 ? (
+            {/* real loading: the LD-PC mini, after 400 ms, real fetched / 72 */}
+            {near && !reduced && !seq.ready && !seq.failed && seq.total > 0 ? (
               <span className="pointer-events-none absolute right-3 top-3 z-[3]">
-                <Loader
-                  world="pirates"
-                  size="mini"
-                  progress={seq.decoded / seq.total}
-                  delayMs={400}
-                />
+                <Loader world="pirates" size="mini" progress={seq.decoded / seq.total} delayMs={400} />
               </span>
             ) : null}
           </div>
@@ -409,6 +530,8 @@ export function JourneyVoyage({ variant, stills, frames: urls, captions, cartouc
             hunt
             compassClassName="w-[72px]"
             medallionClassName="w-14"
+            coin={coin}
+            marginal={marginal}
           >
             <ol aria-label="Voyage waypoints" className="absolute inset-0">
               {journey.map((s, i) => (

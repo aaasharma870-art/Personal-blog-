@@ -45,9 +45,20 @@ import { Loader } from "@/components/primitives/loader";
  *   2G / 3G · `playOn` allows this device (default "desktop" = ≥ 1024 px +
  *   fine pointer: mobile gets 0 bytes of video) · the frame is in view
  *   (IntersectionObserver) · it holds the page-wide DecoderLock.
- * It pauses while the tab is hidden, unmounts when it leaves view or loses
- * the decoder (it waits in the lock's queue and resumes when re-granted),
- * and on a rejected play() or a load error it unmounts for good (poster).
+ * It pauses while the tab is hidden and unmounts when it leaves view. On a
+ * rejected play() or a load error it unmounts for good (poster).
+ *
+ * ONE DECODER, OUTGOING AS A STILL (PHASE3-SPEC §3.2, P3-5; W2-PLATES). A
+ * loop that loses the DecoderLock (a higher or newer claim) PAUSES on its
+ * current frame (it is the still the incoming video crossfades from), waits
+ * in the lock's queue, and unmounts after PARK_MS unless it is re-granted
+ * first. GL (lib/gl/gl-lock.ts): `gl:frame` on the <video> (GL took one
+ * frame and paused it) keeps the loop paused with the lock RELEASED;
+ * `gl:release` re-claims it (still in view, motion on) and resumes, the
+ * paused frame standing in while it waits. An inline frame inside a stage
+ * backdrop the live stage is showing (`.stage-backdrop` within
+ * `[data-stage-on]`, re-checked on the stage's `stage:cover` window event)
+ * plays like `playOn="never"`: the stage owns the decoder there.
  *
  * CODEC (PHASE3-SPEC §6.3; lib/codec.ts): the encode is `pickCodec()`'s
  * (the WebM twin only when MediaCapabilities says it decodes smooth and
@@ -63,7 +74,9 @@ import { Loader } from "@/components/primitives/loader";
  * decoded after loader.showDelayMs (400 ms) the world's mini loader shows,
  * centred in the reserved box (aria-hidden; it idle-stops at 5 s).
  */
-export type MediaFrameState = "poster" | "starting" | "playing" | "failed";
+/** `paused`: the loop's frame is held without the decoder (parked, or GL
+ *  holds it); its video is mounted but not decoding. */
+export type MediaFrameState = "poster" | "starting" | "playing" | "paused" | "failed";
 
 type MediaFrameProps = {
   media: MediaId;
@@ -93,6 +106,9 @@ type MediaFrameProps = {
   className?: string;
   onStateChange?: (state: MediaFrameState) => void;
 };
+
+/** How long a paused (outgoing) loop keeps its frame without the decoder. */
+const PARK_MS = 1500;
 
 function focalPosition(asset: MediaAsset | null): string | undefined {
   const f = asset?.focal;
@@ -135,6 +151,13 @@ export function MediaFrame({
   const [failed, setFailed] = useState(false);
   const [posterLoaded, setPosterLoaded] = useState(false);
   const [loaderDue, setLoaderDue] = useState(false);
+  // under a stage backdrop the live stage is showing (see the header)
+  const [covered, setCovered] = useState(false);
+  // GL holds the loop's frame (gl:frame → gl:release); parked = paused
+  // without the decoder, its frame shown as the still (PARK_MS)
+  const [glHold, setGlHold] = useState(false);
+  const [parked, setParked] = useState(false);
+  const layerOn = useRef(false);
 
   // One decoder claim id per frame (lazy, stable across renders).
   const [claimId] = useState(() => Symbol(`media:${media}`));
@@ -144,27 +167,54 @@ export function MediaFrame({
     () => false,
   );
 
-  const deviceOk = playOn === "any" || (playOn === "desktop" && desktop);
+  const deviceOk = !covered && (playOn === "any" || (playOn === "desktop" && desktop));
   const eligible = Boolean(video) && !reduced && !saveData && deviceOk && !failed;
 
   // In view? Drives both the decoder claim and the pending-poster loader.
+  // Covered by the stage? Re-read when it comes into view and whenever the
+  // stage re-marks its sections (`stage:cover`).
   useEffect(() => {
     const el = boxRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => setInView(Boolean(e?.isIntersecting)), {
-      threshold: 0,
-    });
+    const cover = () => setCovered(Boolean(el.closest(".stage-backdrop")?.closest("[data-stage-on]")));
+    const io = new IntersectionObserver(
+      ([e]) => {
+        setInView(Boolean(e?.isIntersecting));
+        cover();
+      },
+      { threshold: 0 },
+    );
     io.observe(el);
-    return () => io.disconnect();
+    window.addEventListener("stage:cover", cover);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("stage:cover", cover);
+    };
   }, []);
 
-  // Want the decoder while eligible + in view; queue (wait) when refused.
+  // Want the decoder while eligible + in view (and GL is not holding the
+  // frame); queue (wait) when refused. Preempted while playing → park.
   const wantVideo = eligible && inView;
   useEffect(() => {
-    if (!wantVideo) return;
-    acquireDecoder(claimId, { priority: decoderPriority, wait: true, label: media });
+    if (!wantVideo || glHold) return;
+    acquireDecoder(claimId, {
+      priority: decoderPriority,
+      wait: true,
+      label: media,
+      onRevoke: () => {
+        if (layerOn.current) setParked(true);
+      },
+    });
     return () => releaseDecoder(claimId);
-  }, [wantVideo, claimId, decoderPriority, media]);
+  }, [wantVideo, glHold, claimId, decoderPriority, media]);
+
+  // a parked loop gives its frame up after PARK_MS (unless re-granted: then
+  // it plays on; the flag is moot while it holds the decoder)
+  useEffect(() => {
+    if (!parked || glHold) return;
+    const t = window.setTimeout(() => setParked(false), PARK_MS);
+    return () => window.clearTimeout(t);
+  }, [parked, glHold]);
 
   // Poster still pending 400 ms after the frame came into view → the
   // world's mini loader (a lazy offscreen poster is not "pending" yet).
@@ -202,16 +252,18 @@ export function MediaFrame({
     };
   }, [needPick, codecSrc, codecWebm, codecW, codecH]);
 
-  const mountVideo = wantVideo && holdsDecoder && video !== null && pick !== null;
+  const mountVideo = wantVideo && (holdsDecoder || parked || glHold) && video !== null && pick !== null;
   // the intro's prefetched hand-off (a blob: URL + its start), else the pick
   const handoff = mountVideo && pick ? handoffSource(pick.src) : null;
   const [playing, setPlaying] = useState(false);
   const state: MediaFrameState = failed
     ? "failed"
     : mountVideo
-      ? playing
-        ? "playing"
-        : "starting"
+      ? !holdsDecoder || glHold
+        ? "paused"
+        : playing
+          ? "playing"
+          : "starting"
       : "poster";
 
   const reportState = useEffectEvent((s: MediaFrameState) => onStateChange?.(s));
@@ -257,14 +309,26 @@ export function MediaFrame({
 
       {mountVideo && video && pick ? (
         <VideoLayer
+          // a new pick remounts the layer; the hand-off blob arriving late
+          // does not (VideoLayer keeps the source it mounted with)
+          key={pick.src}
           src={handoff?.url ?? pick.src}
           start={handoff?.at ?? 0}
           fade={fade}
           loop={loop}
-          active={visible}
+          active={visible && holdsDecoder && !glHold}
           className={fitClass}
           objectPosition={objectPosition}
-          onMount={() => setPlaying(false)}
+          onMount={() => {
+            layerOn.current = true;
+            setPlaying(false);
+          }}
+          onGl={(held) => {
+            // null: the layer unmounted (nothing to hold or park any more)
+            if (held === null) layerOn.current = false;
+            setGlHold(Boolean(held));
+            setParked(held === false);
+          }}
           onPlaying={() => setPlaying(true)}
           onFail={() => {
             setFailed(true);
@@ -293,6 +357,7 @@ function VideoLayer({
   className,
   objectPosition,
   onMount,
+  onGl,
   onPlaying,
   onFail,
 }: {
@@ -306,17 +371,38 @@ function VideoLayer({
   className: string;
   objectPosition?: string;
   onMount: () => void;
+  /** GL holds this frame (true, `gl:frame`), hands it back (false,
+   *  `gl:release`), or the layer unmounted (null). */
+  onGl: (held: boolean | null) => void;
   onPlaying: () => void;
   onFail: () => void;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shown, setShown] = useState(false);
+  // The source is fixed for the life of this layer: the intro's prefetched
+  // loop can resolve to a blob: URL after the video mounted, and swapping
+  // `src` then would reload the element and leave it paused on frame 0
+  // (the play effect only re-runs on `active`). A remount (mountVideo
+  // toggling, or a new pick) reads the hand-off afresh.
+  const [first] = useState(() => ({ src, start }));
   const mounted = useEffectEvent(onMount);
+  const gl = useEffectEvent(onGl);
   const fail = useEffectEvent(onFail);
 
-  // A fresh layer: the frame's previous "playing" is stale until this one plays.
+  // A fresh layer: the frame's previous "playing" is stale until this one
+  // plays. GL's hand-off events arrive on the <video> itself (they bubble).
   useEffect(() => {
     mounted();
+    const v = ref.current;
+    const hold = () => gl(true);
+    const back = () => gl(false);
+    v?.addEventListener("gl:frame", hold);
+    v?.addEventListener("gl:release", back);
+    return () => {
+      v?.removeEventListener("gl:frame", hold);
+      v?.removeEventListener("gl:release", back);
+      gl(null);
+    };
   }, []);
 
   // Play while the tab is visible, pause while hidden. A rejected play()
@@ -346,7 +432,7 @@ function VideoLayer({
   return (
     <video
       ref={ref}
-      src={src}
+      src={first.src}
       muted
       playsInline
       loop={loop}
@@ -364,7 +450,8 @@ function VideoLayer({
       }}
       onLoadedMetadata={(e) => {
         // the hand-off's match frame (FLIGHTS[*].loopAt), set before play
-        if (start > 0 && start < (e.currentTarget.duration || 0)) e.currentTarget.currentTime = start;
+        const at = first.start;
+        if (at > 0 && at < (e.currentTarget.duration || 0)) e.currentTarget.currentTime = at;
       }}
       onPlaying={() => {
         setShown(true);

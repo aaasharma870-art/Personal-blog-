@@ -5,4 +5,233 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   LAYOUT KEYS ONLY ON THE BOOT GATE (spec §3.2 "Layout gates"; W1 rule):
+   DESKTOP_FINE + no reduced motion + html.js without data-motion-boot
+   "paused" — both set once, pre-paint, so the server HTML is already the
+   final layout and neither a Pause nor a paused reload ever changes a box
+   (P3-2 #11). No rule here matches <html> itself, keys on html.lenis*, or
+   uses a substring attribute selector. Runtime state lives on the card's
+   own section (`data-card-phase`, set by card-p3.tsx at threshold
+   crossings) or on its frame (`data-gl`, W2-GL). Below the gate nothing in
+   this file changes what a card shows (phones, tablets, no JS, RM, a
+   paused boot): the Phase-2 card, byte for byte.
    ========================================================================== */
+
+/* — 1. The pin (spec §7.1, D3-1): per-kind travel, the pin wrapper, the
+     sticky stage. The travel is declared ONLY here, inside the boot gate
+     (validator check 5, scripts/checks/travel.mjs, reads these values
+     against film.cardTravel). — */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) [data-act-card] {
+    --act-card-travel-opening: 90vh;
+    --act-card-travel-seam: 110vh;
+    --act-card-travel-tintype: 90vh;
+    --act-card-travel-ignite: 110vh;
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin="opening"] {
+    --card-travel: var(--act-card-travel-opening);
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin="seam"] {
+    --card-travel: var(--act-card-travel-seam);
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin="tintype"] {
+    --card-travel: var(--act-card-travel-tintype);
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin="ignite"] {
+    --card-travel: var(--act-card-travel-ignite);
+  }
+  /* the wrapper is the p target: 100svh of stage + the travel */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] {
+    min-height: calc(100svh + var(--card-travel, 0px));
+  }
+  /* CSS sticky, never a GSAP pin */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] > .act-card-stage {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+  /* the letterbox geometry measures the STAGE (a size container: 100cqw),
+     not 100vw, so the 17 px scrollbar no longer pushes the frame and its
+     bars off the gutters at 1024 (W1 visual judge 4); the frame keeps the
+     .act-card-letterbox formula (globals.css) otherwise */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] > .act-card-stage {
+    container-type: inline-size;
+    --card-frame-w: min(100cqw, calc((100svh - var(--header-h) - 18.5rem) * var(--letterbox-ratio)));
+    --card-inset: max(var(--spacing-gutter), calc((100cqw - var(--card-frame-w)) / 2));
+  }
+
+  /* the opening: the letterbox grid (its `flow` layout below the gate) */
+  html.js:not([data-motion-boot="paused"]) [data-act-card="opening"] .act-card-stage {
+    grid-template-rows: minmax(calc(var(--header-h) + 8rem), 1fr) auto minmax(8.5rem, auto);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card="opening"] .act-card-upper {
+    padding-inline: var(--card-inset);
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card="opening"] .act-card-frame {
+    width: min(100%, var(--card-frame-w));
+    justify-self: center;
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card="opening"] .act-card-under {
+    width: calc(min(var(--card-frame-w) * 0.56, 44rem) + var(--card-inset) + 1.5rem);
+    padding-right: var(--card-inset);
+  }
+
+  /* the carried line (spec §7.2): every plate the pinned card registers
+     takes its MATCH_ROW crop (plate.tsx registerLine); unlayered, so it
+     wins over PlateBox's sm: utilities */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] [data-plate-reg] {
+    left: var(--pb-l-reg);
+    top: var(--pb-t-reg);
+    width: var(--pb-w-reg);
+    height: var(--pb-h-reg);
+  }
+
+  /* the summary stays screen-reader only in the pinned card, live or not:
+     a Pause never grows the lower bar */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] .act-card-summary {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* the stars' markers on the pin spacer (beats probe + spotlight): star (a)
+     p 0–.45, star (b) .50–1, the impact; centred on the viewport's middle
+     row (the spotlight owns a star while its box crosses the middle 60 %) */
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] > .act-card-beat {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 1px;
+    top: calc(50svh + var(--b0) * var(--card-travel));
+    height: calc((var(--b1) - var(--b0)) * var(--card-travel));
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+.act-card-beat {
+  display: none;
+}
+
+/* — 2. The subtitle (spec §8.4, L5): the act logline as one static line in
+     the lower bar. Screen-reader only below the gate (no layout anywhere:
+     it is absolutely placed in the grid's lower row). — */
+.act-card-subtitle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] .act-card-subtitle {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    inset: 0;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem var(--card-inset) 0;
+    pointer-events: none;
+    /* Geist 500, --fg on the bar's deep (AA by the plane's CALC) */
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--fg);
+    text-align: center;
+  }
+  /* hidden until star (b): kept at (0,1,0) by :where() so cards-pin.css's
+     phase rules ([data-card-phase="b"] .act-card-subtitle, 0,2,0) win (W2
+     gate: at 0,4,1 the logline never showed) */
+  :where(html.js:not([data-motion-boot="paused"]) [data-act-card-pin]) .act-card-subtitle {
+    opacity: 0;
+    transition: opacity 200ms linear;
+  }
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] .act-card-subtitle-line {
+    max-width: min(44rem, 100%);
+    text-wrap: balance;
+  }
+}
+@media (min-width: 80rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) [data-act-card-pin] .act-card-subtitle {
+    font-size: 20px;
+  }
+}
+
+/* — 3–4. The lower bar's phases and the frame's Phase-3 layers live in
+     cards-pin.css (imported by the lazy card-p3.tsx: first-load budget).
+     Only the iris rim's resting state stays here (opening-plate.tsx
+     renders the span on the server). — */
+/* the opening's iris rim (css tier; card-p3.tsx sizes and scales it with
+   the disc: drawn at the full radius, so the brass is ≈ 5 px at the 12 %
+   hook and leaves the frame as the disc opens) */
+.act-card-iris-rim {
+  display: none;
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 36px color-mix(in oklab, var(--w-brass) 88%, #000),
+    inset 0 0 0 46px rgb(0 0 0 / 0.45);
+}
+
+/* — 5. The kraken (pc-kraken, spec §9.1 #6): the upper-bar button (DESKTOP_
+     FINE only, with JS), the css tier's dark mass under the foam, and the
+     tentacle tip above the canvas (it wraps nothing, IC-PC-05). — */
+.act-card-kraken {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  html.js .act-card-kraken {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-start: auto;
+    padding: 0.5rem 0;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--fg-muted);
+    text-decoration: underline dotted;
+    text-underline-offset: 0.3em;
+    cursor: pointer;
+  }
+  html.js .act-card-kraken:hover,
+  html.js .act-card-kraken:focus-visible {
+    color: var(--fg);
+  }
+}
+/* — 6. The opening program over the persistent stage (spec §3.2; stage.css
+     makes `.stage-backdrop` transparent and shows its scrim while the stage
+     marks the section): the section's own ground steps aside for the
+     program, the card's pin keeps it, and the dissolve into About's ground
+     (painted over the stage plate) is not drawn. Never while paused. — */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on][data-act-card="opening"] {
+    background-color: transparent;
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on][data-act-card="opening"] > [data-act-card-pin] {
+    background-color: var(--bg);
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on][data-act-card="opening"] > [data-card-ground="next"] {
+    display: none;
+  }
+}

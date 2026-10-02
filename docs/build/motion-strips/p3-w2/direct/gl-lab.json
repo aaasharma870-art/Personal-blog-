@@ -1,0 +1,270 @@
+{
+ "fresh:seam": {
+  "engagedForCard": true,
+  "ms": 1930,
+  "draws": 5,
+  "distinctFrames": 5,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1138,
+    "ev": "context"
+   },
+   {
+    "t": 2161,
+    "ev": "engage",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 2361,
+    "ev": "settle",
+    "card": "seam",
+    "p": 0
+   }
+  ]
+ },
+ "fresh:opening-alt": {
+  "engagedForCard": true,
+  "ms": 1031,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1202,
+    "ev": "context"
+   },
+   {
+    "t": 1340,
+    "ev": "engage",
+    "card": "opening",
+    "p": 0
+   },
+   {
+    "t": 1541,
+    "ev": "settle",
+    "card": "opening",
+    "p": 0
+   }
+  ]
+ },
+ "fresh:seam-alt": {
+  "engagedForCard": true,
+  "ms": 1064,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1229,
+    "ev": "context"
+   },
+   {
+    "t": 1357,
+    "ev": "engage",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 1557,
+    "ev": "settle",
+    "card": "seam",
+    "p": 0
+   }
+  ]
+ },
+ "fresh:tintype-alt": {
+  "engagedForCard": true,
+  "ms": 964,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1146,
+    "ev": "context"
+   },
+   {
+    "t": 1214,
+    "ev": "engage",
+    "card": "tintype",
+    "p": 0
+   },
+   {
+    "t": 1415,
+    "ev": "settle",
+    "card": "tintype",
+    "p": 0
+   }
+  ]
+ },
+ "fresh:ignite-alt": {
+  "engagedForCard": true,
+  "ms": 1072,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1169,
+    "ev": "context"
+   },
+   {
+    "t": 1326,
+    "ev": "engage",
+    "card": "ignite",
+    "p": 0
+   },
+   {
+    "t": 1526,
+    "ev": "settle",
+    "card": "ignite",
+    "p": 0
+   }
+  ]
+ },
+ "seq:seam": {
+  "engagedForCard": true,
+  "ms": 1840,
+  "draws": 5,
+  "distinctFrames": 5,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 1124,
+    "ev": "context"
+   },
+   {
+    "t": 2034,
+    "ev": "engage",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 2234,
+    "ev": "settle",
+    "card": "seam",
+    "p": 0
+   }
+  ]
+ },
+ "seq:opening-alt": {
+  "engagedForCard": true,
+  "ms": 156,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 5998,
+    "ev": "disengage:now",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 6113,
+    "ev": "engage",
+    "card": "opening",
+    "p": 0
+   },
+   {
+    "t": 6313,
+    "ev": "settle",
+    "card": "opening",
+    "p": 0
+   }
+  ]
+ },
+ "seq:seam-alt": {
+  "engagedForCard": true,
+  "ms": 157,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 9913,
+    "ev": "disengage:now",
+    "card": "opening",
+    "p": 0
+   },
+   {
+    "t": 10037,
+    "ev": "engage",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 10238,
+    "ev": "settle",
+    "card": "seam",
+    "p": 0
+   }
+  ]
+ },
+ "seq:tintype-alt": {
+  "engagedForCard": true,
+  "ms": 156,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 13962,
+    "ev": "disengage:now",
+    "card": "seam",
+    "p": 0
+   },
+   {
+    "t": 14070,
+    "ev": "engage",
+    "card": "tintype",
+    "p": 0
+   },
+   {
+    "t": 14270,
+    "ev": "settle",
+    "card": "tintype",
+    "p": 0
+   }
+  ]
+ },
+ "seq:ignite-alt": {
+  "engagedForCard": true,
+  "ms": 155,
+  "draws": 5,
+  "distinctFrames": 4,
+  "gl": "on",
+  "contexts": 1,
+  "log": [
+   {
+    "t": 18053,
+    "ev": "disengage:now",
+    "card": "tintype",
+    "p": 0
+   },
+   {
+    "t": 18187,
+    "ev": "engage",
+    "card": "ignite",
+    "p": 0
+   },
+   {
+    "t": 18387,
+    "ev": "settle",
+    "card": "ignite",
+    "p": 0
+   }
+  ]
+ }
+}

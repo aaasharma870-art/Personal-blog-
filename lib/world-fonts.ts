@@ -54,28 +54,45 @@ function addToken(world: WorldId): boolean {
   return true;
 }
 
-/** Mark `world`'s faces live and resolve when they have loaded, or after
- *  `timeoutMs` (default 300 ms), whichever comes first. Never rejects. On
- *  phones (below DESKTOP_WIDE) and for "house" it resolves at once. */
+/** Load `world`'s faces, then mark them live (the token), and resolve —
+ *  when they have loaded, or after `timeoutMs` (default 300 ms), whichever
+ *  comes first. The token waits for the faces so the swap happens once,
+ *  on loaded faces (never fallback → face while a slow file streams in:
+ *  the W1 gate's scroll CLS was a caption swapping in view). Never
+ *  rejects. On phones (below DESKTOP_WIDE) and for "house" it marks and
+ *  resolves at once. */
 export function markWorldFontsReady(world: WorldId, timeoutMs = 300): Promise<void> {
   if (typeof document === "undefined") return Promise.resolve();
-  addToken(world);
   const fonts = document.fonts;
   const wide = typeof window.matchMedia === "function" && window.matchMedia(DESKTOP_WIDE).matches;
-  if (!wide || !fonts || typeof fonts.load !== "function" || FACES[world].length === 0) return Promise.resolve();
+  if (!wide || !fonts || typeof fonts.load !== "function" || FACES[world].length === 0) {
+    addToken(world);
+    return Promise.resolve();
+  }
+  // Read the family names BEFORE the token changes <html>: the token
+  // invalidates the whole document's style, and a computed-style read
+  // after it would force that restyle inside the caller (the fast lane's
+  // click). The faces' vars come from next/font classes, not the token.
   const style = window.getComputedStyle(document.documentElement);
-  const loads = FACES[world].map(([v, weight]) => {
-    const family = style.getPropertyValue(v).trim();
+  const families = FACES[world].map(([v, weight]) => [style.getPropertyValue(v).trim(), weight] as const);
+  const loads = families.map(([family, weight]) => {
     return family ? fonts.load(`${weight} 1em ${family}`).then(
       () => undefined,
       () => undefined,
     ) : Promise.resolve();
   });
   return new Promise<void>((resolve) => {
-    const t = window.setTimeout(resolve, Math.max(0, timeoutMs));
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      addToken(world);
+      resolve();
+    };
+    const t = window.setTimeout(finish, Math.max(0, timeoutMs));
     void Promise.all(loads).then(() => {
       window.clearTimeout(t);
-      resolve();
+      finish();
     });
   });
 }

@@ -1,0 +1,6537 @@
+{
+ "meta": {
+  "base": "http://localhost:3161",
+  "date": "2026-10-02T22:01:03.169Z",
+  "chromium": "141.0.7390.37",
+  "cpus": 4,
+  "nth": 1,
+  "pop": {
+   "factor": 3,
+   "maxDy": 40,
+   "floor": 2,
+   "win": 31,
+   "group": 150
+  },
+  "params": {
+   "wheel": "100px / 110ms, pause 1200ms, in-flight ≤ 8",
+   "touch": "1200px/s, 0.7 vh gestures"
+  },
+  "note": "Headless Chromium rasterises in software (SwiftShader) on a few CPUs and pays for the screencast readback, so absolute frame times are pessimistic vs a real laptop/phone GPU. Read them as RELATIVE hotspots: which sections and transitions are worst. \"busy∩jank %\" = share of >33.4 ms frames that overlap a long animation frame in which the main thread really worked (script + style/layout/paint >= half the frame, or a >50 ms task); low = the frame was raster/composite-bound (the LoAF is the main thread waiting on the compositor), high = main-thread script/style/layout. \"paint suspects\" = what the section holds that is costly to raster (filters, blend, masks, canvas, video, image megapixels, infinite animations)."
+ },
+ "runs": [
+  {
+   "introWindow": null,
+   "run": "desktop",
+   "url": "/?skip=intro",
+   "lenis": true,
+   "viewport": "1440x900",
+   "pageHeight": 47041,
+   "durationS": 77.7,
+   "scroll": {
+    "pauses": [
+     {
+      "key": "act-1",
+      "target": 1641,
+      "y": 1900,
+      "at": 4075
+     },
+     {
+      "key": "act-2",
+      "target": 7960,
+      "y": 8213,
+      "at": 14263
+     },
+     {
+      "key": "films-pirates",
+      "target": 23973,
+      "y": 24513,
+      "at": 34963
+     },
+     {
+      "key": "films-idiots",
+      "target": 25205,
+      "y": 25313,
+      "at": 38338
+     },
+     {
+      "key": "films-rdr2",
+      "target": 26445,
+      "y": 26513,
+      "at": 42407
+     },
+     {
+      "key": "films-hp",
+      "target": 27688,
+      "y": 27713,
+      "at": 46493
+     },
+     {
+      "key": "act-3",
+      "target": 29327,
+      "y": 29513,
+      "at": 51509
+     },
+     {
+      "key": "act-4",
+      "target": 39477,
+      "y": 39713,
+      "at": 65428
+     }
+    ],
+    "ms": 76104
+   },
+   "screencast": {
+    "frames": 487,
+    "fps": 6.3
+   },
+   "frame": {
+    "frames": 989,
+    "p50": 16.7,
+    "p95": 300,
+    "p99": 566.6,
+    "jank33": 39.3,
+    "jank50": 35.1,
+    "max": 1033.3,
+    "maxAtY": 43341,
+    "mean": 78.6,
+    "fps": 12.7
+   },
+   "whole": {
+    "busyJankPct": 3.9,
+    "loafMs": 63413,
+    "workPct": 2.7,
+    "waitPct": 97.3,
+    "scriptPct": 2.2,
+    "styleLayoutPct": 0.5,
+    "topScripts": [
+     {
+      "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+      "ms": 634
+     },
+     {
+      "script": "user-callback:IntersectionObserverCallback @ 17uxrkbdeaanq.js",
+      "ms": 278
+     },
+     {
+      "script": "resolve-promise:Promise.resolve @ 1vb142oniqzf6.js",
+      "ms": 180
+     }
+    ]
+   },
+   "loaf": {
+    "count": 355,
+    "totalMs": 63413,
+    "blockingMs": 933,
+    "workMs": 1708,
+    "worst": [
+     {
+      "t": 71.48,
+      "sec": "contact",
+      "dur": 1010,
+      "block": 0,
+      "work": 1,
+      "render": 6,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 56.66,
+      "sec": "beyond",
+      "dur": 881,
+      "block": 0,
+      "work": 5,
+      "render": 10,
+      "styleLayout": 5,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 0.68,
+      "sec": "top",
+      "dur": 782,
+      "block": 0,
+      "work": 1,
+      "render": 4,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 3.46,
+      "sec": "act-1",
+      "dur": 688,
+      "block": 0,
+      "work": 1,
+      "render": 11,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 10.7,
+      "sec": "journey",
+      "dur": 618,
+      "block": 0,
+      "work": 1,
+      "render": 5,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     }
+    ],
+    "worstWork": [
+     {
+      "t": 1.48,
+      "sec": "act-1",
+      "dur": 294,
+      "block": 238,
+      "work": 279,
+      "styleLayout": 1,
+      "scriptMs": 278,
+      "scripts": [
+       {
+        "d": 278,
+        "inv": "IntersectionObserverCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/17uxrkbdeaanq.js",
+        "fn": "",
+        "pos": 24641,
+        "fsl": 0,
+        "snippet": "e=>{e.forEach(e=>{let t=H.get(e.target);if(!t)return;let r=e.boundingClientRect;t.visible=e.isIntersecting&&e.intersectionRatio>0,t.dist=Mat"
+       }
+      ]
+     },
+     {
+      "t": 9.68,
+      "sec": "journey",
+      "dur": 447,
+      "block": 156,
+      "work": 181,
+      "styleLayout": 1,
+      "scriptMs": 180,
+      "scripts": [
+       {
+        "d": 180,
+        "inv": "Promise.resolve",
+        "type": "resolve-promise",
+        "src": "http://localhost:3161/_next/static/chunks/1vb142oniqzf6.js",
+        "fn": "",
+        "pos": -1,
+        "fsl": 170,
+        "snippet": null
+       }
+      ]
+     },
+     {
+      "t": 42.19,
+      "sec": "films",
+      "dur": 168,
+      "block": 118,
+      "work": 164,
+      "styleLayout": 2,
+      "scriptMs": 162,
+      "scripts": [
+       {
+        "d": 162,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     },
+     {
+      "t": 15.02,
+      "sec": "act-2",
+      "dur": 160,
+      "block": 110,
+      "work": 158,
+      "styleLayout": 0,
+      "scriptMs": 158,
+      "scripts": [
+       {
+        "d": 158,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     },
+     {
+      "t": 12.3,
+      "sec": "act-2",
+      "dur": 268,
+      "block": 11,
+      "work": 56,
+      "styleLayout": 1,
+      "scriptMs": 55,
+      "scripts": [
+       {
+        "d": 55,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     }
+    ]
+   },
+   "cls": {
+    "total": 0.0039,
+    "sessionMax": 0.0016,
+    "count": 11,
+    "withInput": 0,
+    "top": [
+     {
+      "t": 69.59,
+      "v": 0.0016,
+      "sec": "principles",
+      "sources": [
+       {
+        "node": "h3.type-title.text-fg.max-sm:hyphens-auto in #principles",
+        "prev": [
+         405,
+         0,
+         623,
+         149
+        ],
+        "cur": [
+         405,
+         0,
+         623,
+         139
+        ]
+       },
+       {
+        "node": "h3.type-title.text-fg.max-sm:hyphens-auto in #principles",
+        "prev": [
+         406,
+         334,
+         622,
+         157
+        ],
+        "cur": [
+         406,
+         324,
+         622,
+         157
+        ]
+       },
+       {
+        "node": "h3.type-title.text-fg.max-sm:hyphens-auto in #principles",
+        "prev": [
+         408,
+         676,
+         620,
+         158
+        ],
+        "cur": [
+         408,
+         666,
+         620,
+         158
+        ]
+       }
+      ]
+     },
+     {
+      "t": 25.02,
+      "v": 0.001,
+      "sec": "optuna-screener",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.max-w-title.type-title in #optuna-screener",
+        "prev": [
+         64,
+         5,
+         620,
+         159
+        ],
+        "cur": [
+         64,
+         0,
+         620,
+         146
+        ]
+       }
+      ]
+     },
+     {
+      "t": 61.56,
+      "v": 0.0003,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         49,
+         592,
+         114
+        ],
+        "cur": [
+         64,
+         42,
+         592,
+         114
+        ]
+       }
+      ]
+     },
+     {
+      "t": 59.82,
+      "v": 0.0003,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         275,
+         592,
+         113
+        ],
+        "cur": [
+         64,
+         268,
+         592,
+         113
+        ]
+       }
+      ]
+     },
+     {
+      "t": 60.85,
+      "v": 0.0003,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         5,
+         592,
+         114
+        ],
+        "cur": [
+         64,
+         0,
+         592,
+         112
+        ]
+       }
+      ]
+     },
+     {
+      "t": 61.28,
+      "v": 0.0003,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         62,
+         0,
+         594,
+         117
+        ],
+        "cur": [
+         62,
+         0,
+         594,
+         110
+        ]
+       }
+      ]
+     },
+     {
+      "t": 60.41,
+      "v": 0.0002,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         78,
+         592,
+         63
+        ],
+        "cur": [
+         64,
+         71,
+         592,
+         63
+        ]
+       }
+      ]
+     },
+     {
+      "t": 20.39,
+      "v": 0.0001,
+      "sec": "trading-algos",
+      "sources": [
+       {
+        "node": "span.scene-caption__film.world-face-idiots in #trading-algos",
+        "prev": [
+         64,
+         0,
+         704,
+         5
+        ],
+        "cur": [
+         0,
+         0,
+         0,
+         0
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "pops": [
+    {
+     "seq": 24,
+     "t": 6.214,
+     "tEnd": 6.214,
+     "y": 1900,
+     "sec": "act-1",
+     "dy": 18,
+     "diff": 8.2,
+     "resid": 8.5,
+     "median": 0.3,
+     "ratio": 23.8,
+     "frames": 1,
+     "kind": "change",
+     "area": 18.6
+    },
+    {
+     "seq": 25,
+     "t": 6.523,
+     "tEnd": 6.523,
+     "y": 1900,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 9.5,
+     "resid": 9.7,
+     "median": 0.7,
+     "ratio": 14.3,
+     "frames": 1,
+     "kind": "change",
+     "area": 18.1
+    },
+    {
+     "seq": 88,
+     "t": 17.122,
+     "tEnd": 17.122,
+     "y": 8468,
+     "sec": "work",
+     "dy": 27,
+     "diff": 17.9,
+     "resid": 20.7,
+     "median": 4.5,
+     "ratio": 4,
+     "frames": 1,
+     "kind": "change",
+     "area": 28.9
+    }
+   ],
+   "diffStats": {
+    "n": 486,
+    "p50": 8.9,
+    "p95": 36,
+    "max": 81.6
+   },
+   "sections": {
+    "top": {
+     "frames": 9,
+     "p50": 16.7,
+     "p95": 799.9,
+     "p99": 799.9,
+     "jank33": 33.3,
+     "jank50": 33.3,
+     "max": 799.9,
+     "maxAtY": 178,
+     "mean": 164.8,
+     "fps": 6.1,
+     "paint": {
+      "paintsPerS": 19.6,
+      "rasterMsPerS": 294.6,
+      "paintMs": 21,
+      "rasterMs": 437,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 11,
+        "ms": 18
+       },
+       {
+        "node": "div#act-1-program.relative.px-gutter.pt-tier-group in #act-1",
+        "n": 8,
+        "ms": 0.7
+       },
+       {
+        "node": "div.absolute.inset-0.origin-center in #top",
+        "n": 3,
+        "ms": 1
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 3,
+        "ms": 0.5
+       }
+      ]
+     },
+     "loaf": 3,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1378,
+     "workPct": 0.1,
+     "waitPct": 99.9,
+     "scriptPct": 0,
+     "styleLayoutPct": 0.1,
+     "topScripts": [],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 1,
+      "mask": 1,
+      "willChange": 5,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 0,
+      "anims": 2
+     },
+     "idle": {
+      "fps": 37.1,
+      "rasterMsPerS": 155.9,
+      "paintMsPerS": 2.9,
+      "paintsPerS": 4.7,
+      "styleLayoutMsPerS": 1.3,
+      "rafJsMsPerS": 15.6,
+      "repaints": [
+       {
+        "n": 4,
+        "ms": 4.2,
+        "desc": "#document"
+       },
+       {
+        "n": 3,
+        "ms": 0.2,
+        "desc": "video.absolute.inset-0.size-full"
+       }
+      ]
+     }
+    },
+    "act-1": {
+     "frames": 25,
+     "p50": 233.3,
+     "p95": 366.7,
+     "p99": 700,
+     "jank33": 92,
+     "jank50": 88,
+     "max": 700,
+     "maxAtY": 1882,
+     "mean": 220,
+     "fps": 4.5,
+     "paint": {
+      "paintsPerS": 23.8,
+      "rasterMsPerS": 591.8,
+      "paintMs": 37,
+      "rasterMs": 3255,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 28
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-1",
+        "n": 15,
+        "ms": 1.7
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 15,
+        "ms": 1.3
+       },
+       {
+        "node": "node 70",
+        "n": 8,
+        "ms": 0.6
+       }
+      ]
+     },
+     "loaf": 22,
+     "loafBlockMs": 238,
+     "cls": 0,
+     "busyJankPct": 13,
+     "loafMs": 5300,
+     "workPct": 6.2,
+     "waitPct": 93.8,
+     "scriptPct": 5.9,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 17uxrkbdeaanq.js",
+       "ms": 278
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 13
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 18,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 14,
+      "anims": 14
+     },
+     "idle": {
+      "fps": 24,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 5.4,
+      "rafJsMsPerS": 11.8,
+      "repaints": []
+     }
+    },
+    "about": {
+     "frames": 9,
+     "p50": 216.7,
+     "p95": 400,
+     "p99": 400,
+     "jank33": 88.9,
+     "jank50": 88.9,
+     "max": 400,
+     "maxAtY": 3061,
+     "mean": 218.5,
+     "fps": 4.6,
+     "paint": {
+      "paintsPerS": 26.4,
+      "rasterMsPerS": 757.1,
+      "paintMs": 15,
+      "rasterMs": 1489,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 9,
+        "ms": 11.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 9,
+        "ms": 1.4
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 9,
+        "ms": 0.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-1",
+        "n": 9,
+        "ms": 0.6
+       }
+      ]
+     },
+     "loaf": 8,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1879,
+     "workPct": 3.4,
+     "waitPct": 96.6,
+     "scriptPct": 2.9,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 30
+      },
+      {
+       "script": "user-callback:TimerHandler:setInterval",
+       "ms": 5
+      },
+      {
+       "script": "event-listener:#document.onwheel @ 3p9eevrhj-twl.js fO",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.8,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 16.1,
+      "rafJsMsPerS": 36.8,
+      "repaints": []
+     }
+    },
+    "journey": {
+     "frames": 16,
+     "p50": 150.1,
+     "p95": 616.6,
+     "p99": 616.6,
+     "jank33": 93.8,
+     "jank50": 93.8,
+     "max": 616.6,
+     "maxAtY": 5913,
+     "mean": 192.7,
+     "fps": 5.2,
+     "paint": {
+      "paintsPerS": 34.1,
+      "rasterMsPerS": 811.2,
+      "paintMs": 36,
+      "rasterMs": 2501,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 16,
+        "ms": 27.1
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 16,
+        "ms": 2.1
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 15,
+        "ms": 0.6
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-1",
+        "n": 12,
+        "ms": 0.9
+       }
+      ]
+     },
+     "loaf": 14,
+     "loafBlockMs": 156,
+     "cls": 0,
+     "busyJankPct": 13.3,
+     "loafMs": 2856,
+     "workPct": 7,
+     "waitPct": 93,
+     "scriptPct": 6.5,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "resolve-promise:Promise.resolve @ 1vb142oniqzf6.js",
+       "ms": 180
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 0.8,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 0.5,
+      "rasterMsPerS": 18.6,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 1.1,
+      "rafJsMsPerS": 1.4,
+      "repaints": []
+     }
+    },
+    "act-2": {
+     "frames": 32,
+     "p50": 116.7,
+     "p95": 399.9,
+     "p99": 500,
+     "jank33": 84.4,
+     "jank50": 84.4,
+     "max": 500,
+     "maxAtY": 8213,
+     "mean": 149.5,
+     "fps": 6.7,
+     "paint": {
+      "paintsPerS": 39.3,
+      "rasterMsPerS": 745.9,
+      "paintMs": 51,
+      "rasterMs": 3568,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 24,
+        "ms": 42.2
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 20,
+        "ms": 2
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 20,
+        "ms": 0.7
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 20,
+        "ms": 0.7
+       }
+      ]
+     },
+     "loaf": 26,
+     "loafBlockMs": 121,
+     "cls": 0,
+     "busyJankPct": 14.8,
+     "loafMs": 4437,
+     "workPct": 6.5,
+     "waitPct": 93.5,
+     "scriptPct": 6.1,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 250
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 11
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 20,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 4.7,
+      "infiniteAnims": 12,
+      "anims": 12
+     },
+     "idle": {
+      "fps": 60.3,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 20.6,
+      "repaints": []
+     }
+    },
+    "work": {
+     "frames": 19,
+     "p50": 116.7,
+     "p95": 316.7,
+     "p99": 316.7,
+     "jank33": 89.5,
+     "jank50": 84.2,
+     "max": 316.7,
+     "maxAtY": 11124,
+     "mean": 137.7,
+     "fps": 7.3,
+     "paint": {
+      "paintsPerS": 38.6,
+      "rasterMsPerS": 831.6,
+      "paintMs": 30,
+      "rasterMs": 2176,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 14,
+        "ms": 25
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 11,
+        "ms": 1.4
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 11,
+        "ms": 1.4
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 11,
+        "ms": 0.6
+       }
+      ]
+     },
+     "loaf": 17,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2467,
+     "workPct": 3.5,
+     "waitPct": 96.5,
+     "scriptPct": 3,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 65
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 3,
+      "backdrop": 0,
+      "blend": 1,
+      "mask": 2,
+      "willChange": 2,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 1.6,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.4,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 17.6,
+      "repaints": []
+     }
+    },
+    "trading-algos": {
+     "frames": 16,
+     "p50": 133.4,
+     "p95": 583.3,
+     "p99": 583.3,
+     "jank33": 87.5,
+     "jank50": 81.3,
+     "max": 583.3,
+     "maxAtY": 12335,
+     "mean": 171.9,
+     "fps": 5.8,
+     "paint": {
+      "paintsPerS": 36.7,
+      "rasterMsPerS": 812,
+      "paintMs": 41,
+      "rasterMs": 2233,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 15,
+        "ms": 31.7
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 15,
+        "ms": 1.2
+       },
+       {
+        "node": "div.stage-window in #optuna-screener",
+        "n": 15,
+        "ms": 0.5
+       },
+       {
+        "node": "node 256",
+        "n": 14,
+        "ms": 4.1
+       }
+      ]
+     },
+     "loaf": 13,
+     "loafBlockMs": 0,
+     "cls": 0.0001,
+     "busyJankPct": 0,
+     "loafMs": 2552,
+     "workPct": 3.4,
+     "waitPct": 96.6,
+     "scriptPct": 2.9,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 51
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 19
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 14.2,
+      "rafJsMsPerS": 33.2,
+      "repaints": []
+     }
+    },
+    "optuna-screener": {
+     "frames": 29,
+     "p50": 116.7,
+     "p95": 333.4,
+     "p99": 349.9,
+     "jank33": 89.7,
+     "jank50": 72.4,
+     "max": 349.9,
+     "maxAtY": 13717,
+     "mean": 141.9,
+     "fps": 7,
+     "paint": {
+      "paintsPerS": 25.3,
+      "rasterMsPerS": 821.6,
+      "paintMs": 51,
+      "rasterMs": 3382,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 25,
+        "ms": 46.1
+       },
+       {
+        "node": "div.stage-window in #trading-algos",
+        "n": 18,
+        "ms": 2.9
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 15,
+        "ms": 0.9
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 9,
+        "ms": 0.5
+       }
+      ]
+     },
+     "loaf": 23,
+     "loafBlockMs": 0,
+     "cls": 0.001,
+     "busyJankPct": 0,
+     "loafMs": 3790,
+     "workPct": 3.1,
+     "waitPct": 96.9,
+     "scriptPct": 2.5,
+     "styleLayoutPct": 0.6,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 59
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 14
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 14
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 1.2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.2,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 13.3,
+      "rafJsMsPerS": 31.7,
+      "repaints": []
+     }
+    },
+    "experiment": {
+     "frames": 17,
+     "p50": 83.3,
+     "p95": 200,
+     "p99": 200,
+     "jank33": 76.5,
+     "jank50": 64.7,
+     "max": 200,
+     "maxAtY": 17628,
+     "mean": 80.4,
+     "fps": 12.4,
+     "paint": {
+      "paintsPerS": 34.4,
+      "rasterMsPerS": 773.5,
+      "paintMs": 16,
+      "rasterMs": 1057,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 12,
+        "ms": 14.7
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 9,
+        "ms": 0.1
+       },
+       {
+        "node": "div.absolute.inset-x-0.top-0 in #kill-list",
+        "n": 7,
+        "ms": 0.4
+       },
+       {
+        "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+        "n": 7,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 10,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1080,
+     "workPct": 1.1,
+     "waitPct": 98.9,
+     "scriptPct": 0.5,
+     "styleLayoutPct": 0.6,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.1,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 16.2,
+      "repaints": []
+     }
+    },
+    "systems": {
+     "frames": 17,
+     "p50": 133.3,
+     "p95": 466.6,
+     "p99": 466.6,
+     "jank33": 88.2,
+     "jank50": 82.4,
+     "max": 466.6,
+     "maxAtY": 20267,
+     "mean": 156.9,
+     "fps": 6.4,
+     "paint": {
+      "paintsPerS": 22.9,
+      "rasterMsPerS": 867.8,
+      "paintMs": 24,
+      "rasterMs": 2314,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 15,
+        "ms": 22.9
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 12,
+        "ms": 0.2
+       },
+       {
+        "node": "div.stage-window in #optuna-screener",
+        "n": 9,
+        "ms": 0.4
+       },
+       {
+        "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+        "n": 9,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 15,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2552,
+     "workPct": 1.2,
+     "waitPct": 98.8,
+     "scriptPct": 0.7,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 14
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 2gtmnwptgq-6o.js",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 1,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.5,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 16.5,
+      "repaints": []
+     }
+    },
+    "kill-list": {
+     "frames": 11,
+     "p50": 216.6,
+     "p95": 450,
+     "p99": 450,
+     "jank33": 100,
+     "jank50": 100,
+     "max": 450,
+     "maxAtY": 22408,
+     "mean": 230.3,
+     "fps": 4.3,
+     "paint": {
+      "paintsPerS": 19.3,
+      "rasterMsPerS": 928.1,
+      "paintMs": 23,
+      "rasterMs": 2351,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 11,
+        "ms": 20.5
+       },
+       {
+        "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+        "n": 11,
+        "ms": 0.3
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 10,
+        "ms": 0.8
+       },
+       {
+        "node": "div.absolute.inset-x-0.top-0 in #kill-list",
+        "n": 7,
+        "ms": 0.7
+       }
+      ]
+     },
+     "loaf": 11,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2468,
+     "workPct": 0.7,
+     "waitPct": 99.3,
+     "scriptPct": 0.4,
+     "styleLayoutPct": 0.3,
+     "topScripts": [
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 3,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.3,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.3,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 18.3,
+      "repaints": []
+     }
+    },
+    "films": {
+     "frames": 440,
+     "p50": 16.7,
+     "p95": 166.7,
+     "p99": 333.4,
+     "jank33": 12.5,
+     "jank50": 10.7,
+     "max": 516.7,
+     "maxAtY": 27395,
+     "mean": 36.2,
+     "fps": 27.6,
+     "paint": {
+      "paintsPerS": 24.7,
+      "rasterMsPerS": 482.7,
+      "paintMs": 201,
+      "rasterMs": 7698,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 153,
+        "ms": 178.9
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 1778 1000 in #films",
+        "n": 73,
+        "ms": 4.2
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 59,
+        "ms": 6.3
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 2333 1000 in #films",
+        "n": 36,
+        "ms": 3.5
+       }
+      ]
+     },
+     "loaf": 47,
+     "loafBlockMs": 418,
+     "cls": 0,
+     "busyJankPct": 10.9,
+     "loafMs": 8832,
+     "workPct": 2.5,
+     "waitPct": 97.5,
+     "scriptPct": 2.1,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 169
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 17
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 4,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 3.9,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 19.7,
+      "repaints": []
+     }
+    },
+    "act-3": {
+     "frames": 98,
+     "p50": 16.7,
+     "p95": 233.3,
+     "p99": 550,
+     "jank33": 20.4,
+     "jank50": 18.4,
+     "max": 550,
+     "maxAtY": 29512,
+     "mean": 53.2,
+     "fps": 18.8,
+     "paint": {
+      "paintsPerS": 29.5,
+      "rasterMsPerS": 502.4,
+      "paintMs": 65,
+      "rasterMs": 2621,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 44,
+        "ms": 54.1
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 42,
+        "ms": 1.8
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-3",
+        "n": 25,
+        "ms": 1
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 20,
+        "ms": 7
+       }
+      ]
+     },
+     "loaf": 19,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3652,
+     "workPct": 0.3,
+     "waitPct": 99.7,
+     "scriptPct": 0.1,
+     "styleLayoutPct": 0.2,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 6,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 18,
+      "repaints": []
+     }
+    },
+    "beyond": {
+     "frames": 24,
+     "p50": 149.9,
+     "p95": 616.6,
+     "p99": 866.7,
+     "jank33": 91.7,
+     "jank50": 83.3,
+     "max": 866.7,
+     "maxAtY": 32261,
+     "mean": 204.2,
+     "fps": 4.9,
+     "paint": {
+      "paintsPerS": 26.1,
+      "rasterMsPerS": 754.7,
+      "paintMs": 35,
+      "rasterMs": 3698,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 29.2
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 19,
+        "ms": 2.6
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 16,
+        "ms": 0.5
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 13,
+        "ms": 0.4
+       }
+      ]
+     },
+     "loaf": 21,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 4723,
+     "workPct": 0.6,
+     "waitPct": 99.4,
+     "scriptPct": 0.2,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 3dewhjypacr5m.js t",
+       "ms": 11
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 6,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 3,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": {
+      "fps": 60.1,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 18.7,
+      "repaints": []
+     }
+    },
+    "writing": {
+     "frames": 32,
+     "p50": 99.9,
+     "p95": 150,
+     "p99": 166.7,
+     "jank33": 81.3,
+     "jank50": 71.9,
+     "max": 166.7,
+     "maxAtY": 36556,
+     "mean": 86.5,
+     "fps": 11.6,
+     "paint": {
+      "paintsPerS": 65.4,
+      "rasterMsPerS": 794.8,
+      "paintMs": 37,
+      "rasterMs": 2199,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 30,
+        "ms": 31.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 27,
+        "ms": 2.4
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 27,
+        "ms": 0.8
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 27,
+        "ms": 0.4
+       }
+      ]
+     },
+     "loaf": 25,
+     "loafBlockMs": 0,
+     "cls": 0.0012,
+     "busyJankPct": 0,
+     "loafMs": 2449,
+     "workPct": 1.5,
+     "waitPct": 98.5,
+     "scriptPct": 0.6,
+     "styleLayoutPct": 0.9,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 2gtmnwptgq-6o.js",
+       "ms": 10
+      },
+      {
+       "script": "event-listener:#document.onscroll @ 3p9eevrhj-twl.js fO",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 3,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 17.6,
+      "repaints": []
+     }
+    },
+    "voices": {
+     "frames": 31,
+     "p50": 33.2,
+     "p95": 183.4,
+     "p99": 333.3,
+     "jank33": 45.2,
+     "jank50": 38.7,
+     "max": 333.3,
+     "maxAtY": 38270,
+     "mean": 60.2,
+     "fps": 16.6,
+     "paint": {
+      "paintsPerS": 105,
+      "rasterMsPerS": 849.1,
+      "paintMs": 43,
+      "rasterMs": 1585,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 30,
+        "ms": 37.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 25,
+        "ms": 2.2
+       },
+       {
+        "node": "div.absolute.inset-0.-z-10 in #principles",
+        "n": 25,
+        "ms": 0.7
+       },
+       {
+        "node": "div.origin-right in #principles",
+        "n": 25,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 12,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1362,
+     "workPct": 3.3,
+     "waitPct": 96.7,
+     "scriptPct": 2.7,
+     "styleLayoutPct": 0.6,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 32
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 2,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": {
+      "fps": 60,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 18.2,
+      "repaints": []
+     }
+    },
+    "act-4": {
+     "frames": 88,
+     "p50": 16.7,
+     "p95": 233.4,
+     "p99": 566.6,
+     "jank33": 25,
+     "jank50": 20.5,
+     "max": 566.6,
+     "maxAtY": 40043,
+     "mean": 55.1,
+     "fps": 18.1,
+     "paint": {
+      "paintsPerS": 25.2,
+      "rasterMsPerS": 580.2,
+      "paintMs": 43,
+      "rasterMs": 2814,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 27,
+        "ms": 39.7
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 25,
+        "ms": 0.9
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-4",
+        "n": 14,
+        "ms": 0.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 13,
+        "ms": 2
+       }
+      ]
+     },
+     "loaf": 19,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3448,
+     "workPct": 1.3,
+     "waitPct": 98.7,
+     "scriptPct": 0.9,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 3iq4ltb5_88fz.js f",
+       "ms": 13
+      },
+      {
+       "script": "resolve-promise:Promise.resolve @ 2rd4rw62hke7d.js",
+       "ms": 9
+      },
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 26,
+      "video": 0,
+      "canvas": 2,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 21,
+      "anims": 21
+     },
+     "idle": {
+      "fps": 60.4,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 19.1,
+      "repaints": []
+     }
+    },
+    "principles": {
+     "frames": 10,
+     "p50": 350,
+     "p95": 500,
+     "p99": 500,
+     "jank33": 100,
+     "jank50": 100,
+     "max": 500,
+     "maxAtY": 40866,
+     "mean": 305,
+     "fps": 3.3,
+     "paint": {
+      "paintsPerS": 12.8,
+      "rasterMsPerS": 1066.6,
+      "paintMs": 21,
+      "rasterMs": 3253,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 10,
+        "ms": 19
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 10,
+        "ms": 1.4
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 9,
+        "ms": 0.3
+       },
+       {
+        "node": "div.origin-right in #principles",
+        "n": 4,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 10,
+     "loafBlockMs": 0,
+     "cls": 0.0016,
+     "busyJankPct": 0,
+     "loafMs": 2981,
+     "workPct": 0.6,
+     "waitPct": 99.4,
+     "scriptPct": 0.3,
+     "styleLayoutPct": 0.3,
+     "topScripts": [
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 7,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.1,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 16.2,
+      "repaints": []
+     }
+    },
+    "contact": {
+     "frames": 3,
+     "p50": 583.3,
+     "p95": 1033.3,
+     "p99": 1033.3,
+     "jank33": 100,
+     "jank50": 100,
+     "max": 1033.3,
+     "maxAtY": 43341,
+     "mean": 672.2,
+     "fps": 1.5,
+     "paint": {
+      "paintsPerS": 10.4,
+      "rasterMsPerS": 864.3,
+      "paintMs": 10,
+      "rasterMs": 1743,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 3,
+        "ms": 7.4
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 3,
+        "ms": 1.7
+       },
+       {
+        "node": "div.stage-cam",
+        "n": 2,
+        "ms": 0.1
+       },
+       {
+        "node": "div.stage-layer",
+        "n": 1,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 3,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1973,
+     "workPct": 0.1,
+     "waitPct": 99.9,
+     "scriptPct": 0,
+     "styleLayoutPct": 0.1,
+     "topScripts": [],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.9,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 17.7,
+      "repaints": []
+     }
+    },
+    "credits": {
+     "frames": 63,
+     "p50": 50.1,
+     "p95": 133.4,
+     "p99": 599.9,
+     "jank33": 71.4,
+     "jank50": 55.6,
+     "max": 599.9,
+     "maxAtY": 44400,
+     "mean": 67.2,
+     "fps": 14.9,
+     "paint": {
+      "paintsPerS": 13,
+      "rasterMsPerS": 478.6,
+      "paintMs": 44,
+      "rasterMs": 2026,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 29,
+        "ms": 38.9
+       },
+       {
+        "node": "div.stage-cam",
+        "n": 15,
+        "ms": 1.1
+       },
+       {
+        "node": "footer#credits.relative.isolate.z-(--z-main) in #credits",
+        "n": 7,
+        "ms": 2.6
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 2,
+        "ms": 1.2
+       }
+      ]
+     },
+     "loaf": 37,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3234,
+     "workPct": 2.1,
+     "waitPct": 97.9,
+     "scriptPct": 0.2,
+     "styleLayoutPct": 1.9,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 2gtmnwptgq-6o.js",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": {
+      "fps": 60.1,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 14.5,
+      "rafJsMsPerS": 33.6,
+      "repaints": []
+     }
+    }
+   },
+   "transitions": {
+    "act-1": {
+     "from": 450,
+     "to": 3283,
+     "frames": 29,
+     "p50": 216.7,
+     "p95": 400,
+     "p99": 700,
+     "jank33": 89.7,
+     "jank50": 86.2,
+     "max": 700,
+     "maxAtY": 1882,
+     "mean": 215.5,
+     "fps": 4.6,
+     "paint": {
+      "paintsPerS": 23.8,
+      "rasterMsPerS": 591.8,
+      "paintMs": 37,
+      "rasterMs": 3255,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 28
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-1",
+        "n": 15,
+        "ms": 1.7
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 15,
+        "ms": 1.3
+       },
+       {
+        "node": "node 70",
+        "n": 8,
+        "ms": 0.6
+       }
+      ]
+     },
+     "loaf": 26,
+     "loafBlockMs": 238,
+     "busyJankPct": 11.5,
+     "loafMs": 6779,
+     "workPct": 4.9,
+     "waitPct": 95.1,
+     "scriptPct": 4.6,
+     "styleLayoutPct": 0.3,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 17uxrkbdeaanq.js",
+       "ms": 278
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 13
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 18,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 14,
+      "anims": 14
+     },
+     "idle": {
+      "fps": 24,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 5.4,
+      "rafJsMsPerS": 11.8,
+      "repaints": []
+     }
+    },
+    "act-2": {
+     "from": 7015,
+     "to": 9355,
+     "frames": 35,
+     "p50": 116.7,
+     "p95": 399.9,
+     "p99": 500,
+     "jank33": 85.7,
+     "jank50": 85.7,
+     "max": 500,
+     "maxAtY": 8213,
+     "mean": 149,
+     "fps": 6.7,
+     "paint": {
+      "paintsPerS": 39.3,
+      "rasterMsPerS": 745.9,
+      "paintMs": 51,
+      "rasterMs": 3568,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 24,
+        "ms": 42.2
+       },
+       {
+        "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+        "n": 20,
+        "ms": 2
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 20,
+        "ms": 0.7
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 20,
+        "ms": 0.7
+       }
+      ]
+     },
+     "loaf": 30,
+     "loafBlockMs": 121,
+     "busyJankPct": 13.3,
+     "loafMs": 4971,
+     "workPct": 6,
+     "waitPct": 94,
+     "scriptPct": 5.6,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 259
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 11
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 20,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 4.7,
+      "infiniteAnims": 12,
+      "anims": 12
+     },
+     "idle": {
+      "fps": 60.3,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 20.6,
+      "repaints": []
+     }
+    },
+    "act-3": {
+     "from": 28472,
+     "to": 30632,
+     "frames": 100,
+     "p50": 16.7,
+     "p95": 316.6,
+     "p99": 616.6,
+     "jank33": 22,
+     "jank50": 20,
+     "max": 616.6,
+     "maxAtY": 30470,
+     "mean": 61.5,
+     "fps": 16.3,
+     "paint": {
+      "paintsPerS": 29.5,
+      "rasterMsPerS": 502.4,
+      "paintMs": 65,
+      "rasterMs": 2621,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 44,
+        "ms": 54.1
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 42,
+        "ms": 1.8
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-3",
+        "n": 25,
+        "ms": 1
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 20,
+        "ms": 7
+       }
+      ]
+     },
+     "loaf": 22,
+     "loafBlockMs": 0,
+     "busyJankPct": 0,
+     "loafMs": 4660,
+     "workPct": 0.4,
+     "waitPct": 99.6,
+     "scriptPct": 0.2,
+     "styleLayoutPct": 0.2,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 3dewhjypacr5m.js t",
+       "ms": 6
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 6,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": {
+      "fps": 60.6,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 18,
+      "repaints": []
+     }
+    },
+    "act-4": {
+     "from": 38532,
+     "to": 40872,
+     "frames": 91,
+     "p50": 16.7,
+     "p95": 266.6,
+     "p99": 566.6,
+     "jank33": 27.5,
+     "jank50": 23.1,
+     "max": 566.6,
+     "maxAtY": 40043,
+     "mean": 62.1,
+     "fps": 16.1,
+     "paint": {
+      "paintsPerS": 25.2,
+      "rasterMsPerS": 580.2,
+      "paintMs": 43,
+      "rasterMs": 2814,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 27,
+        "ms": 39.7
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 25,
+        "ms": 0.9
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-4",
+        "n": 14,
+        "ms": 0.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 13,
+        "ms": 2
+       }
+      ]
+     },
+     "loaf": 23,
+     "loafBlockMs": 0,
+     "busyJankPct": 0,
+     "loafMs": 4341,
+     "workPct": 1.1,
+     "waitPct": 98.9,
+     "scriptPct": 0.7,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 3iq4ltb5_88fz.js f",
+       "ms": 13
+      },
+      {
+       "script": "resolve-promise:Promise.resolve @ 2rd4rw62hke7d.js",
+       "ms": 9
+      },
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 26,
+      "video": 0,
+      "canvas": 2,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 21,
+      "anims": 21
+     },
+     "idle": {
+      "fps": 60.4,
+      "rasterMsPerS": 0,
+      "paintMsPerS": 0,
+      "paintsPerS": 0,
+      "styleLayoutMsPerS": 0,
+      "rafJsMsPerS": 19.1,
+      "repaints": []
+     }
+    }
+   },
+   "sectionsAt": [
+    {
+     "id": "top",
+     "top": 0,
+     "h": 900
+    },
+    {
+     "id": "act-1",
+     "top": 900,
+     "h": 2383
+    },
+    {
+     "id": "about",
+     "top": 3283,
+     "h": 1326
+    },
+    {
+     "id": "journey",
+     "top": 4609,
+     "h": 2856
+    },
+    {
+     "id": "act-2",
+     "top": 7465,
+     "h": 1890
+    },
+    {
+     "id": "work",
+     "top": 9355,
+     "h": 2333
+    },
+    {
+     "id": "trading-algos",
+     "top": 11688,
+     "h": 1921
+    },
+    {
+     "id": "optuna-screener",
+     "top": 13608,
+     "h": 4446
+    },
+    {
+     "id": "experiment",
+     "top": 18055,
+     "h": 1132
+    },
+    {
+     "id": "systems",
+     "top": 19186,
+     "h": 2163
+    },
+    {
+     "id": "kill-list",
+     "top": 21350,
+     "h": 2122
+    },
+    {
+     "id": "films",
+     "top": 23472,
+     "h": 5451
+    },
+    {
+     "id": "act-3",
+     "top": 28922,
+     "h": 1710
+    },
+    {
+     "id": "beyond",
+     "top": 30632,
+     "h": 4324
+    },
+    {
+     "id": "writing",
+     "top": 34957,
+     "h": 2584
+    },
+    {
+     "id": "voices",
+     "top": 37541,
+     "h": 1441
+    },
+    {
+     "id": "act-4",
+     "top": 38982,
+     "h": 1890
+    },
+    {
+     "id": "principles",
+     "top": 40872,
+     "h": 2690
+    },
+    {
+     "id": "contact",
+     "top": 43562,
+     "h": 900
+    },
+    {
+     "id": "credits",
+     "top": 44462,
+     "h": 2579
+    }
+   ],
+   "idle": {
+    "top": {
+     "fps": 37.1,
+     "rasterMsPerS": 155.9,
+     "paintMsPerS": 2.9,
+     "paintsPerS": 4.7,
+     "styleLayoutMsPerS": 1.3,
+     "rafJsMsPerS": 15.6,
+     "repaints": [
+      {
+       "n": 4,
+       "ms": 4.2,
+       "desc": "#document"
+      },
+      {
+       "n": 3,
+       "ms": 0.2,
+       "desc": "video.absolute.inset-0.size-full"
+      }
+     ]
+    },
+    "act-1": {
+     "fps": 24,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 5.4,
+     "rafJsMsPerS": 11.8,
+     "repaints": []
+    },
+    "about": {
+     "fps": 60.8,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 16.1,
+     "rafJsMsPerS": 36.8,
+     "repaints": []
+    },
+    "journey": {
+     "fps": 0.5,
+     "rasterMsPerS": 18.6,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 1.1,
+     "rafJsMsPerS": 1.4,
+     "repaints": []
+    },
+    "act-2": {
+     "fps": 60.3,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 20.6,
+     "repaints": []
+    },
+    "work": {
+     "fps": 60.4,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 17.6,
+     "repaints": []
+    },
+    "trading-algos": {
+     "fps": 60.6,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 14.2,
+     "rafJsMsPerS": 33.2,
+     "repaints": []
+    },
+    "optuna-screener": {
+     "fps": 60.2,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 13.3,
+     "rafJsMsPerS": 31.7,
+     "repaints": []
+    },
+    "experiment": {
+     "fps": 60.1,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 16.2,
+     "repaints": []
+    },
+    "systems": {
+     "fps": 60.5,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 16.5,
+     "repaints": []
+    },
+    "kill-list": {
+     "fps": 60.3,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 18.3,
+     "repaints": []
+    },
+    "films": {
+     "fps": 60.6,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 19.7,
+     "repaints": []
+    },
+    "act-3": {
+     "fps": 60.6,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 18,
+     "repaints": []
+    },
+    "beyond": {
+     "fps": 60.1,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 18.7,
+     "repaints": []
+    },
+    "writing": {
+     "fps": 60.6,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 17.6,
+     "repaints": []
+    },
+    "voices": {
+     "fps": 60,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 18.2,
+     "repaints": []
+    },
+    "act-4": {
+     "fps": 60.4,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 19.1,
+     "repaints": []
+    },
+    "principles": {
+     "fps": 60.1,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 16.2,
+     "repaints": []
+    },
+    "contact": {
+     "fps": 60.6,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 0,
+     "rafJsMsPerS": 17.7,
+     "repaints": []
+    },
+    "credits": {
+     "fps": 60.1,
+     "rasterMsPerS": 0,
+     "paintMsPerS": 0,
+     "paintsPerS": 0,
+     "styleLayoutMsPerS": 14.5,
+     "rafJsMsPerS": 33.6,
+     "repaints": []
+    }
+   },
+   "pageErrors": []
+  },
+  {
+   "introWindow": null,
+   "run": "native",
+   "url": "/?skip=intro,smooth",
+   "lenis": false,
+   "viewport": "1440x900",
+   "pageHeight": 47041,
+   "durationS": 71,
+   "scroll": {
+    "pauses": [
+     {
+      "key": "act-1",
+      "target": 1641,
+      "y": 1600,
+      "at": 3735
+     },
+     {
+      "key": "act-2",
+      "target": 7960,
+      "y": 7900,
+      "at": 13419
+     },
+     {
+      "key": "films-pirates",
+      "target": 23973,
+      "y": 23900,
+      "at": 32579
+     },
+     {
+      "key": "films-idiots",
+      "target": 25205,
+      "y": 24900,
+      "at": 35141
+     },
+     {
+      "key": "films-rdr2",
+      "target": 26445,
+      "y": 26400,
+      "at": 38120
+     },
+     {
+      "key": "films-hp",
+      "target": 27688,
+      "y": 27500,
+      "at": 41231
+     },
+     {
+      "key": "act-3",
+      "target": 29327,
+      "y": 29200,
+      "at": 44726
+     },
+     {
+      "key": "act-4",
+      "target": 39477,
+      "y": 39600,
+      "at": 57952
+     }
+    ],
+    "ms": 69526
+   },
+   "screencast": {
+    "frames": 621,
+    "fps": 8.7
+   },
+   "frame": {
+    "frames": 640,
+    "p50": 50,
+    "p95": 416.7,
+    "p99": 749.9,
+    "jank33": 51.7,
+    "jank50": 45.2,
+    "max": 1333.3,
+    "maxAtY": 4100,
+    "mean": 111,
+    "fps": 9
+   },
+   "whole": {
+    "busyJankPct": 2.7,
+    "loafMs": 59591,
+    "workPct": 2.7,
+    "waitPct": 97.3,
+    "scriptPct": 2.2,
+    "styleLayoutPct": 0.5,
+    "topScripts": [
+     {
+      "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+      "ms": 521
+     },
+     {
+      "script": "user-callback:IntersectionObserverCallback @ 3tw7jfo5o-q7k.js",
+      "ms": 337
+     },
+     {
+      "script": "resolve-promise:Promise.resolve @ 1vb142oniqzf6.js",
+      "ms": 154
+     }
+    ]
+   },
+   "loaf": {
+    "count": 282,
+    "totalMs": 59591,
+    "blockingMs": 634,
+    "workMs": 1612,
+    "worst": [
+     {
+      "t": 7.96,
+      "sec": "about",
+      "dur": 1337,
+      "block": 117,
+      "work": 155,
+      "render": 13,
+      "styleLayout": 1,
+      "scriptMs": 154,
+      "scripts": [
+       {
+        "d": 154,
+        "inv": "Promise.resolve",
+        "type": "resolve-promise",
+        "src": "http://localhost:3161/_next/static/chunks/1vb142oniqzf6.js",
+        "fn": "",
+        "pos": -1,
+        "fsl": 146,
+        "snippet": null
+       }
+      ]
+     },
+     {
+      "t": 62.02,
+      "sec": "principles",
+      "dur": 946,
+      "block": 0,
+      "work": 10,
+      "render": 9,
+      "styleLayout": 1,
+      "scriptMs": 9,
+      "scripts": [
+       {
+        "d": 9,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     },
+     {
+      "t": 60.47,
+      "sec": "principles",
+      "dur": 841,
+      "block": 0,
+      "work": 1,
+      "render": 5,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 5.74,
+      "sec": "act-1",
+      "dur": 814,
+      "block": 0,
+      "work": 1,
+      "render": 9,
+      "styleLayout": 1,
+      "scriptMs": 0,
+      "scripts": []
+     },
+     {
+      "t": 16.7,
+      "sec": "work",
+      "dur": 759,
+      "block": 0,
+      "work": 10,
+      "render": 9,
+      "styleLayout": 1,
+      "scriptMs": 9,
+      "scripts": [
+       {
+        "d": 9,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     }
+    ],
+    "worstWork": [
+     {
+      "t": 2.17,
+      "sec": "act-1",
+      "dur": 355,
+      "block": 297,
+      "work": 343,
+      "styleLayout": 1,
+      "scriptMs": 342,
+      "scripts": [
+       {
+        "d": 337,
+        "inv": "IntersectionObserverCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/3tw7jfo5o-q7k.js",
+        "fn": "",
+        "pos": 24641,
+        "fsl": 0,
+        "snippet": "e=>{e.forEach(e=>{let t=H.get(e.target);if(!t)return;let r=e.boundingClientRect;t.visible=e.isIntersecting&&e.intersectionRatio>0,t.dist=Mat"
+       },
+       {
+        "d": 5,
+        "inv": "FrameRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1rezhhvr7fq6o.js",
+        "fn": "v",
+        "pos": 14099,
+        "fsl": 0
+       }
+      ]
+     },
+     {
+      "t": 7.96,
+      "sec": "about",
+      "dur": 1337,
+      "block": 117,
+      "work": 155,
+      "styleLayout": 1,
+      "scriptMs": 154,
+      "scripts": [
+       {
+        "d": 154,
+        "inv": "Promise.resolve",
+        "type": "resolve-promise",
+        "src": "http://localhost:3161/_next/static/chunks/1vb142oniqzf6.js",
+        "fn": "",
+        "pos": -1,
+        "fsl": 146,
+        "snippet": null
+       }
+      ]
+     },
+     {
+      "t": 32.67,
+      "sec": "films",
+      "dur": 278,
+      "block": 94,
+      "work": 133,
+      "styleLayout": 1,
+      "scriptMs": 132,
+      "scripts": [
+       {
+        "d": 132,
+        "inv": "TimerHandler:setTimeout",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/3nczl85xqg5o6.js",
+        "fn": "",
+        "pos": 30053,
+        "fsl": 127,
+        "snippet": "()=>{let e=function(){let e=.475*window.innerHeight,t=null;for(let n of R){let r=document.getElementById(n)?.getBoundingClientRect();r&&r.he"
+       }
+      ]
+     },
+     {
+      "t": 12.07,
+      "sec": "journey",
+      "dur": 240,
+      "block": 28,
+      "work": 74,
+      "styleLayout": 0,
+      "scriptMs": 74,
+      "scripts": [
+       {
+        "d": 74,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       }
+      ]
+     },
+     {
+      "t": 61.32,
+      "sec": "principles",
+      "dur": 696,
+      "block": 0,
+      "work": 25,
+      "styleLayout": 2,
+      "scriptMs": 23,
+      "scripts": [
+       {
+        "d": 8,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0,
+        "snippet": "()=>{o||(o=!0,e())},r=window;if(\"function\"==typeof r.requestIdleCallback){let e=r.requestIdleCallback(i,null!=n.timeout?{timeout:n.timeout}:"
+       },
+       {
+        "d": 8,
+        "inv": "IdleRequestCallback",
+        "type": "user-callback",
+        "src": "http://localhost:3161/_next/static/chunks/1zum7z4o80845.js",
+        "fn": "i",
+        "pos": 192,
+        "fsl": 0
+       },
+       {
+        "d": 7,
+        "inv": "#document.onwheel",
+        "type": "event-listener",
+        "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
+        "fn": "fO",
+        "pos": 200583,
+        "fsl": 0
+       }
+      ]
+     }
+    ]
+   },
+   "cls": {
+    "total": 0.0152,
+    "sessionMax": 0.0134,
+    "count": 7,
+    "withInput": 0,
+    "top": [
+     {
+      "t": 17.48,
+      "v": 0.0134,
+      "sec": "work",
+      "sources": [
+       {
+        "node": "span.scene-caption__moment.world-face-idiots in #work",
+        "prev": [
+         63,
+         95,
+         641,
+         48
+        ],
+        "cur": [
+         63,
+         85,
+         641,
+         48
+        ]
+       },
+       {
+        "node": "span.scene-caption__moment.world-face-idiots in #work",
+        "prev": [
+         63,
+         78,
+         641,
+         48
+        ],
+        "cur": [
+         63,
+         85,
+         641,
+         48
+        ]
+       },
+       {
+        "node": "span.whitespace-nowrap in #work",
+        "prev": [
+         63,
+         133,
+         641,
+         48
+        ],
+        "cur": [
+         63,
+         85,
+         641,
+         48
+        ]
+       }
+      ]
+     },
+     {
+      "t": 50.88,
+      "v": 0.0008,
+      "sec": "beyond",
+      "sources": [
+       {
+        "node": "span.whitespace-nowrap in #beyond",
+        "prev": [
+         635,
+         389,
+         705,
+         38
+        ],
+        "cur": [
+         635,
+         381,
+         705,
+         38
+        ]
+       },
+       {
+        "node": "span.scene-caption__sep in #beyond",
+        "prev": [
+         635,
+         388,
+         705,
+         23
+        ],
+        "cur": [
+         635,
+         388,
+         705,
+         23
+        ]
+       },
+       {
+        "node": "span.scene-caption__film.world-face-rdr2 in #beyond",
+        "prev": [
+         635,
+         426,
+         705,
+         38
+        ],
+        "cur": [
+         635,
+         414,
+         705,
+         38
+        ]
+       }
+      ]
+     },
+     {
+      "t": 62.01,
+      "v": 0.0005,
+      "sec": "principles",
+      "sources": [
+       {
+        "node": "p.world-face-hp.text-center.text-[1rem][data-lettered=hp] in #principles",
+        "prev": [
+         466,
+         243,
+         509,
+         38
+        ],
+        "cur": [
+         466,
+         239,
+         509,
+         38
+        ]
+       },
+       {
+        "node": "span.whitespace-nowrap in #principles",
+        "prev": [
+         888,
+         709,
+         416,
+         39
+        ],
+        "cur": [
+         888,
+         703,
+         416,
+         39
+        ]
+       },
+       {
+        "node": "span.scene-caption__sep in #principles",
+        "prev": [
+         888,
+         708,
+         416,
+         23
+        ],
+        "cur": [
+         888,
+         708,
+         416,
+         23
+        ]
+       }
+      ]
+     },
+     {
+      "t": 52.8,
+      "v": 0.0003,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         335,
+         592,
+         113
+        ],
+        "cur": [
+         64,
+         328,
+         592,
+         113
+        ]
+       }
+      ]
+     },
+     {
+      "t": 53.18,
+      "v": 0.0002,
+      "sec": "writing",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.type-title.text-fg in #writing",
+        "prev": [
+         64,
+         475,
+         592,
+         63
+        ],
+        "cur": [
+         64,
+         468,
+         592,
+         63
+        ]
+       }
+      ]
+     },
+     {
+      "t": 24.26,
+      "v": 0.0001,
+      "sec": "optuna-screener",
+      "sources": [
+       {
+        "node": "h3.mt-tier-pair.max-w-title.type-title in #optuna-screener",
+        "prev": [
+         64,
+         0,
+         620,
+         16
+        ],
+        "cur": [
+         0,
+         0,
+         0,
+         0
+        ]
+       }
+      ]
+     },
+     {
+      "t": 28.96,
+      "v": 0,
+      "sec": "systems",
+      "sources": [
+       {
+        "node": "h3.type-heading.text-fg.lg:text-[length:var(--text-lead)] in #systems",
+        "prev": [
+         64,
+         82,
+         144,
+         32
+        ],
+        "cur": [
+         64,
+         79,
+         144,
+         32
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "pops": [
+    {
+     "seq": 28,
+     "t": 4.127,
+     "tEnd": 4.127,
+     "y": 1500,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 2.1,
+     "resid": 2.5,
+     "median": 0.2,
+     "ratio": 9.4,
+     "frames": 1,
+     "kind": "change",
+     "area": 2.8
+    },
+    {
+     "seq": 30,
+     "t": 4.52,
+     "tEnd": 4.52,
+     "y": 1600,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 3.5,
+     "resid": 3.6,
+     "median": 0.2,
+     "ratio": 15.5,
+     "frames": 1,
+     "kind": "change",
+     "area": 4.6
+    },
+    {
+     "seq": 34,
+     "t": 5.141,
+     "tEnd": 5.141,
+     "y": 1700,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 9.4,
+     "resid": 9.8,
+     "median": 0.3,
+     "ratio": 36.9,
+     "frames": 1,
+     "kind": "change",
+     "area": 17.9
+    },
+    {
+     "seq": 36,
+     "t": 5.514,
+     "tEnd": 5.514,
+     "y": 1700,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 13.2,
+     "resid": 13.3,
+     "median": 0.3,
+     "ratio": 47.2,
+     "frames": 2,
+     "kind": "change",
+     "area": 26.2
+    },
+    {
+     "seq": 40,
+     "t": 6.059,
+     "tEnd": 6.059,
+     "y": 1700,
+     "sec": "act-1",
+     "dy": 0,
+     "diff": 8.7,
+     "resid": 8.8,
+     "median": 1,
+     "ratio": 9,
+     "frames": 3,
+     "kind": "change",
+     "area": 18.5
+    },
+    {
+     "seq": 60,
+     "t": 8.605,
+     "tEnd": 8.605,
+     "y": 3300,
+     "sec": "about",
+     "dy": 0,
+     "diff": 13.6,
+     "resid": 13.8,
+     "median": 3.5,
+     "ratio": 3.9,
+     "frames": 1,
+     "kind": "blank-out",
+     "area": 25.1
+    },
+    {
+     "seq": 77,
+     "t": 10.441,
+     "tEnd": 10.441,
+     "y": 4100,
+     "sec": "journey",
+     "dy": 0,
+     "diff": 4,
+     "resid": 4.1,
+     "median": 0.1,
+     "ratio": 64.3,
+     "frames": 1,
+     "kind": "change",
+     "area": 3
+    },
+    {
+     "seq": 81,
+     "t": 10.828,
+     "tEnd": 10.828,
+     "y": 4200,
+     "sec": "journey",
+     "dy": 0,
+     "diff": 7.1,
+     "resid": 8.1,
+     "median": 0.1,
+     "ratio": 114.5,
+     "frames": 1,
+     "kind": "change",
+     "area": 9
+    },
+    {
+     "seq": 84,
+     "t": 11.399,
+     "tEnd": 11.399,
+     "y": 5000,
+     "sec": "journey",
+     "dy": 0,
+     "diff": 7.1,
+     "resid": 7.5,
+     "median": 0.3,
+     "ratio": 22.2,
+     "frames": 1,
+     "kind": "change",
+     "area": 9.3
+    },
+    {
+     "seq": 115,
+     "t": 14.664,
+     "tEnd": 14.664,
+     "y": 8100,
+     "sec": "act-2",
+     "dy": 0,
+     "diff": 33.2,
+     "resid": 33.6,
+     "median": 1.4,
+     "ratio": 23.4,
+     "frames": 1,
+     "kind": "change",
+     "area": 45.3
+    },
+    {
+     "seq": 116,
+     "t": 14.923,
+     "tEnd": 14.923,
+     "y": 8100,
+     "sec": "act-2",
+     "dy": 0,
+     "diff": 11.1,
+     "resid": 12.6,
+     "median": 1.4,
+     "ratio": 7.8,
+     "frames": 1,
+     "kind": "change",
+     "area": 19
+    },
+    {
+     "seq": 123,
+     "t": 15.323,
+     "tEnd": 15.323,
+     "y": 8100,
+     "sec": "act-2",
+     "dy": 0,
+     "diff": 6.5,
+     "resid": 8.1,
+     "median": 0.3,
+     "ratio": 19.5,
+     "frames": 1,
+     "kind": "change",
+     "area": 12
+    },
+    {
+     "seq": 142,
+     "t": 16.823,
+     "tEnd": 16.823,
+     "y": 8900,
+     "sec": "work",
+     "dy": 0,
+     "diff": 6.3,
+     "resid": 7,
+     "median": 0.1,
+     "ratio": 100.3,
+     "frames": 1,
+     "kind": "change",
+     "area": 12.8
+    },
+    {
+     "seq": 149,
+     "t": 17.319,
+     "tEnd": 17.319,
+     "y": 9200,
+     "sec": "work",
+     "dy": 0,
+     "diff": 3,
+     "resid": 3.6,
+     "median": 0,
+     "ratio": 218.5,
+     "frames": 1,
+     "kind": "change",
+     "area": 5.7
+    },
+    {
+     "seq": 161,
+     "t": 18.8,
+     "tEnd": 18.8,
+     "y": 10900,
+     "sec": "trading-algos",
+     "dy": 0,
+     "diff": 2.9,
+     "resid": 2.9,
+     "median": 0,
+     "ratio": 110.1,
+     "frames": 1,
+     "kind": "change",
+     "area": 4.4
+    },
+    {
+     "seq": 162,
+     "t": 18.974,
+     "tEnd": 18.974,
+     "y": 10900,
+     "sec": "trading-algos",
+     "dy": 0,
+     "diff": 12.7,
+     "resid": 12.8,
+     "median": 0,
+     "ratio": 477.2,
+     "frames": 1,
+     "kind": "change",
+     "area": 29.4
+    },
+    {
+     "seq": 192,
+     "t": 22.613,
+     "tEnd": 22.613,
+     "y": 13800,
+     "sec": "optuna-screener",
+     "dy": 0,
+     "diff": 15.5,
+     "resid": 15.8,
+     "median": 2.9,
+     "ratio": 5.3,
+     "frames": 1,
+     "kind": "fill-in",
+     "area": 30.9
+    },
+    {
+     "seq": 218,
+     "t": 24.959,
+     "tEnd": 24.959,
+     "y": 15900,
+     "sec": "optuna-screener",
+     "dy": 0,
+     "diff": 4.7,
+     "resid": 4.9,
+     "median": 0.8,
+     "ratio": 5.6,
+     "frames": 1,
+     "kind": "fill-in",
+     "area": 8.7
+    },
+    {
+     "seq": 274,
+     "t": 30.699,
+     "tEnd": 30.699,
+     "y": 21300,
+     "sec": "kill-list",
+     "dy": 0,
+     "diff": 8.4,
+     "resid": 8.5,
+     "median": 2.3,
+     "ratio": 3.7,
+     "frames": 1,
+     "kind": "fill-in",
+     "area": 9.1
+    },
+    {
+     "seq": 294,
+     "t": 33.073,
+     "tEnd": 33.073,
+     "y": 23100,
+     "sec": "films",
+     "dy": 0,
+     "diff": 3.8,
+     "resid": 3.9,
+     "median": 0.9,
+     "ratio": 4.4,
+     "frames": 1,
+     "kind": "fill-in",
+     "area": 5.4
+    },
+    {
+     "seq": 311,
+     "t": 35.49,
+     "tEnd": 35.49,
+     "y": 24700,
+     "sec": "films",
+     "dy": 0,
+     "diff": 8.2,
+     "resid": 8.2,
+     "median": 0.5,
+     "ratio": 15.5,
+     "frames": 1,
+     "kind": "change",
+     "area": 5.8
+    },
+    {
+     "seq": 391,
+     "t": 44.696,
+     "tEnd": 44.696,
+     "y": 28700,
+     "sec": "act-3",
+     "dy": 0,
+     "diff": 20.9,
+     "resid": 20.9,
+     "median": 1,
+     "ratio": 21.1,
+     "frames": 1,
+     "kind": "change",
+     "area": 34.5
+    },
+    {
+     "seq": 403,
+     "t": 46.46,
+     "tEnd": 46.46,
+     "y": 29500,
+     "sec": "act-3",
+     "dy": 0,
+     "diff": 3.9,
+     "resid": 4,
+     "median": 0.6,
+     "ratio": 6,
+     "frames": 1,
+     "kind": "change",
+     "area": 9.8
+    },
+    {
+     "seq": 406,
+     "t": 47.057,
+     "tEnd": 47.259,
+     "y": 29500,
+     "sec": "beyond",
+     "dy": 0,
+     "diff": 16.8,
+     "resid": 17.9,
+     "median": 0.4,
+     "ratio": 41.4,
+     "frames": 3,
+     "kind": "change",
+     "area": 18.2
+    },
+    {
+     "seq": 469,
+     "t": 52.473,
+     "tEnd": 52.572,
+     "y": 34500,
+     "sec": "writing",
+     "dy": 0,
+     "diff": 10,
+     "resid": 10.2,
+     "median": 0,
+     "ratio": 1003.3,
+     "frames": 2,
+     "kind": "change",
+     "area": 7.1
+    },
+    {
+     "seq": 472,
+     "t": 52.845,
+     "tEnd": 52.845,
+     "y": 34800,
+     "sec": "writing",
+     "dy": 0,
+     "diff": 2.6,
+     "resid": 2.7,
+     "median": 0,
+     "ratio": 105.4,
+     "frames": 1,
+     "kind": "change",
+     "area": 2.8
+    },
+    {
+     "seq": 524,
+     "t": 59.164,
+     "tEnd": 59.164,
+     "y": 39600,
+     "sec": "act-4",
+     "dy": 0,
+     "diff": 16.6,
+     "resid": 17.5,
+     "median": 1.7,
+     "ratio": 9.7,
+     "frames": 1,
+     "kind": "change",
+     "area": 37
+    },
+    {
+     "seq": 526,
+     "t": 59.589,
+     "tEnd": 59.589,
+     "y": 39600,
+     "sec": "act-4",
+     "dy": 0,
+     "diff": 21,
+     "resid": 21.1,
+     "median": 1.7,
+     "ratio": 12.3,
+     "frames": 2,
+     "kind": "change",
+     "area": 56.6
+    },
+    {
+     "seq": 547,
+     "t": 61.703,
+     "tEnd": 61.703,
+     "y": 40800,
+     "sec": "principles",
+     "dy": 0,
+     "diff": 22.4,
+     "resid": 22.7,
+     "median": 0.5,
+     "ratio": 47.9,
+     "frames": 1,
+     "kind": "change",
+     "area": 21.2
+    },
+    {
+     "seq": 553,
+     "t": 62.581,
+     "tEnd": 62.695,
+     "y": 40800,
+     "sec": "principles",
+     "dy": 0,
+     "diff": 72,
+     "resid": 72,
+     "median": 1.4,
+     "ratio": 50.8,
+     "frames": 3,
+     "kind": "change",
+     "area": 42.8
+    }
+   ],
+   "diffStats": {
+    "n": 620,
+    "p50": 0.8,
+    "p95": 32.2,
+    "max": 109.7
+   },
+   "sections": {
+    "top": {
+     "frames": 10,
+     "p50": 16.7,
+     "p95": 516.7,
+     "p99": 516.7,
+     "jank33": 40,
+     "jank50": 40,
+     "max": 516.7,
+     "maxAtY": 100,
+     "mean": 121.7,
+     "fps": 8.2,
+     "paint": {
+      "paintsPerS": 14,
+      "rasterMsPerS": 330.5,
+      "paintMs": 5,
+      "rasterMs": 402,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 5,
+        "ms": 4.6
+       },
+       {
+        "node": "div#act-1-program.relative.px-gutter.pt-tier-group in #act-1",
+        "n": 3,
+        "ms": 0.3
+       },
+       {
+        "node": "div.absolute.inset-0.origin-center in #top",
+        "n": 2,
+        "ms": 0.1
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 2,
+        "ms": 0.1
+       }
+      ]
+     },
+     "loaf": 3,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1022,
+     "workPct": 0.3,
+     "waitPct": 99.7,
+     "scriptPct": 0,
+     "styleLayoutPct": 0.3,
+     "topScripts": [],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 1,
+      "mask": 1,
+      "willChange": 5,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 0,
+      "anims": 2
+     },
+     "idle": null
+    },
+    "act-1": {
+     "frames": 24,
+     "p50": 133.4,
+     "p95": 766.7,
+     "p99": 816.7,
+     "jank33": 66.7,
+     "jank50": 66.7,
+     "max": 816.7,
+     "maxAtY": 2400,
+     "mean": 240.3,
+     "fps": 4.2,
+     "paint": {
+      "paintsPerS": 18.9,
+      "rasterMsPerS": 458.3,
+      "paintMs": 27,
+      "rasterMs": 2643,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 21,
+        "ms": 21.9
+       },
+       {
+        "node": "div.absolute.inset-0.origin-center in #top",
+        "n": 11,
+        "ms": 1.3
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 10,
+        "ms": 1
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #act-1",
+        "n": 7,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 14,
+     "loafBlockMs": 297,
+     "cls": 0,
+     "busyJankPct": 12.5,
+     "loafMs": 4433,
+     "workPct": 8.2,
+     "waitPct": 91.8,
+     "scriptPct": 7.8,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 3tw7jfo5o-q7k.js",
+       "ms": 337
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 18,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 14,
+      "anims": 14
+     },
+     "idle": null
+    },
+    "about": {
+     "frames": 7,
+     "p50": 100,
+     "p95": 1333.3,
+     "p99": 1333.3,
+     "jank33": 85.7,
+     "jank50": 85.7,
+     "max": 1333.3,
+     "maxAtY": 4100,
+     "mean": 328.6,
+     "fps": 3,
+     "paint": {
+      "paintsPerS": 32.2,
+      "rasterMsPerS": 643.5,
+      "paintMs": 19,
+      "rasterMs": 1480,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 7,
+        "ms": 13.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 6,
+        "ms": 1.9
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 5,
+        "ms": 0.7
+       },
+       {
+        "node": "div.absolute.inset-0.origin-center in #top",
+        "n": 5,
+        "ms": 0.4
+       }
+      ]
+     },
+     "loaf": 5,
+     "loafBlockMs": 117,
+     "cls": 0,
+     "busyJankPct": 16.7,
+     "loafMs": 2194,
+     "workPct": 7.6,
+     "waitPct": 92.4,
+     "scriptPct": 7.6,
+     "styleLayoutPct": 0,
+     "topScripts": [
+      {
+       "script": "resolve-promise:Promise.resolve @ 1vb142oniqzf6.js",
+       "ms": 154
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 12
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "journey": {
+     "frames": 12,
+     "p50": 266.6,
+     "p95": 500,
+     "p99": 500,
+     "jank33": 91.7,
+     "jank50": 91.7,
+     "max": 500,
+     "maxAtY": 5400,
+     "mean": 254.2,
+     "fps": 3.9,
+     "paint": {
+      "paintsPerS": 22.3,
+      "rasterMsPerS": 671.2,
+      "paintMs": 25,
+      "rasterMs": 2047,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 12,
+        "ms": 20.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 9,
+        "ms": 0.6
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 8,
+        "ms": 0.3
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 7,
+        "ms": 1.6
+       }
+      ]
+     },
+     "loaf": 11,
+     "loafBlockMs": 28,
+     "cls": 0,
+     "busyJankPct": 18.2,
+     "loafMs": 2891,
+     "workPct": 3.6,
+     "waitPct": 96.4,
+     "scriptPct": 3.3,
+     "styleLayoutPct": 0.3,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 83
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 6
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 0.8,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "act-2": {
+     "frames": 15,
+     "p50": 300,
+     "p95": 749.9,
+     "p99": 749.9,
+     "jank33": 73.3,
+     "jank50": 66.7,
+     "max": 749.9,
+     "maxAtY": 8100,
+     "mean": 272.2,
+     "fps": 3.7,
+     "paint": {
+      "paintsPerS": 24.5,
+      "rasterMsPerS": 491.3,
+      "paintMs": 24,
+      "rasterMs": 2006,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 14,
+        "ms": 18.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 6,
+        "ms": 1.3
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 5,
+        "ms": 0.7
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 5,
+        "ms": 0.1
+       }
+      ]
+     },
+     "loaf": 10,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3922,
+     "workPct": 1,
+     "waitPct": 99,
+     "scriptPct": 0.7,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 11
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 20,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 4.7,
+      "infiniteAnims": 12,
+      "anims": 12
+     },
+     "idle": null
+    },
+    "work": {
+     "frames": 11,
+     "p50": 116.7,
+     "p95": 750,
+     "p99": 750,
+     "jank33": 63.6,
+     "jank50": 54.5,
+     "max": 750,
+     "maxAtY": 9900,
+     "mean": 195.4,
+     "fps": 5.1,
+     "paint": {
+      "paintsPerS": 34.4,
+      "rasterMsPerS": 942.4,
+      "paintMs": 29,
+      "rasterMs": 2026,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 10,
+        "ms": 19.9
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 9,
+        "ms": 3.6
+       },
+       {
+        "node": "div.stage-window in #trading-algos",
+        "n": 6,
+        "ms": 3.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 5,
+        "ms": 0.8
+       }
+      ]
+     },
+     "loaf": 6,
+     "loafBlockMs": 0,
+     "cls": 0.0134,
+     "busyJankPct": 0,
+     "loafMs": 1976,
+     "workPct": 1.5,
+     "waitPct": 98.5,
+     "scriptPct": 1.3,
+     "styleLayoutPct": 0.3,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 25
+      }
+     ],
+     "suspects": {
+      "filter": 3,
+      "backdrop": 0,
+      "blend": 1,
+      "mask": 2,
+      "willChange": 2,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 1.6,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "trading-algos": {
+     "frames": 14,
+     "p50": 116.7,
+     "p95": 733.3,
+     "p99": 733.3,
+     "jank33": 92.9,
+     "jank50": 78.6,
+     "max": 733.3,
+     "maxAtY": 13000,
+     "mean": 180.9,
+     "fps": 5.5,
+     "paint": {
+      "paintsPerS": 29.2,
+      "rasterMsPerS": 678.2,
+      "paintMs": 18,
+      "rasterMs": 1718,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 12,
+        "ms": 15.8
+       },
+       {
+        "node": "div.stage-window in #optuna-screener",
+        "n": 8,
+        "ms": 0.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 7,
+        "ms": 0.7
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 7,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 12,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2401,
+     "workPct": 2.2,
+     "waitPct": 97.8,
+     "scriptPct": 1.9,
+     "styleLayoutPct": 0.2,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 40
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "optuna-screener": {
+     "frames": 31,
+     "p50": 100,
+     "p95": 400,
+     "p99": 666.6,
+     "jank33": 80.6,
+     "jank50": 74.2,
+     "max": 666.6,
+     "maxAtY": 14300,
+     "mean": 138.7,
+     "fps": 7.2,
+     "paint": {
+      "paintsPerS": 20.5,
+      "rasterMsPerS": 612.8,
+      "paintMs": 39,
+      "rasterMs": 2635,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 34.7
+       },
+       {
+        "node": "div.stage-window in #trading-algos",
+        "n": 11,
+        "ms": 0.5
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 8,
+        "ms": 1.2
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #work",
+        "n": 6,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 22,
+     "loafBlockMs": 0,
+     "cls": 0.0001,
+     "busyJankPct": 0,
+     "loafMs": 3897,
+     "workPct": 4.5,
+     "waitPct": 95.5,
+     "scriptPct": 3.8,
+     "styleLayoutPct": 0.6,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 122
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 16
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 7
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 1.2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "experiment": {
+     "frames": 19,
+     "p50": 49.9,
+     "p95": 266.7,
+     "p99": 266.7,
+     "jank33": 52.6,
+     "jank50": 36.8,
+     "max": 266.7,
+     "maxAtY": 17700,
+     "mean": 70.2,
+     "fps": 14.3,
+     "paint": {
+      "paintsPerS": 20.3,
+      "rasterMsPerS": 696.1,
+      "paintMs": 10,
+      "rasterMs": 928,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 8,
+        "ms": 9.7
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 7,
+        "ms": 0.1
+       },
+       {
+        "node": "div.stage-window in #optuna-screener",
+        "n": 4,
+        "ms": 0.2
+       },
+       {
+        "node": "div.absolute.inset-x-0.top-0 in #kill-list",
+        "n": 4,
+        "ms": 0.1
+       }
+      ]
+     },
+     "loaf": 8,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1068,
+     "workPct": 1,
+     "waitPct": 99,
+     "scriptPct": 0.6,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "systems": {
+     "frames": 15,
+     "p50": 116.6,
+     "p95": 400,
+     "p99": 400,
+     "jank33": 80,
+     "jank50": 73.3,
+     "max": 400,
+     "maxAtY": 19800,
+     "mean": 147.8,
+     "fps": 6.8,
+     "paint": {
+      "paintsPerS": 22.6,
+      "rasterMsPerS": 792.2,
+      "paintMs": 29,
+      "rasterMs": 1756,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 13,
+        "ms": 22.2
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 7,
+        "ms": 0.1
+       },
+       {
+        "node": "div.stage-window in #optuna-screener",
+        "n": 6,
+        "ms": 1
+       },
+       {
+        "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+        "n": 6,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 12,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2131,
+     "workPct": 1.2,
+     "waitPct": 98.8,
+     "scriptPct": 0.8,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 11
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 1,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "kill-list": {
+     "frames": 15,
+     "p50": 116.7,
+     "p95": 566.7,
+     "p99": 566.7,
+     "jank33": 53.3,
+     "jank50": 53.3,
+     "max": 566.7,
+     "maxAtY": 23000,
+     "mean": 194.4,
+     "fps": 5.1,
+     "paint": {
+      "paintsPerS": 20.9,
+      "rasterMsPerS": 840.7,
+      "paintMs": 22,
+      "rasterMs": 2452,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 14,
+        "ms": 20.3
+       },
+       {
+        "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+        "n": 11,
+        "ms": 0.2
+       },
+       {
+        "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+        "n": 10,
+        "ms": 0.2
+       },
+       {
+        "node": "div.absolute.inset-x-0.top-0 in #kill-list",
+        "n": 9,
+        "ms": 0.8
+       }
+      ]
+     },
+     "loaf": 8,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 2747,
+     "workPct": 0.1,
+     "waitPct": 99.9,
+     "scriptPct": 0,
+     "styleLayoutPct": 0.1,
+     "topScripts": [],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 1,
+      "willChange": 3,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.3,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "films": {
+     "frames": 259,
+     "p50": 16.7,
+     "p95": 199.9,
+     "p99": 350,
+     "jank33": 22.8,
+     "jank50": 17.4,
+     "max": 516.6,
+     "maxAtY": 28000,
+     "mean": 44.2,
+     "fps": 22.6,
+     "paint": {
+      "paintsPerS": 35.3,
+      "rasterMsPerS": 538.6,
+      "paintMs": 148,
+      "rasterMs": 6167,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 154,
+        "ms": 134.3
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 2333 1000 in #films",
+        "n": 77,
+        "ms": 4.8
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 1778 1000 in #films",
+        "n": 47,
+        "ms": 2
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 27,
+        "ms": 2.4
+       }
+      ]
+     },
+     "loaf": 45,
+     "loafBlockMs": 192,
+     "cls": 0,
+     "busyJankPct": 6.8,
+     "loafMs": 6752,
+     "workPct": 3.3,
+     "waitPct": 96.7,
+     "scriptPct": 2.5,
+     "styleLayoutPct": 0.8,
+     "topScripts": [
+      {
+       "script": "user-callback:TimerHandler:setTimeout @ 3nczl85xqg5o6.js",
+       "ms": 132
+      },
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 10
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 8
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 4,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 3.9,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "act-3": {
+     "frames": 30,
+     "p50": 83.3,
+     "p95": 316.6,
+     "p99": 433.3,
+     "jank33": 70,
+     "jank50": 66.7,
+     "max": 433.3,
+     "maxAtY": 29200,
+     "mean": 118.9,
+     "fps": 8.4,
+     "paint": {
+      "paintsPerS": 22.2,
+      "rasterMsPerS": 372.4,
+      "paintMs": 24,
+      "rasterMs": 1328,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 27,
+        "ms": 20.9
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 10,
+        "ms": 1.7
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 10,
+        "ms": 0.1
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 1000 418 in #act-3",
+        "n": 5,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 21,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3166,
+     "workPct": 0.7,
+     "waitPct": 99.3,
+     "scriptPct": 0.2,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 3nczl85xqg5o6.js",
+       "ms": 7
+      }
+     ],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 6,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "beyond": {
+     "frames": 23,
+     "p50": 249.9,
+     "p95": 466.7,
+     "p99": 600,
+     "jank33": 91.3,
+     "jank50": 87,
+     "max": 600,
+     "maxAtY": 31700,
+     "mean": 221,
+     "fps": 4.5,
+     "paint": {
+      "paintsPerS": 24.8,
+      "rasterMsPerS": 552.2,
+      "paintMs": 35,
+      "rasterMs": 2807,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 27.6
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 16,
+        "ms": 4.4
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 14,
+        "ms": 0.5
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 6,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 19,
+     "loafBlockMs": 0,
+     "cls": 0.0008,
+     "busyJankPct": 0,
+     "loafMs": 4588,
+     "workPct": 0.3,
+     "waitPct": 99.7,
+     "scriptPct": 0.1,
+     "styleLayoutPct": 0.2,
+     "topScripts": [
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 6,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 3,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": null
+    },
+    "writing": {
+     "frames": 24,
+     "p50": 116.6,
+     "p95": 250,
+     "p99": 299.9,
+     "jank33": 91.7,
+     "jank50": 70.8,
+     "max": 299.9,
+     "maxAtY": 35900,
+     "mean": 109,
+     "fps": 9.2,
+     "paint": {
+      "paintsPerS": 57.3,
+      "rasterMsPerS": 643.6,
+      "paintMs": 33,
+      "rasterMs": 1684,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 28.3
+       },
+       {
+        "node": "svg.size-full.overflow-visible.will-change-transform viewBox=0 0 400 500[data-motif=journal-landscape] in #writing",
+        "n": 22,
+        "ms": 0.8
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 18,
+        "ms": 0.4
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 17,
+        "ms": 1.6
+       }
+      ]
+     },
+     "loaf": 16,
+     "loafBlockMs": 0,
+     "cls": 0.0004,
+     "busyJankPct": 0,
+     "loafMs": 2211,
+     "workPct": 0.5,
+     "waitPct": 99.5,
+     "scriptPct": 0,
+     "styleLayoutPct": 0.5,
+     "topScripts": [],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 3,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "voices": {
+     "frames": 21,
+     "p50": 83.3,
+     "p95": 250,
+     "p99": 416.7,
+     "jank33": 61.9,
+     "jank50": 61.9,
+     "max": 416.7,
+     "maxAtY": 38200,
+     "mean": 97.6,
+     "fps": 10.2,
+     "paint": {
+      "paintsPerS": 51.2,
+      "rasterMsPerS": 696.1,
+      "paintMs": 22,
+      "rasterMs": 1427,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 22,
+        "ms": 19.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 9,
+        "ms": 0.6
+       },
+       {
+        "node": "div.absolute.inset-0.-z-10 in #principles",
+        "n": 9,
+        "ms": 0.3
+       },
+       {
+        "node": "div.pointer-events-none.absolute.inset-0 in #voices",
+        "n": 9,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 9,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1476,
+     "workPct": 2.6,
+     "waitPct": 97.4,
+     "scriptPct": 2.1,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 31
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 2,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": null
+    },
+    "act-4": {
+     "frames": 32,
+     "p50": 66.7,
+     "p95": 366.6,
+     "p99": 466.7,
+     "jank33": 65.6,
+     "jank50": 59.4,
+     "max": 466.7,
+     "maxAtY": 39300,
+     "mean": 119.8,
+     "fps": 8.3,
+     "paint": {
+      "paintsPerS": 28.7,
+      "rasterMsPerS": 737.5,
+      "paintMs": 33,
+      "rasterMs": 2827,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 27.6
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 9,
+        "ms": 0.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 8,
+        "ms": 1.6
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-4",
+        "n": 7,
+        "ms": 0.4
+       }
+      ]
+     },
+     "loaf": 18,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3391,
+     "workPct": 1.4,
+     "waitPct": 98.6,
+     "scriptPct": 0.7,
+     "styleLayoutPct": 0.6,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 19
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 26,
+      "video": 0,
+      "canvas": 2,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 21,
+      "anims": 21
+     },
+     "idle": null
+    },
+    "principles": {
+     "frames": 7,
+     "p50": 650,
+     "p95": 966.6,
+     "p99": 966.6,
+     "jank33": 100,
+     "jank50": 100,
+     "max": 966.6,
+     "maxAtY": 41600,
+     "mean": 638.1,
+     "fps": 1.6,
+     "paint": {
+      "paintsPerS": 6.9,
+      "rasterMsPerS": 912.4,
+      "paintMs": 12,
+      "rasterMs": 4075,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 7,
+        "ms": 9.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 4,
+        "ms": 0.5
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 4,
+        "ms": 0.2
+       },
+       {
+        "node": "div.relative.grid.grid-cols-1 in #principles",
+        "n": 2,
+        "ms": 0.1
+       }
+      ]
+     },
+     "loaf": 7,
+     "loafBlockMs": 0,
+     "cls": 0.0005,
+     "busyJankPct": 0,
+     "loafMs": 4427,
+     "workPct": 1.6,
+     "waitPct": 98.4,
+     "scriptPct": 1.4,
+     "styleLayoutPct": 0.2,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 49
+      },
+      {
+       "script": "event-listener:#document.onwheel @ 3p9eevrhj-twl.js fO",
+       "ms": 7
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 7,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "contact": {
+     "frames": 3,
+     "p50": 300.1,
+     "p95": 650,
+     "p99": 650,
+     "jank33": 100,
+     "jank50": 100,
+     "max": 650,
+     "maxAtY": 43200,
+     "mean": 400,
+     "fps": 2.5,
+     "paint": {
+      "paintsPerS": 15,
+      "rasterMsPerS": 715,
+      "paintMs": 3,
+      "rasterMs": 858,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 2,
+        "ms": 2.8
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 2,
+        "ms": 0.4
+       },
+       {
+        "node": "div.stage-layer",
+        "n": 1,
+        "ms": 0.2
+       },
+       {
+        "node": "div.stage-cam",
+        "n": 1,
+        "ms": 0
+       }
+      ]
+     },
+     "loaf": 3,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 1181,
+     "workPct": 2.3,
+     "waitPct": 97.7,
+     "scriptPct": 2.3,
+     "styleLayoutPct": 0,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 16
+      },
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 3nczl85xqg5o6.js",
+       "ms": 11
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 0,
+      "video": 0,
+      "canvas": 0,
+      "img": 1,
+      "bigImgMP": 0.9,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "credits": {
+     "frames": 68,
+     "p50": 50,
+     "p95": 233.3,
+     "p99": 316.7,
+     "jank33": 60.3,
+     "jank50": 47.1,
+     "max": 316.7,
+     "maxAtY": 46100,
+     "mean": 72.1,
+     "fps": 13.9,
+     "paint": {
+      "paintsPerS": 13.9,
+      "rasterMsPerS": 314.9,
+      "paintMs": 40,
+      "rasterMs": 1543,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 31,
+        "ms": 33.7
+       },
+       {
+        "node": "div.stage-cam",
+        "n": 14,
+        "ms": 0.8
+       },
+       {
+        "node": "footer#credits.relative.isolate.z-(--z-main) in #credits",
+        "n": 7,
+        "ms": 2.3
+       },
+       {
+        "node": "div.flex.-translate-x-1/2.-translate-y-1/2[data-motif=bracket-monogram] in #contact",
+        "n": 4,
+        "ms": 1.4
+       }
+      ]
+     },
+     "loaf": 33,
+     "loafBlockMs": 0,
+     "cls": 0,
+     "busyJankPct": 0,
+     "loafMs": 3717,
+     "workPct": 5.1,
+     "waitPct": 94.9,
+     "scriptPct": 3.4,
+     "styleLayoutPct": 1.7,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 109
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 12
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 0,
+      "willChange": 1,
+      "video": 0,
+      "canvas": 0,
+      "img": 0,
+      "bigImgMP": 0,
+      "infiniteAnims": 0,
+      "anims": 1
+     },
+     "idle": null
+    }
+   },
+   "transitions": {
+    "act-1": {
+     "from": 450,
+     "to": 3283,
+     "frames": 25,
+     "p50": 133.3,
+     "p95": 766.7,
+     "p99": 816.7,
+     "jank33": 68,
+     "jank50": 68,
+     "max": 816.7,
+     "maxAtY": 2400,
+     "mean": 234.7,
+     "fps": 4.3,
+     "paint": {
+      "paintsPerS": 18.9,
+      "rasterMsPerS": 458.3,
+      "paintMs": 27,
+      "rasterMs": 2643,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 21,
+        "ms": 21.9
+       },
+       {
+        "node": "div.absolute.inset-0.origin-center in #top",
+        "n": 11,
+        "ms": 1.3
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 10,
+        "ms": 1
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #act-1",
+        "n": 7,
+        "ms": 0.3
+       }
+      ]
+     },
+     "loaf": 15,
+     "loafBlockMs": 297,
+     "busyJankPct": 11.8,
+     "loafMs": 4512,
+     "workPct": 8.1,
+     "waitPct": 91.9,
+     "scriptPct": 7.7,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 3tw7jfo5o-q7k.js",
+       "ms": 337
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 10
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 4,
+      "willChange": 18,
+      "video": 0,
+      "canvas": 0,
+      "img": 2,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 14,
+      "anims": 14
+     },
+     "idle": null
+    },
+    "act-2": {
+     "from": 7015,
+     "to": 9355,
+     "frames": 17,
+     "p50": 266.6,
+     "p95": 749.9,
+     "p99": 749.9,
+     "jank33": 70.6,
+     "jank50": 64.7,
+     "max": 749.9,
+     "maxAtY": 8100,
+     "mean": 256.9,
+     "fps": 3.9,
+     "paint": {
+      "paintsPerS": 24.5,
+      "rasterMsPerS": 491.3,
+      "paintMs": 24,
+      "rasterMs": 2006,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 14,
+        "ms": 18.7
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-2",
+        "n": 6,
+        "ms": 1.3
+       },
+       {
+        "node": "div.absolute.inset-0.will-change-transform in #top",
+        "n": 5,
+        "ms": 0.7
+       },
+       {
+        "node": "div.relative.@container in #work",
+        "n": 5,
+        "ms": 0.1
+       }
+      ]
+     },
+     "loaf": 11,
+     "loafBlockMs": 0,
+     "busyJankPct": 0,
+     "loafMs": 4179,
+     "workPct": 1,
+     "waitPct": 99,
+     "scriptPct": 0.6,
+     "styleLayoutPct": 0.4,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 11
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 5
+      },
+      {
+       "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+       "ms": 5
+      }
+     ],
+     "suspects": {
+      "filter": 2,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 20,
+      "video": 0,
+      "canvas": 0,
+      "img": 4,
+      "bigImgMP": 4.7,
+      "infiniteAnims": 12,
+      "anims": 12
+     },
+     "idle": null
+    },
+    "act-3": {
+     "from": 28472,
+     "to": 30632,
+     "frames": 33,
+     "p50": 83.4,
+     "p95": 316.6,
+     "p99": 433.3,
+     "jank33": 72.7,
+     "jank50": 69.7,
+     "max": 433.3,
+     "maxAtY": 29200,
+     "mean": 128.3,
+     "fps": 7.8,
+     "paint": {
+      "paintsPerS": 22.2,
+      "rasterMsPerS": 372.4,
+      "paintMs": 24,
+      "rasterMs": 1328,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 27,
+        "ms": 20.9
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-3",
+        "n": 10,
+        "ms": 1.7
+       },
+       {
+        "node": "div.stage-window in #beyond",
+        "n": 10,
+        "ms": 0.1
+       },
+       {
+        "node": "svg.pointer-events-none.absolute.inset-0 viewBox=0 0 1000 418 in #act-3",
+        "n": 5,
+        "ms": 0.2
+       }
+      ]
+     },
+     "loaf": 25,
+     "loafBlockMs": 0,
+     "busyJankPct": 0,
+     "loafMs": 4323,
+     "workPct": 0.6,
+     "waitPct": 99.4,
+     "scriptPct": 0.2,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IntersectionObserverCallback @ 3nczl85xqg5o6.js",
+       "ms": 7
+      }
+     ],
+     "suspects": {
+      "filter": 1,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 6,
+      "video": 0,
+      "canvas": 0,
+      "img": 3,
+      "bigImgMP": 2,
+      "infiniteAnims": 0,
+      "anims": 0
+     },
+     "idle": null
+    },
+    "act-4": {
+     "from": 38532,
+     "to": 40872,
+     "frames": 34,
+     "p50": 83.3,
+     "p95": 683.3,
+     "p99": 849.9,
+     "jank33": 67.6,
+     "jank50": 61.8,
+     "max": 849.9,
+     "maxAtY": 40800,
+     "mean": 157.8,
+     "fps": 6.3,
+     "paint": {
+      "paintsPerS": 28.7,
+      "rasterMsPerS": 737.5,
+      "paintMs": 33,
+      "rasterMs": 2827,
+      "repaints": [
+       {
+        "node": "#document",
+        "n": 23,
+        "ms": 27.6
+       },
+       {
+        "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+        "n": 9,
+        "ms": 0.3
+       },
+       {
+        "node": "div.act-card-stage.relative.flex in #act-4",
+        "n": 8,
+        "ms": 1.6
+       },
+       {
+        "node": "div.absolute.inset-0 in #act-4",
+        "n": 7,
+        "ms": 0.4
+       }
+      ]
+     },
+     "loaf": 21,
+     "loafBlockMs": 0,
+     "busyJankPct": 0,
+     "loafMs": 5169,
+     "workPct": 1.6,
+     "waitPct": 98.4,
+     "scriptPct": 1.1,
+     "styleLayoutPct": 0.5,
+     "topScripts": [
+      {
+       "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+       "ms": 43
+      },
+      {
+       "script": "event-listener:#document.onwheel @ 3p9eevrhj-twl.js fO",
+       "ms": 7
+      },
+      {
+       "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+       "ms": 6
+      }
+     ],
+     "suspects": {
+      "filter": 0,
+      "backdrop": 0,
+      "blend": 0,
+      "mask": 3,
+      "willChange": 26,
+      "video": 0,
+      "canvas": 2,
+      "img": 3,
+      "bigImgMP": 2.3,
+      "infiniteAnims": 21,
+      "anims": 21
+     },
+     "idle": null
+    }
+   },
+   "sectionsAt": [
+    {
+     "id": "top",
+     "top": 0,
+     "h": 900
+    },
+    {
+     "id": "act-1",
+     "top": 900,
+     "h": 2383
+    },
+    {
+     "id": "about",
+     "top": 3283,
+     "h": 1326
+    },
+    {
+     "id": "journey",
+     "top": 4609,
+     "h": 2856
+    },
+    {
+     "id": "act-2",
+     "top": 7465,
+     "h": 1890
+    },
+    {
+     "id": "work",
+     "top": 9355,
+     "h": 2333
+    },
+    {
+     "id": "trading-algos",
+     "top": 11688,
+     "h": 1921
+    },
+    {
+     "id": "optuna-screener",
+     "top": 13608,
+     "h": 4446
+    },
+    {
+     "id": "experiment",
+     "top": 18055,
+     "h": 1132
+    },
+    {
+     "id": "systems",
+     "top": 19186,
+     "h": 2163
+    },
+    {
+     "id": "kill-list",
+     "top": 21350,
+     "h": 2122
+    },
+    {
+     "id": "films",
+     "top": 23472,
+     "h": 5451
+    },
+    {
+     "id": "act-3",
+     "top": 28922,
+     "h": 1710
+    },
+    {
+     "id": "beyond",
+     "top": 30632,
+     "h": 4324
+    },
+    {
+     "id": "writing",
+     "top": 34957,
+     "h": 2584
+    },
+    {
+     "id": "voices",
+     "top": 37541,
+     "h": 1441
+    },
+    {
+     "id": "act-4",
+     "top": 38982,
+     "h": 1890
+    },
+    {
+     "id": "principles",
+     "top": 40872,
+     "h": 2690
+    },
+    {
+     "id": "contact",
+     "top": 43562,
+     "h": 900
+    },
+    {
+     "id": "credits",
+     "top": 44462,
+     "h": 2579
+    }
+   ],
+   "idle": null,
+   "pageErrors": []
+  }
+ ],
+ "hotspots": [
+  {
+   "run": "native",
+   "where": "principles",
+   "frames": 7,
+   "fps": 1.6,
+   "mean": 638.1,
+   "p50": 650,
+   "p95": 966.6,
+   "p99": 966.6,
+   "jank50": 100,
+   "max": 966.6,
+   "relMean": 5.7,
+   "paint": {
+    "paintsPerS": 6.9,
+    "rasterMsPerS": 912.4,
+    "paintMs": 12,
+    "rasterMs": 4075,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 7,
+      "ms": 9.7
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-4",
+      "n": 4,
+      "ms": 0.5
+     },
+     {
+      "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+      "n": 4,
+      "ms": 0.2
+     },
+     {
+      "node": "div.relative.grid.grid-cols-1 in #principles",
+      "n": 2,
+      "ms": 0.1
+     }
+    ]
+   },
+   "loaf": 7,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 1.6,
+   "waitPct": 98.4,
+   "scriptPct": 1.4,
+   "styleLayoutPct": 0.2,
+   "topScripts": [
+    {
+     "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+     "ms": 49
+    },
+    {
+     "script": "event-listener:#document.onwheel @ 3p9eevrhj-twl.js fO",
+     "ms": 7
+    },
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 5
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 0,
+    "willChange": 7,
+    "video": 0,
+    "canvas": 0,
+    "img": 0,
+    "bigImgMP": 0,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 60.1,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 0,
+    "rafJsMsPerS": 16.2,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 98.4% waiting for the compositor — on screen: 7 will-change [while scrolling: raster 912.4 ms/s, 6.9 paints/s — repainting: #document ×7; div.act-card-stage.relative.flex in #act-4 ×4 | idle 60.1 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "native",
+   "where": "about",
+   "frames": 7,
+   "fps": 3,
+   "mean": 328.6,
+   "p50": 100,
+   "p95": 1333.3,
+   "p99": 1333.3,
+   "jank50": 85.7,
+   "max": 1333.3,
+   "relMean": 3,
+   "paint": {
+    "paintsPerS": 32.2,
+    "rasterMsPerS": 643.5,
+    "paintMs": 19,
+    "rasterMs": 1480,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 7,
+      "ms": 13.3
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-2",
+      "n": 6,
+      "ms": 1.9
+     },
+     {
+      "node": "div.absolute.inset-0.will-change-transform in #top",
+      "n": 5,
+      "ms": 0.7
+     },
+     {
+      "node": "div.absolute.inset-0.origin-center in #top",
+      "n": 5,
+      "ms": 0.4
+     }
+    ]
+   },
+   "loaf": 5,
+   "loafBlockMs": 117,
+   "busyJankPct": 16.7,
+   "workPct": 7.6,
+   "waitPct": 92.4,
+   "scriptPct": 7.6,
+   "styleLayoutPct": 0,
+   "topScripts": [
+    {
+     "script": "resolve-promise:Promise.resolve @ 1vb142oniqzf6.js",
+     "ms": 154
+    },
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 12
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 1,
+    "willChange": 0,
+    "video": 0,
+    "canvas": 0,
+    "img": 0,
+    "bigImgMP": 0,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 60.8,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 16.1,
+    "rafJsMsPerS": 36.8,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 16.7% of janky frames overlap real main-thread work; the LoAFs are 92.4% waiting for the compositor — on screen: 1 mask [while scrolling: raster 643.5 ms/s, 32.2 paints/s — repainting: #document ×7; div.act-card-stage.relative.flex in #act-2 ×6 | idle 60.8 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "desktop",
+   "where": "principles",
+   "frames": 10,
+   "fps": 3.3,
+   "mean": 305,
+   "p50": 350,
+   "p95": 500,
+   "p99": 500,
+   "jank50": 100,
+   "max": 500,
+   "relMean": 3.9,
+   "paint": {
+    "paintsPerS": 12.8,
+    "rasterMsPerS": 1066.6,
+    "paintMs": 21,
+    "rasterMs": 3253,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 10,
+      "ms": 19
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-4",
+      "n": 10,
+      "ms": 1.4
+     },
+     {
+      "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+      "n": 9,
+      "ms": 0.3
+     },
+     {
+      "node": "div.origin-right in #principles",
+      "n": 4,
+      "ms": 0.3
+     }
+    ]
+   },
+   "loaf": 10,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 0.6,
+   "waitPct": 99.4,
+   "scriptPct": 0.3,
+   "styleLayoutPct": 0.3,
+   "topScripts": [
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 10
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 0,
+    "willChange": 7,
+    "video": 0,
+    "canvas": 0,
+    "img": 0,
+    "bigImgMP": 0,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 60.1,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 0,
+    "rafJsMsPerS": 16.2,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 99.4% waiting for the compositor — on screen: 7 will-change [while scrolling: raster 1066.6 ms/s, 12.8 paints/s — repainting: #document ×10; div.act-card-stage.relative.flex in #act-4 ×10 | idle 60.1 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "native",
+   "where": "act-2",
+   "frames": 15,
+   "fps": 3.7,
+   "mean": 272.2,
+   "p50": 300,
+   "p95": 749.9,
+   "p99": 749.9,
+   "jank50": 66.7,
+   "max": 749.9,
+   "relMean": 2.5,
+   "paint": {
+    "paintsPerS": 24.5,
+    "rasterMsPerS": 491.3,
+    "paintMs": 24,
+    "rasterMs": 2006,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 14,
+      "ms": 18.7
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-2",
+      "n": 6,
+      "ms": 1.3
+     },
+     {
+      "node": "div.absolute.inset-0.will-change-transform in #top",
+      "n": 5,
+      "ms": 0.7
+     },
+     {
+      "node": "div.relative.@container in #work",
+      "n": 5,
+      "ms": 0.1
+     }
+    ]
+   },
+   "loaf": 10,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 1,
+   "waitPct": 99,
+   "scriptPct": 0.7,
+   "styleLayoutPct": 0.4,
+   "topScripts": [
+    {
+     "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+     "ms": 11
+    },
+    {
+     "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+     "ms": 5
+    },
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 5
+    }
+   ],
+   "suspects": {
+    "filter": 2,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 3,
+    "willChange": 20,
+    "video": 0,
+    "canvas": 0,
+    "img": 4,
+    "bigImgMP": 4.7,
+    "infiniteAnims": 12,
+    "anims": 12
+   },
+   "idle": {
+    "fps": 60.3,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 0,
+    "rafJsMsPerS": 20.6,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 99% waiting for the compositor — on screen: 2 filter, 3 mask, 20 will-change, 12 infinite anims, 4.7 MP of images [while scrolling: raster 491.3 ms/s, 24.5 paints/s — repainting: #document ×14; div.act-card-stage.relative.flex in #act-2 ×6 | idle 60.3 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "native",
+   "where": "journey",
+   "frames": 12,
+   "fps": 3.9,
+   "mean": 254.2,
+   "p50": 266.6,
+   "p95": 500,
+   "p99": 500,
+   "jank50": 91.7,
+   "max": 500,
+   "relMean": 2.3,
+   "paint": {
+    "paintsPerS": 22.3,
+    "rasterMsPerS": 671.2,
+    "paintMs": 25,
+    "rasterMs": 2047,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 12,
+      "ms": 20.3
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-2",
+      "n": 9,
+      "ms": 0.6
+     },
+     {
+      "node": "div.relative.@container in #work",
+      "n": 8,
+      "ms": 0.3
+     },
+     {
+      "node": "div.absolute.inset-0.will-change-transform in #top",
+      "n": 7,
+      "ms": 1.6
+     }
+    ]
+   },
+   "loaf": 11,
+   "loafBlockMs": 28,
+   "busyJankPct": 18.2,
+   "workPct": 3.6,
+   "waitPct": 96.4,
+   "scriptPct": 3.3,
+   "styleLayoutPct": 0.3,
+   "topScripts": [
+    {
+     "script": "user-callback:IdleRequestCallback @ 1zum7z4o80845.js i",
+     "ms": 83
+    },
+    {
+     "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+     "ms": 6
+    },
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 5
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 1,
+    "willChange": 1,
+    "video": 0,
+    "canvas": 0,
+    "img": 4,
+    "bigImgMP": 0.8,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 0.5,
+    "rasterMsPerS": 18.6,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 1.1,
+    "rafJsMsPerS": 1.4,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 18.2% of janky frames overlap real main-thread work; the LoAFs are 96.4% waiting for the compositor — on screen: 1 mask, 1 will-change, 0.8 MP of images [while scrolling: raster 671.2 ms/s, 22.3 paints/s — repainting: #document ×12; div.act-card-stage.relative.flex in #act-2 ×9 | idle 0.5 fps, raster 18.6 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "native",
+   "where": "act-1",
+   "frames": 24,
+   "fps": 4.2,
+   "mean": 240.3,
+   "p50": 133.4,
+   "p95": 766.7,
+   "p99": 816.7,
+   "jank50": 66.7,
+   "max": 816.7,
+   "relMean": 2.2,
+   "paint": {
+    "paintsPerS": 18.9,
+    "rasterMsPerS": 458.3,
+    "paintMs": 27,
+    "rasterMs": 2643,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 21,
+      "ms": 21.9
+     },
+     {
+      "node": "div.absolute.inset-0.origin-center in #top",
+      "n": 11,
+      "ms": 1.3
+     },
+     {
+      "node": "div.absolute.inset-0.will-change-transform in #top",
+      "n": 10,
+      "ms": 1
+     },
+     {
+      "node": "div.absolute.inset-0.will-change-transform in #act-1",
+      "n": 7,
+      "ms": 0.3
+     }
+    ]
+   },
+   "loaf": 14,
+   "loafBlockMs": 297,
+   "busyJankPct": 12.5,
+   "workPct": 8.2,
+   "waitPct": 91.8,
+   "scriptPct": 7.8,
+   "styleLayoutPct": 0.4,
+   "topScripts": [
+    {
+     "script": "user-callback:IntersectionObserverCallback @ 3tw7jfo5o-q7k.js",
+     "ms": 337
+    },
+    {
+     "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+     "ms": 10
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 4,
+    "willChange": 18,
+    "video": 0,
+    "canvas": 0,
+    "img": 2,
+    "bigImgMP": 2.3,
+    "infiniteAnims": 14,
+    "anims": 14
+   },
+   "idle": {
+    "fps": 24,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 5.4,
+    "rafJsMsPerS": 11.8,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 12.5% of janky frames overlap real main-thread work; the LoAFs are 91.8% waiting for the compositor — on screen: 4 mask, 18 will-change, 14 infinite anims, 2.3 MP of images [while scrolling: raster 458.3 ms/s, 18.9 paints/s — repainting: #document ×21; div.absolute.inset-0.origin-center in #top ×11 | idle 24 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "desktop",
+   "where": "kill-list",
+   "frames": 11,
+   "fps": 4.3,
+   "mean": 230.3,
+   "p50": 216.6,
+   "p95": 450,
+   "p99": 450,
+   "jank50": 100,
+   "max": 450,
+   "relMean": 2.9,
+   "paint": {
+    "paintsPerS": 19.3,
+    "rasterMsPerS": 928.1,
+    "paintMs": 23,
+    "rasterMs": 2351,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 11,
+      "ms": 20.5
+     },
+     {
+      "node": "div.relative.@container.will-change-[transform,opacity] in #header",
+      "n": 11,
+      "ms": 0.3
+     },
+     {
+      "node": "div.relative.sm:overflow-hidden.sm:rounded-frame in #systems",
+      "n": 10,
+      "ms": 0.8
+     },
+     {
+      "node": "div.absolute.inset-x-0.top-0 in #kill-list",
+      "n": 7,
+      "ms": 0.7
+     }
+    ]
+   },
+   "loaf": 11,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 0.7,
+   "waitPct": 99.3,
+   "scriptPct": 0.4,
+   "styleLayoutPct": 0.3,
+   "topScripts": [
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 10
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 1,
+    "willChange": 3,
+    "video": 0,
+    "canvas": 0,
+    "img": 1,
+    "bigImgMP": 0.3,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 60.3,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 0,
+    "rafJsMsPerS": 18.3,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 99.3% waiting for the compositor — on screen: 1 mask, 3 will-change, 0.3 MP of images [while scrolling: raster 928.1 ms/s, 19.3 paints/s — repainting: #document ×11; div.relative.@container.will-change-[transform,opacity] in #header ×11 | idle 60.3 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "native",
+   "where": "beyond",
+   "frames": 23,
+   "fps": 4.5,
+   "mean": 221,
+   "p50": 249.9,
+   "p95": 466.7,
+   "p99": 600,
+   "jank50": 87,
+   "max": 600,
+   "relMean": 2,
+   "paint": {
+    "paintsPerS": 24.8,
+    "rasterMsPerS": 552.2,
+    "paintMs": 35,
+    "rasterMs": 2807,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 23,
+      "ms": 27.6
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-3",
+      "n": 16,
+      "ms": 4.4
+     },
+     {
+      "node": "div.stage-window in #beyond",
+      "n": 14,
+      "ms": 0.5
+     },
+     {
+      "node": "div.rdr2-module__R8wI0W__campSticky in #voices",
+      "n": 6,
+      "ms": 0.2
+     }
+    ]
+   },
+   "loaf": 19,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 0.3,
+   "waitPct": 99.7,
+   "scriptPct": 0.1,
+   "styleLayoutPct": 0.2,
+   "topScripts": [
+    {
+     "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+     "ms": 5
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 6,
+    "willChange": 0,
+    "video": 0,
+    "canvas": 0,
+    "img": 4,
+    "bigImgMP": 3,
+    "infiniteAnims": 0,
+    "anims": 1
+   },
+   "idle": {
+    "fps": 60.1,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 0,
+    "rafJsMsPerS": 18.7,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 99.7% waiting for the compositor — on screen: 6 mask, 3 MP of images [while scrolling: raster 552.2 ms/s, 24.8 paints/s — repainting: #document ×23; div.act-card-stage.relative.flex in #act-3 ×16 | idle 60.1 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "desktop",
+   "where": "act-1",
+   "frames": 25,
+   "fps": 4.5,
+   "mean": 220,
+   "p50": 233.3,
+   "p95": 366.7,
+   "p99": 700,
+   "jank50": 88,
+   "max": 700,
+   "relMean": 2.8,
+   "paint": {
+    "paintsPerS": 23.8,
+    "rasterMsPerS": 591.8,
+    "paintMs": 37,
+    "rasterMs": 3255,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 23,
+      "ms": 28
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-1",
+      "n": 15,
+      "ms": 1.7
+     },
+     {
+      "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+      "n": 15,
+      "ms": 1.3
+     },
+     {
+      "node": "node 70",
+      "n": 8,
+      "ms": 0.6
+     }
+    ]
+   },
+   "loaf": 22,
+   "loafBlockMs": 238,
+   "busyJankPct": 13,
+   "workPct": 6.2,
+   "waitPct": 93.8,
+   "scriptPct": 5.9,
+   "styleLayoutPct": 0.4,
+   "topScripts": [
+    {
+     "script": "user-callback:IntersectionObserverCallback @ 17uxrkbdeaanq.js",
+     "ms": 278
+    },
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 13
+    },
+    {
+     "script": "user-callback:FrameRequestCallback @ 1rezhhvr7fq6o.js v",
+     "ms": 10
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 4,
+    "willChange": 18,
+    "video": 0,
+    "canvas": 0,
+    "img": 2,
+    "bigImgMP": 2.3,
+    "infiniteAnims": 14,
+    "anims": 14
+   },
+   "idle": {
+    "fps": 24,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 5.4,
+    "rafJsMsPerS": 11.8,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 13% of janky frames overlap real main-thread work; the LoAFs are 93.8% waiting for the compositor — on screen: 4 mask, 18 will-change, 14 infinite anims, 2.3 MP of images [while scrolling: raster 591.8 ms/s, 23.8 paints/s — repainting: #document ×23; div.act-card-stage.relative.flex in #act-1 ×15 | idle 24 fps, raster 0 ms/s, 0 paints/s]"
+  },
+  {
+   "run": "desktop",
+   "where": "about",
+   "frames": 9,
+   "fps": 4.6,
+   "mean": 218.5,
+   "p50": 216.7,
+   "p95": 400,
+   "p99": 400,
+   "jank50": 88.9,
+   "max": 400,
+   "relMean": 2.8,
+   "paint": {
+    "paintsPerS": 26.4,
+    "rasterMsPerS": 757.1,
+    "paintMs": 15,
+    "rasterMs": 1489,
+    "repaints": [
+     {
+      "node": "#document",
+      "n": 9,
+      "ms": 11.3
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-2",
+      "n": 9,
+      "ms": 1.4
+     },
+     {
+      "node": "div.sticky.top-[calc(var(--header-h)+1.5rem)] in #journey",
+      "n": 9,
+      "ms": 0.7
+     },
+     {
+      "node": "div.act-card-stage.relative.flex in #act-1",
+      "n": 9,
+      "ms": 0.6
+     }
+    ]
+   },
+   "loaf": 8,
+   "loafBlockMs": 0,
+   "busyJankPct": 0,
+   "workPct": 3.4,
+   "waitPct": 96.6,
+   "scriptPct": 2.9,
+   "styleLayoutPct": 0.5,
+   "topScripts": [
+    {
+     "script": "event-listener:MessagePort.onmessage @ 3p9eevrhj-twl.js O",
+     "ms": 30
+    },
+    {
+     "script": "user-callback:TimerHandler:setInterval",
+     "ms": 5
+    },
+    {
+     "script": "event-listener:#document.onwheel @ 3p9eevrhj-twl.js fO",
+     "ms": 5
+    }
+   ],
+   "suspects": {
+    "filter": 0,
+    "backdrop": 0,
+    "blend": 0,
+    "mask": 1,
+    "willChange": 0,
+    "video": 0,
+    "canvas": 0,
+    "img": 0,
+    "bigImgMP": 0,
+    "infiniteAnims": 0,
+    "anims": 0
+   },
+   "idle": {
+    "fps": 60.8,
+    "rasterMsPerS": 0,
+    "paintMsPerS": 0,
+    "paintsPerS": 0,
+    "styleLayoutMsPerS": 16.1,
+    "rafJsMsPerS": 36.8,
+    "repaints": []
+   },
+   "likely": "raster/composite-bound: only 0% of janky frames overlap real main-thread work; the LoAFs are 96.6% waiting for the compositor — on screen: 1 mask [while scrolling: raster 757.1 ms/s, 26.4 paints/s — repainting: #document ×9; div.act-card-stage.relative.flex in #act-2 ×9 | idle 60.8 fps, raster 0 ms/s, 0 paints/s]"
+  }
+ ],
+ "strips": [
+  "strips/desktop-act-1.png",
+  "strips/desktop-act-2.png",
+  "strips/desktop-act-3.png",
+  "strips/desktop-act-4.png",
+  "strips/desktop-first-60s.png",
+  "strips/pop-desktop-88.png",
+  "strips/pop-desktop-25.png",
+  "strips/pop-desktop-24.png",
+  "strips/native-act-1.png",
+  "strips/native-act-2.png",
+  "strips/native-act-3.png",
+  "strips/native-act-4.png",
+  "strips/native-first-60s.png",
+  "strips/pop-native-553.png",
+  "strips/pop-native-115.png",
+  "strips/pop-native-547.png",
+  "strips/pop-native-192.png"
+ ]
+}

@@ -1,0 +1,10 @@
+act-1 jump→.6 settle 5 ms {"phase":"b","sub":1,"subText":"Where I started, and the course I've bee","raw":0.6,"t":0.6} y 1386 want 1386
+act-2 jump→.6 settle 8 ms {"phase":"b","sub":1,"subText":"What I build, how I try to break it, and","raw":0.6,"t":0.6} y 8059 want 8059
+act-3 jump→.6 settle 2 ms {"phase":"b","sub":1,"subText":"Life beyond the screen: the miles, the m","raw":0.6,"t":0.6} y 29408 want 29379
+act-4 jump→.6 settle 2 ms {"phase":"b","sub":1,"subText":"What I believe about doing this work hon","raw":0.6,"t":0.6} y 39576 want 39576
+wheel act-2 [[1612,0.72,0.624],[1714,0.72,0.624],[1826,0.767,0.707],[1929,0.767,0.707],[2032,0.767,0.707],[2136,0.774,0.756],[2240,0.776,0.767],[2343,0.776,0.767],[2458,0.777,0.776]]
+act-1 jump→.6 settle 21 ms {"phase":"b","sub":1,"subText":"Where I started, and the course I've bee","raw":0.601,"t":0.601} y 1183 want 1183
+act-2 jump→.6 settle 10 ms {"phase":"b","sub":1,"subText":"What I build, how I try to break it, and","raw":0.6,"t":0.6} y 7258 want 7258
+act-3 jump→.6 settle 1 ms {"phase":"b","sub":1,"subText":"Life beyond the screen: the miles, the m","raw":0.601,"t":0.601} y 27642 want 27646
+act-4 jump→.6 settle 21 ms {"phase":"b","sub":1,"subText":"What I believe about doing this work hon","raw":0.6,"t":0.6} y 37336 want 37336
+wheel act-2 [[1322,0.85,0.697],[1427,0.882,0.809],[1530,0.89,0.845],[1633,0.897,0.874],[1736,0.897,0.874],[1853,0.901,0.894],[1963,0.901,0.898],[2066,0.901,0.898],[2168,0.901,0.898],[2276,0.902,0.901]]

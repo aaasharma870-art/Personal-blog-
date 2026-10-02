@@ -282,3 +282,45 @@ export function spanUnit<T>(at: readonly number[], to: readonly T[]): [number[],
   }
   return [a, t];
 }
+
+/* — Phase 3 pinned act cards (PHASE3-SPEC §7.1, §8.1, §8.4; W2-CARDS) ————
+   Every pinned card is ONE driver p over its travel (film.cardTravel, the
+   boot gate only): the hook frame at p ≤ .05, star (a) the world transition
+   p 0–.45 (the tintype's develop starts at its flash, .03), the settle
+   .45–.50 (the new world breathes; quiet), star (b) the push through the
+   act title p .50–1 (the letters open from .68). The card draws a DAMPED p
+   inside the pin only: p += (p_raw − p)·(1 − e^(−λ·dt)), one rAF owner per
+   card while |p_raw − p| > eps, snapping exactly to 0 and 1; an immediate
+   jump (the cut, the chapter select, a hash) sets p = p_raw. In-flow
+   motion is never damped. Reduced motion / Pause: no damping (the card is
+   the static settled frame). */
+export const cardPin = {
+  /** Star (a): the world transition. */
+  a: [0, 0.45],
+  /** The settle between the stars (quiet). */
+  settle: [0.45, 0.5],
+  /** Star (b): the push through the act title. */
+  b: [0.5, 1],
+  /** The hook frame is every p ≤ hook. */
+  hook: 0.05,
+  /** The act title's letters start opening (css + GL). */
+  titleIn: 0.68,
+  /** The subtitle fades out as the mask opens the bars. */
+  titleOut: 0.92,
+  /** Damping rate λ (1/s) and the snap epsilon. */
+  lambda: 8,
+  eps: 0.002,
+  /** The longest frame the damping integrates (s): the lag is in real time
+   *  on a slow frame, not in frames (W2 gate: at a 64 ms cap a 3 fps frame
+   *  rate left the card seconds behind). */
+  dtMax: 0.25,
+  /** A p_raw change this large in one scroll event is a jump (a scrollbar
+   *  drag, Home / End, a script): the damped p snaps to it. */
+  jump: 0.5,
+  /** Each scroll star shows for at least this long on a fling (s): the
+   *  damped p's speed inside a star is capped at its span / starMinS
+   *  (spec P3-6 #2). */
+  starMinS: 0.4,
+  /** The subtitle's fades (s): in at p .50, out at `titleOut`. */
+  subtitleFade: 0.2,
+} as const;

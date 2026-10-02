@@ -1,6 +1,10 @@
+import { principles } from "@/lib/content";
 import { slot, variantChoiceOf } from "@/lib/sections";
+import { pieceVariant } from "@/lib/variants";
 import { SectionHead, WorldSection } from "@/components/site/world-kit";
 import { PrinciplesStage } from "@/components/site/principles-stage";
+import { MapHint } from "@/components/worlds/hp/map-hint";
+import { PrincipleBody, SCRUB_ROOM } from "@/components/worlds/hp/principle-body";
 import type { SectionProps } from "@/components/sections/types";
 
 /**
@@ -24,14 +28,40 @@ import type { SectionProps } from "@/components/sections/types";
  * renders plain rows). Reduced motion / Pause / no JS: the final state —
  * the map unfolded with a static trail, or every candle lit.
  * Variant piece: `principles.map` (lib/variants.ts; ?variant=principles:alt).
+ *
+ * Phase 3 (W3-HP): the h2 arrives in character (B53, `words.title-hp`); the
+ * map unfold is a weight-1 time star (B52) through the spotlight; room 05
+ * carries the Act IV scroll-scrubbed sentence (B55, worlds/hp/principle-body);
+ * the `hp-map` egg's hint sits on the banner; the wand cursor works the
+ * whole section (components/worlds/hp/wand-cursor.tsx, desktop only).
  */
 export function Principles({ entry, number }: SectionProps<"principles">) {
   const titleId = `${entry.id}-title`;
+  const choice = variantChoiceOf(entry);
   return (
     <WorldSection entry={entry} labelledBy={titleId}>
       <PrinciplesStage
-        choice={variantChoiceOf(entry)}
+        choice={choice}
         ribbons={slot(entry, "emphasis") === "ribbon"}
+        // the `hp-map` egg's hint, set here on the server for each
+        // choreography: under the Map's banner, or under the ceiling band
+        hint={{
+          map: <MapHint className="inset-x-0 top-full mt-2 text-center" />,
+          ceiling: <MapHint className="bottom-2 right-0 text-right" />,
+        }}
+        // room 05's body with the Act IV scrubbed sentence (B55), rendered
+        // here on the server: the words data stays out of the client bundle
+        scrub={{
+          at: SCRUB_ROOM,
+          node: (
+            <PrincipleBody
+              body={principles[SCRUB_ROOM]?.body ?? ""}
+              index={SCRUB_ROOM}
+              scrub={pieceVariant(choice, "scrub")}
+              className="mt-tier-group max-w-body type-body text-fg-muted"
+            />
+          ),
+        }}
         head={
           <SectionHead
             id={titleId}
@@ -39,6 +69,12 @@ export function Principles({ entry, number }: SectionProps<"principles">) {
             label={entry.nav?.label ?? "Principles"}
             title="A small philosophy of work."
             intro="Five ideas I actually use when I build. The names are sources, not decoration."
+            // Act IV's one animated h2 (spec §8.2, B53): inked with a nib on
+            // desktop (ALT: the ink bleeds in), once, through the spotlight
+            inCharacter
+            world="hp"
+            beat="B53"
+            variant={pieceVariant(choice, "title-hp")}
           />
         }
       />

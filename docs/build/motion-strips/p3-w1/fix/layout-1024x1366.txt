@@ -1,0 +1,21 @@
+docH 39043 -> 39942 fontsLoaded+ Film Name Pirates|fontWorldHpBody|fontWorldHpHead|fontWorldIdiotsHead|fontWorldIdiotsLead|fontWorldPiratesBody|fontWorldRdr2Body|fontWorldRdr2Head fonts- fontWorldHp|fontWorldIdiots|fontWorldPirates|fontWorldRdr2
+top: top 0->0 (Δ0) h Δ0 nodes 61->62 +fonts "Film Name Pirates" -fonts fontWorldPirates
+act-1: top 1366->1366 (Δ0) h Δ0 nodes 111->111 +fonts "Film Name Pirates" -fonts fontWorldPirates
+about: top 2690.77->2690.77 (Δ0) h Δ114.21 nodes 102->103 +fonts "Film Name Pirates"|fontWorldPiratesBody -fonts fontWorldPirates
+journey: top 4067.47->4181.67 (Δ114.2) h Δ41 nodes 138->138 +fonts "Film Name Pirates"|fontWorldPiratesBody -fonts fontWorldPirates
+act-2: top 5076.97->5232.17 (Δ155.2) h Δ0 nodes 80->80 +fonts fontWorldIdiotsHead|fontWorldIdiotsLead -fonts fontWorldIdiots
+work: top 6442.97->6598.17 (Δ155.2) h Δ98 nodes 191->193 +fonts fontWorldIdiotsHead|fontWorldIdiotsLead -fonts Newsreader|fontWorldIdiots
+trading-algos: top 8428.64->8681.84 (Δ253.2) h Δ-2.07 nodes 206->212 +fonts fontWorldIdiotsHead -fonts Newsreader|fontWorldIdiots
+optuna-screener: top 10007.02->10258.16 (Δ251.14) h Δ-5.16 nodes 348->356 +fonts fontWorldIdiotsHead -fonts Newsreader|fontWorldIdiots
+experiment: top 13528.34->13774.33 (Δ245.99) h Δ49.68 nodes 46->47 -fonts Newsreader
+systems: top 14506.5->14802.17 (Δ295.67) h Δ101.88 nodes 168->168 +fonts fontWorldIdiotsHead|fontWorldIdiotsLead -fonts fontWorldIdiots text@1399: "-WORLD × DATA-TONE⏎⏎NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL⏎⏎Why not just use a pencil?" -> "-WORLD × DATA-TONE⏎⏎SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH RE"
+kill-list: top 16262.2->16659.75 (Δ397.55) h Δ-30.85 nodes 289->290 +fonts fontWorldIdiotsHead -fonts fontWorldIdiots
+films: top 18431.03->18797.73 (Δ366.7) h Δ-10.49 nodes 279->279 +fonts "Film Name Pirates"|fontWorldHpHead|fontWorldIdiotsHead|fontWorldRdr2Head -fonts fontWorldHp|fontWorldIdiots|fontWorldPirates|fontWorldRdr2
+act-3: top 23192.33->23548.55 (Δ356.22) h Δ0 nodes 56->56 +fonts fontWorldRdr2Body|fontWorldRdr2Head -fonts fontWorldRdr2
+beyond: top 24558.33->24914.55 (Δ356.22) h Δ266.79 nodes 303->308 +fonts fontWorldRdr2Body|fontWorldRdr2Head -fonts fontWorldRdr2
+writing: top 28201.17->28824.17 (Δ623) h Δ-74.74 nodes 195->129 +fonts fontWorldRdr2Body|fontWorldRdr2Head -fonts Newsreader|fontWorldRdr2
+voices: top 30777.33->31325.59 (Δ548.26) h Δ81.82 nodes 67->67 +fonts fontWorldRdr2Body|fontWorldRdr2Head -fonts fontWorldRdr2
+act-4: top 32238.81->32868.89 (Δ630.08) h Δ0 nodes 42->42 +fonts fontWorldHpBody|fontWorldHpHead -fonts fontWorldHp
+principles: top 33604.81->34234.89 (Δ630.08) h Δ214.48 nodes 702->702 +fonts fontWorldHpBody|fontWorldHpHead -fonts Newsreader|fontWorldHp
+contact: top 35834.67->36679.23 (Δ844.56) h Δ0 nodes 162->162 +fonts fontWorldHpBody|fontWorldHpHead -fonts fontWorldHp
+credits: top 37200.67->38045.23 (Δ844.56) h Δ54.38 nodes 125->133 +fonts "Film Name Pirates"|fontWorldHpHead|fontWorldIdiotsHead|fontWorldRdr2Head -fonts fontWorldHp|fontWorldIdiots|fontWorldPirates|fontWorldRdr2 text@976: "3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this p" -> "3.0, nano_banana_pro, minimax_h3) · our own prompts; the only image inputs were frames mad"

@@ -1,0 +1,257 @@
+[
+ {
+  "run": 0,
+  "nameFirstVisibleMsAfterReveal": 115,
+  "revFrames": [
+   [
+    31,
+    0
+   ],
+   [
+    65,
+    0
+   ],
+   [
+    115,
+    1
+   ],
+   [
+    131,
+    1
+   ]
+  ],
+  "nameFramesAfterReveal": 3,
+  "marks": {
+   "intro:arm": 47,
+   "intro:ready": 433,
+   "intro:play": 3050,
+   "intro:flight": 3156,
+   "intro:warm": 7751,
+   "intro:hold": 9138,
+   "intro:reveal": 9301,
+   "intro:landing": 9301,
+   "intro:titles": 9948,
+   "intro:end": 9948,
+   "intro:titles-end": 13149,
+   "p3:quiet-end": 13149,
+   "p3:ladder-1": 13345,
+   "p3:ladder-2": 13511,
+   "p3:ladder-3": 13675,
+   "p3:ladder-4": 13839,
+   "p3:ladder-5": 14013
+  },
+  "mediaAtFirstSweepFrame": "playing",
+  "mediaAtRevealMark": "playing",
+  "mediaStatesSeen": [
+   "poster",
+   "starting",
+   "playing"
+  ],
+  "loafWarmToEnd": {
+   "n": 11,
+   "over50dur": 11,
+   "maxDur": 95,
+   "over50work": 0,
+   "maxWork": 30,
+   "worst": [
+    {
+     "t": 9102,
+     "d": 69,
+     "work": 30,
+     "top": {
+      "d": 30,
+      "inv": "VideoFrameRequestCallback",
+      "src": "calhost:3161/intro/intro.js?v=bfbafba6ce",
+      "fn": "hn",
+      "st": 9137.700000000186
+     }
+    },
+    {
+     "t": 9496,
+     "d": 52,
+     "work": 1
+    },
+    {
+     "t": 9436,
+     "d": 59,
+     "work": 0
+    }
+   ]
+  },
+  "handoff": {
+   "loafs": 2,
+   "maxScript": 30,
+   "scripts": [
+    "30ms VideoFrameRequestCallback calhost:3161/intro/intro.js?v=bfbafba6ce hn"
+   ]
+  },
+  "errs": []
+ },
+ {
+  "run": 1,
+  "nameFirstVisibleMsAfterReveal": 90,
+  "revFrames": [
+   [
+    40,
+    0
+   ],
+   [
+    90,
+    1
+   ],
+   [
+    140,
+    1
+   ],
+   [
+    206,
+    1
+   ]
+  ],
+  "nameFramesAfterReveal": 2,
+  "marks": {
+   "intro:arm": 60,
+   "intro:ready": 308,
+   "intro:play": 2972,
+   "intro:flight": 3079,
+   "intro:warm": 7689,
+   "intro:hold": 9072,
+   "intro:reveal": 9231,
+   "intro:landing": 9231,
+   "intro:titles": 9875,
+   "intro:end": 9875,
+   "intro:titles-end": 13075,
+   "p3:quiet-end": 13076,
+   "p3:ladder-1": 13280,
+   "p3:ladder-2": 13440,
+   "p3:ladder-3": 13597,
+   "p3:ladder-4": 13762,
+   "p3:ladder-5": 13934
+  },
+  "mediaAtFirstSweepFrame": "playing",
+  "mediaAtRevealMark": "playing",
+  "mediaStatesSeen": [
+   "poster",
+   "starting",
+   "playing"
+  ],
+  "loafWarmToEnd": {
+   "n": 10,
+   "over50dur": 10,
+   "maxDur": 76,
+   "over50work": 0,
+   "maxWork": 0,
+   "worst": [
+    {
+     "t": 9444,
+     "d": 62,
+     "work": 0
+    },
+    {
+     "t": 7694,
+     "d": 56,
+     "work": 0
+    },
+    {
+     "t": 7966,
+     "d": 53,
+     "work": 0
+    }
+   ]
+  },
+  "handoff": {
+   "loafs": 2,
+   "maxScript": 0,
+   "scripts": []
+  },
+  "errs": []
+ },
+ {
+  "run": 2,
+  "nameFirstVisibleMsAfterReveal": 121,
+  "revFrames": [
+   [
+    38,
+    0
+   ],
+   [
+    71,
+    0
+   ],
+   [
+    121,
+    1
+   ],
+   [
+    171,
+    1
+   ]
+  ],
+  "nameFramesAfterReveal": 3,
+  "marks": {
+   "intro:arm": 68,
+   "intro:ready": 368,
+   "intro:play": 3013,
+   "intro:flight": 3111,
+   "intro:warm": 7732,
+   "intro:hold": 9161,
+   "intro:reveal": 9322,
+   "intro:landing": 9322,
+   "intro:titles": 10017,
+   "intro:end": 10018,
+   "intro:titles-end": 13218,
+   "p3:quiet-end": 13218,
+   "p3:ladder-1": 13389,
+   "p3:ladder-2": 13556,
+   "p3:ladder-3": 13713,
+   "p3:ladder-4": 13878,
+   "p3:ladder-5": 14047
+  },
+  "mediaAtFirstSweepFrame": "playing",
+  "mediaAtRevealMark": "playing",
+  "mediaStatesSeen": [
+   "poster",
+   "starting",
+   "playing"
+  ],
+  "loafWarmToEnd": {
+   "n": 7,
+   "over50dur": 7,
+   "maxDur": 95,
+   "over50work": 0,
+   "maxWork": 25,
+   "worst": [
+    {
+     "t": 9127,
+     "d": 63,
+     "work": 25,
+     "top": {
+      "d": 25,
+      "inv": "VideoFrameRequestCallback",
+      "src": "calhost:3161/intro/intro.js?v=bfbafba6ce",
+      "fn": "hn",
+      "st": 9161.200000000186
+     }
+    },
+    {
+     "t": 9965,
+     "d": 58,
+     "work": 1
+    },
+    {
+     "t": 9447,
+     "d": 57,
+     "work": 0
+    }
+   ]
+  },
+  "handoff": {
+   "loafs": 2,
+   "maxScript": 25,
+   "scripts": [
+    "25ms VideoFrameRequestCallback calhost:3161/intro/intro.js?v=bfbafba6ce hn"
+   ]
+  },
+  "errs": []
+ }
+]

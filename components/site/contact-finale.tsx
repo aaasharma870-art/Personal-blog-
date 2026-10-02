@@ -4,8 +4,10 @@ import { useRef, useState } from "react";
 import type { PointerEvent } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { emit } from "@/lib/events";
 import { useFinePointer, useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { dur, ease, springFollow } from "@/lib/motion";
+import { copyText, copyVisible } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import { GithubMark } from "@/components/ui/icons";
 
@@ -27,6 +29,16 @@ import { GithubMark } from "@/components/ui/icons";
  *     share one grid cell, CLS 0), a polite live region announces it, and
  *     `onCopied()` asks the plate for its single flare. On reject: nothing
  *     claims success.
+ *
+ * THE "LUMOS" BUTTON (PHASE3-SPEC §9.2 #4, W3-HP): the candle toy's keyboard
+ * path, last in the tab order. It lights every dark candle of the hall in
+ * one 1.6 s sweep (worlds/hp/candle-toy.tsx, through the `toy` event); when
+ * the hall is all lit, the toy writes "The hall is lit." into the polite
+ * live region beside it (`data-candle-status`; it clears it when it arms
+ * again). Shown under the boot gate only (desktop, fine pointer, motion on
+ * at load: where the toy can arm), so phones and reduced-motion visitors
+ * keep today's layout; with no toy running every candle is already lit, and
+ * the button simply says so.
  */
 export function ContactFinale({
   email,
@@ -80,7 +92,38 @@ export function ContactFinale({
         Résumé<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
         <span className="sr-only">, </span>coming soon
       </p>
+      <CandleLumos />
     </div>
+  );
+}
+
+const LUMOS = copyText("toy.candles.lumos");
+/** "The hall is lit." (the toy writes it too: candle-toy.tsx `HALL_LIT`). */
+export const HALL_LIT = copyText("toy.candles.done");
+
+function CandleLumos() {
+  const status = useRef<HTMLSpanElement>(null);
+  if (!copyVisible(LUMOS)) return null;
+  const onLumos = () => {
+    emit("toy", { toy: "candles", action: "lumos" });
+    // no toy running (motion off, or not loaded yet): the hall is already lit
+    if (!document.querySelector("[data-candle-toy]") && status.current && copyVisible(HALL_LIT)) {
+      status.current.textContent = HALL_LIT.text;
+    }
+  };
+  return (
+    <p className="mt-tier-group hidden items-center gap-x-4 boot:flex">
+      <button
+        type="button"
+        onClick={onLumos}
+        className="inline-flex min-h-11 items-center type-body text-fg underline decoration-(--fg-ghost) decoration-1 underline-offset-4 transition-colors hover:decoration-current"
+        data-candle-lumos=""
+      >
+        {LUMOS.text}
+      </button>
+      {/* the live region: written by the toy (or the line above), never by React */}
+      <span ref={status} aria-live="polite" className="type-meta text-fg-muted" data-candle-status="" />
+    </p>
   );
 }
 

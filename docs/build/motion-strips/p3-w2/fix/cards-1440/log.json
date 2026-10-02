@@ -1,0 +1,194 @@
+[
+ {
+  "name": "opening-p0.05",
+  "settleMs": 1173,
+  "raw": 0.051,
+  "t": 0.051,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "opening-p0.22",
+  "settleMs": 644,
+  "raw": 0.22,
+  "t": 0.22,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "opening-p0.5",
+  "settleMs": 1120,
+  "raw": 0.5,
+  "t": 0.5,
+  "phase": "b",
+  "sub": 0.92
+ },
+ {
+  "name": "opening-p0.75",
+  "settleMs": 1425,
+  "raw": 0.751,
+  "t": 0.751,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "opening-p0.9",
+  "settleMs": 1079,
+  "raw": 0.9,
+  "t": 0.9,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "opening-p1",
+  "settleMs": 1591,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.05",
+  "settleMs": 1862,
+  "raw": 0.049,
+  "t": 0.006,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.22",
+  "settleMs": 1250,
+  "raw": 0.219,
+  "t": 0.219,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.5",
+  "settleMs": 1625,
+  "raw": 0.5,
+  "t": 0.5,
+  "phase": "b",
+  "sub": 0
+ },
+ {
+  "name": "seam-p0.75",
+  "settleMs": 554,
+  "raw": 0.749,
+  "t": 0.749,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "seam-p0.9",
+  "settleMs": 615,
+  "raw": 0.9,
+  "t": 0.9,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "seam-p1",
+  "settleMs": 681,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.05",
+  "settleMs": 1186,
+  "raw": 0.049,
+  "t": 0.049,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.22",
+  "settleMs": 328,
+  "raw": 0.221,
+  "t": 0.221,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "tintype-p0.5",
+  "settleMs": 89,
+  "raw": 0.5,
+  "t": 0.5,
+  "phase": "b",
+  "sub": 1
+ },
+ {
+  "name": "tintype-p0.75",
+  "settleMs": 481,
+  "raw": 0.751,
+  "t": 0.751,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "tintype-p0.9",
+  "settleMs": 291,
+  "raw": 0.9,
+  "t": 0.9,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "tintype-p1",
+  "settleMs": 1471,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.05",
+  "settleMs": 920,
+  "raw": 0.051,
+  "t": 0.051,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.22",
+  "settleMs": 984,
+  "raw": 0.22,
+  "t": 0.22,
+  "phase": "a",
+  "sub": 0
+ },
+ {
+  "name": "ignite-p0.5",
+  "settleMs": 402,
+  "raw": 0.5,
+  "t": 0.5,
+  "phase": "b",
+  "sub": 0.58
+ },
+ {
+  "name": "ignite-p0.75",
+  "settleMs": 626,
+  "raw": 0.751,
+  "t": 0.751,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "ignite-p0.9",
+  "settleMs": 842,
+  "raw": 0.9,
+  "t": 0.9,
+  "phase": "m",
+  "sub": 1
+ },
+ {
+  "name": "ignite-p1",
+  "settleMs": 1437,
+  "raw": 1,
+  "t": 1,
+  "phase": "e",
+  "sub": 0
+ }
+]

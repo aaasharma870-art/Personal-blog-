@@ -28,6 +28,7 @@ import {
 } from "@/lib/sections";
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
+import { EggHint } from "@/components/eggs/egg-hint";
 import { GithubMark } from "@/components/ui/icons";
 import { MotionToggle } from "@/components/primitives/motion-toggle";
 import { useMotionPreference } from "@/components/providers/motion-provider";
@@ -102,8 +103,13 @@ function useHeaderActive(): string {
   const observed = useActiveSection();
   const observedRef = useRef(observed);
   const [probe, setProbe] = useState<{ id: string | null; base: string }>({ id: null, base: "" });
+  const reprobe = useRef<() => void>(() => {});
   useEffect(() => {
     observedRef.current = observed;
+    // an observer change that lands AFTER the last settle probe (a late
+    // entry after a long programmatic jump: the W1 visual gate's stale
+    // "ACT IV" over the films) is probed again once it settles
+    reprobe.current();
   }, [observed]);
   useEffect(() => {
     let t = 0;
@@ -116,10 +122,12 @@ function useHeaderActive(): string {
         setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
       }, PROBE_SETTLE_MS);
     };
+    reprobe.current = schedule;
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     return () => {
+      reprobe.current = () => {};
       window.clearTimeout(t);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
@@ -214,11 +222,18 @@ function WorkPill({ base, href }: { base: string; href: string }) {
     e.preventDefault();
     runFastLane(href);
   };
+  // intent (hover / keyboard focus) warms the target world's faces, so the
+  // cut rarely waits on them (spec §11.3: the fast lane lands ≤ 400 ms)
+  const warm = () => {
+    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 3000);
+  };
   return (
     <a
       href={`${base}${href}`}
       data-fast-lane=""
       onClick={onClick}
+      onPointerEnter={warm}
+      onFocus={warm}
       aria-current={active === href.slice(1) ? "location" : undefined}
       className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
     >
@@ -282,13 +297,17 @@ function PauseWithTooltip() {
   return (
     <span className="group/tip relative inline-flex">
       <MotionToggle />
+      {/* the Lumos / Nox alias is the lumos egg's hint (W2-HUNT): gone
+          when the visitor turns the eggs off for the session */}
       {mounted && copyVisible(tip) ? (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-control px-3 py-1.5 type-meta text-fg-muted opacity-0 transition-opacity duration-(--dur-micro) surface-2 group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
-        >
-          {tip.text}
-        </span>
+        <EggHint egg="lumos">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-control px-3 py-1.5 type-meta text-fg-muted opacity-0 transition-opacity duration-(--dur-micro) surface-2 group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
+          >
+            {tip.text}
+          </span>
+        </EggHint>
       ) : null}
     </span>
   );

@@ -1,4 +1,4 @@
-import { capabilities, featuredProjects } from "@/lib/content";
+import { capabilities, featuredProjects, gauntlet } from "@/lib/content";
 import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -10,6 +10,7 @@ import { actCards, acts, copyText, copyVisible, enabledSections, variantChoiceOf
 import { beatAttrs } from "@/lib/beats";
 import type { CopyKey } from "@/lib/film";
 import type { SectionProps } from "@/components/sections/types";
+import { droneCopy } from "@/components/games/copy";
 
 /**
  * Systems — the capabilities matrix (Act II, idiots canvas; SPEC v2 §3 row 7,
@@ -27,6 +28,12 @@ import type { SectionProps } from "@/components/sections/types";
  *      pencil?", and a footnote that checks the film's legend.
  * The graph grid thins here toward open air and keeps thinning through the
  * kill-list to 0 at its last row (3I-07): this section takes it 6 % → 3 %.
+ *
+ * PHASE 3 (W3-GAMES): the band hosts FLY THE HOMEMADE DRONE (PHASE3-SPEC
+ * §9.2 #2): its strings are resolved here, on the server (the seven gate
+ * lines carry the gauntlet's titles VERBATIM), and handed to the band, so no
+ * client chunk reads lib/content for them. B26 (the take-off invite) is the
+ * band's; B27 (the FIG ink) stays on the FIG column below.
  */
 const COLS = [
   ["Methods", "methods"],
@@ -36,10 +43,9 @@ const COLS = [
 
 /** How this page is built, scoped to where each claim is true (PHASE3-SPEC
  *  §8.6; proposed + unsigned until Aryan signs). "systems.meta.webgl"
- *  ("WebGL, where supported, only for scene changes") joins this list in the
- *  commit that ships the WebGL layer (W2-GL handoff): until then the page has
- *  no WebGL and the line would be untrue. */
-const META: readonly CopyKey[] = ["systems.meta.scroll", "systems.meta.native", "systems.meta.css"];
+ *  ("WebGL, where supported, only for scene changes") joined in the commit
+ *  that ships the WebGL layer (W2 assembly). */
+const META: readonly CopyKey[] = ["systems.meta.scroll", "systems.meta.native", "systems.meta.css", "systems.meta.webgl"];
 
 export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   const titleId = `${entry.id}-title`;
@@ -52,7 +58,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
   ];
   const choice = variantChoiceOf(entry);
   const pencilQ = copyText("systems.pencil.q");
-  const pencilBody = copyText("systems.pencil.body");
+  const pencilBody = copyText("systems.pencil.body.p3");
   const pencilNote = copyText("systems.pencil.footnote");
   const meta = META.map((k) => copyText(k)).filter(copyVisible).map((c) => c.text);
   return (
@@ -68,6 +74,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           choice={choice}
           caption={<SceneCaption k="cap.systems" place="bl" />}
           className="mb-tier-block"
+          game={droneCopy(gauntlet.map((g) => g.title))}
         />
       ) : null}
 
@@ -126,7 +133,11 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           </ChalkboardFrame>
           <Meta className="mt-tier-group" fields={meta} />
           {/* IC-3I-06: the space-pen wink, in our own words (not a quote);
-              lib/film.ts copy "systems.pencil.*" (proposed) */}
+              lib/film.ts copy "systems.pencil.*" (proposed). The body is the
+              Phase-3 line (PHASE3-SPEC §8.6: "on desktop, one small WebGL
+              layer only where the scenes change"), scoped so it is true on
+              every device, so it renders everywhere (the W1 line, "no WebGL,
+              just native scroll", was retired when WebGL shipped in W2). */}
           {copyVisible(pencilQ) && copyVisible(pencilBody) ? (
             <p className="mt-tier-group max-w-body type-small text-fg-muted">
               <span className="text-fg">{pencilQ.text}</span> {pencilBody.text}

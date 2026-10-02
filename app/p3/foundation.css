@@ -7,28 +7,46 @@
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
 
-/* — Lenis (spec §3.1). lenis.css is NOT imported; these are the three rules
-     the page needs. `html.lenis` exists only while the one instance lives
-     (DESKTOP_FINE, motion on, home page); phones never match. — */
+/* — Lenis (spec §3.1). lenis.css is NOT imported. NO rule here may key on
+     Lenis's own classes (`html.lenis`, `.lenis-*`): Lenis rewrites them on
+     <html> at every glide start and stop, and any rule that can match
+     <html> itself makes that a full-document restyle (≈ 70–100 ms headless;
+     W1 gate, the warm-up LoAFs). So the page is Lenis-ready from the first
+     paint under the BOOT GATE (DESKTOP_FINE + motion on at boot + html.js,
+     the `boot:` variant in app/globals.css), and nothing changes on <html>
+     when the instance is created or destroyed. Phones, touch, reduced
+     motion and a view that booted paused never match. — */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  /* Without height:auto, Lenis's ResizeObserver on the `h-full` <html>
+     never fires and its scroll limit goes stale (the post-credits tail out
+     of reach after collapses toggle or fonts swap). The body keeps today's
+     viewport minimum (it was `min-h-full` of the h-full <html>). */
+  html.js:not([data-motion-boot="paused"]) {
+    height: auto;
+    /* Lenis owns the smoothing (and ScrollTrigger's refresh scrolls must
+       be instant); scrollToTarget() passes an explicit behavior. */
+    scroll-behavior: auto;
+  }
+  html.js:not([data-motion-boot="paused"]) body {
+    height: auto;
+    min-height: 100vh;
+  }
+  /* Nested scrollers (menu sheet, palette, map dialog) scroll natively and
+     never chain into the page. */
+  html.js:not([data-motion-boot="paused"]) [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+}
 
-/* Without this, Lenis's ResizeObserver on the `h-full` <html> never fires
-   and its scroll limit goes stale (the post-credits tail out of reach after
-   collapses toggle or fonts swap). */
-html.lenis,
-html.lenis body {
+/* A view that BOOTED paused and resumed: <SmoothScroll/> may start Lenis
+   later, so it marks <html data-smooth> once (never on a normal boot, where
+   the rules above already hold). */
+html[data-smooth],
+html[data-smooth] body {
   height: auto;
 }
-
-/* Lenis owns the smoothing; html { scroll-behavior: smooth } stays for the
-   native path (phones, Pause/RM set auto themselves). */
-html.lenis {
+html[data-smooth] {
   scroll-behavior: auto;
-}
-
-/* Nested scrollers (menu sheet, palette, map dialog) scroll natively and
-   never chain into the locked page. */
-.lenis [data-lenis-prevent] {
-  overscroll-behavior: contain;
 }
 
 /* — The cut (spec §11.3; components/director/cut-overlay.tsx): a fixed deep

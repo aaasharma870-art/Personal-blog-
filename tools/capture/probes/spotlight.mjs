@@ -37,6 +37,17 @@ export default async function probe(page, ctx) {
     };
     window.scrollTo(0, Math.min(innerHeight * 2, document.documentElement.scrollHeight - innerHeight * 2));
     await sleep(200);
+    // W2 measure fix: from W2 the opening card pins at 1–2.9 vh and its scroll stars (B03/B04) own the
+    // band at y = 2 vh, so "free" / "queue" / "release" waited on a real owner. Step down the page to a
+    // spot no registered scroll star owns before the synthetic tests (reported as res.start).
+    for (let i = 0; i < 40 && S.state?.().owner; i++) {
+      window.scrollTo(0, Math.min(window.scrollY + Math.round(innerHeight * 0.5), document.documentElement.scrollHeight - innerHeight * 2));
+      await sleep(200);
+    }
+    {
+      const owner = S.state?.().owner ?? null;
+      res.start = { pass: owner === null, y: Math.round(window.scrollY), owner };
+    }
 
     // own: a scroll star in the band blocks a time star until maxWait
     {

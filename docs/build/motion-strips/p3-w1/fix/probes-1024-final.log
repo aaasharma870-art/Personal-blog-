@@ -1,0 +1,6 @@
+pass    decoder (83521 ms)
+FAIL    lenis (56757 ms)
+pass    loaf (14906 ms)
+pass    research-font (1321 ms)
+pass    spotlight (56220 ms)
+p3-probes: 5 probe(s), 1 failed → docs/build/motion-strips/p3-w1/fix/probes-1024-final/p3-probes.json

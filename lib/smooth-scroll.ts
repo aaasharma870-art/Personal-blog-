@@ -24,7 +24,7 @@
 import { useSyncExternalStore } from "react";
 import { emit } from "./events";
 import { film, type ActSpec } from "./film";
-import { DESKTOP_WIDE, motionOffNow } from "./flags";
+import { DESKTOP_FINE, DESKTOP_WIDE, motionOffNow } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import { actCards } from "./sections";
 import { markWorldFontsReady } from "./world-fonts";
@@ -156,12 +156,22 @@ function resolveTarget(t: string | Element): Element | null {
   return id ? document.getElementById(id) : null;
 }
 
-/** The pinned travel of an act card in px: its height beyond the sticky
- *  stage (0 when it does not pin: phones, reduced motion, no JS). */
+/** The pin wrapper of an act card (the p target, W2-CARDS): the sticky
+ *  stage's own box. The opening's program block is a SIBLING after it
+ *  inside the section, so the section's height is not the travel. */
+function cardPin(card: HTMLElement): HTMLElement {
+  return card.querySelector<HTMLElement>(":scope > [data-act-card-pin]") ?? card;
+}
+
+/** The pinned travel of an act card in px: its pin wrapper's height beyond
+ *  one viewport (0 when it does not pin: phones, reduced motion, no JS).
+ *  The same range as the card's p_raw (CardShell's useScroll on the pin,
+ *  "start start" → "end end"), so `landAt` is the p the card shows even
+ *  when a short window lets the stage grow past 100svh (W2 gate). */
 function cardTravel(card: HTMLElement): number {
   const stage = card.querySelector<HTMLElement>("[data-card-stage], .act-card-stage");
   if (!stage || getComputedStyle(stage).position !== "sticky") return 0;
-  return Math.max(0, card.offsetHeight - stage.offsetHeight);
+  return Math.max(0, cardPin(card).offsetHeight - window.innerHeight);
 }
 
 /** `#act-n` → the card's top + landAt × travel (spec §7.1: land on the new
@@ -174,7 +184,7 @@ function landAtY(el: Element): number | null {
   if (landAt == null || !(landAt > 0)) return null;
   const travel = cardTravel(el);
   if (travel <= 0) return null;
-  return el.getBoundingClientRect().top + window.scrollY + Math.min(1, landAt) * travel;
+  return cardPin(el).getBoundingClientRect().top + window.scrollY + Math.min(1, landAt) * travel;
 }
 
 /** The page y that puts `el` where `block` says, with the native anchor
@@ -241,41 +251,58 @@ function focusOn(el: Element): void {
 
 const nextFrame = (): Promise<void> => new Promise((r) => requestAnimationFrame(() => r()));
 
-/** A native smooth scroll has arrived: `scrollend`, or a cap (Safari has
- *  no scrollend; a zero-length scroll fires none). */
-function nativeArrival(y: number): Promise<void> {
-  if (Math.abs(window.scrollY - y) < 1) return nextFrame();
-  return new Promise<void>((resolve) => {
+/** At `y` (within 2 px): a glide that was interrupted did not arrive. */
+const arrivedAt = (y: number): boolean => Math.abs(window.scrollY - y) < 2;
+
+const USER_SCROLL_INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+
+/** A native smooth scroll has ended: `scrollend`, or a cap (Safari has
+ *  no scrollend; a zero-length scroll fires none). Resolves `false` when
+ *  the visitor took over (wheel, touch, pointer, key) and the page is not
+ *  at `y`: an interrupted scroll never moves focus off screen. A slow but
+ *  uninterrupted scroll still counts as arrived (the skip link's focus). */
+function nativeArrival(y: number): Promise<boolean> {
+  if (Math.abs(window.scrollY - y) < 1) return nextFrame().then(() => true);
+  return new Promise<boolean>((resolve) => {
+    let interrupted = false;
+    const took = () => {
+      interrupted = true;
+    };
+    const opts = { capture: true, passive: true } as const;
     const finish = () => {
       window.removeEventListener("scrollend", finish);
+      for (const ev of USER_SCROLL_INPUT) window.removeEventListener(ev, took, opts);
       clearTimeout(timer);
-      resolve();
+      resolve(!interrupted || arrivedAt(y));
     };
     const timer = setTimeout(finish, 1500);
     window.addEventListener("scrollend", finish);
+    for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, took, opts);
   });
 }
 
 /** A Lenis glide to `y`: resolves on completion, or as soon as the glide is
- *  interrupted (a wheel, a newer jump, Lenis destroyed), capped at 4 s. */
-function lenisGlide(l: LenisLike, y: number): Promise<void> {
-  return new Promise<void>((resolve) => {
+ *  interrupted (a wheel, a newer jump, Lenis destroyed), capped at 4 s.
+ *  Resolves `true` only when it arrived (onComplete, or the page is at `y`):
+ *  an interrupted glide never moves focus to an off-screen target. */
+function lenisGlide(l: LenisLike, y: number): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
     let done = false;
     let started = false;
-    const finish = () => {
+    const finish = (completed: boolean) => {
       if (done) return;
       done = true;
       clearInterval(poll);
       clearTimeout(cap);
-      resolve();
+      resolve(completed || arrivedAt(y));
     };
     const poll = setInterval(() => {
-      if (lenis !== l) return finish();
+      if (lenis !== l) return finish(false);
       if (l.isScrolling === "smooth") started = true;
-      else if (started) finish();
+      else if (started) finish(false);
     }, 100);
-    const cap = setTimeout(finish, 4000);
-    l.scrollTo(y, { force: true, onComplete: finish });
+    const cap = setTimeout(() => finish(false), 4000);
+    l.scrollTo(y, { force: true, onComplete: () => finish(true) });
   });
 }
 
@@ -291,6 +318,8 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
   const el = typeof t === "number" ? null : resolveTarget(t);
   if (typeof t !== "number" && !el) return;
   const seq = ++jumpSeq;
+  // an explicit jump supersedes the load-time hash
+  hashHold = false;
 
   // a closing modal (menu, palette, map) releases its lock first: Lenis's
   // start() would cancel a glide begun while it was stopped
@@ -309,14 +338,21 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
 
   if (immediate) {
     const jump = () => {
-      if (l && lenis === l) l.scrollTo(y, { immediate: true, force: true });
-      else window.scrollTo({ top: y, behavior: "instant" });
+      // a newer jump owns the page: a superseded cut never lands
+      if (seq !== jumpSeq) return;
+      // measured now, not before the cut: the fonts readied during the
+      // fade-in (and any chapter above the target) may have re-flowed
+      const yy = el ? clampY(targetY(el, o.block ?? "start")) : y;
+      if (l && lenis === l) l.scrollTo(yy, { immediate: true, force: true });
+      else window.scrollTo({ top: yy, behavior: "instant" });
       gsapIfLoaded()?.ScrollTrigger.update();
       // cards set their damped p to the raw value: no catch-up after a cut
-      emit("scroll:jump", { y, immediate: true });
+      emit("scroll:jump", { y: yy, immediate: true });
     };
     const runner = cutRunner;
-    if (wantsCut && !off && runner) await runner(cutReady(el), jump);
+    // the overlay is motion: DESKTOP_FINE only (spec §1.2). A wide touch
+    // screen keeps the instant jump without the fade.
+    if (wantsCut && !off && runner && window.matchMedia(DESKTOP_FINE).matches) await runner(cutReady(el), jump);
     else {
       if (o.cut) await cutReady(el);
       jump();
@@ -327,12 +363,13 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
   }
 
   emit("scroll:jump", { y, immediate: false });
-  if (l) await lenisGlide(l, y);
+  let arrived: boolean;
+  if (l) arrived = await lenisGlide(l, y);
   else {
     window.scrollTo({ top: y, behavior: "smooth" });
-    await nativeArrival(y);
+    arrived = await nativeArrival(y);
   }
-  if (o.focus && el && seq === jumpSeq) focusOn(el);
+  if (o.focus && el && arrived && seq === jumpSeq) focusOn(el);
 }
 
 /* — locks (ref-counted by owner) ——————————————————————————————————— */
@@ -381,9 +418,48 @@ function whenUnlocked(): Promise<void> {
 
 let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let deferredSince = 0;
-let refreshedWithTriggers = false;
 let userScrolled = false;
 let inputTracked = false;
+/** A hash on load (`/#act-2`, `/#work`) on the desktop motion path is held
+ *  at its target — first at `load`, then through every refresh — until the
+ *  visitor scrolls, clicks or jumps themself (W2 gate: late layout, the
+ *  Lenis start and the pins used to leave it at the browser's native jump,
+ *  or at 0). Phones and reduced motion keep the browser's own jump. */
+let hashHold = false;
+if (typeof window !== "undefined" && window.location.hash.length > 1) {
+  try {
+    hashHold = window.matchMedia(DESKTOP_FINE).matches && !motionOffNow();
+  } catch {
+    hashHold = false;
+  }
+  if (hashHold) {
+    const opts = { capture: true, passive: true } as const;
+    const drop = () => {
+      hashHold = false;
+      for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.removeEventListener(ev, drop, opts);
+      window.removeEventListener("keydown", onKey, opts);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (/^(PageUp|PageDown|ArrowUp|ArrowDown|Home|End| |Spacebar|Tab)$/.test(e.key)) drop();
+    };
+    for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.addEventListener(ev, drop, opts);
+    window.addEventListener("keydown", onKey, opts);
+    // a target the stream has not placed yet (its pin wrapper) is retried
+    // for up to 3 s; every later refresh re-lands it while it is held
+    const land = () => {
+      let n = 0;
+      const tryLand = () => {
+        if (!hashHold) return;
+        const el = resolveTarget(window.location.hash);
+        if (el && (!el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) reapplyHash();
+        else if (++n < 20) window.setTimeout(tryLand, 150);
+      };
+      requestAnimationFrame(tryLand);
+    };
+    if (document.readyState === "complete") land();
+    else window.addEventListener("load", land, { once: true });
+  }
+}
 
 /** Note any scroll the visitor makes themself (wheel, touch, keys), so the
  *  one-time hash re-apply never yanks them back. <SmoothScroll/> calls it
@@ -393,8 +469,10 @@ export function trackScrollInput(): void {
   inputTracked = true;
   const mark = () => {
     userScrolled = true;
+    hashHold = false;
     window.removeEventListener("wheel", mark, true);
     window.removeEventListener("touchmove", mark, true);
+    window.removeEventListener("pointerdown", mark, true);
     window.removeEventListener("keydown", onKey, true);
   };
   const onKey = (e: KeyboardEvent) => {
@@ -402,20 +480,31 @@ export function trackScrollInput(): void {
   };
   window.addEventListener("wheel", mark, { capture: true, passive: true });
   window.addEventListener("touchmove", mark, { capture: true, passive: true });
+  window.addEventListener("pointerdown", mark, { capture: true, passive: true });
   window.addEventListener("keydown", onKey, { capture: true, passive: true });
+  // a refresh re-lands a held hash once the desktop chunk is in (no
+  // ScrollTrigger is needed: the cards pin with CSS sticky)
+  if (hashHold) requestScrollRefresh();
 }
 
-/** After the first refresh that measured ScrollTriggers, put a hash target
- *  back where the browser's load-time jump put it (pins may have moved it),
- *  unless the visitor has scrolled away since. */
+/** At every refresh while the load-time hash is held: put its target where
+ *  scrollToTarget would (an act card at its `landAt`), instantly, with no
+ *  cut and no focus move (the browser's own hash jump moves neither). The
+ *  cards snap their damped p (`scroll:jump`). */
 function reapplyHash(): void {
-  const hash = window.location.hash;
-  if (!hash || hash === "#" || userScrolled) return;
-  const el = resolveTarget(hash);
+  if (!hashHold || userScrolled) {
+    hashHold = false;
+    return;
+  }
+  const el = resolveTarget(window.location.hash);
   if (!el) return;
   const y = clampY(targetY(el, "start"));
-  if (Math.abs(y - window.scrollY) > window.innerHeight * 1.5) return;
-  void scrollToTarget(el, { immediate: true, history: false });
+  if (Math.abs(y - window.scrollY) < 2) return;
+  const l = lenis;
+  if (l) l.scrollTo(y, { immediate: true, force: true });
+  else window.scrollTo({ top: y, behavior: "instant" });
+  gsapIfLoaded()?.ScrollTrigger.update();
+  emit("scroll:jump", { y, immediate: true });
 }
 
 function runRefresh(): void {
@@ -431,15 +520,13 @@ function runRefresh(): void {
   deferredSince = 0;
   l?.resize();
   const kit = gsapIfLoaded();
-  if (!kit) return;
-  // page order first (sections hydrate out of order, one Suspense each):
-  // refreshPriority ties fall back to each trigger's position on the page
-  kit.ScrollTrigger.sort();
-  kit.ScrollTrigger.refresh();
-  if (!refreshedWithTriggers && kit.ScrollTrigger.getAll().length) {
-    refreshedWithTriggers = true;
-    reapplyHash();
+  if (kit) {
+    // page order first (sections hydrate out of order, one Suspense each):
+    // refreshPriority ties fall back to each trigger's position on the page
+    kit.ScrollTrigger.sort();
+    kit.ScrollTrigger.refresh();
   }
+  reapplyHash();
 }
 
 /** Debounced (200 ms) re-measure after a layout change: `lenis.resize()`,

@@ -5,4 +5,63 @@
    base. Plain CSS: no @apply (add `@reference "../globals.css";` if a rule
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
+
+   FIRST LOAD, so only what the server markup needs (W2 rule 34): the two
+   game pills ("▲ Take off" in the systems band, "DEAD EYE" in the kill-list
+   header) and their rows. They exist ONLY on DESKTOP_FINE after JS (the full
+   media query, never `lg:`; spec §9 "new on-page hotspots render only on
+   DESKTOP_FINE"): phones, touch tablets and no-JS views never see a game
+   they cannot play, and their layout is today's. Everything a running game
+   draws is in components/games/games.css (lazy). Nothing here matches <html>
+   or keys on a runtime toggle of it (rule 33).
    ========================================================================== */
+
+.game-pill,
+.drone-pill-row {
+  display: none;
+}
+
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  /* the kill-list header: the Meta line and the DEAD EYE pill on one row */
+  html.js .game-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+  }
+
+  /* the systems band: lower right, over the plate (the caption is lower left) */
+  html.js .drone-pill-row {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  html.js .drone-pill-row > img {
+    width: 2.75rem;
+    height: auto;
+  }
+
+  html.js .game-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-deep) 80%, transparent);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  html.js .game-pill:hover {
+    border-color: var(--fg-muted);
+  }
+  html.js .game-pill:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}

@@ -50,6 +50,17 @@
      (M2 critic 3 #9: the band opens closer than the card's plate) */
   transform-origin: 70% 56%;
 }
+/* the plate's static ×1.2 framing (P3-0: phones, touch, reduced motion, no
+   JS). Under the boot gate the LivePlate camera owns the scale (spec §6.1:
+   the card's push continued, 1.04 → 1.08 about the sun), from first paint */
+.bandZoom {
+  scale: 1.2;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :global(html.js:not([data-motion-boot="paused"])) .bandZoom {
+    scale: 1;
+  }
+}
 /* RD-P5 dark foreground: a deep feather under the head (left 55%), the
    card's deep at the top edge, the rd canvas at the bottom edge. */
 .bandScrim {
@@ -140,8 +151,14 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-block: var(--board-top) clamp(3rem, 5vw, 4.5rem);
   background: var(--rd-deep);
+}
+/* the camera group (wanted-board.tsx): the board's padding box, so the
+   plate's offsets resolve against the same box with or without a camera
+   transform (a transform makes it the containing block) */
+.boardCam {
+  position: relative;
+  padding-block: var(--board-top) clamp(3rem, 5vw, 4.5rem);
 }
 .boardPlate {
   position: absolute;

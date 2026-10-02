@@ -1,0 +1,58 @@
+[
+ {
+  "frame": "D26-trading-algos",
+  "world": "idiots",
+  "moment": "SM-7 chapter Trading_Algos",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D27-optuna-screener",
+  "world": "idiots",
+  "moment": "SM-7 chapter Optuna-Screener",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D30-kill-list",
+  "world": "idiots",
+  "moment": "SM-8 kill-list header cue",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D33-beyond-satchel",
+  "world": "rdr2",
+  "moment": "SM-15 beyond: the satchel",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D35-beyond-2800",
+  "world": "rdr2",
+  "moment": "SM-15 beyond end",
+  "mode": "CAPTION",
+  "variant": "default"
+ },
+ {
+  "frame": "D39-principles-1000",
+  "world": "hp",
+  "moment": "Principles lower",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D40-contact",
+  "world": "hp",
+  "moment": "SM-12 last light (contact)",
+  "mode": "BLIND",
+  "variant": "default"
+ },
+ {
+  "frame": "D43-films-pirates",
+  "world": "pirates",
+  "moment": "SM-9 films chapter screen: pirates",
+  "mode": "BLIND",
+  "variant": "default"
+ }
+]

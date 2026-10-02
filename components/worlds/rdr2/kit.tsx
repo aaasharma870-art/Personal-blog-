@@ -1,7 +1,9 @@
 "use client";
 
-import { useId } from "react";
+import { lazy, Suspense, useId, useRef } from "react";
 import type { CSSProperties } from "react";
+import { useDesktopFine } from "@/lib/flags";
+import type { MediaAsset } from "@/lib/media";
 import tooth from "@/assets/p3/raster/graphite-tooth.png";
 
 /* ============================================================================
@@ -68,4 +70,48 @@ export function bakedGraphite(viewBoxW: number): CSSProperties {
 /** A DOM-safe unique id for SVG defs (SSR = client). */
 export function useFid(): string {
   return useId().replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
+/** A plate point (0–1 of the plate, a `marks` entry) as a fraction of a
+ *  w × h box the plate COVERS (object-fit: cover, object-position = the
+ *  plate's focal: MediaFrame's crop). The camera's focal is in box units. */
+export function coverPoint(
+  a: Pick<MediaAsset, "width" | "height" | "focal">,
+  p: readonly [number, number],
+  w: number,
+  h: number,
+): [number, number] {
+  const k = Math.max(w / a.width, h / a.height);
+  const pw = a.width * k;
+  const ph = a.height * k;
+  const [fx, fy] = a.focal ?? [0.5, 0.5];
+  return [((w - pw) * fx + p[0] * pw) / w, ((h - ph) * fy + p[1] * ph) / h];
+}
+
+/* ============================================================================
+   ACT III DESKTOP EXTRAS — facade + lazy impl (DP-13, rule 34). The first
+   load ships only this hidden anchor; on DESKTOP_FINE the impl chunk
+   (components/worlds/rdr2/rd-desktop.tsx) registers the part's SCROLL stars
+   with the spotlight (B41 beyond, B46 writing, B47 voices; motion on) and
+   draws its hunt egg when it fires (rd-eagle, rd-bone, rd-fire; spec §9.1:
+   the effect bypasses the spotlight). Phones, touch tablets, the server
+   and hydration: nothing. `note` = the rd-bone note (copy egg.bone.note).
+   ========================================================================== */
+
+export type RdPart = "beyond" | "writing" | "voices";
+
+const DesktopImpl = lazy(() => import("@/components/worlds/rdr2/rd-desktop"));
+
+export function RdDesktop({ part, note }: { part: RdPart; note?: string }) {
+  const fine = useDesktopFine();
+  const ref = useRef<HTMLSpanElement>(null);
+  return (
+    <span ref={ref} hidden>
+      {fine ? (
+        <Suspense fallback={null}>
+          <DesktopImpl part={part} anchor={ref} note={note} />
+        </Suspense>
+      ) : null}
+    </span>
+  );
 }

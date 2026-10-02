@@ -21,6 +21,7 @@ import {
   inBox,
   plateOf,
   registerY,
+  type Box,
   type Plate,
 } from "@/components/sections/act-card/plate";
 
@@ -61,6 +62,13 @@ import {
  *
  * No `board` (the lab's old call, or the plate missing): the M1 code
  * blueprint ground stands in (the same FIG in blueprint line).
+ *
+ * Phase 3 PIN MODE (PHASE3-SPEC §7.1–§7.2; CardShell): this choreography is
+ * the css tier, run over star (a) (p 0–.45). Both plates take their
+ * REGISTERED crops under the boot gate (`reg`: the storm's horizon and the
+ * board's ledge on MATCH_ROW, the carried line), push-in #2 is the frame's
+ * code camera (CardShell's content box, FIG. 0 inside it) with the L08 loop
+ * from p .50 under the FIG (PlateLayers).
  */
 
 const W = LINE_VIEWBOX.w;
@@ -154,14 +162,18 @@ export function SeamFrame({
   storm: stormId,
   board: boardId = null,
   graded,
+  reg,
 }: {
   storm: MediaId | null;
   /** The incoming ICE lecture hall (iconic-ice); null → the code blueprint. */
   board?: MediaId | null;
   /** The storm is a fallback plate (MV-01): give it the code storm grade. */
   graded: boolean;
+  /** Phase 3: the registered crops (the carried line; boot gate only). */
+  reg?: { storm?: Box | null; board?: Box | null } | null;
 }) {
-  const { p, live } = useCard();
+  const { p, live, pin } = useCard();
+  const PlateLayers = pin?.ui?.PlateLayers;
   const reduced = useReducedMotion();
   const board = plateOf(boardId);
   const storm = registeredStorm(stormId, board);
@@ -203,7 +215,7 @@ export function SeamFrame({
         style={live ? { y: outY } : { display: "none" }}
       >
         {storm ? (
-          <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+          <PlateBox plate={storm} reg={reg?.storm} className={cn(graded && "act-storm-grade")}>
             <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" />
           </PlateBox>
         ) : null}
@@ -212,7 +224,7 @@ export function SeamFrame({
             only, no blend mode re-drawn per frame */}
         {storm && live ? (
           <motion.div className="absolute inset-0 grayscale will-change-[opacity]" style={{ opacity: grey }}>
-            <PlateBox plate={storm} className={cn(graded && "act-storm-grade")}>
+            <PlateBox plate={storm} reg={reg?.storm} className={cn(graded && "act-storm-grade")}>
               <MediaFrame media={storm.asset.id} layout="fill" playOn="never" sizes="100vw" loader={false} />
             </PlateBox>
           </motion.div>
@@ -242,8 +254,9 @@ export function SeamFrame({
           style={live ? { y: hallY } : undefined}
         >
           {board ? (
-            <PlateBox plate={board}>
+            <PlateBox plate={board} reg={reg?.board}>
               <MediaFrame media={board.asset.id} layout="fill" playOn="never" sizes="100vw" />
+              {PlateLayers ? <PlateLayers plate={board.asset.id} /> : null}
               <BoardFig
                 plate={board}
                 fig={live ? fig : one}
