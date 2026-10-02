@@ -28,6 +28,7 @@ import {
 } from "@/lib/sections";
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
+import { EggHint } from "@/components/eggs/egg-hint";
 import { GithubMark } from "@/components/ui/icons";
 import { MotionToggle } from "@/components/primitives/motion-toggle";
 import { useMotionPreference } from "@/components/providers/motion-provider";
@@ -296,13 +297,17 @@ function PauseWithTooltip() {
   return (
     <span className="group/tip relative inline-flex">
       <MotionToggle />
+      {/* the Lumos / Nox alias is the lumos egg's hint (W2-HUNT): gone
+          when the visitor turns the eggs off for the session */}
       {mounted && copyVisible(tip) ? (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-control px-3 py-1.5 type-meta text-fg-muted opacity-0 transition-opacity duration-(--dur-micro) surface-2 group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
-        >
-          {tip.text}
-        </span>
+        <EggHint egg="lumos">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-control px-3 py-1.5 type-meta text-fg-muted opacity-0 transition-opacity duration-(--dur-micro) surface-2 group-focus-within/tip:opacity-100 group-hover/tip:opacity-100"
+          >
+            {tip.text}
+          </span>
+        </EggHint>
       ) : null}
     </span>
   );

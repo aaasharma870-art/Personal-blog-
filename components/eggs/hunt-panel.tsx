@@ -9,6 +9,8 @@ import type { CopyKey } from "@/lib/film";
 import { triggerEgg } from "@/components/eggs/egg-bus";
 import { HUNT_ROWS, HUNT_WORLDS } from "@/components/eggs/hunt-rows";
 import { HUNT_IDS, HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
+// its CSS (game-lazy.css) loads with this lazy chunk, not the page (W2 assembly)
+import "@/app/p3/game-lazy.css";
 
 /* ============================================================================
    HUNT PANEL (lazy; PHASE3-SPEC §9.3) — OWNER: W2-HUNT.

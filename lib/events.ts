@@ -32,6 +32,10 @@ export type P3Events = {
   "scroll:jump": { y: number; immediate: boolean };
   "fastlane": void;
   "stage:live": { on: boolean };
+  /** The stage re-marked the sections it covers (`[data-stage-on]`): inline
+   *  MediaFrames under a covered backdrop re-check their play state
+   *  (W2-PLATES; dispatched as a plain window Event, no detail). */
+  "stage:cover": void;
   "impact": { world: WorldId };
   /** A card's two halves meet at the carried line/shape (§7.1). */
   "transition:meet": { card: TransitionKind };

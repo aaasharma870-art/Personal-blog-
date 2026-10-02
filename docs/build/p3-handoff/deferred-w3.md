@@ -1,0 +1,66 @@
+# Handoffs deferred to wave 3 (collected by the W2 integrator, 2026-10-02)
+
+Source: the W2 builder returns (`docs/build/p3-handoff/w2/W2-{CARDS,PLATES,WORDS,HUNT}.md`, `docs/build/p3-handoff/W2-{GL,SOUND}.json`) and the W1 list (`docs/build/p3-handoff/deferred-handoffs.md`). Everything addressed to the W2 assembler or to a W1/W2 file with no owner was applied in the W2 integration commit (see `docs/build/p3-reports/W2-notes.md` §1). The items below are addressed to wave-3 builders, the W3 assembler, the W2 gate verifier or Aryan. **Their text is copied unchanged** from the source named in brackets; a short note after "→" says what changed around it since, when anything did.
+
+## W3-PIRATES (Act I hosts)
+- [W2-PLATES #3] W3-PIRATES journey-voyage.tsx: move JV to window mode useFrameSequence(urls, wanted, { window: 12, index }) + frameAt(i) (JV holds all 72 decoded ≈ 265 MB today).
+- [W2-WORDS #2] W3-PIRATES: SectionHead inCharacter world="pirates" beat="B07"; pillar 02 B08 ScrubSentence via splitAround(pillars[1].body, SCRUB_LINES.B08.text) (null → plain); journey end gull <FlyThrough kind="gull" beat="B12" path={{points:[[-0.08,0.3],[0.35,0.2],[0.7,0.26],[1.08,0.16]], ms:4200}}/> over the voyage window's SKY only; about-bio philosophy note in <Collapse summary={copyText("about.philosophy.summary").text}>.
+- [W2-PLATES #4, every W3 world host] W3 world hosts: put every remaining film plate on <LivePlate> with the spec §6.1 camera table (drone, kill-list + work heads, films screens, handbill, camp, contact); playOn='never' only where the stage covers the plate.
+
+## W3-IDIOTS (Act II hosts)
+- [W2-WORDS #3] W3-IDIOTS: Work SectionHead inCharacter world="idiots" beat="B16"; trading-algos learned B21 ScrubSentence via splitAround(featuredProjects[0].learned, SCRUB_LINES.B21.text); optuna problem <PhysicalWord word="noise" kind="grain" beat="B23"/>; kill-list intro <PhysicalWord text="Killed and never retuned — …" word="Killed" kind="strike" beat="B29"/> (kill-list files are W3-GAMES'); optuna appendix in <Collapse summary={copyText("optuna.appendix.summary").text}> (Option Alpha whole block with its honest framing, supporting list, earlier repos).
+- [W2-HUNT #3, the W3-IDIOTS part] W3-IDIOTS: triggerEgg("quadcopter-lift") on a 7/7 run. Skip auto paths when eggsSessionOff().
+- [W2-SOUND, quadcopter] When the hidden kraken or the quadcopter-lift egg fires, call `triggerEgg("hidden-kraken")` or `triggerEgg("quadcopter-lift")`. Never call sound.cue for these. (file: kraken host (W2-CARDS) and components/site/projects.tsx quadcopter doodle (W3-IDIOTS)) → the kraken half is done (card-p3.tsx calls `triggerEgg("hidden-kraken")`; since the W2 assembly it skips the auto path and the count when the eggs are off).
+- [deferred-handoffs #14] (B1-STAGE #4) Visual check inside the split: the ICE board breaks out over the whole grid (`[data-stage-wide]`, opaque ground); the ChalkDrone beside the caption now sits over the window column on trading-algos: check at 1440/1024, hide/move under the boot gate if it fights the plate.
+
+## W3-RDR2 (Act III hosts)
+- [W2-WORDS #4] W3-RDR2: Beyond SectionHead inCharacter world="rdr2" beat="B40"; Creative · Photography B42 ScrubSentence (splitAround(beyond[3].items[0].body, SCRUB_LINES.B42.text)); writing B45 horse FlyThrough.
+- [deferred-handoffs #16] (B1-RASTER #4) B46 is tagged on the voices camp stage root (campfire-stage.tsx, both variants) though it is declared on the writing item; if the beats probe needs B46 inside #writing, move it to writing.tsx's dusk div.
+- [deferred-handoffs #17] (B1-TYPE #7) `font-world-hand` for rdr2 journal heads/dates (≤ 4 words).
+
+## W3-HP (Act IV hosts)
+- [W2-WORDS #5] W3-HP: Principles SectionHead inCharacter world="hp" beat="B53"; room 05 B55 ScrubSentence (splitAround(principles[4].body, SCRUB_LINES.B55.text)).
+
+## W3-CINEMA (films, credits, director's cut)
+- [W2-WORDS #6] W3-CINEMA: <FilmTitle world as="h3" inCharacter beat={B31|B32|B33|B34}/>; credits long lists in <Collapse summary={copyText("credits.more.summary").text}> (fan-tribute line, "To be continued.", "Mischief managed." stay outside).
+- [W2-HUNT #4] snitch.tsx (W3-CINEMA): wrap the dart in spotlight.request("B57", { weight: 2 }) and tag B57.
+- [W2-SOUND, director] In the click handler, call `sound.borrow()` first, synchronously, before any other await: `const restore = await sound.borrow(); emit("dc:start")`. On stop, `emit("dc:stop", …)`, then call `restore()` about 1.6 s later so the reel-runout is heard (restore mutes at once). Under Pause the master is already silent. (file: components/director/** (W3-CINEMA))
+
+## Every W3 world builder
+- [W2-HUNT #2] W3 world builders: place <EggHotspot hunt=… label=…> on each host (label may be the egg.hunt.hint.* key). Ids: pc-coin, 3i-aal (600 ms hold built in), 3i-pen, rd-eagle, rd-bone, rd-fire (800 ms hover dwell built in). Draw each effect from EGG_EVENT for the registry id (aztec-coin, aal-izz-well, worthy-pen, eagle-eye, fossil-bone, campfire-flare). Wrap hint marginals in <EggHint egg=…>: Map banner "I solemnly swear…" (marauders-map), "parley?" (parley). Pen host draws Rancho's circle only when worthyOfPen() and calls recordLedgerRowRead(row); Dead Eye calls recordDeadEyeWin() on a win. Import lib/hunt only from client code, lazily where possible. Counting/toasts/sound already wired.
+  → since the W2 assembly `worthyOfPen()` with no argument counts the RENDERED ledger rows (`[data-ledger] li[data-row]`, ledger-reckoning.tsx) instead of importing lib/content; pass the count if the pen host renders a different ledger.
+- [W2-HUNT #3, the CARDS part, optional] HERE BE MONSTERS button can be <EggHotspot hunt="pc-kraken" label="egg.hunt.hint.pc-kraken">. → not done in W2 (the button already triggers + counts through card-p3.tsx).
+- [deferred-handoffs #18] (B1-RASTER notes) Tagged time stars (B17, B22, B43, B44, B52) do not pass `useEnterOnce({ star })` yet: the world builders wire the spotlight.
+- [deferred-handoffs #19] (B1-TYPE #7) `font-world-lead` for idiots board notes; `data-house-type` on new chrome (fast lane, hunt chip, sound toggle, director's cut).
+- [deferred-handoffs #33, rule] Never add a CSS rule that can match `<html>` itself for a class or attribute toggled at runtime, and never use `[class*=…]` / `[class^=…]` substring selectors. Each such toggle restyles the whole document (70–100 ms headless). Lenis rewrites `html` classes at every glide start and stop, so nothing may key on `html.lenis*` (foundation.css now keys on the boot gate and `html[data-smooth]`). `html[data-letterbox]` (stage.css scroll-padding) is one such toggle: W3-CINEMA keeps it to once per scene.
+- [deferred-handoffs #34, rule] Budget headroom: first-load JS has ≈ 4.6 KB gz left (base +1,524 B of 6,144). Desktop-only code goes behind a facade (`React.lazy` mounted under `useDesktopFine()` / `useDesktopWide()`, DP-13), as smooth-scroll, world-fonts, stage-gate, letterbox-bars and the cut overlay now do. Docs-only data fields are stripped from browser chunks by `scripts/build/browser-data-loader.cjs`: a client file that starts reading `provenance.*` (other than `source`), a variant's `note`/`plan`/`files`, or a section's `beats`/`tempo`/`estVh` must be removed from its RULES first. → after the W2 assembly the headroom is ≈ 1.9 KB gz JS and ≈ 0.85 KB gz CSS (W2-notes §3). Lazy-only CSS now rides its lazy chunk (`app/p3/cards-pin.css`, `app/p3/game-lazy.css`), and a lazy module must not import `lib/content` exports the first load does not use (the shared content module then ships them).
+- [deferred-handoffs #35, rule] Large painted layers (gradients, wear, grain) must be static promoted layers (`will-change: transform` that never changes) with positioned, non-repeating bands, not full-size gradients re-rastered on repaint (see the principles fix in components/site/principles-map.tsx).
+
+## W3 assembler
+- [W2-WORDS #1] W3 assembler: write components/words/sprites/horse-frames.ts `export const HORSE_FRAMES: readonly string[] = [...frames.json frames[].d]` (+ provenance header) from docs/build/media-staged/p3/sprites/horse/frames.json. Host: <FlyThrough kind="horse" frames={HORSE_FRAMES} beat="B45" path={{ points: [[-0.12, 0.97], [1.12, 0.97]], ms: 3600 }} /> in a positioned box on the journal's bottom edge.
+- [W2-WORDS #7] W3 assembler: scripts/checks/words.mjs host-shortfall warn → gate once hosts land.
+- [W2-PLATES #5, optional] lib/stage.ts (asm, optional): add move?: { scale; x?; y?; at? } to StageCue + validator rule.
+- [W2-PLATES #6] lib/media.ts (asm/Aryan): iconic-corridor-alt has no line mark (optuna cue 2 runs camera-only). → needs a measured mark (media lane M-AUX), never an invented one.
+- [W2-HUNT #5, optional part] optionally move palette-dialog.tsx to components/site/.
+
+## The W2 gate verifier (after this integration; plan §10.1 #5, §10.2)
+- [W2-HUNT #5] W2 assembler: bundle probe --compare; … re-run the sound probe (deferred 28 now wired). → the integrator measured first load from the built HTML (W2-notes §3); the probe run is still due.
+- [W2-SOUND, measurement] Run tools/capture/probes/bundle.mjs with --compare on the built site. Confirm the header's sound cost on '/' (static store + toggle) and the lazy audio chunks (engine + store-impl).
+- [plan §10.2 W2] `node tools/capture/beats.mjs http://localhost:3161 --widths=1440,1024 --write`, then rebuild (estVh; the 8 static beat gates in W2-release.txt date from W1).
+- [deferred-handoffs #25, partly open] (visual judge 4, not a W1 regression) The act-2 chalk label is clipped at 1024, and act-card images sit 17 px outside the gutters at 1024. → CARDS fixed the 17 px gutter; the 1024 chalk-label clip was not checked.
+- [deferred-handoffs #36] `split.mjs` still reads stale rects; use the direct check (`docs/build/motion-strips/p3-w1/fix/split-*.json`).
+- [deferred-handoffs #37] `motion.js`'s idle probe and intro run pay the screencast cost; the intro "name visible" metric should read the stage's mask edge, not `elementFromPoint` (the empty `.intro-block` is hit-testable but transparent).
+- [W2-SOUND acceptance] P3-9 #5, the manual listen, is recorded by the W2 assembler (plan §6.6): no one in a headless session can listen; it goes to Aryan with the TTS approvals.
+
+## Unowned W1 follow-ups (no W2 builder owned the files)
+- [deferred-handoffs #31] World-font swap CLS: 0.003–0.005 remains on lettered captions and rdr2 h3s (P3-2 #7 wants 0). The `html[data-fonts~=world]` token is now added only after the faces load (lib/world-fonts.ts, timeout 4000 / 3000 for the fast-lane warm), which took it from 0.0151. Next: metric overrides (`size-adjust` / `ascent-override` / `descent-override`) on the world faces, or reserve the line boxes. → not done in W2 (a measured metric-override pass needs a browser CLS run; route it to W3 or P3-11).
+- [deferred-handoffs #32] Glue or balance the dangling separators (LOW 8 / judge 11; glued to the moment by an M2 decision, so a taste call for P3-11).
+- [deferred-handoffs #26] (visual judge 7, not a W1 regression) The outgoing caption shows over the wipe. → W2-CARDS left it as designed (a P3-11 taste call).
+
+## Aryan (decisions / signatures)
+- [deferred-handoffs #21] Sign the unsigned copy (96 strings incl. `fastlane.label` "Skip to the research", `titles.1–3`, the `systems.meta.*` lines). → now **100** strings (W2-HUNT added `egg.hunt.found`, `egg.hunt.unfound`, `egg.hunt.reset.cancel`; the list is in `docs/build/p3-reports/W2-release.txt`).
+- [deferred-handoffs #22] Countersign Check L2 on the 40 new P3 media rows (lib/media.ts `aryan:pending`).
+- [W2-SOUND, DP-9] When the TTS files are copied from docs/build/media-staged/p3/accepted/audio/ into public/audio/, `RELEASE=1 npm run check` gains expected release failures: '#9 sound: tts-<line> (…) awaits Aryan', one per line (5). Add them to DP-9's expected list. They are the same kind as the Check-L2 countersignatures. They clear when Aryan approves the line and its terms and the 'to approve' / 'to confirm' text is removed from its SOUNDS.md rows.
+- [deferred-handoffs #23] 19 of 25 loops pass (one short of "≥ 20"); SEQ-HALL 3.66 MB vs 1.6 MB budget; L12 storm composition flag; IM Fell English SC (44 KB) loads with the page on a first visit for the hp captions (B1-TYPE note).
+- [deferred-handoffs #38–#41] see `deferred-handoffs.md` (iPad world type, the `minimax_h3` credit, `credits.libraries`, the real-laptop recording).
+- [W2-CARDS notes] For Aryan: kraken button copy + 4 loglines unsigned; landAt .47 vs spec .45.

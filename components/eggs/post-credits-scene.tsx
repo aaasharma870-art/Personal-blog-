@@ -7,6 +7,8 @@ import { spotlight } from "@/lib/spotlight";
 import { useVariant } from "@/lib/use-variant";
 import { BROOM_SVG } from "@/components/intro/broom";
 import { HUNT_TOTAL, foundIds } from "@/components/eggs/hunt-store";
+// its CSS (game-lazy.css) loads with this lazy chunk, not the page (W2 assembly)
+import "@/app/p3/game-lazy.css";
 
 /* ============================================================================
    POST-CREDITS SCENE (lazy; PHASE3-SPEC §9.4, B58) — OWNER: W2-HUNT.

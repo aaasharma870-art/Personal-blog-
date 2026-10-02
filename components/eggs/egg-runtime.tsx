@@ -18,6 +18,8 @@ import { EggToast, type EggToastData } from "@/components/eggs/egg-toast";
 import { HUNT_ROWS } from "@/components/eggs/hunt-rows";
 import { HUNT_TOTAL, foundIds, type HuntId } from "@/components/eggs/hunt-store";
 import type { DeadEyeRun } from "@/components/eggs/dead-eye";
+// its CSS (game-lazy.css) loads with this lazy chunk, not the page (W2 assembly)
+import "@/app/p3/game-lazy.css";
 
 /* ============================================================================
    EGG RUNTIME (lazy; PHASE3-SPEC §9.1, §9.3, §9.4) — OWNER: W2-HUNT.

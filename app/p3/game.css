@@ -69,46 +69,10 @@
   }
 }
 
-/* — The hunt panel (lazy; non-modal popover under the chip) ——————————— */
-.hunt-panel {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  z-index: 1;
-  width: min(22rem, calc(100vw - 2rem));
-  max-height: calc(100vh - var(--header-h, 4rem) - 1.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 1rem;
-  transform-origin: top right;
-  transition:
-    opacity 160ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-@starting-style {
-  .hunt-panel {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.98);
-  }
-}
-.hunt-panel-action {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  padding-inline: 0.75rem;
-  border-radius: var(--radius-control);
-  font-size: var(--text-small);
-  color: var(--fg-muted);
-  box-shadow: inset 0 0 0 1px var(--rule);
-  transition: color var(--dur-micro) ease;
-}
-.hunt-panel-action:hover,
-.hunt-panel-action:focus-visible {
-  color: var(--fg);
-}
-.hunt-panel-action[data-danger] {
-  color: var(--fg);
-}
+/* — The hunt panel, the Lumos / Nox veil + wand bloom and the post-credits
+     SCENE live in game-lazy.css, imported by the lazy modules that draw
+     them (hunt-panel.tsx, egg-runtime.tsx, post-credits-scene.tsx): the
+     first-load CSS budget (W2 assembly). — */
 
 /* — Egg hotspots (<EggHotspot>): DESKTOP_FINE only, ≥ 44 px ——————————— */
 /* the gate is unlayered (it must win over any utility a host adds) */
@@ -166,52 +130,7 @@
   }
 }
 
-/* — Lumos / Nox (spec §9.1 #2): the media veil + the wand-tip bloom ——— */
-/* a layer INSIDE each media box in view (never over text), opacity only;
-   added and removed by the egg runtime */
-.lumos-veil {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-.lumos-veil[data-dir="lumos"] {
-  background: rgb(255 255 255 / 0.1);
-  mix-blend-mode: screen;
-}
-.lumos-veil[data-dir="nox"] {
-  background: rgb(0 0 0 / 0.1);
-}
-/* the bloom sits UNDER the Pause glyph (the button is `relative isolate`;
-   IC-HP-09: no light across text) */
-[data-motion-toggle][data-wand-bloom]::before {
-  content: "";
-  position: absolute;
-  inset: -0.625rem;
-  z-index: -1;
-  border-radius: 999px;
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--w-patronus) 55%, transparent), transparent);
-  pointer-events: none;
-  animation: wand-bloom 900ms cubic-bezier(0.23, 1, 0.32, 1) both;
-}
-@keyframes wand-bloom {
-  0% {
-    opacity: 0;
-    transform: scale(0.55);
-  }
-  30% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.12);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  [data-motion-toggle][data-wand-bloom]::before {
-    display: none;
-  }
   .hunt-chip-n[data-tick] {
     animation: none;
   }
@@ -229,74 +148,4 @@
     overflow: hidden;
     contain: layout paint;
   }
-}
-.pc-scene {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.pc-broom {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: clamp(180px, 22%, 260px);
-  will-change: transform, opacity;
-}
-/* playing: every part starts hidden until its timeline (set before paint) */
-.pc-scene:not([data-still]) .pc-broom,
-.pc-scene:not([data-still]) .pc-print {
-  opacity: 0;
-}
-.pc-broom svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* still (motion off, a spotlight skip): the broom rests under the link */
-.pc-scene[data-still] .pc-broom {
-  left: 50%;
-  top: 68%;
-  transform: translate(-50%, -50%);
-  will-change: auto;
-}
-.pc-instruments {
-  position: absolute;
-  left: 50%;
-  top: 28%;
-  display: flex;
-  gap: 2rem;
-  transform: translateX(-50%);
-  color: var(--fg-muted);
-}
-.pc-instruments svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  overflow: visible;
-}
-.pc-pivot {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.pc-gold {
-  fill: var(--w-ink-contour);
-  stroke: none;
-}
-.pc-scene[data-still] [data-pc-part="quad"] {
-  transform: translateY(-8px);
-}
-.pc-prints {
-  position: absolute;
-  inset: 0;
-}
-.pc-print {
-  position: absolute;
-  fill: var(--w-ink-contour);
-  opacity: 0.85;
-  transform: rotate(90deg);
-}
-.pc-print:nth-child(even) {
-  transform: rotate(90deg) scaleX(-1);
 }

@@ -256,6 +256,11 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
             b: { flavour: "title", text: title, world: item.to, maskOrigin: act?.maskOrigin ?? [0.5, 0.5], range: [0.5, 1] },
             row: MATCH_ROW,
             cover: { from: coverOf(cFrom), to: coverOf(cTo) },
+            // the tintype's inset plate (develop / deadeye settle on it, on
+            // the world deep, with its bone line: the DOM's settled card)
+            ...(kind === "tintype"
+              ? { inset: { x: PLATE.x / VB.w, y: PLATE.y / VB.h, w: PLATE.w / VB.w, h: PLATE.h / VB.h, r: PLATE.r / VB.h } }
+              : {}),
             ...(center ? { center } : {}),
             ...(kind === "seam" || kind === "ignite"
               ? { shapes: kind === "seam" ? { from: "ring32", to: "gear12", at: 0.22 } : { from: "wheel12", to: "snitch", at: 0.22 } }

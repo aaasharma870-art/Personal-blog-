@@ -9,7 +9,7 @@
 
 ## 1. Files (`public/audio/`)
 
-The assembler copies these from `docs/build/media-staged/p3/accepted/audio/` (the media lane's B9 output; the take record is `tts.json` there and the write-up is `docs/build/media/p3/tts.md`). The engine fetches them only after the first unmute and picks the format with `canPlayType`: Opus in WebM first, MP3 otherwise. A browser loads one set, so the WebM set (46.9 KB) and the MP3 set (89.3 KB) are each under the 150 KB total of spec §10.4. A missing file is a silent no-op.
+The W2 assembler copied these (2026-10-02) from `docs/build/media-staged/p3/accepted/audio/` (the media lane's B9 output; the take record is `tts.json` there and the write-up is `docs/build/media/p3/tts.md`). The engine fetches them only after the first unmute and picks the format with `canPlayType`: Opus in WebM first, MP3 otherwise. A browser loads one set, so the WebM set (46.9 KB) and the MP3 set (89.3 KB) are each under the 150 KB total of spec §10.4. A missing file is a silent no-op.
 
 **Release gate:** validator check #9 holds every file in `public/audio/` whose line still says "to approve" or "to confirm" (in any of its rows, so the MP3 fallback counts too). It is a warning on the branch and an error under `RELEASE=1` until Aryan approves the line and its terms and the flag is removed from the row.
 
