@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { pickCodec } from "@/lib/codec";
+import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { acquireDecoder, releaseDecoder } from "@/lib/decoder-lock";
 import { getMedia, isMediaId, type MediaId } from "@/lib/media";
 
@@ -220,6 +221,19 @@ export function StageVideo({ host, loop, focal, play }: StageVideoProps): null {
       }
     };
   }, [host, loop, play, focal]);
+
+  // Pause / reduced motion: pause in the click's own task (`first`), before
+  // the stage re-renders with `play: false`
+  useEffect(
+    () =>
+      onMotionOffChange(
+        () => {
+          if (motionOffNow()) run.current?.el.pause();
+        },
+        { first: true },
+      ),
+    [],
+  );
 
   // the tab hidden: pause (resume when the stage asks again)
   useEffect(() => {

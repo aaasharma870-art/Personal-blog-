@@ -53,6 +53,12 @@ const OBSERVE: Readonly<Record<Kind, { margin: string; amount: number }>> = {
   fly: { margin: "0px", amount: 0.5 },
 };
 
+/** Late markup with no word primitive in it re-scans once per mutation
+ *  burst: after the DOM has been quiet this long (a wheel scroll mounts
+ *  something every 100-400 ms), and at most this long after the burst began. */
+const BURST_QUIET_MS = 500;
+const BURST_MAX_MS = 3000;
+
 function weightOf(el: HTMLElement, fallback: BeatWeight): BeatWeight {
   const w = Number(el.dataset.beatWeight);
   return w === 1 || w === 2 || w === 3 ? w : fallback;
@@ -229,18 +235,58 @@ class Controller {
     mq.addEventListener("change", check);
     this.offs.push(() => mq.removeEventListener("change", check));
 
-    // late markup (a reduced-motion remount, a client section mounting late)
+    // late markup (a reduced-motion remount, a client section mounting late).
+    // A word primitive that mounts late (the B12 gull's zone, mounted by the
+    // voyage once step 4 is reached) binds on the next frame, so a fast
+    // scroll cannot carry it out of view before it asks the spotlight; any
+    // other late markup re-scans on idle, ONCE per mutation burst (one scan
+    // in the first idle slice after the burst goes quiet), never once per
+    // record batch.
+    let cancelFrame = () => {};
     let cancelIdle = () => {};
-    const mo = new MutationObserver((records) => {
-      if (!this.live || !this.ready()) return;
-      const outside = records.some((r) => r.addedNodes.length > 0 && !(r.target instanceof Element && r.target.closest("[data-words]")));
-      if (!outside) return;
+    let quiet = 0;
+    let burstAt = 0;
+    const endBurst = () => {
+      window.clearTimeout(quiet);
+      quiet = 0;
+      burstAt = 0;
+    };
+    const idleScan = () => {
+      endBurst();
       cancelIdle();
       cancelIdle = onIdle(() => this.scan(), { timeout: 1000 });
+    };
+    const isWords = (n: Node) => n instanceof Element && (n.matches("[data-words]") || n.querySelector("[data-words]") !== null);
+    const mo = new MutationObserver((records) => {
+      if (!this.live || !this.ready()) return;
+      let outside = false;
+      let words = false;
+      for (const r of records) {
+        if (!r.addedNodes.length || (r.target instanceof Element && r.target.closest("[data-words]"))) continue;
+        outside = true;
+        for (const n of r.addedNodes) if (isWords(n)) words = true;
+        if (words) break;
+      }
+      if (!outside) return;
+      if (words) {
+        // the next frame's scan covers the burst so far
+        endBurst();
+        cancelIdle();
+        cancelFrame();
+        const raf = requestAnimationFrame(() => this.scan());
+        cancelFrame = () => cancelAnimationFrame(raf);
+        return;
+      }
+      const now = performance.now();
+      if (!burstAt) burstAt = now;
+      window.clearTimeout(quiet);
+      quiet = window.setTimeout(idleScan, Math.max(0, Math.min(BURST_QUIET_MS, burstAt + BURST_MAX_MS - now)));
     });
     mo.observe(this.root.body, { childList: true, subtree: true });
     this.offs.push(() => {
       mo.disconnect();
+      endBurst();
+      cancelFrame();
       cancelIdle();
     });
 

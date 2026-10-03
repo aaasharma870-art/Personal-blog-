@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { beatAttrs } from "@/lib/beats";
 import { gauntlet } from "@/lib/content";
 import { film, type CaptionWorld } from "@/lib/film";
 import { actCards, acts, copyVisible, numeralOf, seenHereIn } from "@/lib/sections";
@@ -44,6 +45,30 @@ const DEEP: Record<WorldId, string> = {
   rdr2: "var(--rd-deep)",
   hp: "var(--hp-deep)",
 };
+
+/** The house lights' markers, inside the first frame's box (server markup:
+ *  no client code). B30, a weight-3 scroll star: the close's spotlight box,
+ *  above the frame (films-desktop.tsx registers it). B31-bars: the open,
+ *  centred on the frame. */
+function LightsMarks() {
+  return (
+    <>
+      <span
+        aria-hidden="true"
+        data-beat-scroll=""
+        className="pointer-events-none invisible absolute left-0 w-px"
+        style={{ top: "-105vh", height: "max(40vh, 300px)" }}
+        {...beatAttrs("B30", { weight: 3 })}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute left-0 w-px"
+        style={{ top: "calc(50% - 20vh)", height: "40vh" }}
+        {...beatAttrs("B31-bars")}
+      />
+    </>
+  );
+}
 
 function groundOf(prev: WorldId, last: boolean): CSSProperties {
   const layers = [`linear-gradient(to bottom, ${DEEP[prev]} 0, transparent 24vh)`];
@@ -108,6 +133,8 @@ export function FilmScreen({
         choice={choice}
         bearing={bearing}
         gates={gauntlet.length}
+        beat={{ finale: FILM_BEATS[world].finale, weight: FILM_BEATS[world].weight }}
+        marks={first ? <LightsMarks /> : null}
         lights={first}
         carry={last}
         className="mt-tier-group"

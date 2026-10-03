@@ -14,12 +14,62 @@
    - `data-egg-dwell` (the campfire): resting a mouse on it that long fires
      it once per view; a click or a key still fires it any time.
    - "Turn off easter eggs" (session): hotspots go aria-disabled and do
-     nothing until the eggs are back on.
+     nothing until the eggs are back on, including hotspots that mount
+     while they are off (a MutationObserver, only while off).
    ========================================================================== */
 
-import { eggsSessionOff, subscribeEggs, triggerEgg, type EggId } from "@/components/eggs/egg-bus";
+import { motionOffNow } from "@/lib/flags";
+import { EGG_EVENT, eggsSessionOff, subscribeEggs, triggerEgg, type EggId } from "@/components/eggs/egg-bus";
 
 const SEL = "button[data-egg-hotspot]";
+
+/* — pc-coin's moonlight (PHASE3-SPEC §9.1 #5; components/worlds/pirates/
+     coin-moon.tsx). Its wiring lives here, in the lazy desktop chunk, not
+     in the first-load chart (W3 budget): only this binder makes the coin
+     fire. Each `aztec-coin` sweeps the moonlight once over the chart's brass
+     layer; under reduced motion / Pause (at the press) it is an instant
+     swap held until the next press or Esc. coin-moon.tsx is plain DOM: it
+     inserts its layer right after the chart's `[data-chart-medallion]`
+     (over the medallion, under the compass and the labels) and removes it
+     when it ends. One chart carries the coin at a time. */
+
+const loadMoon = () => import("@/components/worlds/pirates/coin-moon");
+
+function coinMoons(root: Document): () => void {
+  let moon: { stop: () => void; hold: boolean } | null = null;
+  let seq = 0;
+  const onEgg = (e: Event) => {
+    if ((e as CustomEvent<{ id?: string } | undefined>).detail?.id !== "aztec-coin") return;
+    const medal = root.querySelector(`${SEL}[data-egg="aztec-coin"]`)?.closest("[data-chart-plot]")?.querySelector("[data-chart-medallion]");
+    if (!medal) return;
+    const was = moon;
+    moon = null;
+    was?.stop();
+    const n = ++seq;
+    // a held swap: this press puts the gold back
+    if (was?.hold) return;
+    const hold = motionOffNow();
+    void loadMoon().then(
+      ({ default: coinMoon }) => {
+        if (n !== seq || !medal.isConnected) return;
+        const m = { hold, stop: () => {} };
+        moon = m;
+        // (it may end at once: motion went off before the chunk arrived)
+        m.stop = coinMoon(medal, hold, () => {
+          if (moon === m) moon = null;
+        });
+      },
+      () => {},
+    );
+  };
+  window.addEventListener(EGG_EVENT, onEgg);
+  return () => {
+    window.removeEventListener(EGG_EVENT, onEgg);
+    seq++;
+    moon?.stop();
+    moon = null;
+  };
+}
 
 function hotspotOf(t: EventTarget | null): HTMLElement | null {
   return t instanceof Element ? t.closest<HTMLElement>(SEL) : null;
@@ -106,12 +156,31 @@ export default function bind(root: Document): () => void {
     if (el === holdEl) endHold();
   };
 
+  /** While the eggs are off: hotspots that mount later (the coin in the
+   *  voyage chart, the pen once the ledger is read) go aria-disabled too. */
+  let late: MutationObserver | null = null;
+  const disable = (el: Element) => el.setAttribute("aria-disabled", "true");
   const syncOff = () => {
     const off = eggsSessionOff();
     root.querySelectorAll<HTMLElement>(SEL).forEach((el) => {
-      if (off) el.setAttribute("aria-disabled", "true");
+      if (off) disable(el);
       else el.removeAttribute("aria-disabled");
     });
+    if (off && !late && typeof MutationObserver !== "undefined") {
+      late = new MutationObserver((records) => {
+        for (const r of records) {
+          for (const n of r.addedNodes) {
+            if (!(n instanceof Element)) continue;
+            if (n.matches(SEL)) disable(n);
+            n.querySelectorAll(SEL).forEach(disable);
+          }
+        }
+      });
+      late.observe(root.body ?? root.documentElement, { childList: true, subtree: true });
+    } else if (!off && late) {
+      late.disconnect();
+      late = null;
+    }
   };
 
   root.addEventListener("click", onClick);
@@ -122,11 +191,15 @@ export default function bind(root: Document): () => void {
   root.addEventListener("pointerout", onOut);
   syncOff();
   const offEggs = subscribeEggs(syncOff);
+  const offMoons = coinMoons(root);
 
   return () => {
     endHold();
     endDwell();
     offEggs();
+    offMoons();
+    late?.disconnect();
+    late = null;
     root.removeEventListener("click", onClick);
     root.removeEventListener("pointerdown", onDown);
     root.removeEventListener("pointerup", onUp);

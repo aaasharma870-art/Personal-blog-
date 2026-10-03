@@ -137,7 +137,7 @@ Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂
 | B26 | 16421–17300 | systems head | *DroneBand L07*; the **Take-off invite**: on scroll-idle the band's drone lifts 8 px once beside the "▲ Take off" pill (no fly-through in Act II) | Take-off invite | toy-invite · t · 1 | brisk | P3-8 |
 | B27 | 17300–18379 | systems matrix | FIG. "How this page is built" inks (copy made honest, §8.6); drone game (opt-in) | FIG ink | signature · t · 2 | brisk | existing |
 | B28 | 18379–19250 | kill-list head | h2 in Kalam, quiet MaskReveal; *PenInset L17*; **"DEAD EYE" pill invite** (scroll-idle); `3i-pen` egg | Dead Eye invite | toy-invite · t · 1 | brisk | P3-8 |
-| B29 | 19250–20100 | kill-list rows | **physical word "Killed"** struck through once; lens bracket; Dead Eye game (opt-in) | "Killed" strike | physical-word · t · 1 | brisk | P3-7, P3-8 |
+| B29 | 19250–20100 | kill-list rows | **physical word "Killed"** struck through once; *lens bracket (quiet `B29-lens`: its travel down the ledger, a scroll stage-cue)*; Dead Eye game (opt-in) | "Killed" strike | physical-word · t · 1 | brisk | P3-7, P3-8 |
 | B30 | 20100–20460 | fade-out → films head | **letterbox bars close** over 40vh at the INTERMISSION head: "house lights down" | house lights down | letterbox · s · 3 | slow | P3-6 |
 | B31 ⟂ | 20501–21500 | films: Pirates screen | film title **burned/stamped**; plate opens (*L14*); *the bars open as the Pirates frame centres (≈ 1.5 screens after the close); from here the frame's own 2.39 matte carries the scene*; compass finale (demoted: breath); the reason stays visible in flow | title in character | title · t · 1 | slow | P3-7, P3-5, P3-6 |
 | B32 | 21500–22700 | films: 3 Idiots screen | title **chalked**; plate (*L22*); gates finale | title, then finale (sequential) | title · t · 1; signature · t · 2 | slow | same |
@@ -162,7 +162,7 @@ Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂
 | B54 | 38130–38980 | rooms 3–4 | ribbons converge under each title; *footprints* | ribbons converge | signature · s · 2 | medium | existing |
 | B55 | 38980–39571 | room 5 | **scroll-scrubbed sentence (Act IV)**; `hp-map` hint on the banner | scrubbed sentence | scrub-sentence · s · 1 | medium | P3-7, P3-8 |
 | B56 | 39571–40471 | contact | h2 lines ink in → bracket closes [A · flame · S]; *MV-08 → MV-09 loop*; candle toy (armed dark only on the first pointer move inside `#contact`; never self-lights) | bracket close | signature · t · 2 | medium | existing + P3-8 |
-| B57 | 40471–41380 | credits | the roll over the last shot (stage backdrop: MV-08 still → MV-09 loop, push 1 → 1.06); *candle motes*; **the Snitch darts once** (IC-HP-12's existing dart; the §2.1 exception) | Snitch dart | signature · t · 2 | slow | P3-2, existing egg |
+| B57 | 40471–41380 | credits | the roll over the last shot (stage backdrop: MV-08 still → MV-09 loop, push 1 → 1.06); *candle motes*; **the Snitch darts once** (IC-HP-12's existing dart; the §2.1 exception); *the roll itself (quiet `B57-roll`, a scroll stage-cue; the star stays on the Snitch)* | Snitch dart | signature · t · 2 | slow | P3-2, existing egg |
 | B58 | 41380–41520 (+ the 60vh tail) | end + post-credits tail | "Mischief managed" ink fold → **post-credits scene** (riderless broom; the 12/12 extended cut) | post-credits scene | post-credits · t · 3 | slow | P3-8 |
 
 At 1024×768 every range scales by roughly 0.9 (cards scale with vh; reading sections reflow taller). The **P3-2 beat probe** (§3.4) is the authority for both widths. The time stars (every `t` row) run through the spotlight (§3.8); where a row lists two stars they are sequential by construction or by the spotlight.
@@ -1145,7 +1145,7 @@ Both strings render at every width, and phones, RM, Pause and the css/off tiers 
 - **Invite (B28):** the pill pulses once on scroll-idle, through the spotlight.
 - **On start:** `scrollToTarget` centres the killed block (593 px @1440, which fits the 832 px under the header), awaiting completion.
 - **Draw** (0.4 s):
-  - time → 0.25× (WAAPI, videos, `--time-scale`, **and `gsap.globalTimeline.timeScale`**);
+  - time → 0.25× (WAAPI, videos, `--time-scale`, **and `gsap.globalTimeline.timeScale`**). As built (W3), `--time-scale` is set on `#kill-list`, never on `<html>` (rule 33), and no rule reads it yet;
   - the grade is an **opacity overlay on the section's media layer, below the text** (never over DOM text; never transition the 2,122 px section's background: B6);
   - survivors and flagships dim a step to `--fg-muted` at ≥ 4.5:1 on the graded ground, and are never targets.
 - **Paint** (5.0 s core, a draining white ring = IC-RD-09):

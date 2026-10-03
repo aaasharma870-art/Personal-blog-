@@ -48,6 +48,7 @@ import { isQuiet, prefetchChunks, registerChunk, useLadder, useQuiet, whenLadder
 import {
   getLenis,
   haltGlide,
+  loadJumps,
   requestScrollRefresh,
   scrollToTarget,
   setLenis,
@@ -148,9 +149,13 @@ function useLenisInstance(enabled: boolean): void {
       teardown = null;
     };
     // reduced motion / Pause: destroy in the same task, before React renders
-    const offWatch = onMotionOffChange(() => {
-      if (motionOffNow()) kill();
-    });
+    // and before every other Pause listener (`first`)
+    const offWatch = onMotionOffChange(
+      () => {
+        if (motionOffNow()) kill();
+      },
+      { first: true },
+    );
     Promise.all([loadLenis(), loadGsap()])
       .then(([mod, kit]) => {
         if (dead || motionOffNow() || !fineNow() || isQuiet() || getLenis()) return;
@@ -185,6 +190,8 @@ function useDesktopPrefetch(on: boolean): void {
     registerChunk(loadLenis);
     registerChunk(prefetchGsap);
     registerChunk(loadEnhancer);
+    // scrollToTarget's lazy body (anchors, the fast lane, the cut)
+    registerChunk(loadJumps);
     if (!on) return;
     let cancel = () => {};
     const go = () => {

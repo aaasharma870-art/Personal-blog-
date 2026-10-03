@@ -10,7 +10,12 @@
    - `runDeadEye({ reduced, onFired, onEnd })` for the egg runtime (the typed
      word "deadeye" and the palette, components/eggs/egg-runtime.tsx): it
      CALLS the game (the DEAD_EYE_CALL window event, answered by the
-     kill-list's <DeadEyeCall/>, DESKTOP_FINE) and returns { fire, abort }.
+     desktop enhancer's games binder, components/enhance/binders/games.ts,
+     which wires the kill-list's DEAD EYE pill on DESKTOP_FINE) and returns
+     { fire, abort }. Before the binder has bound (nothing answers the
+     event; the enhancer's click queue is still recording), a start is a
+     click on the pill, which the boot script records and the enhancer
+     replays; a stop drops that click.
      `onEnd` runs when the round is released (`game:stop`). The round shows
      its own score in its HUD, so `onFired` is no longer called (the toast
      would repeat it) and `reduced` is the round's own business (run.ts
@@ -31,7 +36,18 @@ export type DeadEyeRun = {
   abort(): void;
 };
 
-const call = (action: DeadEyeAction) => window.dispatchEvent(new CustomEvent(DEAD_EYE_CALL, { detail: { action } }));
+const call = (action: DeadEyeAction) => {
+  const detail: { action: DeadEyeAction; handled?: boolean } = { action };
+  window.dispatchEvent(new CustomEvent(DEAD_EYE_CALL, { detail }));
+  // a bound games binder answered (it sets `handled`)
+  if (detail.handled) return;
+  const q = window.__enhanceQ;
+  if (!q) return;
+  // not bound yet: queue the pill's click (start: the boot script records
+  // it into this array and the enhancer replays it), or drop a queued one
+  if (action === "start") document.getElementById("deadeye-call")?.click();
+  else if (action === "stop") for (let i = q.length - 1; i >= 0; i--) if (q[i]?.sel === "#deadeye-call") q.splice(i, 1);
+};
 
 export function runDeadEye(o: {
   reduced: boolean;

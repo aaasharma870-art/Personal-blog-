@@ -1,11 +1,12 @@
 "use client";
 
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
-import type { ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import {
+  motionOffNow,
+  onMotionOffChange,
   useFinePointer,
   useMediaQuery,
-  useMotionPaused,
   useMotionPausedAtBoot,
   useOsReducedMotion,
   useSaveData,
@@ -48,7 +49,16 @@ const subscribeNothing = () => () => {};
 const onClient = () => true;
 const onServer = () => false;
 
-const JourneyVoyage = lazy(() => import("@/components/site/journey-voyage").then((m) => ({ default: m.JourneyVoyage })));
+type VoyageProps = ComponentProps<typeof import("@/components/site/journey-voyage").JourneyVoyage>;
+
+/** Not safeLazy (null): if the voyage's chunk fails to load (deploy skew, a
+ *  flaky network), the stack, which carries every step, shows the content. */
+const JourneyVoyage = lazy(() =>
+  import("@/components/site/journey-voyage").then(
+    (m) => ({ default: m.JourneyVoyage }),
+    () => ({ default: (p: VoyageProps) => <JourneyStack {...p} stills={stillsFor(p.stills, p.variant)} /> }),
+  ),
+);
 
 /** The stills a variant shows on the stills paths. */
 function stillsFor(stills: readonly MediaId[], variant: Variant): MediaId[] {
@@ -83,15 +93,21 @@ export function JourneyExperience({
   const hydrated = useSyncExternalStore(subscribeNothing, onClient, onServer);
   const variant = useVariant(choice, "journey.voyage");
   const osReduce = useOsReducedMotion();
-  const paused = useMotionPaused();
   const pausedAtBoot = useMotionPausedAtBoot();
   const fine = useFinePointer();
   const wide = useMediaQuery("(min-width: 1024px)");
   const saveData = useSaveData();
   // a view that started paused keeps the stack until motion is first
   // resumed; from then on it is the voyage (a later Pause keeps it, static)
+  // (a listener, not useMotionPaused(): the Pause toggle never re-renders
+  // the journey, so the click's other listeners stop at once; spec §12.2)
   const [resumed, setResumed] = useState(false);
-  if (hydrated && pausedAtBoot && !paused && !resumed) setResumed(true);
+  useEffect(() => {
+    if (!hydrated || !pausedAtBoot || resumed) return;
+    return onMotionOffChange(() => {
+      if (!motionOffNow()) setResumed(true);
+    });
+  }, [hydrated, pausedAtBoot, resumed]);
 
   const stack = (
     <JourneyStack

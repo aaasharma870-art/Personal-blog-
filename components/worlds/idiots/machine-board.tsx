@@ -18,7 +18,7 @@ import { drawn } from "@/components/site/world-motion";
 import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import { CameraGroup, type CameraSpec } from "@/components/primitives/camera";
 import type { EnterPhase } from "@/components/primitives/use-enter-once";
-import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk";
+import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk-motion";
 import { PlateBand, coverRect, headPlateOf } from "@/components/worlds/idiots/plate-band";
 import { BoardDrone, boardQuad } from "@/components/sections/act-card/frames/board-fig";
 import { PlateBox, plateOf, type Plate } from "@/components/sections/act-card/plate";

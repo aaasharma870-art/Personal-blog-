@@ -7,7 +7,7 @@ import type { FocalBox, MediaId } from "@/lib/media";
 import { easeDraw } from "@/lib/motion";
 import { EGG_EVENT } from "@/components/eggs/egg-bus";
 import { EggHotspot } from "@/components/eggs/egg-hotspot";
-import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk";
+import { ChalkFilter, useSvgId } from "@/components/worlds/idiots/chalk-motion";
 
 /* ============================================================================
    THE WORTHY PEN (PHASE3-SPEC §9.1 #9, the `3i-pen` egg) — OWNER: W3-IDIOTS.

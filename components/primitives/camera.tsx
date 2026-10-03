@@ -1,8 +1,9 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
+import { startTransition, Suspense, useEffect, useRef, useState, type ComponentProps, type ComponentType, type ReactNode } from "react";
 import type { MotionValue } from "motion/react";
 import { useDesktopFine, useReducedMotion } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 import { cn } from "@/lib/utils";
 
 /* ============================================================================
@@ -17,7 +18,8 @@ import { cn } from "@/lib/utils";
    wrapper and, on DESKTOP_FINE with motion on and after ladder step 2 (the
    intro's quiet window is over), lazy-loads the driver from the desktop
    plates engine (components/stage/stage.tsx `CameraDrive`, the stage's own
-   chunk). Server, hydration, phones, touch, reduced motion and Pause: the
+   chunk) through `enginePart()`, the one loader the four plate facades
+   share (camera, depth, LivePlate, weather). Server, hydration, phones, touch, reduced motion and Pause: the
    static wrapper, identity transform (Pause mid-scroll resets it within one
    render: posters only, no camera transforms).
 
@@ -73,7 +75,9 @@ export function usePlateEngine(): boolean {
       .then((m) => m.whenLadder(2))
       .then(
         () => {
-          if (on) setReady(true);
+          // a transition: the step-2 render of every plate is time-sliced
+          // (no long task under the first wheel, P3-2 #9)
+          if (on) startTransition(() => setReady(true));
         },
         () => undefined,
       );
@@ -84,19 +88,32 @@ export function usePlateEngine(): boolean {
   return live && ready;
 }
 
-const Drive = lazy(() => import("@/components/stage/stage").then((m) => ({ default: m.CameraDrive })));
+type Stage = typeof import("@/components/stage/stage");
+type EnginePartName = "CameraDrive" | "DepthNear" | "LiveImpl" | "WeatherImpl";
+
+/** One part of the desktop plates engine (components/stage/stage.tsx, the
+ *  stage's own chunk, lazy; a failed chunk renders nothing), rendered only
+ *  while usePlateEngine() holds. One loader for the four facades (camera,
+ *  depth, LivePlate, weather). */
+export function enginePart<K extends EnginePartName>(name: K): (props: ComponentProps<Stage[K]>) => ReactNode {
+  const Part = safeLazy(() => import("@/components/stage/stage").then((m) => ({ default: m[name] as ComponentType<object> })));
+  return function EnginePart(props) {
+    return usePlateEngine() ? (
+      <Suspense fallback={null}>
+        <Part {...props} />
+      </Suspense>
+    ) : null;
+  };
+}
+
+const Drive = enginePart("CameraDrive");
 
 export function CameraGroup({ spec, progress, className, children }: CameraGroupProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const engine = usePlateEngine();
   return (
     <div ref={ref} className={cn("plate-cam", className)} data-camera={spec.kind}>
       {children}
-      {engine && spec.kind !== "hold" ? (
-        <Suspense fallback={null}>
-          <Drive target={ref} spec={spec} progress={progress} />
-        </Suspense>
-      ) : null}
+      {spec.kind !== "hold" ? <Drive target={ref} spec={spec} progress={progress} /> : null}
     </div>
   );
 }

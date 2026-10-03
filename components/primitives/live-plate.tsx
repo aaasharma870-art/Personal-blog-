@@ -1,11 +1,11 @@
 "use client";
 
-import { lazy, Suspense, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import type { MotionValue } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { usePlateEngine, type CameraSpec } from "@/components/primitives/camera";
+import { enginePart, type CameraSpec } from "@/components/primitives/camera";
 import type { DepthSpec } from "@/components/primitives/depth-plate";
 
 /* ============================================================================
@@ -62,24 +62,19 @@ export type LivePlateProps = {
   children?: ReactNode;
 };
 
-const Live = lazy(() => import("@/components/stage/stage").then((m) => ({ default: m.LiveImpl })));
+const Live = enginePart("LiveImpl");
 
 export function LivePlate({ children, ...props }: LivePlateProps) {
   const { media, sizes, className, alt } = props;
   const cam = useRef<HTMLDivElement>(null);
   const far = useRef<HTMLDivElement>(null);
-  const engine = usePlateEngine();
   return (
     <div className={cn("relative overflow-hidden", className)} data-live-plate={media} role={alt ? "img" : undefined} aria-label={alt || undefined}>
       <div ref={cam} className="plate-cam absolute inset-0">
         <div ref={far} className="plate-depth-far">
           <MediaFrame media={media} layout="fill" playOn="never" loop={false} sizes={sizes} />
         </div>
-        {engine ? (
-          <Suspense fallback={null}>
-            <Live {...props} cam={cam} far={far} />
-          </Suspense>
-        ) : null}
+        <Live {...props} cam={cam} far={far} />
         {children}
       </div>
     </div>

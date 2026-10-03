@@ -9,10 +9,12 @@
    so phones and touch screens never fetch any stage code.
    ========================================================================== */
 
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { useDesktopFine } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 
-const Gate = lazy(() => import("./stage-gate-impl"));
+// progressive: a failed chunk leaves the page as phones see it (no stage)
+const Gate = safeLazy(() => import("./stage-gate-impl"));
 
 export function StageGate() {
   const fine = useDesktopFine();

@@ -1,12 +1,13 @@
 "use client";
 
-import { lazy, Suspense, useRef } from "react";
+import { Suspense, useRef, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { beatAttrs } from "@/lib/beats";
+import { beatAttrs, type BeatWeight } from "@/lib/beats";
 import { film, type CaptionKey, type CaptionWorld } from "@/lib/film";
 import { resolveMedia, resolveVariant, type MediaId } from "@/lib/media";
 import { dur, easeClip } from "@/lib/motion";
 import { captionKeyFor } from "@/lib/sections";
+import { safeLazy } from "@/lib/safe-lazy";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { usePlateEngine, type CameraSpec } from "@/components/primitives/camera";
@@ -14,7 +15,6 @@ import { LivePlate } from "@/components/primitives/live-plate";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { WorldProvider } from "@/components/primitives/world";
-import { FILM_BEATS } from "@/components/sections/films/film-beats";
 import { Finale, type FinaleMode } from "@/components/sections/films/finales";
 import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
 
@@ -59,7 +59,11 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  *   there each screen's own 2.39 matte carries the scene. One close, one
  *   open per pass (html[data-letterbox] flips twice, rule 33). B30 is a
  *   weight-3 scroll star: its marker's box sits above the frame so its
- *   spotlight ownership ends as the close does.
+ *   spotlight ownership ends as the close does. The B30 / B31-bars markers
+ *   are the server screen's (`marks`, film-screen.tsx: no client code).
+ * - The beat ids come from the server screen (`beat`, film-beats.ts), so the
+ *   table stays out of the first load; without one (the lab) the finale
+ *   plays on entry, unranked.
  * - THE WARM POINT (`carry`, the last screen; B35 films half): the lazy
  *   ./films-desktop.tsx lifts the HP finale's warm point off the plate and
  *   lays it on the rising tintype card's sun (DESKTOP_FINE, motion on).
@@ -77,13 +81,15 @@ export const FILMS_CAPTION: Record<CaptionWorld, CaptionKey> = {
 const PUSH: CameraSpec = { kind: "push", scale: [1, 1.05], driver: "flow" };
 
 /** The desktop half (DP-13): the house lights and the warm-point carry. */
-const FilmsDesktop = lazy(() => import("@/components/sections/films/films-desktop"));
+const FilmsDesktop = safeLazy(() => import("@/components/sections/films/films-desktop"));
 
 export function FilmFrame({
   world,
   choice,
   bearing,
   gates,
+  beat,
+  marks,
   lights = false,
   carry = false,
   className,
@@ -94,6 +100,10 @@ export function FilmFrame({
   bearing: number;
   /** gauntlet.length (the 3 Idiots finale; derived). */
   gates: number;
+  /** The finale's time-star (film-beats.ts FILM_BEATS[world]). */
+  beat?: { finale: string; weight: BeatWeight };
+  /** Server markers inside the frame's box (the first screen's B30 / B31-bars). */
+  marks?: ReactNode;
   /** The first screen: the house lights go down on it (B30, B31-bars). */
   lights?: boolean;
   /** The last screen: its warm point is carried onto the tintype's sun (B35). */
@@ -111,18 +121,16 @@ export function FilmFrame({
         : base;
   const asset = stillId ? resolveMedia(stillId) : null;
   const aspect = asset ? asset.width / asset.height : 21 / 9;
-  const beats = FILM_BEATS[world];
 
   // The observer watches the UNCLIPPED box: IntersectionObserver clips its
   // target by the target's own clip-path in Chromium, so observing the
   // element that carries the closed iris (circle(0%): zero area) could leave
   // the ALT screens armed — shut — forever (ART-DIRECTOR #1).
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.5, star: { id: beats.finale, weight: beats.weight } });
+  const phase = useEnterOnce(ref, { amount: 0.5, star: beat ? { id: beat.finale, weight: beat.weight } : undefined });
   const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? "play" : "final";
 
   // the house lights (first screen) and the warm point (last): desktop, lazy
-  const lightsRef = useRef<HTMLSpanElement>(null);
   const engine = usePlateEngine();
 
   const focal = variant === "alt" && asset ? filmMark(asset.id, FOCAL_MARK[world]) : null;
@@ -138,28 +146,9 @@ export function FilmFrame({
         className="relative aspect-[3/2] sm:aspect-[2.39/1]"
         data-films-frame={world}
         data-finale-mode={mode}
-        {...beatAttrs(beats.finale, { weight: beats.weight })}
+        {...(beat ? beatAttrs(beat.finale, { weight: beat.weight }) : null)}
       >
-        {lights ? (
-          <>
-            {/* B30 (scroll star, w3): the close's spotlight box (above the frame) */}
-            <span
-              ref={lightsRef}
-              aria-hidden="true"
-              data-beat-scroll=""
-              className="pointer-events-none invisible absolute left-0 w-px"
-              style={{ top: "-105vh", height: "max(40vh, 300px)" }}
-              {...beatAttrs("B30", { weight: 3 })}
-            />
-            {/* B31-bars: the open, centred on this frame */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none invisible absolute left-0 w-px"
-              style={{ top: "calc(50% - 20vh)", height: "40vh" }}
-              {...beatAttrs("B31-bars")}
-            />
-          </>
-        ) : null}
+        {marks}
         <motion.div
           className="absolute inset-0 overflow-hidden bg-bg"
           initial={false}
@@ -186,7 +175,7 @@ export function FilmFrame({
       <SceneCaption k={captionKeyFor(FILMS_CAPTION[world], variant)} place="under" />
       {(lights || carry) && engine ? (
         <Suspense fallback={null}>
-          <FilmsDesktop frame={ref} marker={lightsRef} lights={lights} carry={carry} />
+          <FilmsDesktop frame={ref} lights={lights} carry={carry} />
         </Suspense>
       ) : null}
     </div>

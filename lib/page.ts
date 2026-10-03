@@ -442,6 +442,10 @@ export const page: readonly SectionEntry[] = [
     beats: [
       { id: "B28", at: 0, span: 96.8, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B29", at: 96.8, span: 94.4, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B29-lens (quiet, spec row B29's "lens bracket"): the ledger itself, where the bracket
+      // travels to the row on the reading line; its box (W3 beats probe, 1440) closes the
+      // B29 → B30 gap. A quiet beat is never a `signature` (those are stars), so stage-cue.
+      { id: "B29-lens", at: 66.9, span: 150.9, kind: "stage-cue", timing: "scroll", feature: "existing" },
     ],
     // head: VIRUS'S ASTRONAUT PEN (iconic-pen; ALT iconic-pen-alt)
     props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
@@ -605,6 +609,10 @@ export const page: readonly SectionEntry[] = [
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B57-roll (quiet): the roll itself over the last shot (the backdrop's push); its box (W3
+      // beats probe, 1440) closes the B56 → B57 gap. B57 stays on the Snitch, so the spotlight's
+      // "host left the viewport" test for the dart is unchanged.
+      { id: "B57-roll", at: 12.7, span: 181, kind: "stage-cue", timing: "scroll", feature: "existing" },
       // B58: "Mischief managed" → the post-credits scene in the +60vh tail
       { id: "B58", at: 101, span: 75.6, kind: "post-credits", timing: "time", star: true, weight: 3, feature: "P3-8" },
     ],

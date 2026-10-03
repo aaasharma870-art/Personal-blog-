@@ -11,10 +11,12 @@ import "@/components/games/games.css";
 
 /* ============================================================================
    FLY THE HOMEMADE DRONE (PHASE3-SPEC §9.2 #2; P3-8 #4) — OWNER: W3-GAMES.
-   The lazy game, mounted inside the systems band's picture box by
-   <DroneBand/> on the first press of "▲ Take off" (DESKTOP_FINE only; the
-   pill is server markup shown by the full media query). It never starts by
-   itself: every flight is a press (`run` counts them).
+   The lazy game, mounted inside the systems band's picture box (a small
+   React root of its own) by the desktop enhancer's games binder
+   (components/enhance/binders/games.ts) on the first press of "▲ Take off"
+   (DESKTOP_FINE only; the pill is plain markup in <DroneBand/>, shown by
+   the full media query). It never starts by itself: every flight is a
+   press (`run` counts them; a remount answers no old press).
 
    THE FLIGHT
    - Take-off: the plate dims to the slate "board" state (an opacity layer
@@ -38,8 +40,10 @@ import "@/components/games/games.css";
    - Controls: arrows / WASD ONLY while the play field has focus
      (preventDefault only there; no page-wide keys, WCAG 2.1.4); pointer
      press-and-drag on the field (a spring toward the pointer); Esc lands
-     (600 ms glide back to the mark); the band below 50 % visible lands it.
-     Wheel and scroll are never captured.
+     (600 ms glide back to the mark); the band below 50 % visible lands it
+     (judged after a take-off's centring scroll); the band fully out of
+     view, Pause / reduced motion, a hidden tab mid-glide and the fast lane
+     end it at once. Wheel and scroll are never captured.
    - Sound (lib/audio): the rotor hum loop at a rate that follows the speed;
      the gate tick and finish chord come from the events.
    - The HUD ("3/7 gates · 9.2 s" and how to fly) is fixed, through
@@ -94,6 +98,7 @@ export default function DroneGame({
   const [clock, setClock] = useState(0);
   const [said, setSaid] = useState("");
   const [result, setResult] = useState<Result | null>(null);
+  const gameEl = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLDivElement>(null);
   const spriteEl = useRef<HTMLImageElement>(null);
   const board = useRef<HTMLDivElement>(null);
@@ -102,7 +107,7 @@ export default function DroneGame({
   const helpId = useId();
 
   useEffect(() => {
-    const c = flightController({ box, field, sprite: spriteEl, board, pill }, copy, {
+    const c = flightController({ game: gameEl, box, field, sprite: spriteEl, board, pill }, copy, {
       phase: setPhase,
       gates: setGates,
       clock: setClock,
@@ -148,7 +153,7 @@ export default function DroneGame({
 
   return (
     <>
-      <div className="drone-game" data-phase={phase} data-variant={variant}>
+      <div ref={gameEl} className="drone-game" data-phase={phase} data-variant={variant}>
         {/* the board and its course stay mounted once the game is (the board
             is transparent at rest), so a landing fades them out together */}
         <div ref={board} className="drone-board" aria-hidden="true">

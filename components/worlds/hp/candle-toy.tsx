@@ -243,8 +243,17 @@ export default function CandleToy({ choice, flare }: { choice: VariantChoice; fl
       });
     };
 
+    // the last pointer position seen: Chromium sends a pointermove when the page scrolls under a
+    // still mouse (wheel, the director's cut); that is not the visitor moving, so it never arms the
+    // toy or lights a candle (as ledger-reckoning.tsx filters its rows). The first such move has
+    // no position to compare with, but it carries no movement either.
+    let seenX = NaN;
+    let seenY = NaN;
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      if ((e.clientX === seenX && e.clientY === seenY) || (e.movementX === 0 && e.movementY === 0)) return;
+      seenX = e.clientX;
+      seenY = e.clientY;
       px = e.clientX;
       py = e.clientY;
       if (!raf) raf = requestAnimationFrame(tick);

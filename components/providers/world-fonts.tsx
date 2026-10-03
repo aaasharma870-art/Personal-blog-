@@ -8,10 +8,12 @@
    Phones never fetch it, and fetch no world face.
    ========================================================================== */
 
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { useDesktopWide } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 
-const Impl = lazy(() => import("./world-fonts-impl"));
+// renders nothing: a failed chunk only means today's fonts, as on phones
+const Impl = safeLazy(() => import("./world-fonts-impl"));
 
 export function WorldFonts() {
   const wide = useDesktopWide();

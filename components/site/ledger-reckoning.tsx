@@ -7,6 +7,7 @@ import { animate, motion, useMotionValue } from "motion/react";
 import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import { springFollow } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/smooth-scroll";
+import { beatAttrs } from "@/lib/beats";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
@@ -279,7 +280,13 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
   const lensRowData = rows[lensRow] ?? rows[0];
 
   return (
-    <div ref={listRef} className="relative mt-tier-block" data-ledger={lensOn ? "lens-index" : "index-bar"}>
+    <div
+      ref={listRef}
+      className="relative mt-tier-block"
+      data-ledger={lensOn ? "lens-index" : "index-bar"}
+      /* B29-lens (quiet, lib/page.ts): the bracket's travel down the ledger */
+      {...beatAttrs("B29-lens")}
+    >
       <ol
         ref={olRef}
         aria-label="Ledger: flagships, survivors and killed ideas"

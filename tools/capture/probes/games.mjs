@@ -6,11 +6,13 @@
 //
 //   beats        [data-beat] B26 (systems band), B28 (the DEAD EYE pill), B29 (the "Killed" physical word)
 //   pills        "▲ Take off" (#drone-takeoff) and "DEAD EYE" (#deadeye-call) shown on DESKTOP_FINE
-//   drone.keys   arrows move the drone only while the play field has focus (blurred: no move)
+//   drone.keys   arrows move the drone only while the play field has focus (blurred: no move); each key is
+//                held for a count of drawn frames (18 blurred, 12 focused), not ms: the flight steps per frame
 //   drone.course a pointer drag flies the 7 gates in order; the live region speaks each gate VERBATIM
 //                ("Gate n of 7 · <gauntlet[n].title>"); html[data-game="drone"] while flying; the score
 //                panel shows the real link "Next: the kill-list ↓"; the best time is stored
-//   drone.edge   holding ← into the band's edge: the drone stops dead (x constant: no bounce)
+//   drone.edge   holding ← into the band's edge: the drone stops dead (x constant: no bounce); held until x has
+//                been still for 8 drawn frames (≤ 15 s: the flight steps per frame), then 5 x two frames apart
 //   drone.esc    Esc lands (≤ 900 ms), focus returns to the pill, html[data-game] cleared
 //   drone.off    scrolling the band under 50 % visible lands it
 //   drone.pause  the Pause control lands it at once (≤ 250 ms)
@@ -21,9 +23,15 @@
 //   de.fire      Shift+Enter fires: 5 rows struck, the HUD reads "5/5 marked · …"
 //   de.read      every struck row's reason is the content's reason VERBATIM; links unchanged
 //   de.store     aryan:games:v1 deadeye.n = 5; the hunt's deadEye win is recorded (the pen)
-//   de.release   Esc restores #kill-list EXACTLY (outerHTML equal) and clears html[data-game]
+//   de.release   Esc restores #kill-list EXACTLY (outerHTML equal, but for the ledger's own interaction
+//                state — the lens included — and the reveal / words binders' transient state:
+//                killListMarkup; before and after read at the same scroll position) and clears html[data-game]
 //   de.roving    ↑/↓ walk only the killed rows during a round
-//   rows.read    scrolling the ledger through the reading line records every rendered row (the pen)
+//   rows.read    scrolling the ledger through the reading line records every rendered row (the pen): a
+//                real mouse WHEEL (notches of ≤ half the shortest row, each glide at rest before the next,
+//                the pointer parked in the left margin so no row is hovered) until the centre line has
+//                passed the last row; a scripted scrollBy at 60 px / 40 ms outran the IntersectionObserver
+//                frames (1/10 read), and timed 100 px notches still skipped a row at headless frame rates
 //   inp          the slowest click / key event of the probe ≤ 200 ms (Event Timing)
 //   phone        390×844 touch: neither pill shows; no game layer mounts
 // Under --rm: drone.plan (a press shows the static labelled flight plan with the 7 titles, no flight,
@@ -54,6 +62,31 @@ function copy(key) {
 
 const fill = (t, v) => t.replace(/\{(\w+)\}/g, (m, k) => (k in v ? String(v[k]) : m));
 
+/** #kill-list's markup for de.release, run in the page: attributes sorted (a binder that re-sets one
+ *  changes the order, not the markup), without the ledger's own interaction state (class, style,
+ *  tabindex, aria-current: the active row's colours, the lens, the roving tab stop follow the round's
+ *  clicks) and without the binders' transient state: the Rise reveal's one-way armed → entered
+ *  (data-reveal) and the words binder's arm / play of the B29 "Killed" word (data-words-state, the
+ *  contents of its [data-words-fx] layer). The words probe checks those binders leave nothing behind;
+ *  the round's own marks are checked on their own (`left`). */
+function killListMarkup() {
+  const el = document.getElementById("kill-list");
+  if (!el) return "";
+  const c = el.cloneNode(true);
+  const DROP = new Set(["class", "style", "tabindex", "aria-current", "data-reveal", "data-words-state"]);
+  c.querySelectorAll("[data-words-fx]").forEach((f) => f.replaceChildren());
+  // the lane's lens (bracket, figure, label: aria-hidden) shows the ledger's last active row and opens
+  // once on the first activation: the round's clicks are activations (reported as `lens`; a Dead Eye
+  // [data-dead-eye] media left in it is caught by `left`)
+  c.querySelector("[data-lens]")?.parentElement?.replaceChildren(document.createTextNode("[lens]"));
+  for (const n of [c, ...c.querySelectorAll("*")]) {
+    const attrs = [...n.attributes].filter((a) => !DROP.has(a.name)).map((a) => [a.name, a.value]).sort(([a], [b]) => (a < b ? -1 : 1));
+    for (const a of [...n.attributes]) n.removeAttribute(a.name);
+    for (const [k, v] of attrs) n.setAttribute(k, v);
+  }
+  return c.outerHTML;
+}
+
 export default async function probe(page, ctx) {
   const checks = {};
   const set = (name, pass, detail = {}) => (checks[name] = { pass: Boolean(pass), ...detail });
@@ -76,7 +109,13 @@ export default async function probe(page, ctx) {
     try {
       new PerformanceObserver((l) => {
         for (const e of l.getEntries()) {
-          if (/click|key|pointer/.test(e.name)) window.__gamesInp = Math.max(window.__gamesInp, e.duration);
+          // INP counts INTERACTIONS only (interactionId > 0: pointerdown/up, click, keydown/up);
+          // a hover's pointerover / pointerenter while the page is busy is not one
+          if (!(e.interactionId > 0) || !/click|key|pointer/.test(e.name)) continue;
+          if (e.duration > window.__gamesInp) {
+            window.__gamesInp = e.duration;
+            window.__gamesInpWorst = { name: e.name, ms: e.duration, at: Math.round(e.startTime), delay: Math.round(e.processingStart - e.startTime), run: Math.round(e.processingEnd - e.processingStart) };
+          }
         }
       }).observe({ type: "event", durationThreshold: 16, buffered: true });
     } catch {
@@ -112,6 +151,30 @@ export default async function probe(page, ctx) {
     await page.click("#drone-takeoff");
     await page.waitForFunction(() => document.querySelector(".drone-game")?.getAttribute("data-phase") === "flying", null, { timeout: 8000 });
     await sleep(350);
+  };
+  /** Hold `key` until the page has drawn `frames` animation frames (or `until()` holds, ≤ 4 s). */
+  const holdKey = async (key, frames, until = null) => {
+    await page.evaluate(() => {
+      window.__probeFrames = 0;
+      const f = () => {
+        window.__probeFrames++;
+        window.__probeRaf = requestAnimationFrame(f);
+      };
+      window.__probeRaf = requestAnimationFrame(f);
+    });
+    await page.keyboard.down(key);
+    const t0 = Date.now();
+    while (Date.now() - t0 < 4000) {
+      await sleep(50);
+      if ((await page.evaluate(() => window.__probeFrames)) >= frames) break;
+      if (until && (await until())) break;
+    }
+    await page.keyboard.up(key);
+    const n = await page.evaluate(() => {
+      cancelAnimationFrame(window.__probeRaf);
+      return window.__probeFrames;
+    });
+    return { frames: n, ms: Date.now() - t0 };
   };
   const landed = (ms = 1500) =>
     page.waitForFunction(() => ["idle", "done"].includes(document.querySelector(".drone-game")?.getAttribute("data-phase") ?? ""), null, { timeout: ms });
@@ -164,16 +227,14 @@ export default async function probe(page, ctx) {
     const r0 = await page.evaluate(() => ({ game: document.documentElement.getAttribute("data-game"), focus: document.activeElement?.className ?? "" }));
     await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur());
     const x0 = await spriteX();
-    await page.keyboard.down("ArrowLeft");
-    await sleep(600);
-    await page.keyboard.up("ArrowLeft");
+    // held for FRAMES, not ms: the flight integrates ≤ 1/30 s per frame, so at a starved headless frame
+    // rate a 400 ms hold moved the drone 4 px (12 frames ≈ 0.4 s of flight ≈ 120 px at full thrust)
+    const blurred = await holdKey("ArrowLeft", 18);
     const x1 = await spriteX();
     await page.evaluate(() => document.querySelector(".drone-field")?.focus());
-    await page.keyboard.down("ArrowLeft");
-    await sleep(400);
-    await page.keyboard.up("ArrowLeft");
+    const focused = await holdKey("ArrowLeft", 12, async () => (await spriteX()) < x1 - 20);
     const x2 = await spriteX();
-    set("drone.keys", r0.game === "drone" && /drone-field/.test(r0.focus) && Math.abs(x1 - x0) < 2 && x2 < x1 - 20, { ...r0, x0, x1, x2 });
+    set("drone.keys", r0.game === "drone" && /drone-field/.test(r0.focus) && Math.abs(x1 - x0) < 2 && x2 < x1 - 20, { ...r0, x0, x1, x2, blurred, focused });
     await page.keyboard.press("Escape");
     await landed();
   });
@@ -227,15 +288,39 @@ export default async function probe(page, ctx) {
   await run("drone.edge", async () => {
     await toBand();
     await takeOff();
+    const x0 = await spriteX();
     await page.keyboard.down("ArrowLeft");
-    await sleep(2800);
-    const xs = [];
-    for (let i = 0; i < 5; i++) {
-      xs.push(await spriteX());
-      await sleep(80);
-    }
+    // the flight steps ≤ 1/30 s per drawn frame: at a starved headless frame rate the crossing takes many
+    // seconds, so hold until x has not changed for 8 drawn frames (≤ 15 s), then sample 5 x two frames apart
+    const r = await page.evaluate(async () => {
+      const x = () => {
+        const m = /translate3d\(([-\d.]+)px/.exec(document.querySelector(".drone-sprite")?.style.transform ?? "");
+        return m ? Number(m[1]) : null;
+      };
+      const frame = () => new Promise((res) => requestAnimationFrame(() => res()));
+      const t0 = performance.now();
+      let last = x();
+      let still = 0;
+      let frames = 0;
+      while (performance.now() - t0 < 15000 && still < 8) {
+        await frame();
+        frames++;
+        const v = x();
+        still = v !== null && last !== null && Math.abs(v - last) < 0.05 ? still + 1 : 0;
+        last = v;
+      }
+      const xs = [];
+      for (let i = 0; i < 5; i++) {
+        xs.push(x());
+        await frame();
+        await frame();
+      }
+      return { xs, frames, ms: Math.round(performance.now() - t0) };
+    });
     await page.keyboard.up("ArrowLeft");
-    set("drone.edge", xs.every((v) => v !== null && Math.abs(v - xs[0]) < 0.5), { xs });
+    const xs = r.xs;
+    // stopped dead AT THE EDGE: constant, and well left of where it took off
+    set("drone.edge", x0 !== null && xs.every((v) => v !== null && Math.abs(v - xs[0]) < 0.5) && xs[0] < x0 - 100, { x0, xs, frames: r.frames, ms: r.ms });
     await page.keyboard.press("Escape");
     await landed();
   });
@@ -278,13 +363,26 @@ export default async function probe(page, ctx) {
   });
 
   /* — Dead Eye ————————————————————————————————————————————————————————— */
-  const before = await page.evaluate(() => document.getElementById("kill-list")?.outerHTML ?? "");
+  // de.release's baseline: re-taken in de.start with the ledger in view and still (the lens, its figure and
+  // its label follow the row on the centre line, so before and after are read at the SAME scroll position)
+  let before = await page.evaluate(killListMarkup);
+  let beforeY = null;
+  let lensBefore = null;
+  const lensState = () => {
+    const l = document.querySelector("#kill-list [data-lens]");
+    return l ? { lens: l.getAttribute("data-lens"), figure: l.querySelector("[data-lens-figure]")?.getAttribute("data-lens-figure") ?? null } : null;
+  };
   const bg0 = await page.evaluate(() => getComputedStyle(document.getElementById("kill-list")).backgroundColor);
   const hrefs0 = await page.evaluate(() => [...document.querySelectorAll('#kill-list li[data-verdict="killed"] a')].map((a) => a.href));
 
   await run("de.start", async () => {
     await page.evaluate(() => document.getElementById("kill-list")?.scrollIntoView({ block: "start", behavior: "instant" }));
     await sleep(500);
+    await page.mouse.move(8, Math.round(ctx.vw.height / 2)); // no row hovered
+    await sleep(1200); // the lens opens and travels to the centre row
+    before = await page.evaluate(killListMarkup);
+    lensBefore = await page.evaluate(lensState);
+    beforeY = await page.evaluate(() => Math.round(scrollY));
     await page.click("#deadeye-call");
     await page.waitForSelector('#kill-list[data-deadeye="on"]', { timeout: 8000 });
     await sleep(500);
@@ -372,23 +470,32 @@ export default async function probe(page, ctx) {
     await page
       .waitForFunction(() => [...document.querySelectorAll("#kill-list [data-deadeye-layer]")].every((l) => l.hidden && !l.childElementCount), null, { timeout: 4000 })
       .catch(() => {});
-    const after = await page.evaluate(() => document.getElementById("kill-list")?.outerHTML ?? "");
+    // back where the baseline was read (the round brings the killed block into view), no row hovered
+    const releasedY = await page.evaluate(() => Math.round(scrollY));
+    if (beforeY !== null && beforeY !== releasedY) {
+      await page.evaluate((y) => {
+        const l = window.__lenis;
+        if (l) l.scrollTo(y, { immediate: true, force: true });
+        else window.scrollTo({ top: y, behavior: "instant" });
+      }, beforeY);
+    }
+    await page.mouse.move(8, Math.round(ctx.vw.height / 2));
+    await sleep(1200);
+    const after = await page.evaluate(killListMarkup);
     const game = await gameAttr();
-    // the ledger's own interaction state (the active row's colours, the lens
-    // position, the roving tab stop) follows the clicks of the round; the
-    // round's own marks must all be gone and everything else equal
-    const norm = (h) => h.replace(/\s(class|style|tabindex|aria-current)="[^"]*"/g, "");
+    // (killListMarkup leaves out the ledger's own interaction state and the binders' transient state)
     const left = await page.evaluate(() => ({
-      de: document.querySelectorAll("#kill-list [data-de], #kill-list [data-deadeye-struck], #kill-list [data-deadeye-id]").length,
+      de: document.querySelectorAll("#kill-list [data-de], #kill-list [data-deadeye-struck], #kill-list [data-deadeye-id], #kill-list [data-dead-eye]").length,
       on: document.getElementById("kill-list").hasAttribute("data-deadeye"),
       layers: [...document.querySelectorAll("#kill-list [data-deadeye-layer]")].map((l) => ({ hidden: l.hidden, kids: l.childElementCount })),
       time: document.getElementById("kill-list").style.getPropertyValue("--time-scale"),
     }));
-    const same = norm(after) === norm(before);
+    const same = after === before;
     let at = 0;
-    if (!same) while (at < before.length && norm(before)[at] === norm(after)[at]) at++;
+    if (!same) while (at < before.length && before[at] === after[at]) at++;
     const clean = left.de === 0 && !left.on && left.layers.every((l) => l.hidden && l.kids === 0) && left.time === "";
-    set("de.release", same && clean && game === null, same ? { game, ...left } : { game, ...left, at, before: norm(before).slice(at - 60, at + 80), after: norm(after).slice(at - 60, at + 80) });
+    const ys = { beforeY, releasedY, lens: { before: lensBefore, after: await page.evaluate(lensState) } };
+    set("de.release", same && clean && game === null, same ? { game, ...left, ...ys } : { game, ...left, ...ys, at, before: before.slice(at - 60, at + 80), after: after.slice(at - 60, at + 80) });
   });
 
   await run("de.roving", async () => {
@@ -409,31 +516,61 @@ export default async function probe(page, ctx) {
   });
 
   let inpSoFar = 0;
+  let inpWorstSoFar = null;
   await run("rows.read", async () => {
     await page.evaluate(() => localStorage.setItem("aryan:hunt:v1", JSON.stringify({ v: 1, found: {}, rows: [] })));
     // the ledger keeps the rows it already counted in memory (a reset store is not re-read): start a fresh view
     // (keep the Event Timing maximum so far: the reload resets it)
-    inpSoFar = await page.evaluate(() => window.__gamesInp ?? 0);
+    [inpSoFar, inpWorstSoFar] = await page.evaluate(() => [window.__gamesInp ?? 0, window.__gamesInpWorst ?? null]);
     await ctx.goto();
     await sleep(1500);
     await page.evaluate(() => document.getElementById("kill-list")?.scrollIntoView({ block: "start", behavior: "instant" }));
-    const h = await page.evaluate(() => document.getElementById("kill-list").offsetHeight);
-    for (let y = 0; y < h; y += 60) {
-      await page.evaluate(() => window.scrollBy(0, 60));
-      await sleep(40);
+    await sleep(400);
+    // the centre line must pass the last row's bottom
+    const { end, minH } = await page.evaluate(() => {
+      const rows = [...document.querySelectorAll("[data-ledger] li[data-row]")];
+      const last = rows[rows.length - 1]?.getBoundingClientRect();
+      return {
+        end: last ? Math.round(last.bottom + scrollY - innerHeight / 2 + 40) : 0,
+        minH: Math.round(Math.min(...rows.map((r) => r.getBoundingClientRect().height))),
+      };
+    });
+    // each notch at most half the shortest row, and the glide AT REST (+ 2 drawn frames) before the next:
+    // the centre line then rests inside every row at least once. At a starved headless frame rate a
+    // timed 100 px / 120 ms wheel let a row cross the line between two frames (9/10 read)
+    const notch = Math.max(20, Math.min(100, Math.floor(minH / 2)));
+    await page.mouse.move(8, Math.round(ctx.vw.height / 2));
+    let notches = 0;
+    for (; notches < 400; notches++) {
+      if ((await page.evaluate(() => scrollY)) >= end) break;
+      await page.mouse.wheel(0, notch);
+      await page.evaluate(async () => {
+        const frame = () => new Promise((r) => requestAnimationFrame(() => r()));
+        await frame();
+        await frame();
+        const t0 = performance.now();
+        // "smooth" only: Lenis 1.3 can leave isScrolling stuck at "native" (zero-velocity native scroll)
+        while (window.__lenis?.isScrolling === "smooth" && performance.now() - t0 < 3000) await frame();
+        await frame();
+        await frame();
+      });
     }
     await sleep(600);
-    const r = await page.evaluate(() => ({
-      rendered: document.querySelectorAll("[data-ledger] li[data-row]").length,
-      read: JSON.parse(localStorage.getItem("aryan:hunt:v1") ?? "null")?.rows?.length ?? 0,
-    }));
-    set("rows.read", r.rendered > 0 && r.read >= r.rendered, r);
+    const r = await page.evaluate(() => {
+      const rows = JSON.parse(localStorage.getItem("aryan:hunt:v1") ?? "null")?.rows ?? [];
+      return {
+        rendered: document.querySelectorAll("[data-ledger] li[data-row]").length,
+        read: rows.length,
+        scrollY: Math.round(scrollY),
+      };
+    });
+    set("rows.read", r.rendered > 0 && r.read >= r.rendered, { ...r, end, notch, notches, minRowH: minH });
   });
 
   await run("inp", async () => {
-    const now = await page.evaluate(() => window.__gamesInp ?? null);
+    const [now, worstNow] = await page.evaluate(() => [window.__gamesInp ?? null, window.__gamesInpWorst ?? null]);
     const inp = now === null ? null : Math.max(now, inpSoFar);
-    set("inp", inp !== null && inp <= 200, { maxEventMs: inp });
+    set("inp", inp !== null && inp <= 200, { maxEventMs: inp, worst: now !== null && now >= inpSoFar ? worstNow : inpWorstSoFar });
   });
 
   await run("phone", async () => {

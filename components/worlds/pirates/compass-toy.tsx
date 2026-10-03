@@ -14,6 +14,10 @@ import { useCompassSpin } from "@/components/worlds/pirates/use-compass-spin";
    The behaviour is use-compass-spin.ts (spin / drag / ← → / reduced
    motion / sound).
 
+   A spin settles on the next pillar in reading order, or on the pillar
+   focused by keyboard since the last spin (spec §9.2 #1: about-pillars.tsx
+   marks its list `data-pillars`; the focus is read here, in the lazy half).
+
    THE INVITE (B08-invite, a `needsIdle` time star; spec §2.3 B08): once the
    button is half in view it asks the spotlight; the row's scroll star (the
    scrubbed sentence of pillar 02) owns the spotlight while it crosses the
@@ -39,11 +43,31 @@ const INVITE = "B08-invite";
 
 export default function CompassToy({ api, label, bearings, point, alt, setPoint, setBusy }: CompassToyProps) {
   const ref = useRef<HTMLButtonElement>(null);
-  const spin = useCompassSpin(api, { bearings, point, alt, setPoint, setBusy });
+  /** The pillar focused by keyboard since the last spin (its goal). */
+  const focused = useRef<number | null>(null);
+  const spin = useCompassSpin(api, { bearings, point, alt, setPoint, setBusy, focused });
   const spinRef = useRef(spin);
   useEffect(() => {
     spinRef.current = spin;
   });
+
+  // keyboard focus on a pillar (about-pillars.tsx `ol[data-pillars]`) since
+  // the last spin: the next spin settles on it (spec §9.2 #1)
+  useEffect(() => {
+    const list = document.querySelector<HTMLOListElement>("ol[data-pillars]");
+    if (!list) return;
+    const onFocusIn = (e: FocusEvent) => {
+      const t = e.target;
+      if (!(t instanceof Element) || !t.matches(":focus-visible")) return;
+      // the pillar: the list's own child holding the focus
+      let li: Element | null = t;
+      while (li && li.parentElement !== list) li = li.parentElement;
+      const i = li ? Array.prototype.indexOf.call(list.children, li) : -1;
+      if (i >= 0) focused.current = i;
+    };
+    list.addEventListener("focusin", onFocusIn);
+    return () => list.removeEventListener("focusin", onFocusIn);
+  }, []);
 
   // the B08 invite: half in view → the spotlight (needsIdle) → one twitch
   useEffect(() => {

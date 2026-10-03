@@ -4,7 +4,8 @@ import { useEffect, useState, type RefObject } from "react";
 import { spotlight } from "@/lib/spotlight";
 import { FLAME_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { StageLayerPortal } from "@/components/stage/stage-layers";
-import { useLetterboxScene, type LetterboxSceneOptions } from "@/components/stage/letterbox-bars";
+import type { LetterboxSceneOptions } from "@/components/stage/letterbox-bars";
+import { useLetterboxScene } from "@/components/stage/letterbox-bars-impl";
 
 /* ============================================================================
    FILMS, DESKTOP (DP-13: the lazy half of film-frame.tsx; mounted on
@@ -18,8 +19,9 @@ import { useLetterboxScene, type LetterboxSceneOptions } from "@/components/stag
       around the moment the frame is centred (its centre from 70% to 30%);
       from there each screen's own 2.39 matte carries the scene. One close,
       one open per pass (html[data-letterbox] flips twice, rule 33). B30's
-      marker (rendered by film-frame.tsx, above the frame) is registered as
-      a weight-3 scroll star: its spotlight ownership ends as the close does.
+      marker (server markup in the frame's box, film-screen.tsx, above the
+      frame) is registered as a weight-3 scroll star: its spotlight
+      ownership ends as the close does.
 
    2. THE WARM POINT, CARRIED (the last screen; §2.3 B35, §7.3; the films
       half of the match cut, `pairWith` the tintype card's "B35-sun").
@@ -33,7 +35,8 @@ import { useLetterboxScene, type LetterboxSceneOptions } from "@/components/stag
    the plate's sun as the card arrives (tintype.tsx, `pin.enter`). Both
    halves are on screen together; at the meet the carried point fades into
    the card's sun. Reversible by position (scrolling back puts it back on
-   the plate). Transform / opacity only, one rAF-coalesced read per scroll.
+   the plate). Transform / opacity only, one rAF-coalesced read per scroll,
+   and only while the card is within half a viewport (an observer).
 
    Off: phones, reduced motion, Pause (the facade unmounts this file; the
    plate's point is restored at once), or when either half is absent.
@@ -60,23 +63,20 @@ const NO_REF: RefObject<Element | null> = { current: null };
 
 export default function FilmsDesktop({
   frame,
-  marker,
   lights,
   carry,
 }: {
-  /** The screen's frame box (the bars' trigger). */
+  /** The screen's frame box (the bars' trigger; B30's marker inside it). */
   frame: RefObject<HTMLElement | null>;
-  /** B30's marker (the close's spotlight box). */
-  marker: RefObject<HTMLElement | null>;
   lights: boolean;
   carry: boolean;
 }) {
   useLetterboxScene(lights ? frame : NO_REF, LIGHTS);
   useEffect(() => {
-    const el = marker.current;
-    if (!lights || !el) return;
-    return spotlight.registerScrollStar("B30", el, 3);
-  }, [lights, marker]);
+    // B30's marker: the close's spotlight box
+    const el = lights ? frame.current?.querySelector('[data-beat="B30"]') : null;
+    return el ? spotlight.registerScrollStar("B30", el, 3) : undefined;
+  }, [lights, frame]);
   return carry ? <WarmCarry /> : null;
 }
 
@@ -139,8 +139,36 @@ function WarmCarry() {
       el.style.transform = `translate3d(${(x - BOX / 2).toFixed(1)}px,${(y - BOX / 2).toFixed(1)}px,0) scale(${(w / BOX).toFixed(3)})`;
       el.style.opacity = (u < 0.9 ? 1 : (1 - u) / 0.1).toFixed(3);
     };
-    const onScroll = () => {
+    // the rect reads run only while the card is near the viewport (an
+    // observer, no layout read): elsewhere on the page a scroll costs a
+    // querySelector at most (no long task under the first wheel, P3-2 #9)
+    let near = false;
+    let watched: HTMLElement | null = null;
+    let io: IntersectionObserver | null = null;
+    const schedule = () => {
       if (!raf) raf = requestAnimationFrame(frame);
+    };
+    const track = () => {
+      find();
+      if (card === watched) return;
+      io?.disconnect();
+      io = null;
+      watched = card;
+      near = false;
+      if (!card) return;
+      io = new IntersectionObserver(
+        ([e]) => {
+          near = Boolean(e?.isIntersecting);
+          if (near) schedule();
+          else hide();
+        },
+        { rootMargin: "50% 0px" },
+      );
+      io.observe(card);
+    };
+    const onScroll = () => {
+      track();
+      if (near) schedule();
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
@@ -148,6 +176,7 @@ function WarmCarry() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      io?.disconnect();
       cancelAnimationFrame(raf);
       raf = 0;
       hide();

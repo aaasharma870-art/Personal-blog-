@@ -154,6 +154,15 @@ function evaluate(): void {
   tryGrant();
 }
 
+function scheduleEvaluate(): void {
+  if (!raf) {
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      evaluate();
+    });
+  }
+}
+
 function onScroll(): void {
   // a needsIdle star that was idle and now races again waits for a new idle
   if (pending.size && scrollVelocity() >= IDLE.below) {
@@ -164,12 +173,7 @@ function onScroll(): void {
       }
     }
   }
-  if (!raf) {
-    raf = requestAnimationFrame(() => {
-      raf = 0;
-      evaluate();
-    });
-  }
+  scheduleEvaluate();
 }
 
 function settle(p: Pending, a: SpotlightAnswer, why: string, remember = true): void {
@@ -348,6 +352,10 @@ export function registerScrollStar(id: string, el: Element, weight: BeatWeight):
     if (stars.get(id) !== s) return;
     stars.delete(id);
     if (owner === s) owner = null;
-    evaluate();
+    // re-evaluated on the next frame, never in the caller's task: stars
+    // unregister on Pause (the words binder's scrub reset, a host's effect
+    // cleanup), and evaluate()'s window.scrollY would force the whole-
+    // document restyle the Pause has just queued, inside the Pause
+    scheduleEvaluate();
   };
 }

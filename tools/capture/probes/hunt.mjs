@@ -17,7 +17,8 @@
 //   obliviate    Obliviate keeps the count
 //   eggsoff      "Turn off easter eggs" hides the chip and keeps the count; on again shows it
 //   panel        the chip opens the panel (12 slots), Esc closes it and focus returns to the chip
-//   hotspot      an injected <EggHotspot> markup (body > button, apart from the hosted ones) counts on click once the enhancer binds it; a hold
+//   hotspot      an injected <EggHotspot> markup (body > button, apart from the hosted ones; leftovers of an earlier
+//                injection removed first) counts on click once the enhancer binds it; a hold
 //                hotspot ignores a short click and counts on a 700 ms press
 //   reset        the palette's "Reset the egg hunt" (confirm accepted) clears the count
 //   complete     at 11 found, the 12th (palette "aal") turns the chip gold, toasts 12 / 12 and
@@ -256,6 +257,8 @@ export default async function probe(page, ctx) {
 
   await run("hotspot", async () => {
     await page.evaluate(() => {
+      // a leftover injection (an earlier attempt on this page) would make the locators below match twice
+      document.querySelectorAll("body > button[data-egg-hotspot]").forEach((b) => b.remove());
       const mk = (hunt, egg, hold) => {
         const b = document.createElement("button");
         b.type = "button";

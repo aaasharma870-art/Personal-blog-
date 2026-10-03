@@ -76,7 +76,8 @@ import {
      still: these hosts have no camera (§6.1 "none").
    - B12: Act I's gull fly-through crosses the window's SKY (above the
      horizon row; never a text column) once, on scroll-idle, at the
-     journey's end (the zone mounts on step 4; words binder + spotlight).
+     journey's end (the zone mounts once step 4 is reached and stays; words
+     binder + spotlight).
    - Reduced motion / Pause mid-scroll: the layout stays (§12.2); the sea
      shows the active step's still (no canvas, no loop, no sail), the
      captions show, the compass simply points.
@@ -472,8 +473,11 @@ export function JourneyVoyage({
               </div>
             ) : null}
 
-            {/* B12: the gull, in the sky above the horizon row only */}
-            {gull && active === NOW_INDEX ? (
+            {/* B12: the gull, in the sky above the horizon row only. The zone
+                mounts when step 4 is first reached and STAYS (a fast scroll
+                past Now must not unmount it before the words binder asks the
+                spotlight; it flies once per page view either way). */}
+            {gull && reached >= NOW_INDEX ? (
               <div className="pointer-events-none absolute inset-x-0 top-0" style={{ height: "42%" }}>
                 {gull}
               </div>

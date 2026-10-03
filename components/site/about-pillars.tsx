@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import { motion } from "motion/react";
 import { pillars } from "@/lib/content";
 import { useDesktopFine, useReducedMotion } from "@/lib/flags";
@@ -59,7 +60,7 @@ const SWEEP = { lid: 0, first: 520, every: 460, home: 520 } as const;
 const ENTRY_STAR = { id: "B08-compass", weight: 1 } as const;
 
 /** The toy (desktop only): a lazy chunk, never on phones (DP-13). */
-const CompassToy = lazy(() => import("@/components/worlds/pirates/compass-toy"));
+const CompassToy = safeLazy(() => import("@/components/worlds/pirates/compass-toy"));
 
 /** Bearing lines from the case rim outward (desktop hub SVG, 280 × 280). */
 const RAYS = HEADINGS.map((deg) => {
@@ -201,6 +202,7 @@ export function AboutPillars({
       <ol
         ref={listRef}
         aria-label="Four operating pillars"
+        data-pillars=""
         className="grid grid-cols-1 gap-y-tier-block sm:grid-cols-2 sm:gap-x-12 lg:gap-x-40 lg:gap-y-24"
       >
         {pillars.map((p, i) => (

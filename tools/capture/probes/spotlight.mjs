@@ -9,7 +9,10 @@
 //   queue    a second request waits for the first one's hold, then plays
 //   once     asking again for an id that played answers "skip"
 //   release  release() ends a hold early and the next request plays at once
-//   idle     a needsIdle star waits through fast scrolling and plays ≥ 600 ms after it stops
+//   idle     a needsIdle star waits through fast scrolling and plays ≥ 600 ms after it stops; the
+//            scrolling (≈ 1800 px/s for 900 ms, back and forth over ≤ 600 px) happens in a stretch
+//            of the page no registered scroll star owns at any point (from state().stars: the
+//            band, 20–80 % of the viewport, never meets a star), so only the idle rule decides
 //   pause    html[data-motion="paused"] skips every waiting star within 100 ms
 //   page     a slow full scroll: no two grants ever hold at the same time; every request ends
 // Under --rm (reduced motion) the impl must never load: pass = window.__spotlight absent.
@@ -40,13 +43,30 @@ export default async function probe(page, ctx) {
     // W2 measure fix: from W2 the opening card pins at 1–2.9 vh and its scroll stars (B03/B04) own the
     // band at y = 2 vh, so "free" / "queue" / "release" waited on a real owner. Step down the page to a
     // spot no registered scroll star owns before the synthetic tests (reported as res.start).
-    for (let i = 0; i < 40 && S.state?.().owner; i++) {
-      window.scrollTo(0, Math.min(window.scrollY + Math.round(innerHeight * 0.5), document.documentElement.scrollHeight - innerHeight * 2));
-      await sleep(200);
+    // W3 probe fix: reading `owner` 200 ms after a jump raced the owner update (y = 2 vh read free, then B04
+    // took the band and free / queue / release all skipped at 1.5 s). Pick the spot from the stars' measured
+    // ranges (the band, 20–80 % of the viewport, meets no star), then confirm it is quiet after 600 ms: no
+    // owner, no hold, nothing pending.
+    {
+      const vh = innerHeight;
+      const maxY = document.documentElement.scrollHeight - vh * 2;
+      const clear = (y) => (S.state?.().stars ?? []).every((st) => st.bottom <= y + 0.2 * vh || st.top >= y + 0.8 * vh);
+      const quiet = () => {
+        const st = S.state?.() ?? {};
+        return !st.owner && !st.hold && !(st.pending ?? []).length;
+      };
+      let tries = 0;
+      for (let y = Math.round(vh * 2); y <= maxY && tries < 40; y += 50) {
+        if (!clear(y)) continue;
+        tries++;
+        window.scrollTo(0, y);
+        await sleep(600);
+        if (clear(y) && quiet()) break;
+      }
     }
     {
-      const owner = S.state?.().owner ?? null;
-      res.start = { pass: owner === null, y: Math.round(window.scrollY), owner };
+      const st = S.state?.() ?? {};
+      res.start = { pass: !st.owner && !st.hold && !(st.pending ?? []).length, y: Math.round(window.scrollY), owner: st.owner ?? null, hold: st.hold ?? null, pending: st.pending ?? [] };
     }
 
     // own: a scroll star in the band blocks a time star until maxWait
@@ -87,20 +107,48 @@ export default async function probe(page, ctx) {
       res.release = { pass: a === "play" && now() - t0 < 100, answer: a, ms: Math.round(now() - t0) };
       await sleep(150);
     }
-    // idle: waits through fast scrolling (≈ 1800 px/s for 900 ms)
+    // idle: waits through fast scrolling (≈ 1800 px/s for 900 ms), in a starless stretch
     {
-      const p = S.request("probe-idle", { weight: 1, needsIdle: true, maxWait: 5000 });
-      let stop = 0;
-      const t0 = now();
-      while (now() - t0 < 900) {
-        window.scrollBy(0, 30);
-        await sleep(16);
+      const RANGE = 600;
+      const vh = innerHeight;
+      const maxY = document.documentElement.scrollHeight - vh;
+      // the band [y + .2 vh, y + .8 vh] for every y in [y0, y0 + RANGE] meets no star
+      const clear = (y0) => {
+        const b0 = y0 + 0.2 * vh;
+        const b1 = y0 + RANGE + 0.8 * vh;
+        return (S.state?.().stars ?? []).every((st) => st.bottom <= b0 || st.top >= b1);
+      };
+      const here = Math.round(window.scrollY);
+      let y0 = null;
+      for (let d = 0; d <= maxY && y0 === null; d += 50) {
+        for (const y of [here + d, here - d]) {
+          if (y >= 0 && y + RANGE <= maxY && clear(y)) {
+            y0 = y;
+            break;
+          }
+        }
       }
-      stop = now();
-      const a = await p;
-      const after = now() - stop;
-      res.idle = { pass: a === "play" && after >= 550, answer: a, msAfterStop: Math.round(after) };
-      await sleep(1300);
+      if (y0 === null) {
+        res.idle = { pass: false, error: `no ${RANGE} px stretch without a scroll star`, stars: S.state?.().stars ?? [] };
+      } else {
+        window.scrollTo(0, y0);
+        await sleep(900); // let the jump's own scroll settle (it is not part of the test)
+        const p = S.request("probe-idle", { weight: 1, needsIdle: true, maxWait: 5000 });
+        let dir = 1;
+        const t0 = now();
+        while (now() - t0 < 900) {
+          const y = window.scrollY + 30 * dir;
+          if (y > y0 + RANGE || y < y0) dir = -dir;
+          window.scrollBy(0, 30 * dir);
+          await sleep(16);
+        }
+        const stop = now();
+        const ownerDuring = S.state?.().owner ?? null;
+        const a = await p;
+        const after = now() - stop;
+        res.idle = { pass: a === "play" && after >= 550, answer: a, msAfterStop: Math.round(after), y0, range: RANGE, ownerDuring };
+        await sleep(1300);
+      }
     }
     // pause: every waiting star skips within 100 ms
     {

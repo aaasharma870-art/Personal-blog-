@@ -17,7 +17,8 @@ import { nearestTurn } from "@/components/worlds/pirates/voyage-chart";
    - CLICK / Enter / Space: an impulse of +720…1080° (seeded by the press
      count), the needle spinning down with 3 s⁻¹ friction, a little past the
      goal, then springNeedle (the compass's own spring) settles it on the
-     NEXT pillar's bearing in reading order (NW → NE → SW → SE). The lid
+     NEXT pillar's bearing in reading order (NW → NE → SW → SE), or on the
+     pillar focused by keyboard since the last spin (`focused`). The lid
      clicks shut-open on each spin.
      ALT (about.compass "taking-bearings"): the press takes the four
      bearings in turn, one spring step each, and comes to rest on the next.
@@ -43,6 +44,9 @@ export type CompassSpinOptions = {
   setBusy(busy: boolean): void;
   /** about.compass ALT: a press takes the bearings in turn. */
   alt: boolean;
+  /** The pillar focused by keyboard since the last spin (null = none): the
+   *  next spin's goal (spec §9.2 #1). A spin consumes it. */
+  focused?: { current: number | null };
 };
 
 export type CompassSpin = {
@@ -137,7 +141,18 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
     caseAngle.current = a;
     api.caseEl?.setAttribute("transform", Math.abs(a) < 0.01 ? "" : `rotate(${a.toFixed(2)})`);
   };
-  const next = () => (opts.current.point + 1) % opts.current.bearings.length;
+  /** The next spin's pillar: the one focused by keyboard since the last
+   *  spin, else the next in reading order (spec §9.2 #1). Consumes the focus. */
+  const next = () => {
+    const f = opts.current.focused;
+    const n = opts.current.bearings.length;
+    const k = f?.current;
+    if (f && k != null && k >= 0 && k < n) {
+      f.current = null;
+      return k;
+    }
+    return (opts.current.point + 1) % n;
+  };
   const bearingOf = (i: number) => opts.current.bearings[i] ?? 0;
 
   /** Rest on pillar `i`: the needle's goal (springNeedle settles it). */
@@ -152,7 +167,10 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
     opts.current.setBusy(false);
   };
 
-  /** Motion off mid-anything: stop now, final state (Pause: no sound). */
+  /** Motion off mid-anything: stop now, final state (Pause: no sound). The
+   *  needle, case and lid stop in the Pause's own task (motion values and
+   *  attributes: no layout read); the React state (the brass pillar, busy)
+   *  follows on the next frame, so the Pause click re-renders nothing. */
   useEffect(
     () =>
       onMotionOffChange(() => {
@@ -164,7 +182,17 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
         api.lid("open", true);
         // the bearing it was heading for, else the one it rests on (a
         // twitch cut short must not leave the needle off its bearing)
-        land(was ?? opts.current.point, true);
+        const i = was ?? opts.current.point;
+        const goal = nearestTurn(api.needle.get(), bearingOf(i));
+        api.target.jump(goal);
+        api.needle.jump(goal);
+        pending.current = null;
+        const raf = requestAnimationFrame(() => {
+          opts.current.setPoint(i);
+          opts.current.setBusy(false);
+        });
+        // a later spin / unmount supersedes it (stopAll)
+        running.current.push(() => cancelAnimationFrame(raf));
       }),
     // `api` is stable for the compass's life
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -257,6 +285,8 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
   const step = (d: 1 | -1) => {
     touched.current = true;
     stopAll();
+    // it points somewhere new: a pillar focused before this is no longer "since then"
+    if (opts.current.focused) opts.current.focused.current = null;
     const n = opts.current.bearings.length;
     const to = (opts.current.point + d + n) % n;
     const jump = motionOffNow();

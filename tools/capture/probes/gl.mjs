@@ -13,7 +13,8 @@
 //  loss         __gl.lose() → data-gl gone within 100 ms (live fallback); __gl.restore() → engaged again at p 0.
 //  pause        the Pause control ([data-motion-toggle]) → data-gl gone ≤ 100 ms and no draws while paused; resume re-engages.
 //  page.force   /?skip=intro&gl=force: each [data-act-card-frame] that engages (after W2-CARDS mounts GlGate) is scrubbed
-//               through its pin (p ≈ .1/.3/.45/.8) with screenshots <dir>/page-<card>-p<p>.png; skipped while none engages.
+//               through its pin (p ≈ .1/.3/.45/.8) with screenshots <dir>/page-<card>-p<p>.png, then out past the pin's
+//               end before the next card; skipped while none engages.
 //  page.default /?skip=intro: headless SwiftShader fails failIfMajorPerformanceCaveat → tier "css", no data-gl="on".
 //  page.off     /?skip=intro&gl=off: no GL canvas, no data-gl="on".
 //  rm           reduced motion: /lab/p3/gl?gl=force → tier "off", no canvas, 0 contexts.
@@ -162,6 +163,10 @@ export default async function probe(page, ctx) {
           await clip(p, sel, f);
           shots.push(f);
         }
+        // leave through the pin's END (p > 1), as a reader does, before the instant jump to the next card:
+        // jumping away from p .8 logged the card's disengage at its last p (.8) as a "mid switch"
+        await p.evaluate((id) => { const s = document.getElementById(id); const top = s.getBoundingClientRect().top + scrollY; scrollTo(0, top + Math.max(0, s.offsetHeight - innerHeight) + innerHeight * 0.6); }, id);
+        await sleep(900);
       }
       per[id] = { engaged: on, shots };
     }

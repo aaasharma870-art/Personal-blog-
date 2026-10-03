@@ -8,8 +8,10 @@
      lib/media.ts     provenance → { source }   (model, credits, date,
                       jobId and the LOG note stay server-side; the client
                       reads only `provenance.source`, the "legacy" test)
-     lib/variants.ts  note, plan, files          (the lab page is a server
-                      component; the client reads name / media / alt)
+     lib/variants.ts  note, plan, files, and each side's name and media
+                      (the lab pages are server components and Node reads
+                      the rest; the client reads only the keys and whether
+                      `alt` is null: hasAlt, pieceSpec in prepaint-variants)
      lib/page.ts      beats, tempo, estVh        (read by StageSplit, a
      lib/film.ts      beats, tempo, estVh         server component, and by
                                                   Node; the spotlight reads
@@ -31,7 +33,10 @@
 /** Per file: the data object's opening text, and what to do per key. */
 const RULES = {
   "lib/media.ts": { start: "export const mediaAssets = {", keys: { provenance: "source" } },
-  "lib/variants.ts": { start: "export const VARIANT_REGISTRY = {", keys: { note: "drop", plan: "drop", files: "drop" } },
+  "lib/variants.ts": {
+    start: "export const VARIANT_REGISTRY = {",
+    keys: { note: "drop", plan: "drop", files: "drop", name: "drop", media: "drop" },
+  },
   "lib/page.ts": { start: "export const page: readonly SectionEntry[] = [", keys: { beats: "drop", tempo: "drop", estVh: "drop" } },
   "lib/film.ts": { start: "export const film = {", keys: { beats: "drop", tempo: "drop", estVh: "drop" } },
 };

@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useCallback, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useMemo, useRef, useState } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { CSSProperties, ReactNode } from "react";
 import { motion } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
@@ -74,7 +75,8 @@ import {
    - THE CANDLE TOY + THE WAND (spec §9.2 #4): the hall's ceiling field is a
      toy field (CandleField `toy`, every candle lit by default). The two
      desktop modules (worlds/hp/wand-cursor.tsx, worlds/hp/candle-toy.tsx)
-     are lazy chunks mounted here on DESKTOP_FINE with motion on, after the
+     are ONE lazy chunk (worlds/hp/contact-toys.tsx: one loader stub in the
+     first load, not two) mounted here on DESKTOP_FINE with motion on, after the
      intro's quiet window (`usePlateEngine`, the plate facades' gate; DP-13):
      server, phones, touch, reduced motion and Pause never load or keep them.
      All lit → the toy calls `flare` → the same single flare as a copy.
@@ -88,8 +90,8 @@ import {
 const B56 = { id: "B56", weight: 2 } as const;
 
 /** Act IV's desktop toys (lazy chunks; see the header). */
-const WandCursor = lazy(() => import("@/components/worlds/hp/wand-cursor"));
-const CandleToy = lazy(() => import("@/components/worlds/hp/candle-toy"));
+/** The wand + the candle toy: ONE lazy chunk (worlds/hp/contact-toys.tsx). */
+const ContactToys = safeLazy(() => import("@/components/worlds/hp/contact-toys"));
 
 /** The flame's centre on each plate (0–1), measured on the accepted file
  *  (sharp, 2026-09-29: the > 200 luminance centroid of the flame; x .860–
@@ -274,9 +276,8 @@ export function ContactScene({
       </div>
       {toys ? (
         <Suspense fallback={null}>
-          <WandCursor choice={choice} />
-          {/* every candle lit → the same single flare as a copy */}
-          <CandleToy choice={choice} flare={onCopied} />
+          {/* the wand; every candle lit → the same single flare as a copy */}
+          <ContactToys choice={choice} flare={onCopied} />
         </Suspense>
       ) : null}
     </div>

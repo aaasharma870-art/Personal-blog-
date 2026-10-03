@@ -12,8 +12,10 @@ import "@/components/games/games.css";
 
 /* ============================================================================
    DEAD EYE · the HUD (lazy; PHASE3-SPEC §9.2 #3) — OWNER: W3-GAMES.
-   Mounted by <DeadEyeCall/> for one round (a new round remounts it). It
-   starts the round (run.ts) and shows it, fixed in the game-hud stage layer
+   Mounted for one round by the desktop enhancer's games binder (components/
+   enhance/binders/games.ts: its own small React root per round; the DEAD
+   EYE pill is server markup, components/games/dead-eye/dead-eye-call.tsx).
+   It starts the round (run.ts) and shows it, fixed in the game-hud stage layer
    (StageLayerPortal: under the header and the fast lane, P3-2 #12):
    - the CORE: a white ring that drains over the 5.0 s of Dead Eye (IC-RD-09;
      two half-discs turned by transform under the inner core, no paint per
@@ -21,18 +23,32 @@ import "@/components/games/games.css";
    - the score line ("2/5 marked · 3.1 s of Dead Eye left"; the clock at
      ≤ 10 Hz, aria-hidden), the best once lib/film.ts has its line, and the
      "Survived: not a target" note when a wrong row is clicked;
-   - "Fire" (during the paint) and "Release" (always);
+   - "Fire" (during the paint) and "Release" (always); when the round
+     leaves the paint with focus on Fire (Enter on it, the core running
+     out), focus moves to Release before Fire unmounts (never to <body>);
    - one polite live region: the notes and the final score.
    Esc anywhere releases (run.ts). Unmounting (the pill again, leaving
    DESKTOP_FINE) restores the ledger at once.
    ========================================================================== */
 
-export default function DeadEyeHud({ copy, variant, onEnd }: { copy: DeadEyeCopy; variant: Variant; onEnd: () => void }) {
+export default function DeadEyeHud({
+  copy,
+  variant,
+  onEnd,
+}: {
+  copy: DeadEyeCopy;
+  variant: Variant;
+  /** The round is over and the ledger restored (`reason`: "esc", "release",
+   *  "offscreen", "fastlane", "none"; never called for an unmount). */
+  onEnd: (reason: string) => void;
+}) {
   const [view, setView] = useState<RoundView | null>(null);
   const [note, setNote] = useState("");
   const [said, setSaid] = useState("");
   const right = useRef<HTMLDivElement>(null);
   const left = useRef<HTMLDivElement>(null);
+  const fireBtn = useRef<HTMLButtonElement>(null);
+  const releaseBtn = useRef<HTMLButtonElement>(null);
   const round = useRef<Round | null>(null);
   const endRef = useRef(onEnd);
   useEffect(() => {
@@ -45,7 +61,12 @@ export default function DeadEyeHud({ copy, variant, onEnd }: { copy: DeadEyeCopy
       variant,
       survivor: copy.survivor,
       hooks: {
-        view: setView,
+        view: (v) => {
+          // Fire unmounts when the paint ends: its focus goes to Release
+          // first (synchronously, before React removes it)
+          if (v.phase !== "paint" && fireBtn.current && document.activeElement === fireBtn.current) releaseBtn.current?.focus({ preventScroll: true });
+          setView(v);
+        },
         core: (share) => {
           // the ring drains clockwise from 12 o'clock: the right half first
           const used = 1 - Math.min(1, Math.max(0, share));
@@ -60,13 +81,13 @@ export default function DeadEyeHud({ copy, variant, onEnd }: { copy: DeadEyeCopy
           window.clearTimeout(noteTimer);
           noteTimer = window.setTimeout(() => setNote(""), 1600);
         },
-        ended: () => endRef.current(),
+        ended: (reason) => endRef.current(reason),
       },
     });
     if (!r) {
       // nothing to play (no ledger rows): tell the callers it is over
       emit("game:stop", { game: "deadeye", reason: "none" });
-      endRef.current();
+      endRef.current("none");
       return;
     }
     round.current = r;
@@ -118,11 +139,11 @@ export default function DeadEyeHud({ copy, variant, onEnd }: { copy: DeadEyeCopy
           ) : null}
         </div>
         {phase === "paint" ? (
-          <button type="button" className="de-btn type-meta" onClick={() => round.current?.fire()}>
+          <button ref={fireBtn} type="button" className="de-btn type-meta" onClick={() => round.current?.fire()}>
             {copy.fire}
           </button>
         ) : null}
-        <button type="button" className="de-btn type-meta" onClick={() => round.current?.release("release")}>
+        <button ref={releaseBtn} type="button" className="de-btn type-meta" onClick={() => round.current?.release("release")}>
           {copy.release}
         </button>
         <p className="sr-only" role="status" aria-live="polite">

@@ -22,7 +22,8 @@ import { registerChunk, useLadder } from "@/lib/ladder";
    frame), so toggling Pause never re-downloads or re-measures anything.
    ========================================================================== */
 
-const Stage = dynamic(() => import("./stage"), { ssr: false });
+// a failed chunk renders nothing (the page stays opaque: never a blank section)
+const Stage = dynamic(() => import("./stage").catch(() => ({ default: () => null })), { ssr: false });
 /** The same chunk for the warm-up ladder's prefetch (lib/ladder registerChunk):
  *  a stable reference, registered once on DESKTOP_FINE. */
 const loadStage = () => import("./stage");

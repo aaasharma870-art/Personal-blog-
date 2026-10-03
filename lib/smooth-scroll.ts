@@ -7,7 +7,8 @@
    touch tablets, reduced motion and Pause keep native scroll.
 
    - scrollToTarget(): every programmatic jump (anchors, palette, eggs, the
-     Time-Turner, the fast lane, the chapter select). Native `scrollTo` when
+     Time-Turner, the fast lane, the chapter select); its body is the lazy
+     ./smooth-scroll-jump (off the first load). Native `scrollTo` when
      there is no Lenis (instant under reduced motion / Pause), `lenis.scrollTo
      (y, { force })` when there is. `#act-n` lands at the act's `landAt` share
      of the card's pinned travel. Jumps longer than 3 viewports never glide
@@ -24,11 +25,9 @@
 import { useSyncExternalStore } from "react";
 import { emit } from "./events";
 import { film, type ActSpec } from "./film";
-import { DESKTOP_FINE, DESKTOP_WIDE, motionOffNow } from "./flags";
+import { DESKTOP_FINE, motionOffNow } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import { actCards } from "./sections";
-import { markWorldFontsReady } from "./world-fonts";
-import { WORLD_IDS, type WorldId } from "./worlds";
 
 /** The subset of Lenis 1.3's `scrollTo` options this page uses. */
 export type LenisScrollOptions = {
@@ -66,13 +65,12 @@ export type ScrollToTargetOptions = {
 };
 
 /** The cut (components/director/cut-overlay.tsx): fade the deep layer in
- *  (140 ms) while `ready` settles, call `jump()`, resolve, fade out (220 ms)
- *  in the background. */
-export type CutRunner = (ready: Promise<void>, jump: () => void) => Promise<void>;
+ *  (140 ms), run `jump()` (the jump, the focus move, then the target
+ *  world's fonts and the re-land, all under the layer), resolve, fade out
+ *  (220 ms) in the background. */
+export type CutRunner = (jump: () => Promise<void>) => Promise<void>;
 
 const noop = () => {};
-/** A jump longer than this many viewports never glides (spec §3.1). */
-const LONG_JUMP_VIEWPORTS = 3;
 /** How long a jump waits for a closing modal to release its lock. */
 const UNLOCK_WAIT_MS = 400;
 /** A refresh waits for a glide to end, at most this long. */
@@ -135,6 +133,11 @@ export function setCutRunner(run: CutRunner | null): () => void {
   };
 }
 
+/** The registered cut (./smooth-scroll-jump), or null. */
+export function getCutRunner(): CutRunner | null {
+  return cutRunner;
+}
+
 /* — geometry ———————————————————————————————————————————————————————— */
 
 const px = (v: string | null | undefined): number => {
@@ -143,9 +146,11 @@ const px = (v: string | null | undefined): number => {
 };
 
 const maxScroll = (): number => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-const clampY = (y: number): number => Math.min(Math.max(0, y), maxScroll());
+/** A page y clamped to the scroll range (./smooth-scroll-jump reads it). */
+export const clampY = (y: number): number => Math.min(Math.max(0, y), maxScroll());
 
-function resolveTarget(t: string | Element): Element | null {
+/** An element, an id or "#id" as the element (./smooth-scroll-jump too). */
+export function resolveTarget(t: string | Element): Element | null {
   if (typeof t !== "string") return t;
   let id = t.startsWith("#") ? t.slice(1) : t;
   try {
@@ -189,7 +194,7 @@ function landAtY(el: Element): number | null {
 
 /** The page y that puts `el` where `block` says, with the native anchor
  *  offset (the target's scroll-margin-top + the root's scroll-padding-top). */
-function targetY(el: Element, block: "start" | "center" | "nearest"): number {
+export function targetY(el: Element, block: "start" | "center" | "nearest"): number {
   const land = landAtY(el);
   if (land != null) return land;
   const r = el.getBoundingClientRect();
@@ -206,170 +211,39 @@ function targetY(el: Element, block: "start" | "center" | "nearest"): number {
   return r.top + y0 - pad;
 }
 
-const FILM_WORLDS: ReadonlySet<string> = new Set(WORLD_IDS.filter((w) => w !== "house"));
+/* — jumps (the body is ./smooth-scroll-jump, a chunk of its own) ————————— */
 
-/** The cut's readiness: the target world's fonts (≤ 300 ms, B1-TYPE). */
-function cutReady(el: Element | null): Promise<void> {
-  const w = el?.closest("[data-world]")?.getAttribute("data-world");
-  if (!w || !FILM_WORLDS.has(w)) return Promise.resolve();
-  return markWorldFontsReady(w as WorldId).catch(noop);
+type Jumps = typeof import("./smooth-scroll-jump");
+let jumps: Promise<Jumps> | null = null;
+
+/** The jump machinery (./smooth-scroll-jump: the cut, the glide, focus and
+ *  history), off the first load. The desktop smooth-scroll chunk prefetches
+ *  it, the fast lane warms it on intent, the intro's end warms it; any other
+ *  first jump waits for it once. */
+export function loadJumps(): Promise<Jumps> {
+  return (jumps ??= import("./smooth-scroll-jump").catch((e: unknown) => {
+    jumps = null;
+    throw e;
+  }));
 }
 
-/* — history + focus ——————————————————————————————————————————————— */
-
-function writeHistory(mode: "push" | "replace", id: string): void {
-  const url = `#${id}`;
-  try {
-    if (mode === "push" && window.location.hash !== url) window.history.pushState(null, "", url);
-    else window.history.replaceState(null, "", url);
-  } catch {
-    /* a sandboxed frame may refuse history writes: the jump still happens */
-  }
-}
-
-const FOCUSABLE = "a[href], button, input, select, textarea, summary, [tabindex]";
-const shown = (e: Element): boolean => e.getClientRects().length > 0;
-
-/** Focus the target (when it is focusable) or its first visible heading,
- *  else the target itself with a temporary tabindex=-1 (removed on blur). */
-function focusOn(el: Element): void {
-  let target: Element | null = el.matches(FOCUSABLE) ? el : null;
-  if (!target) {
-    if (el.matches("h1, h2, h3")) target = el;
-    else target = Array.from(el.querySelectorAll("h1, h2, h3")).find(shown) ?? el;
-  }
-  if (!(target instanceof HTMLElement || target instanceof SVGElement)) return;
-  const t = target;
-  if (!t.matches(FOCUSABLE)) {
-    t.setAttribute("tabindex", "-1");
-    t.addEventListener("blur", () => t.removeAttribute("tabindex"), { once: true });
-  }
-  t.focus({ preventScroll: true });
-}
-
-/* — arrival ————————————————————————————————————————————————————————— */
-
-const nextFrame = (): Promise<void> => new Promise((r) => requestAnimationFrame(() => r()));
-
-/** At `y` (within 2 px): a glide that was interrupted did not arrive. */
-const arrivedAt = (y: number): boolean => Math.abs(window.scrollY - y) < 2;
-
-const USER_SCROLL_INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
-
-/** A native smooth scroll has ended: `scrollend`, or a cap (Safari has
- *  no scrollend; a zero-length scroll fires none). Resolves `false` when
- *  the visitor took over (wheel, touch, pointer, key) and the page is not
- *  at `y`: an interrupted scroll never moves focus off screen. A slow but
- *  uninterrupted scroll still counts as arrived (the skip link's focus). */
-function nativeArrival(y: number): Promise<boolean> {
-  if (Math.abs(window.scrollY - y) < 1) return nextFrame().then(() => true);
-  return new Promise<boolean>((resolve) => {
-    let interrupted = false;
-    const took = () => {
-      interrupted = true;
-    };
-    const opts = { capture: true, passive: true } as const;
-    const finish = () => {
-      window.removeEventListener("scrollend", finish);
-      for (const ev of USER_SCROLL_INPUT) window.removeEventListener(ev, took, opts);
-      clearTimeout(timer);
-      resolve(!interrupted || arrivedAt(y));
-    };
-    const timer = setTimeout(finish, 1500);
-    window.addEventListener("scrollend", finish);
-    for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, took, opts);
-  });
-}
-
-/** A Lenis glide to `y`: resolves on completion, or as soon as the glide is
- *  interrupted (a wheel, a newer jump, Lenis destroyed), capped at 4 s.
- *  Resolves `true` only when it arrived (onComplete, or the page is at `y`):
- *  an interrupted glide never moves focus to an off-screen target. */
-function lenisGlide(l: LenisLike, y: number): Promise<boolean> {
-  return new Promise<boolean>((resolve) => {
-    let done = false;
-    let started = false;
-    const finish = (completed: boolean) => {
-      if (done) return;
-      done = true;
-      clearInterval(poll);
-      clearTimeout(cap);
-      resolve(completed || arrivedAt(y));
-    };
-    const poll = setInterval(() => {
-      if (lenis !== l) return finish(false);
-      if (l.isScrolling === "smooth") started = true;
-      else if (started) finish(false);
-    }, 100);
-    const cap = setTimeout(() => finish(false), 4000);
-    l.scrollTo(y, { force: true, onComplete: () => finish(true) });
-  });
-}
-
-/* — jumps ——————————————————————————————————————————————————————————— */
-
-let jumpSeq = 0;
+if (typeof window !== "undefined") window.addEventListener("intro:end", () => void loadJumps().catch(noop), { once: true });
 
 /** Scroll to an element, an id ("#about" or "about") or a page y. Resolves
  *  on arrival (and after the focus move). Unknown targets resolve at once.
  *  A newer jump supersedes an older one (the older skips its focus). */
 export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions = {}): Promise<void> {
   if (typeof window === "undefined") return;
-  const el = typeof t === "number" ? null : resolveTarget(t);
-  if (typeof t !== "number" && !el) return;
-  const seq = ++jumpSeq;
-  // an explicit jump supersedes the load-time hash
-  hashHold = false;
-
-  // a closing modal (menu, palette, map) releases its lock first: Lenis's
-  // start() would cancel a glide begun while it was stopped
-  await whenUnlocked();
-  if (seq !== jumpSeq) return;
-
-  const l = lenis;
-  const off = motionOffNow();
-  const y = clampY(el ? targetY(el, o.block ?? "start") : (t as number));
-  const wide = window.matchMedia(DESKTOP_WIDE).matches;
-  const long = (l !== null || wide) && Math.abs(y - window.scrollY) > LONG_JUMP_VIEWPORTS * window.innerHeight;
-  const wantsCut = Boolean(o.cut) || long;
-  const immediate = off || Boolean(o.immediate) || wantsCut;
-
-  if (o.history && el?.id) writeHistory(o.history, el.id);
-
-  if (immediate) {
-    const jump = () => {
-      // a newer jump owns the page: a superseded cut never lands
-      if (seq !== jumpSeq) return;
-      // measured now, not before the cut: the fonts readied during the
-      // fade-in (and any chapter above the target) may have re-flowed
-      const yy = el ? clampY(targetY(el, o.block ?? "start")) : y;
-      if (l && lenis === l) l.scrollTo(yy, { immediate: true, force: true });
-      else window.scrollTo({ top: yy, behavior: "instant" });
-      gsapIfLoaded()?.ScrollTrigger.update();
-      // cards set their damped p to the raw value: no catch-up after a cut
-      emit("scroll:jump", { y: yy, immediate: true });
-    };
-    const runner = cutRunner;
-    // the overlay is motion: DESKTOP_FINE only (spec §1.2). A wide touch
-    // screen keeps the instant jump without the fade.
-    if (wantsCut && !off && runner && window.matchMedia(DESKTOP_FINE).matches) await runner(cutReady(el), jump);
-    else {
-      if (o.cut) await cutReady(el);
-      jump();
-    }
-    if (o.focus && el && seq === jumpSeq) focusOn(el);
-    await nextFrame();
+  let m: Jumps;
+  try {
+    m = await loadJumps();
+  } catch {
+    // the chunk failed (deploy skew, offline): the browser's own jump
+    const el = typeof t === "number" ? null : resolveTarget(t);
+    if (typeof t === "number" || el) window.scrollTo({ top: clampY(el ? targetY(el, o.block ?? "start") : (t as number)), behavior: "instant" });
     return;
   }
-
-  emit("scroll:jump", { y, immediate: false });
-  let arrived: boolean;
-  if (l) arrived = await lenisGlide(l, y);
-  else {
-    window.scrollTo({ top: y, behavior: "smooth" });
-    arrived = await nativeArrival(y);
-  }
-  if (o.focus && el && arrived && seq === jumpSeq) focusOn(el);
+  return m.scrollToTarget(t, o);
 }
 
 /* — locks (ref-counted by owner) ——————————————————————————————————— */
@@ -401,7 +275,8 @@ export function unlockScroll(owner: string): void {
   waiters.forEach((w) => w());
 }
 
-function whenUnlocked(): Promise<void> {
+/** Resolves once no modal holds the lock (at most UNLOCK_WAIT_MS). */
+export function whenUnlocked(): Promise<void> {
   if (!lockOwners.size) return Promise.resolve();
   return new Promise<void>((resolve) => {
     const done = () => {
@@ -426,6 +301,10 @@ let inputTracked = false;
  *  Lenis start and the pins used to leave it at the browser's native jump,
  *  or at 0). Phones and reduced motion keep the browser's own jump. */
 let hashHold = false;
+/** An explicit jump supersedes the load-time hash (./smooth-scroll-jump). */
+export function dropHashHold(): void {
+  hashHold = false;
+}
 if (typeof window !== "undefined" && window.location.hash.length > 1) {
   try {
     hashHold = window.matchMedia(DESKTOP_FINE).matches && !motionOffNow();

@@ -1,12 +1,13 @@
 "use client";
 
-import { lazy, Suspense, useSyncExternalStore, type ReactNode } from "react";
+import { Suspense, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useDesktopFine } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 
 /* the cut is DESKTOP_FINE only (lib/smooth-scroll.ts runs it there alone):
    its code loads there, after mount (DP-13) */
-const CutOverlay = lazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
+const CutOverlay = safeLazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
 
 /* ============================================================================
    STAGE LAYERS (spec §3.2) — OWNER: B1-STAGE.

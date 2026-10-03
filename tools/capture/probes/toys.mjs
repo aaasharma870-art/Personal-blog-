@@ -6,7 +6,8 @@
 //   arm          scroll #contact in from fully offscreen, one mouse move inside: every on-screen
 //                svg[data-candle] loses data-lit, one toy "arm" event; the cursor over the section is the wand
 //   idle         2.5 s with no input: no candle relights itself
-//   light        the pointer within 56 px of each flame (rect.top + .2 h) re-lights it; then one "done",
+//   light        the pointer within 56 px of each flame (rect.top + .2 h) re-lights it (a flame the pointer cannot
+//                reach — under the fixed header at 1024×768 — is scrolled to the middle first); then one "done",
 //                [data-candle-status] = "The hall is lit.", data-flare ticks once
 //   bloom        [data-wand-bloom-sprite] shows (opacity > 0) while moving; it sits in a media/art layer
 //                ([data-wand-art] at z −10, or a hall [data-wand-zone]), never in the text's own layer
@@ -15,6 +16,10 @@
 //   pause        Pause: every candle lit, no [data-candle-toy], no bloom, #contact cursor "auto"
 //   compass      the About compass button: a click and Enter each settle the needle on a pillar bearing
 //                (315 · 45 · 225 · 135 ± 2°), ← / → step it; a drag on the case settles on a bearing too
+//                (the resting heading before any press is reported, not judged; "settled" = the same
+//                reading over 8 drawn frames and ≥ 400 ms)
+// Headless timing: a pointer move can reach a busy page seconds late, so arm / lumos wait for the toy's
+// own "arm" / "done" events (≤ 6 s / ≤ 3.7 s) instead of fixed sleeps.
 // Under --rm: no [data-candle-toy], no [data-wand-bloom-sprite], all candles lit; the compass press jumps
 //   to the next bearing.
 
@@ -38,6 +43,13 @@ export default async function probe(page, ctx) {
   });
   await ctx.goto();
   const log = () => page.evaluate(() => window.__toyLog.filter((e) => e.toy === "candles").map((e) => e.action));
+  /** Wait (≤ ms) for a candles toy action in the log; true when seen. Headless input can land seconds late
+   *  (a pointer move reached the page 2.2 s after it was sent), so a fixed sleep raced the arm. */
+  const mark = () => page.evaluate(() => window.__toyLog.length);
+  const waitAction = (action, ms, from = 0) =>
+    page
+      .waitForFunction(([a, from]) => window.__toyLog.slice(from).some((e) => e.toy === "candles" && e.action === a), [action, from], { timeout: ms, polling: 50 })
+      .then(() => true, () => false);
   const candles = () =>
     page.evaluate(() => {
       const s = document.querySelector('[data-world-section="contact"]');
@@ -55,6 +67,16 @@ export default async function probe(page, ctx) {
         toy: Boolean(document.querySelector("[data-candle-toy]")),
         flames: shown
           .filter((c) => !c.hasAttribute("data-lit"))
+          .map((c) => {
+            const r = c.getBoundingClientRect();
+            return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.2 };
+          }),
+        // every DISPLAYED dark candle (the toy counts those, on screen or not)
+        dark: all
+          .filter((c) => {
+            const r = c.getBoundingClientRect();
+            return r.width > 0 && r.height > 0 && !c.hasAttribute("data-lit");
+          })
           .map((c) => {
             const r = c.getBoundingClientRect();
             return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.2 };
@@ -84,7 +106,7 @@ export default async function probe(page, ctx) {
     await sleep(800);
     const c = await candles();
     const bloom = await page.evaluate(() => Boolean(document.querySelector("[data-wand-bloom-sprite]")));
-    set("rm.candles", !c.toy && !bloom && c.litAll === c.total && c.total > 0, { ...c, flames: undefined, bloom });
+    set("rm.candles", !c.toy && !bloom && c.litAll === c.total && c.total > 0, { ...c, flames: undefined, dark: undefined, bloom });
     await run("rm.compass", async () => {
       const btn = page.locator('button[data-toy="compass"]');
       const has = await btn.count();
@@ -117,8 +139,12 @@ export default async function probe(page, ctx) {
     await sleep(700);
     const before = await candles();
     const p = await inside();
+    const from = await mark();
     await page.mouse.move(p.x, p.y, { steps: 2 });
-    await sleep(1500); // the 600 ms sweep + fade
+    const t0 = Date.now();
+    await waitAction("arm", 6000, from);
+    const armMs = Date.now() - t0;
+    await sleep(1100); // the 600 ms sweep + 200 ms fade
     const c = await candles();
     const cursor = await page.evaluate(() => getComputedStyle(document.querySelector('[data-world-section="contact"]')).cursor);
     const l = await log();
@@ -128,6 +154,7 @@ export default async function probe(page, ctx) {
       litBefore: before.litShown,
       litAfter: c.litShown,
       events: l,
+      armMs,
       cursor: cursor.slice(0, 40),
     });
   });
@@ -140,16 +167,38 @@ export default async function probe(page, ctx) {
   });
 
   await run("light", async () => {
-    const flareBefore = await page.evaluate(() => document.querySelector("[data-flare]")?.getAttribute("data-flare"));
+    // [data-flare] renders only once a flare has played (flare > 0): absent = 0
+    const flareBefore = await page.evaluate(() => document.querySelector("[data-flare]")?.getAttribute("data-flare") ?? "0");
     let c = await candles();
     let bloomSeen = null;
     let guard = 0;
-    while (c.flames.length && guard++ < 80) {
-      const f = c.flames[0];
+    let recentred = 0;
+    while (c.dark.length && guard++ < 80) {
+      // a flame the pointer cannot reach (under the fixed header at 1024×768, or at the viewport's edge:
+      // the pointer events go to another element) is brought to the viewport's middle first
+      const reachable = await page.evaluate((fl) => fl.map((f) => {
+        const el = f.x > 4 && f.x < innerWidth - 4 && f.y > 4 && f.y < innerHeight - 4 ? document.elementFromPoint(f.x, f.y) : null;
+        return Boolean(el?.closest('[data-world-section="contact"]'));
+      }), c.dark);
+      const k = reachable.indexOf(true);
+      if (k < 0) {
+        if (recentred++ > 10) break;
+        await page.evaluate((y) => {
+          const to = scrollY + y - innerHeight / 2;
+          const l = window.__lenis;
+          if (l) l.scrollTo(to, { immediate: true, force: true });
+          else scrollTo({ top: to, behavior: "instant" });
+        }, c.dark[0].y);
+        await sleep(400);
+        c = await candles();
+        continue;
+      }
+      const f = c.dark[k];
       await page.mouse.move(f.x - 30, f.y - 20, { steps: 2 });
       await page.mouse.move(f.x, f.y, { steps: 3 });
       await sleep(60);
-      if (!bloomSeen)
+      // keep the first reading with the bloom actually shown (a reading over the header shows it hidden)
+      if (!bloomSeen || !(bloomSeen.opacity > 0))
         bloomSeen = await page.evaluate(() => {
           const b = document.querySelector("[data-wand-bloom-sprite]");
           if (!b) return null;
@@ -167,10 +216,11 @@ export default async function probe(page, ctx) {
     c = await candles();
     const l = await log();
     const status = await page.evaluate(() => document.querySelector("[data-candle-status]")?.textContent?.trim() ?? null);
-    const flareAfter = await page.evaluate(() => document.querySelector("[data-flare]")?.getAttribute("data-flare"));
+    const flareAfter = await page.evaluate(() => document.querySelector("[data-flare]")?.getAttribute("data-flare") ?? "0");
     const done = l.filter((a) => a === "done").length;
     set("light", c.litShown === c.shown && done === 1 && status === "The hall is lit." && Number(flareAfter) === Number(flareBefore) + 1, {
       lit: `${c.litShown}/${c.shown}`,
+      recentred,
       done,
       status,
       flare: [flareBefore, flareAfter],
@@ -193,7 +243,8 @@ export default async function probe(page, ctx) {
     await sleep(700);
     const p = await inside();
     await page.mouse.move(p.x, p.y, { steps: 2 });
-    await sleep(1500);
+    await waitAction("arm", 6000);
+    await sleep(1100);
     const dark = await candles();
     await page.focus("[data-candle-lumos]");
     const t0 = Date.now();
@@ -205,12 +256,15 @@ export default async function probe(page, ctx) {
       if (c.litShown === c.shown) break;
     }
     const ms = Date.now() - t0;
-    await sleep(200);
+    // "done" ends the 1.6 s sweep (a timer: late on a busy headless page, reported as doneMs)
+    const doneSeen = await waitAction("done", Math.max(0, 1700 + 2000 - (Date.now() - t0)));
+    const doneMs = doneSeen ? Date.now() - t0 : null;
     const l = await log();
     set("lumos", dark.litShown === 0 && c.litShown === c.shown && ms <= 1700 && l.includes("done"), {
       darkBefore: `${dark.litShown}/${dark.shown}`,
       lit: `${c.litShown}/${c.shown}`,
       ms,
+      doneMs,
       events: [...new Set(l)],
     });
   });
@@ -222,8 +276,10 @@ export default async function probe(page, ctx) {
     await toHall();
     await sleep(700);
     const p = await inside();
+    const from = await mark();
     await page.mouse.move(p.x, p.y, { steps: 2 });
-    await sleep(1500);
+    await waitAction("arm", 6000, from);
+    await sleep(1100);
     const before = await candles();
     await page.locator("header [data-motion-toggle]").first().click();
     await sleep(250);
@@ -248,21 +304,32 @@ export default async function probe(page, ctx) {
     await btn.waitFor({ state: "attached", timeout: 15000 });
     await btn.scrollIntoViewIfNeeded();
     await sleep(800);
-    const needle = () => page.evaluate(() => {
-      const v = document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle");
-      return v == null ? null : Number(v);
-    });
-    const settle = async () => {
-      // the needle has stopped when two reads 300 ms apart agree
-      let a = await needle();
-      for (let i = 0; i < 30; i++) {
-        await sleep(300);
-        const b = await needle();
-        if (a != null && b != null && Math.abs(a - b) < 0.05) return b;
-        a = b;
-      }
-      return a;
-    };
+    // the needle has stopped when it reads the same over 8 drawn frames and ≥ 400 ms (≤ 9 s): two reads
+    // 300 ms apart agreed mid-spin when a busy headless page drew no frame between them (203.3°)
+    const settle = () =>
+      page.evaluate(async () => {
+        const read = () => {
+          const v = document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle");
+          return v == null ? null : Number(v);
+        };
+        const frame = () => new Promise((r) => requestAnimationFrame(() => r()));
+        const t0 = performance.now();
+        let last = read();
+        let still = 0;
+        let since = performance.now();
+        while (performance.now() - t0 < 9000) {
+          await frame();
+          const v = read();
+          if (v != null && last != null && Math.abs(v - last) < 0.05) still++;
+          else {
+            still = 0;
+            since = performance.now();
+          }
+          last = v;
+          if (still >= 8 && performance.now() - since >= 400) break;
+        }
+        return last;
+      });
     const start = await settle();
     await btn.click();
     const click = await settle();
@@ -285,8 +352,10 @@ export default async function probe(page, ctx) {
     }
     await page.mouse.up();
     const drag = await settle();
+    // the needle's resting heading before any press (start) is reported, not judged: only a press, a key
+    // and a drag must settle on a pillar bearing
     const all = { start, click, enter, right, left, drag };
-    set("compass", Object.values(all).every(onBearing) && click !== start && enter !== click && right !== enter, all);
+    set("compass", [click, enter, right, left, drag].every(onBearing) && click !== start && enter !== click && right !== enter, all);
   });
 
   return { pass: Object.values(checks).every((c) => c.pass), checks };

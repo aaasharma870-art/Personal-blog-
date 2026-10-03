@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { emit } from "@/lib/events";
-import type { ScrollSceneApi } from "@/lib/use-scroll-scene";
+import { requestScrollRefresh } from "@/lib/smooth-scroll";
+import { useScrollScene, type ScrollSceneApi } from "@/lib/use-scroll-scene";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant } from "@/lib/variants";
 import type { LetterboxSceneOptions } from "./letterbox-bars";
@@ -10,8 +11,8 @@ import type { LetterboxSceneOptions } from "./letterbox-bars";
 /* ============================================================================
    LETTERBOX BARS (spec §7.4, K3) — OWNER: B1-STAGE.
    The lazy half (DP-13) of ./letterbox-bars.tsx, the static facade: its
-   <LetterboxBars/> loads <Bars/> here on DESKTOP_FINE with motion on, and
-   its useLetterboxScene() runs `letterboxScene()` here inside the scene.
+   <LetterboxBars/> loads <Bars/> here on DESKTOP_FINE with motion on;
+   useLetterboxScene() (below; its host is lazy) runs `letterboxScene()`.
    <LetterboxBars/> is mounted by app/page.tsx before <main>: one fixed pair
    at --z-bars (below the header and the fast lane), in the scene world's
    deep. Height --lb-h (app/p3/stage.css): (100svh − 100vw/2.39)/2 at
@@ -63,7 +64,8 @@ function progress(): number {
 
 function apply(): void {
   const p = progress();
-  if (Math.abs(p - shown) < 0.0005) return;
+  // sub-step changes are skipped, never the ends: fully closed is exactly 1
+  if (p === shown || (p > 0 && p < 1 && Math.abs(p - shown) < 0.0005)) return;
   shown = p;
   const { top, bottom, iris } = els;
   if (variant === "alt") {
@@ -173,47 +175,68 @@ export function Bars() {
   );
 }
 
-/** One consumer's scene (the facade's useLetterboxScene runs it inside
+/** A ScrollTrigger position "<edge> <n>%" (edge top | center | bottom | a
+ *  percentage of the box) as [edge share of the box, viewport share]. */
+type Pos = readonly [edge: number, at: number];
+const EDGES: Readonly<Record<string, number>> = { top: 0, center: 0.5, bottom: 1 };
+function pos(s: string): Pos {
+  const [e = "top", v = "0%"] = s.trim().split(/\s+/);
+  return [EDGES[e] ?? parseFloat(e) / 100, parseFloat(v) / 100];
+}
+const posString = ([e, at]: Pos) => `${e * 100}% ${at * 100}%`;
+
+/** One consumer's scene (useLetterboxScene below runs it inside
  *  useScrollScene): close the global bars over `o.close`, open them over
  *  `o.open` (ScrollTrigger [start, end] position strings on the scope).
- *  Returns the cleanup. */
+ *  The close and the open are read from the scope's LIVE box on every
+ *  update (one rect read), not from ScrollTrigger's cached positions: a
+ *  jump re-flows the lazy sections above after the last refresh, and the
+ *  stale ranges left the hold at .82 with a dip on the way in (W3 gate).
+ *  So the bars are fully closed from the close's end until the open starts.
+ *  One trigger, a viewport wider than the scene on each side, only times
+ *  the reads. Returns the cleanup. */
 export function letterboxScene({ ScrollTrigger, scope }: ScrollSceneApi, o: LetterboxSceneOptions): () => void {
-  const [c0, c1] = o.close;
-  const [o0, o1] = o.open;
+  const [c0, c1] = o.close.map(pos);
+  const [o0, o1] = o.open.map(pos);
   const id = Symbol("letterbox");
-  let pc = 0;
-  let po = 0;
-  const set = () => setConsumer(id, pc * (1 - po));
   setBarColour(scope);
-  const close = ScrollTrigger.create({
+  const set = () => {
+    const r = scope.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // the scroll left until a position is reached (≤ 0: reached)
+    const d = ([e, at]: Pos) => r.top + e * r.height - at * vh;
+    const span = (a: Pos, b: Pos) => clamp01(-d(a) / Math.max(1, d(b) - d(a)));
+    setConsumer(id, span(c0, c1) * (1 - span(o0, o1)));
+  };
+  const st = ScrollTrigger.create({
     trigger: scope,
-    start: c0,
-    end: c1,
-    onUpdate: (st) => {
-      pc = st.progress;
-      set();
-    },
-    onRefresh: (st) => {
-      pc = st.progress;
-      set();
-    },
-  });
-  const open = ScrollTrigger.create({
-    trigger: scope,
-    start: o0,
-    end: o1,
-    onUpdate: (st) => {
-      po = st.progress;
-      set();
-    },
-    onRefresh: (st) => {
-      po = st.progress;
-      set();
-    },
+    start: posString([c0[0], c0[1] + 1]),
+    end: posString([o1[0], o1[1] - 1]),
+    onUpdate: set,
+    onRefresh: set,
+    onToggle: set,
   });
   return () => {
-    close.kill();
-    open.kill();
+    st.kill();
     setConsumer(id, null);
   };
+}
+
+/** Close the global bars over `o.close`, open them over `o.open` (both
+ *  ScrollTrigger [start, end] position strings on the host `ref`). A no-op
+ *  on phones, under reduced motion / Pause and before ladder step 2. Its
+ *  only host (components/sections/films/films-desktop.tsx) is lazy, so it
+ *  lives here, off the first load. */
+export function useLetterboxScene(ref: RefObject<Element | null>, o: LetterboxSceneOptions): void {
+  const [c0, c1] = o.close;
+  const [o0, o1] = o.open;
+  useScrollScene(
+    ref,
+    (api) => {
+      const undo = letterboxScene(api, { close: [c0, c1], open: [o0, o1] });
+      requestScrollRefresh();
+      return undo;
+    },
+    [c0, c1, o0, o1],
+  );
 }

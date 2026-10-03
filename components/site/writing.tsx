@@ -2,6 +2,7 @@ import { writing } from "@/lib/content";
 import { beatAttrs } from "@/lib/beats";
 import { copyText, copyVisible, slot, variantChoiceOf } from "@/lib/sections";
 import { cn } from "@/lib/utils";
+import { pieceVariant } from "@/lib/variants";
 import { planeAttrs } from "@/lib/worlds";
 import { Meta, WorldSection, recedeInto } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
@@ -95,7 +96,15 @@ export function Writing({ entry, number }: SectionProps<"index">) {
           choice={variantChoiceOf(entry)}
           caption={<SceneCaption k="cap.writing" place="head" />}
           head={head(true)}
-          fly={<FlyThrough kind="horse" lazyFrames="horse" beat="B45" path={HORSE_PATH} />}
+          fly={
+            <FlyThrough
+              kind="horse"
+              lazyFrames="horse"
+              beat="B45"
+              path={HORSE_PATH}
+              variant={pieceVariant(variantChoiceOf(entry), "flythrough")}
+            />
+          }
           bone={<EggHotspot hunt="rd-bone" label="egg.hunt.name.rd-bone" />}
         />
       ) : (

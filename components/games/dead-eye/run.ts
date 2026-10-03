@@ -11,14 +11,19 @@
      B9; no CSS keys on it, W2 rule 33), then `scrollToTarget` centres the
      killed block under the header and the round waits for the arrival.
    - DRAW (0.4 s): time → 0.25× for every running animation (WAAPI and CSS),
-     every video, `gsap.globalTimeline.timeScale` (B5) and `--time-scale` on
-     the section; the GRADE fades in as an opacity overlay on the section's
-     media layer (the server's `[data-deadeye-layer="grade"]`, z −1: below
-     every word; the 2,122 px section's background is never transitioned,
-     B6): the Dead Eye ground, the iconic-deadeye plate only at the outer
-     edges, a red vignette. Survivors and flagships step to --fg-muted (AA on
-     the graded ground) and are never targets; `#kill-list[data-deadeye=on]`
-     also grades the lens figure (the ledger's own piece).
+     every video and `gsap.globalTimeline.timeScale` (B5). (`--time-scale`
+     is also set on the section, but nothing reads it today: no canvas or
+     weather loop in #kill-list follows it.) The GRADE fades in as an
+     opacity overlay on the section's media layer (the server's
+     `[data-deadeye-layer="grade"]`, z −1: below every word; the 2,122 px
+     section's background is never transitioned, B6). Rule 35: the grade is
+     ONE static promoted layer (components/games/games.css), filled once per
+     round and faded only by its host's opacity: the Dead Eye ground (a flat
+     fill), the iconic-deadeye plate in two 6 % edge bands, the red vignette
+     in two 10 % edge bands; never a full-size mask or gradient. Survivors
+     and flagships step to --fg-muted (AA on the graded ground) and are
+     never targets; `#kill-list[data-deadeye=on]` also grades the lens
+     figure (the ledger's own piece).
    - PAINT (a 5.0 s core, the draining white ring of the HUD, IC-RD-09):
      clicking a killed row (the whole row is the target) locks an ember mark
      beside it (`game:mark`: a pencil scratch); clicking a survivor or a
@@ -32,9 +37,13 @@
      EXISTING post-mortem link with it (the reason describes the row's
      button). The score ("5/5 marked · 2.3 s of Dead Eye left") is kept as
      the best in aryan:games:v1; 5 of 5 also earns the pen
-     (`recordDeadEyeWin`, egg 9). Replayable.
-   - EXIT (Esc or "Release", at any step): the ledger is restored EXACTLY
-     (D-6): every attribute, layer, mark, rate and scale put back.
+     (`recordDeadEyeWin`, egg 9). Replayable. The read has no game keys:
+     `html[data-game]` is cleared as it begins (typed eggs work again) and
+     the ledger's own ↑ / ↓ are back.
+   - EXIT (Esc or "Release", at any step; #kill-list falling under ~10 %
+     of the view, "offscreen"; the fast lane, "fastlane"): the ledger is
+     restored EXACTLY (D-6): every attribute, layer, mark, rate and scale
+     put back, time at 1× in the same task, the grade gone within 150 ms.
    KEYBOARD: roving focus over the killed rows only (↑ / ↓, Home / End,
    Enter / Space mark, Shift+Enter fire), Esc releases; no page-wide single
    keys (WCAG 2.1.4). REDUCED MOTION: untimed, no time-scale, instant marks
@@ -51,7 +60,7 @@
    ========================================================================== */
 
 import { getImageProps } from "next/image";
-import { emit } from "@/lib/events";
+import { emit, on } from "@/lib/events";
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { gsapIfLoaded } from "@/lib/gsap";
 import { resolveMedia } from "@/lib/media";
@@ -105,6 +114,9 @@ const CORE_MS = 5000;
 const DRAW_MS = 400;
 const PENALTY_MS = 500;
 const RETURN_MS = 300;
+/** The grade's exit fade (a compositor opacity fade; cleared by a timer
+ *  too, so it can never linger). */
+const FADE_OUT_MS = 150;
 const TURN_MS = 140;
 const SLOW = 0.25;
 /** The mark's box (px). */
@@ -123,24 +135,33 @@ function plateSrc(): string | null {
   }
 }
 
-/** Fill the grade layer (once per round; emptied on exit). */
-function fillGrade(host: HTMLElement): void {
-  const ground = document.createElement("div");
-  ground.className = "de-ground";
-  host.appendChild(ground);
-  const src = plateSrc();
+/** Fill the grade layer (once per round; emptied on exit): the flat
+ *  ground, the plate in two 6 % edge bands, the vignette in two 10 % edge
+ *  bands (components/games/games.css). Static: nothing in it changes until
+ *  the exit, so its promoted layer rasters once. */
+function fillGrade(host: HTMLElement, src: string | null): void {
+  const div = (cls: string) => {
+    const el = document.createElement("div");
+    el.className = cls;
+    return el;
+  };
+  host.appendChild(div("de-ground"));
   if (src) {
-    const img = document.createElement("img");
-    img.className = "de-plate";
-    img.alt = "";
-    img.decoding = "async";
-    img.src = src;
-    host.appendChild(img);
+    for (const side of ["l", "r"]) {
+      const band = div(`de-edge de-edge-${side}`);
+      const plate = document.createElement("i");
+      plate.style.backgroundImage = `url(${JSON.stringify(src)})`;
+      band.appendChild(plate);
+      host.appendChild(band);
+    }
   }
-  const vignette = document.createElement("div");
-  vignette.className = "de-vignette";
-  host.appendChild(vignette);
+  host.append(div("de-vig de-vig-l"), div("de-vig de-vig-r"));
 }
+
+/** A released round's grade still fading out: a new round clears it at
+ *  once (before it reads the host's style), so a quick restart is never
+ *  wiped by the old round's deferred clear. */
+let pendingClear: (() => void) | null = null;
 
 export function startRound(o: { variant: Variant; survivor: string; hooks: RoundHooks }): Round | null {
   const found = document.getElementById("kill-list");
@@ -153,6 +174,16 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
   const gradeHost = section.querySelector<HTMLElement>('[data-deadeye-layer="grade"]');
   const marksHost = section.querySelector<HTMLElement>('[data-deadeye-layer="marks"]');
   const root = document.documentElement;
+  // a previous round's grade still fading: gone now, its server style back
+  pendingClear?.();
+  // the plate for the grade's edge bands, fetched during the aim (a
+  // display:none layer's background is never fetched)
+  const plate = gradeHost ? plateSrc() : null;
+  if (plate) {
+    const pre = new Image();
+    pre.decoding = "async";
+    pre.src = plate;
+  }
   /** The section had no style attribute: leave none behind (D-6). */
   const bareStyle = !section.hasAttribute("style");
   /** The grade host's server style, put back verbatim on exit. */
@@ -225,8 +256,9 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
   };
   const slowDown = () => {
     snapshot();
-    // the canvases' scale, scoped to the section (a var on <html> would
-    // restyle the whole document: W2 rule 33)
+    // the time factor as a custom property, scoped to the section (a var on
+    // <html> would restyle the whole document: W2 rule 33). Nothing reads
+    // it today (the probes check it is set and removed)
     section.style.setProperty("--time-scale", String(SLOW));
     rampTime(SLOW, DRAW_MS);
   };
@@ -339,6 +371,8 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     loopRaf = 0;
     const left = leftNow();
     phase = "read";
+    // the read has no game keys left: typed eggs listen again (B9)
+    if (root.getAttribute("data-game") === "deadeye") root.removeAttribute("data-game");
     const hit = [...marked].sort((a, b) => a - b);
     emit("game:fire");
     if (alt && !motionOffNow()) hit.forEach((i, j) => later(j * TURN_MS, () => strike(i)));
@@ -376,7 +410,9 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     else wrong();
   };
   const onKey = (e: KeyboardEvent) => {
-    if (phase === "aim" || e.altKey || e.ctrlKey || e.metaKey) return;
+    // the game's keys live in the paint only (the read gives the ledger
+    // its own ↑ / ↓ back)
+    if (phase !== "paint" || e.altKey || e.ctrlKey || e.metaKey) return;
     const i = targetIndex(e.target instanceof Element ? e.target : null);
     if (i < 0) return;
     const go = (j: number) => {
@@ -389,11 +425,11 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     else if (e.key === "ArrowUp") go(Math.max(0, i - 1));
     else if (e.key === "Home") go(0);
     else if (e.key === "End") go(last);
-    else if (phase === "paint" && e.key === "Enter" && e.shiftKey) {
+    else if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
       e.stopPropagation();
       fire();
-    } else if (phase === "paint" && (e.key === "Enter" || e.key === " ")) {
+    } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       e.stopPropagation();
       mark(i);
@@ -408,6 +444,23 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
   };
 
   const ro = new ResizeObserver(() => place());
+  /** The round ends when #kill-list falls under ~10 % of the view (the
+   *  visitor scrolled on): no HUD or slowed time follows them down the
+   *  page. Observed from the draw (the aim scrolls it in first). */
+  let io: IntersectionObserver | null = null;
+  const watchView = () => {
+    const h = section.getBoundingClientRect().height || 1;
+    const t = Math.min(1, (0.1 * Math.min(window.innerHeight, h)) / h);
+    io = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting || e.intersectionRatio < t) release("offscreen");
+      },
+      { threshold: [0, t] },
+    );
+    io.observe(section);
+  };
+  // the fast lane (spec §11.3) stops any game
+  const offFast = on("fastlane", () => release("fastlane"));
   const offMotion = onMotionOffChange(() => {
     if (ended) return;
     if (motionOffNow()) {
@@ -442,8 +495,9 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     const isTarget = new Set(targets.map((t) => t.row));
     for (const li of rows) li.setAttribute("data-de", isTarget.has(li) ? "target" : "dim");
     if (gradeHost) {
-      if (!gradeHost.childElementCount) fillGrade(gradeHost);
+      if (!gradeHost.childElementCount) fillGrade(gradeHost, plate);
       gradeHost.hidden = false;
+      // the host's opacity is the only thing that moves (its layer is static)
       gradeHost.style.opacity = "1";
       if (!untimed) gradeHost.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DRAW_MS, easing: "ease-out" });
     }
@@ -451,6 +505,7 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     list.addEventListener("click", onClick, true);
     list.addEventListener("keydown", onKey, true);
     ro.observe(section);
+    watchView();
     emit("game:start", { game: "deadeye" });
     if (!untimed) slowDown();
     coreStart = performance.now() + (untimed ? 0 : DRAW_MS);
@@ -478,6 +533,8 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     list.removeEventListener("keydown", onKey, true);
     document.removeEventListener("keydown", onEsc, true);
     ro.disconnect();
+    io?.disconnect();
+    offFast();
     offMotion();
     for (const el of marks.values()) el.remove();
     marks.clear();
@@ -497,15 +554,25 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     delete section.dataset.deadeye;
     if (bareStyle && !section.getAttribute("style")) section.removeAttribute("style");
     if (gradeHost) {
+      // the grade leaves within FADE_OUT_MS: a compositor fade of the static
+      // layer, cleared by the fade's end or by a timer, whichever is first
+      let fadeOut: Animation | null = null;
+      let timer = 0;
       const clear = () => {
+        if (pendingClear !== clear) return;
+        pendingClear = null;
+        window.clearTimeout(timer);
+        fadeOut?.cancel();
         gradeHost.hidden = true;
         if (gradeStyle === null) gradeHost.removeAttribute("style");
         else gradeHost.setAttribute("style", gradeStyle);
         gradeHost.replaceChildren();
       };
+      pendingClear = clear;
       if (!gradeHost.hidden && !motionOffNow() && reason !== "unmount") {
-        gradeHost.style.opacity = "0";
-        gradeHost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: "ease-out" }).finished.then(clear, clear);
+        fadeOut = gradeHost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: FADE_OUT_MS, easing: "ease-out", fill: "forwards" });
+        fadeOut.finished.then(clear, clear);
+        timer = window.setTimeout(clear, FADE_OUT_MS);
       } else clear();
     }
     if (root.getAttribute("data-game") === "deadeye") root.removeAttribute("data-game");

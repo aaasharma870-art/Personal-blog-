@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useId, useRef } from "react";
+import { Suspense, useId, useRef } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { CSSProperties } from "react";
 import { useDesktopFine } from "@/lib/flags";
 import type { MediaAsset } from "@/lib/media";
@@ -100,7 +101,7 @@ export function coverPoint(
 
 export type RdPart = "beyond" | "writing" | "voices";
 
-const DesktopImpl = lazy(() => import("@/components/worlds/rdr2/rd-desktop"));
+const DesktopImpl = safeLazy(() => import("@/components/worlds/rdr2/rd-desktop"));
 
 export function RdDesktop({ part, note }: { part: RdPart; note?: string }) {
   const fine = useDesktopFine();

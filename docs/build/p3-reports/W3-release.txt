@@ -2,7 +2,7 @@
 > personal-website@0.1.0 check
 > tsc --noEmit && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-manifest.mjs
 
-  beats: 80 declared (60 stars) on 20 items; page ≈ 4952.2vh @1440, 5366.9vh @1024 (RELEASE: gaps, overlaps and pacing are errors)
+  beats: 82 declared (60 stars) on 20 items; page ≈ 4952.2vh @1440, 5366.9vh @1024 (RELEASE: gaps, overlaps and pacing are errors)
   hunt: 12 eggs (pirates 3, idiots 3, rdr2 3, hp 3), 4 spells
 check-manifest: 19 entries (16 enabled, 10 numbered: about journey work trading-algos optuna-screener systems beyond writing voices principles); 141 media assets, 25 manifest media refs
   acts: act-1 opening —→pirates "The Crossing" | act-2 seam(long) pirates→idiots "The Workshop" | act-3 tintype idiots→rdr2 "The Frontier" | act-4 ignite(long) rdr2→hp "The Light"

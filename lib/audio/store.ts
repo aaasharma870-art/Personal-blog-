@@ -104,10 +104,14 @@ function loadImpl(): Promise<StoreImpl | null> {
 function wire(): void {
   if (wired || typeof window === "undefined") return;
   wired = true;
-  onMotionOffChange(() => {
-    impl?.motion();
-    notify();
-  });
+  // `first`: the context suspends before any other Pause listener runs
+  onMotionOffChange(
+    () => {
+      impl?.motion();
+      notify();
+    },
+    { first: true },
+  );
   // A reload with sound on: the lazy half arms the first press (no context yet).
   if (wants() && window.matchMedia(DESKTOP_FINE).matches) void loadImpl();
 }

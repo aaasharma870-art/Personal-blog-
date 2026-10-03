@@ -13,7 +13,7 @@ import { createPortal } from "react-dom";
 import { useScroll, type MotionValue } from "motion/react";
 import { emit } from "@/lib/events";
 import { film, type ActSpec } from "@/lib/film";
-import { useDesktopFine, useDocumentVisible, useReducedMotion } from "@/lib/flags";
+import { motionOffNow, onMotionOffChange, useDesktopFine, useDocumentVisible, useReducedMotion } from "@/lib/flags";
 import { loopFor } from "@/lib/loops";
 import { markOf, resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
@@ -173,6 +173,29 @@ function inViewNow(el: Element): boolean {
   return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
 }
 
+/* Pause / reduced motion stops every plate in the click's own task, before
+   React re-renders and before any other Pause listener (`first`): weather
+   holds, camera and depth bands return to identity. React's unmount (the
+   facades drop the engine; the stage stops its weather) then cleans up as
+   before. Each entry gets `off` (motion off now). */
+const plateStops = new Set<(off: boolean) => void>();
+let plateWatch = false;
+
+function onPlateStop(fn: (off: boolean) => void): () => void {
+  if (!plateWatch) {
+    plateWatch = true;
+    onMotionOffChange(
+      () => {
+        const off = motionOffNow();
+        for (const f of [...plateStops]) f(off);
+      },
+      { first: true },
+    );
+  }
+  plateStops.add(fn);
+  return () => plateStops.delete(fn);
+}
+
 type Writer = { start(t: number): void; set(t: number): void; stop(): void };
 
 /** Writes one element's pose (transform only, unchanged values skipped).
@@ -183,9 +206,12 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
   let t0 = 0;
   let raf = 0;
   let last = "";
+  let dead = false;
+  let offStop = () => {};
   if (origin) el.style.transformOrigin = `${origin[0] * 100}% ${origin[1] * 100}%`;
   const put = () => {
     raf = 0;
+    if (dead) return;
     const q = pose(t);
     const k = t0 ? c01((performance.now() - t0) / EASE_IN_MS) : 1;
     const e = 1 - (1 - k) ** 3;
@@ -197,8 +223,9 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
     if (k < 1) raf = requestAnimationFrame(put);
     else t0 = 0;
   };
-  return {
+  const w: Writer = {
     start(v) {
+      offStop = onPlateStop((off) => off && w.stop());
       t = c01(v);
       if (inViewNow(el)) t0 = performance.now();
       put();
@@ -208,6 +235,8 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
       if (!raf) put();
     },
     stop() {
+      dead = true;
+      offStop();
       cancelAnimationFrame(raf);
       raf = 0;
       el.style.transform = "";
@@ -215,6 +244,7 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
       el.style.willChange = "";
     },
   };
+  return w;
 }
 
 /** Feeds a Writer 0–1 from the host's MotionValue (`progress`), else from
@@ -457,6 +487,16 @@ export function LiveImpl({
     return () => root.removeAttribute("data-plate");
   }, [cam, mode]);
 
+  // Pause: the loop holds in the click's own task (the facade's re-render
+  // then unmounts this half and its video)
+  useEffect(
+    () =>
+      onPlateStop((off) => {
+        if (off) for (const v of cam.current?.querySelectorAll("video") ?? []) v.pause();
+      }),
+    [cam],
+  );
+
   return (
     <>
       {spec ? <CameraDrive target={cam} spec={{ ...spec, focal }} progress={progress} /> : null}
@@ -599,7 +639,15 @@ export function WeatherImpl({
       list.push(a);
     }
     anims.current = list;
+    // Pause: hold at once (resume plays again only if this layer still runs)
+    const offStop = onPlateStop((off) => {
+      for (const a of list) {
+        if (off) a.pause();
+        else if (goRef.current) a.play();
+      }
+    });
     return () => {
+      offStop();
       for (const a of list) a.cancel();
       anims.current = [];
       box.replaceChildren();

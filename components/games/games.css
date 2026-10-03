@@ -6,7 +6,8 @@
    app/p3/games.css.
    RULES (W2 rules 33–35): nothing here matches <html> (`html[data-game]` is a
    JS flag only); no [class*=] selectors; motion is transform / opacity only;
-   the big layers (the board, the grade) are flat colours faded by opacity.
+   the big layers (the board, the grade) are static, faded by opacity only
+   (the grade is promoted: rule 35).
    ========================================================================== */
 
 /* — THE HOMEMADE DRONE ———————————————————————————————————————————————— */
@@ -187,35 +188,77 @@
 /* — DEAD EYE —————————————————————————————————————————————————————————— */
 
 /* the grade: the server's empty layer in #kill-list (z −1, below every
-   word), filled by a round and faded by opacity on the host; flat colour
-   and static gradients only (never the section's background: B6) */
+   word), filled by a round (run.ts fillGrade) and emptied on exit. RULE 35:
+   one STATIC layer, promoted, rastered once when it shows; only the host's
+   opacity moves (a compositor fade in 400 ms, out in 150 ms). Nothing in it
+   is full-size but the flat ground: the plate and the vignette are narrow
+   edge bands, never a full-size mask or gradient. The section's own
+   background never changes (B6). */
+[data-deadeye-layer="grade"] {
+  will-change: transform;
+}
 [data-deadeye-layer="grade"] > .de-ground {
   position: absolute;
   inset: 0;
   background: var(--rd-deadeye-bg);
 }
-/* the frozen frontier only at the outer edges: the reading column stays on
-   the plain graded ground (AA unchanged) */
-[data-deadeye-layer="grade"] > .de-plate {
+/* the frozen frontier only at the outer edges (6 %): the reading column
+   stays on the plain graded ground (AA unchanged). Each band clips a
+   section-wide plate (cover, centred: the same crop on both sides) and a
+   gradient into the ground over it, so the plate fades out toward the
+   column with no mask */
+[data-deadeye-layer="grade"] > .de-edge {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: 0;
+  bottom: 0;
+  width: 6%;
+  overflow: hidden;
   opacity: 0.2;
-  -webkit-mask-image: linear-gradient(to right, black 0, transparent 6%, transparent 94%, black 100%);
-  mask-image: linear-gradient(to right, black 0, transparent 6%, transparent 94%, black 100%);
 }
-[data-deadeye-layer="grade"] > .de-vignette {
+.de-edge-l {
+  left: 0;
+}
+.de-edge-r {
+  right: 0;
+}
+.de-edge > i {
+  position: absolute;
+  top: 0;
+  width: calc(100% / 0.06);
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.de-edge-l > i {
+  left: 0;
+}
+.de-edge-r > i {
+  right: 0;
+}
+.de-edge::after {
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    color-mix(in oklab, var(--w-deadeye) 22%, transparent),
-    transparent 10%,
-    transparent 90%,
-    color-mix(in oklab, var(--w-deadeye) 22%, transparent)
-  );
+  background: linear-gradient(to right, transparent, var(--rd-deadeye-bg));
+}
+.de-edge-r::after {
+  background: linear-gradient(to left, transparent, var(--rd-deadeye-bg));
+}
+/* the red vignette: two 10 % bands at the outer edges */
+[data-deadeye-layer="grade"] > .de-vig {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10%;
+}
+.de-vig-l {
+  left: 0;
+  background: linear-gradient(to right, color-mix(in oklab, var(--w-deadeye) 22%, transparent), transparent);
+}
+.de-vig-r {
+  right: 0;
+  background: linear-gradient(to left, color-mix(in oklab, var(--w-deadeye) 22%, transparent), transparent);
 }
 
 /* the rows during a round (the section carries data-deadeye="on"):

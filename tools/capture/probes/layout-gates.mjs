@@ -4,9 +4,14 @@
 //
 // Four runs (each in its own context):
 //   paused-reload  1440×900, sessionStorage "motion" = "paused" before load (a paused view):
-//                  the layout read at DOMContentLoaded equals the layout 3 s after load (no
-//                  reflow after hydration); no split grid, no stage root, no bars;
-//   pause-mid      1440×900, unpaused: scroll into the first split section, record every
+//                  the server layout (read once every [data-section] has streamed in: no
+//                  pending Suspense boundary, template[id^="B:"] / div[hidden][id^="S:"]; act-3
+//                  and act-4 can stream in after DOMContentLoaded) equals the layout 3 s after
+//                  load (no reflow after hydration); no split grid, no stage root, no bars;
+//   pause-mid      1440×900, unpaused: scroll into the first split section, let the page settle
+//                  (the world faces of every world loaded first — their late swap reflows the act
+//                  cards, P3-2 #7, measured on its own: reported as settle.drift — then two equal
+//                  layouts 600 ms apart), record every
 //                  section's box, press the header's Pause control, wait 400 ms: every box
 //                  identical, scroll position kept, and the layout-shift entries after the
 //                  press sum to 0 (hadRecentInput included); the stage's layers hidden and the
@@ -24,7 +29,27 @@ function layoutSnapshot() {
     const r = el.getBoundingClientRect();
     return [el.id || el.getAttribute("data-world-section") || el.tagName, Math.round(r.top + scrollY), Math.round(r.height)];
   });
-  return { height: document.documentElement.scrollHeight, boxes };
+  return { height: document.documentElement.scrollHeight, sections: document.querySelectorAll("[data-section]").length, boxes };
+}
+
+/** How much of the page has streamed in (pending Suspense boundaries, hidden sections). */
+function streamState() {
+  return {
+    pending: document.querySelectorAll("template[id^='B:']").length,
+    hiddenSections: [...document.querySelectorAll("[data-section]")].filter((s) => s.closest("div[hidden][id^='S:']")).length,
+  };
+}
+
+/** Loads every world's faces (the tokens world-fonts-impl adds as each world approaches) and
+ *  resolves when the font set is idle: the late swap is P3-2 #7's, not a Pause reflow. */
+async function settleWorldFonts() {
+  const root = document.documentElement;
+  const tokens = new Set((root.dataset.fonts ?? "").split(/\s+/).filter(Boolean));
+  for (const w of ["pirates", "idiots", "rdr2", "hp"]) tokens.add(w);
+  root.dataset.fonts = [...tokens].join(" ");
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 5000))]);
+  return document.fonts.status;
 }
 
 function gateState() {
@@ -69,7 +94,15 @@ export default async function probe(page, ctx) {
     await p.goto(ctx.url("/?skip=intro"), { waitUntil: "domcontentloaded" });
     // the server layout = every streamed Suspense boundary revealed (React reveals the $RC
     // boundaries in batches, sometimes after DOMContentLoaded): not a reflow after hydration
-    await p.waitForFunction(() => !document.querySelector("template[id^='B:']"), null, { timeout: 5000 }).catch(() => {});
+    const streamedAtDcl = await p.evaluate(streamState);
+    const streamed = await p
+      .waitForFunction(() => {
+        const pending = document.querySelector("template[id^='B:'], div[hidden][id^='S:']");
+        const secs = [...document.querySelectorAll("[data-section]")];
+        return !pending && secs.length > 0 && secs.every((s) => !s.closest("div[hidden][id^='S:']"));
+      }, null, { timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
     const early = await p.evaluate(layoutSnapshot);
     await p.waitForLoadState("load");
     await p.waitForTimeout(3000);
@@ -80,7 +113,10 @@ export default async function probe(page, ctx) {
       gate,
       diff,
       heights: [early.height, late.height],
-      ok: diff.length === 0 && gate.splitGrid === 0 && !gate.stageRoot && !gate.bars && gate.motionBoot === "paused",
+      streamed,
+      streamedAtDcl,
+      sections: [early.sections, late.sections],
+      ok: streamed && diff.length === 0 && gate.splitGrid === 0 && !gate.stageRoot && !gate.bars && gate.motionBoot === "paused",
     };
   }
 
@@ -97,6 +133,25 @@ export default async function probe(page, ctx) {
     });
     await p.evaluate((y) => window.scrollTo(0, y), target);
     await p.waitForTimeout(2500);
+    // settle: the world faces first, then two equal layouts 600 ms apart (≤ 8 s)
+    const settle = { drift: [] };
+    const first = await p.evaluate(layoutSnapshot);
+    settle.fonts = await p.evaluate(settleWorldFonts);
+    let prev = first;
+    const t0 = Date.now();
+    for (;;) {
+      await p.waitForTimeout(600);
+      const cur = await p.evaluate(layoutSnapshot);
+      const moved = cur.boxes.filter((b, i) => !same(b, prev.boxes[i]));
+      if (!moved.length) break;
+      settle.drift.push(...moved.slice(0, 3).map((b) => ({ box: b[0], to: [b[1], b[2]], from: prev.boxes.find((x) => x[0] === b[0])?.slice(1) ?? null })));
+      prev = cur;
+      if (Date.now() - t0 > 8000) {
+        settle.timedOut = true;
+        break;
+      }
+    }
+    settle.ms = Date.now() - t0;
     await p.evaluate(() => {
       window.__shift = 0;
       new PerformanceObserver((l) => {
@@ -127,6 +182,7 @@ export default async function probe(page, ctx) {
       scroll: [y0, y1],
       shift,
       diff,
+      settle,
       ok: found && diff.length === 0 && y0 === y1 && shift === 0 && gateAfter.on === 0 && layersHidden,
     };
     results.zScale = { ...(await p.evaluate(zAudit)) };

@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { KeyboardEvent, ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Play } from "lucide-react";
@@ -23,7 +24,7 @@ import {
 type Step = { n: string; title: string; body: string };
 
 /** The Run invite (B18; desktop only, lazy: components/worlds/idiots/run-invite.tsx). */
-const RunInvite = lazy(() => import("@/components/worlds/idiots/run-invite"));
+const RunInvite = safeLazy(() => import("@/components/worlds/idiots/run-invite"));
 
 const pad = (n: number) => String(n).padStart(2, "0");
 

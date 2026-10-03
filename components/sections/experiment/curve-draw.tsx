@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useRef, type ReactNode } from "react";
+import { Suspense, useRef, type ReactNode } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import { beatAttrs } from "@/lib/beats";
 import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import type { VariantChoice } from "@/lib/variants";
@@ -20,7 +21,7 @@ import { cn } from "@/lib/utils";
    H4: no film styling here — a plain plot reveal, no chalk, no world face.
    ========================================================================== */
 
-const Impl = lazy(() => import("./curve-draw-impl"));
+const Impl = safeLazy(() => import("./curve-draw-impl"));
 
 export function CurveDraw({ choice, className, children }: { choice: VariantChoice; className?: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);

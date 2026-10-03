@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, useLayoutEffect, useRef, useState } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { ReactNode, RefObject } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import type { BeatWeight } from "@/lib/beats";
@@ -457,8 +458,8 @@ export function HeadBand({
 
 /* — the pen (the `3i-pen` egg, spec §9.1 #9): desktop only, lazy ———————— */
 
-const PenHotspot = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenHotspot })));
-const PenWin = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenWin })));
+const PenHotspot = safeLazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenHotspot })));
+const PenWin = safeLazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenWin })));
 
 /**
  * PenInset — the kill-list's header plate: Virus's astronaut pen in its open

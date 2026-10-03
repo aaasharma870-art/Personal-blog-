@@ -9,7 +9,7 @@ import { ArrowUpRight, Search, X } from "lucide-react";
 import { DESKTOP_WIDE, useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { emit } from "@/lib/events";
 import { track } from "@/lib/analytics";
-import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
+import { loadJumps, lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
 import { markWorldFontsReady } from "@/lib/world-fonts";
 import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
@@ -40,9 +40,11 @@ import { SoundToggle } from "@/components/audio/sound-toggle";
 
 /** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
  *  menu opens on DESKTOP_FINE (plan DP-17). */
-const ChapterSelect = dynamic(() => import("@/components/site/chapter-select").then((m) => m.ChapterSelect), {
-  ssr: false,
-});
+const ChapterSelect = dynamic(
+  // a failed chunk: the menu keeps its section links (never "Application error")
+  () => import("@/components/site/chapter-select").then((m) => m.ChapterSelect, () => () => null),
+  { ssr: false },
+);
 
 /* ============================================================================
    HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
@@ -208,7 +210,7 @@ const FAST_LANE = copyText("fastlane.label");
 const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
 
 function runFastLane(href: string): void {
-  void markWorldFontsReady("idiots");
+  // the jump readies the target world's fonts (lib/smooth-scroll cutReady)
   emit("fastlane");
   track("fast_lane");
   void scrollToTarget(href, { immediate: true, cut: true, focus: true, history: "push" });
@@ -222,10 +224,12 @@ function WorkPill({ base, href }: { base: string; href: string }) {
     e.preventDefault();
     runFastLane(href);
   };
-  // intent (hover / keyboard focus) warms the target world's faces, so the
-  // cut rarely waits on them (spec §11.3: the fast lane lands ≤ 400 ms)
+  // intent (hover / keyboard focus) warms the target world's faces and the
+  // jump's chunk, so the cut rarely waits on them (spec §11.3: ≤ 400 ms)
   const warm = () => {
-    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 3000);
+    if (base || !window.matchMedia(DESKTOP_WIDE).matches) return;
+    void markWorldFontsReady("idiots", 3000);
+    void loadJumps().catch(() => {});
   };
   return (
     <a
@@ -419,7 +423,14 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence
+        onExitComplete={() => {
+          // a pick that moved no focus (a jump that did not land, the
+          // director's cut still loading) never leaves it on <body>
+          const a = document.activeElement;
+          if (!a || a === document.body || sheetRef.current?.contains(a)) menuButtonRef.current?.focus();
+        }}
+      >
         {open ? (
           <motion.div
             key="menu"
@@ -450,7 +461,7 @@ export function Header() {
             </div>
 
             <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
-              {fine ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
+              {fine && !base ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
               <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
                 {navGroups.map((g) => {
                   const cardLink = g.href && cardsPresent.has(g.href.slice(1)) ? g.href : null;

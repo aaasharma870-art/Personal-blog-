@@ -1,7 +1,6 @@
 "use client";
 
-import { lazy, Suspense } from "react";
-import { usePlateEngine } from "@/components/primitives/camera";
+import { enginePart } from "@/components/primitives/camera";
 
 /* ============================================================================
    WEATHER LAYER (spec §7.7) — OWNER: W2-PLATES.
@@ -35,13 +34,5 @@ export type WeatherLayerProps = {
   run?: boolean;
 };
 
-const Impl = lazy(() => import("./stage").then((m) => ({ default: m.WeatherImpl })));
-
-export function WeatherLayer(props: WeatherLayerProps) {
-  const engine = usePlateEngine();
-  return engine ? (
-    <Suspense fallback={null}>
-      <Impl {...props} />
-    </Suspense>
-  ) : null;
-}
+/** The sprites (the engine's WeatherImpl) once the plates engine is wanted. */
+export const WeatherLayer = enginePart("WeatherImpl");

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import type { CameraSpec } from "@/components/primitives/camera";
 import { LivePlate } from "@/components/primitives/live-plate";
 import { maskIntersect } from "@/components/primitives/mask-style";
-import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "@/components/worlds/idiots/chalk";
+import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "@/components/worlds/idiots/chalk-motion";
 
 /* ============================================================================
    THE GAUNTLET ON THE DAWN BOARD (SPEC v2 SM-6, noise-order-seam.BAR §3B,

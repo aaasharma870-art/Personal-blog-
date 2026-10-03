@@ -330,21 +330,9 @@ export default function EggRuntime({
 
   useEffect(() => attach((m) => handle(m)), [attach]);
 
-  // Dead Eye keys: Esc aborts, Enter fires (while it runs)
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const d = deadEye.current;
-      if (!d) return;
-      if (e.key === "Escape") {
-        d.abort();
-        deadEye.current = null;
-      } else if (e.key === "Enter" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
-        d.fire();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  // Dead Eye's keys belong to the round itself (components/games/dead-eye/
+  // run.ts: Esc releases unless a dialog owns it, Shift+Enter on a row and
+  // the Fire button fire); `deadEye.current` is cleared by its `game:stop`.
 
   const closeMap = useCallback(() => {
     setMapOpen(false);

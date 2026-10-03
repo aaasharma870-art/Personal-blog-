@@ -14,7 +14,9 @@
 //   4. screenshot with the section's text made transparent: the pixels under each box are
 //      exactly what the text sits on (plate + scrim + ground); find the brightest and the
 //      darkest pixel under it and take the worse contrast;
-//   (text that is not rendered, e.g. a closed <details>, is skipped; --aa-open opens every collapse first)
+//   (text that is not rendered, e.g. a closed <details>, is skipped; --aa-open opens every collapse first;
+//   text mid-entrance — inside [data-words-state] or [data-reveal="armed"] once ≤ 4 s have not settled
+//   it — is reported as `transient`, not failed: the words probe checks no title is left armed)
 //   5. threshold 4.5:1, or 3:1 for large text (≥ 24 px, or ≥ 18.66 px at weight ≥ 700).
 // pass = no box under its threshold at any step; `live: false` sections are reported, not failed
 // (the stage never showed them, so they rendered opaque as today).
@@ -88,6 +90,9 @@ function collectBoxes() {
           h: Math.ceil(Math.min(r.bottom, vh) - Math.max(r.top, 0)),
           color: rgb(cs.color),
           large: size >= 24 || (size >= 18.66 && weight >= 700),
+          // mid-entrance: a words primitive armed / playing (an in-character title before its spotlight
+          // grant), or a Rise block not yet entered: its colour is not the reading state
+          transient: Boolean(el.closest('[data-words-state], [data-reveal="armed"]')),
         });
       }
     }
@@ -160,6 +165,7 @@ async function runWidth(page, ctx, vw, step) {
     const ys = [];
     for (let y = s.top - vw.height * 0.5; y < s.bottom - vw.height * 0.25; y += vw.height * step) ys.push(Math.max(0, Math.round(y)));
     const failures = [];
+    const transient = [];
     let samples = 0;
     let liveSamples = 0;
     let worst = null;
@@ -174,16 +180,26 @@ async function runWidth(page, ctx, vw, step) {
         )
         .catch(() => null);
       await page.waitForTimeout(800);
+      // let the entrances on screen finish (a title plays once the reader is idle and the spotlight grants it)
+      await page
+        .waitForFunction(() => {
+          const on = (el) => {
+            const r = el.getBoundingClientRect();
+            return r.width > 0 && r.bottom > 0 && r.top < innerHeight;
+          };
+          return ![...document.querySelectorAll('[data-words-state], [data-reveal="armed"]')].some(on);
+        }, null, { timeout: 4000 })
+        .catch(() => null);
       const m = await measureAt(page, ctx.file(`${vw.width}-${s.item}-${i}.png`));
       samples += 1;
       for (const r of m.results) {
         if (r.item !== s.item || r.ratio === null) continue;
         if (r.live) liveSamples += 1;
-        if (!worst || r.ratio < worst.ratio) worst = { ratio: r.ratio, text: r.text, y, live: r.live };
-        if (r.live && r.ratio < r.min) failures.push({ y, text: r.text, ratio: r.ratio, min: r.min });
+        if (!r.transient && (!worst || r.ratio < worst.ratio)) worst = { ratio: r.ratio, text: r.text, y, live: r.live };
+        if (r.live && r.ratio < r.min) (r.transient ? transient : failures).push({ y, text: r.text, ratio: r.ratio, min: r.min });
       }
     }
-    report.push({ item: s.item, samples, liveBoxes: liveSamples, worst, failures: failures.slice(0, 20), failCount: failures.length });
+    report.push({ item: s.item, samples, liveBoxes: liveSamples, worst, failures: failures.slice(0, 20), failCount: failures.length, ...(transient.length ? { transient: transient.slice(0, 10) } : {}) });
   }
   return report;
 }

@@ -4,14 +4,15 @@
    (the component, drone-game.tsx, renders the phases and wires the input).
    One flight: take-off from the mark, the physics step per frame, the gates
    in order, the live-region lines, the score, the landing glide, and the
-   world around it (in view, the tab visible, Pause / reduced motion land at
-   once, the band below 50 % visible lands it). See drone-game.tsx's header
+   world around it (in view, the tab visible, Pause / reduced motion and the
+   fast lane land at once, the band below 50 % visible lands it, the band
+   fully out of view ends a landing at once). See drone-game.tsx's header
    for the whole behaviour.
    ========================================================================== */
 
 import type { RefObject } from "react";
 import { sound, type SoundLoop } from "@/lib/audio";
-import { emit } from "@/lib/events";
+import { emit, on } from "@/lib/events";
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { GATE_COUNT, TAKEOFF, passes } from "@/components/games/drone/course";
@@ -61,6 +62,8 @@ export type Setters = {
 };
 
 export type Refs = {
+  /** The game's own layer (`.drone-game`: its data-phase is the phase). */
+  game: RefObject<HTMLDivElement | null>;
   box: RefObject<HTMLDivElement | null>;
   field: RefObject<HTMLDivElement | null>;
   sprite: RefObject<HTMLImageElement | null>;
@@ -86,6 +89,10 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
   let lastClock = -1;
   let lastHum = 0;
   let inView = true;
+  /** A take-off's centring scroll in progress (the observer does not judge
+   *  the band's share until it ends), and which take-off started it. */
+  let centering = false;
+  let centerSeq = 0;
   let visible = document.visibilityState !== "hidden";
   const keys: Record<Key, boolean> = { l: false, r: false, u: false, d: false };
   let ptr: { x: number; y: number } | null = null;
@@ -94,6 +101,10 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
 
   const go = (p: Phase) => {
     phase = p;
+    // the layer's phase now, in this task (its CSS and the probes read it;
+    // React renders the same value with the state below, which may land a
+    // task later when the game's root is not the one handling the event)
+    r.game.current?.setAttribute("data-phase", p);
     set.phase(p);
   };
 
@@ -122,6 +133,13 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     s.style.transform = `translate3d(${(f.x - sw / 2).toFixed(1)}px,${(f.y - sh / 2 + bob).toFixed(1)}px,0) rotate(${tilt.toFixed(2)}deg)`;
   };
 
+  /** The band's visible share now (a layout read: only at a take-off and
+   *  at the end of its centring scroll, never per frame or under Pause). */
+  const shareNow = (): number => {
+    const b = r.box.current?.getBoundingClientRect();
+    return b && b.height ? Math.max(0, Math.min(b.bottom, window.innerHeight) - Math.max(b.top, 0)) / b.height : 0;
+  };
+
   const atMark = () => {
     f.x = TAKEOFF[0] * W;
     f.y = TAKEOFF[1] * H;
@@ -129,16 +147,20 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     f.vy = 0;
   };
 
-  /** Opacity on one layer: a fade with motion on, a set with motion off. */
+  /** The running opacity fade per layer (cancelled by the next one). */
+  const fades = new WeakMap<HTMLElement, Animation>();
+  /** Opacity on one layer: a fade with motion on; with motion off (Pause,
+   *  reduced motion) a plain set with NO style read, so the Pause click never
+   *  forces the restyle html[data-motion] has just invalidated. */
   const fade = (el: HTMLElement | null, to: 0 | 1, ms: number) => {
     if (!el) return;
-    const from = Number(getComputedStyle(el).opacity) || 0;
+    const off = motionOffNow();
+    // the fade's start is read before the running one is cancelled (motion on)
+    const from = off ? to : Number(getComputedStyle(el).opacity) || 0;
+    fades.get(el)?.cancel();
+    fades.delete(el);
     el.style.opacity = String(to);
-    if (!motionOffNow() && from !== to)
-      el.animate([{ opacity: from }, { opacity: to }], {
-        duration: ms,
-        easing: "ease-out",
-      });
+    if (!off && from !== to) fades.set(el, el.animate([{ opacity: from }, { opacity: to }], { duration: ms, easing: "ease-out" }));
   };
 
   const steer = (): Steer => {
@@ -148,8 +170,10 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     return ax || ay ? { kind: "keys", ax, ay } : { kind: "none" };
   };
 
+  // a flight runs in view; a landing glide finishes even off-view (the band
+  // scrolled away mid-glide: its HUD, hum and data-game must still end)
   const loop = () => {
-    if (!raf && inView && visible && (phase === "flying" || phase === "landing")) raf = requestAnimationFrame(frame);
+    if (!raf && visible && (phase === "landing" || (phase === "flying" && inView))) raf = requestAnimationFrame(frame);
   };
   /** Restart after a stop (hidden tab, off-view): no catch-up step. */
   const resume = () => {
@@ -248,7 +272,16 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     if (document.documentElement.getAttribute("data-game") === "drone") document.documentElement.removeAttribute("data-game");
     go(next === GATE_COUNT ? "done" : "idle");
     emit("game:stop", { game: "drone", reason });
-    if (hadFocus) r.pill.current?.focus({ preventScroll: true });
+    // focus comes home to the pill (the fast lane moves it to #work itself).
+    // Pause: on the next frame, so the click never forces the restyle that
+    // html[data-motion] has just invalidated (focus() flushes style)
+    if (!hadFocus || reason === "fastlane") return;
+    const home = () => {
+      const a = document.activeElement;
+      if (!a || a === document.body || r.field.current?.contains(a)) r.pill.current?.focus({ preventScroll: true });
+    };
+    if (reason === "pause") requestAnimationFrame(home);
+    else home();
   }
 
   function takeOff() {
@@ -263,10 +296,23 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     }
     if (!measure()) return;
     // a take-off with the band under half in view (a press after scrolling
-    // past it): bring it to the middle first; the flight starts at once
-    const b = r.box.current?.getBoundingClientRect();
-    if (b && Math.max(0, Math.min(b.bottom, window.innerHeight) - Math.max(b.top, 0)) < b.height / 2 && r.box.current) {
-      void scrollToTarget(r.box.current, { block: "center" });
+    // past it): bring it to the middle first; the flight starts at once, and
+    // the visible share is judged only once the centring scroll has ended
+    // (else the observer's first report would land it straight away)
+    if (r.box.current && shareNow() < 0.5) {
+      const n = ++centerSeq;
+      centering = true;
+      void scrollToTarget(r.box.current, { block: "center" }).finally(() => {
+        if (n !== centerSeq) return;
+        centering = false;
+        if (phase !== "flying") return;
+        // measured, not the observer's last report (it may be a frame old);
+        // the visitor may also have scrolled away during the scroll
+        const share = shareNow();
+        if (share === 0) land("offscreen", false);
+        else if (share < 0.5) land("offscreen", true);
+        else resume();
+      });
     }
     next = 0;
     flown = 0;
@@ -309,6 +355,16 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
     ([e]) => {
       const ratio = e?.isIntersecting ? e.intersectionRatio : 0;
       inView = ratio > 0;
+      if (centering) {
+        if (inView) resume();
+        return;
+      }
+      // the band fully out of view (a fast wheel past it, mid-flight or
+      // mid-glide): land at once, so no HUD, hum or data-game outlives it
+      if (ratio === 0 && (phase === "flying" || phase === "landing")) {
+        land("offscreen", false);
+        return;
+      }
       // the band below 50 % visible: land (no capture, no fight)
       if (phase === "flying" && ratio < 0.5) land("offscreen", true);
       else if (inView) resume();
@@ -323,20 +379,33 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
   const onVis = () => {
     visible = document.visibilityState !== "hidden";
     if (visible) resume();
-    else {
+    else if (phase === "landing") {
+      // a hidden tab never runs the glide's frames: end it now
+      end(glide?.reason ?? "hidden");
+    } else {
       cancelAnimationFrame(raf);
       raf = 0;
       keys.l = keys.r = keys.u = keys.d = false;
     }
   };
   document.addEventListener("visibilitychange", onVis);
-  // Pause / reduced motion: land at once
-  const offMotion = onMotionOffChange(() => {
-    if (motionOffNow()) land("pause", false);
-  });
+  // Pause / reduced motion: land at once, in this task, with the stop-at-once
+  // set (before html[data-motion] restyles the page). The loop and the hum
+  // stop synchronously; end() reads no layout on this path, and the
+  // game:stop listeners only schedule frames.
+  const offMotion = onMotionOffChange(
+    () => {
+      if (motionOffNow()) land("pause", false);
+    },
+    { first: true },
+  );
+  // the fast lane (spec §11.3) stops any game
+  const offFast = on("fastlane", () => land("fastlane", false));
 
-  /** Presses already answered by THIS controller (a remount, e.g. React's
-   *  dev double effects, answers the current press again). */
+  /** Presses already answered by THIS controller. A fresh controller
+   *  answers the press that mounted it: the games binder mounts the game
+   *  only on a press, and drops it on leaving DESKTOP_FINE, so a remount
+   *  never replays an old press by itself. */
   let answered = 0;
 
   return {
@@ -379,6 +448,7 @@ export function flightController(r: Refs, copy: DroneCopy, set: Setters) {
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
       offMotion();
+      offFast();
     },
   };
 }
