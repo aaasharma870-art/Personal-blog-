@@ -1,0 +1,261 @@
+[
+  {
+    "frame": "J001",
+    "film": "Harry Potter",
+    "moment": "Enchanted ceiling of the Great Hall: floating candles under a night sky, broomstick silhouettes",
+    "confidence": 0.7,
+    "why": "Floating lit candles against a starry sky plus forked broom-shaped line marks; the candles alone are the strongest cue"
+  },
+  {
+    "frame": "J002",
+    "film": "3 Idiots",
+    "moment": "Finale at Pangong Tso (Ladakh): the yellow scooter by the lake, a row of squares with one circled",
+    "confidence": 0.65,
+    "why": "Yellow scooter on a pebble shore of a still high-altitude lake ringed by bare mountains; that image is the 3 Idiots ending"
+  },
+  {
+    "frame": "J003",
+    "film": "Red Dead Redemption 2",
+    "moment": "Night campfire between two tents in the hills",
+    "confidence": 0.35,
+    "why": "Campfire and canvas tents fit the western-camp theme, but the image is dark and generic"
+  },
+  {
+    "frame": "J004",
+    "film": "Pirates of the Caribbean",
+    "moment": "The Black Pearl at night seen from below, compass leading a dotted line",
+    "confidence": 0.75,
+    "why": "Galleon with tattered black sails, lit stern windows, moonlit fog; octagonal compass / dotted X-marks-the-spot route"
+  },
+  {
+    "frame": "J005",
+    "film": "Pirates of the Caribbean",
+    "moment": "The Black Pearl at night, dotted treasure-map trail to an X",
+    "confidence": 0.85,
+    "why": "Galleon with tattered black sails, lit stern windows, moonlit fog; octagonal compass / dotted X-marks-the-spot route"
+  },
+  {
+    "frame": "J006",
+    "film": "??",
+    "moment": "An open sketchbook with crossed-out layout boxes and a taped note",
+    "confidence": 0.1,
+    "why": "Plain cream notebook with pencil sketches and tape; nothing film-specific (faintly like a grail-diary journal, too weak to name)"
+  },
+  {
+    "frame": "J007",
+    "film": "Pirates of the Caribbean",
+    "moment": "Ghostly glowing sea at night with a distant ship on the horizon",
+    "confidence": 0.5,
+    "why": "Bioluminescent teal wave under storm clouds and a lone galleon; fits the cursed-sea mood, but the frame alone is generic"
+  },
+  {
+    "frame": "J008",
+    "film": "Red Dead Redemption 2",
+    "moment": "Dead Eye targeting over a red-sky ranch (Beecher's Hope-like homestead)",
+    "confidence": 0.85,
+    "why": "Blood-red graded western ranch, big oak, split-rail fence, and red/white X marks painted on targets: the Dead Eye mechanic"
+  },
+  {
+    "frame": "J009",
+    "film": "Harry Potter",
+    "moment": "The Marauder's Map unfolding (blank before the ink appears)",
+    "confidence": 0.5,
+    "why": "Folded parchment in three panels, ribbon banner, compass roses in corners, corridor-like lines; no footprints yet so less certain"
+  },
+  {
+    "frame": "J010",
+    "film": "Red Dead Redemption 2",
+    "moment": "Dead Eye targeting over a red-sky ranch (Beecher's Hope-like homestead)",
+    "confidence": 0.8,
+    "why": "Blood-red graded western ranch, big oak, split-rail fence, and red/white X marks painted on targets: the Dead Eye mechanic"
+  },
+  {
+    "frame": "J011",
+    "film": "3 Idiots",
+    "moment": "Virus's astronaut pen in its velvet case, with his stopwatch",
+    "confidence": 0.65,
+    "why": "Ornate pen presented in a wooden box beside a stopwatch, in a college classroom: the pen Virus saves for a worthy student"
+  },
+  {
+    "frame": "J012",
+    "film": "3 Idiots",
+    "moment": "Engineering lecture hall: a drone sketched in chalk on the board",
+    "confidence": 0.5,
+    "why": "Tiered wooden benches, stone walls, chalkboard drone diagram; matches the film's college lecture halls, though only loosely"
+  },
+  {
+    "frame": "J013",
+    "film": "Red Dead Redemption 2",
+    "moment": "Golden-hour overlook of a river valley with a grazing horse",
+    "confidence": 0.6,
+    "why": "Painterly American-frontier vista, lone saddled horse, warm haze; strongly in RDR2's landscape style but no unique prop"
+  },
+  {
+    "frame": "J014",
+    "film": "Red Dead Redemption 2",
+    "moment": "The gang's camp at dusk: canvas tents, cooking pot over the fire, wagons",
+    "confidence": 0.75,
+    "why": "Canvas wall tents with lanterns, stew pot on a tripod, covered wagon and tethered horses by a lake: Horseshoe Overlook vibe"
+  },
+  {
+    "frame": "J015",
+    "film": "Red Dead Redemption 2",
+    "moment": "The gang's camp at dusk: canvas tents, cooking pot over the fire, wagons",
+    "confidence": 0.8,
+    "why": "Canvas wall tents with lanterns, stew pot on a tripod, covered wagon and tethered horses by a lake: Horseshoe Overlook vibe"
+  },
+  {
+    "frame": "J016",
+    "film": "3 Idiots",
+    "moment": "Engineering lecture hall: a drone sketched in chalk on the board",
+    "confidence": 0.55,
+    "why": "Tiered wooden benches, stone walls, chalkboard drone diagram; matches the film's college lecture halls, though only loosely"
+  },
+  {
+    "frame": "J017",
+    "film": "Pirates of the Caribbean",
+    "moment": "Moonlit pirate harbour (Port Royal / Tortuga) with Jack's compass charting a dotted route to an X",
+    "confidence": 0.7,
+    "why": "Brass octagonal compass, dashed treasure-map route ending in an X, skull emblem; night harbour/sea photo"
+  },
+  {
+    "frame": "J018",
+    "film": "??",
+    "moment": "An open sketchbook with crossed-out layout boxes and a taped note",
+    "confidence": 0.1,
+    "why": "Plain cream notebook with pencil sketches and tape; nothing film-specific (faintly like a grail-diary journal, too weak to name)"
+  },
+  {
+    "frame": "J019",
+    "film": "Harry Potter",
+    "moment": "Enchanted ceiling of the Great Hall: floating candles under a night sky, broomstick silhouettes",
+    "confidence": 0.75,
+    "why": "Floating lit candles against a starry sky plus forked broom-shaped line marks; the candles alone are the strongest cue"
+  },
+  {
+    "frame": "J020",
+    "film": "Pirates of the Caribbean",
+    "moment": "The Black Pearl at night, Jack Sparrow's compass hanging over it",
+    "confidence": 0.85,
+    "why": "Galleon with tattered black sails, lit stern windows, moonlit fog; octagonal compass / dotted X-marks-the-spot route"
+  },
+  {
+    "frame": "J021",
+    "film": "3 Idiots",
+    "moment": "Joy Lobo's homemade drone flying in the ICE college campus",
+    "confidence": 0.55,
+    "why": "Hand-built quadcopter in a stone-and-concrete colonnaded campus like IIM Bangalore, where the film was shot"
+  },
+  {
+    "frame": "J022",
+    "film": "Harry Potter",
+    "moment": "Enchanted ceiling of the Great Hall: floating candles under a night sky, broomstick silhouettes",
+    "confidence": 0.75,
+    "why": "Floating lit candles against a starry sky plus forked broom-shaped line marks; the candles alone are the strongest cue"
+  },
+  {
+    "frame": "J023",
+    "film": "Harry Potter",
+    "moment": "Hogwarts Great Hall, long house tables under floating candles",
+    "confidence": 0.95,
+    "why": "Long candlelit tables, gothic windows, hundreds of floating candles: unmistakable"
+  },
+  {
+    "frame": "J024",
+    "film": "3 Idiots",
+    "moment": "Joy Lobo's homemade drone flying in the ICE college campus",
+    "confidence": 0.55,
+    "why": "Hand-built quadcopter in a stone-and-concrete colonnaded campus like IIM Bangalore, where the film was shot"
+  },
+  {
+    "frame": "J025",
+    "film": "3 Idiots",
+    "moment": "Engineering lecture hall: a drone sketched in chalk on the board",
+    "confidence": 0.55,
+    "why": "Tiered wooden benches, stone walls, chalkboard drone diagram; matches the film's college lecture halls, though only loosely"
+  },
+  {
+    "frame": "J026",
+    "film": "Harry Potter",
+    "moment": "Hogwarts Great Hall, long house tables under floating candles",
+    "confidence": 0.95,
+    "why": "Long candlelit tables, gothic windows, hundreds of floating candles: unmistakable"
+  },
+  {
+    "frame": "J027",
+    "film": "Harry Potter",
+    "moment": "The Hogwarts Express crossing the Glenfinnan Viaduct",
+    "confidence": 0.95,
+    "why": "Red steam train on a curved stone viaduct above a Highland loch"
+  },
+  {
+    "frame": "J028",
+    "film": "Harry Potter",
+    "moment": "The Marauder's Map unfolding, footprints walking the corridors",
+    "confidence": 0.8,
+    "why": "Folded parchment in panels, hand-drawn corridor plan, ribbon title banner, compass roses and inked footprints moving along it"
+  },
+  {
+    "frame": "J029",
+    "film": "3 Idiots",
+    "moment": "Finale at Pangong Tso (Ladakh): the yellow scooter by the lake, circled and ticked",
+    "confidence": 0.7,
+    "why": "Yellow scooter on a pebble shore of a still high-altitude lake ringed by bare mountains; that image is the 3 Idiots ending"
+  },
+  {
+    "frame": "J030",
+    "film": "Red Dead Redemption 2",
+    "moment": "Golden-hour overlook of a river valley with a grazing horse",
+    "confidence": 0.6,
+    "why": "Painterly American-frontier vista, lone saddled horse, warm haze; strongly in RDR2's landscape style but no unique prop"
+  },
+  {
+    "frame": "J031",
+    "film": "3 Idiots",
+    "moment": "Virus's astronaut pen in its velvet case, with his stopwatch",
+    "confidence": 0.65,
+    "why": "Ornate pen presented in a wooden box beside a stopwatch, in a college classroom: the pen Virus saves for a worthy student"
+  },
+  {
+    "frame": "J032",
+    "film": "Harry Potter",
+    "moment": "The Marauder's Map unfolding, footprints walking the corridors",
+    "confidence": 0.9,
+    "why": "Folded parchment in panels, hand-drawn corridor plan, ribbon title banner, compass roses and inked footprints moving along it"
+  },
+  {
+    "frame": "J033",
+    "film": "Harry Potter",
+    "moment": "Hogwarts castle across the Black Lake at night, floating candles and a broomstick",
+    "confidence": 0.95,
+    "why": "Gothic castle on a cliff over a lake, candles floating in the air, a broomstick in the foreground"
+  },
+  {
+    "frame": "J034",
+    "film": "Pirates of the Caribbean",
+    "moment": "Sunset sea with a distant ship with Jack's compass charting a dotted route to an X",
+    "confidence": 0.65,
+    "why": "Brass octagonal compass, dashed treasure-map route ending in an X, skull emblem; night harbour/sea photo"
+  },
+  {
+    "frame": "J035",
+    "film": "Red Dead Redemption 2",
+    "moment": "Wanted-poster board outside a frontier sheriff's office",
+    "confidence": 0.5,
+    "why": "Blank paper pinned over weathered notices on a wooden board, western street blurred behind; reads as a wanted board"
+  },
+  {
+    "frame": "J036",
+    "film": "Pirates of the Caribbean",
+    "moment": "Ghostly glowing sea at night with a distant ship on the horizon",
+    "confidence": 0.5,
+    "why": "Bioluminescent teal wave under storm clouds and a lone galleon; fits the cursed-sea mood, but the frame alone is generic"
+  },
+  {
+    "frame": "J037",
+    "film": "Pirates of the Caribbean",
+    "moment": "Stormy open sea with Jack's compass charting a dotted route to an X",
+    "confidence": 0.6,
+    "why": "Brass octagonal compass, dashed treasure-map route ending in an X, skull emblem; night harbour/sea photo"
+  }
+]

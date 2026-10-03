@@ -1,0 +1,188 @@
+[
+  {
+    "frame": "C001",
+    "name": "Aryan Sharma",
+    "cantRead": [
+      "First heading line clipped under the nav bar (reads like 'A builder of', only the bottom half visible)",
+      "Faded tail of 'Intellectual honesty' ('…did not survive testing.') is very low contrast"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 2
+    }
+  },
+  {
+    "frame": "C002",
+    "name": "Aryan Sharma",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter). Also 'VIEW THE QUANT PORTFOLIO ↓' under the name.",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C003",
+    "name": "Aryan",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C004",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C005",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C006",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C007",
+    "name": null,
+    "cantRead": [
+      "Top line half-hidden under the nav bar: '…it failed me first. Step through it.'"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C008",
+    "name": null,
+    "cantRead": [
+      "Last body line under 'On this page it became the course line…' is sliced off mid-letter (only the tops of the letters show), unreadable"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C009",
+    "name": "Aryan Sharma",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C010",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C011",
+    "name": null,
+    "cantRead": [
+      "'FIG. · TRADING_ALGOS-' label is crossed by an empty outlined vertical bar, which makes it hard to read and looks like a leftover graphic"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C012",
+    "name": null,
+    "cantRead": [
+      "Taped note on the right-hand page: only drawn lines, no legible words (looks decorative)"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C013",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C014",
+    "name": null,
+    "cantRead": [
+      "Chalkboard quote stops mid-word: '“A machine is anything that reduces h' (still being written?)"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C015",
+    "name": null,
+    "cantRead": [
+      "Heading word cut mid-letter by the quill: 'PHILOSOPH…' (the Y is not drawn yet)",
+      "'I solemnly swear…' under the banner is tiny and faint"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C016",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter) (this frame is already the research section)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C017",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter)",
+      "seconds": 1
+    }
+  }
+]
