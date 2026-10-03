@@ -1,0 +1,1288 @@
+{
+ "judge": "panel-j2",
+ "round": 1,
+ "persona": "first-time visitor, steady scroll ~250 px/s, 2 s stop at headings",
+ "inputs": "screencast/reader-1440/sheets-panel 01-13, screencast/reader-1024/sheets-panel 01-12, clips-panel.json (both widths), scenes/1440 sheets 01-08 (context)",
+ "screens": [
+  {
+   "width": 1440,
+   "screen": 1,
+   "clip": 3,
+   "keep": "yes",
+   "why": "Play screen, candles, broom flight over Hogwarts, glowing wave, then the name. A real hook, though the 2 s empty-sea hold (#5) and ~16 s wait before I can scroll feel long."
+  },
+  {
+   "width": 1440,
+   "screen": 2,
+   "clip": 11,
+   "keep": "yes",
+   "why": "Porthole iris opens on the Black Pearl. Lovely reveal; the ghost 'The Crossing' letters over the ship (#13) look muddy in a still."
+  },
+  {
+   "width": 1440,
+   "screen": 3,
+   "clip": 14,
+   "keep": "yes",
+   "why": "'A research journal in four acts' plus a chapter list. I now know there is a shape to this and want to see the acts."
+  },
+  {
+   "width": 1440,
+   "screen": 4,
+   "clip": 17,
+   "keep": "yes",
+   "why": "'A builder of quantitative systems.' is a clear statement, and the compass is a nice touch. The three columns of small grey text are skimmable at best."
+  },
+  {
+   "width": 1440,
+   "screen": 5,
+   "clip": 21,
+   "keep": "yes",
+   "why": "'How the methodology was earned.' with a sticky photo and a route map that tracks progress. Scrollytelling that pays off on each scroll."
+  },
+  {
+   "width": 1440,
+   "screen": 6,
+   "clip": 23,
+   "keep": "yes",
+   "why": "The photo swaps from harbour to storm as the steps pass, enough change to carry me, but the left column is mostly empty."
+  },
+  {
+   "width": 1440,
+   "screen": 7,
+   "clip": 25,
+   "keep": "no",
+   "why": "Third sea photo in a row, same layout, tiny text in a near-empty column. Starting to feel 'seen it'."
+  },
+  {
+   "width": 1440,
+   "screen": 8,
+   "clip": 27,
+   "keep": "yes",
+   "why": "Dawn photo closes the journey and '3 IDIOTS' arrives in a new font. A chapter change snaps attention back."
+  },
+  {
+   "width": 1440,
+   "screen": 9,
+   "clip": 29,
+   "keep": "yes",
+   "why": "A wave wipe into a bright, warm lecture hall with a chalk drone drawing. The first warm image after all the navy, a welcome shift."
+  },
+  {
+   "width": 1440,
+   "screen": 10,
+   "clip": 32,
+   "keep": "yes",
+   "why": "'The Workshop' zoom-through-the-letters is the coolest transition so far; the dark gap between hall and pen images (#33) is clumsy."
+  },
+  {
+   "width": 1440,
+   "screen": 11,
+   "clip": 35,
+   "keep": "no",
+   "why": "'Led by what survived scrutiny.' types in, then the screen sits static with ~60 % empty and small text. Nothing to look at."
+  },
+  {
+   "width": 1440,
+   "screen": 12,
+   "clip": 37,
+   "keep": "yes",
+   "why": "Seven-part gauntlet list next to a chalkboard bar chart. The film prop and the content finally meet."
+  },
+  {
+   "width": 1440,
+   "screen": 13,
+   "clip": 40,
+   "keep": "yes",
+   "why": "First project: corridor photo plus a blueprint that draws itself. The blueprint is satisfying."
+  },
+  {
+   "width": 1440,
+   "screen": 14,
+   "clip": 42,
+   "keep": "yes",
+   "why": "Blueprint boxes connect, stats get a hand-drawn chalk circle. Small delight, still dense."
+  },
+  {
+   "width": 1440,
+   "screen": 15,
+   "clip": 45,
+   "keep": "yes",
+   "why": "'What is a machine?' writes itself on the chalkboard. Charming."
+  },
+  {
+   "width": 1440,
+   "screen": 16,
+   "clip": 46,
+   "keep": "no",
+   "why": "Second project uses exactly the same template as the first. Seen it."
+  },
+  {
+   "width": 1440,
+   "screen": 17,
+   "clip": 49,
+   "keep": "no",
+   "why": "Same blueprint, same stats block, same chalk circle, same corridor photo as screen 14."
+  },
+  {
+   "width": 1440,
+   "screen": 18,
+   "clip": 52,
+   "keep": "yes",
+   "why": "'See the thesis, not just read it.' A chart that draws itself and promises a demo, though the plain sans and grey-green band feel like another website."
+  },
+  {
+   "width": 1440,
+   "screen": 19,
+   "clip": 55,
+   "keep": "yes",
+   "why": "A real photo of his homemade drone. A human payoff after a lot of abstraction."
+  },
+  {
+   "width": 1440,
+   "screen": 20,
+   "clip": 57,
+   "keep": "no",
+   "why": "'What I can actually do.' is a skills table of small text with a blueprint stack. Clutter; I would skim past."
+  },
+  {
+   "width": 1440,
+   "screen": 21,
+   "clip": 59,
+   "keep": "no",
+   "why": "More table rows and long paragraphs; only the incoming 'The kill-list' title rescues it."
+  },
+  {
+   "width": 1440,
+   "screen": 22,
+   "clip": 61,
+   "keep": "yes",
+   "why": "'The kill-list' is an intriguing idea (what he killed and why), but the pen photo is reused and an empty outlined box sits in the row."
+  },
+  {
+   "width": 1440,
+   "screen": 23,
+   "clip": 64,
+   "keep": "no",
+   "why": "A dozen near-identical rows of tiny low-contrast text; only a small stamp icon moves."
+  },
+  {
+   "width": 1440,
+   "screen": 24,
+   "clip": 67,
+   "keep": "no",
+   "why": "'Three films and a game' sits alone on an empty black screen for ~4 s in plain type. The words intrigue me, but the screen looks dead."
+  },
+  {
+   "width": 1440,
+   "screen": 25,
+   "clip": 69,
+   "keep": "no",
+   "why": "Pirates film card shows the same Black Pearl photo from screen 2. The quote is fun, but I've seen this picture."
+  },
+  {
+   "width": 1440,
+   "screen": 26,
+   "clip": 71,
+   "keep": "yes",
+   "why": "Bright yellow scooter at Pangong Lake. Colour and air after a long dark stretch."
+  },
+  {
+   "width": 1440,
+   "screen": 27,
+   "clip": 73,
+   "keep": "yes",
+   "why": "'All izz well' then a blood-red Red Dead landscape. Each card brings a new palette."
+  },
+  {
+   "width": 1440,
+   "screen": 28,
+   "clip": 75,
+   "keep": "yes",
+   "why": "'HARRY POTTER' written on by a quill. Delightful."
+  },
+  {
+   "width": 1440,
+   "screen": 29,
+   "clip": 77,
+   "keep": "yes",
+   "why": "Hogwarts Express with a tiny golden snitch zipping across. I want to chase it."
+  },
+  {
+   "width": 1440,
+   "screen": 30,
+   "clip": 79,
+   "keep": "yes",
+   "why": "A sepia photo develops in a cream frame with the snitch over it, an intriguing reveal, but 'Red Dead Redemption 2' again so soon is confusing."
+  },
+  {
+   "width": 1440,
+   "screen": 31,
+   "clip": 81,
+   "keep": "yes",
+   "why": "Golden dawn settles, then 'The Frontier' zoom-through. Cinematic."
+  },
+  {
+   "width": 1440,
+   "screen": 32,
+   "clip": 84,
+   "keep": "yes",
+   "why": "Full-bleed dawn with 'Discipline, service, and a trained eye.' The most filmic screen on the page."
+  },
+  {
+   "width": 1440,
+   "screen": 33,
+   "clip": 87,
+   "keep": "yes",
+   "why": "A hand-drawn trail map on parchment beside the text. Nice texture."
+  },
+  {
+   "width": 1440,
+   "screen": 34,
+   "clip": 88,
+   "keep": "no",
+   "why": "Same dawn photo for the fourth time, now sticky beside long text columns."
+  },
+  {
+   "width": 1440,
+   "screen": 35,
+   "clip": 90,
+   "keep": "no",
+   "why": "More text beside the same photo; the satchel arrives only at the very end."
+  },
+  {
+   "width": 1440,
+   "screen": 36,
+   "clip": 91,
+   "keep": "yes",
+   "why": "A satchel with item icons, then a WANTED poster with his name. Playful and on theme."
+  },
+  {
+   "width": 1440,
+   "screen": 37,
+   "clip": 94,
+   "keep": "yes",
+   "why": "The page curls into Arthur Morgan's journal: parchment, sketches drawing in. A strong tone change."
+  },
+  {
+   "width": 1440,
+   "screen": 38,
+   "clip": 97,
+   "keep": "no",
+   "why": "Essay titles marked 'soon' with no essays yet, and 'The kill-list' appears again. Feels like filler."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "clip": 99,
+   "keep": "no",
+   "why": "A thick grey brush arc appears like an artifact, then a muddy parchment-to-black fade."
+  },
+  {
+   "width": 1440,
+   "screen": 40,
+   "clip": 101,
+   "keep": "yes",
+   "why": "'In their words.' Real quotes over a warm campfire photo. Credible and human."
+  },
+  {
+   "width": 1440,
+   "screen": 41,
+   "clip": 104,
+   "keep": "no",
+   "why": "Small italic quotes over a busy dark photo, then a 'HARRY POTTER' title over the Red Dead campfire. Confusing."
+  },
+  {
+   "width": 1440,
+   "screen": 42,
+   "clip": 106,
+   "keep": "yes",
+   "why": "A fire ring burns the campfire away, the snitch flies, and the Great Hall's candles appear. Magic."
+  },
+  {
+   "width": 1440,
+   "screen": 43,
+   "clip": 109,
+   "keep": "yes",
+   "why": "'The Light' zoom-through, then the hall shrinks into a parchment. Smooth."
+  },
+  {
+   "width": 1440,
+   "screen": 44,
+   "clip": 110,
+   "keep": "yes",
+   "why": "Marauder's Map: 'A small philosophy of work.' with walking footprints. Beautiful."
+  },
+  {
+   "width": 1440,
+   "screen": 45,
+   "clip": 115,
+   "keep": "no",
+   "why": "Five identical parchment boxes with the same footprints, and the capture log shows ~5 fps here, so it likely stutters."
+  },
+  {
+   "width": 1440,
+   "screen": 46,
+   "clip": 117,
+   "keep": "no",
+   "why": "Still the same boxes; the contact block arrives only in the last frames."
+  },
+  {
+   "width": 1440,
+   "screen": 47,
+   "clip": 119,
+   "keep": "yes",
+   "why": "'Let's talk research, markets, or building systems that are honest about their limits.' A clear ask with an email pill. I'd consider writing."
+  },
+  {
+   "width": 1440,
+   "screen": 48,
+   "clip": 122,
+   "keep": "no",
+   "why": "End credits in tiny grey type on black. Cute idea, unreadable; this is where I'd leave."
+  },
+  {
+   "width": 1440,
+   "screen": 49,
+   "clip": 125,
+   "keep": "no",
+   "why": "Near-black screen with a tiny 'Mischief managed.' Nice line, weak final frame, nowhere to go."
+  },
+  {
+   "width": 1024,
+   "screen": 1,
+   "clip": 3,
+   "keep": "yes",
+   "why": "The same opening, a little quicker (name by 0:08). Broom flight still the hook."
+  },
+  {
+   "width": 1024,
+   "screen": 2,
+   "clip": 10,
+   "keep": "yes",
+   "why": "Porthole reveal of the Black Pearl, clean."
+  },
+  {
+   "width": 1024,
+   "screen": 3,
+   "clip": 13,
+   "keep": "yes",
+   "why": "Ghost 'The Crossing' letters, then the four-act chapter list. Promise of structure."
+  },
+  {
+   "width": 1024,
+   "screen": 4,
+   "clip": 15,
+   "keep": "yes",
+   "why": "'A builder of quantitative systems.' is a strong heading; a sliver of the ship photo shows at the right edge."
+  },
+  {
+   "width": 1024,
+   "screen": 5,
+   "clip": 18,
+   "keep": "no",
+   "why": "About text becomes a full-screen wall of small grey serif in three columns. Too dense at this width."
+  },
+  {
+   "width": 1024,
+   "screen": 6,
+   "clip": 20,
+   "keep": "yes",
+   "why": "'How the methodology was earned.' with a sticky photo and route map. Works well at this width."
+  },
+  {
+   "width": 1024,
+   "screen": 7,
+   "clip": 22,
+   "keep": "yes",
+   "why": "Steps are tighter than at 1440 (less empty column); photo swaps keep pace."
+  },
+  {
+   "width": 1024,
+   "screen": 8,
+   "clip": 24,
+   "keep": "yes",
+   "why": "Sunrise step, then '3 IDIOTS' and the Kraken strip. New chapter, new energy."
+  },
+  {
+   "width": 1024,
+   "screen": 9,
+   "clip": 26,
+   "keep": "yes",
+   "why": "A torn-edge wipe from storm sea to pale clouds is a surprise, though it pauses on a blank cloud texture."
+  },
+  {
+   "width": 1024,
+   "screen": 10,
+   "clip": 27,
+   "keep": "yes",
+   "why": "Sun icon tears the clouds off the lecture hall, then 'The Workshop' zoom-through. Great."
+  },
+  {
+   "width": 1024,
+   "screen": 11,
+   "clip": 31,
+   "keep": "yes",
+   "why": "Pen photo, then 'Led by what survived scrutiny.' types itself out."
+  },
+  {
+   "width": 1024,
+   "screen": 12,
+   "clip": 32,
+   "keep": "no",
+   "why": "Static 2 s on that heading with small text and an empty right half."
+  },
+  {
+   "width": 1024,
+   "screen": 13,
+   "clip": 34,
+   "keep": "yes",
+   "why": "Gauntlet list plus chalkboard bar chart. Good pairing."
+  },
+  {
+   "width": 1024,
+   "screen": 14,
+   "clip": 36,
+   "keep": "yes",
+   "why": "First project heading, corridor photo, blueprint drawing in."
+  },
+  {
+   "width": 1024,
+   "screen": 15,
+   "clip": 39,
+   "keep": "yes",
+   "why": "Blueprint boxes connect; stats begin."
+  },
+  {
+   "width": 1024,
+   "screen": 16,
+   "clip": 41,
+   "keep": "yes",
+   "why": "Chalk circle on a stat and 'What is a machine?' written on the board."
+  },
+  {
+   "width": 1024,
+   "screen": 17,
+   "clip": 43,
+   "keep": "no",
+   "why": "Second project in the identical template. Seen it."
+  },
+  {
+   "width": 1024,
+   "screen": 18,
+   "clip": 45,
+   "keep": "no",
+   "why": "Same blueprint treatment again."
+  },
+  {
+   "width": 1024,
+   "screen": 19,
+   "clip": 47,
+   "keep": "no",
+   "why": "Same stats plus chalk circle plus the same corridor photo."
+  },
+  {
+   "width": 1024,
+   "screen": 20,
+   "clip": 50,
+   "keep": "yes",
+   "why": "'See the thesis' with an equity chart drawing in. Promises interaction."
+  },
+  {
+   "width": 1024,
+   "screen": 21,
+   "clip": 51,
+   "keep": "yes",
+   "why": "The chart grows to full width with an explanation. Clear at this size."
+  },
+  {
+   "width": 1024,
+   "screen": 22,
+   "clip": 53,
+   "keep": "yes",
+   "why": "Homemade drone photo, then 'What I can actually do.'"
+  },
+  {
+   "width": 1024,
+   "screen": 23,
+   "clip": 55,
+   "keep": "no",
+   "why": "Skills table squeezed into four narrow columns of tiny text. Clutter."
+  },
+  {
+   "width": 1024,
+   "screen": 24,
+   "clip": 58,
+   "keep": "yes",
+   "why": "'The kill-list' title intrigues, despite the reused pen photo and an empty outlined box."
+  },
+  {
+   "width": 1024,
+   "screen": 25,
+   "clip": 60,
+   "keep": "no",
+   "why": "Long list of dead strategies in small low-contrast type."
+  },
+  {
+   "width": 1024,
+   "screen": 26,
+   "clip": 62,
+   "keep": "no",
+   "why": "More of the list, then an empty screen with 'Three films and a game'."
+  },
+  {
+   "width": 1024,
+   "screen": 27,
+   "clip": 64,
+   "keep": "no",
+   "why": "Blank heading screen for ~4 s, then the same Black Pearl photo again."
+  },
+  {
+   "width": 1024,
+   "screen": 28,
+   "clip": 66,
+   "keep": "yes",
+   "why": "Pirates quote, then '3 IDI|' types in. The typing perks me up."
+  },
+  {
+   "width": 1024,
+   "screen": 29,
+   "clip": 68,
+   "keep": "yes",
+   "why": "Yellow scooter at Pangong Lake. Bright and fresh."
+  },
+  {
+   "width": 1024,
+   "screen": 30,
+   "clip": 69,
+   "keep": "yes",
+   "why": "'All izz well' then Red Dead red; small white squares across the sky are odd but intriguing."
+  },
+  {
+   "width": 1024,
+   "screen": 31,
+   "clip": 71,
+   "keep": "yes",
+   "why": "Dead Eye quote, then a quill writes 'HARRY POTTER'."
+  },
+  {
+   "width": 1024,
+   "screen": 32,
+   "clip": 72,
+   "keep": "yes",
+   "why": "Hogwarts Express and the golden snitch zipping down to a sepia photo. I want to catch it."
+  },
+  {
+   "width": 1024,
+   "screen": 33,
+   "clip": 75,
+   "keep": "yes",
+   "why": "Sepia develops to colour, then 'The Frontier' zoom-through."
+  },
+  {
+   "width": 1024,
+   "screen": 34,
+   "clip": 77,
+   "keep": "yes",
+   "why": "Frontier letters, then a full-bleed dawn arrives (with a black gap between the two dawn images)."
+  },
+  {
+   "width": 1024,
+   "screen": 35,
+   "clip": 79,
+   "keep": "yes",
+   "why": "'Discipline, service, and a trained eye.' over the dawn. Cinematic."
+  },
+  {
+   "width": 1024,
+   "screen": 36,
+   "clip": 81,
+   "keep": "yes",
+   "why": "Parchment trail map, then 'Showing up unprompted'."
+  },
+  {
+   "width": 1024,
+   "screen": 37,
+   "clip": 83,
+   "keep": "no",
+   "why": "Long text column beside the same sticky dawn photo."
+  },
+  {
+   "width": 1024,
+   "screen": 38,
+   "clip": 85,
+   "keep": "no",
+   "why": "More text; satchel only at the end."
+  },
+  {
+   "width": 1024,
+   "screen": 39,
+   "clip": 86,
+   "keep": "yes",
+   "why": "Satchel, then a WANTED poster with his name."
+  },
+  {
+   "width": 1024,
+   "screen": 40,
+   "clip": 88,
+   "keep": "yes",
+   "why": "The page curls into the parchment journal. Strong mood shift."
+  },
+  {
+   "width": 1024,
+   "screen": 41,
+   "clip": 90,
+   "keep": "no",
+   "why": "Essays marked 'soon', 'The kill-list' title again. Filler."
+  },
+  {
+   "width": 1024,
+   "screen": 42,
+   "clip": 92,
+   "keep": "no",
+   "why": "More essay stubs with sketches; nothing to read yet."
+  },
+  {
+   "width": 1024,
+   "screen": 43,
+   "clip": 93,
+   "keep": "no",
+   "why": "Grey brush arc artifact and a long muddy fade to black."
+  },
+  {
+   "width": 1024,
+   "screen": 44,
+   "clip": 96,
+   "keep": "yes",
+   "why": "'In their words.' Real testimonials over the camp at dusk."
+  },
+  {
+   "width": 1024,
+   "screen": 45,
+   "clip": 98,
+   "keep": "no",
+   "why": "Tiny quotes over a dark photo, then 'HARRY POTTER' over the Red Dead campfire. Mismatch."
+  },
+  {
+   "width": 1024,
+   "screen": 46,
+   "clip": 100,
+   "keep": "yes",
+   "why": "Fire ring burn, snitch, Great Hall candles. Magic."
+  },
+  {
+   "width": 1024,
+   "screen": 47,
+   "clip": 102,
+   "keep": "yes",
+   "why": "'The Light' zoom-through, then the map parchment unfolds."
+  },
+  {
+   "width": 1024,
+   "screen": 48,
+   "clip": 104,
+   "keep": "yes",
+   "why": "Quill writes 'A small philosophy of work.' on the Marauder's Map."
+  },
+  {
+   "width": 1024,
+   "screen": 49,
+   "clip": 108,
+   "keep": "no",
+   "why": "Identical principle boxes with the same footprints."
+  },
+  {
+   "width": 1024,
+   "screen": 50,
+   "clip": 110,
+   "keep": "no",
+   "why": "More identical boxes; the capture log shows ~6-7 fps, so it is choppy."
+  },
+  {
+   "width": 1024,
+   "screen": 51,
+   "clip": 112,
+   "keep": "yes",
+   "why": "Contact ask with an email pill and floating candles. Clear next step."
+  },
+  {
+   "width": 1024,
+   "screen": 52,
+   "clip": 115,
+   "keep": "no",
+   "why": "Tiny grey film credits. Unreadable."
+  },
+  {
+   "width": 1024,
+   "screen": 53,
+   "clip": 118,
+   "keep": "no",
+   "why": "Empty black screen with a tiny 'Mischief managed.'"
+  }
+ ],
+ "acts": [
+  {
+   "act": "Opening: play screen, broom flight, name",
+   "screens": {
+    "1440": "1",
+    "1024": "1"
+   },
+   "yesRate": {
+    "1440": "1/1 (100%)",
+    "1024": "1/1 (100%)"
+   },
+   "tempo": "medium",
+   "feel": "Cinematic and genuinely gripping; the flight is the hook. The empty-sea hold and ~16 s before you can scroll make it a touch long."
+  },
+  {
+   "act": "Act I, The Crossing (Pirates): chapter list, about, journey",
+   "screens": {
+    "1440": "2-8",
+    "1024": "2-8"
+   },
+   "yesRate": {
+    "1440": "6/7 (86%)",
+    "1024": "6/7 (86%)"
+   },
+   "tempo": "medium",
+   "feel": "Porthole reveal and chapter list flow nicely; the about text wall slows it; the journey scrollytelling is steady but its third sea photo drags."
+  },
+  {
+   "act": "Act II, The Workshop (3 Idiots): principles, gauntlet, two projects, experiment, skills, kill-list",
+   "screens": {
+    "1440": "9-23",
+    "1024": "9-26"
+   },
+   "yesRate": {
+    "1440": "9/15 (60%)",
+    "1024": "11/18 (61%)"
+   },
+   "tempo": "slow",
+   "feel": "The longest act (~70 s). Strong start (wave wipe, zoom-through, chalkboard), then two projects in the identical template, a skills table and a long kill-list. The 'seen it' zone."
+  },
+  {
+   "act": "Interlude, Three films and a game: four film cards",
+   "screens": {
+    "1440": "24-30",
+    "1024": "27-32"
+   },
+   "yesRate": {
+    "1440": "5/7 (71%)",
+    "1024": "5/6 (83%)"
+   },
+   "tempo": "brisk",
+   "feel": "After a dead title screen, a new photo and palette every screen, quill and typewriter titles, the snitch. The most fun stretch."
+  },
+  {
+   "act": "Act III, The Frontier (Red Dead): dawn, three arenas, satchel, wanted poster, journal, testimonials",
+   "screens": {
+    "1440": "31-41",
+    "1024": "33-45"
+   },
+   "yesRate": {
+    "1440": "6/11 (55%)",
+    "1024": "7/13 (54%)"
+   },
+   "tempo": "medium",
+   "feel": "Opens grand (developing photo, full-bleed dawn), sags in the middle (same dawn photo four times, essay stubs marked 'soon'), recovers with the WANTED poster and testimonials."
+  },
+  {
+   "act": "Act IV, The Light (Harry Potter): Great Hall, Marauder's Map principles, contact",
+   "screens": {
+    "1440": "42-47",
+    "1024": "46-51"
+   },
+   "yesRate": {
+    "1440": "4/6 (67%)",
+    "1024": "4/6 (67%)"
+   },
+   "tempo": "medium",
+   "feel": "The burn transition and Great Hall are brisk magic; the five identical principle boxes slow it to a crawl (and look choppy); the contact ask lands well."
+  },
+  {
+   "act": "Credits: film-style credits, 'Mischief managed.'",
+   "screens": {
+    "1440": "48-49",
+    "1024": "52-53"
+   },
+   "yesRate": {
+    "1440": "0/2 (0%)",
+    "1024": "0/2 (0%)"
+   },
+   "tempo": "slow",
+   "feel": "A cute film ending, but tiny grey type rolling on black. Nothing to hold onto."
+  }
+ ],
+ "overallYes": {
+  "1440": "31/49 (63%)",
+  "1024": "34/53 (64%)"
+ },
+ "discovery": [
+  {
+   "thing": "'Play' button on the opening screen (with a whispered quote above it)",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "yes: first thing on the page, obviously clickable"
+  },
+  {
+   "thing": "'Play' button on the opening screen (with a whispered quote above it)",
+   "firstScreen": 1,
+   "width": 1024,
+   "wouldTry": "yes: first thing on the page, obviously clickable"
+  },
+  {
+   "thing": "Two small nav pills ('Skip to the research' and a skip-intro link)",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "no: I want the show, not the skip"
+  },
+  {
+   "thing": "Two small nav pills ('Skip to the research' and a skip-intro link)",
+   "firstScreen": 1,
+   "width": 1024,
+   "wouldTry": "no: I want the show, not the skip"
+  },
+  {
+   "thing": "Bracket 'spyglass' frame around the Black Pearl on the horizon in the hero",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "yes: looks like a target; I'd hover or click it"
+  },
+  {
+   "thing": "Bracket 'spyglass' frame around the Black Pearl on the horizon in the hero",
+   "firstScreen": 1,
+   "width": 1024,
+   "wouldTry": "yes: looks like a target; I'd hover or click it"
+  },
+  {
+   "thing": "Two small text links under the hero tagline (too small to read in the capture)",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "maybe: too small to tempt me"
+  },
+  {
+   "thing": "Two small text links under the hero tagline (too small to read in the capture)",
+   "firstScreen": 1,
+   "width": 1024,
+   "wouldTry": "maybe: too small to tempt me"
+  },
+  {
+   "thing": "'A research journal in four acts' chapter list (The Crossing … The Light)",
+   "firstScreen": 3,
+   "width": 1440,
+   "wouldTry": "maybe: would use it to jump to a chapter"
+  },
+  {
+   "thing": "'A research journal in four acts' chapter list (The Crossing … The Light)",
+   "firstScreen": 3,
+   "width": 1024,
+   "wouldTry": "maybe: would use it to jump to a chapter"
+  },
+  {
+   "thing": "Jack's compass in About ('it points to what you want most')",
+   "firstScreen": 4,
+   "width": 1440,
+   "wouldTry": "yes: I'd move the mouse to see if it points at me"
+  },
+  {
+   "thing": "Jack's compass in About ('it points to what you want most')",
+   "firstScreen": 4,
+   "width": 1024,
+   "wouldTry": "yes: I'd move the mouse to see if it points at me"
+  },
+  {
+   "thing": "Voyage route map with nodes beside the journey photos",
+   "firstScreen": 5,
+   "width": 1440,
+   "wouldTry": "maybe: reads as a progress map, not clearly clickable"
+  },
+  {
+   "thing": "Voyage route map with nodes beside the journey photos",
+   "firstScreen": 6,
+   "width": 1024,
+   "wouldTry": "maybe: reads as a progress map, not clearly clickable"
+  },
+  {
+   "thing": "Chalk circles on stats and 'What is a machine?' writing itself",
+   "firstScreen": 14,
+   "width": 1440,
+   "wouldTry": "no: decoration, nothing to do"
+  },
+  {
+   "thing": "Chalk circles on stats and 'What is a machine?' writing itself",
+   "firstScreen": 16,
+   "width": 1024,
+   "wouldTry": "no: decoration, nothing to do"
+  },
+  {
+   "thing": "'Why a pretty backtest isn't an edge' chart card with small toggle labels",
+   "firstScreen": 18,
+   "width": 1440,
+   "wouldTry": "yes: looks like an in-sample/out-of-sample toggle; most 'try me' thing in Act II"
+  },
+  {
+   "thing": "'Why a pretty backtest isn't an edge' chart card with small toggle labels",
+   "firstScreen": 20,
+   "width": 1024,
+   "wouldTry": "yes: looks like an in-sample/out-of-sample toggle; most 'try me' thing in Act II"
+  },
+  {
+   "thing": "Small pill button on the homemade drone photo",
+   "firstScreen": 19,
+   "width": 1440,
+   "wouldTry": "maybe: probably plays something"
+  },
+  {
+   "thing": "Small pill button on the homemade drone photo",
+   "firstScreen": 22,
+   "width": 1024,
+   "wouldTry": "maybe: probably plays something"
+  },
+  {
+   "thing": "'Three films and a game' heading promising a game",
+   "firstScreen": 24,
+   "width": 1440,
+   "wouldTry": "yes: I went looking for the game; I never found a playable one in the capture"
+  },
+  {
+   "thing": "'Three films and a game' heading promising a game",
+   "firstScreen": 26,
+   "width": 1024,
+   "wouldTry": "yes: I went looking for the game; I never found a playable one in the capture"
+  },
+  {
+   "thing": "Compass outline on the Pirates film card",
+   "firstScreen": 25,
+   "width": 1440,
+   "wouldTry": "maybe"
+  },
+  {
+   "thing": "Compass outline on the Pirates film card",
+   "firstScreen": 27,
+   "width": 1024,
+   "wouldTry": "maybe"
+  },
+  {
+   "thing": "White target-like squares across the Red Dead sky (Dead Eye marks?)",
+   "firstScreen": null,
+   "width": 1440,
+   "wouldTry": "not noticed at 1440 in the reader capture"
+  },
+  {
+   "thing": "White target-like squares across the Red Dead sky (Dead Eye marks?)",
+   "firstScreen": 30,
+   "width": 1024,
+   "wouldTry": "yes: they look like targets to mark (not visible in the 1440 reader capture)"
+  },
+  {
+   "thing": "Golden snitch zipping across the Hogwarts Express and over the sepia photo",
+   "firstScreen": 29,
+   "width": 1440,
+   "wouldTry": "yes: the strongest invitation on the page, but tiny and fast"
+  },
+  {
+   "thing": "Golden snitch zipping across the Hogwarts Express and over the sepia photo",
+   "firstScreen": 32,
+   "width": 1024,
+   "wouldTry": "yes: the strongest invitation on the page, but tiny and fast"
+  },
+  {
+   "thing": "Satchel with four item icons ('What's in the satchel')",
+   "firstScreen": 36,
+   "width": 1440,
+   "wouldTry": "yes: looks like an inventory to open"
+  },
+  {
+   "thing": "Satchel with four item icons ('What's in the satchel')",
+   "firstScreen": 39,
+   "width": 1024,
+   "wouldTry": "yes: looks like an inventory to open"
+  },
+  {
+   "thing": "WANTED poster with his name and a small link on it",
+   "firstScreen": 36,
+   "width": 1440,
+   "wouldTry": "maybe: I'd read it, maybe click the link"
+  },
+  {
+   "thing": "WANTED poster with his name and a small link on it",
+   "firstScreen": 39,
+   "width": 1024,
+   "wouldTry": "maybe: I'd read it, maybe click the link"
+  },
+  {
+   "thing": "Pinned note on the journal page",
+   "firstScreen": 37,
+   "width": 1440,
+   "wouldTry": "maybe"
+  },
+  {
+   "thing": "Pinned note on the journal page",
+   "firstScreen": 40,
+   "width": 1024,
+   "wouldTry": "maybe"
+  },
+  {
+   "thing": "Marauder's Map footprints walking between principles",
+   "firstScreen": 44,
+   "width": 1440,
+   "wouldTry": "maybe: I'd hover to see if they follow me"
+  },
+  {
+   "thing": "Marauder's Map footprints walking between principles",
+   "firstScreen": 48,
+   "width": 1024,
+   "wouldTry": "maybe: I'd hover to see if they follow me"
+  },
+  {
+   "thing": "Snitch flying through the burn transition into the Great Hall",
+   "firstScreen": 42,
+   "width": 1440,
+   "wouldTry": "yes: second sighting confirms it's a thing to catch"
+  },
+  {
+   "thing": "Snitch flying through the burn transition into the Great Hall",
+   "firstScreen": 46,
+   "width": 1024,
+   "wouldTry": "yes: second sighting confirms it's a thing to catch"
+  },
+  {
+   "thing": "Email pill and links in the contact block",
+   "firstScreen": 47,
+   "width": 1440,
+   "wouldTry": "yes"
+  },
+  {
+   "thing": "Email pill and links in the contact block",
+   "firstScreen": 51,
+   "width": 1024,
+   "wouldTry": "yes"
+  },
+  {
+   "thing": "Tiny toggle and dots above 'Mischief managed.' at the very end",
+   "firstScreen": 49,
+   "width": 1440,
+   "wouldTry": "maybe: too small; I'd likely miss it"
+  },
+  {
+   "thing": "Tiny toggle and dots above 'Mischief managed.' at the very end",
+   "firstScreen": 53,
+   "width": 1024,
+   "wouldTry": "maybe: too small; I'd likely miss it"
+  }
+ ],
+ "findings": [
+  {
+   "width": 1440,
+   "screen": 41,
+   "t": "3:26",
+   "clip": 104,
+   "severity": "high",
+   "finding": "'HARRY POTTER' heading sits over the Red Dead campfire photo still captioned 'The campfire · Red Dead Redemption 2' for 2-4 s (it includes the heading stop). Heading and image disagree. Same at 1024 screen 45, clip #98-99."
+  },
+  {
+   "width": 1440,
+   "screen": 16,
+   "t": "1:30",
+   "clip": 46,
+   "severity": "medium",
+   "finding": "The second project (screens 16-17, #46-50) repeats the first project's template exactly: heading plus photo, blueprint, stats, chalk circle, and the same corridor photo. Reads as a copy. Same at 1024 screens 17-19."
+  },
+  {
+   "width": 1440,
+   "screen": 24,
+   "t": "2:12",
+   "clip": 67,
+   "severity": "medium",
+   "finding": "'Three films and a game' is a small plain-sans heading on an otherwise empty black screen for ~4 s. It looks like a dead or loading area and drops all the film theming. Same at 1024 screens 26-27, #62-64."
+  },
+  {
+   "width": 1440,
+   "screen": 10,
+   "t": "1:04",
+   "clip": 33,
+   "severity": "medium",
+   "finding": "Between the lecture-hall photo and the pen photo there is a dark band, with both images cropped to slivers. The seam reads as a gap or glitch. Also 1024 screen 11, #30."
+  },
+  {
+   "width": 1440,
+   "screen": 32,
+   "t": "2:44",
+   "clip": 83,
+   "severity": "medium",
+   "finding": "The framed dawn photo scrolls off while the same photo enters full-bleed below, with a black band between: a double-image seam. Also 1024 screen 34, #77."
+  },
+  {
+   "width": 1440,
+   "screen": 22,
+   "t": "2:00",
+   "clip": 61,
+   "severity": "medium",
+   "finding": "An empty, tall, outlined rectangle sits in the first kill-list row until the stamp icon arrives. It looks like a broken image placeholder. Also 1024 screen 24, #58."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "t": "3:16",
+   "clip": 99,
+   "severity": "medium",
+   "finding": "A thick grey brushstroke arc appears near 'Mandarin and global markets', unlike the hairline sketches around it. It looks like an artifact. Also 1024 screen 43, #93."
+  },
+  {
+   "width": 1024,
+   "screen": 10,
+   "t": "0:52",
+   "clip": 27,
+   "severity": "medium",
+   "finding": "The 3 Idiots wipe pauses on a flat pale cloud texture with a small ring in the middle, which reads like an image still loading (a spinner)."
+  },
+  {
+   "width": 1440,
+   "screen": 4,
+   "t": "0:36",
+   "clip": 19,
+   "severity": "medium",
+   "finding": "The About section is three columns of small grey serif on navy, hard to read. At 1024 (screen 5, #18) it fills the screen as a wall of text."
+  },
+  {
+   "width": 1440,
+   "screen": 23,
+   "t": "2:06",
+   "clip": 64,
+   "severity": "medium",
+   "finding": "Kill-list rows are tiny, low-contrast text, a dozen near-identical lines; only the stamp icon moves. Same at 1024 screens 25-26."
+  },
+  {
+   "width": 1440,
+   "screen": 41,
+   "t": "3:24",
+   "clip": 103,
+   "severity": "medium",
+   "finding": "Testimonials are small italic text over a busy darkened campfire photo, hard to read. Same at 1024 screen 45, #98."
+  },
+  {
+   "width": 1440,
+   "screen": 45,
+   "t": "3:48",
+   "clip": 115,
+   "severity": "medium",
+   "finding": "Five identical Marauder's Map principle boxes in a row, each with the same footprints. The capture log shows 4.5-6.6 fps for #114-117 (maxDt up to 483 ms), so this stretch likely stutters. 1024 #108-110 shows 6-9 fps."
+  },
+  {
+   "width": 1440,
+   "screen": 11,
+   "t": "1:08",
+   "clip": 35,
+   "severity": "medium",
+   "finding": "'Led by what survived scrutiny.' holds static for 2 s with ~60 % of the screen empty (the right side) and small text on the left. A dead area."
+  },
+  {
+   "width": 1440,
+   "screen": 30,
+   "t": "2:34",
+   "clip": 78,
+   "severity": "medium",
+   "finding": "Order feels like a loop: the 'Red Dead Redemption 2' heading reappears right after its film card, and 'Harry Potter' later does the same (screen 41). The Black Pearl photo (screen 2) and the pen photo (screens 10 and 22) are reused, and the dawn photo appears four times (screens 31-35)."
+  },
+  {
+   "width": 1024,
+   "screen": 30,
+   "t": "2:16",
+   "clip": 69,
+   "severity": "medium",
+   "finding": "A row of small white hollow squares runs across the Red Dead sky with no label. It could be Dead Eye targets, but it reads as UI debris."
+  },
+  {
+   "width": 1024,
+   "screen": 4,
+   "t": "0:30",
+   "clip": 16,
+   "severity": "low",
+   "finding": "A ~20 px vertical strip of the ship photo shows at the right edge beside the About text (#15-20), as if the panel doesn't reach the edge."
+  },
+  {
+   "width": 1440,
+   "screen": 1,
+   "t": "0:08",
+   "clip": 5,
+   "severity": "low",
+   "finding": "A 2 s hold on an empty glowing wave with no text, and ~16 s total before the page scrolls. There is no visible cue that scrolling is possible."
+  },
+  {
+   "width": 1440,
+   "screen": 2,
+   "t": "0:24",
+   "clip": 13,
+   "severity": "low",
+   "finding": "Huge ghost 'The Crossing' letters fade over the ship photo while its caption is still up. In a still it reads as overlapping text or a double exposure."
+  },
+  {
+   "width": 1440,
+   "screen": 3,
+   "t": "0:28",
+   "clip": 15,
+   "severity": "low",
+   "finding": "A thin bright sliver of the ship photo stays pinned at the top while the chapter list scrolls in, like a cropped leftover."
+  },
+  {
+   "width": 1440,
+   "screen": 18,
+   "t": "1:40",
+   "clip": 51,
+   "severity": "low",
+   "finding": "The experiment section switches to plain sans on a grey-green band and looks like another site's dashboard. The chart card fills only the left two-thirds."
+  },
+  {
+   "width": 1440,
+   "screen": 31,
+   "t": "2:42",
+   "clip": 82,
+   "severity": "low",
+   "finding": "Mid-transition frames of 'The Frontier' zoom-through show broken partial letters ('rontier', a giant 'O') on black. Brief, but glitchy if caught."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "t": "3:18",
+   "clip": 100,
+   "severity": "low",
+   "finding": "Parchment fades to black through a long muddy brown gradient band."
+  },
+  {
+   "width": 1440,
+   "screen": 37,
+   "t": "3:04",
+   "clip": 93,
+   "severity": "low",
+   "finding": "A big brightness jump from near-black to full-screen cream parchment. It's on theme, but harsh on the eyes after 3 minutes of dark."
+  },
+  {
+   "width": 1440,
+   "screen": 48,
+   "t": "4:02",
+   "clip": 122,
+   "severity": "medium",
+   "finding": "Credits are tiny grey text on black, unreadable at a glance. Same at 1024 screen 52."
+  },
+  {
+   "width": 1440,
+   "screen": 49,
+   "t": "4:08",
+   "clip": 125,
+   "severity": "low",
+   "finding": "The page ends on a nearly empty black screen with a tiny 'Mischief managed.' and no clear ending beat or way back up."
+  },
+  {
+   "width": 1440,
+   "screen": 38,
+   "t": "3:12",
+   "clip": 97,
+   "severity": "low",
+   "finding": "The journal lists essay titles marked 'soon' with no essays behind them, and 'The kill-list' title repeats. It feels like filler."
+  }
+ ],
+ "scores": {
+  "keepScrolling": 3,
+  "tempo": 3,
+  "discovery": 2
+ }
+}
