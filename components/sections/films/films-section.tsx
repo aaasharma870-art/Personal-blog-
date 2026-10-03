@@ -13,6 +13,7 @@ import {
 import type { WorldId } from "@/lib/worlds";
 import { SectionHead, WorldSection } from "@/components/site/world-kit";
 import { FilmScreen } from "@/components/sections/films/film-screen";
+import { FilmsBill, FilmsPlay } from "@/components/sections/films/films-bill";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -36,6 +37,9 @@ import type { SectionProps } from "@/components/sections/types";
    plate moves (LivePlate push 1 → 1.05, loops through loopFor), and the
    last screen's warm point is carried onto the tintype's sun (B35: the
    marker below, films-desktop.tsx).
+   P3-11 r1 (F2): under the lead, the plain invitation to play (F6's words,
+   `films.play`), then the BILL (films-bill.tsx): the four films in their
+   own faces and inks under their act numerals; desktop only.
    ========================================================================== */
 
 function capitalize(s: string): string {
@@ -68,6 +72,10 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
         title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
         intro={copyVisible(lead) ? lead.text : undefined}
       />
+      {/* P3-11 r1 (films-bill.tsx; desktop only): the invitation to play,
+          right under the lead, then the Intermission's programme */}
+      <FilmsPlay />
+      <FilmsBill works={screens} />
       <div className="mt-tier-block">
         {screens.map((w, i) => (
           <FilmScreen

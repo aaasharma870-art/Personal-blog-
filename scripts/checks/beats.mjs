@@ -12,6 +12,16 @@
 // and a negative one (the item still rising from below) is kept as is. Competing stars and
 // pacing are judged at 1440 (the beat map's width); gaps and star spans at both widths.
 // The runtime probe (tools/capture/beats.mjs) re-measures the real DOM.
+//
+// P3-11 r1 (F1): the spotlight's performance windows (lib/spotlight-windows.ts, and the
+// `beatAttrs(id, { …, scroll: "<window>" })` attributes in the markup) must name declared SCROLL
+// stars and parse (ERROR); the BREATHS (lib/beats.ts: the viewport after each weight-3 star or
+// card set piece) are listed in the summary (#12 keeps them weight ≤ 1). #2 judges pairs with
+// a scroll star: two TIME stars never show at once (the spotlight holds one grant at a time and
+// queues the other ≤ 1.5 s, then shows its end state), so their zones may overlap.
+
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 /** Every kind of spec §3.4. */
 const KINDS = new Set([
@@ -37,7 +47,7 @@ const rowOf = (id) => Number(id.slice(1, 3));
 const slugs = (id) => id.split("-").slice(1);
 const fmt = (n) => (Math.round(n * 10) / 10).toString();
 
-export default function run({ RELEASE, err, warn, gate, page, film, derive }) {
+export default async function run({ ROOT, RELEASE, err, warn, gate, page, film, derive, uiFiles = [], readFile }) {
   const enabled = page.filter((s) => s.enabled !== false);
   const items = derive.pageItemsOf(enabled, film);
   const actSpec = (id) => film.acts.find((a) => a.id === id);
@@ -188,6 +198,7 @@ export default function run({ RELEASE, err, warn, gate, page, film, derive }) {
       const b = stars[j];
       if (rowOf(a.b.id) === rowOf(b.b.id)) continue; // one row: sequential by construction or by the spotlight
       if (a.r === b.r && setPiece(a) && setPiece(b)) continue; // a card's (a) → (b)
+      if (a.b.timing === "time" && b.b.timing === "time") continue; // one hold at a time (P3-11 r1)
       const o = overlap(occ(a), occ(b));
       if (o > EPS) gate(`[P3 #2] competing stars ${where(a)} and ${where(b)} overlap by ${fmt(o)}vh at 1440`);
     }
@@ -312,9 +323,56 @@ export default function run({ RELEASE, err, warn, gate, page, film, derive }) {
     }
   }
 
+  /* — spotlight performance windows (ERROR; lib/spotlight-windows.ts) ———————— */
+  const sw = await import(pathToFileURL(path.join(ROOT, "lib", "spotlight-windows.ts")).href);
+  const declared = new Map(all.map(({ b }) => [b.id, b]));
+  for (const [id, spec] of Object.entries(sw.SCROLL_WINDOWS ?? {})) {
+    const b = declared.get(id);
+    if (!sw.parseWindow(spec)) err(`[P3 spotlight] lib/spotlight-windows.ts ${id}: "${spec}" is not "<start>, <end>", each "[selector] <top|center|bottom|n%> <vp%>"`);
+    if (!b) err(`[P3 spotlight] lib/spotlight-windows.ts ${id}: not a declared beat`);
+    else if (!(b.star && b.timing === "scroll")) err(`[P3 spotlight] lib/spotlight-windows.ts ${id}: a window is for SCROLL stars (${id} is ${b.star ? "a time star" : "quiet"})`);
+  }
+  for (const id of sw.LIVE_STARS ?? []) if (!declared.get(id)?.star) err(`[P3 spotlight] lib/spotlight-windows.ts LIVE_STARS ${id}: not a declared star`);
+  // windows written on the element: beatAttrs("<id>", { …, scroll: "<window>" })
+  const attrWindows = new Map();
+  for (const f of uiFiles) {
+    if (!/\.(t|j)sx?$/.test(f)) continue;
+    const src = readFile ? readFile(path.relative(ROOT, f)) : "";
+    for (const m of src.matchAll(/beatAttrs\(\s*"(B[0-9a-z-]+)"\s*,\s*\{[^}]*?\bscroll:\s*"([^"]*)"/gi)) attrWindows.set(m[1], { spec: m[2], file: path.relative(ROOT, f) });
+    // …or written beside it: {...beatAttrs("<id>", …)} data-beat-scroll="<window>"
+    for (const m of src.matchAll(/beatAttrs\(\s*"(B[0-9a-z-]+)"[^)]*\)\s*\}\s*data-beat-scroll="([^"]*)"/g)) attrWindows.set(m[1], { spec: m[2], file: path.relative(ROOT, f) });
+  }
+  for (const [id, { spec, file }] of attrWindows) {
+    const b = declared.get(id);
+    if (spec && !sw.parseWindow(spec)) err(`[P3 spotlight] ${file} ${id}: data-beat-scroll "${spec}" is not "<start>, <end>", each "[selector] <top|center|bottom|n%> <vp%>"`);
+    if (b && !(b.star && b.timing === "scroll")) err(`[P3 spotlight] ${file} ${id}: a scroll window on a ${b.star ? "time star" : "quiet beat"}`);
+  }
+  const scrollStars = stars.filter((p) => p.b.timing === "scroll");
+  const windowed = scrollStars.filter((p) => p.b.id in (sw.SCROLL_WINDOWS ?? {}) || attrWindows.get(p.b.id)?.spec || p.b.kind === "scrub-sentence");
+
+  /* — breaths (lib/beats.ts BREATHS): the viewport after each weight-3 star ———— */
+  const breaths = [];
+  {
+    const pieces = new Map();
+    for (const p of stars.filter((x) => x.b.weight === 3)) {
+      const end = occ(p)[1];
+      if (setPiece(p)) {
+        const prev = pieces.get(p.r);
+        if (!prev || end > prev.end) pieces.set(p.r, { id: p.b.id, end });
+      } else breaths.push({ id: p.b.id, end });
+    }
+    breaths.push(...pieces.values());
+    breaths.sort((a, b) => a.end - b.end);
+  }
+
   const nStars = all.filter(({ b }) => b.star).length;
   console.log(
     `  beats: ${all.length} declared (${nStars} stars) on ${rows.length} items; page ≈ ${fmt(placed.page.d)}vh @1440, ${fmt(placed.page.t)}vh @1024` +
       `${RELEASE ? " (RELEASE: gaps, overlaps and pacing are errors)" : ""}`,
+  );
+  console.log(
+    `  spotlight: ${windowed.length}/${scrollStars.length} scroll stars with a performance window (table, markup or scrub)` +
+      `${windowed.length < scrollStars.length ? `; band default: ${scrollStars.filter((p) => !windowed.includes(p)).map((p) => p.b.id).join(" ")}` : ""}` +
+      `; breaths after ${breaths.map((b) => `${b.id} (${fmt(b.end)}–${fmt(b.end + 100)}vh)`).join(", ")}`,
   );
 }

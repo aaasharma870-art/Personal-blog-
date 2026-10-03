@@ -121,6 +121,9 @@
   var vfOn = false, vfId = 0, trailOn = false, frozen = false, warmed = false, pf = false;
   var holdCv = null, shadeCv = null, stillCv = null, quietSent = false, titling = false, fastHref = "";
   var lv = null, lvOn = false, flightBlob = null;
+  // P3-11 r1: the canvases' backing scale (C.trailScale once the video
+  // flight has taken over from the play screen)
+  var res = 1;
   var PICK = w.__codecPicks || (w.__codecPicks = {});
 
   var ctl = { arm: arm, onHydrated: onHydrated, state: function () { return st; } };
@@ -259,7 +262,7 @@
     motes = null; trail = []; lastEmit = null; code = null; patch = null; domeOn = false; vPlaying = false;
     vfOn = false; vfId = 0; trailOn = false; frozen = false; warmed = false; pf = false;
     holdCv = shadeCv = stillCv = null; quietSent = false; titling = false; fastHref = "";
-    lv = null; lvOn = false; flightBlob = null;
+    lv = null; lvOn = false; flightBlob = null; res = 1;
     loaderAt = -1; showPlate = false; plateAt = -1; plate = null;
     VV = w.__introV || {};
     altPlay = alt("intro.play");
@@ -344,7 +347,12 @@
   function size() {
     W = intro.clientWidth || w.innerWidth;
     H = intro.clientHeight || w.innerHeight;
-    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1);
+    // `res` < 1 during the video flight: the canvases then hold only soft
+    // light (the trail's glows, the frozen trail's fade), drawn at
+    // C.trailScale and stretched by CSS — a quarter of the pixels to clear,
+    // composite and upload per trail frame (P3-11 r1, J8: the flight's
+    // canvas work was half the GPU thread under software raster)
+    var base = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), nd = base * res;
     cv.width = M.round(W * nd);
     cv.height = M.round(H * nd);
     cx.setTransform(nd, 0, 0, nd, 0, 0);
@@ -353,7 +361,7 @@
     tl = canvas(W * nd, H * nd);
     tlx = tl.getContext("2d");
     tlx.setTransform(nd, 0, 0, nd, 0, 0);
-    if (!sprites || nd !== dpr) { dpr = nd; sprites = mkSprites(); }
+    if (!sprites || base !== dpr) { dpr = base; sprites = mkSprites(); }
     if (st === "armed") {
       var p = H > W ? C.plateM : C.plate;
       if (p !== plate) {
@@ -587,6 +595,12 @@
    *  rAF (`more = trail-on-rAF || motes || code || ink || loader || …`). */
   function draw(t) {
     if (st === "idle" || !cx || frozen) return false;
+    // the video flight owns the picture and the candles have streamed in:
+    // from here the canvas holds only the trail's soft light (see size())
+    if (res === 1 && st === "flight" && vPlaying && !motes && !showPlate && C.trailScale > 0 && C.trailScale < 1) {
+      res = C.trailScale;
+      size();
+    }
     var dt = M.min(64, M.max(0, t - last)), more = false, i;
     last = t;
     var awake = st === "armed" && t < awakeUntil;
@@ -697,13 +711,15 @@
   function capsPlay(ms) {
     if (!(ms > 0) || !capsFind()) return;
     capsStop(0);
-    var a = 2.5 / 6, b = 3.5 / 6, fi = M.min(a / 2, 300 / ms);
+    // HP out over the first half of the window, Pirates in over the second:
+    // never both on screen (P3-11 r1, J4 #9 — they overlapped for ~1 s)
+    var a = 2.5 / 6, b = 3.5 / 6, mid = (a + b) / 2, fi = M.min(a / 2, 300 / ms);
     var o = { duration: ms, easing: "linear", fill: "forwards" };
     boxFi = fi;
     try {
       capAnims.push(capBox.animate([{ visibility: "visible", opacity: 0 }, { visibility: "visible", opacity: 1, offset: fi }, { visibility: "visible", opacity: 1 }], o));
-      capAnims.push(capHp.animate([{ opacity: 0 }, { opacity: 1, offset: fi }, { opacity: 1, offset: a }, { opacity: 0, offset: b }, { opacity: 0 }], o));
-      capAnims.push(capPc.animate([{ opacity: 0 }, { opacity: 0, offset: a }, { opacity: 1, offset: b }, { opacity: 1 }], o));
+      capAnims.push(capHp.animate([{ opacity: 0 }, { opacity: 1, offset: fi }, { opacity: 1, offset: a }, { opacity: 0, offset: mid }, { opacity: 0 }], o));
+      capAnims.push(capPc.animate([{ opacity: 0 }, { opacity: 0, offset: mid }, { opacity: 1, offset: b }, { opacity: 1 }], o));
     } catch { capsStop(0); }
   }
   /** Any input, a fast-lane click, Pause, a reduced-motion change or a
@@ -890,6 +906,11 @@
   function ensureVideo() {
     if (video || lite || !FL || st === "idle") return video;
     var fb = flightBlob, v = mkVideo(fb && fb.url ? fb.url : srcOf(FL), false);
+    // FL.start (P3-11 r1, J4 #9): the clip's opening frames rear the broom
+    // up through vertical (a "flip" at any frame rate a capture or a busy
+    // laptop drops to); the flight starts past them. Set at creation, so
+    // the element has decoded its first frame there long before Play.
+    if (FL.start > 0) try { v.currentTime = FL.start; } catch { /* plays from 0 */ }
     film.insertBefore(v, film.firstChild);
     video = v;
     return v;
@@ -970,6 +991,19 @@
     if (!drew) {
       g.fillStyle = w.getComputedStyle(intro).backgroundColor; // the failure path only
       g.fillRect(0, 0, W, H);
+    }
+    return c;
+  }
+
+  /** The play plate as a static canvas, exactly as draw() paints it (the
+   *  FL.start dissolve's outgoing picture). */
+  function plateStill() {
+    var nd = M.min(C.dprMax || 1.5, w.devicePixelRatio || 1), c = canvas(W * nd, H * nd), g = c.getContext("2d");
+    c.id = "intro-still";
+    c.setAttribute("aria-hidden", "true");
+    if (g && img) {
+      g.setTransform(nd, 0, 0, nd, 0, 0);
+      try { g.drawImage(img, fitP.x, fitP.y, fitP.w, fitP.h); } catch { /* not drawable: a plain cut */ }
     }
     return c;
   }
@@ -1107,11 +1141,16 @@
       shown = true;
       vPlaying = true;
       v.style.opacity = "1";
-      showPlate = false; // the video's first frame IS the plate
-      fadeStill(); // L05's held frame → the flight's first (t.liveFade)
+      // the video's first frame IS the plate — unless it starts later in the
+      // clip (FL.start): then the plate is held on #intro-still and
+      // dissolves into it, as L05's frame does (t.liveFade)
+      if (FL.start > 0 && !stillCv && showPlate && imgOk && cv) film.insertBefore(stillCv = plateStill(), cv);
+      showPlate = false;
+      fadeStill(); // L05's held frame / the plate → the flight's first (t.liveFade)
       // the captions run on the flight's own length (to its cut + landing)
       var len = v.duration > 0 ? M.min(v.duration, FL.dur) : FL.dur;
       if (FL.cut > 0) len = M.min(len, FL.cut + (altLand ? C.t.fold : C.t.landing) / 1000);
+      if (FL.start > 0) len -= FL.start; // the clip plays from its `start`
       capsPlay(len * 1000);
       kick();
     };
@@ -1926,6 +1965,7 @@
     drop(shadeCv);
     drop(stillCv);
     holdCv = shadeCv = stillCv = null;
+    res = 1;
     var sty = stage.style; // the wipe's mask (the overlay is display:none now)
     sty.removeProperty("-webkit-mask-image");
     sty.removeProperty("mask-image");

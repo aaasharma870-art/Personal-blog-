@@ -109,6 +109,9 @@ type MediaFrameProps = {
 
 /** How long a paused (outgoing) loop keeps its frame without the decoder. */
 const PARK_MS = 1500;
+/** Then its frame fades to the poster over this long before the <video>
+ *  unmounts (P3-11 r1 integration, F2: the swap was one frame). */
+const LEAVE_MS = 320;
 
 function focalPosition(asset: MediaAsset | null): string | undefined {
   const f = asset?.focal;
@@ -157,6 +160,8 @@ export function MediaFrame({
   // without the decoder, its frame shown as the still (PARK_MS)
   const [glHold, setGlHold] = useState(false);
   const [parked, setParked] = useState(false);
+  /** The parked frame is fading to the poster (LEAVE_MS), then unmounts. */
+  const [leaving, setLeaving] = useState(false);
   const layerOn = useRef(false);
 
   // One decoder claim id per frame (lazy, stable across renders).
@@ -202,19 +207,31 @@ export function MediaFrame({
       wait: true,
       label: media,
       onRevoke: () => {
-        if (layerOn.current) setParked(true);
+        if (!layerOn.current) return;
+        setParked(true);
+        setLeaving(false);
       },
     });
     return () => releaseDecoder(claimId);
   }, [wantVideo, glHold, claimId, decoderPriority, media]);
 
   // a parked loop gives its frame up after PARK_MS (unless re-granted: then
-  // it plays on; the flag is moot while it holds the decoder)
+  // it plays on; the flag is moot while it holds the decoder): its frame
+  // fades to the poster under it over LEAVE_MS, then the layer unmounts
   useEffect(() => {
     if (!parked || glHold) return;
-    const t = window.setTimeout(() => setParked(false), PARK_MS);
+    const t = window.setTimeout(() => setLeaving(true), PARK_MS);
     return () => window.clearTimeout(t);
   }, [parked, glHold]);
+  const leavingNow = leaving && parked && !holdsDecoder && !glHold;
+  useEffect(() => {
+    if (!leavingNow) return;
+    const t = window.setTimeout(() => {
+      setParked(false);
+      setLeaving(false);
+    }, LEAVE_MS);
+    return () => window.clearTimeout(t);
+  }, [leavingNow]);
 
   // Poster still pending 400 ms after the frame came into view → the
   // world's mini loader (a lazy offscreen poster is not "pending" yet).
@@ -315,6 +332,7 @@ export function MediaFrame({
           src={handoff?.url ?? pick.src}
           start={handoff?.at ?? 0}
           fade={fade}
+          leaving={leavingNow}
           loop={loop}
           active={visible && holdsDecoder && !glHold}
           className={fitClass}
@@ -328,6 +346,7 @@ export function MediaFrame({
             if (held === null) layerOn.current = false;
             setGlHold(Boolean(held));
             setParked(held === false);
+            setLeaving(false);
           }}
           onPlaying={() => setPlaying(true)}
           onFail={() => {
@@ -352,6 +371,7 @@ function VideoLayer({
   src,
   start,
   fade,
+  leaving,
   loop,
   active,
   className,
@@ -366,6 +386,8 @@ function VideoLayer({
   start: number;
   /** Crossfade override (s); undefined = dur.preview (the CSS token). */
   fade?: number;
+  /** The parked frame fades out to the poster (LEAVE_MS) before unmount. */
+  leaving: boolean;
   loop: boolean;
   active: boolean;
   className: string;
@@ -442,11 +464,11 @@ function VideoLayer({
       className={cn(
         "absolute inset-0 size-full transition-opacity duration-(--dur-preview)",
         className,
-        shown ? "opacity-100" : "opacity-0",
+        shown && !leaving ? "opacity-100" : "opacity-0",
       )}
       style={{
         ...(objectPosition ? { objectPosition } : null),
-        ...(fade !== undefined ? { transitionDuration: `${fade}s` } : null),
+        ...(leaving ? { transitionDuration: `${LEAVE_MS}ms` } : fade !== undefined ? { transitionDuration: `${fade}s` } : null),
       }}
       onLoadedMetadata={(e) => {
         // the hand-off's match frame (FLIGHTS[*].loopAt), set before play

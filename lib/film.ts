@@ -450,6 +450,11 @@ const copy = {
     text: "This page borrows its light from {works}. Here is what it took from each.",
     status: "proposed",
   },
+  /* P3-11 r1 (F6 discovery → F2 places it under the films lead, desktop
+     only; "Systems" and "kill-list" link to their sections) */
+  "films.play": p3(
+    "Something to play, too: 12 easter eggs hide on this page (your count is at the top right), the homemade drone flies in Systems, and Dead Eye marks the kill-list.",
+  ),
   "beyond.handbill.sub": { text: "for questions about quantitative research", status: "proposed" },
   "beyond.handbill.reward": {
     text: "An honest answer, including “I don't know yet.”",
@@ -564,6 +569,8 @@ const copy = {
      egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
      the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */
   "egg.hunt.chip": p3("{n}/12"),
+  /* P3-11 r1 (F6): the word before the count, so the chip names the hunt */
+  "egg.hunt.chip.word": p3("Egg hunt"),
   "egg.hunt.chip.name": p3("Easter-egg hunt: {n} of 12 found. Show hints"),
   "egg.hunt.toast": p3("Egg {n} of 12 · {name}"),
   "egg.hunt.panel.title": p3("The egg hunt"),

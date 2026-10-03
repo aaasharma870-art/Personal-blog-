@@ -1,4 +1,10 @@
-@import "tailwindcss";
+/* Utilities come from the code only (P3-11, the CSS budget): automatic
+   source detection also read docs/, tools/ and .claude/skills/*.md and
+   shipped 69 utilities no page uses (≈ 1.2 KB gz of first-load CSS). */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@source "../lib";
 
 /* `motion-off:` = OS reduced motion OR the Pause toggle (html[data-motion=
    "paused"]). CSS-level, so server HTML is already right for reduced-motion
@@ -544,7 +550,10 @@
 }
 
 /* — Pause toggle (MotionToggle sets html[data-motion="paused"]): CSS motion
-     behaves exactly as under prefers-reduced-motion (DESIGN v2 §6.5). — */
+     behaves exactly as under prefers-reduced-motion (DESIGN v2 §6.5).
+     Transitions are OFF (transition-property: none), not 0.01 ms long: a
+     0.01 ms transition is still a running CSS transition on every change
+     (P3-11 J9 M1: 6 running in #work under RM). — */
 :root[data-motion="paused"] {
   scroll-behavior: auto;
 }
@@ -553,7 +562,7 @@
 :root[data-motion="paused"] *::after {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+  transition-property: none !important;
   scroll-behavior: auto !important;
 }
 
@@ -597,7 +606,7 @@ body {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: none !important;
     scroll-behavior: auto !important;
   }
 }
@@ -877,7 +886,7 @@ body {
 /* ----------------------------------------------------------------------------
    Amplified hover interactions — make existing structure feel clickable/alive.
    All transform/opacity only; reduced-motion neutralizes them via the global
-   transition-duration override above.
+   transition-property override above.
    -------------------------------------------------------------------------- */
 
 /* Tag fill-wipe: a teal wash sweeps in left→right on hover (stack tags). */
@@ -1401,9 +1410,9 @@ html[data-motion="paused"] .opening-vignette {
       and one baseline: a late swap changes only glyph widths (the h1 is
       w-fit; its height is fixed by line-height .96 × 2 lines): CLS 0.
    2. Lazy per world: a face is referenced only through
-      --font-world-<world>-<role>-live, which exists only once
-      html[data-fonts~="<world>"] carries the token (<WorldFonts/>,
-      lib/world-fonts.ts; ladder step 5, then on approach). The Pirates head
+      --font-world-<world>-<role>-live, which the world's planes get only
+      once html[data-fonts~="<world>"] carries the token (<WorldFonts/>,
+      lib/world-fonts.ts: on approach, swapped while off screen). The Pirates head
       is the name's file (already loaded), so it is live from first paint.
       The prologue (first visit, html.intro-armed) letters its two hp
       captions in the hp head before the quiet window; nothing else loads
@@ -1436,20 +1445,24 @@ html[data-motion="paused"] .opening-vignette {
     --container-body: 35rem;
   }
 
-  /* — the tokens (lib/world-fonts.ts markWorldFontsReady) — */
-  html[data-fonts~="pirates"] {
+  /* — the tokens (lib/world-fonts.ts markWorldFontsReady). Set on the
+       world's own planes and captions, never on <html> itself: a token
+       restyles only that world's text (P3-11 J8 #1: 80–95 → 11–39 ms of
+       style per swap at 1440; an html-level var restyled all 4,300
+       elements). The Pirates head is never gated (:root above). — */
+  [data-fonts~="pirates"] [data-world=pirates] {
     --font-world-pirates-body-live: var(--font-world-pirates-body);
   }
-  html[data-fonts~="idiots"] {
+  [data-fonts~="idiots"] :is([data-world=idiots], .world-face-idiots) {
     --font-world-idiots-head-live: var(--font-world-idiots-head);
     --font-world-idiots-lead-live: var(--font-world-idiots-lead);
   }
-  html[data-fonts~="rdr2"] {
+  [data-fonts~="rdr2"] :is([data-world=rdr2], .world-face-rdr2) {
     --font-world-rdr2-head-live: var(--font-world-rdr2-head);
     --font-world-rdr2-body-live: var(--font-world-rdr2-body);
     --font-world-rdr2-hand-live: var(--font-world-rdr2-hand);
   }
-  html[data-fonts~="hp"] {
+  [data-fonts~="hp"] :is([data-world=hp], .world-face-hp) {
     --font-world-hp-head-live: var(--font-world-hp-head);
     --font-world-hp-body-live: var(--font-world-hp-body);
   }

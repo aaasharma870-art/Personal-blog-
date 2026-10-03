@@ -34,6 +34,16 @@
 [data-card-phase="b"] .act-card-subtitle,
 [data-card-phase="m"] .act-card-subtitle {
   opacity: 1;
+  /* P3-11 r1 (F5 hand-off; panel J3 #4, J4 #10: the act-3 logline came up
+     over "THE FRONTIER", its TIP and "GOLDEN HOUR IN THE HEARTLANDS"): the
+     logline waits for the h2 and the caption to leave — never two lines
+     of the lower bar on screen at once — and they wait for it on the way
+     back (below) */
+  transition-delay: 200ms;
+}
+[data-card-phase="a"] .act-card-lower,
+[data-card-phase="a"] .act-card-under {
+  transition-delay: 200ms, 0ms;
 }
 [data-title-mask="alt"][data-card-phase="b"] .act-card-lower {
   transform: translateY(0.75rem);
@@ -55,17 +65,20 @@
 }
 /* the act title as a mask (css tier, §8.1): a deep rect with the title cut
    out, zoomed by transform (no will-change: re-rastered crisp) */
-/* the exit: a 300 ms fade by state (card-p3.tsx TITLE_DONE), never a
-   scrubbed half-letter held at rest */
+/* in and out by state (card-p3.tsx: in at p .68 over 250 ms, out from
+   TITLE_DONE over 300 ms): a dissolve, never a one-frame cut, and never a
+   scrubbed half-letter held at rest (P3-11 r1) */
 .act-card-title-mask-wrap {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  opacity: 0;
   transition: opacity 300ms ease-out;
 }
-.act-card-title-mask-wrap[data-out] {
-  opacity: 0;
+.act-card-title-mask-wrap[data-in] {
+  opacity: 1;
+  transition-duration: 250ms;
 }
 .act-card-title-mask {
   position: absolute;
@@ -102,6 +115,19 @@
   bottom: 0;
   transform-origin: 50% 100%;
 }
+/* the opening's iris rim (css tier; server markup, an empty span until
+   card-p3.tsx sizes and scales it with the disc: drawn at the full radius,
+   so the brass is ≈ 5 px at the 12 % hook and leaves the frame as the disc
+   opens). Moved here from cards.css in P3-11 r1 (first-load budget). */
+.act-card-iris-rim {
+  display: none;
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 36px color-mix(in oklab, var(--w-brass) 88%, #000),
+    inset 0 0 0 46px rgb(0 0 0 / 0.45);
+}
 /* the carried shape, css tier (§7.3): static, shown by state */
 .act-card-shape {
   position: absolute;
@@ -135,6 +161,16 @@
   height: 100%;
   opacity: 0;
   pointer-events: none;
+}
+/* the ignite's impact on the css tier: the slow-decay Lumos bloom */
+.act-card-bloom {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at 50% 45%, #fff6e0 0%, #ffe9c4 45%, rgb(255 233 196 / 0.35) 100%);
+  mix-blend-mode: plus-lighter;
 }
 /* the seam's impact: the chalk-dust puff */
 .act-card-puff {

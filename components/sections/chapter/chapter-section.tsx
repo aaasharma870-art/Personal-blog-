@@ -63,11 +63,16 @@ import type { SectionProps } from "@/components/sections/types";
    column, ≈ 1024), the ICE board is `data-stage-wide` (it breaks out over
    the whole grid, so the horizontal schematic keeps its size), each text
    block is a `data-stage-block` (the window's rack focus) and the approach
-   and metrics carry the cue anchors `<id>-approach` / `<id>-metrics`. The
+   carries the cue anchors `<id>-approach` (its top) and `<id>-metrics` (a
+   marker under the approach list: at 1440 the metrics sit BESIDE the list,
+   so a cue on the metrics' top crossfaded the window while the FIG above
+   was still inking, P3-11 r1 J1 #6; the marker keeps 1024's order — the
+   draw ends, then the window turns — at every width). The
    data islands (metric tiles, reported figures, caveats and limitations)
    are `data-research`: Geist only, whatever the world's faces (B1-TYPE).
    PHASE 3 HOSTS (W3-IDIOTS; PHASE3-SPEC §8.3, §8.5, §9.1, §11.5, §2.3):
-   - B20: the trading-algos blueprint's ink-on is a time star (spotlight).
+   - B20: the trading-algos blueprint's ink-on is a time star (spotlight);
+     B23-fig: the optuna blueprint's, likewise (weight 1; P3-11 r1).
    - B21: Act II's scroll-scrubbed sentence, the second sentence of
      trading-algos "What I learned" (SCRUB_LINES.B21, verbatim; splitAround
      null → plain text). Rancho's circle on the caveat follows (B21-circle).
@@ -137,13 +142,17 @@ function ChapterBody({
 }) {
   const s = schematicOf(p);
   const isOptuna = p.id === "optuna-screener";
+  // the FIG's ink-on is a time star: trading-algos' B20 (the beat map), and
+  // the pipeline's FIG, which performed undeclared (P3-11 r1 J1 #4; B23-fig
+  // is an F1 handoff in lib/page.ts)
+  const figStar = entry.id === "trading-algos" ? ({ id: "B20", weight: 2 } as const) : isOptuna ? ({ id: "B23-fig", weight: 1 } as const) : undefined;
   return (
     <div>
       {/* the claim, beside the problem it answers */}
       <div data-stage-block="" className="split-stack grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-7">
           <Meta fields={[number, p.status]} />
-          <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
+          <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg motion-off:transition-none">
             {p.name}
           </h2>
           <a
@@ -176,7 +185,7 @@ function ChapterBody({
           data-stage-block=""
           data-stage-wide=""
           className="mt-tier-block"
-          {...(entry.id === "trading-algos" ? beatAttrs("B20", { weight: 2 }) : {})}
+          {...(figStar ? beatAttrs(figStar.id, { weight: figStar.weight }) : {})}
         >
           <Rise>
             {/* the board is NAMED as it comes into view — above it, not under
@@ -200,7 +209,7 @@ function ChapterBody({
                 spec={s}
                 choice={variantChoiceOf(entry)}
                 pieceKey={`${entry.id}.schematic`}
-                star={entry.id === "trading-algos" ? { id: "B20", weight: 2 } : undefined}
+                star={figStar}
               />
             </ChalkboardFrame>
             {/* (the pipeline's film cue is its head band, MachineBoard) */}
@@ -220,9 +229,10 @@ function ChapterBody({
               <li key={a}>{a}</li>
             ))}
           </ul>
+          {/* the second stage cue's anchor (see the header) */}
+          <div id={`${entry.id}-metrics`} aria-hidden="true" />
         </div>
         <dl
-          id={`${entry.id}-metrics`}
           data-research=""
           className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1"
         >
@@ -324,7 +334,7 @@ function OptionAlphaOrigin() {
     <AppendixCollapse summary={copyVisible(summary) ? summary.text : null} className="border-t border-rule pt-tier-block dw:pt-tier-group">
       <Rise as="article">
         <Meta fields={[optionAlpha.tag]} />
-        <h3 className="mt-tier-pair max-w-title type-title text-fg">{optionAlpha.name}</h3>
+        <h3 className="mt-tier-pair max-w-title type-title text-fg motion-off:transition-none">{optionAlpha.name}</h3>
         <a
           href={optionAlpha.href}
           target="_blank"
@@ -358,7 +368,7 @@ function Supporting() {
     <div>
       <AppendixCollapse summary={SUPPORTING_TITLE} className="border-t border-rule pt-tier-block dw:pt-tier-group">
         <Meta fields={["Supporting work"]} />
-        <h3 className="mt-tier-pair type-title text-fg">{SUPPORTING_TITLE}</h3>
+        <h3 className="mt-tier-pair type-title text-fg motion-off:transition-none">{SUPPORTING_TITLE}</h3>
         <ul aria-label="Supporting projects" className="mt-tier-block border-t border-rule">
           {supportingProjects.map((s) => (
             <li

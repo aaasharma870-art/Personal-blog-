@@ -10,17 +10,20 @@
 //   - 4 frames, the frame on screen at 1/8, 3/8, 5/8 and 7/8 of the clip;
 //   - scrollY (mid-clip, from the frames' scroll offsets), the section at the reading line (50 %);
 //   - the STARS ACTIVE per the spotlight log (?debug=spotlight): a scroll star owns the spotlight from "own"
-//     to the next "own" / "free"; a time star holds it from "grant" to "end" / "release". `maxConcurrent` is
-//     the largest number active at one instant (the O.4 bar: 0 clips with two or more; `overlapMs` = how long
-//     two or more are active together inside the clip); `ids` every star seen
-//     in the clip (a hand-off inside one second lists two, one after the other);
+//     to the next "own" / "free" (its PERFORMANCE WINDOW since P3-11 r1: lib/spotlight.ts) and PERFORMS only
+//     while the page moves inside it (frames' scrollY changing), unless the log marks it `how: "live"` (it
+//     animates on its own: a loop); a time star holds it from "grant" to "end" / "release". So the machine
+//     counts what the eye can see move (and only where the page moved ≥ 12 px inside the clip). `maxConcurrent` is the largest number active at one instant (the O.4
+//     bar: 0 clips with two or more; `overlapMs` = how long two or more are active together inside the clip);
+//     `ids` every star seen in the clip (a hand-off inside one second lists two, one after the other);
 //   - declared scroll stars that never registered with the spotlight in this run (e.g. a host that never calls
 //     registerScrollStar), while their DOM box crosses the middle 60 %: `unregistered`; totals.withDeclared
 //     counts them with the spotlight's own stars;
-//   - the declared breath: the beat-map rows marked ⟂ in docs/build/PHASE3-SPEC.md §2.3, placed on this run's
-//     own geometry (lib/page.ts + lib/film.ts beats `at` / `span`, with the validator's rule: an offset ≥ 0 at
-//     the same fraction of the item, a negative one in vh), so a clip whose scrollY falls in such a row is
-//     `breath: "<row>"`; `row` / `rowStars` = the beat-map row of the screen and its declared stars;
+//   - the declared breath (lib/beats.ts BREATHS, P3-11 r1): the viewport right after each weight-3 star (a
+//     card's (a) → (b) set piece counts as one, from the end of its (b)), placed on this run's own geometry
+//     (lib/page.ts + lib/film.ts beats `at` / `span`, with the validator's rule: an offset ≥ 0 at the same
+//     fraction of the item, a negative one in vh), so a clip whose scrollY falls in one is
+//     `breath: "after <id>"`; `row` / `rowStars` = the beat-map row of the screen and its declared stars;
 //   - the intro phase (play screen, flight, hold, titles) from the intro:* marks: the prologue is outside the
 //     page rules and is counted apart;
 //   - frame timings (rAF fps, p95, max) and LoAFs > 50 ms in the clip.
@@ -71,13 +74,40 @@ const { film } = await imp("lib/film.ts");
 const { pageItemsOf } = await imp("lib/derive.ts");
 const items = pageItemsOf(page.filter((s) => s.enabled !== false), film).map((it) =>
   it.kind === "act"
-    ? { dom: it.id, est: film.acts.find((a) => a.id === it.act)?.estVh ?? null, beats: film.acts.find((a) => a.id === it.act)?.beats ?? [] }
-    : { dom: it.entry.id, est: it.entry.estVh ?? null, beats: it.entry.beats ?? [] },
+    ? { dom: it.id, card: true, est: film.acts.find((a) => a.id === it.act)?.estVh ?? null, beats: film.acts.find((a) => a.id === it.act)?.beats ?? [] }
+    : { dom: it.entry.id, card: false, est: it.entry.estVh ?? null, beats: it.entry.beats ?? [] },
 );
 const DECLARED_SCROLL = new Set(items.flatMap((it) => it.beats.filter((b) => b.star && b.timing === "scroll").map((b) => b.id)));
-const spec = fs.readFileSync(path.join(ROOT, "docs/build/PHASE3-SPEC.md"), "utf8");
-const BREATH_ROWS = new Set([...spec.matchAll(/^\| (B\d\d)(?:–\d\d)? ⟂ \|/gm)].map((m) => m[1]));
 const rowOf = (id) => id.slice(0, 3);
+
+/** An item's beat offset (vh @1440 from its top) → px on a geometry snapshot (the validator's rule). */
+const placer = (it, box, vh) => {
+  const itemVh = it.est ? it.est.d * 100 : (box.h / vh) * 100; // the item's height in vh@1440 (the beats' unit)
+  return (at) => box.top + (at >= 0 ? (at / itemVh) * box.h : (at / 100) * vh);
+};
+
+/** The breaths (lib/beats.ts BREATHS) on a geometry snapshot: [{ after, from, to }] in scrollY (viewport top).
+ *  A weight-3 star ends at at + span (a time star with span 0: at + 50); a card's (a) → (b) is one set piece. */
+function breathsFor(geo) {
+  const vh = geo.vh;
+  const byId = new Map(geo.items.map((i) => [i.id, i]));
+  const ends = [];
+  for (const it of items) {
+    const box = byId.get(it.dom);
+    if (!box) continue;
+    const y = placer(it, box, vh);
+    let piece = null;
+    for (const b of it.beats) {
+      if (!b.star || b.weight !== 3) continue;
+      const end = { id: b.id, y: y(b.timing === "time" && b.span === 0 ? b.at + 50 : b.at + b.span) };
+      if (it.card && (b.kind === "transition" || b.kind === "push-title")) {
+        if (!piece || end.y > piece.y) piece = end;
+      } else ends.push(end);
+    }
+    if (piece) ends.push(piece);
+  }
+  return ends.sort((a, b) => a.y - b.y).map((e) => ({ after: e.id, from: Math.round(e.y), to: Math.round(e.y + vh) }));
+}
 
 /** Beat-map rows placed on a geometry snapshot: [{ row, from, to, stars: [{ id, w }] }] in scrollY (viewport top). */
 function rowsFor(geo) {
@@ -87,9 +117,8 @@ function rowsFor(geo) {
   for (const it of items) {
     const box = byId.get(it.dom);
     if (!box) continue;
-    const itemVh = it.est ? it.est.d * 100 : (box.h / vh) * 100; // the item's height in vh@1440 (the beats' unit)
-    const off = (at) => (at >= 0 ? (at / itemVh) * box.h : (at / 100) * vh);
-    for (const b of it.beats) starts.push({ id: b.id, row: rowOf(b.id), y: box.top + off(b.at), star: Boolean(b.star), w: b.weight ?? 0, timing: b.timing });
+    const y = placer(it, box, vh);
+    for (const b of it.beats) starts.push({ id: b.id, row: rowOf(b.id), y: y(b.at), star: Boolean(b.star), w: b.weight ?? 0, timing: b.timing });
   }
   const rows = new Map();
   for (const s of starts) {
@@ -100,11 +129,34 @@ function rowsFor(geo) {
   }
   const list = [...rows.values()].sort((a, b) => a.from - b.from);
   list.forEach((r, i) => (r.to = list[i + 1]?.from ?? geo.H));
-  return list.map((r) => ({ ...r, from: Math.round(r.from), to: Math.round(r.to), breath: BREATH_ROWS.has(r.row) }));
+  // a row that begins inside a breath is a rest (tools/capture/deadscreen.mjs asks it for no fill)
+  const breaths = breathsFor(geo);
+  return list.map((r) => ({ ...r, from: Math.round(r.from), to: Math.round(r.to), breath: breaths.some((b) => b.from - 1 <= r.from && r.from < b.to) }));
 }
 
 /* — spotlight intervals ———————————————————————————————————————————————————— */
 const T_END = SC.tEnd;
+/** When the page moves: [from, to] page-time spans where consecutive frames' scrollY differ. The screencast
+ *  sends a frame only when the screen changes, so a long gap before a moved frame counts its last 150 ms. */
+const MOVING = (() => {
+  const out = [];
+  const fr = SC.frames ?? [];
+  for (let k = 1; k < fr.length; k++) {
+    if (Math.abs((fr[k].y ?? 0) - (fr[k - 1].y ?? 0)) < 1) continue;
+    const from = Math.max(fr[k - 1].t, fr[k].t - 150);
+    const last = out.at(-1);
+    if (last && from <= last[1] + 1) last[1] = fr[k].t;
+    else out.push([from, fr[k].t]);
+  }
+  return out;
+})();
+/** The scroll a scrub star needs inside a clip to count there (px). */
+const MIN_SCRUB_PX = 12;
+/** A scrub star performs only while the page moves inside its window: its own interval cut to MOVING. */
+const performing = (i) =>
+  i.kind !== "scrub"
+    ? [i]
+    : MOVING.filter(([a, b]) => b > i.from && a < i.to).map(([a, b]) => ({ ...i, from: Math.max(a, i.from), to: Math.min(b, i.to) }));
 function starIntervals(log) {
   const out = [];
   let own = null;
@@ -112,7 +164,7 @@ function starIntervals(log) {
   for (const e of log ?? []) {
     if (e.ev === "own") {
       if (own) own.to = e.t;
-      own = { id: e.id, w: e.weight ?? 0, how: "scroll", from: e.t, to: null };
+      own = { id: e.id, w: e.weight ?? 0, how: "scroll", kind: e.how === "live" ? "live" : "scrub", from: e.t, to: null };
       out.push(own);
     } else if (e.ev === "free") {
       if (own) own.to = e.t;
@@ -133,7 +185,7 @@ function starIntervals(log) {
     }
   }
   for (const i of out) if (i.to == null) i.to = Math.max(i.from, T_END);
-  return out;
+  return out.flatMap(performing);
 }
 const STARS = starIntervals(SC.spotlight);
 /** Declared scroll stars that never owned the spotlight in THIS run (not registered, or never reached). */
@@ -207,6 +259,12 @@ const rowsAt = (t) => {
   if (!rowsCache.has(g)) rowsCache.set(g, rowsFor(g));
   return rowsCache.get(g);
 };
+const breathsCache = new Map();
+const breathsAt = (t) => {
+  const g = geoAt(t);
+  if (!breathsCache.has(g)) breathsCache.set(g, breathsFor(g));
+  return breathsCache.get(g);
+};
 const sectionAt = (g, y) => {
   const mid = y + g.vh / 2;
   let best = null;
@@ -247,7 +305,11 @@ for (let i = 0; i < N; i++) {
   const rows = rowsAt((a + b) / 2);
   const intro = introPhase((a + b) / 2);
   const row = intro ? null : rows.find((r) => r.from <= y && y < r.to) ?? null;
-  const active = STARS.filter((s) => s.from < b && s.to > a);
+  const rest = intro ? null : breathsAt((a + b) / 2).find((r) => r.from <= y && y < r.to) ?? null;
+  // a scrub star counts in this clip only if the page moved ≥ 12 px while it performed in it (a Lenis
+  // settle of a few px moves nothing the eye can see in four frames)
+  const movedIn = (s) => Math.abs((frameAt(Math.min(s.to, b))?.y ?? 0) - (frameAt(Math.max(s.from, a))?.y ?? 0));
+  const active = STARS.filter((s) => s.from < b && s.to > a && (s.kind !== "scrub" || movedIn(s) >= MIN_SCRUB_PX));
   const ids = [...new Map(active.map((s) => [s.id, { id: s.id, w: s.w, how: s.how }])).values()];
   const mc = maxConcurrent(active, a, b);
   const raf = SC.raf.filter((s) => s[0] >= a && s[0] < b).map((s) => s[1]);
@@ -274,7 +336,7 @@ for (let i = 0; i < N; i++) {
     skips,
     row: row?.row ?? null,
     rowStars: row ? row.stars.map((s) => `${s.id} w${s.w}`) : [],
-    breath: row?.breath ? row.row : null,
+    breath: rest ? `after ${rest.after}` : null,
     frames: picks.map((f) => f?.file ?? null),
     fps: sum ? r1((1000 * raf.length) / sum) : null,
     p95: r1(q(raf, 0.95)),
@@ -321,7 +383,7 @@ const totals = {
     };
   })(),
   starsSeen: [...new Set(STARS.map((s) => s.id))].length,
-  breathRows: [...BREATH_ROWS],
+  breaths: breathsFor(SC.geo.at(-1)),
 };
 
 /* — images ——————————————————————————————————————————————————————————————— */
@@ -424,12 +486,12 @@ const out = {
     plain: PLAIN,
     strips: STRIPS ? path.relative(ROOT, path.join(RAW, "clips")) + " (local only)" : null,
     definitions: {
-      stars: "spotlight log (?debug=spotlight): scroll star own → next own/free; time star grant → end/release",
+      stars: "spotlight log (?debug=spotlight): scroll star own → next own/free, counted only while the page moves (frames' scrollY changes) unless the log says how: live; time star grant → end/release",
       maxConcurrent: "most stars active at one instant inside the clip (the O.4 bar counts this)",
       overlapMs: "how long two or more stars are active together inside the clip (context for a 2+ clip)",
       unregistered: "declared scroll stars (lib/page.ts, lib/film.ts) that never owned the spotlight in this run, listed while their box crosses the middle 60 % (shown as '(+id unreg.)'; totals.withDeclared counts them)",
       distinct: "stars seen anywhere in the clip (a hand-off inside one second lists two in sequence)",
-      breath: "the clip's scrollY lies in a beat-map row marked ⟂ (PHASE3-SPEC §2.3), placed on this run's geometry",
+      breath: "the clip's scrollY lies in the viewport after a weight-3 star (lib/beats.ts BREATHS; a card's set piece from the end of its (b)), placed on this run's geometry",
       intro: "the prologue (play screen → titles → quiet window), outside the page rules; excluded from the page totals",
     },
   },

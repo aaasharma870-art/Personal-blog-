@@ -38,7 +38,9 @@ import type { BeatWeight } from "@/lib/beats";
  * end state with no animation. Elsewhere (phones, tablets) it enters as
  * before, without asking; motion off stays "static". The host should also
  * carry `beatAttrs(star.id, { weight })` (lib/beats.ts) so the spotlight can
- * drop a request whose host has left the viewport.
+ * drop a request whose host has left the viewport. `star.ms`: how long the
+ * entrance visibly moves (the hold; default 1.2 s, the cap): a host never
+ * starts before the grant, and the grant covers no more than it shows.
  */
 export type EnterPhase = "static" | "armed" | "entered";
 
@@ -47,13 +49,14 @@ const THRESHOLDS = Array.from({ length: 21 }, (_, i) => i / 20);
 
 export function useEnterOnce(
   ref: RefObject<Element | null>,
-  { amount = viewportOnce.amount, star }: { amount?: number; star?: { id: string; weight: BeatWeight } } = {},
+  { amount = viewportOnce.amount, star }: { amount?: number; star?: { id: string; weight: BeatWeight; ms?: number } } = {},
 ): EnterPhase {
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<EnterPhase>("static");
   const [done, setDone] = useState(false);
   const starId = star?.id;
   const starWeight = star?.weight ?? 1;
+  const starMs = star?.ms;
 
   useEffect(() => {
     if (reduced || done) return;
@@ -89,7 +92,7 @@ export function useEnterOnce(
           if (starId && window.matchMedia(DESKTOP_FINE).matches) {
             // one star at a time: wait for the spotlight (≤ 1.5 s), or skip
             asking = true;
-            void spotlight.request(starId, { weight: starWeight }).then((answer) => {
+            void spotlight.request(starId, { weight: starWeight, durationMs: starMs }).then((answer) => {
               asking = false;
               if (cancelled) return;
               setPhase(answer === "play" ? "entered" : "static");
@@ -110,7 +113,7 @@ export function useEnterOnce(
       // torn down while still waiting: withdraw (a granted hold runs out alone)
       if (asking && starId) spotlight.release(starId);
     };
-  }, [ref, amount, reduced, done, starId, starWeight]);
+  }, [ref, amount, reduced, done, starId, starWeight, starMs]);
 
   if (reduced) return "static";
   return phase;

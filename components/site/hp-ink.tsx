@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { MouseEvent, ReactNode } from "react";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/flags";
 import { scrollToTarget } from "@/lib/smooth-scroll";
@@ -172,12 +172,12 @@ export function BracketMonogram({ initials, className }: { initials: string; cla
  * primitives (triangle, inscribed circle, line) in ink-contour. Never a
  * brand mark; one per page; aria-hidden.
  */
-export function HallowsMark({ className }: { className?: string }) {
+export function HallowsMark({ className, style }: { className?: string; style?: CSSProperties }) {
   // equilateral triangle, side 22, base at y = 20.5; incircle r = side / (2√3)
   const r = 22 / (2 * Math.sqrt(3));
   const cy = 20.5 - r;
   return (
-    <svg viewBox="0 0 24 24" width={12} height={12} aria-hidden="true" focusable="false" className={cn("inline-block overflow-visible", className)} data-motif="hallows">
+    <svg viewBox="0 0 24 24" width={12} height={12} aria-hidden="true" focusable="false" className={cn("inline-block overflow-visible", className)} style={style} data-motif="hallows">
       <g fill="none" className="stroke-(--w-ink-contour)" strokeWidth={1.2} vectorEffect="non-scaling-stroke">
         <path d={`M1 20.5 L23 20.5 L12 ${(20.5 - 11 * Math.sqrt(3)).toFixed(3)} Z`} />
         <circle cx={12} cy={cy.toFixed(3)} r={r.toFixed(3)} />
@@ -196,7 +196,18 @@ export function HallowsMark({ className }: { className?: string }) {
  * credits to the opening it is a long jump, so it lands through the cut),
  * replaceState as before, focus on the target's heading.
  */
-export function TimeTurnerLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
+export function TimeTurnerLink({
+  href,
+  children,
+  className,
+  icon = 20,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  /** The hourglass's size (px). */
+  icon?: number;
+}) {
   const reduce = useReducedMotion();
   const [turns, setTurns] = useState(0);
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -213,8 +224,8 @@ export function TimeTurnerLink({ href, children, className }: { href: string; ch
     <a href={href} onClick={onClick} className={cn("group inline-flex min-h-11 items-center gap-3", className)}>
       <motion.svg
         viewBox="0 0 24 24"
-        width={20}
-        height={20}
+        width={icon}
+        height={icon}
         aria-hidden="true"
         focusable="false"
         className="shrink-0 overflow-visible"

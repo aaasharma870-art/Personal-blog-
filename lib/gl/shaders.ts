@@ -63,6 +63,9 @@ vec4 inset(vec3 c,float k){float d=PL(),h=.5/uRes.y,bw=mix(.05,HI()>0.?h:-.01,k)
 c=mix(c,vec3(.9,.85,.74),S(-bw-2.*h,-bw,d));return vec4(mix(c,uDeep,HI()*S(h,3.*h,d)),1.);}
 vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*vec2(4.,10.)+vec2(uP*3.,0.));float s=N(q*vec2(A,1.)*220.);
 return mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.8+.3*s),k);}
+// the mist the breaker leaves (seam): the incoming hall already THROUGH the
+// foam / chalk veil, never a blank pale frame (P3-11 r1: "failed to load")
+vec3 MI(float k){return mix(T(uv),veil(uv,k),.42+.14*fbm(G2()*3.));}
 `;
 
 const SHAPES = `
@@ -100,27 +103,29 @@ return vec4(mix(c,brass,m),1.);}`,
   wave: `vec4 fl(){float t=uP,y=uv.y,f=mix(.04,1.45,t*t*(3.-2.*t))+.05*sin(y*7.+t*4.)+.1*(fbm(vec2(y*4.,t*3.))-.5);
 float j=(fbm(G2()*9.+vec2(t*3.,0.))-.5)*.08,dx=f-uv.x-j,nr=exp(-abs(dx)*14.);vec2 q=uv;q.x+=nr*.03*sign(dx);q.y-=nr*.02;
 float b=exp(-pow(D(uv,vec2(.62,uRow+.16))/.24,2.))*uKraken*S(uRow-.02,uRow+.04,uv.y);q.y+=b*.05;
-vec3 c=mix(F(q)*(1.-.7*b)*(1.+.25*nr),veil(uv,0.),S(-.015,.03,dx));
+vec3 c=mix(F(q)*(1.-.7*b)*(1.+.25*nr),MI(0.),S(-.015,.03,dx));
 return vec4(mix(c,vec3(.95,1.,1.),exp(-dx*dx/3e-4)*.85),1.);}`,
 
   // 3 Idiots chalk IN: foam turns to chalk speckle; a noisy diagonal edge
   // uncovers the hall
   chalk: `vec4 fl(){float t=uP,s=dot(uv,vec2(.62,.78)),e=mix(-.3,1.7,t)+(fbm(G2()*5.)-.5)*.3;
 float r=1.-S(e-.05,e+.05,s),g=exp(-abs(s-e)*28.);
-vec3 c=mix(veil(uv,S(0.,.35,t)),T(uv),r)+vec3(.9)*g*.25*(1.-t);return vec4(c,1.);}`,
+vec3 c=mix(MI(S(0.,.35,t)),T(uv),r)+vec3(.9)*g*.25*(1.-t);return vec4(c,1.);}`,
 
   // 3 Idiots duster (ALT IN): five anisotropic strokes along 110°
   duster: `vec4 fl(){float t=uP;vec2 g=G2()-vec2(A*.5,.5),d=vec2(-.342,.94),n=vec2(-d.y,d.x);
 float b=dot(g,d)/(.5*(A*.342+.94))*.5+.5,a=dot(g,n)/(.5*(A*.94+.342))*.5+.5,i=floor(clamp(a,0.,.999)*5.);
 float st=N(vec2(a*120.,b*3.)),s=clamp(t*1.6-i*.15,0.,1.),r=1.-S(-.04,.04,b-s*1.15+st*.1);
-vec3 c=mix(veil(uv,1.),T(uv),r)+(st-.5)*.14*r*(1.-t);return vec4(c,1.);}`,
+vec3 c=mix(MI(1.),T(uv),r)+(st-.5)*.14*r*(1.-t);return vec4(c,1.);}`,
 
-  // RDR2 tintype develop: pow(luma, γ) outward from the horizon row, grain,
-  // sepia → golden hour; the bone border settles to the inset plate's 1 px
+  // RDR2 tintype develop: the plate opens as a legible sepia PRINT (the full
+  // tonal range: P3-11 r1, the old flat latent read as "failed to load"),
+  // then pow(luma, γ) develops outward from the horizon row into golden
+  // hour, a light grain; the bone border settles to the inset plate's 1 px
   // line on the world deep (the DOM's settled tintype), or away full-bleed
   develop: `vec4 fl(){float t=uP;vec3 p=T(uv);float l=L(p),dv=clamp((t*1.25-abs(uv.y-uRow)*1.1+(fbm(G2()*4.)-.5)*.15)/.25,0.,1.);
-vec3 c=mix(vec3(.42,.36,.28)*(.55+.45*l),vec3(1.,.86,.66)*pow(l,mix(2.6,1.,dv))*1.05,dv);
-c=mix(c,p,S(.55,1.,t))+(N(G2()*300.+t*50.)-.5)*.09*(1.-t);
+vec3 c=mix(mix(vec3(.08,.065,.05),vec3(.88,.76,.58),pow(l,1.15)),vec3(1.,.86,.66)*pow(l,mix(1.8,1.,dv))*1.05,dv);
+c=mix(c,p,S(.55,1.,t))+(N(G2()*300.+t*50.)-.5)*.05*(1.-t);
 return inset(c,S(.83,1.,t));}`,
 
   // RDR2 Dead Eye (ALT): a red-sepia grade ramp + a radial chroma split,
@@ -144,9 +149,13 @@ return vec4(mix(mix(uDeep,T(uv),m),vec3(.03,.03,.08),k*.8*(1.-t*t)),1.);}`,
   lumos: `vec4 fl(){float t=uP,d=D(uv,uCenter),r=mix(uRadius.x,uRadius.y,t*t),m=1.-S(r*.55,r,d),b=exp(-d*d/(.02+.05*t))*(1.-t);
 return vec4(mix(uDeep,T(uv)*(1.+1.4*b),m)+vec3(1.,.92,.75)*b*.55,1.);}`,
 
-  // the act title as a mask: deep outside the letters, transparent inside
-  title: `vec4 fl(){float s=texture(uTitle,uv*uTitleXf.xy+uTitleXf.zw).r,a=max(fwidth(s),1e-5)*.7;
-return vec4(uDeep,S(0.,.18,uP)*(1.-S(.5-a,.5+a,s)));}`,
+  // the act title as a mask: the world's deep outside the letters (never
+  // black: the push still shows through at a fifth), a faint warm lift
+  // inside (legible over a dark plate: the candlelit hall);
+  // in over p .68–.76, whole and legible, dissolved by p .92 (plan.ts
+  // TITLE_OUT; P3-11 r1: no half-words, no one-frame cut)
+  title: `vec4 fl(){float s=texture(uTitle,uv*uTitleXf.xy+uTitleXf.zw).r,a=max(fwidth(s),1e-5)*.7,i=S(.5-a,.5+a,s);
+return vec4(mix(uDeep,vec3(1.,.97,.9),i),S(0.,.25,uP)*(1.-S(.55,.75,uP))*mix(.8,.24,i));}`,
 };
 
 /** The fragment source of one flavour (header + shapes + flavour + main). */

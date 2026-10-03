@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { animate, motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
+import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "motion/react";
 import { getImageProps } from "next/image";
 import { beatAttrs } from "@/lib/beats";
 import { emit, on as onEvent } from "@/lib/events";
@@ -22,6 +22,7 @@ import { GlGate } from "@/components/gl/gl-gate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { remap } from "@/components/primitives/loaders/line";
 import { CarriedShape } from "@/components/stage/carried-shape";
+import { hideWhenFar } from "@/components/stage/far";
 import { WeatherLayer } from "@/components/stage/weather-layer";
 // the pin chunk's own layers (phases, GL-replaced layers, title mask, bars,
 // shape, weather, SEQ canvas, puff, kraken mass + tip): loaded with this
@@ -153,6 +154,9 @@ export function CardP3(props: Props) {
   useIris(t, content, active, spec, choreo);
   useCrossings(t, spec, pinned, liveRef, tierRef, frameRef);
   useStars(pinNode, pinned);
+  useFarFrame(frame, pinned);
+  useExitDip(pinEl, frame, active && spec.kind !== "opening");
+  useHeroCover(spec.kind, pinned, enter);
   useKraken(spec, pinned, liveRef, raw, t, kraken, section, pinEl, content, tipRef, massRef);
 
   const glSpec = useMemo<GlCardSpec | null>(() => {
@@ -166,7 +170,7 @@ export function CardP3(props: Props) {
       {active && pushSpec.seq ? (
         <SeqCanvas seq={pushSpec.seq} b={b} push={pushSpec} mine={spec.toPlate[choreo] === pushSpec.seq.plate} />
       ) : null}
-      {active && title === "default" ? <TitleMask t={t} text={spec.title.text} origin={spec.title.origin} /> : null}
+      {active && title === "default" ? <TitleMask t={t} text={spec.title.text} zoom={spec.title.zoom ?? 1.3} /> : null}
       {active && title === "alt" ? <Bars t={t} /> : null}
       {active && spec.shape ? <ShapeLayer t={t} shape={spec.shape} /> : null}
       {pinned ? spec.weather.map((w) => <WeatherCue key={w.beat} w={w} t={t} live={live} />) : null}
@@ -423,9 +427,11 @@ function useCrossings(
           el,
           shake: i.shake,
           flash: gl ? 0 : i.flash,
-          bloomEv: gl ? 0 : i.bloomEv,
+          // the bloom is drawn here with a slower decay (below)
+          bloomEv: 0,
         });
         if (fired && i.puff && el) chalkPuff(el);
+        if (fired && !gl && i.bloomEv && el) bloomPulse(el, i.bloomEv);
       }
       prev = v;
     });
@@ -434,6 +440,36 @@ function useCrossings(
       offJump();
     };
   }, [t, spec, pinned, liveRef, tierRef, frameRef]);
+}
+
+/** The ignite's impact on the css tier (§7.6 Lumos): an exposure bloom — a
+ *  warm-white additive overlay pulse of ≈ the EV's brightness that rises in
+ *  ~90 ms and DECAYS over ~400 ms (P3-11 r1, J8 #5: lib/impact.ts' 180 ms
+ *  pulse dropped back to dark in one frame, a cut). One pulse, never red
+ *  (WCAG 2.3.1); opacity on a layer that exists only for its run;
+ *  cancelled with every impact animation on Pause. */
+function bloomPulse(frame: HTMLElement, ev: number) {
+  if (typeof document === "undefined") return;
+  const o = document.createElement("span");
+  o.setAttribute("aria-hidden", "true");
+  o.setAttribute("data-impact-pulse", "bloom");
+  o.className = "act-card-bloom";
+  frame.appendChild(o);
+  const done = () => o.remove();
+  if (typeof o.animate !== "function") return done();
+  // +0.35 EV ≈ ×1.27 brightness: a ≈ .3 additive warm-white peak
+  const peak = Math.min(0.4, (2 ** ev - 1) * 1.1);
+  const a = o.animate(
+    [
+      { opacity: 0, easing: "cubic-bezier(0.3, 0, 0.6, 1)" },
+      { opacity: peak, offset: 0.18, easing: "cubic-bezier(0.25, 0.6, 0.35, 1)" },
+      { opacity: 0 },
+    ],
+    { duration: 520 },
+  );
+  a.onfinish = done;
+  a.oncancel = done;
+  trackImpactAnim(a);
 }
 
 /** The seam's impact: a chalk-dust puff where the duster slaps (no flash):
@@ -484,6 +520,77 @@ function useStars(host: HTMLDivElement | null, pinned: boolean) {
     });
     return () => offs.forEach((f) => f());
   }, [host, pinned]);
+}
+
+/** J8 #2 (P3-11 r1): a card that has not started or has finished costs
+ *  nothing — its frame (aria-hidden art: plates, canvases, the GL host,
+ *  weather) is out of paint while the sticky stage is more than a viewport
+ *  away (components/stage/far.ts); the bars' text stays (accessible). */
+function useFarFrame(frame: HTMLDivElement | null, pinned: boolean) {
+  useEffect(() => (frame && pinned ? hideWhenFar(frame, 1) : undefined), [frame, pinned]);
+}
+
+/** The card's EXIT (P3-11 r1; panel J2 #4, J3 #5, J4 #7 and F5's hand-off:
+ *  the lecture hall stacked over the pen, the tintype's sunset doubled by
+ *  Beyond's band of the same photo): once the pin is done and the stage
+ *  scrolls away, its frame dips to the card's deep while the next section's
+ *  picture rises into view — gone by the time the pin's foot is at 70 % of
+ *  the viewport — so one picture holds the screen at a time and the same
+ *  photo is never on screen twice. Opacity only (promoted while it runs),
+ *  by position (reverses exactly); not the opening, whose exit frame IS the
+ *  stage's next cue. Pin mode, live only. */
+function useExitDip(pinEl: RefObject<HTMLDivElement | null>, frame: HTMLDivElement | null, on: boolean) {
+  const { scrollYProgress: exit } = useScroll({ target: pinEl, offset: ["end end", "end 70%"] });
+  useEffect(() => {
+    if (!frame || !on) return;
+    let cur = -1;
+    const write = (v: number) => {
+      const o = v <= 0 ? 1 : 1 - ss(v);
+      if (o === cur) return;
+      cur = o;
+      css(frame, { opacity: o >= 1 ? "" : o.toFixed(3), "will-change": o > 0 && o < 1 ? "opacity" : "" });
+    };
+    write(exit.get());
+    const off = exit.on("change", write);
+    return () => {
+      off();
+      css(frame, { opacity: "", "will-change": "" });
+    };
+  }, [exit, frame, on]);
+}
+
+/** The CONTRACT with the hero (F3, J8 #3): while the opening card's pinned
+ *  stage covers the whole viewport — its pin has reached the top, so the
+ *  hero is entirely above the reader — the hero carries
+ *  `data-stage-covered`, and its ambient loops pause; the attribute goes
+ *  the moment the pin's top comes back below the viewport's top (the hero's
+ *  edge can show again). Set on the hero's `section[data-hero]` AND on its
+ *  manifest wrapper (`[data-section]`, "top"): there is no
+ *  `[data-section="hero"]` element. Pin mode only; removed on unmount. */
+function useHeroCover(kind: CardPinSpec["kind"], pinned: boolean, enter: MotionValue<number>) {
+  useEffect(() => {
+    if (kind !== "opening" || !pinned) return;
+    const hero = document.querySelector<HTMLElement>("section[data-hero]");
+    if (!hero) return;
+    const els = [hero, hero.closest<HTMLElement>("[data-section]")].filter((e): e is HTMLElement => e !== null);
+    let cur = false;
+    const set = (on: boolean) => {
+      if (on === cur) return;
+      cur = on;
+      for (const el of els) {
+        if (on) el.setAttribute("data-stage-covered", "");
+        else el.removeAttribute("data-stage-covered");
+      }
+    };
+    // `enter` is 1 once the pin's top is at (or above) the viewport's top
+    const check = (v: number) => set(v >= 0.999);
+    check(enter.get());
+    const off = enter.on("change", check);
+    return () => {
+      off();
+      set(false);
+    };
+  }, [kind, pinned, enter]);
 }
 
 /* — the kraken (pc-kraken, §9.1 #6) ———————————————————————————————————— */
@@ -695,23 +802,27 @@ function KrakenLayer({
 /* — frame layers ——————————————————————————————————————————————————————— */
 
 /** The act title as a mask, css tier (§8.1): a deep rect with the title
- *  cut out, faded in at p .68 (the frame outside the letters collapses to
- *  the world deep) and zoomed ×1 → ×6 about the title's mask origin by
- *  transform (no will-change: Chrome re-rasters it crisp) by p .88, then
- *  faded out by state (300 ms) to the full frame. The world outside the
- *  letters dims to a third (never black). aria-hidden: the h2 carries it.
- *  The SVG is stretched over the frame (preserveAspectRatio none): the
- *  pinned frame is always 2.39:1, the viewBox's own ratio. */
+ *  cut out. P3-11 r1 (panel J3 #1 / J4 #3, J8 #5): the old ×6 dive showed
+ *  half-words ("Wor", "THE LIGH") and near-black middles, and snapped in
+ *  and out in one frame. Now it dissolves IN by state at p .68 (250 ms),
+ *  holds the whole title legible while it grows by ≤ `zoom` about the ink
+ *  centre (ink ≤ 96 % of the frame; the tintype's does not grow: a still
+ *  stencil over the moving push), and dissolves OUT by state from
+ *  TITLE_DONE (300 ms) to the clean push frame, as the GL `title` does
+ *  (lib/gl/plan.ts TITLE_OUT). The world outside the letters dims to
+ *  .7 of the deep, never black. aria-hidden: the h2 carries it. The SVG
+ *  is stretched over the frame (preserveAspectRatio none): the pinned
+ *  frame is always 2.39:1, the viewBox's own ratio. */
 const VB_W = 2390;
 const VB_H = 1000;
-/** The css title's zoom ends here; the mask is gone (by state) after it. */
-const TITLE_DONE = 0.88;
-type TitleFit = { size: number; base: number; origin: readonly [number, number] };
-/** The title's size and zoom origin, as the GL title sets it (lib/gl/plan.ts
- *  `titleXf`): cap = 20 % of the frame height, the ink ≤ 72 % of its width,
- *  centred; the origin is `maskOrigin` in the title's INK box (cap top →
- *  ink bottom), measured with the face's own metrics. */
-function fitTitle(el: SVGTextElement, text: string, origin: readonly [number, number]): TitleFit | null {
+/** The css title's masked middle ends here (= GL title t .55). */
+const TITLE_DONE = 0.856;
+type TitleFit = { size: number; base: number; centre: readonly [number, number]; ink: number };
+/** The title's size, as the GL title sets it (lib/gl/plan.ts `titleXf`):
+ *  cap = 20 % of the frame height, the ink ≤ 72 % of its width, centred;
+ *  `centre` = its ink box's centre and `ink` its width (viewBox fractions),
+ *  measured with the face's own metrics. */
+function fitTitle(el: SVGTextElement, text: string): TitleFit | null {
   const cs = getComputedStyle(el);
   const c = document.createElement("canvas").getContext("2d");
   if (!c) return null;
@@ -729,20 +840,20 @@ function fitTitle(el: SVGTextElement, text: string, origin: readonly [number, nu
   const x1 = x0 + inkR * size;
   const y0 = base - cap;
   const y1 = base + (m.actualBoundingBoxDescent / 100) * size;
-  return { size, base, origin: [(x0 + origin[0] * (x1 - x0)) / VB_W, (y0 + origin[1] * (y1 - y0)) / VB_H] };
+  return { size, base, centre: [(x0 + x1) / 2 / VB_W, (y0 + y1) / 2 / VB_H], ink: (x1 - x0) / VB_W };
 }
 
-function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; origin: readonly [number, number] }) {
+function TitleMask({ t, text, zoom }: { t: MotionValue<number>; text: string; zoom: number }) {
   const id = useId();
   const textRef = useRef<SVGTextElement>(null);
-  const [fit, setFit] = useState<TitleFit>({ size: 280, base: VB_H / 2 + 100, origin: [0.5, 0.5] });
+  const [fit, setFit] = useState<TitleFit>({ size: 280, base: VB_H / 2 + 100, centre: [0.5, 0.5], ink: 0.72 });
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
     let cancelled = false;
     const measure = () => {
       if (cancelled) return;
-      const f = fitTitle(el, text, origin);
+      const f = fitTitle(el, text);
       if (f) setFit(f);
     };
     measure();
@@ -751,20 +862,16 @@ function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; 
     return () => {
       cancelled = true;
     };
-  }, [origin, text]);
-  const opacity = useTransform(t, (v) => remap(v, cardPin.titleIn, cardPin.titleIn + 0.06));
-  const scale = useTransform(t, (v) => {
-    const k = remap(v, cardPin.titleIn, TITLE_DONE);
-    // legible first, then the zoom accelerates (the GL title's t³ curve)
-    return Math.pow(6, k * k * k);
-  });
-  // the exit is a STATE, not a scrub (W2 gate): from TITLE_DONE the mask
-  // fades out over 300 ms and the clean plate holds to p 1, so a reader who
-  // stops in the tail never keeps a giant half-letter over the plate
-  const [out, setOut] = useState(() => t.get() >= TITLE_DONE);
-  useMotionValueEvent(t, "change", (v) => setOut(v >= TITLE_DONE));
+  }, [text]);
+  const zmax = Math.max(1, Math.min(zoom, 0.96 / Math.max(0.1, fit.ink)));
+  const scale = useTransform(t, (v) => 1 + (zmax - 1) * ss(remap(v, cardPin.titleIn, TITLE_DONE)));
+  // in and out are STATES, not scrubs (W2 gate; P3-11 r1 J8 #5): a reader
+  // who stops never keeps a half-faded or giant half-letter over the plate
+  const phase = (v: number) => (v >= TITLE_DONE ? 2 : v >= cardPin.titleIn ? 1 : 0);
+  const [ph, setPh] = useState(() => phase(t.get()));
+  useMotionValueEvent(t, "change", (v) => setPh(phase(v)));
   return (
-    <div className="act-card-title-mask-wrap" data-gl-replaced="" data-out={out ? "" : undefined}>
+    <div className="act-card-title-mask-wrap" data-gl-replaced="" data-in={ph === 1 ? "" : undefined}>
       <motion.svg
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         preserveAspectRatio="none"
@@ -772,9 +879,8 @@ function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; 
         focusable="false"
         className="act-card-title-mask"
         style={{
-          opacity,
           scale,
-          transformOrigin: `${(fit.origin[0] * 100).toFixed(2)}% ${(fit.origin[1] * 100).toFixed(2)}%`,
+          transformOrigin: `${(fit.centre[0] * 100).toFixed(2)}% ${(fit.centre[1] * 100).toFixed(2)}%`,
         }}
       >
         <defs>
@@ -793,9 +899,22 @@ function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; 
             </text>
           </mask>
         </defs>
-        {/* the world outside the letters dims to a third, never to black:
-            the camera dives INTO the title instead of cutting away (W2 judge) */}
-        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={0.68} mask={`url(#${id}m)`} />
+        {/* the world outside the letters dims, never to black: the push
+            keeps moving behind the title (W2 judge; P3-11 r1) */}
+        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={0.7} mask={`url(#${id}m)`} />
+        {/* a faint warm lift inside the letters: legible over a dark plate
+            (the candlelit hall), as the GL title does */}
+        <text
+          x={VB_W / 2}
+          y={fit.base}
+          textAnchor="middle"
+          fontSize={fit.size}
+          fill="#fff8e6"
+          fillOpacity={0.24}
+          className="act-card-title-mask-text"
+        >
+          {text}
+        </text>
       </motion.svg>
     </div>
   );
@@ -979,4 +1098,67 @@ function RackSoft({ plate, t }: { plate: string; t: MotionValue<number> }) {
   );
 }
 
-const UI: PinUi = { PlateLayers };
+/** The ignite's css-tier film burn (frames/ignite.tsx, pin mode; P3-11 r1
+ *  hooks), as ONE pre-rendered sprite (Law 1: 0 gradients per frame): a
+ *  ragged disc of the card's deep, its rim orange-white, a soft glow out.
+ *  The hole's edge sits at .7 of the sprite's radius. */
+function burnSprite(deep: string): HTMLCanvasElement | null {
+  const S = 512;
+  const c = document.createElement("canvas");
+  c.width = c.height = S;
+  const g = c.getContext("2d");
+  if (!g) return null;
+  const R = S / 2;
+  const edge = (k: number) => {
+    g.beginPath();
+    for (let i = 0; i <= 72; i++) {
+      const a = (i / 72) * Math.PI * 2;
+      // a deterministic ragged edge (no Math.random: same burn every view)
+      const j = 1 + 0.035 * Math.sin(a * 5 + 1.3) + 0.025 * Math.sin(a * 11 + 0.4) + 0.015 * Math.sin(a * 23);
+      const r = R * k * j;
+      const x = R + r * Math.cos(a);
+      const y = R + r * Math.sin(a);
+      if (i) g.lineTo(x, y);
+      else g.moveTo(x, y);
+    }
+    g.closePath();
+  };
+  const glow = g.createRadialGradient(R, R, R * 0.6, R, R, R);
+  glow.addColorStop(0, "rgba(255,150,60,0.55)");
+  glow.addColorStop(0.45, "rgba(255,110,30,0.22)");
+  glow.addColorStop(1, "rgba(255,90,20,0)");
+  g.fillStyle = glow;
+  g.fillRect(0, 0, S, S);
+  const rim = g.createRadialGradient(R, R, R * 0.66, R, R, R * 0.8);
+  rim.addColorStop(0, "#fff3d6");
+  rim.addColorStop(0.45, "#ffb15a");
+  rim.addColorStop(1, "rgba(255,106,20,0)");
+  g.fillStyle = rim;
+  edge(0.8);
+  g.fill();
+  g.fillStyle = deep;
+  edge(0.7);
+  g.fill();
+  return c;
+}
+
+/** The burn's growth: r ≈ .04 → past the frame (frame heights, like the GL
+ *  `burn`) over star (a) 0–.5, fading under the hall over .3–.5. */
+const BURN = { r0: 0.04, grow: 2, out: [0.3, 0.5] as const };
+
+/** The ignite's css-tier film burn (P3-11 r1 hooks: the GL tier's order):
+ *  already eating the camp from its fire as the card pins — a deep hole
+ *  with an orange-white rim, growing, gone under the hall as it comes up. */
+const burn: PinUi["burn"] = (deep) => {
+  const hole = burnSprite(deep);
+  if (!hole) return null;
+  return (ctx, v, x, y, h) => {
+    if (v >= BURN.out[1]) return;
+    const k = v / BURN.out[1];
+    const R = ((BURN.r0 + BURN.grow * k * k) * h) / 0.7;
+    ctx.globalAlpha = 1 - remap(v, BURN.out[0], BURN.out[1]);
+    ctx.drawImage(hole, x - R, y - R, 2 * R, 2 * R);
+  };
+};
+
+const UI: PinUi = { PlateLayers, burn };

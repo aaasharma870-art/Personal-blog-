@@ -6,3 +6,45 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* — the Intermission's bill (components/sections/films/films-bill.tsx;
+     P3-11 r1): the programme of the films in their own faces and inks, a
+     hairline above it and the projector's light behind it. Desktop only:
+     phones keep today's head. — */
+.films-bill {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .films-bill {
+    display: block;
+    position: relative;
+    margin-top: var(--spacing-tier-block);
+  }
+  .films-bill::before {
+    content: "";
+    position: absolute;
+    inset: -90% -8% -10%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--fg) 7%, transparent), transparent);
+  }
+  .films-bill-acts {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .films-bill-acts > li {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+  .films-bill-title {
+    font-size: clamp(1.6rem, 2.4vw, 2.6rem);
+    line-height: 1.04;
+    color: var(--world-emphasis);
+    text-wrap: balance;
+  }
+}

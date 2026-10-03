@@ -72,6 +72,11 @@ import {
      Phones, reduced motion, Pause: the still, identity transform.
    - THE BRACKET CLOSE is the B56 time star (weight 2): on DESKTOP_FINE it
      asks the spotlight first; "skip" = resolved at once.
+   - THE TRAIL ON (P3-11 r1; J1: contact's reading seconds had no star):
+     the last light's trail to the credits is the B56-trail scroll star —
+     on DESKTOP_FINE with motion on the lazy toys chunk lays its points
+     down one by one as it scrolls through (a ViewTimeline per point);
+     everywhere else it lies static, as before.
    - THE CANDLE TOY + THE WAND (spec §9.2 #4): the hall's ceiling field is a
      toy field (CandleField `toy`, every candle lit by default). The two
      desktop modules (worlds/hp/wand-cursor.tsx, worlds/hp/candle-toy.tsx)
@@ -187,31 +192,48 @@ const TRAIL = Array.from({ length: TRAIL_N }, (_, i) => {
 
 function LastLightTrail({ variant }: { variant: Variant }) {
   return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute top-full hidden lg:block"
-      style={{ left: "-60%", right: 0, height: "calc(50svh - 50%)" }}
-      data-motif="last-light-trail"
-      data-variant={variant}
-    >
-      {TRAIL.map((p, i) =>
-        variant === "alt" ? (
-          <span
-            key={i}
-            className="absolute"
-            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o, transform: `translate(-50%, -50%) rotate(${p.deg.toFixed(1)}deg)` }}
-          >
-            <Footprint side={i % 2 ? "right" : "left"} size={12} fill="var(--w-ink-contour)" />
-          </span>
-        ) : (
-          <span
-            key={i}
-            className="absolute size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
-            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o }}
-          />
-        ),
-      )}
-    </div>
+    <>
+      {/* B56-trail's spotlight box (P3-11 r1 integration): a sibling marker
+          (the toys animate the trail's CHILDREN) as tall as the trail plus
+          the 30vh of its window, so "top 85%, bottom 85%" here owns exactly
+          the trail's "top 85%, bottom 55%" and the beat probe measures the
+          whole performance (spec §3.4 #11: ≥ 300 px; the trail alone is
+          ≈ 190 px) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute left-0 top-full hidden w-px lg:block"
+        style={{ height: "calc(50svh - 50% + 30vh)" }}
+        {...beatAttrs("B56-trail", { weight: 1, scroll: "top 85%, bottom 85%" })}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-full hidden lg:block"
+        style={{ left: "-60%", right: 0, height: "calc(50svh - 50%)" }}
+        data-motif="last-light-trail"
+        data-variant={variant}
+        // P3-11 r1: a scroll star (B56-trail, its marker above) — the lazy
+        // toys lay the trail down point by point as it scrolls through
+        // (worlds/hp/contact-toys.tsx)
+      >
+        {TRAIL.map((p, i) =>
+          variant === "alt" ? (
+            <span
+              key={i}
+              className="absolute"
+              style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o, transform: `translate(-50%, -50%) rotate(${p.deg.toFixed(1)}deg)` }}
+            >
+              <Footprint side={i % 2 ? "right" : "left"} size={12} fill="var(--w-ink-contour)" />
+            </span>
+          ) : (
+            <span
+              key={i}
+              className="absolute size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+              style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o }}
+            />
+          ),
+        )}
+      </div>
+    </>
   );
 }
 

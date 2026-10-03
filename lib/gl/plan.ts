@@ -6,7 +6,7 @@
 
 import { SKY, skyMix, type SkyKey } from "../sky";
 import { coverVec, inFrame } from "./cover";
-import type { GlCardSpec, GlFlavour, GlShape } from "./types";
+import type { GlCard, GlCardSpec, GlFlavour, GlShape } from "./types";
 
 /** The OUT/IN meet of a .45 star (a) (§7.1: p .22). */
 export const MEET = 0.22;
@@ -185,8 +185,10 @@ export function uniformsFor(s: GlCardSpec, d: Draw, g: Geo, l: Live): Uniforms {
     }
   }
 
-  if (s.grade && d.pass.role !== "out") {
-    const gr = gradeAt(s.grade.from, s.grade.to, t);
+  if (s.grade) {
+    // the OUT half holds the IN half's first grade: the hall it shows through
+    // the seam's mist (shaders.ts MI) meets the IN pass without a jump
+    const gr = gradeAt(s.grade.from, s.grade.to, d.pass.role === "out" ? 0 : t);
     u.uGradeFrom = gr.cur;
     u.uGradeTo = gr.end;
   }
@@ -248,20 +250,28 @@ export type SdfMeta = {
   ink: readonly [number, number, number, number];
 };
 
+/** The act title's growth over its pass (P3-11 r1, panel J3 #1 / J4 #3: the
+ *  old dive until one stroke covered the frame showed half-words — "Wor",
+ *  "…rontier", "THE LIGH" — and near-black middles, the same move 4×). Now
+ *  the title stays whole and legible: it grows by at most this factor
+ *  (its ink never wider than 96 % of the frame) and dissolves (shaders.ts
+ *  `title`). The tintype's title does not grow at all (the varied one: a
+ *  still stencil over the moving push, "developed" rather than dived). */
+export const TITLE_ZOOM: Readonly<Record<GlCard, number>> = { opening: 1.3, seam: 1.3, tintype: 1, ignite: 1.3 };
+/** The title's dissolve (title-local t; p ≈ .856 → .92): the clean push
+ *  frame holds after it. The css tier's state fade starts at the same p. */
+export const TITLE_OUT: readonly [number, number] = [0.55, 0.75];
+
 /** frame uv → title SDF uv at title-local t (0 → 1, p .68 → 1): the title
- *  rests centred (cap ≤ 20% of the frame height, ink ≤ 72% of its width),
- *  then scales about its origin, which drifts to the frame centre, until
- *  the stroke's inscribed disc covers the frame. */
-export function titleXf(m: SdfMeta, res: readonly [number, number], t: number): [number, number, number, number] {
+ *  rests centred (cap ≤ 20% of the frame height, ink ≤ 72% of its width)
+ *  and grows about its ink centre by ≤ `zoom` (eased), whole in the frame. */
+export function titleXf(m: SdfMeta, res: readonly [number, number], t: number, zoom = 1.3): [number, number, number, number] {
   const [W, H] = res;
-  const k = Math.min((0.2 * H) / m.cap, (0.72 * W) / Math.max(1, m.ink[2] - m.ink[0]));
+  const inkW = Math.max(1, m.ink[2] - m.ink[0]);
+  const k = Math.min((0.2 * H) / m.cap, (0.72 * W) / inkW);
   const cx = (m.ink[0] + m.ink[2]) / 2;
   const cy = m.ink[1] + m.cap / 2;
-  const e = ss(0, 1, t);
-  const px = W / 2 + (m.ox - cx) * k * (1 - e);
-  const py = H / 2 + (m.oy - cy) * k * (1 - e);
-  const end = ((Math.hypot(W, H) / 2) * 1.08) / Math.max(0.5, m.rIn * k);
-  // legible first, then the zoom accelerates (exponent t³)
-  const ks = k * Math.pow(Math.max(1, end), t * t * t);
-  return [W / (ks * m.w), H / (ks * m.h), (m.ox - px / ks) / m.w, (m.oy - py / ks) / m.h];
+  const zmax = Math.max(1, Math.min(zoom, (0.96 * W) / (inkW * k)));
+  const ks = k * (1 + (zmax - 1) * ss(0, 1, t / TITLE_OUT[1]));
+  return [W / (ks * m.w), H / (ks * m.h), (cx - W / 2 / ks) / m.w, (cy - H / 2 / ks) / m.h];
 }

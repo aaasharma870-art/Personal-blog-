@@ -28,15 +28,26 @@ export function CardReveal({
   as?: "span" | "div";
   /** Phase 3 pin mode (PHASE3-SPEC §7.1): "static" = up from arrival (the
    *  film title in the upper bar: legible, no stamp); "rise" (default) =
-   *  rises at `at` of star (a) (the h2 and the epigraph / TIP). */
-  pinned?: "rise" | "static";
+   *  rises at `at` of star (a) (the h2 and the epigraph / TIP); a number =
+   *  rises at that star (a) progress instead (P3-11 r1: the seam's and the
+   *  ignite's film title lands with the new world, never over the old
+   *  world's picture and caption while the card approaches). */
+  pinned?: "rise" | "static" | number;
   children: ReactNode;
   className?: string;
 }) {
   const { p, live, pin } = useCard();
-  const [shown, setShown] = useState(() => p.get() >= at);
+  const th = pin != null && typeof pinned === "number" ? pinned : at;
+  const [shown, setShown] = useState(() => p.get() >= th);
+  // the pin chunk swaps the driver (and the threshold) in: re-read it then,
+  // so a pinned title is never left up from the passage driver's state
+  const [src, setSrc] = useState({ p, th });
+  if (src.p !== p || src.th !== th) {
+    setSrc({ p, th });
+    setShown(p.get() >= th);
+  }
   useMotionValueEvent(p, "change", (v) => {
-    const next = v >= at;
+    const next = v >= th;
     if (next !== shown) setShown(next);
   });
   const up = !live || shown || (pin != null && pinned === "static");

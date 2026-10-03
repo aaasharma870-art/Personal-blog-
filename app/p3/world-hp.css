@@ -6,3 +6,32 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* — the roll (components/site/footer.tsx [data-roll]; P3-11 r1: the panel
+     left at the credits, "tiny grey type on black"). Desktop only, nothing
+     hidden: roles in ink at the small size, names at the lead size, rows
+     and gaps tightened, and the last line set large for the final frame.
+     Unlayered, so it wins over the utilities it adjusts. — */
+@media (min-width: 64rem) {
+  [data-roll] {
+    padding-top: var(--spacing-tier-block);
+  }
+  [data-roll] .mt-tier-block {
+    margin-top: var(--spacing-tier-group);
+  }
+  [data-roll] dl > div {
+    padding-block: var(--spacing-tier-pair);
+  }
+  [data-roll] dt {
+    font-size: var(--text-small);
+    color: var(--fg);
+  }
+  [data-roll] dd {
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+  }
+  [data-credits-last] > p {
+    font-size: var(--text-title);
+    line-height: 1.05;
+  }
+}

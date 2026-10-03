@@ -184,6 +184,8 @@ export default function PaletteDialog({
   const [active, setActive] = useState(0);
   // what the page holds right now (the shell mounts a fresh dialog per open)
   const [page] = useState<PageSnapshot>(snapshotPage);
+  // where focus was when this (fresh) dialog opened: it goes back there
+  const [returnTo] = useState<Element | null>(() => (typeof document === "undefined" ? null : document.activeElement));
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -350,12 +352,27 @@ export default function PaletteDialog({
   useEffect(() => {
     if (!open) return;
     lockScroll("palette");
-    const t = setTimeout(() => inputRef.current?.focus(), 20);
+    const input = inputRef;
+    const t = setTimeout(() => input.current?.focus(), 20);
     return () => {
       clearTimeout(t);
       unlockScroll("palette");
+      // WCAG 2.4.3 (P3-11 J9 M3): on close, focus goes back where it was
+      // before the palette opened, at once — a command that moves it (a
+      // jump, the drone) runs after this, and a dialog a command opens
+      // (the Map) takes this as its opener, so its Esc lands here too, not
+      // on <body>. Opened from the menu (its sheet is gone): the Menu button.
+      const now = document.activeElement;
+      if (now && now !== document.body && now !== input.current) return;
+      const back =
+        returnTo instanceof HTMLElement && returnTo.isConnected && returnTo !== document.body
+          ? returnTo
+          : returnTo instanceof HTMLElement && returnTo !== document.body
+            ? document.querySelector<HTMLElement>('[aria-controls="site-menu"]')
+            : null;
+      back?.focus({ preventScroll: true });
     };
-  }, [open]);
+  }, [open, returnTo]);
 
   const runAt = (i: number) => {
     const cmd = filtered[i];

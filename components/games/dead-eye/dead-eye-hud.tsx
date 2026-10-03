@@ -109,7 +109,7 @@ export default function DeadEyeHud({
   const live = result ? scoreLine(copy.score, result.n, result.left) : said;
   const phase = view?.phase ?? "aim";
   const line = view ? scoreLine(copy.score, view.marked, view.left) : "";
-  const best = result && copy.best ? fill(copy.best, { n: result.best.n, s: secs(result.best.left) }) : null;
+  const best = result?.best && copy.best ? fill(copy.best, { n: result.best.n, s: secs(result.best.left) }) : null;
 
   return (
     <StageLayerPortal layer="game-hud">

@@ -11,11 +11,14 @@
              ALT     branded         letters burn in from the centre outward, blot             420 ms
      idiots  DEFAULT chalked         a ragged chalk edge sweeps word by word, ≤ 12 dust specks 600 ms
              ALT     duster-reveal   the inverse wipe (right → left) behind a board duster     600 ms
-     rdr2    DEFAULT poster press    scale 1.02 → 1, a pre-blurred ink duplicate .6 → 0        360 ms
+     rdr2    DEFAULT poster press    scale 1.02 → 1, a pre-blurred ink duplicate .6 → 0,
+                                     the ink fading up over 240 ms                            360 ms
              ALT     typewriter      per-character steps, 28 ms/char (≤ 800 ms), key clicks
      hp      DEFAULT ink nib         a wipe along the line, a nib riding the edge, a wet-ink
                                      sheen duplicate that dries                               900 ms
              ALT     ink bleed       letters bleed in from the centre, a soft ink duplicate     900 ms
+             both: a faint underdrawing of the whole title (.38) until the ink has written it,
+             so a frame caught mid-write still reads every word (P3-11 r1)
    ========================================================================== */
 
 import { sound } from "@/lib/audio";
@@ -38,8 +41,14 @@ import { CHALK_EDGE, DUSTER, NIB, SCORCH_BLOT, SCORCH_EDGE } from "./sprites";
 
 export type TitleWorld = "pirates" | "idiots" | "rdr2" | "hp";
 
-/** Spec §8.2 durations (the spotlight hold). */
+/** Spec §8.2 durations (the arrival itself). */
 export const TITLE_MS: Readonly<Record<TitleWorld, number>> = { pirates: 420, idiots: 600, rdr2: 360, hp: 900 };
+/** How long each arrival VISIBLY moves, its decoration included (the
+ *  scorch blot fades over 1 s, the chalk dust falls ≈ 0.7 s after the
+ *  wipe, the wet-ink sheen dries 0.4 s after the nib): the spotlight hold,
+ *  ≤ 1.2 s, ended early when the run finishes (P3-11 r1 J1 #9: the grant
+ *  covers what the eye sees, no more). */
+const TITLE_VISIBLE_MS: Readonly<Record<TitleWorld, number>> = { pirates: 1000, idiots: 1200, rdr2: 420, hp: 1200 };
 
 /** The title's world: its own `data-words-world`, else the closest plane. */
 export function titleWorldOf(root: HTMLElement): TitleWorld | null {
@@ -67,7 +76,7 @@ const charCount = (el: HTMLElement): number => (el.textContent ?? "").replace(/\
 /** Typewriter: ms per character (28, compressed so the line is ≤ 800 ms). */
 const typeStep = (n: number): number => Math.min(28, 800 / Math.max(1, n));
 
-/** How long the title holds the spotlight (ms). */
+/** How long the title holds the spotlight (ms): its visible motion. */
 export function titleHold(root: HTMLElement): number {
   const world = titleWorldOf(root);
   const p = titleParts(root);
@@ -76,7 +85,7 @@ export function titleHold(root: HTMLElement): number {
     const n = charCount(p.i);
     return Math.round(Math.min(800, n * typeStep(n))) + 40;
   }
-  return TITLE_MS[world];
+  return TITLE_VISIBLE_MS[world];
 }
 
 /* — geometry ———————————————————————————————————————————————————————— */
@@ -382,7 +391,9 @@ function rdr2(run: Run, p: Parts, b: Box, v: Variant, seed: () => number): void 
   const ms = TITLE_MS.rdr2;
   run.style(p.root, { transformOrigin: `${b.cx}px ${b.cy}px` });
   run.animate(p.root, [{ transform: "scale(1.02)" }, { transform: "none" }], { duration: ms, easing: EASE_OUT, fill: "both" });
-  run.animate(p.o, [{ opacity: 0 }, { opacity: 1 }], { duration: 90, easing: EASE_OUT, fill: "both" });
+  // P3-11 r1 integration (J8 #7, F2: B33 "pops in" at the 3 Idiots → RDR2
+  // hand-off): the ink comes up over 240 ms under the press, not in 90
+  run.animate(p.o, [{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: EASE_OUT, fill: "both" });
   const fx = openFx(run, p.fx);
   if (fx) {
     const blur = overlay(fx, p, b, {
@@ -397,6 +408,15 @@ function rdr2(run: Run, p: Parts, b: Box, v: Variant, seed: () => number): void 
 function hp(run: Run, p: Parts, b: Box, v: Variant): void {
   const ms = TITLE_MS.hp;
   const fx = openFx(run, p.fx);
+  // the UNDERDRAWING (P3-11 r1, strangers D38: "PHILOSOPH…" caught mid-write):
+  // the whole title stays readable while the nib writes — a faint copy of
+  // the words lies under the ink and fades as the line is finished (over
+  // the revealed letters it is the same ink, so only the unwritten part
+  // shows it)
+  if (fx) {
+    const guide = overlay(fx, p, b, { opacity: "0", willChange: "opacity" });
+    run.animate(guide, [{ opacity: 0.38 }, { opacity: 0.38, offset: 0.78 }, { opacity: 0 }], { duration: ms, easing: "linear", fill: "both" });
+  }
   if (v === "alt") {
     run.style(p.root, { transformOrigin: `${b.cx}px ${b.cy}px` });
     radial(run, p, b, { charMs: 300, spread: 520 });

@@ -16,8 +16,16 @@
                half in view; nothing is hidden before it.
    - scrub     (scrub-sentence.tsx): a SCROLL star, scrubbed continuously
                (components/words/bind/scrub.ts).
+   - stars     every other `[data-beat-star]` element that carries
+               `data-beat-scroll` or is listed in lib/spotlight-windows.ts
+               is registered as a SCROLL star with the spotlight (its
+               performance window; P3-11 r1 F1), so a host with markup only
+               needs no client code. A host that registers the same element
+               itself is counted once.
    - collapse  (components/primitives/collapse.tsx): every toggle asks for a
                scroll refresh (Lenis + ScrollTrigger re-measure the page).
+   A time star's spotlight hold ends when its effect visibly ends
+   (spotlight.release), never later.
 
    It first waits for the page to finish hydrating (`page:hydrated`, ≤ 3 s),
    so it never touches markup a Suspense boundary has yet to hydrate. A title
@@ -37,8 +45,9 @@ import { DESKTOP_FINE, onMotionOffChange } from "@/lib/flags";
 import { onIdle } from "@/lib/idle";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
 import { spotlight } from "@/lib/spotlight";
+import { SCROLL_WINDOWS } from "@/lib/spotlight-windows";
 import type { Variant } from "@/lib/variants";
-import { Run, exposeDebug, liveNow, note, type Restore } from "@/components/words/bind/shared";
+import { EASE_OUT, Run, exposeDebug, liveNow, note, type Restore } from "@/components/words/bind/shared";
 import { armTitle, playTitle, titleHold, titleWorldOf, type TitleWorld } from "@/components/words/bind/titles";
 import { PHYSICAL_MS, armPhysical, playPhysical, syncPhysicalVariant } from "@/components/words/bind/physical";
 import { loadFlyFrames, playFly } from "@/components/words/bind/fly";
@@ -71,6 +80,10 @@ class TimeStar implements Item {
   private io: IntersectionObserver | null = null;
   private unarm: Restore | null = null;
   private run: Run | null = null;
+  /** The spotlight granted this play: its hold ends when the run does. */
+  private granted = false;
+  /** A skipped title's soft reveal (cancelled by reset). */
+  private fade: Animation | null = null;
 
   constructor(
     readonly el: HTMLElement,
@@ -128,7 +141,9 @@ class TimeStar implements Item {
         .request(this.id, { weight: weightOf(this.el, fly ? 2 : 1), needsIdle: fly || undefined, durationMs: this.hold() })
         .then((answer) => {
           if (this.state !== "asking") return;
+          this.granted = answer === "play";
           if (answer === "play" && liveNow()) void this.play();
+          else if (answer === "skip" && this.kind === "title" && liveNow()) this.reveal();
           else this.settle("static", answer === "skip" ? "spotlight skip" : "motion off");
         });
     });
@@ -172,11 +187,28 @@ class TimeStar implements Item {
     return run.finished;
   }
 
+  /** A title the spotlight skipped is not a star, but it never pops in
+   *  (P3-11 r1 integration, J8 #7: "the next block fills in all at once"):
+   *  its armed opacity 0 fades up over 240 ms (WAAPI on the outer wrapper,
+   *  no fill, so the settled inline style wins when it ends). */
+  private reveal(): void {
+    const o = this.unarm ? this.el.querySelector<HTMLElement>(":scope > [data-words-o]") : null;
+    this.settle("static", "spotlight skip");
+    if (!o || typeof o.animate !== "function") return;
+    const a = o.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: EASE_OUT });
+    this.fade = a;
+    const done = () => {
+      if (this.fade === a) this.fade = null;
+    };
+    a.finished.then(done, done);
+  }
+
   private settle(how: "static" | "played", why?: string): void {
     this.io?.disconnect();
     this.io = null;
     this.unarm?.();
     this.unarm = null;
+    this.free();
     this.state = "done";
     this.mark(null);
     this.ctl.decide(this.key);
@@ -187,7 +219,10 @@ class TimeStar implements Item {
    *  (or is playing) stays decided for this page view. */
   reset(): void {
     const was = this.state;
+    this.fade?.cancel();
+    this.fade = null;
     if (was === "asking") spotlight.release(this.id);
+    this.free();
     this.io?.disconnect();
     this.io = null;
     const run = this.run;
@@ -204,6 +239,40 @@ class TimeStar implements Item {
     if (s) this.el.dataset.wordsState = s;
     else if (this.el.dataset.wordsState) delete this.el.dataset.wordsState;
   }
+
+  /** The effect is over (or never ran): end the spotlight hold now, so the
+   *  grant covers what the eye sees and no more. */
+  private free(): void {
+    if (!this.granted) return;
+    this.granted = false;
+    spotlight.release(this.id);
+  }
+}
+
+/** A scroll star with markup only (`data-beat-scroll`, or a host listed in
+ *  lib/spotlight-windows.ts): registered here, its window resolved by the
+ *  spotlight (the attribute, then the table). */
+class ScrollStar implements Item {
+  private off: () => void;
+
+  constructor(
+    readonly el: HTMLElement,
+    id: string,
+  ) {
+    this.off = spotlight.registerScrollStar(id, el, weightOf(el, 1));
+  }
+
+  reset(): void {
+    this.off();
+    this.off = () => {};
+  }
+}
+
+/** Elements the binder registers as scroll stars (never a word primitive:
+ *  a scrub sentence registers itself). */
+function isScrollStar(el: HTMLElement): boolean {
+  const id = el.dataset.beat;
+  return Boolean(id) && !el.hasAttribute("data-words") && (el.hasAttribute("data-beat-scroll") || Object.hasOwn(SCROLL_WINDOWS, id!));
 }
 
 class Controller {
@@ -256,7 +325,8 @@ class Controller {
       cancelIdle();
       cancelIdle = onIdle(() => this.scan(), { timeout: 1000 });
     };
-    const isWords = (n: Node) => n instanceof Element && (n.matches("[data-words]") || n.querySelector("[data-words]") !== null);
+    const NOW = "[data-words], [data-beat-scroll]";
+    const isWords = (n: Node) => n instanceof Element && (n.matches(NOW) || n.querySelector(NOW) !== null);
     const mo = new MutationObserver((records) => {
       if (!this.live || !this.ready()) return;
       let outside = false;
@@ -369,6 +439,9 @@ class Controller {
         this.items.delete(el);
       }
     }
+    for (const el of this.root.querySelectorAll<HTMLElement>("[data-beat-star]")) {
+      if (!this.items.has(el) && isScrollStar(el)) this.items.set(el, new ScrollStar(el, el.dataset.beat!));
+    }
     const found = Array.from(this.root.querySelectorAll<HTMLElement>("[data-words]")).filter((el) => !this.items.has(el));
     if (!found.length) return;
     // every read first (one layout), then the writes
@@ -403,7 +476,7 @@ class Controller {
     return [...this.items.values()].map((it) => ({
       words: it.el.dataset.words,
       beat: it.el.dataset.beat ?? null,
-      state: it instanceof TimeStar ? it.state : "scrub",
+      state: it instanceof TimeStar ? it.state : it instanceof ScrollStar ? "scroll-star" : "scrub",
     }));
   }
 }

@@ -26,7 +26,7 @@
    its static / css frame); anything else waits for the next end.
 
    DRAW ONLY ON p CHANGE: one coalesced rAF per change (p, the kraken), plus
-   the 120–180 ms impact pulse. 0 rAF at rest, offscreen or hidden.
+   the 120 ms flash / 520 ms bloom impact pulse. 0 rAF at rest, offscreen or hidden.
    BUDGET: ≤ 3 plates and ≤ 25 MB of textures (LRU; an offscreen owner's
    plates give way to the card approaching), buffer ≤ 1922×804. With no
    host left (Pause, reduced motion, a resize, tier css) the plates, titles
@@ -45,9 +45,9 @@ import { motionOffNow, onMotionOffChange } from "../flags";
 import { onIdle } from "../idle";
 import { whenLadder } from "../ladder";
 import { getMedia, isMediaId, markOf, registeredTo, type MediaId } from "../media";
-import { markWorldFontsReady } from "../world-fonts";
+import { worldFontsMarked } from "../world-fonts";
 import type { GlPeek } from "./gl-debug";
-import { frameAt, programsOf, titleXf, uniformsFor, type Geo } from "./plan";
+import { TITLE_ZOOM, frameAt, programsOf, titleXf, uniformsFor, type Geo } from "./plan";
 import type { SdfTitle, TitleFont } from "./sdf-title";
 import { fragment } from "./shaders";
 import { glForced, glTier, onGlTierChange, setContextTier } from "./support";
@@ -140,6 +140,25 @@ const log = (ev: string, h?: Host) => {
   if (dbg.log.length > 200) dbg.log.shift();
 };
 const moving = () => now() - lastMove < QUIET_MS;
+/** The PAGE scrolled within QUIET_MS (any scroll, not only a card's p):
+ *  the engage (mount, size, first draw) waits for it (P3-11 r1, F6 / J8
+ *  #1: it ran inside the first scroll's observer pass, 180–350 ms). */
+let lastScroll = -1e9;
+const scrolling = () => now() - lastScroll < QUIET_MS;
+/** The visibility observer's work (arbitrate + reprep), coalesced into
+ *  ONE idle slice instead of running inside the observer callback. */
+let arbiter: (() => void) | null = null;
+function arbitrateSoon(): void {
+  if (arbiter) return;
+  arbiter = onIdle(
+    () => {
+      arbiter = null;
+      arbitrate();
+      if (!holds(owner)) reprep();
+    },
+    { timeout: 600 },
+  );
+}
 
 /** WEBGL_lose_context, taken at creation (getExtension is null once lost). */
 let loseExt: WEBGL_lose_context | null = null;
@@ -383,7 +402,12 @@ function platePrep(h: Host, which: "from" | "to"): void {
 }
 
 async function fontOf(h: Host): Promise<TitleFont> {
-  await markWorldFontsReady(h.spec.b.world, 1500);
+  // never force a world's face in from here (P3-11 r1, F6: forcing it could
+  // swap the face while that world is on screen); WorldFonts adds the token
+  // while the world is off screen: wait for it (≤ 8 s, a 250 ms poll, no
+  // work), else set the title in the face that is there
+  const w = h.spec.b.world;
+  for (let i = 0; i < 32 && !worldFontsMarked().has(w); i++) await new Promise((r) => window.setTimeout(r, 250));
   const cs = getComputedStyle(h.el);
   const v = (n: string) => cs.getPropertyValue(n).trim();
   const family = v("--world-font-head") || v("--world-font-act") || cs.fontFamily;
@@ -558,7 +582,7 @@ function later(): void {
 function tryEngage(h: Host): void {
   if (h !== owner || h.state !== "idle" || mid(h) || !ready(h) || glTier() !== "gl" || motionOffNow()) return;
   // only at a still p end: the fade never meets a scrub
-  if (moving()) return later();
+  if (moving() || scrolling()) return later();
   mount(h);
   grab(h);
   draw(h);
@@ -626,7 +650,9 @@ function flashNow(): [number, number] {
   if (!flash.dur) return [0, 0];
   const k = (now() - flash.t0) / flash.dur;
   if (k < 0 || k >= 1) return [0, 0];
-  const v = flash.amt * (k < 0.2 ? k / 0.2 : 1 - (k - 0.2) / 0.8);
+  // up fast, then an ease-out decay (P3-11 r1 J8 #5: the bloom's linear
+  // 180 ms tail read as a one-frame drop back to dark)
+  const v = flash.amt * (k < 0.2 ? k / 0.2 : (1 - (k - 0.2) / 0.8) ** 2);
   return flash.bloom ? [0, v] : [v, 0];
 }
 
@@ -661,7 +687,7 @@ function draw(h: Host): void {
     kraken: h.spec.kraken?.get() ?? 0,
     flash: flashNow(),
     roll: h.roll,
-    titleXf: title?.meta ? titleXf(title.meta, res, d.t) : null,
+    titleXf: title?.meta ? titleXf(title.meta, res, d.t, TITLE_ZOOM[h.spec.card]) : null,
   });
   const name = d.kind === "title" ? "title" : d.pass.flavour;
   tgl.draw(name, u, {
@@ -729,8 +755,7 @@ function install(): void {
           h.visible = e.isIntersecting && e.intersectionRatio > 0;
           h.dist = Math.abs(r.top + r.height / 2 - (e.rootBounds?.height ?? window.innerHeight) / 2);
         });
-        arbitrate();
-        if (!holds(owner)) reprep();
+        arbitrateSoon();
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
     ),
@@ -751,11 +776,18 @@ function install(): void {
   };
   onMotionOffChange(stopAll);
   onGlTierChange(stopAll);
+  window.addEventListener(
+    "scroll",
+    () => {
+      lastScroll = now();
+    },
+    { passive: true },
+  );
   on("impact", ({ world }) => {
     const h = owner;
     if (!h || h.state === "idle" || !h.spec.flash || h.spec.b.world !== world || motionOffNow()) return;
     const bloom = world === "hp";
-    flash = { t0: now(), dur: bloom ? 180 : 120, amt: h.spec.flash.amount, bloom, raf: 0 };
+    flash = { t0: now(), dur: bloom ? 520 : 120, amt: h.spec.flash.amount, bloom, raf: 0 };
     const step = () => {
       if (owner && owner.state !== "idle") draw(owner);
       flash.raf = now() - flash.t0 < flash.dur ? requestAnimationFrame(step) : 0;

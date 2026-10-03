@@ -16,7 +16,7 @@ import { useLetterboxScene } from "@/components/stage/letterbox-bars-impl";
       P3-6 #8): the global letterbox bars close over 40vh as the
       INTERMISSION head rises (the frame's top from 125% to 85% of the
       viewport: closed as the first screen arrives) and open over 40vh
-      around the moment the frame is centred (its centre from 70% to 30%);
+      as the frame rises to the middle (its centre from 92% to 52%: P3-11 r1);
       from there each screen's own 2.39 matte carries the scene. One close,
       one open per pass (html[data-letterbox] flips twice, rule 33). B30's
       marker (server markup in the frame's box, film-screen.tsx, above the
@@ -54,10 +54,14 @@ const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const easeSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
 
-/** House lights down (spec §7.4; positions on the first frame's box). */
+/** House lights down (spec §7.4; positions on the first frame's box). The
+ *  bars open over 40vh as the frame rises to just below the middle, so
+ *  they are gone before the screen's reading text comes up under the frame
+ *  (P3-11 r1, strangers C008: the bottom bar, still opening, sliced the
+ *  Pirates reason's second paragraph to the tops of its letters). */
 const LIGHTS: LetterboxSceneOptions = {
   close: ["top 125%", "top 85%"],
-  open: ["center 70%", "center 30%"],
+  open: ["center 92%", "center 52%"],
 };
 const NO_REF: RefObject<Element | null> = { current: null };
 

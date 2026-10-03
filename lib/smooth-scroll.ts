@@ -49,6 +49,8 @@ export type LenisLike = {
   readonly isScrolling: boolean | "smooth" | "native";
   readonly velocity: number;
   readonly actualScroll: number;
+  /** The position Lenis last scrolled to (a stored number: no layout read). */
+  readonly animatedScroll: number;
 };
 
 export type ScrollTarget = string | Element | number;
@@ -420,32 +422,38 @@ export function requestScrollRefresh(): void {
 
 /* — velocity + idle ————————————————————————————————————————————————— */
 
-const sample = { y: 0, t: 0, v: 0, on: false };
+const sample = { y: 0, t: 0, v: 0, on: false, ev: -1e9 };
 
 function ensureSampler(): void {
   if (sample.on || typeof window === "undefined") return;
   sample.on = true;
-  sample.y = window.scrollY;
-  sample.t = performance.now();
+  // the handler only stamps the time: reading scrollY here forced a layout
+  // per scroll event whenever a task had dirtied it (J8 #1: 175–226 ms in
+  // the native run); the position is read when someone asks
   window.addEventListener(
     "scroll",
     () => {
-      const now = performance.now();
-      const dt = now - sample.t;
-      if (dt > 0) sample.v = ((window.scrollY - sample.y) / dt) * 1000;
-      sample.y = window.scrollY;
-      sample.t = now;
+      sample.ev = performance.now();
     },
     { passive: true },
   );
 }
 
-/** Current scroll speed in px/s (0 at rest; measured from scroll events,
- *  so it is the same with or without Lenis). */
+/** Current scroll speed in px/s (0 at rest). Measured between calls (the
+ *  spotlight asks once a frame while it waits), from Lenis's own position
+ *  when it drives the scroll; a first call after a pause, with a scroll
+ *  event in the last 120 ms, reads as moving (Infinity) until the next. */
 export function scrollVelocity(): number {
   if (typeof window === "undefined") return 0;
   ensureSampler();
-  return performance.now() - sample.t > 120 ? 0 : Math.abs(sample.v);
+  const now = performance.now();
+  if (now - sample.ev > 120) return 0;
+  const y = lenis ? lenis.animatedScroll : window.scrollY;
+  const dt = now - sample.t;
+  sample.v = dt > 0 && dt < 250 ? (Math.abs(y - sample.y) / dt) * 1000 : dt <= 0 ? sample.v : Infinity;
+  sample.y = y;
+  sample.t = now;
+  return sample.v;
 }
 
 /** Call `fn` ONCE, when the page has not scrolled (or wheeled) for `ms`

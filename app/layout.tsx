@@ -64,6 +64,12 @@ const newsreader = Newsreader({
   preload: false,
 });
 
+/** No JS: React's streamed segments (hidden until its inline script moves
+ *  them; see the <noscript> below) are shown where they are. In Tailwind's
+ *  first layer: an important declaration in an earlier cascade layer beats
+ *  preflight's `[hidden]{display:none!important}` (@layer base). */
+const NOSCRIPT_SEGMENTS_CSS = '@layer theme{body>div[hidden][id^="S:"]{display:block!important}}';
+
 const description =
   "Self-taught high-school quant building and validating systematic trading systems on ES/NQ futures — research, data pipelines, and a kill-list that treats every backtest as guilty until proven innocent.";
 
@@ -158,8 +164,15 @@ export default function RootLayout({
         {/* every request (Phase 3 boot gate: html.js); B1-SCROLL */}
         <BootHeadScript />
         {/* no JS: every world face is live at ≥ 64rem (no <WorldFonts/> to
-            add the html[data-fonts] tokens; app/globals.css "world type") */}
-        <noscript dangerouslySetInnerHTML={{ __html: `<style>${NOSCRIPT_WORLD_FONTS_CSS}</style>` }} />
+            add the html[data-fonts] tokens; app/globals.css "world type").
+            And the page itself: app/page.tsx hydrates each section in its
+            own Suspense boundary, and React streams a boundary bigger than
+            its chunk size as a hidden segment (`<div hidden id="S:n">`
+            after </main>) that an inline script moves into place. Without
+            JS nothing moves it, so this shows the segments where they sit
+            (after the hero, in page order) — P3-11 J9 M4: no-JS showed
+            the hero and nothing else. */}
+        <noscript dangerouslySetInnerHTML={{ __html: `<style>${NOSCRIPT_WORLD_FONTS_CSS}${NOSCRIPT_SEGMENTS_CSS}</style>` }} />
       </head>
       <body className="flex min-h-full flex-col">
         {intro ? <IntroOverlay model={intro} /> : null}

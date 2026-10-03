@@ -5,13 +5,12 @@ import { safeLazy } from "@/lib/safe-lazy";
 import { motion } from "motion/react";
 import { pillars } from "@/lib/content";
 import { useDesktopFine, useReducedMotion } from "@/lib/flags";
-import { easeDraw } from "@/lib/motion";
+import { dur, ease, easeDraw } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
 import type { VariantChoice } from "@/lib/variants";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
-import { Rise } from "@/components/site/world-motion";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import { JackCompass, type CompassApi, type CompassLid } from "@/components/worlds/pirates/jack-compass";
 
 /* ============================================================================
@@ -61,6 +60,45 @@ const ENTRY_STAR = { id: "B08-compass", weight: 1 } as const;
 
 /** The toy (desktop only): a lazy chunk, never on phones (DP-13). */
 const CompassToy = safeLazy(() => import("@/components/worlds/pirates/compass-toy"));
+
+/**
+ * AboutRise — world-motion's Rise (a block rises 24 px and fades in once),
+ * except on DESKTOP_FINE, where About's prose is simply there (P3-11 r1,
+ * J1 #5): the bio and the pillars rising in a stagger while Jack's compass
+ * spins on entry read as two stars at once. On the desktop the compass's
+ * entry spin (B08-compass, through the spotlight) is this screen's one
+ * motion; phones keep the rise. Same element type on both sides (no
+ * remount when the media query settles after hydration).
+ */
+export function AboutRise({
+  as = "div",
+  children,
+  className,
+  delay = 0,
+}: {
+  as?: "div" | "li";
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const entered = useEnterOnce(ref);
+  const still = useDesktopFine();
+  const phase = still ? "static" : entered;
+  const Tag = as === "li" ? motion.li : motion.div;
+  return (
+    <Tag
+      // motion's per-tag ref types differ; the element is always an HTMLElement
+      ref={ref as RefObject<never>}
+      className={className}
+      initial={false}
+      animate={phase === "armed" ? { opacity: 0, y: 24 } : { opacity: 1, y: 0 }}
+      transition={phase === "entered" ? { duration: dur.reveal, ease, delay } : { duration: 0 }}
+    >
+      {children}
+    </Tag>
+  );
+}
 
 /** Bearing lines from the case rim outward (desktop hub SVG, 280 × 280). */
 const RAYS = HEADINGS.map((deg) => {
@@ -206,12 +244,7 @@ export function AboutPillars({
         className="grid grid-cols-1 gap-y-tier-block sm:grid-cols-2 sm:gap-x-12 lg:gap-x-40 lg:gap-y-24"
       >
         {pillars.map((p, i) => (
-          <Rise
-            as="li"
-            key={p.index}
-            delay={i * 0.06}
-            className="max-w-[34ch]"
-          >
+          <AboutRise as="li" key={p.index} delay={i * 0.06} className="max-w-[34ch]">
             <div
               onPointerEnter={() => setAim(i)}
               onPointerLeave={() => setAim(null)}
@@ -237,7 +270,7 @@ export function AboutPillars({
               <h3 className="mt-tier-pair type-heading text-fg">{p.title}</h3>
               <p className="mt-tier-pair type-body text-fg-muted">{bodies?.[i] ?? p.body}</p>
             </div>
-          </Rise>
+          </AboutRise>
         ))}
       </ol>
     </div>

@@ -9,8 +9,11 @@
 //            for a declared scroll star the spotlight never registered — its box crossed the middle 60 % (the
 //            clips' `unregistered`). A row whose stars were all skipped (maxWait, host left the viewport) or
 //            never seen does not show its fill (by the log: a host that animates without asking the spotlight
-//            is reported the same way, so the sheets of the row are the check). Also reported: the share of the
-//            rows' clips with no star.
+//            is reported the same way, so the sheets of the row are the check). A row that begins inside a
+//            BREATH (lib/beats.ts: the viewport after a weight-3 star; clips.json `rows[].breath`) is a rest and
+//            needs no fill (reported as `rest`). Since P3-11 r1 the log's scroll stars own only over their
+//            performance window and markup-only hosts are registered by the words binder, so "played" means
+//            the host's own animation ran. Also reported: the share of the rows' clips with no star.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -48,9 +51,11 @@ const runs = flags.clips.split(",").map((f) => {
   const played = new Set((sc.spotlight ?? []).filter((e) => e.ev === "own" || e.ev === "grant").map((e) => e.id));
   const skipped = new Map((sc.spotlight ?? []).filter((e) => e.ev === "skip").map((e) => [e.id, e.why]));
   const rowStars = new Map(c.rows.map((r) => [r.row, r.stars]));
+  const restRows = new Set(c.rows.filter((r) => r.breath).map((r) => r.row));
   const fills = stretches.map((s) => {
     const rows = s.rows.map((row) => {
       const stars = rowStars.get(row) ?? [];
+      const rest = restRows.has(row);
       const clips = c.clips.filter((x) => x.row === row && !x.intro);
       const geo = new Set(clips.flatMap((x) => x.unregistered));
       const shown = stars.filter((id) => played.has(id) || geo.has(id));
@@ -61,7 +66,8 @@ const runs = flags.clips.split(",").map((f) => {
         skipped: stars.filter((id) => !shown.includes(id) && skipped.has(id)).map((id) => `${id} (${skipped.get(id)})`),
         clips: clips.length,
         clipsNoStar: clips.filter((x) => x.withDeclared === 0).length,
-        pass: stars.length === 0 ? null : shown.length > 0,
+        rest,
+        pass: stars.length === 0 || (rest && !shown.length) ? null : shown.length > 0,
       };
     });
     const judged = rows.filter((r) => r.pass !== null);

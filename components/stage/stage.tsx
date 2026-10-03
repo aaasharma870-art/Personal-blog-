@@ -42,7 +42,11 @@ import type { DepthSpec } from "@/components/primitives/depth-plate";
 import type { LivePlateProps } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import type { WeatherKind, WeatherLayerProps } from "./weather-layer";
+import { hideWhenFar } from "./far";
 import { StageVideo } from "./stage-video";
+// the stage's and the plates engine's own layers: loaded with this chunk,
+// not with the page (first-load CSS budget, P3-11 r1)
+import "./stage-lazy.css";
 
 /* ============================================================================
    THE PERSISTENT STAGE (spec §3.2, P3-2) — OWNER: B1-STAGE (W1), W2-PLATES (W2).
@@ -1426,6 +1430,10 @@ export function Stage() {
       const w = Number(el.dataset.beatWeight ?? 1);
       if (id) stars.push(spotlight.registerScrollStar(id, el, w === 3 ? 3 : w === 2 ? 2 : 1));
     });
+    // a split window outside its section costs nothing (J8 #2, P3-11 r1):
+    // the sticky window (aria-hidden art) is out of paint while it is more
+    // than a viewport away (./far.ts); its layer mounts within half a one
+    const fars = [...document.querySelectorAll<HTMLElement>("[data-stage-window]")].map((el) => hideWhenFar(el, 1));
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
@@ -1435,6 +1443,7 @@ export function Stage() {
       window.removeEventListener("pointermove", onPointer);
       offScroll();
       stars.forEach((off) => off());
+      fars.forEach((off) => off());
       mark(new Set());
     };
   }, [scrollY]);

@@ -4,6 +4,7 @@ import { useEffect, type RefObject } from "react";
 import type { MotionValue } from "motion/react";
 import { on } from "@/lib/events";
 import { onIdle } from "@/lib/idle";
+import { getLenis } from "@/lib/smooth-scroll";
 import { armInvite } from "@/components/games/invite";
 
 /* ============================================================================
@@ -19,7 +20,10 @@ import { armInvite } from "@/components/games/invite";
       (top entering the viewport 0 → bottom leaving the top 1) on scroll,
       rAF-coalesced and only while the band is near, and HOLDS it while the
       drone flies (`game:start` → `game:stop`), so the plate under the
-      course never moves.
+      course never moves. P3-11 (J8 #1): under Lenis the passage is Lenis's
+      own position against the band's box, measured once per approach (no
+      getBoundingClientRect per frame: it forced a layout in every rAF
+      while the band was near).
    2. THE INVITE (B26, a toy-invite time star): on scroll-idle, once, the
       chalk drone beside "▲ Take off" lifts 8 px (the IC-3I-08 lift
       microbeat, ≤ 400 ms up) through the spotlight (components/games/
@@ -47,13 +51,30 @@ export default function DroneDesk({
     let raf = 0;
     let near = false;
     let held = false;
+    /** The band's document top and height (null: measure again). */
+    let box: { top: number; h: number } | null = null;
     const put = () => {
       raf = 0;
       if (held) return;
-      const r = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      const t = (vh - r.top) / (vh + r.height);
+      const y = getLenis()?.animatedScroll;
+      let top: number;
+      let h: number;
+      if (y != null && box) {
+        top = box.top - y;
+        h = box.h;
+      } else {
+        const r = el.getBoundingClientRect();
+        top = r.top;
+        h = r.height;
+        if (y != null) box = { top: r.top + y, h };
+      }
+      const t = (vh - top) / (vh + h);
       p.set(Math.min(1, Math.max(0, t)));
+    };
+    const remeasure = () => {
+      box = null;
+      ask();
     };
     const ask = () => {
       if (!near || held || raf) return;
@@ -62,13 +83,13 @@ export default function DroneDesk({
     const io = new IntersectionObserver(
       ([e]) => {
         near = Boolean(e?.isIntersecting);
-        ask();
+        remeasure();
       },
       { rootMargin: "25% 0px" },
     );
     io.observe(el);
     window.addEventListener("scroll", ask, { passive: true });
-    window.addEventListener("resize", ask);
+    window.addEventListener("resize", remeasure);
     const offStart = on("game:start", (d) => {
       if (d.game === "drone") held = true;
     });
@@ -81,7 +102,7 @@ export default function DroneDesk({
       cancelAnimationFrame(raf);
       io.disconnect();
       window.removeEventListener("scroll", ask);
-      window.removeEventListener("resize", ask);
+      window.removeEventListener("resize", remeasure);
       offStart();
       offStop();
     };

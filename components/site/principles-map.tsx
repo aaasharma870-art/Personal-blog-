@@ -13,7 +13,7 @@ import {
 import { beatAttrs } from "@/lib/beats";
 import { principles, type Principle } from "@/lib/content";
 import { film } from "@/lib/film";
-import { useReducedMotion } from "@/lib/flags";
+import { useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { copyVisible } from "@/lib/sections";
 import { dur, ease, easeClip } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ import { Lettered } from "@/components/primitives/scene-caption";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { Footprint } from "@/components/worlds/hp/footprints";
 import type { ScrubBody } from "@/components/worlds/hp/principle-body";
-import { InkWall, MapBanner, MapTrail, Stairs, Turret } from "@/components/worlds/hp/map-ink";
+import { InkWall, MapBanner, MapTrail, Turret } from "@/components/worlds/hp/map-ink";
 import { CandleField, spotsIn } from "@/components/worlds/hp/hall-ceiling";
 import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
 
@@ -69,6 +69,20 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
    desktop the wand cursor's bloom gets its own layer on this sheet, under
    the ink and the words (components/worlds/hp/wand-cursor.tsx, lazy).
 
+   P3-11 r1 (panel J4 #6, J2 #10; J1 #4):
+   - While it waits to unfold, the sheet is a FOLDED MAP, not a blank cream
+     box: the ink and the words show on the middle panel (clipped to it)
+     and open with the outer panels (one clip-path, in step with their
+     scaleX), instead of arriving after them.
+   - The five rooms are no longer one box five times: each has its own
+     furniture in its free corner and its own visitor's trail
+     (worlds/hp/room-features.tsx, rendered on the server and passed in:
+     no drawing code in the client bundle).
+   - The walk is B54's scroll star: its host is now room 1 (was room 3's
+     ribbons), so its window (lib/spotlight-windows.ts: "top 62%,
+     [data-room='4'] bottom 62%", registered by the words binder) covers
+     rooms 1–4; room 5 is B55's scrubbed sentence.
+
    Our own drawing: rooms and corridors come from THIS page's list, never
    the film's castle plan; the prints are ours (worlds/hp/footprints). All
    ink is SVG on CSS variables (never currentColor). Everything here is
@@ -88,6 +102,9 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
 
 /** The unfold's time star (spec §2.3 B52: "map unfold", signature · t · 1). */
 const B52 = { id: "B52", weight: 1 } as const;
+/** The ink while the sheet is folded: the middle panel only; then open. */
+const FOLDED = "inset(0% 33.333% 0% 33.333%)";
+const OPENED = "inset(0% 0% 0% 0%)";
 
 /** The door (and the passage to it) sits at this fraction of a room's height. */
 const DOOR = 0.3;
@@ -256,11 +273,14 @@ export function PrinciplesMap({
   head,
   scrub,
   hint,
+  features,
 }: {
   ribbons: boolean;
   head: ReactNode;
   scrub?: ScrubBody;
   hint?: ReactNode;
+  /** Each room's furniture (server-rendered: worlds/hp/room-features). */
+  features?: readonly ReactNode[];
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
@@ -276,6 +296,8 @@ export function PrinciplesMap({
   if (phase === "armed" && !wasArmed) setWasArmed(true);
   const live = !reduced && (phase !== "static" || wasArmed);
   const walks = useRoomWalks(listRef, principles.length);
+  // the folded-map ink is desktop's (phones keep the fade after the unfold)
+  const desktop = useMediaQuery("(min-width: 64rem)");
   // the two outer panels are their own layers only while they can move
   // (armed, then the unfold): their scaleX is then a compositor property
   // change, never a repaint of the sheet's layer; flat, they paint into it
@@ -303,7 +325,7 @@ export function PrinciplesMap({
       )}
     >
       {/* T11: the Great Hall's candles, dimming above the sheet */}
-      <CandleField spots={HALL_LAST} className="inset-x-0 bottom-full h-(--section-pad)" />
+      <CandleField spots={HALL_LAST} className="inset-x-0 bottom-full" style={{ height: "var(--section-pad)" }} />
 
       {/* the parchment: three panels, the outer two unfold from the centre.
           The sheet (grain + gradients) and the wear below are STATIC
@@ -339,8 +361,16 @@ export function PrinciplesMap({
         transition={arrive(0.25)}
       />
 
-      {/* the ink and the words arrive once the sheet lies flat */}
-      <motion.div className="relative" initial={false} animate={{ opacity: folded ? 0 : 1 }} transition={arrive(0.35)}>
+      {/* the ink and the words: ≥ 64rem on the middle panel while folded (no
+          blank sheet), opening with the outer panels (one clip, in step
+          with their scaleX; never clipped unless the sheet was ever
+          folded); phones: as before, they arrive once the sheet lies flat */}
+      <motion.div
+        className={cn("relative", unfolding && "will-change-transform")}
+        initial={false}
+        animate={!desktop ? { opacity: folded ? 0 : 1 } : wasArmed ? { clipPath: folded ? FOLDED : OPENED } : undefined}
+        transition={desktop ? unfold : arrive(0.35)}
+      >
         <SheetFrame />
         <div className="relative px-2 pb-6 pt-5 sm:px-8 sm:pb-12 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
           <TitleRow hint={hint} />
@@ -365,6 +395,7 @@ export function PrinciplesMap({
                 live={live}
                 ribbons={ribbons}
                 body={scrub?.at === i ? scrub.node : undefined}
+                feature={features?.[i]}
               />
             ))}
           </ol>
@@ -456,8 +487,9 @@ function HeadTrail() {
 }
 
 /* — a room ———————————————————————————————————————————————————————————— */
-/** B54 (ribbons converge, rooms 3–4): the third room carries the beat. */
-const RIBBONS_BEAT_ROOM = 2;
+/** B54, the walk (a scroll star): room 1 hosts it, so its window
+ *  (lib/spotlight-windows.ts) runs from room 1 to room 4. */
+const WALK_BEAT_ROOM = 0;
 
 function MapRoom({
   p,
@@ -466,6 +498,7 @@ function MapRoom({
   live,
   ribbons,
   body,
+  feature,
 }: {
   p: Principle;
   index: number;
@@ -475,6 +508,8 @@ function MapRoom({
   ribbons: boolean;
   /** A server-rendered body (room 05: the B55 scrub), else the plain text. */
   body?: ReactNode;
+  /** The room's furniture (server-rendered, ≥ lg). */
+  feature?: ReactNode;
 }) {
   const [inRoom, setInRoom] = useState(false);
   useMotionValueEvent(walk, "change", (v) => setInRoom(v >= DOOR && v < 0.999));
@@ -486,7 +521,7 @@ function MapRoom({
 
   return (
     <li
-      {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
+      {...(index === WALK_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
       className="relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]"
       data-room={index + 1}
       data-active={active ? "" : undefined}
@@ -530,7 +565,7 @@ function MapRoom({
             active ? "opacity-90" : "opacity-0",
           )}
         />
-        <RoomFeature index={index} />
+        {feature}
         <div className="relative grid grid-cols-1 gap-tier-pair sm:grid-cols-12 sm:gap-x-6">
           <Meta className="sm:col-span-2" fields={[p.n]} />
           <div className="sm:col-span-7">
@@ -597,46 +632,6 @@ const RoomWalls = memo(function RoomWalls({ seed, className }: { seed: number; c
         className=""
         style={{ left: "-4px", top: `calc(${DOOR * 100}% + 1rem)`, height: `calc(${100 - DOOR * 100}% - 1rem - ${inset})` }}
       />
-    </span>
-  );
-});
-
-/** Each room's free lower-right corner (≥ lg, never under text): a round
- *  tower with its spiral stair, or a hatched flight — and someone's trail
- *  walking to it. */
-const RoomFeature = memo(function RoomFeature({ index }: { index: number }) {
-  const tower = index % 2 === 0;
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute bottom-[9%] right-[3%] hidden h-[150px] w-[160px] lg:block"
-      data-motif="room-feature"
-    >
-      {tower ? (
-        <>
-          <MapTrail
-            width={160}
-            height={150}
-            pts={[[8, 26], [40, 60], [66, 90], [86, 100]]}
-            strides={[1, 1, 1]}
-            fade={0.28}
-            className="absolute inset-0"
-          />
-          <Turret size={72} seed={index + 2} door={200} className="absolute bottom-0 right-1" />
-        </>
-      ) : (
-        <>
-          <MapTrail
-            width={160}
-            height={150}
-            pts={[[132, 8], [94, 42], [52, 64], [36, 96]]}
-            strides={[1, 1, 1]}
-            fade={0.28}
-            className="absolute inset-0"
-          />
-          <Stairs width={132} height={52} seed={index} className="absolute bottom-0.5 right-0" />
-        </>
-      )}
     </span>
   );
 });

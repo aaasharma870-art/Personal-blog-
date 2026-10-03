@@ -18,10 +18,22 @@
    t = px@1024 / 768). The validator places an offset ≥ 0 at the same
    fraction of the item at 1024 and keeps a negative one as is.
 
-   TIMING. A scroll star owns the spotlight over [at, at + span]. A time
-   star's [at, at + span] is its trigger zone: the beat map sizes those rows
-   at ≈ 100vh, i.e. the trigger ±50vh (spec §3.4 check 2); a time star with
-   span 0 occupies at ± 50vh. Quiet beats (no `star`) only count for gaps.
+   TIMING. A scroll star's [at, at + span] is its declared range (the
+   validator's spans, overlaps and pacing); at runtime it owns the
+   spotlight over its PERFORMANCE WINDOW, measured on the element that
+   carries its data-beat (lib/spotlight.ts THE WINDOW: `beatAttrs(id,
+   { weight, scroll: "top 85%, bottom 35%" })`, or lib/spotlight-windows.ts
+   for hosts that register without one). A time star's [at, at + span] is
+   its trigger zone: the beat map sizes those rows at ≈ 100vh, i.e. the
+   trigger ±50vh (spec §3.4 check 2); a time star with span 0 occupies
+   at ± 50vh. Quiet beats (no `star`) only count for gaps.
+
+   BREATHS (P3-11 r1, J1 #8; spec §2.1 pacing). A breath is DERIVED, never
+   typed in: the viewport (100vh) right after each weight-3 star (a card's
+   (a) → (b) set piece counts as one, from the end of its (b)). Only there
+   is a rest right; a reader second with no star outside a breath is a dead
+   one. scripts/checks/beats.mjs lists them and keeps them weight ≤ 1;
+   tools/capture/clips.mjs places them on each run's geometry (`breath`).
 
    SLUGS the validator reads: `-rack` = rack focus (split windows only);
    `-spray` / `-chalk` / `-fireflies` / `-motes` = that weather kind (one
@@ -86,11 +98,19 @@ export type BeatAttrs = {
   "data-beat": string;
   "data-beat-star"?: string;
   "data-beat-weight"?: string;
+  "data-beat-scroll"?: string;
+  "data-beat-live"?: string;
 };
 
-/** `data-beat` (+ `data-beat-star` / `data-beat-weight` for a star). */
-export function beatAttrs(id: string, star?: { weight: BeatWeight }): BeatAttrs {
-  return star
-    ? { "data-beat": id, "data-beat-star": "", "data-beat-weight": String(star.weight) }
-    : { "data-beat": id };
+/** `data-beat` (+ `data-beat-star` / `data-beat-weight` for a star).
+ *  `scroll`: a SCROLL star the desktop words binder registers with the
+ *  spotlight by itself: its performance window ("top 85%, bottom 35%";
+ *  lib/spotlight.ts) or `true` (lib/spotlight-windows.ts, else the
+ *  default). `live`: it animates on its own while it owns (a loop). */
+export function beatAttrs(id: string, star?: { weight: BeatWeight; scroll?: string | true; live?: true }): BeatAttrs {
+  if (!star) return { "data-beat": id };
+  const a: BeatAttrs = { "data-beat": id, "data-beat-star": "", "data-beat-weight": String(star.weight) };
+  if (star.scroll) a["data-beat-scroll"] = star.scroll === true ? "" : star.scroll;
+  if (star.live) a["data-beat-live"] = "";
+  return a;
 }

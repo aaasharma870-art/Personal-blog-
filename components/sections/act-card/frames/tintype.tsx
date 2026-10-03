@@ -87,6 +87,12 @@ const HACHURES = Array.from({ length: 6 }, (_, k) => {
  *  played below the fold). Act III stays a 0-travel card: the pinned-card
  *  budget is spent (validator #3, SPEC D-5: ≤ 2 long cards). */
 const DEVELOP = { from: 0.25, to: 0.82 };
+/** Pin mode (P3-11 r1 hooks: at p .05 the latent ghost read as "a muddy
+ *  sepia smear / image failed to load"): the plate opens as a recognisable
+ *  tintype print — the tree, the river, the ridges and the sun legible
+ *  under a light cover — and develops from the first pixel of star (a). */
+const DEVELOP_PIN = { from: 0, to: 0.55 };
+const LATENT_PIN = 0.16;
 /** The undeveloped plate is a LATENT image under the cover (never solid
  *  black): the cover's opacity where the plate has not developed yet. */
 const LATENT_COVER = 0.8;
@@ -125,10 +131,11 @@ export function TintypeFrame({ plate: id, reg = null }: { plate: MediaId | null;
   const sunFrom = Math.max(-0.08, sun[1] - 0.24);
   // pin mode: the sun sinks as the card rises (on its mark on arrival, B35)
   const sunP = pin?.enter ?? p;
-  const latent = pin ? 0.6 : LATENT_COVER;
+  const latent = pin ? LATENT_PIN : LATENT_COVER;
+  const dev = pin ? DEVELOP_PIN : DEVELOP;
 
   const trail = useTransform(p, (v) => remap(v, 0, 0.25));
-  const develop = useTransform(p, (v) => remap(v, DEVELOP.from, DEVELOP.to));
+  const develop = useTransform(p, (v) => remap(v, dev.from, dev.to));
   const border = useTransform(p, (v) => remap(v, 0.78, 0.97));
   // the sun sinks by transform (the wrapper is frame-sized, so % = frame)
   const sunY = useTransform(sunP, (v) => `${((sunFrom - sun[1]) * (1 - remap(v, 0, pin ? 1 : 0.22)) * 100).toFixed(3)}%`);

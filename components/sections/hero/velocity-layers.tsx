@@ -24,9 +24,10 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                brightness 1.15, faded in by velocity: the plate's crest
  *                brightens by ≤ 15 % (1 + .15·vn);
  * all from one value `vn` (0–1) that decays on springSoft, so stopping
- * restores clarity (vn < .005 within ~1.5 s). `--vn` is mirrored on the host
- * for tests, written only when it moved by more than .01 (or comes to rest):
- * an inherited custom property restyles the whole plate on every write.
+ * restores clarity (vn < .005 within ~1.5 s). (P3-11 r1: the `--vn` mirror
+ * on the host, for tests no tool reads, is gone: each write restyled the
+ * whole plate while the page scrolled.) The layers mount only while the
+ * hero is in view and not covered by the Act I card (hero-stage.tsx).
  * The wake and the grain are promoted (will-change): a vn step is a
  * compositor opacity/transform change, never a repaint of the plate (spec
  * §12.1 #7). Nothing here touches text; every node is aria-hidden and sits
@@ -46,8 +47,6 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                      sea is clear ≤ 1.5 s after the scroll stops (H16).
  */
 
-/** `--vn` is mirrored only on a change larger than this (or at rest). */
-const VN_STEP = 0.01;
 
 /** |v| (px/s) below which nothing happens, and the span to full effect. */
 const DEADZONE = 400;
@@ -112,7 +111,7 @@ export function VelocityLayers({
   objectPosition,
   dialect = "grain",
 }: {
-  /** The plate element: the poster <img> is read from it, `--vn` set on it. */
+  /** The plate element: the poster <img> is read from it. */
   hostRef: RefObject<HTMLElement | null>;
   /** The crest band in FRAME fractions (the Lens frame). */
   wake: Box01;
@@ -129,18 +128,6 @@ export function VelocityLayers({
   const vn = useSpring(target, springSoft);
   const grain = useTransform(vn, (n) => n * GRAIN_MAX);
   const chroma = useTransform(vn, (n) => n * CHROMA_MAX_PX);
-  // `--vn` mirrors vn in steps: a write only when it moved by > VN_STEP, when
-  // it crosses under the .005 "clear" line, and when it comes to rest at 0
-  const vnWritten = useRef(0);
-  useMotionValueEvent(vn, "change", (n) => {
-    const last = vnWritten.current;
-    const moved = Math.abs(n - last) > VN_STEP;
-    const cleared = n < 0.005 && last >= 0.005;
-    const rest = n === 0 && last !== 0;
-    if (!moved && !cleared && !rest) return;
-    vnWritten.current = n;
-    hostRef.current?.style.setProperty("--vn", n.toFixed(4));
-  });
 
   // The wake copies the poster the plate ALREADY loaded (its currentSrc), so
   // it never costs a request of its own.

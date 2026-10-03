@@ -8,6 +8,7 @@ import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import { springFollow } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { beatAttrs } from "@/lib/beats";
+import { useScrollStar } from "@/lib/spotlight-react";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
@@ -19,10 +20,12 @@ import { LensFigure, type LensFigureKind, type LensRoute } from "@/components/se
    THE RECKONING — the kill-list as a Lens Index (SPEC v2 SM-8, D-6;
    lens-index.BAR v1 H1–H25 + v2 H26–H30; SM-17 host).
    Every program Aryan tested sits at the same quiet weight: at rest every
-   row is ghost ink and every verdict WORD is present (meaning is in the
-   word, never the hue). The row on the reading line — focus > pointer >
-   the viewport's centre line — takes its hue: SURVIVED aqua, KILLED ember
-   (with its strike), EXCEPTION amber, a flagship its status in muted. No
+   row is muted ink (P3-11 r1: ghost rows read as "tiny dim text" to all
+   three panels; research data stays readable in every state) and every
+   verdict WORD is present (meaning is in the word, never the hue). The row
+   on the reading line — focus > pointer > the viewport's centre line —
+   lifts to ink and takes its hue: SURVIVED aqua, KILLED ember (with its
+   strike), EXCEPTION amber, a flagship its status in muted. No
    chalk and no icons on the rows (austerity; the header carries the film).
    Two choreographies (lib/variants.ts `kill-list.reckoning`):
      default "lens-index"  ≥ 1024 the bracket travels (springFollow) down
@@ -76,6 +79,9 @@ type Nav = { centre: number | null; pointer: number | null; focus: number | null
 type Geo = { top: number; h: number; mid: number };
 
 const pad = (n: number) => String(n).padStart(2, "0");
+/** A colour swap on the reading line: instant under reduced motion / Pause
+ *  (no CSS transition is created at all, J9 M1). */
+const TC = "transition-colors duration-(--dur-micro) motion-off:transition-none";
 const activeOf = (n: Nav) => n.focus ?? n.pointer ?? n.centre;
 const withLast = (n: Nav): Nav => {
   const a = activeOf(n);
@@ -183,8 +189,8 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
         return { top: lr.top - base.top, h: lr.height, mid: br.top - base.top + Math.min(lh, br.height) / 2 };
       });
       setGeo((g) => (g.length === next.length && g.every((x, i) => x.top === next[i]?.top && x.mid === next[i]?.mid && x.h === next[i]?.h) ? g : next));
-      // H26: the grid mask's span — half strength down to the first row,
-      // then thinning to 0 at the LAST row's top (a static mask per layout)
+      // H26: the grid veil's span — half strength down to the first row,
+      // then thinning to 0 at the LAST row's top (static per layout)
       const host = hostRef.current;
       if (host instanceof HTMLElement) {
         const top = base.top - host.getBoundingClientRect().top;
@@ -245,6 +251,32 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
     return () => io.disconnect();
   }, [reduced, lensOn]);
 
+  // B29-lens (P3-11 r1, J1 #5: a long UNGATED scroll star held back the
+  // time stars inside it, e.g. the B29 "Killed" strike): a GATED scroll
+  // star over the ledger crossing the reading line. Told `false` while
+  // the ledger is still on the line, a time star holds the spotlight: the
+  // lens holds still and travels to the current row when handed back
+  // (`true`). `false` with the ledger off the line is the window's end
+  // (pointer / focus travel as before). A hold is ≤ 1.2 s; the 1.5 s
+  // timer frees the lens if the hand-back never comes (scrolled away).
+  const [yielded, setYielded] = useState(false);
+  const yieldTimer = useRef(0);
+  const onLensOwn = useCallback((owned: boolean) => {
+    window.clearTimeout(yieldTimer.current);
+    if (owned) {
+      setYielded(false);
+      return;
+    }
+    const r = listRef.current?.getBoundingClientRect();
+    const line = window.innerHeight / 2;
+    const onLine = Boolean(r && r.top < line && r.bottom > line);
+    setYielded(onLine);
+    if (onLine) yieldTimer.current = window.setTimeout(() => setYielded(false), 1500);
+  }, []);
+  useEffect(() => () => window.clearTimeout(yieldTimer.current), []);
+  // the window is the markup's (beatAttrs below); this registration adds the gate
+  useScrollStar(listRef, "B29-lens", { weight: 1, onOwn: onLensOwn, on: lensOn });
+
   // the lens / index bar travel (springFollow; instant under reduced motion)
   const ly = useMotionValue(0);
   const by = useMotionValue(0);
@@ -252,6 +284,9 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
   useEffect(() => {
     const g = geo[lensRow];
     if (!g) return;
+    // yielded to a time star: hold still (placed keeps the old row, so the
+    // hand-back travels)
+    if (yielded && !reduced && placed.current !== null) return;
     const targetLens = g.mid - figH / 2;
     // only a change of ROW travels; a layout change (first measure, resize,
     // a font swap) jumps, so nothing moves on its own
@@ -270,7 +305,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
       a.stop();
       b.stop();
     };
-  }, [lensRow, geo, figH, reduced, ly, by, bh]);
+  }, [lensRow, geo, figH, reduced, yielded, ly, by, bh]);
 
   /* — row events ———————————————————————————————————————————————— */
   const onPointerMove = (i: number) => (e: PointerEvent<HTMLLIElement>) => {
@@ -304,8 +339,13 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
       ref={listRef}
       className="relative mt-tier-block"
       data-ledger={lensOn ? "lens-index" : "index-bar"}
-      /* B29-lens (quiet, lib/page.ts): the bracket's travel down the ledger */
-      {...beatAttrs("B29-lens")}
+      /* B29-lens: the bracket's travel down the ledger, a GATED scroll star
+         while the ledger crosses the reading line (the lens follows the
+         centre line; P3-11 r1 J1 #4 "the kill-list mini-card" performs
+         undeclared). The window is here (the words binder registers the
+         element too: the spotlight counts one star, and the gate from
+         useScrollStar above stays); lib/page.ts declares the star. */
+      {...beatAttrs("B29-lens", { weight: 1, scroll: "top 50%, bottom 50%" })}
     >
       <ol
         ref={olRef}
@@ -320,13 +360,13 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
           const meta = (
             <>
               {v.word ? (
-                <span className={cn("transition-colors duration-(--dur-micro)", on ? v.hue : "text-fg-ghost")}>{v.word}</span>
+                <span className={cn(TC, on ? v.hue : "text-fg-muted")}>{v.word}</span>
               ) : null}
               {r.caveat ? (
                 <>
                   <span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
                   <span className="sr-only">, </span>
-                  <span className={cn("transition-colors duration-(--dur-micro)", on ? "text-exception" : "text-fg-ghost")}>Exception</span>
+                  <span className={cn(TC, on ? "text-exception" : "text-fg-muted")}>Exception</span>
                 </>
               ) : null}
               {r.status ? (
@@ -337,7 +377,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                       <span className="sr-only">, </span>
                     </>
                   ) : null}
-                  <span className={cn("transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}>{r.status}</span>
+                  <span className={cn(TC, "text-fg-muted")}>{r.status}</span>
                 </>
               ) : null}
             </>
@@ -356,7 +396,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                 lensOn ? "border-b border-rule lg:border-b-0" : "border-b border-rule",
               )}
             >
-              <span className={cn("tnum type-meta transition-colors duration-(--dur-micro) lg:col-span-1", on ? "text-fg-muted" : "text-fg-ghost")}>{pad(i + 1)}</span>
+              <span className={cn("tnum type-meta lg:col-span-1", TC, on ? "text-fg-muted" : "text-fg-ghost")}>{pad(i + 1)}</span>
               <div className="min-w-0 lg:col-span-6">
                 {/* < 1024: the Meta line leads the row */}
                 <p className="mb-1 type-meta lg:hidden">{meta}</p>
@@ -375,17 +415,14 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                       setRoving(i);
                       touch((n) => ({ ...n, pointer: i }));
                     }}
-                    className={cn(
-                      "relative min-h-11 text-left transition-colors duration-(--dur-micro)",
-                      on ? "text-fg" : "text-fg-ghost",
-                    )}
+                    className={cn("relative min-h-11 text-left", TC, on ? "text-fg" : "text-fg-muted")}
                   >
                     <span data-name="">{r.name}</span>
                     {r.kind === "killed" ? (
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "absolute inset-x-0 top-1/2 h-px origin-left bg-kill transition-transform duration-(--dur-base)",
+                          "absolute inset-x-0 top-1/2 h-px origin-left bg-kill transition-transform duration-(--dur-base) motion-off:transition-none",
                           struck ? "scale-x-100" : "scale-x-0",
                         )}
                       />
@@ -393,13 +430,13 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                   </button>
                 </h3>
                 <p
-                  className={cn("mt-1 max-w-[64ch] type-small transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}
+                  className={cn("mt-1 max-w-[64ch] type-small", TC, on ? "text-fg" : "text-fg-muted")}
                   {...(r.kind === "killed" ? { "data-reason": "" } : {})}
                 >
                   {r.detail}
                 </p>
                 {r.evidence ? (
-                  <p className={cn("tnum mt-1 max-w-[64ch] type-small transition-colors duration-(--dur-micro)", on ? "text-fg-muted" : "text-fg-ghost")}>
+                  <p className={cn("tnum mt-1 max-w-[64ch] type-small", TC, on ? "text-fg" : "text-fg-muted")}>
                     {r.evidence}
                   </p>
                 ) : null}
@@ -433,7 +470,11 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
           lane stays empty (only Dead Eye's plate uses it). */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden grid-cols-12 gap-x-6 lg:grid">
         <div ref={laneRef} className="relative col-span-2 col-start-8">
-          <motion.div className="absolute inset-x-0 top-0 will-change-transform" style={{ y: ly }}>
+          {/* armed CLOSED (offscreen at mount), the bracket would sit on the
+              lane as an empty outlined bar over the FIG label (P3-11 r1: all
+              three panels, "a broken image"): it is not drawn until the
+              first activation opens it by aperture */}
+          <motion.div className={cn("absolute inset-x-0 top-0 will-change-transform", lensState === "closed" && "invisible")} style={{ y: ly }}>
             {lensOn ? (
               <>
                 <Lens
@@ -453,7 +494,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                     ) : null}
                   </div>
                 </Lens>
-                <p className={cn("mt-3 type-meta transition-colors duration-(--dur-micro)", active !== null ? "text-fg-muted" : "text-fg-ghost")}>
+                <p className={cn("mt-3 type-meta", TC, active !== null ? "text-fg-muted" : "text-fg-ghost")}>
                   {lensRowData?.figLabel}
                 </p>
               </>
@@ -475,7 +516,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
         <motion.div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute -left-3 top-0 w-0.5 bg-fg-muted transition-opacity duration-(--dur-micro) will-change-transform sm:-left-4",
+            "pointer-events-none absolute -left-3 top-0 w-0.5 bg-fg-muted transition-opacity duration-(--dur-micro) will-change-transform motion-off:transition-none sm:-left-4",
             active !== null ? "opacity-100" : "opacity-0",
           )}
           style={{ y: by, height: bh }}

@@ -17,8 +17,9 @@
      b.range[0] … .68        transparent (the DOM push plays underneath)
      .68 … b.range[1]        `title`: the frame outside the letters fades to
                              the world deep, the letters (transparent: the
-                             live DOM push shows through) scale about
-                             `b.maskOrigin` to full-bleed
+                             live DOM push shows through) stay whole and
+                             grow by ≤ plan.ts TITLE_ZOOM, then the mask
+                             dissolves by p .92 (P3-11 r1: no half-words)
      p ≥ b.range[1]          transparent (full-bleed; the stage takes over)
    So the push layers (SEQ canvas, L08 camera group) must NOT carry
    `data-gl-replaced`: they sit under the GL canvas and show through it.
@@ -117,7 +118,7 @@ export type GlCardSpec = {
   /** The impact (§7.6) on the GL tier: when `impact(world)` fires for
    *  `b.world` (the `impact` event), the GL pulses once — a white flash of
    *  `amount` (120 ms), or for the HP world an exposure bloom of `amount`
-   *  EV (180 ms). `at` documents the p it lands on (CARDS calls impact()). */
+   *  EV (520 ms, an ease-out decay). `at` documents the p it lands on (CARDS calls impact()). */
   flash?: { at: number; amount: number };
   /** pc-kraken (§9.1 #6): 0 → 1 → 0 on the seam's storm, `wave` only. */
   kraken?: MotionValue<number>;

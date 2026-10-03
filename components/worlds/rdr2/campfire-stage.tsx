@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
-import { useMediaQuery, useReducedMotion } from "@/lib/flags";
+import { DESKTOP_FINE, useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { markOf, resolveMedia, type MediaId } from "@/lib/media";
 import { dur, easeClip } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
@@ -14,6 +14,7 @@ import type { CameraSpec } from "@/components/primitives/camera";
 import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
+import { hideWhenFar } from "@/components/stage/far";
 import { WeatherLayer } from "@/components/stage/weather-layer";
 import { Rise } from "@/components/site/world-motion";
 import { FirelightRead } from "@/components/site/rdr2-graphite";
@@ -191,6 +192,15 @@ export function CampfireStage({
 
   const bandRef = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(bandRef, { amount: 0.3 });
+
+  // the sticky camp's plate out of paint while far (P3-11 r1 integration,
+  // J8 #2: the voices sticky layer repainted under principles / contact).
+  // The plate is aria-hidden art (the hotspot is a sibling: never hidden)
+  useEffect(() => {
+    const el = plateRef.current;
+    if (alt || !el || !window.matchMedia(DESKTOP_FINE).matches) return;
+    return hideWhenFar(el, 1);
+  }, [alt]);
 
   const restList = (
     <ul

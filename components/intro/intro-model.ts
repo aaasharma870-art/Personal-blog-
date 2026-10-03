@@ -120,8 +120,17 @@ type TrailJson = { emitUntil: number; points: number[][] };
 /** `loopAt` (P3-3, optional 0-credit media): the hero loop's start time (s)
  *  when this clip's last frames were re-blended into the loop's first ones
  *  (a true match cut); unset → the loop starts at 0 under the hold. */
-const FLIGHTS: Partial<Record<MediaId, { trail: TrailJson; anchored: boolean; cut?: number; loopAt?: number }>> = {
-  "IN-02": { trail: trailDefault, anchored: true },
+const FLIGHTS: Partial<
+  Record<
+    MediaId,
+    { trail: TrailJson; anchored: boolean; cut?: number; loopAt?: number; start?: number }
+  >
+> = {
+  // start (P3-11 r1, J4 #9): frames 10–19 (0.4–0.8 s) rear the broom up
+  // through vertical, which reads as a one-frame flip at any dropped frame
+  // rate; the flight starts at 0.84 s (frame 20, the broom already
+  // climbing away), the play plate dissolving into it (t.liveFade)
+  "IN-02": { trail: trailDefault, anchored: true, start: 0.84 },
   // the IN-02 batch runner-up: last frame SSIM 0.957 vs MV-01 (not tail-anchored).
   // cut 2.9 s (M2 critic 3 #8): the broom plunges into the crest at ~3.1 s
   // in a rectangular foam burst with a hard right edge — the flight hands
@@ -154,6 +163,9 @@ export type IntroFlight = IntroVideo & {
   /** Hand off to the hero at this video time (s), holding that frame under
    *  the landing; null = land on the clip's own end. */
   cut: number | null;
+  /** Where the flight starts (video s; 0 = its first frame, the play
+   *  plate itself). A later start dissolves from the plate. */
+  start: number;
 };
 
 export type IntroPlate = {
@@ -281,6 +293,9 @@ export type IntroConfig = {
   feather: number;
   /** Canvas DPR cap (trail, hold, shade). */
   dprMax: number;
+  /** The video flight's canvas backing scale (×dprMax-capped DPR) once the
+   *  flight owns the picture: the canvas then holds only the trail. */
+  trailScale: number;
   /** The hero loop per hero.plate side, per hero.loop side (a video
    *  registered to that still, as hero-section.tsx resolves it), or null:
    *  the hero keeps its still (no prefetch, no wait at the hold). */
@@ -415,6 +430,7 @@ function flightOf(
     anchored: Boolean(known?.anchored && heroStill && a.endsOn === heroStill),
     trail: known ? { emitUntil: known.trail.emitUntil, points: known.trail.points } : null,
     cut: known?.cut ?? null,
+    start: known?.start ?? 0,
   };
 }
 
@@ -547,6 +563,9 @@ export function introModel(): IntroModel | null {
       foldPerspective: 1600,
       feather: introTiming.feather,
       dprMax: introTiming.dprMax,
+      // the video flight's canvases (only the trail's soft glows by then)
+      // at half the backing resolution: a quarter of the pixels per frame
+      trailScale: 0.5,
       heroLoops: { default: loopsOf("default"), alt: loopsOf("alt") },
       playLoop: live && live.kind === "video" ? videoOf(live) : null,
       titles: {

@@ -58,7 +58,15 @@ export type PinUi = {
   /** Extra layers inside a frame's settled PlateBox (the rack-focus soft
    *  copy, the plate's loop from star (b)); `plate` = the drawn asset. */
   PlateLayers: (props: { plate: string; loop?: boolean }) => ReactNode;
+  /** The ignite's css-tier film burn (P3-11 r1): given the card's deep,
+   *  a drawer for frames/ignite.tsx's canvas (null: none). */
+  burn?: BurnUi;
 };
+
+/** (deep) → draw(ctx, star (a) p, the fire's x / y, the frame height). */
+export type BurnUi = (
+  deep: string,
+) => ((ctx: CanvasRenderingContext2D, v: number, x: number, y: number, h: number) => void) | null;
 
 const STATIC_P = motionValue(1);
 

@@ -4,8 +4,10 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { useMediaQuery, useReducedMotion } from "@/lib/flags";
+import { beatAttrs } from "@/lib/beats";
+import { DESKTOP_FINE, useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { dur, ease, easeDraw } from "@/lib/motion";
+import { spotlight } from "@/lib/spotlight";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
@@ -16,11 +18,13 @@ import {
   BONE_AT,
   BONE_SPOT,
   FURNITURE,
+  GROUND,
   HORSE,
   HORSE_AT,
-  LANDSCAPE,
+  SKY,
   VIGNETTES,
   VIGNETTE_AT,
+  VIGNETTE_W,
   type Stroke,
 } from "@/components/worlds/rdr2/journal-sketches";
 import { RD_PIECES, bakedGraphite } from "@/components/worlds/rdr2/kit";
@@ -75,6 +79,17 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
      [data-bone-note] (page art).
    - The vignette page carries its entry's head in the journal hand
      ("Entry III": font-world-hand, ≤ 4 words per page; spec §5.2).
+
+   P3-11 r1 (panel + strangers):
+   - The page is ALWAYS the frontier: the landscape's GROUND (lake, pines,
+     trail, grass, the grazing horse) stays on every page and only its SKY
+     gives way to the entry's vignette, drawn smaller in that sky (blind
+     D36/D37 read the bare vignette pages "??").
+   - The draws are TIME STARS through the spotlight (DESKTOP_FINE): the
+     landscape's ("B44-sketch") waits for the NibTitle (B44) to finish, and
+     each vignette's first draw ("B44-page1" … "B44-page5") waits for the
+     horse (B45) or any other star; "skip" shows the drawn page (J1 #7:
+     skim collisions s1024 #57, s1440 #76). Elsewhere: as before.
    ========================================================================== */
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
@@ -100,6 +115,9 @@ function MetaLine({ fields }: { fields: readonly string[] }) {
     </p>
   );
 }
+
+/** The landscape's draw: a time star (it waits for the NibTitle, B44). */
+const SKETCH_STAR = { id: "B44-sketch", weight: 1 } as const;
 
 /** Vignettes already drawn this visit (drawn once per entry per session). */
 const drawnOnce = new Set<number>();
@@ -136,74 +154,110 @@ function Furniture() {
   );
 }
 
-function Landscape({ phase }: { phase: EnterPhase }) {
-  const strokes = (list: readonly Stroke[]) =>
-    list.map((l) => <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />);
+/** A graphite page layer (viewBox 400 × 500) holding `children`. */
+function PageArt({ motif, children }: { motif: string; children: ReactNode }) {
+  return (
+    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("absolute inset-0 size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif={motif}>
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
+        {children}
+      </g>
+    </svg>
+  );
+}
+
+const strokesOf = (list: readonly Stroke[], phase: EnterPhase) =>
+  list.map((l) => <motion.path key={l.d} d={l.d} strokeWidth={l.w} strokeOpacity={l.o ?? 1} {...drawProps(phase, l)} />);
+
+/** The ground (lake, pines, trail, grass, the grazing horse): every page. */
+function Ground({ phase }: { phase: EnterPhase }) {
+  return (
+    <PageArt motif="journal-ground">
+      {strokesOf(GROUND, phase)}
+      <g transform={HORSE_AT}>{strokesOf(HORSE, phase)}</g>
+    </PageArt>
+  );
+}
+
+/** The sky (ridge, hachures, hills, birds, the bone): the page at rest. */
+function Sky({ phase }: { phase: EnterPhase }) {
   return (
     <>
-      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-landscape">
-        <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
-          {strokes(LANDSCAPE)}
-          <g transform={HORSE_AT}>{strokes(HORSE)}</g>
-          <g transform={BONE_AT} data-motif="fossil-bone">
-            {strokes(BONE)}
-          </g>
+      <PageArt motif="journal-landscape">
+        {strokesOf(SKY, phase)}
+        <g transform={BONE_AT} data-motif="fossil-bone">
+          {strokesOf(BONE, phase)}
         </g>
-      </svg>
+      </PageArt>
       {/* rd-bone's pencilled note lands here (page art; rd-desktop.tsx) */}
       <div data-bone-note="" className="absolute inset-0" />
     </>
   );
 }
 
-/** One entry's vignette at page scale, drawn the first time it shows. */
-function PageVignette({ index, still }: { index: number; still: boolean }) {
+/** The whole landscape (the ALT's resting leaf). */
+function Landscape({ phase }: { phase: EnterPhase }) {
+  return (
+    <>
+      <Ground phase={phase} />
+      <Sky phase={phase} />
+    </>
+  );
+}
+
+/** A vignette's first draw waits for the spotlight on DESKTOP_FINE (a time
+ *  star; "skip" = drawn at once); elsewhere it draws at once, as before.
+ *  null = waiting (nothing drawn yet). */
+function useDrawGate(fresh: boolean, index: number): boolean | null {
+  // a vignette only mounts on the client (once an entry is read or pointed at)
+  const [ask] = useState(() => fresh && typeof window !== "undefined" && window.matchMedia(DESKTOP_FINE).matches);
+  const [go, setGo] = useState<boolean | null>(fresh ? (ask ? null : true) : false);
+  useEffect(() => {
+    if (!ask) return;
+    const id = `B44-page${index + 1}`;
+    let live = true;
+    void spotlight.request(id, { weight: 1, maxWait: 700, durationMs: 1100 }).then((a) => {
+      if (live) setGo(a === "play");
+    });
+    return () => {
+      live = false;
+      spotlight.release(id);
+    };
+  }, [ask, index]);
+  return go;
+}
+
+/** One entry's vignette in the page's sky, drawn the first time it shows;
+ *  `ground`: the page's ground drawn with it (the ALT's turned leaf). */
+function PageVignette({ index, still, ground = false }: { index: number; still: boolean; ground?: boolean }) {
   const [fresh] = useState(() => !still && !drawnOnce.has(index));
   useEffect(() => {
     drawnOnce.add(index);
   }, [index]);
+  const go = useDrawGate(fresh, index);
   const v = VIGNETTES[index % VIGNETTES.length] ?? VIGNETTES[0]!;
   const draw = (delay: number) =>
-    fresh
-      ? {
+    go === false
+      ? { initial: false as const, animate: { pathLength: 1 }, transition: { duration: 0 } }
+      : {
           initial: { pathLength: 0 },
-          animate: { pathLength: 1 },
-          transition: { duration: dur.draw.short, ease: easeDraw, delay },
-        }
-      : { initial: false as const, animate: { pathLength: 1 } };
+          animate: { pathLength: go ? 1 : 0 },
+          transition: { duration: go ? dur.draw.short : 0, ease: easeDraw, delay },
+        };
   return (
-    <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
-      {/* the entry's head in the journal hand (≤ 4 words on the page) */}
-      <text x={50} y={96} fontSize={24} className="font-world-hand fill-(--world-line)">
-        {`Entry ${ROMAN[index] ?? index + 1}`}
-      </text>
-      <g>
-        <g transform={VIGNETTE_AT}>
-          {v.fill ? (
-            <motion.path
-              d={v.fill}
-              className="fill-(--world-line)"
-              fillOpacity={0.85}
-              initial={fresh ? { opacity: 0 } : false}
-              animate={{ opacity: 1 }}
-              transition={{ duration: dur.base, ease, delay: fresh ? 0.45 : 0 }}
-            />
-          ) : null}
+    <>
+      {ground ? <Ground phase="static" /> : null}
+      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("absolute inset-0 size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
+        {/* the entry's head in the journal hand (≤ 4 words on the page) */}
+        <text x={50} y={96} fontSize={24} className="font-world-hand fill-(--world-line)">
+          {`Entry ${ROMAN[index] ?? index + 1}`}
+        </text>
+        <g transform={VIGNETTE_AT} fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
           {v.strokes.map((d, i) => (
-            <motion.path
-              key={d}
-              d={d}
-              fill="none"
-              className="stroke-(--world-line)"
-              strokeWidth={0.42}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              {...draw(i * 0.22)}
-            />
+            <motion.path key={d} d={d} strokeWidth={VIGNETTE_W} {...draw(i * 0.22)} />
           ))}
         </g>
-      </g>
-    </svg>
+      </svg>
+    </>
   );
 }
 
@@ -220,10 +274,12 @@ function RightPage({
   children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.4 });
-  const leaf = active == null ? <Landscape phase={phase} /> : <PageVignette index={active} still={reduced} />;
+  // the landscape draws through the spotlight (after the NibTitle, B44)
+  const phase = useEnterOnce(ref, { amount: 0.4, star: SKETCH_STAR });
+  const leaf = active == null ? <Landscape phase={phase} /> : <PageVignette index={active} still={reduced} ground />;
   return (
-    <div ref={ref} className={s.page} data-page-active={active ?? "landscape"}>
+    // the spotlight host of B44-sketch (its box: where the landscape draws)
+    <div ref={ref} className={s.page} data-page-active={active ?? "landscape"} {...beatAttrs(SKETCH_STAR.id, SKETCH_STAR)}>
       <div aria-hidden="true" className="absolute inset-0">
         <Furniture />
         {leafing ? (
@@ -241,13 +297,15 @@ function RightPage({
           </AnimatePresence>
         ) : (
           <>
+            {/* the ground stays; the sky gives way to the entry's vignette */}
+            <Ground phase={phase} />
             <motion.div
               className={s.pageLayer}
               initial={false}
               animate={{ opacity: active == null ? 1 : 0 }}
               transition={{ duration: dur.preview, ease }}
             >
-              <Landscape phase={phase} />
+              <Sky phase={phase} />
             </motion.div>
             <AnimatePresence initial={false}>
               {active != null ? (
@@ -348,6 +406,9 @@ export function JournalSpread({
             <Rise as="li" key={post.title} delay={Math.min(i, 3) * 0.06} className="border-b border-rule">
               <div
                 data-entry={i}
+                // the spotlight host of this entry's first vignette draw (B44-page1…5, lib/page.ts):
+                // the row on the reading line is where it draws; it leaving the view skips the wait
+                {...beatAttrs(`B44-page${i + 1}`, { weight: 1 })}
                 className="grid grid-cols-[1fr_auto] items-start gap-x-6 py-tier-block lg:block"
                 onPointerEnter={leafing ? undefined : () => setHovered(i)}
               >

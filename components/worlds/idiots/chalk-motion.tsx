@@ -4,7 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalSto
 import type { ReactNode } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import type { BeatWeight } from "@/lib/beats";
-import { useReducedMotion } from "@/lib/flags";
+import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { dur, ease, easeClip, easeDraw, springSettle } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { eggsSessionOff, subscribeEggs } from "@/components/eggs/egg-bus";
@@ -75,20 +75,28 @@ export function useSvgId(prefix: string): string {
  * `star` (PHASE3-SPEC §3.8): the entrance is a time star of the beat map
  * (the gauntlet board, B17): on DESKTOP_FINE it waits for the spotlight and
  * a "skip" shows the settled frame. The host carries `beatAttrs(star.id)`.
+ * `desktopWipe` (P3-11 r1, J1: "B17 never visibly performed": the 8 px
+ * settle was too quiet to read as the board's star): on DESKTOP_FINE the
+ * DEFAULT enters with the duster's wipe too; phones keep the settle. The
+ * frame always renders the wipe's two layers then, so the switch at
+ * hydration is a style change, never a remount of the board.
  */
 export function SettleFrame({
   children,
   className,
   entrance = "settle",
+  desktopWipe = false,
   amount = 0.3,
   star,
 }: {
   children: ReactNode;
   className?: string;
   entrance?: "settle" | "wipe";
+  desktopWipe?: boolean;
   amount?: number;
   star?: { id: string; weight: BeatWeight };
 }) {
+  const fine = useDesktopFine();
   const ref = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(ref, { amount, star });
   // motion values, never React style: the server renders the final frame
@@ -102,7 +110,9 @@ export function SettleFrame({
   const frameX = useTransform(wiped, (w) => `${(-w * 100).toFixed(3)}%`);
   const contentX = useTransform(wiped, (w) => `${(w * 100).toFixed(3)}%`);
   const [done, setDone] = useState(false);
-  const wipe = entrance === "wipe";
+  const wipe = entrance === "wipe" || (desktopWipe && fine);
+  /** The wipe's two layers (always, when the entrance can become a wipe). */
+  const layered = entrance === "wipe" || desktopWipe;
 
   useLayoutEffect(() => {
     if (phase === "static") {
@@ -113,12 +123,12 @@ export function SettleFrame({
       return;
     }
     if (phase === "armed") {
-      if (wipe) wiped.jump(1);
-      else {
-        y.jump(8);
-        scale.jump(0.96);
-        opacity.jump(0);
-      }
+      // every value set, so an entrance that changes while armed (desktopWipe
+      // resolving after hydration) never keeps the other one's armed state
+      wiped.jump(wipe ? 1 : 0);
+      y.jump(wipe ? 0 : 8);
+      scale.jump(wipe ? 1 : 0.96);
+      opacity.jump(wipe ? 1 : 0);
       return;
     }
     // entered
@@ -161,11 +171,14 @@ export function SettleFrame({
 
   const moving = phase === "armed" || (phase === "entered" && !done);
   return (
-    <div ref={ref} data-entrance={entrance}>
-      {wipe ? (
+    <div ref={ref} data-entrance={wipe ? "wipe" : "settle"}>
+      {layered ? (
         // the old inset(0) clip at rest, as an overflow clip on the frame
-        <motion.div className={cn(className, "overflow-clip", moving && "will-change-transform")} style={{ x: frameX }}>
-          <motion.div className={cn(moving && "will-change-transform")} style={{ x: contentX }}>
+        <motion.div
+          className={cn(className, wipe && "overflow-clip", moving && (wipe ? "will-change-transform" : "will-change-[transform,opacity]"))}
+          style={wipe ? { x: frameX, opacity } : { y, scale, opacity }}
+        >
+          <motion.div className={cn(wipe && moving && "will-change-transform")} style={wipe ? { x: contentX } : undefined}>
             {children}
           </motion.div>
         </motion.div>

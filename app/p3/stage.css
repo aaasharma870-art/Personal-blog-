@@ -34,51 +34,7 @@
   }
 }
 
-/* while the bars are closed, anchors and focus clear them (Lenis's
-   scrollTo reads scroll-padding); spec §7.4, WCAG 2.4.11 */
-html[data-letterbox] {
-  scroll-padding-top: max(var(--lb-h), calc(var(--header-h) + 24px));
-  scroll-padding-bottom: var(--lb-h);
-}
 
-/* — the stage root and its layers (client-only markup, components/stage) — */
-.stage-root {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-stage);
-  pointer-events: none;
-  overflow: hidden;
-  contain: strict;
-  display: none;
-}
-.stage-layer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  display: none;
-  will-change: transform, opacity;
-}
-.stage-cam {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
-}
-.stage-video-host {
-  position: absolute;
-  inset: 0;
-}
-.stage-video,
-.stage-soft {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.stage-soft {
-  opacity: 0;
-  will-change: opacity;
-}
 
 /* — backdrop: the static scrim (components/stage/scrim.tsx) ———————————— */
 .stage-scrim {
@@ -209,77 +165,4 @@ html[data-letterbox] {
   .stage-split-text [data-satchel-kit] {
     grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
   }
-}
-
-/* — LIVE: paint only (the stage is showing; never while paused) ———————— */
-@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  html.js:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-root,
-  html.js:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-layer {
-    display: block;
-  }
-  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on] .stage-backdrop,
-  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on].stage-backdrop {
-    background-color: transparent;
-  }
-  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) [data-stage-on] .stage-scrim {
-    display: block;
-  }
-  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-window[data-stage-on] .stage-window-poster {
-    opacity: 0;
-  }
-}
-
-/* — letterbox bars (components/stage/letterbox-bars.tsx) ——————————————— */
-.letterbox {
-  display: contents;
-}
-.letterbox-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: var(--lb-h);
-  z-index: var(--z-bars);
-  pointer-events: none;
-  background-color: var(--lb-bg, #050708);
-  transform: scaleY(0);
-  will-change: transform;
-}
-.letterbox-bar[data-bar="top"] {
-  top: 0;
-  transform-origin: 50% 0;
-}
-.letterbox-bar[data-bar="bottom"] {
-  bottom: 0;
-  transform-origin: 50% 100%;
-}
-/* ALT "iris-bars": an elliptical iris (static gradient, scaled) closes
-   toward the 2.39 band, then the flat bars square it off */
-.letterbox[data-variant="iris-bars"] .letterbox-bar {
-  transform: none;
-  opacity: 0;
-  will-change: opacity;
-}
-.letterbox-iris {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-bars);
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(2.6);
-  will-change: transform, opacity;
-  background-image: radial-gradient(
-    ellipse 72vw calc(50svh - var(--lb-h)) at 50% 50%,
-    transparent 99%,
-    var(--lb-bg, #050708) 100%
-  );
-}
-/* bars never show under reduced motion or Pause (the component unmounts
-   them too; this covers the frame in between) */
-@media (prefers-reduced-motion: reduce) {
-  .letterbox {
-    display: none;
-  }
-}
-html[data-motion="paused"] .letterbox {
-  display: none;
 }

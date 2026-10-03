@@ -124,6 +124,13 @@ const GLOW_ACCENT: readonly (readonly [number, number])[] = [
 ];
 /** The wipe's window of p. */
 const CUT = { from: 0.12, to: 0.66 };
+/** Pin mode (P3-11 r1 hooks: the GL tier's order): the cut is already
+ *  rising from the frame's foot as the card pins, so the hook frame (p .05,
+ *  star (a) ≈ .11) shows the hall coming up under the storm — never the old
+ *  world alone under the new film's title. */
+const CUT_PIN = { from: -0.1, to: 0.66 };
+/** The storm settles onto its registration over star (a) 0–this. */
+const STORM_SETTLE = 0.12;
 /** How far (frame heights) the storm is lifted at p 0 (≤ .19: the plate's
  *  box still covers the frame under the 8 % opening inset). */
 const STORM_ENTRY = 0.18;
@@ -177,26 +184,29 @@ export function SeamFrame({
   const reduced = useReducedMotion();
   const board = plateOf(boardId);
   const storm = registeredStorm(stormId, board);
+  const CUT_ = pin ? CUT_PIN : CUT;
 
   const open = useTransform(p, (v) => `inset(${(8 * (1 - remap(v, 0, 0.15))).toFixed(2)}%)`);
   // the storm ENTERS tilted up (its glowing crest in the frame's top half,
   // where the card is first seen with the outgoing caption over it) and
   // settles onto its registration (horizon on the ledge) by the time the
   // cut starts (M2 critic 3 #3: at p 0 the top half was only night sky)
-  const outY = useTransform(p, (v) => `${(-100 * STORM_ENTRY * (1 - smooth01(remap(v, 0, CUT.from))) - 40 * v * v).toFixed(3)}%`);
-  const cut = useTransform(p, (v) => cutAt(remap(v, CUT.from, CUT.to)));
+  const outY = useTransform(p, (v) => `${(-100 * STORM_ENTRY * (1 - smooth01(remap(v, 0, STORM_SETTLE))) - 40 * v * v).toFixed(3)}%`);
+  const cut = useTransform(p, (v) => cutAt(remap(v, CUT_.from, CUT_.to)));
   // belt and braces: once the wipe is complete the incoming is unmasked
-  const mask = useTransform(p, (v) => (remap(v, CUT.from, CUT.to) >= 1 ? "none" : EDGE_MASK));
+  const mask = useTransform(p, (v) => (remap(v, CUT_.from, CUT_.to) >= 1 ? "none" : EDGE_MASK));
   const lineY = useTransform(cut, (c) => `${((-2 * c) / 3) * 100}%`);
   // the hall, counter-moved inside the rising mask layer (+2c frames), plus
   // its own opposing parallax (+.4·(1−p)² frames)
   const hallY = useTransform(p, (v) => {
-    const c = cutAt(remap(v, CUT.from, CUT.to));
+    const c = cutAt(remap(v, CUT_.from, CUT_.to));
     return `${(200 * c + 40 * (1 - v) * (1 - v)).toFixed(3)}%`;
   });
-  const lineOn = useTransform(p, (v) => (v > 0.1 && v < CUT.to ? 1 : 0));
-  const dustOn = useTransform(p, (v) => Math.min(remap(v, 0.1, 0.18), 1 - remap(v, CUT.to - 0.08, CUT.to)));
-  const grey = useTransform(p, (v) => 0.85 * remap(v, CUT.from, CUT.to));
+  // the seam line and the chalk dust ride the cut from where it starts
+  const on0 = Math.max(0, CUT_.from - 0.02);
+  const lineOn = useTransform(p, (v) => (v > on0 && v < CUT_.to ? 1 : 0));
+  const dustOn = useTransform(p, (v) => Math.min(remap(v, on0, on0 + 0.08), 1 - remap(v, CUT_.to - 0.08, CUT_.to)));
+  const grey = useTransform(p, (v) => 0.85 * remap(v, CUT_.from, CUT_.to));
   const fig = useTransform(p, (v) => remap(v, 0.3, 0.8));
 
   const { circle, spin, one } = useRanchoCircle(p, live, reduced);

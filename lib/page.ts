@@ -290,7 +290,11 @@ export const page: readonly SectionEntry[] = [
       { id: "B09-window", at: 0, span: 10, kind: "match-cut", timing: "scroll", feature: "P3-2" },
       { id: "B10", at: 0, span: 106.2, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
       { id: "B11", at: 106.2, span: 105.6, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
-      { id: "B12", at: 211.8, span: 101, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
+      // B12-push (P3-11 r1, F3): the last sea plate's push-in 1 → 1.08, a scroll star over the
+      // stretch the gull used to hold (journey-voyage.tsx, data-beat-scroll "center 50%, bottom 0%");
+      // the gull's fly-through (B12) keeps the screen after it
+      { id: "B12-push", at: 211.8, span: 80, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "P3-11" },
+      { id: "B12", at: 291.8, span: 21, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
     ],
     props: {
       variant: "voyage",
@@ -323,11 +327,14 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Work", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.593, t: 2.713 },
+    estVh: { d: 2.442, t: 2.536 },
     beats: [
       { id: "B16", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B17", at: 0, span: 100.1, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
-      { id: "B18", at: 100.1, span: 54.6, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      // B18's zone ends where trading-algos' split window (B19) starts arriving: work measures
+      // 244.2vh since P3-11 r1 (beats probe --write), so B19 begins at 144.2 (the runtime keeps
+      // them apart anyway: the invite waits for reading pace, B19 owns only while the page moves)
+      { id: "B18", at: 100.1, span: 44.1, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
     ],
     // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
     // "generic architecture"): Virus's astronaut pen on his desk — the
@@ -362,20 +369,25 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Optuna", keywords: ["pipeline", "screener", "optimizer"] },
     // head own (MachineBoard), body split right from the approach (spec §3.2);
     // chalk dust in the window (spec §7.7; W2-PLATES: weather in all three
-    // split windows). Cue 2's depth needs a registered line on
-    // iconic-corridor-alt (none yet: the stage keeps it camera-only).
+    // split windows). Cue 2 (P3-11 r1, F4; panel J2 #2: the corridor repeated
+    // trading-algos'): the homemade drone's ALT plate (iconic-drone-alt,
+    // accepted, unused in the default variant), camera only (no depth line).
     stage: {
       mode: "split",
       side: "right",
       cues: [
         { at: "optuna-screener-approach", media: "iconic-ice", camera: "push", weather: "chalk" },
-        { at: "optuna-screener-metrics", media: "iconic-corridor-alt", camera: "drift", depth: true },
+        { at: "optuna-screener-metrics", media: "iconic-drone-alt", camera: "drift" },
       ],
     },
     tempo: "brisk",
     estVh: { d: 3.23, t: 3.934 },
     beats: [
       { id: "B22", at: 0, span: 83.2, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B23-fig (P3-11 r1, F4): the pipeline FIG's ink, a time star; at 1440 its top is 142vh
+      // into the section, 441 px tall, drawn at 35 % visible ≈ 59vh of scroll (same screen as
+      // B23: one row, the spotlight runs them in turn)
+      { id: "B23-fig", at: 59, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       { id: "B23", at: 83.2, span: 88.9, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B23-rack", at: 83.2, span: 88.9, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
       { id: "B24", at: 172.1, span: 80.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
@@ -409,7 +421,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.404, t: 2.419 },
+    estVh: { d: 2.576, t: 2.673 },
     beats: [
       { id: "B26", at: 0, span: 97.7, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 97.7, span: 119.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -442,10 +454,13 @@ export const page: readonly SectionEntry[] = [
     beats: [
       { id: "B28", at: 0, span: 96.8, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B29", at: 96.8, span: 94.4, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
-      // B29-lens (quiet, spec row B29's "lens bracket"): the ledger itself, where the bracket
-      // travels to the row on the reading line; its box (W3 beats probe, 1440) closes the
-      // B29 → B30 gap. A quiet beat is never a `signature` (those are stars), so stage-cue.
-      { id: "B29-lens", at: 66.9, span: 150.9, kind: "stage-cue", timing: "scroll", feature: "existing" },
+      // B29-lens (P3-11 r1, F4: a STAR now; the eye saw the bracket and its mini-card perform):
+      // the ledger, where the bracket travels to the row on the reading line. Its runtime
+      // window is on the element (data-beat-scroll "top 50%, bottom 50%": the ledger crossing
+      // the reading line, box ≈ 66.9–217.8vh), GATED (integration r1, ledger-reckoning.tsx
+      // useScrollStar onOwn: it holds still while B29's strike holds the spotlight); the declared range is the B29
+      // row's own (96.8–191.2), so check #2 keeps it clear of B28's zone and of B30
+      { id: "B29-lens", at: 96.8, span: 94.4, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
     ],
     // head: VIRUS'S ASTRONAUT PEN (iconic-pen; ALT iconic-pen-alt)
     props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
@@ -461,7 +476,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     stage: { mode: "own" },
     tempo: "slow",
-    estVh: { d: 6.056, t: 5.816 },
+    estVh: { d: 6.37, t: 6.194 },
     // each screen's title + finale belong to that film's world (rations)
     beats: [
       { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
@@ -489,13 +504,15 @@ export const page: readonly SectionEntry[] = [
     variant: "default",
     nav: { label: "Beyond", primary: true },
     // own band + the lower half split, window LEFT from Activities (spec
-    // §3.2): MV-10 pushing toward the sun, golden into dusk (lib/sky.ts: the
-    // stage fades a static grade toward the next section's sky), depth on
-    // its horizon (no loop: L04 did not pass), fireflies at dusk (§7.7)
+    // §3.2): F-RD (the Heartlands at dusk, riderless horses; P3-11 r1 F5:
+    // MV-10 is already the FrontierBand's and the act-3 card's) pushing
+    // toward its horses, golden into dusk (lib/sky.ts: the stage fades a
+    // static grade toward the next section's sky), no depth (F-RD has no
+    // horizon mark), fireflies at dusk (§7.7)
     stage: {
       mode: "split",
       side: "left",
-      cues: [{ at: "beyond-activities", media: "MV-10", camera: "push", depth: true, grade: "golden", weather: "fireflies" }],
+      cues: [{ at: "beyond-activities", media: "F-RD", camera: "push", grade: "golden", weather: "fireflies" }],
     },
     tempo: "medium",
     estVh: { d: 4.805, t: 5.611 },
@@ -528,6 +545,14 @@ export const page: readonly SectionEntry[] = [
     estVh: { d: 2.91, t: 3.236 },
     beats: [
       { id: "B44", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // P3-11 r1 (F5, journal-spread.tsx): the landscape draws after the NibTitle; each
+      // vignette's first draw is its own time star (estimates: beats.mjs re-measures)
+      { id: "B44-sketch", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page1", at: 30, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page2", at: 65, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page3", at: 100, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page4", at: 140, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page5", at: 180, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
       { id: "B45", at: 96.9, span: 100, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
       { id: "B46", at: 254.5, span: 36.5, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
     ],
@@ -567,8 +592,10 @@ export const page: readonly SectionEntry[] = [
     estVh: { d: 2.989, t: 3.183 },
     beats: [
       { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
-      { id: "B53", at: 0, span: 98.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
-      { id: "B54", at: 98.4, span: 94.5, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B53", at: 0, span: 19, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B54 (P3-11 r1, F5): the footprints' walk through rooms 1–4 (room 1 hosts it;
+      // lib/spotlight-windows.ts), room 5 being B55's scrubbed sentence
+      { id: "B54", at: 19, span: 155, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
       { id: "B55", at: 192.9, span: 65.7, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
     ],
     props: {},
@@ -586,6 +613,10 @@ export const page: readonly SectionEntry[] = [
     estVh: { d: 1.06, t: 1.025 },
     beats: [
       { id: "B56", at: 0, span: 100, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B56-trail (P3-11 r1, F5): the last light's trail laid down point by point as it
+      // scrolls through (contact-scene.tsx; its window is on the element). Span ≥ 300 px at
+      // both widths (spec §3.4 #11); beats.mjs re-measures
+      { id: "B56-trail", at: 60, span: 41, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "P3-11" },
     ],
     props: { media: "MV-08", loop: "MV-09" },
   },
@@ -605,7 +636,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
     },
     tempo: "slow",
-    estVh: { d: 2.065, t: 2.23 },
+    estVh: { d: 1.806, t: 1.943 },
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },

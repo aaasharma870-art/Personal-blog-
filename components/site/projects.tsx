@@ -71,7 +71,7 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridMask="linear-gradient(to bottom, black 0%, black 18%, transparent 72%)"
+      gridVeil="transparent 18%, var(--color-bg) 72%"
       fadeIn
       lead={
         head ? (
@@ -85,30 +85,37 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
         ) : null
       }
     >
-      <SectionHead
-        id={titleId}
-        number={number}
-        label={entry.nav?.label ?? "Work"}
-        title="Led by what survived scrutiny."
-        intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
-        inCharacter
-        world="idiots"
-        beat="B16"
-        variant={titleVariant}
-      />
+      {/* ≥ 1024 the standing rule stands BESIDE the head, bottom-aligned
+          (P3-11 r1 J4 #8: the title held ~4 s with the right third empty);
+          below, today's stack */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-6">
+        <SectionHead
+          id={titleId}
+          number={number}
+          label={entry.nav?.label ?? "Work"}
+          title="Led by what survived scrutiny."
+          intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
+          inCharacter
+          world="idiots"
+          beat="B16"
+          variant={titleVariant}
+          className="lg:col-span-7"
+          titleClassName="motion-off:transition-none"
+        />
 
-      <Rise className="mt-tier-group max-w-body">
-        <Meta fields={["Standing rule"]} />
-        <p className="mt-tier-pair type-body text-fg-muted">
-          Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
-          figures below are the ones that earned their place under that rule.
-        </p>
-      </Rise>
+        <Rise className="mt-tier-group max-w-body lg:col-span-5 lg:self-end">
+          <Meta fields={["Standing rule"]} />
+          <p className="mt-tier-pair type-body text-fg-muted">
+            Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
+            figures below are the ones that earned their place under that rule.
+          </p>
+        </Rise>
+      </div>
 
       {/* ── the dawn board: the seven gates ─────────────────────────── */}
       <div className="mt-tier-block border-t border-rule pt-tier-block">
         <Meta fields={["Inside the flagship"]} />
-        <h3 className="mt-tier-pair max-w-title type-title text-fg">The seven-part validation gauntlet.</h3>
+        <h3 className="mt-tier-pair max-w-title type-title text-fg motion-off:transition-none">The seven-part validation gauntlet.</h3>
         <div className="mt-tier-block">
           <GauntletTabs
             steps={gauntlet}

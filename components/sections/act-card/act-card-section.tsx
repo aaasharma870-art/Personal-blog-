@@ -111,6 +111,14 @@ const FILM_AT: Record<ActCardItem["transition"], number> = {
   flight: 0.05,
 };
 
+/** Pin mode (P3-11 r1, hooks + panel J2 #1 / J4 #5): where the card opens
+ *  on the OLD world's picture (the seam's storm, the ignite's camp), the new
+ *  film's title lands as the transition visibly starts (star (a) progress
+ *  .045 ≈ the card's p .02, just inside the hook frame), never while the
+ *  card approaches over the old world's image and caption. The opening and
+ *  the tintype open on their own world: their title is up from arrival. */
+const FILM_PIN: Partial<Record<ActCardItem["transition"], number>> = { seam: 0.045, ignite: 0.045 };
+
 const visible = (c: Copy | { text: string; status: string } | null | undefined) =>
   Boolean(c && copyVisible(c));
 
@@ -288,7 +296,7 @@ export function ActCardSection({
   const filmTitle =
     item.to !== "house" && spec.work ? (
       <p className="card-film text-[length:var(--text-title)] leading-[1.02] tracking-[0.03em] text-balance text-fg">
-        <CardReveal at={FILM_AT[kind]} pinned="static">
+        <CardReveal at={FILM_AT[kind]} pinned={FILM_PIN[kind] ?? "static"}>
           <FilmTitle world={item.to} as="span" />
         </CardReveal>
       </p>

@@ -230,6 +230,73 @@ const fire: Fx = (sec, still) => {
 
 const FX: Readonly<Record<RdPart, Fx>> = { beyond: eagle, writing: bone, voices: fire };
 
+/* — writing: the dusk's horizon (P3-11 r1) ————————————————————————————
+   writing.tsx's [data-dusk-trees] host (≥ lg): a pine treeline in the
+   camp's deep (--bg of the host's plane) standing where the fade turns
+   solid, drawn HERE so it costs the first load nothing. With motion on it
+   rises as the dusk scrolls in — B46's visible performance: a translate on
+   a ViewTimeline of its box (compositor only; no ViewTimeline → it simply
+   stands). Pause / reduced motion: it stands. Deterministic shapes. */
+const hash = (k: number) => {
+  const v = Math.sin(k * 12.9898 + 78.233) * 43758.5453;
+  return v - Math.floor(v);
+};
+
+/** One pine: four drooping tiers, tip to tip (viewBox units). */
+function pine(x: number, h: number, base: number): string {
+  const w = h * 0.24 + 4;
+  const side: [number, number][] = [];
+  for (let t = 0; t < 4; t++) {
+    const f = t / 4;
+    const wb = w * (1 - f * 0.8);
+    side.push([wb, h * f * 0.92], [wb * 0.32, h * (f + 0.1375) * 0.92]);
+  }
+  const pt = ([dx, dy]: [number, number], s: number) => `${(x + s * dx).toFixed(0)} ${(base - dy).toFixed(0)}`;
+  const left = side.map((p) => pt(p, -1));
+  const right = side.reverse().map((p) => pt(p, 1));
+  return `M${pt([w * 0.2, 0], -1)} L${[...left, pt([0, h], 1), ...right, pt([w * 0.2, 0], 1)].join(" L")}Z`;
+}
+
+function treeline(): string {
+  let d = "M0 140V122H1600V140Z";
+  for (let k = 0, x = 4; x < 1600; k++) {
+    const h = hash(k + 101) > 0.15 ? 34 + hash(k) * 84 : 22 + hash(k) * 20;
+    d += pine(x, h, 124 + Math.sin(x / 170) * 3);
+    x += 12 + hash(k + 7) * 22;
+  }
+  return d;
+}
+
+function drawTrees(host: HTMLElement): SVGSVGElement {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 1600 140");
+  svg.setAttribute("preserveAspectRatio", "xMidYMax slice");
+  svg.setAttribute("focusable", "false");
+  svg.style.cssText = "position:absolute;left:0;bottom:13%;width:100%;height:44%;fill:var(--bg)";
+  const path = document.createElementNS(ns, "path");
+  path.setAttribute("d", treeline());
+  svg.append(path);
+  host.replaceChildren(svg);
+  return svg;
+}
+
+type ViewTimelineCtor = new (o: { subject: Element }) => AnimationTimeline;
+
+function riseTrees(trees: SVGSVGElement, box: Element): (() => void) | null {
+  const VT = (window as unknown as { ViewTimeline?: ViewTimelineCtor }).ViewTimeline;
+  if (!VT) return null;
+  const a = trees.animate([{ transform: "translateY(38%)" }, { transform: "none" }], {
+    timeline: new VT({ subject: box }),
+    // B46's window (lib/spotlight-windows.ts "bottom 100%, bottom 30%"):
+    // from the box fully in (its bottom at the viewport's) to ≈ its bottom at 30 %
+    rangeStart: "contain 0%",
+    rangeEnd: "cover 75%",
+    fill: "both",
+  } as KeyframeAnimationOptions);
+  return () => a.cancel();
+}
+
 export default function RdDesktopImpl({
   part,
   anchor,
@@ -248,6 +315,25 @@ export default function RdDesktopImpl({
     const w = Number(el.dataset.beatWeight);
     const weight: BeatWeight = w === 3 ? 3 : w === 2 ? 2 : 1;
     return spotlight.registerScrollStar(STAR[part], el, weight);
+  }, [part, anchor, reduced]);
+
+  // writing: the dusk's treeline (drawn always; it rises with motion on)
+  useEffect(() => {
+    const host = part === "writing" ? anchor.current?.closest("section")?.querySelector<HTMLElement>("[data-dusk-trees]") : null;
+    if (!host) return;
+    const trees = drawTrees(host);
+    let stop = reduced || motionOffNow() ? null : riseTrees(trees, host);
+    const offMotion = onMotionOffChange(() => {
+      if (motionOffNow()) {
+        stop?.();
+        stop = null;
+      } else if (!reduced) stop ??= riseTrees(trees, host);
+    });
+    return () => {
+      offMotion();
+      stop?.();
+      host.replaceChildren();
+    };
   }, [part, anchor, reduced]);
 
   // the part's egg: draw it when it fires; Pause / reduced motion ends it

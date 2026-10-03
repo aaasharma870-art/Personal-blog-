@@ -60,6 +60,16 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 /** B45: hooves on the page's bottom edge, left → right, ≤ 1.2 s (spec §2.3). */
 const HORSE_PATH = { points: [[-0.12, 0.94], [1.12, 0.94]], ms: 1200 } as const;
 
+/** The dusk's box (shared by the fade and its treeline); the mask is inline. */
+const DUSK_BOX =
+  "pointer-events-none absolute left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]";
+const DUSK_AT = { bottom: "calc(-1 * var(--spacing-section))" };
+const DUSK_MASK = {
+  ...DUSK_AT,
+  maskImage: "linear-gradient(to bottom, transparent, #000 85%)",
+  WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 85%)",
+};
+
 export function Writing({ entry, number }: SectionProps<"index">) {
   const titleId = `${entry.id}-title`;
   const journal = slot(entry, "dressing").index === "journal";
@@ -143,7 +153,21 @@ export function Writing({ entry, number }: SectionProps<"index">) {
             data-dusk=""
             {...planeAttrs(dusk.tone, dusk.world)}
             {...beatAttrs("B46", { weight: 1 })}
-            className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent,#000_85%)] boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]"
+            className={cn(DUSK_BOX, "bg-bg")}
+            style={DUSK_MASK}
+          />
+          {/* P3-11 r1 (panel: "a muddy parchment-to-black fade"): the dusk's
+              horizon, ≥ lg — a pine treeline in the camp's deep where the
+              fade turns solid, so the page reads as night falling on the
+              frontier (the camp's own pines answer it). The lazy desktop
+              extras draw it here and raise it as the dusk scrolls in (B46's
+              visible performance; rd-desktop.tsx): 0 first-load bytes. */}
+          <div
+            aria-hidden="true"
+            data-dusk-trees=""
+            {...planeAttrs(dusk.tone, dusk.world)}
+            className={cn(DUSK_BOX, "hidden overflow-hidden lg:block")}
+            style={DUSK_AT}
           />
         </>
       ) : null}

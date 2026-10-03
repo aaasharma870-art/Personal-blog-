@@ -11,8 +11,15 @@ import { cn } from "@/lib/utils";
    text-fg from SectionFrame's world × tone), the derived dome seam, and the
    page container. Adds aria-hidden layers painted between the plane and
    the content (they sit at -z-10 inside the isolated section):
-     - "grid"      the 3I-07 graph grid (≤ 6 %, CSS per data-world), masked
-                   by `gridMask` (a CSS mask-image value; default: none);
+     - "grid"      the 3I-07 graph grid (≤ 6 %, CSS per data-world), thinned
+                   by `gridVeil`: a gradient of the plane's own colour
+                   painted OVER the grid (transparent = the grid at full
+                   strength, the plane colour = no grid). Never a mask: a
+                   masked section-tall layer is its own composited layer,
+                   and under reduced motion at 1024 Chromium painted stale
+                   tiles of it over the kill-list rows (P3-11 r1 J9 H1: rows
+                   01–02 ghosted over 05–06). The plane is opaque (bg-bg),
+                   so the veil reads exactly as the old mask did;
      - `fadeIn`    RECOGNIZABILITY T4: the incoming board's deep fades into
                    this plane over the first 30vh (board → board);
      - `fadeOut`   T5: this plane crossfades into the page's deep over the
@@ -31,7 +38,7 @@ export function IdiotsSection({
   className,
   containerClassName,
   grid = false,
-  gridMask,
+  gridVeil,
   fadeIn = false,
   fadeOut = false,
   layers,
@@ -44,7 +51,10 @@ export function IdiotsSection({
   className?: string;
   containerClassName?: string;
   grid?: boolean;
-  gridMask?: string;
+  /** The stops of a top → bottom gradient of the plane colour over the grid,
+   *  e.g. "transparent 18%, var(--color-bg) 72%" (the grid full to 18 %,
+   *  gone by 72 %). */
+  gridVeil?: string;
   fadeIn?: boolean;
   fadeOut?: boolean;
   layers?: ReactNode;
@@ -62,11 +72,12 @@ export function IdiotsSection({
       style={style}
     >
       {from ? <Seam from={from} /> : null}
-      {grid ? (
+      {grid ? <div aria-hidden="true" className="world-ground pointer-events-none absolute inset-0 -z-10" /> : null}
+      {grid && gridVeil ? (
         <div
           aria-hidden="true"
-          className="world-ground pointer-events-none absolute inset-0 -z-10"
-          style={gridMask ? { WebkitMaskImage: gridMask, maskImage: gridMask } : undefined}
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{ backgroundImage: `linear-gradient(to bottom, ${gridVeil})` }}
         />
       ) : null}
       {fadeIn ? (

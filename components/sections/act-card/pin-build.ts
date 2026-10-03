@@ -1,5 +1,6 @@
 import { film, type ActSpec } from "@/lib/film";
 import { coverOf } from "@/lib/gl/cover";
+import { TITLE_ZOOM } from "@/lib/gl/plan";
 import type { GlFlavour } from "@/lib/gl/types";
 import { markOf, rectOf, sequenceFrames, type MediaId } from "@/lib/media";
 import type { ActCardItem } from "@/lib/sections";
@@ -309,7 +310,7 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       gl,
       toPlate: { default: plates.to.default, alt: plates.to.alt },
       push,
-      title: { text: title, origin: act?.maskOrigin ?? [0.5, 0.5] },
+      title: { text: title, origin: act?.maskOrigin ?? [0.5, 0.5], zoom: TITLE_ZOOM[kind] },
       shape,
       weather,
       beats,

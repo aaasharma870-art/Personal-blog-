@@ -108,6 +108,8 @@ Pinned scroll windows at 1440: act-1 900→1710 · act-2 7359→8349 · act-3 25
 ### 2.3 The beat map (1440×900; scrollY = viewport top; one star per row)
 Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂ are breaths (weight ≤ 1 after a weight-3 star).
 
+> **Superseded (P3-11 round 1, J1 #8):** breaths are now DERIVED, never typed in: a breath is the viewport (100vh) right after each weight-3 star (a card's (a) → (b) set piece counts as one, from the end of its (b)) — today after B04, B14, B30, B38, B50 and B58. `lib/beats.ts` (BREATHS) defines them, `scripts/checks/beats.mjs` lists them and keeps them weight ≤ 1 (#12), and `tools/capture/clips.mjs` places them on each run's geometry. The ⟂ marks in the table below are the original plan only: they no longer decide where a rest is, and a reader second with no star outside a derived breath counts as a dead one.
+
 | # | scrollY ≈ | where | beats in order (quiet ones in *italics*) | **THE ONE STAR** | kind · timing · w | tempo | supplied by |
 |---|---|---|---|---|---|---|---|
 | B00 | intro, time | prologue play screen | *IN-01 living loop (L05)*; Play; Skip intro; Skip to the research | the living play screen | signature · t · 2 | slow | P3-5 (L05, only after P3-3) |

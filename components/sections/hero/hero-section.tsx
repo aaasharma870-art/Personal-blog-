@@ -30,6 +30,7 @@ import {
 } from "@/components/sections/hero/focal";
 import { heroBootHtml } from "@/components/sections/hero/hero-boot";
 import { DirectorsCutButton } from "@/components/director/directors-cut-button";
+import { JackCompass } from "@/components/worlds/pirates/jack-compass";
 import {
   HeroStage,
   type HeroGeo,
@@ -274,6 +275,14 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
       frames={Object.fromEntries(VARIANTS.map((v) => [v, geoOf(plates[v])])) as Record<Variant, HeroGeo>}
       caption={caption}
       captionWorld={cap?.world ?? null}
+      // P3-11 r1 (strangers, blind: the first screen read 0.45–0.5
+      // "Pirates", "a lone ship… the glowing sea could be any sea"): JACK'S
+      // COMPASS under the bracket, its red arrow on the Black Pearl ("it
+      // points to what you want most"; ≈ 24° at 16:10–4:3). The Act I
+      // instrument (our own drawing, IC-PC-02; About's toy), not a still, a
+      // likeness or a logo. Static (it simply points: no star), aria-hidden,
+      // out of paint with the plate while the hero is off stage.
+      mark={<JackCompass heading={24} lid="open" className="w-full" />}
     >
       {column}
     </HeroStage>

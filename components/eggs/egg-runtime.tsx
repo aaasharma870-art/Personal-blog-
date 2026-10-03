@@ -47,6 +47,11 @@ import "@/app/p3/game-lazy.css";
    counts only for the worthy (every ledger row read, or Dead Eye won).
    Lights (the veil) are opacity-only layers inside each media box in view,
    never over text, removed when done (≤ 2.4 s).
+   P3-11 (TRIAGE F6; integration r1, F2's hand-off): a toast never lands on
+   an act card. While any card's frame ([data-act-card]
+   [data-act-card-frame]) intersects the viewport, the toast on screen bows
+   out and a new one waits (the latest is kept) until no frame is in view,
+   then shows after CARD_CLEAR_MS.
    ========================================================================== */
 
 const MapDialog = dynamic(() => import("@/components/eggs/marauders-map-dialog"), { ssr: false });
@@ -54,6 +59,9 @@ const MapDialog = dynamic(() => import("@/components/eggs/marauders-map-dialog")
 export type EggMsg = { kind: "egg"; id: EggId } | { kind: "found"; id: HuntId; count: number };
 
 type HuntLine = { id: HuntId; count: number };
+
+/** How long after the last card frame leaves the view a held toast shows. */
+const CARD_CLEAR_MS = 400;
 
 const c = (k: EggCopyKey): string | null => (copyVisible(eggCopy[k]) ? eggCopy[k].text : null);
 const copyOf = (k: CopyKey): string | null => {
@@ -140,27 +148,62 @@ export default function EggRuntime({
   const self = useRef<{ on: boolean; count: number }>({ on: false, count: 0 });
   /** The hunt line held while the Map is open. */
   const afterMap = useRef<HuntLine | null>(null);
+  /** The act-card frames in the viewport now (they hold the toasts). */
+  const framesIn = useRef<Set<Element>>(new Set());
+  /** The latest toast held while a card frame is in view. */
+  const held = useRef<EggToastData | null>(null);
+  const clearTimer = useRef(0);
+
+  // an act card on screen keeps the toast corner clear
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const inView = framesIn.current;
+    const io = new IntersectionObserver((entries) => {
+      const was = inView.size;
+      for (const e of entries) {
+        if (e.isIntersecting) inView.add(e.target);
+        else inView.delete(e.target);
+      }
+      window.clearTimeout(clearTimer.current);
+      if (inView.size > 0) {
+        if (was === 0) setToast(null);
+        return;
+      }
+      clearTimer.current = window.setTimeout(() => {
+        const t = held.current;
+        held.current = null;
+        if (t && inView.size === 0) setToast(t);
+      }, CARD_CLEAR_MS);
+    });
+    document.querySelectorAll("[data-act-card] [data-act-card-frame]").forEach((el) => io.observe(el));
+    return () => {
+      io.disconnect();
+      window.clearTimeout(clearTimer.current);
+      inView.clear();
+    };
+  }, []);
 
   const say = useCallback((world: WorldId, body: ReactNode, hunt?: HuntLine | null, ms?: number) => {
     const huntLine = hunt ? huntToastLine(hunt) : null;
     if (!body && !huntLine) return;
     // mount the live region first (never at rest: E1), then speak into it
+    // (held while an act card is on screen)
     setRegion(true);
-    window.setTimeout(
-      () =>
-        setToast({
-          key: ++seq.current,
-          world,
-          body: (
-            <div className="flex flex-col gap-2">
-              {body}
-              {huntLine}
-            </div>
-          ),
-          ms: ms ?? (hunt?.count === HUNT_TOTAL ? 4000 : undefined),
-        }),
-      60,
-    );
+    const t: EggToastData = {
+      key: ++seq.current,
+      world,
+      body: (
+        <div className="flex flex-col gap-2">
+          {body}
+          {huntLine}
+        </div>
+      ),
+      ms: ms ?? (hunt?.count === HUNT_TOTAL ? 4000 : undefined),
+    };
+    window.setTimeout(() => {
+      if (framesIn.current.size > 0) held.current = t;
+      else setToast(t);
+    }, 60);
   }, []);
   const line = (text: string | null) => (text ? <p className="type-small text-fg">{text}</p> : null);
   const clearToast = useCallback(() => setToast(null), []);

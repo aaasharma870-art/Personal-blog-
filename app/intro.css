@@ -256,7 +256,10 @@ html:not(.intro-kbd) #intro-skip:focus-visible {
   pointer-events: none;
   transition: color var(--dur-micro) var(--ease-out);
 }
-html.intro-armed .intro-lens {
+html.intro-armed .intro-lens,
+html.intro-armed.intro-alt-play.intro-inked .intro-lens {
+  /* the second selector: intro.play ALT, once inked (VARIANTS below; it
+     outranks the ALT's `animation: none`) */
   animation: intro-draw 0.9s var(--ease-draw) both;
 }
 .intro-lens-l {
@@ -278,9 +281,11 @@ html.intro-armed .intro-lens {
 }
 .intro-arm-a {
   top: 0;
+  transform: scaleX(clamp(0, calc(var(--intro-draw) * 10), 1));
 }
 .intro-arm-b {
   bottom: 0;
+  transform: scaleX(clamp(0, calc((var(--intro-draw) - 0.9) * 10), 1));
 }
 .intro-spine {
   top: 0;
@@ -302,12 +307,6 @@ html.intro-armed .intro-lens {
 .intro-lens-l .intro-arm-b,
 .intro-lens-r .intro-arm-a {
   transform-origin: left;
-}
-.intro-arm-a {
-  transform: scaleX(clamp(0, calc(var(--intro-draw) * 10), 1));
-}
-.intro-arm-b {
-  transform: scaleX(clamp(0, calc((var(--intro-draw) - 0.9) * 10), 1));
 }
 .intro-play:hover .intro-lens {
   color: var(--color-aqua-bright);
@@ -438,9 +437,6 @@ html.intro-armed.intro-alt-play .intro-lens {
   --intro-draw: 0;
   animation: none;
 }
-html.intro-armed.intro-alt-play.intro-inked .intro-lens {
-  animation: intro-draw 0.9s var(--ease-draw) both;
-}
 /* intro.landing ALT "map-fold": the overlay turns away on a hinge at its
    right edge (the controller animates the transform), so the name zone on
    the left clears first; past edge-on nothing of it shows. */
@@ -454,10 +450,7 @@ html.intro-fold #intro {
      P3-3: the feather is STATIC (72 px / 48 px), rasterised once when the
      fold starts; it no longer grows by an animated custom property (a
      repaint of the whole overlay every frame). */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 72px),
-    linear-gradient(to bottom, transparent, #000 48px, #000 calc(100% - 48px), transparent);
-  -webkit-mask-composite: source-in;
+  /* (the -webkit- mask prefixes, composite included, are the build's) */
   mask-image:
     linear-gradient(to right, transparent, #000 72px),
     linear-gradient(to bottom, transparent, #000 48px, #000 calc(100% - 48px), transparent);
@@ -488,7 +481,6 @@ html.intro-fold .intro-skip {
 .hero-cap__in {
   position: relative;
   isolation: isolate;
-  transition: opacity 600ms var(--ease-out);
 }
 html.intro-armed .hero-cap__in,
 html.intro-caps-linger .hero-cap__in {

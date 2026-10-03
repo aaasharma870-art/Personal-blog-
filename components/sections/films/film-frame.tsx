@@ -54,8 +54,8 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  * - HOUSE LIGHTS DOWN (`lights`, the first screen; B30 / B31-bars, spec
  *   §7.4, P3-6 #8): the global letterbox bars close over 40vh as the
  *   INTERMISSION head rises (the frame's top from 125% to 85% of the
- *   viewport: closed as the first screen arrives) and open over 40vh around
- *   the moment this frame is centred (its centre from 70% to 30%); from
+ *   viewport: closed as the first screen arrives) and open over 40vh as
+ *   this frame rises to the middle (its centre from 92% to 52%); from
  *   there each screen's own 2.39 matte carries the scene. One close, one
  *   open per pass (html[data-letterbox] flips twice, rule 33). B30 is a
  *   weight-3 scroll star: its marker's box sits above the frame so its

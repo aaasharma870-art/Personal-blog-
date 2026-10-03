@@ -7,6 +7,8 @@ import { useScrollScene, type ScrollSceneApi } from "@/lib/use-scroll-scene";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant } from "@/lib/variants";
 import type { LetterboxSceneOptions } from "./letterbox-bars";
+// the bars' own CSS: loaded with this chunk, not the page (P3-11 r1)
+import "./letterbox.css";
 
 /* ============================================================================
    LETTERBOX BARS (spec §7.4, K3) — OWNER: B1-STAGE.

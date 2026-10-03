@@ -75,7 +75,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridMask="linear-gradient(to bottom, black 0%, black 22%, color-mix(in srgb, black 50%, transparent) 100%)"
+      gridVeil="transparent 22%, color-mix(in srgb, var(--color-bg) 50%, transparent) 100%"
     >
       {entry.props.media ? (
         <DroneBand
@@ -94,16 +94,19 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
         label={entry.nav?.label ?? "Systems"}
         title="What I can actually do."
         intro="A working map, not a skills cloud: the methods I rely on, the tools behind them, and what they are meant to produce."
+        titleClassName="motion-off:transition-none"
       />
 
       <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-8">
-          {/* column heads (desktop); every cell also carries its own label */}
+          {/* column heads (desktop); every cell also carries its own label.
+              ≥ 1024 each row is its area's name over three columns (P3-11 r1
+              J4 #2: an Area column + three + the FIG column crammed five
+              columns of small text into 1024) */}
           <div
             aria-hidden="true"
-            className="hidden border-b border-rule pb-tier-pair lg:grid lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
+            className="hidden border-b border-rule pb-tier-pair lg:grid lg:grid-cols-3 lg:gap-x-6"
           >
-            <span className="type-meta text-fg-muted">Area</span>
             {COLS.map(([label]) => (
               <span key={label} className="type-meta text-fg-muted">
                 {label}
@@ -116,13 +119,13 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
                 as="li"
                 key={c.area}
                 delay={i * 0.04}
-                className="grid grid-cols-1 gap-3 border-b border-rule py-tier-group lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
+                className="grid grid-cols-1 gap-3 border-b border-rule py-tier-group lg:grid-cols-3 lg:gap-x-6"
               >
-                <h3 className="type-heading text-fg lg:text-[length:var(--text-lead)] lg:leading-[1.45]">{c.area}</h3>
+                <h3 className="type-heading text-fg lg:col-span-3 lg:text-[length:var(--text-lead)] lg:leading-[1.45]">{c.area}</h3>
                 {COLS.map(([label, key]) => (
                   <dl key={key}>
                     <dt className="type-meta text-fg-muted lg:sr-only">{label}</dt>
-                    <dd className="mt-1 type-small text-fg-muted lg:mt-0">{c[key]}</dd>
+                    <dd className="mt-1 type-body text-fg-muted lg:mt-0">{c[key]}</dd>
                   </dl>
                 ))}
               </Rise>

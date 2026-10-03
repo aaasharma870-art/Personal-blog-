@@ -314,7 +314,28 @@ export default async function probe(page, ctx) {
               if (!(lab && hit.closest(`#${CSS.escape(lab)}`))) covered = `${hit.tagName.toLowerCase()}${hit.id ? "#" + hit.id : ""}${typeof hit.className === "string" && hit.className ? "." + hit.className.trim().split(/\s+/).slice(0, 2).join(".") : ""}`;
             }
           }
-          const label = (e.getAttribute("aria-label") || e.textContent || "").trim().replace(/\s+/g, " ").slice(0, 50);
+          // the ACCESSIBLE NAME (P3-11 r1, F6: textContent read "WorkSkip to the research" for a
+          // link whose aria-hidden decoration doubles its label): aria-labelledby, aria-label, then
+          // the subtree's text without aria-hidden / hidden parts (img alt), then title
+          const textOf = (node) => {
+            if (node.nodeType === 3) return node.nodeValue ?? "";
+            if (node.nodeType !== 1) return "";
+            const el = node;
+            if (el.getAttribute("aria-hidden") === "true" || el.hidden || getComputedStyle(el).display === "none") return "";
+            if (el.tagName === "IMG") return el.getAttribute("alt") ?? "";
+            if (el !== e && el.getAttribute("aria-label")) return ` ${el.getAttribute("aria-label")} `;
+            return [...el.childNodes].map(textOf).join("");
+          };
+          const by = (e.getAttribute("aria-labelledby") ?? "")
+            .split(/\s+/)
+            .map((id) => (id ? document.getElementById(id) : null))
+            .filter(Boolean)
+            .map((el) => el.textContent ?? "")
+            .join(" ");
+          const label = (by.trim() || e.getAttribute("aria-label") || textOf(e).trim() || e.getAttribute("title") || "")
+            .trim()
+            .replace(/\s+/g, " ")
+            .slice(0, 50);
           return {
             n,
             again,

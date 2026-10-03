@@ -432,7 +432,10 @@ export function MachineBoard({
               ref={answerRef}
               className="relative mt-tier-pair [--fg-muted:#d6dcd5] sm:pointer-events-auto sm:absolute sm:top-(--ma-t-lg) sm:left-(--ma-l-lg) sm:mt-0 sm:w-(--ma-w-lg)"
             >
-              <ChalkWrite phase={phase} write={!alt} delay={1.55} duration={1.5} block>
+              {/* the answer follows the question at once and writes briskly
+                  (P3-11 r1 strangers, 1440: a frame caught it at "…reduces
+                  h"; a line half-written for 1.5 s reads as stuck) */}
+              <ChalkWrite phase={phase} write={!alt} delay={1.2} duration={1.05} block>
                 <p className="text-[clamp(1.125rem,0.9rem+1vw,1.5rem)] leading-[1.25] text-(--w-chalk) sm:text-[length:1.95cqw]">
                   <FilmQuote id="Q-3I-3" rendition="lettered" attribution="speaker" />
                 </p>

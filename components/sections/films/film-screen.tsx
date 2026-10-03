@@ -48,8 +48,8 @@ const DEEP: Record<WorldId, string> = {
 
 /** The house lights' markers, inside the first frame's box (server markup:
  *  no client code). B30, a weight-3 scroll star: the close's spotlight box,
- *  above the frame (films-desktop.tsx registers it). B31-bars: the open,
- *  centred on the frame. */
+ *  above the frame (films-desktop.tsx registers it). B31-bars: the open
+ *  (the reading line while the frame rises to the middle). */
 function LightsMarks() {
   return (
     <>
@@ -63,7 +63,9 @@ function LightsMarks() {
       <span
         aria-hidden="true"
         className="pointer-events-none invisible absolute left-0 w-px"
-        style={{ top: "calc(50% - 20vh)", height: "40vh" }}
+        // the reading line's span while the bars open (films-desktop.tsx
+        // LIGHTS: the frame's centre 92% → 52% of the viewport)
+        style={{ top: "calc(50% - 42vh)", height: "40vh" }}
         {...beatAttrs("B31-bars")}
       />
     </>

@@ -51,8 +51,9 @@ import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "
    <LivePlate>: the L09 living beam plays on DESKTOP_FINE with motion on
    (loopFor; RM / Pause / phones: the still). NO camera and no depth: the
    chalk overlay is registered to the board, so the board never moves under
-   it (the `plates.loops` ALT is the plain still). The board's settle is the
-   B17 time star (SettleFrame `star`, through the spotlight).
+   it (the `plates.loops` ALT is the plain still). The board's entrance is
+   the B17 time star (SettleFrame `star`, through the spotlight): the
+   duster's wipe on DESKTOP_FINE (P3-11 r1), the settle on phones.
    ========================================================================== */
 
 /** MV-06 never moves (spec §6.1: the gauntlet overlay is registered). */
@@ -455,6 +456,9 @@ export function GauntletBoard({
           darkens the board, its wooden frame or the chalk ledge */}
       <SettleFrame
         entrance={alt ? "wipe" : "settle"}
+        // P3-11 r1 (J1: B17 never visibly performed): the duster wipes the
+        // board on at desktop widths; phones keep the settle
+        desktopWipe
         className="relative sm:overflow-hidden sm:rounded-frame"
         star={{ id: "B17", weight: 2 }}
       >

@@ -81,6 +81,14 @@ import { beatAttrs } from "@/lib/beats";
    - THE SNITCH's dart is the credits' star B57 (snitch.tsx asks the
      spotlight on desktop). The roll block carries the quiet B57-roll
      (lib/page.ts), so the credits are never a dead screen before the dart.
+
+   P3-11 r1 (panel: credits 0 % keep-scrolling, "tiny grey type on black",
+   "a weak final frame"): ≥ 64rem the roll is BRISKER and READABLE without
+   hiding a row (app/p3/world-hp.css "the roll", keyed on [data-roll]):
+   roles in ink at the small size, names at the lead size, half the row
+   padding, the block gaps at the group tier, a shorter run-in; the last
+   line (Q-HP-2) is set at the title size, so the page ends on a composed
+   frame. The AI row and the fan-tribute line stay where they were.
    ========================================================================== */
 
 /** The film faces the site ships (PHASE3-SPEC §5.2; `typeCredits` in
@@ -230,6 +238,8 @@ export function Footer({ entry }: SectionProps<"credits">) {
     <footer
       id={anchorId(entry)}
       aria-labelledby="credits-title"
+      // P3-11 r1: the desktop roll (app/p3/world-hp.css "the roll")
+      data-roll=""
       {...planeAttrs("deep", "house")}
       className={`relative isolate z-(--z-main) bg-bg py-section text-fg${scrim ? " stage-backdrop" : ""}`}
     >
@@ -305,10 +315,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
           {on && copyVisible(credits.end) ? <p className="type-body text-fg">{credits.end.text}</p> : null}
           <div className="flex items-center gap-2" data-credits-return="">
             {hp ? (
-              <TimeTurnerLink
-                href={topHref}
-                className="type-small text-fg-muted transition-colors hover:text-fg [&_[data-motif=time-turner]]:size-6"
-              >
+              <TimeTurnerLink href={topHref} icon={24} className="type-small text-fg-muted transition-colors hover:text-fg">
                 ↑ Back to the opening
               </TimeTurnerLink>
             ) : (
@@ -345,7 +352,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
           <div className="mt-tier-block flex flex-col items-center gap-3 text-center" data-credits-last="">
             <p className="text-(length:--text-heading) leading-(--text-heading--line-height) text-fg">
               <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
-              {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
+              {hp ? <HallowsMark className="ml-3 size-4" style={{ verticalAlign: -1 }} /> : null}
             </p>
             {hp ? <InkFold /> : null}
           </div>

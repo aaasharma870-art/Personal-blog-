@@ -29,6 +29,7 @@ export function PrinciplesStage({
   head,
   scrub,
   hint,
+  features,
 }: {
   choice: VariantChoice;
   ribbons: boolean;
@@ -37,6 +38,8 @@ export function PrinciplesStage({
   scrub?: ScrubBody;
   /** The `hp-map` egg's hint per choreography (server-rendered). */
   hint?: { map: ReactNode; ceiling: ReactNode };
+  /** The Map's room furniture (server-rendered; DEFAULT only). */
+  features?: readonly ReactNode[];
 }) {
   const variant = useVariant(choice, "principles.map");
   const alt = variant === "alt";
@@ -54,7 +57,7 @@ export function PrinciplesStage({
       {alt ? (
         <PrinciplesLumos ribbons={ribbons} head={headRow} scrub={scrub} hint={hint?.ceiling} />
       ) : (
-        <PrinciplesMap ribbons={ribbons} head={headRow} scrub={scrub} hint={hint?.map} />
+        <PrinciplesMap ribbons={ribbons} head={headRow} scrub={scrub} hint={hint?.map} features={features} />
       )}
     </div>
   );

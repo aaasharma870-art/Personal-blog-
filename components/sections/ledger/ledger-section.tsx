@@ -28,7 +28,8 @@ import type { SectionProps } from "@/components/sections/types";
    quiet at rest; no chalk, no icons (D-6, H27).
    GROUND: the Act II graph grid (≤ 6 %) arrives here at half strength from
    `systems` and thins row by row to 0 by the LAST row (3I-07, H26: a static
-   mask from the rows' measured span, CSS vars written by the list); then
+   veil from the rows' measured span, CSS vars written by the list; a veil
+   of the plane colour, never a mask: J9 H1); then
    T5 crossfades the idiots canvas into the intermission's deep over the
    last 30vh.
    DEAD EYE (PHASE3-SPEC §9.2 #3, a real game now; W3-GAMES): the Meta pill
@@ -121,7 +122,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
       labelledBy={titleId}
       className="scroll-mt-24"
       grid
-      gridMask="linear-gradient(to bottom, color-mix(in srgb, black 50%, transparent) 0%, color-mix(in srgb, black 50%, transparent) var(--ledger-grid-a, 25%), transparent var(--ledger-grid-b, 88%))"
+      gridVeil="color-mix(in srgb, var(--color-bg) 50%, transparent) 0%, color-mix(in srgb, var(--color-bg) 50%, transparent) var(--ledger-grid-a, 25%), var(--color-bg) var(--ledger-grid-b, 88%)"
       fadeOut
       layers={
         game ? (
@@ -145,7 +146,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
           ) : (
             meta
           )}
-          <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg">
+          <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg motion-off:transition-none">
             The kill-list
           </MaskReveal>
           <p className="mt-tier-group max-w-body type-body text-fg-muted">

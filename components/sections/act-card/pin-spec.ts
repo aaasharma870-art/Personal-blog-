@@ -79,9 +79,11 @@ export type CardPinSpec = {
   /** The push-in, per choreography (its settled plate) and per
    *  `card-<kind>.push` variant: push[choreo][push]. */
   push: Readonly<Record<Variant, Readonly<Record<Variant, PushSpec>>>>;
-  /** The act title as a mask (§8.1): the text, its world face, and the
-   *  zoom origin in the title's ink box (film.acts[].maskOrigin). */
-  title: { text: string; origin: readonly [number, number] };
+  /** The act title as a mask (§8.1): the text, its world face, the zoom
+   *  origin in the title's ink box (film.acts[].maskOrigin; the GL SDF's),
+   *  and how much the whole title grows over its pass (lib/gl/plan.ts
+   *  TITLE_ZOOM; P3-11 r1: never a half-word). */
+  title: { text: string; origin: readonly [number, number]; zoom?: number };
   /** The css tier's static carried shape (the incoming half, §7.3). */
   shape: { id: CarriedShapeId; at: Pos; size: number; range: readonly [number, number] } | null;
   weather: readonly PinWeather[];
