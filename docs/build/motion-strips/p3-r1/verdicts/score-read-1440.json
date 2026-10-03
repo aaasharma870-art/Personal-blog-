@@ -1,0 +1,274 @@
+{
+ "kind": "captioned",
+ "width": "1440",
+ "name": "Aryan Sharma",
+ "heroIds": [
+  "C002"
+ ],
+ "nameOk": 3,
+ "nameRows": [
+  {
+   "judge": 1,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 2,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 3,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  }
+ ],
+ "cantRead": [
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Top of the headline above 'quantitative systems.' is sliced off by the header bar (I can only guess 'A builder of')"
+  },
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "End of the 'Intellectual honesty' paragraph ('did not survive testing.') fades to near-invisible grey"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D32-beyond",
+   "text": "Bottom row ('Discipline, in three arenas', 'One-on-one accountability, mental toughness,') is cut off by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C007",
+   "scene": "D21-journey-step-1",
+   "text": "Top line is half hidden under the header ('...of it failed me first. Step through it.')"
+  },
+  {
+   "judge": 1,
+   "frame": "C007",
+   "scene": "D21-journey-step-1",
+   "text": "'02 · EARLY WORK' label cut off at the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C008",
+   "scene": "D43-films-pirates",
+   "text": "Second paragraph under 'On this page it became the course line…' is clipped mid-height; only the tops of the letters show (something like 'My first strategies were a compass that pointed wherever I wanted it to')"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D30-kill-list",
+   "text": "'FIG. · TRADING_ALGOS-' caption is crossed by an empty vertical rectangle outline"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D30-kill-list",
+   "text": "Repo link 'Trading_Algos-' ends in a hyphen and looks truncated"
+  },
+  {
+   "judge": 1,
+   "frame": "C013",
+   "scene": "D24-work",
+   "text": "Headline 'Led by what…' cut off at the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C014",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote stops mid-word: '“A machine is anything that reduces h' (rest not shown)"
+  },
+  {
+   "judge": 1,
+   "frame": "C014",
+   "scene": "D27-optuna-screener",
+   "text": "Body text under 'THE PROBLEM' cut off at the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C015",
+   "scene": "D38-principles",
+   "text": "Headline word 'PHILOSOPHY' loses its last letter at the panel edge ('PHILOSOPH'')"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D26-trading-algos",
+   "text": "Sub-labels of the blueprint boxes ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') sliced by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D26-trading-algos",
+   "text": "Repo link 'Trading_Algos-' looks truncated"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D29-systems",
+   "text": "Headline 'What I can actually do' cut off at the bottom edge"
+  },
+  {
+   "judge": 2,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "First heading line clipped under the nav bar (reads like 'A builder of', only the bottom half visible)"
+  },
+  {
+   "judge": 2,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Faded tail of 'Intellectual honesty' ('…did not survive testing.') is very low contrast"
+  },
+  {
+   "judge": 2,
+   "frame": "C007",
+   "scene": "D21-journey-step-1",
+   "text": "Top line half-hidden under the nav bar: '…it failed me first. Step through it.'"
+  },
+  {
+   "judge": 2,
+   "frame": "C008",
+   "scene": "D43-films-pirates",
+   "text": "Last body line under 'On this page it became the course line…' is sliced off mid-letter (only the tops of the letters show), unreadable"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D30-kill-list",
+   "text": "'FIG. · TRADING_ALGOS-' label is crossed by an empty outlined vertical bar, which makes it hard to read and looks like a leftover graphic"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D36-writing",
+   "text": "Taped note on the right-hand page: only drawn lines, no legible words (looks decorative)"
+  },
+  {
+   "judge": 2,
+   "frame": "C014",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote stops mid-word: '“A machine is anything that reduces h' (still being written?)"
+  },
+  {
+   "judge": 2,
+   "frame": "C015",
+   "scene": "D38-principles",
+   "text": "Heading word cut mid-letter by the quill: 'PHILOSOPH…' (the Y is not drawn yet)"
+  },
+  {
+   "judge": 2,
+   "frame": "C015",
+   "scene": "D38-principles",
+   "text": "'I solemnly swear…' under the banner is tiny and faint"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Top heading line ('A builder of'?) is half-hidden under the sticky header; only the bottom halves of the letters show"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "End of the 'Intellectual honesty' paragraph ('did not survive testing.') is faded to near-background contrast"
+  },
+  {
+   "judge": 3,
+   "frame": "C004",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' heading and the activity descriptions at the bottom are cut by the frame edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C007",
+   "scene": "D21-journey-step-1",
+   "text": "Top line ('...of it failed me first. Step through it.') is half-hidden behind the sticky header"
+  },
+  {
+   "judge": 3,
+   "frame": "C007",
+   "scene": "D21-journey-step-1",
+   "text": "'02 · EARLY WORK' at the bottom edge is cut off"
+  },
+  {
+   "judge": 3,
+   "frame": "C008",
+   "scene": "D43-films-pirates",
+   "text": "Second body paragraph under the Jack's-compass sentence ('My first strategies were a compass that pointed wherever I wanted it to...'): only the tops of the letters show, so it is effectively unreadable"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D30-kill-list",
+   "text": "'FIG. · TRADING_ALGOS-' label is struck through by an empty tall rectangle outline sitting on top of it"
+  },
+  {
+   "judge": 3,
+   "frame": "C013",
+   "scene": "D24-work",
+   "text": "Section heading ('Led by what...') is cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C014",
+   "scene": "D27-optuna-screener",
+   "text": "Rancho's chalkboard quote stops mid-word: 'A machine is anything that reduces h...'; the rest is not shown"
+  },
+  {
+   "judge": 3,
+   "frame": "C014",
+   "scene": "D27-optuna-screener",
+   "text": "'Automated Strategy' heading and its problem paragraph are cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C015",
+   "scene": "D38-principles",
+   "text": "The 'Y' of 'PHILOSOPHY' in the headline is clipped at the map fold, so it reads 'PHILOSOPH'"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D26-trading-algos",
+   "text": "Blueprint box subtitles ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C017",
+   "scene": "D29-systems",
+   "text": "Second line of the 'What I can actually do' heading is cut by the bottom edge"
+  }
+ ],
+ "fastLane": [
+  {
+   "judge": 1,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill, top right (also 'VIEW THE QUANT PORTFOLIO ↓' under the intro)"
+  },
+  {
+   "judge": 2,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter). Also 'VIEW THE QUANT PORTFOLIO ↓' under the name."
+  },
+  {
+   "judge": 3,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill, top bar, right of centre (the 'VIEW THE QUANT PORTFOLIO' button under the intro also works)"
+  }
+ ],
+ "fastLaneOk": 3
+}

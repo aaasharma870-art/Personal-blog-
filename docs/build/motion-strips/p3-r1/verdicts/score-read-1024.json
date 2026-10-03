@@ -1,0 +1,202 @@
+{
+ "kind": "captioned",
+ "width": "1024",
+ "name": "Aryan Sharma",
+ "heroIds": [
+  "C006"
+ ],
+ "nameOk": 3,
+ "nameRows": [
+  {
+   "judge": 1,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 2,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 3,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  }
+ ],
+ "cantRead": [
+  {
+   "judge": 1,
+   "frame": "C002",
+   "scene": "D29-systems",
+   "text": "Intro line under 'What I can actually do.' cut off at the bottom edge ('A working map, not a skills cloud: the…')"
+  },
+  {
+   "judge": 1,
+   "frame": "C003",
+   "scene": "D36-writing",
+   "text": "Last line under 'How I try not to fool myself' sliced by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D26-trading-algos",
+   "text": "Repo link 'Trading_Algos-' ends in a hyphen and looks truncated"
+  },
+  {
+   "judge": 1,
+   "frame": "C008",
+   "scene": "D21-journey-step-1",
+   "text": "Top line half hidden under the header ('...of it failed me first. Step through it.')"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "Top-right caption (the Jack's compass line, '…YOU WANT MOST') is sliced off by the header bar"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "Top of the headline above 'quantitative systems.' is hidden under the header"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "End of 'Intellectual honesty' paragraph ('my own ideas that did not survive testing.') fades to near-invisible grey"
+  },
+  {
+   "judge": 1,
+   "frame": "C010",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' row cut off at the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D30-kill-list",
+   "text": "Repo link 'Trading_Algos-' looks truncated"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D30-kill-list",
+   "text": "Last line of the pipeline description sliced by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D43-films-pirates",
+   "text": "Blackletter heading above the ship (looks like 'PIRATES OF THE CARIBBEAN') is half hidden under the header bar"
+  },
+  {
+   "judge": 2,
+   "frame": "C003",
+   "scene": "D36-writing",
+   "text": "Taped note on the right-hand page: only drawn lines, no legible words (looks decorative)"
+  },
+  {
+   "judge": 2,
+   "frame": "C008",
+   "scene": "D21-journey-step-1",
+   "text": "Top line half-hidden under the nav bar: '…it failed me first. Step through it.' (first word cut off)"
+  },
+  {
+   "judge": 2,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "Top-right line clipped under the nav bar, only '…YOU WHAT MOST' fragments visible, overlapping the 'PIRATES OF THE CARIBBEAN' caption"
+  },
+  {
+   "judge": 2,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "Faded end of the 'Intellectual honesty' paragraph ('…my own ideas that did not survive testing.') is very low contrast"
+  },
+  {
+   "judge": 2,
+   "frame": "C017",
+   "scene": "D43-films-pirates",
+   "text": "Heading at the very top (blackletter, looks like 'PIRATES OF THE CARIBBEAN') is cut in half by the nav bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C002",
+   "scene": "D29-systems",
+   "text": "Intro line under 'What I can actually do.' is cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C003",
+   "scene": "D36-writing",
+   "text": "Entry I description is cut by the bottom edge after 'A plain-English tour of the seven-part'"
+  },
+  {
+   "judge": 3,
+   "frame": "C008",
+   "scene": "D21-journey-step-1",
+   "text": "Top line ('...of it failed me first. Step through it.') is half-hidden behind the sticky header"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "Top-right caption ('Jack's compass – it points to what you want most') is hidden under the header; only the bottom of '...you want most' shows"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D20-about-120",
+   "text": "End of the 'Intellectual honesty' paragraph ('my own ideas that did not survive testing.') is faded to near-background contrast"
+  },
+  {
+   "judge": 3,
+   "frame": "C010",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' heading is cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C014",
+   "scene": "D28-experiment",
+   "text": "Last lines of the chart caption are cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D30-kill-list",
+   "text": "Last line of the 'Automated Strategy Research Pipeline' description is cut by the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C017",
+   "scene": "D43-films-pirates",
+   "text": "A blackletter heading ('Pirates of the Caribbean'?) at the very top is half-hidden behind the sticky header"
+  }
+ ],
+ "fastLane": [
+  {
+   "judge": 1,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill, top of header (also 'VIEW THE QUANT PORTFOLIO ↓' under the intro)"
+  },
+  {
+   "judge": 2,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter). Also 'VIEW THE QUANT PORTFOLIO ↓' under the name."
+  },
+  {
+   "judge": 3,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill, top bar (the 'VIEW THE QUANT PORTFOLIO' button under the intro also works)"
+  }
+ ],
+ "fastLaneOk": 3
+}

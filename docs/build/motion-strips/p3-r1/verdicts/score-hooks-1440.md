@@ -1,0 +1,9 @@
+| css-ignite-p05 | 0/3 | FAIL | Gorgeous campfire image, but the heading says HARRY POTTER while the caption says 'The Campfire · Red Dead Redemption 2'. Frozen like this it reads as a mislabel, not a transition. / Act title says HA |
+| css-opening-p05 | 3/3 | PASS | Bold blackletter PIRATES OF THE CARIBBEAN title plus a brass porthole showing the lit stern of a ship. The porthole promises a reveal and I would scroll to open it, though the left two thirds of the f |
+| css-seam-p05 | 0/3 | FAIL | Mixed message: the title says 3 IDIOTS / The Workshop, but the big image and its caption are 'The Kraken's Storm · Pirates of the Caribbean'. The glowing sea is pretty, but as a stranger I can't tell  |
+| css-tintype-p05 | 2/3 | FAIL | The big RED DEAD REDEMPTION 2 title lands, but the framed picture is a muddy, grainy brown blur that reads as a failed or still-loading image rather than an old photograph developing. Nothing in the f |
+| gl-ignite-p05 | 3/3 | PASS | A glowing burn-hole is eating through the campfire photo. That clearly signals the RDR2 picture is about to burn away into the Harry Potter act, and it's a striking, curiosity-making moment. / Glowing |
+| gl-opening-p05 | 3/3 | PASS | The porthole ring glows gold and the ghost-ship scene is starting to bleed into the frame behind it. It feels like a door opening, a clear invitation to keep going. / Blackletter PIRATES OF THE CARIBB |
+| gl-seam-p05 | 3/3 | PASS | A pale, chalky wash is tearing across the storm from the left. That visible change of world is the cinematic moment, and it makes me want to see what replaces the sea. The label mismatch is still ther |
+| gl-tintype-p05 | 0/3 | FAIL | Same as H001: a strong title over an almost blank sepia smear. The frame gives no reason to read on. / Strong western title, but the framed photo is a near-uniform muddy sepia blur. As a still it look |
+HOOKS @1440: 4/8 judged a hook 3/3

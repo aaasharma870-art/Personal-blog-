@@ -1,0 +1,94 @@
+{
+ "kind": "hooks",
+ "width": "1024",
+ "rows": [
+  {
+   "id": "H008",
+   "frame": "css-ignite-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Beautiful campfire image, but the heading says HARRY POTTER while the caption says 'The Campfire · Red Dead Redemption 2'. Without the burn effect visible it reads as a mislabel.",
+    "Act title says HARRY POTTER but the picture is the Red Dead campfire with its RDR2 caption, and only a faint thin arc is drawn over it. Lovely image, but the mismatch feels like a bug and gives no Potter promise.",
+    "The campfire image is lovely, but the act title says 'HARRY POTTER' while the caption says 'The Campfire · Red Dead Redemption 2'. Nothing yet signals that a change is coming, so it reads as a labelling error."
+   ]
+  },
+  {
+   "id": "H006",
+   "frame": "css-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Bold blackletter PIRATES OF THE CARIBBEAN plus a brass porthole onto a lit ship stern. The porthole promises a reveal, though the rest of the frame is empty black.",
+    "Same spyglass ring on the ghost ship's lit stern under the blackletter title. The background is pure black, so about 70% of the frame is empty, but the porthole still works as a tease.",
+    "The same spyglass tease works, though the rest of the frame is flat black. It holds up only because the circle invites me to look through it."
+   ]
+  },
+  {
+   "id": "H002",
+   "frame": "css-seam-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "The title says 3 IDIOTS / The Workshop, but the image and caption are 'The Kraken's Storm · Pirates of the Caribbean'. It's a pretty but very dark sea, and frozen like this it reads as a mislabel rather than an arrival.",
+    "The title says 3 IDIOTS / The Workshop, but the picture and caption are still the Pirates storm, and the photo is dark and murky. Nothing new for this act is on screen yet, so it reads like the wrong image loaded rather than a reveal.",
+    "'3 IDIOTS · The Workshop' sits on a dark stormy sea captioned 'The Kraken's Storm · Pirates of the Caribbean'. Nothing shows a transition, so it reads as a mislabelled slide, and the image is mostly black."
+   ]
+  },
+  {
+   "id": "H007",
+   "frame": "css-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Same muddy sepia frame as H004. The 'EGG 1 OF 12 · THE KRAKEN' toast is a Pirates reference sitting on an RDR2 opener, which adds confusion rather than pull.",
+    "The photo is still a murky sepia blur, but the 'EGG 1 OF 12 · THE KRAKEN' toast (and the counter going to 1/12) says there are hidden things to collect. That alone makes me want to keep scrolling. It is a weak pass, carried by the toast and not the image.",
+    "The murky sepia photo alone would not hook me, but the 'EGG 1 OF 12 · THE KRAKEN' toast turns scrolling into a hunt. The pull comes from the collectible, not the section art."
+   ]
+  },
+  {
+   "id": "H003",
+   "frame": "gl-ignite-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A glowing burn-hole is eating through the campfire photo, so the RDR2 picture is clearly about to burn away into the Harry Potter act. It's striking, and it makes me want to see what's underneath.",
+    "Glowing burn-hole eating through the western campfire photo under a HARRY POTTER act title. The burn makes the world change feel intentional and magical, and I want to see what burns through.",
+    "A glowing burn-hole eats through the RDR2 campfire photo under the 'HARRY POTTER' title. The page is visibly burning into the next world, and I'd scroll to see what is underneath."
+   ]
+  },
+  {
+   "id": "H005",
+   "frame": "gl-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "The gold porthole ring glows and the ghost-ship scene is starting to bleed in behind it, like a door opening. It's a clear pull to keep scrolling.",
+    "Blackletter PIRATES OF THE CARIBBEAN title and a gold spyglass/porthole ring framing the lit stern of a ghost ship, with the rest of the scene faint in the dark. It's a peephole that makes you want to see the whole ship.",
+    "A gold spyglass circle reveals the lit stern of a ghost ship over a faint dark sea, under 'IN FOUR ACTS / PIRATES OF THE CARIBBEAN'. It's a cinematic opening that promises a story."
+   ]
+  },
+  {
+   "id": "H001",
+   "frame": "gl-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A pale, chalky wash is ripping across the dark storm from the left. That visible change of world is a real 'something is happening' moment, and I want to see what replaces the sea. The 3 IDIOTS title above a Pirates caption is still confusing.",
+    "Big '3 IDIOTS / The Workshop' act card while a torn, foaming edge eats the pirate storm and shows a pale new layer underneath. It reads as a deliberate scene change and I want to see what comes through. The 'HERE BE MONSTERS' link adds intrigue. Small snag: the caption still says Pirates.",
+    "The pale torn edge eating into the dark storm shows one world being wiped away for the next, and 'HERE BE MONSTERS' teases. The '3 IDIOTS' title over a Pirates-captioned sea is still confusing, but the visible change pulls me on."
+   ]
+  },
+  {
+   "id": "H004",
+   "frame": "gl-tintype-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "The RED DEAD REDEMPTION 2 title is strong, but the framed picture is an almost featureless grainy brown smear that looks broken or still loading. The frame gives no reason to read on.",
+    "Strong western title, but the framed photo is a near-uniform muddy sepia blur. As a still it looks like an image that failed to load, not a reveal, so nothing pulls me down.",
+    "The bold woodtype title is strong, but the framed photo is a near-blank, grainy sepia smear that looks like a failed or loading image. The section has nothing to grab me."
+   ]
+  }
+ ]
+}
