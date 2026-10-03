@@ -904,8 +904,10 @@ type LayerEls = {
   row: string;
 };
 
-type VideoState = { k: number; host: HTMLElement | null; play: boolean };
-const NO_VIDEO: VideoState = { k: -1, host: null, play: false };
+/** `n` counts the pauses the frame loop made itself (StageVideo re-checks on
+ *  each, so a pause and a play inside one render never leave it paused). */
+type VideoState = { k: number; host: HTMLElement | null; play: boolean; n: number };
+const NO_VIDEO: VideoState = { k: -1, host: null, play: false, n: 0 };
 
 const FADE_VH = 0.4;
 const MOUNT_MARGIN_VH = 0.5;
@@ -1288,7 +1290,16 @@ export function Stage() {
       }
       const v = videoRef.current;
       if (v.k !== kv || v.host !== host || v.play !== play) {
-        videoRef.current = { k: kv, host, play };
+        // the loop stops IN THIS FRAME, with the layers' opacity writes above:
+        // the state below lands a render later, and a crossfade never starts
+        // with the outgoing loop still decoding (0 during a fade, P3-2 #5;
+        // the W3 gate's decoder probe caught one such sample at 1024)
+        let n = v.n;
+        if (v.play && (!play || v.host !== host)) {
+          v.host?.querySelector("video")?.pause();
+          n += 1;
+        }
+        videoRef.current = { k: kv, host, play, n };
         setVideo(videoRef.current);
       }
     };
@@ -1579,7 +1590,7 @@ export function Stage() {
           const host = hosts.get(k);
           return host ? createPortal(layer(k), host, `stage-${k}`) : null;
         })}
-      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} />
+      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} nonce={video.n} />
     </>
   );
 }

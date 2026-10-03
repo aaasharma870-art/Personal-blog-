@@ -1,9 +1,10 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useId, useRef, useState } from "react";
+import { Suspense, useEffect, useId, useRef, useState } from "react";
 import { on } from "@/lib/events";
 import { film } from "@/lib/film";
 import { motionOffNow } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 import { copyText, copyVisible } from "@/lib/sections";
 import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
 
@@ -23,7 +24,8 @@ import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hu
    - "Turn off easter eggs" hides it (the count is kept).
    ========================================================================== */
 
-const HuntPanel = lazy(() => import("@/components/eggs/hunt-panel"));
+// safeLazy: a failed chunk opens nothing, never an application error (W3 review #6)
+const HuntPanel = safeLazy(() => import("@/components/eggs/hunt-panel"));
 const preload = () => void import("@/components/eggs/hunt-panel");
 
 export function HuntChip() {

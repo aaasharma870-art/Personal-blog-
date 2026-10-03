@@ -1,0 +1,11 @@
+1440 rows.read (fresh page, wheel): {"rendered":10,"read":10}
+1440 drone.pause try 1 {"ms":6,"phase":"idle","inClick":true}
+1440 drone.pause try 2 {"ms":2,"phase":"idle","inClick":true}
+1440 drone.pause try 3 {"ms":2,"phase":"idle","inClick":true}
+1440 de.release +200ms {"on":false,"layers":["grade:hidden/0","marks:hidden/0"],"game":null}
+1440 de.release +600ms {"on":false,"layers":["grade:hidden/0","marks:hidden/0"],"game":null}
+1440 de.release +1200ms {"on":false,"layers":["grade:hidden/0","marks:hidden/0"],"game":null}
+1440 de.release +2500ms {"on":false,"layers":["grade:hidden/0","marks:hidden/0"],"game":null}
+1440 de.release +4000ms {"on":false,"layers":["grade:hidden/0","marks:hidden/0"],"game":null}
+1440 de.release lens {"before":{"lens":"closed","figure":"ta:kill-list","y":19321},"after":{"lens":"closed","figure":"ta:kill-list","y":19321}}
+1440 slow interactions (> 200 ms): [{"name":"pointerout","dur":264,"delay":3,"proc":0,"target":"P.tnum","t":21037},{"name":"pointerleave","dur":264,"delay":3,"proc":0,"target":"P.tnum","t":21037},{"name":"pointerleave","dur":264,"delay":3,"proc":0,"target":"DIV.min-w-0","t":21037},{"name":"pointerleave","dur":264,"delay":3,"proc":0,"target":"LI.grid","t":21037},{"name":"pointerover","dur":264,"delay":3,"proc":0,"target":"BUTTON.relative","t":21037},{"name":"pointerenter","dur":264,"delay":3,"proc":0,"target":"LI.grid","t":21037},{"name":"pointerenter","dur":264,"delay":3,"proc":0,"target":"DIV.min-w-0","t":21037},{"name":"pointerenter","dur":264,"delay":3,"proc":0,"target":"H3.type-heading","t":21037},{"name":"pointerenter","dur":264,"delay":3,"proc":0,"target":"BUTTON.relative","t":21037},{"name":"pointerout","dur":264,"delay":1,"proc":0,"target":"BUTTON.relative","t":21099},{"name":"pointerover","dur":264,"delay":1,"proc":0,"target":"SPAN.","t":21099},{"name":"pointerenter","dur":264,"delay":1,"proc":0,"target":"SPAN.","t":21099}]

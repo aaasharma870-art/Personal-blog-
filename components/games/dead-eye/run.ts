@@ -582,20 +582,36 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
 
   /* — aim ————————————————————————————————————————————————————————— */
   root.setAttribute("data-game", "deadeye");
+  // "aim" before the centring scroll ("on" at the draw; no CSS keys on
+  // "aim"): the ledger keeps its pre-round lens from here and puts it back
+  // on release (components/site/ledger-reckoning.tsx)
+  section.dataset.deadeye = "aim";
   document.addEventListener("keydown", onEsc, true);
   hooks.view({ phase, marked: 0, total: targets.length, left: untimed ? null : CORE_MS, result: null });
   hooks.core(1);
-  const first = targets[0]?.row.getBoundingClientRect();
-  const lastRow = targets[targets.length - 1]?.row.getBoundingClientRect();
-  if (first && lastRow) {
+  /** Where the killed block sits centred under the header (or, when it does
+   *  not fit, its top under it); null without targets. */
+  const aimY = (): number | null => {
+    const first = targets[0]?.row.getBoundingClientRect();
+    const lastRow = targets[targets.length - 1]?.row.getBoundingClientRect();
+    if (!first || !lastRow) return null;
     const top = first.top + window.scrollY;
     const bottom = lastRow.bottom + window.scrollY;
     const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
     const room = window.innerHeight - pad;
-    // centred under the header when the block fits, else its top under it
-    const y = bottom - top <= room ? (top + bottom) / 2 - (pad + room / 2) : top - pad - 16;
-    void scrollToTarget(Math.max(0, y)).then(draw, draw);
-  } else draw();
+    return Math.max(0, bottom - top <= room ? (top + bottom) / 2 - (pad + room / 2) : top - pad - 16);
+  };
+  const y0 = aimY();
+  if (y0 === null) draw();
+  else
+    void scrollToTarget(y0)
+      .then(() => {
+        // a reflow above during the glide (a late world-font swap: P3-2 #7)
+        // moves the block while the glide holds its old target: aim once more
+        const y1 = aimY();
+        if (!ended && y1 !== null && Math.abs(y1 - window.scrollY) > 2) return scrollToTarget(y1);
+      })
+      .then(draw, draw);
 
   return {
     fire: () => fire(),

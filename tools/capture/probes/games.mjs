@@ -350,14 +350,29 @@ export default async function probe(page, ctx) {
   await run("drone.pause", async () => {
     await toBand();
     await takeOff();
-    const t0 = Date.now();
-    await page.evaluate(() => [...document.querySelectorAll("[data-motion-toggle]")].find((b) => b.offsetParent !== null)?.click());
-    const ok = await landed(1000).then(
-      () => true,
-      () => false,
+    // timed IN THE PAGE from the click (the flight lands inside the Pause click: a stop-at-once listener):
+    // a frame-polled wait from Node adds two round trips and a 100-400 ms SwiftShader frame
+    const r = await page.evaluate(
+      () =>
+        new Promise((resolve) => {
+          const g = document.querySelector(".drone-game");
+          const down = () => ["idle", "done"].includes(g?.getAttribute("data-phase") ?? "");
+          const t0 = performance.now();
+          [...document.querySelectorAll("[data-motion-toggle]")].find((b) => b.offsetParent !== null)?.click();
+          if (down()) return resolve({ ms: Math.round(performance.now() - t0), inClick: true });
+          const mo = new MutationObserver(() => {
+            if (!down()) return;
+            mo.disconnect();
+            resolve({ ms: Math.round(performance.now() - t0), inClick: false });
+          });
+          if (g) mo.observe(g, { attributes: true, attributeFilter: ["data-phase"] });
+          setTimeout(() => {
+            mo.disconnect();
+            resolve({ ms: null, inClick: false });
+          }, 1000);
+        }),
     );
-    const ms = Date.now() - t0;
-    set("drone.pause", ok && ms <= 250, { ms, phase: await phase(), game: await gameAttr() });
+    set("drone.pause", r.ms !== null && r.ms <= 250, { ...r, phase: await phase(), game: await gameAttr() });
     await page.evaluate(() => [...document.querySelectorAll("[data-motion-toggle]")].find((b) => b.offsetParent !== null)?.click());
     await sleep(300);
   });

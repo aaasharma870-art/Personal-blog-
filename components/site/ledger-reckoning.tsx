@@ -137,12 +137,31 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
   }, []);
 
   // the host <section>: the grid mask's span is written on it, and the
-  // Dead Eye run marks it with data-deadeye (watched here, never at rest)
+  // Dead Eye run marks it with data-deadeye (watched here, never at rest):
+  // "aim" from the press, "on" from the draw. A round leaves no trace: the
+  // lens (open or closed, the row it rests on, the tab stop) is kept from
+  // the press and put back on release; the centre line stays live.
+  const live = useRef({ nav, lensState, roving });
+  useEffect(() => {
+    live.current = { nav, lensState, roving };
+  });
+  const centreNow = useRef<number | null>(null);
   useEffect(() => {
     const host = listRef.current?.closest("section") ?? null;
     hostRef.current = host;
     if (!host || typeof MutationObserver === "undefined") return;
-    const mo = new MutationObserver(() => setGraded(host.dataset.deadeye === "on"));
+    let pre: typeof live.current | null = null;
+    const mo = new MutationObserver(() => {
+      const v = host.dataset.deadeye;
+      if (v && !pre) pre = live.current;
+      setGraded(v === "on");
+      if (v || !pre) return;
+      const { nav: n, lensState: l, roving: r } = pre;
+      pre = null;
+      setNav({ centre: centreNow.current, pointer: null, focus: null, last: n.last });
+      setLensState(l === "aperture" ? "open" : l);
+      setRoving(r);
+    });
     mo.observe(host, { attributes: true, attributeFilter: ["data-deadeye"] });
     return () => mo.disconnect();
   }, []);
@@ -194,6 +213,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
           else hits.delete(i);
         }
         const c = hits.size ? Math.min(...hits) : null;
+        centreNow.current = c;
         setNav((n) => (n.centre === c ? n : withLast({ ...n, centre: c })));
         if (c !== null) setLensState((s) => (s === "closed" ? "aperture" : s));
       },

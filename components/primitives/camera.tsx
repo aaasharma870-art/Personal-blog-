@@ -72,11 +72,13 @@ export function usePlateEngine(): boolean {
     if (!live || ready) return;
     let on = true;
     import("@/lib/ladder")
-      .then((m) => m.whenLadder(2))
+      .then((m) => m.whenLadder(2).then(() => m.nextTurn()))
       .then(
         () => {
-          // a transition: the step-2 render of every plate is time-sliced
-          // (no long task under the first wheel, P3-2 #9)
+          // on this plate's turn (a few plates per idle slice: their engine
+          // parts mount over a few frames, not one commit) and in a
+          // transition (its render is time-sliced): no long task under the
+          // first wheel (P3-2 #9)
           if (on) startTransition(() => setReady(true));
         },
         () => undefined,

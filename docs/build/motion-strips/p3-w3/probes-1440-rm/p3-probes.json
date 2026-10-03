@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": true,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T12:11:07.324Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "bundle",
+      "cards",
+      "cinema",
+      "games",
+      "gl",
+      "hunt",
+      "lenis",
+      "sound",
+      "spotlight",
+      "toys"
+    ]
+  },
+  "results": {
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 443376,
+            "cssGz": 35537,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 24,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": null,
+          "skipped": "not a DESKTOP_FINE run"
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            443376
+          ],
+          "cssGz": [
+            29433,
+            35537
+          ],
+          "deltaJsGz": 4284,
+          "deltaCssGz": 6104,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 4908,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 6392,
+      "console": []
+    },
+    "cinema": {
+      "pass": true,
+      "checks": {
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "rm.button": {
+          "pass": true,
+          "text": "▶ Director's cut(sound on)Motion is paused",
+          "display": "flex"
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 5510,
+      "console": []
+    },
+    "games": {
+      "pass": true,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.plan": {
+          "pass": true,
+          "items": [
+            "Pre-registration",
+            "A blind holdout, spent once",
+            "Deflated Sharpe Ratio",
+            "Combinatorial Purged CV",
+            "A mandatory cost model",
+            "Leak / look-ahead audits",
+            "Kill what fails — keep the post-mortem"
+          ],
+          "game": null,
+          "phase": "plan"
+        },
+        "de.untimed": {
+          "pass": true,
+          "line0": "0/5 marked",
+          "ts": "",
+          "still": "paint"
+        }
+      },
+      "ms": 9260,
+      "console": []
+    },
+    "gl": {
+      "pass": true,
+      "checks": {
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 11494,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "rm": {
+          "pass": true,
+          "chip": "flex",
+          "tail": 0,
+          "toast": "Lumos: your system asks for reduced motion, so the page stays still.Egg 1 of 12 · Lumos and Nox",
+          "bloom": false,
+          "veil": false,
+          "found": [
+            "hp-lumos"
+          ]
+        }
+      },
+      "ms": 2200,
+      "console": []
+    },
+    "lenis": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "desktop": {
+          "pass": null,
+          "skipped": "viewport 1440x900 rm: smooth scroll expected off"
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 37730,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": "true",
+          "described": "_r_1_",
+          "note": "Sound follows motion: resume motion to hear it",
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 33459,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "note": "not loaded under reduced motion (correct)",
+      "ms": 10302,
+      "console": []
+    },
+    "toys": {
+      "pass": true,
+      "checks": {
+        "rm.candles": {
+          "pass": true,
+          "total": 29,
+          "shown": 29,
+          "litShown": 29,
+          "litAll": 29,
+          "toy": false,
+          "bloom": false
+        },
+        "rm.compass": {
+          "pass": true,
+          "button": true,
+          "needle": 45
+        }
+      },
+      "ms": 10477,
+      "console": []
+    }
+  }
+}

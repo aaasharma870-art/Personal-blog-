@@ -46,16 +46,29 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         if (ph === "idle" || ph === "done") { mo.disconnect(); res({ ms: Math.round(performance.now() - t0), phase: ph }); }
       });
       mo.observe(g, { attributes: true, attributeFilter: ["data-phase"] });
+      const before = g.getAttribute("data-phase");
       [...document.querySelectorAll("[data-motion-toggle]")].find((b) => b.offsetParent !== null)?.click();
+      // the phase read synchronously after the click (the flight lands inside it)
+      const sync = g.getAttribute("data-phase");
+      if (sync === "idle" || sync === "done") { mo.disconnect(); return res({ ms: Math.round(performance.now() - t0), phase: sync, inClick: true }); }
+      window.__dpDebug = { before, sync };
       setTimeout(() => { mo.disconnect(); res({ ms: null, phase: g.getAttribute("data-phase") }); }, 3000);
     }));
-    console.log(W, "drone.pause try", i + 1, JSON.stringify(r));
+    console.log(W, "drone.pause try", i + 1, JSON.stringify({ ...r, ...(await p.evaluate(() => window.__dpDebug ?? {})) }));
     await p.evaluate(() => [...document.querySelectorAll("[data-motion-toggle]")].find((b) => b.offsetParent !== null)?.click());
     await sleep(800);
   }
   // 3. Dead Eye: start, Esc, read the layers at 200 / 600 / 1200 / 2500 ms
   await p.evaluate(() => document.getElementById("kill-list")?.scrollIntoView({ block: "start", behavior: "instant" }));
   await sleep(500);
+  // the lens before the round (W3 gate: a round leaves no trace, the lens included)
+  const lens = () => p.evaluate(() => {
+    const l = document.querySelector("#kill-list [data-lens]");
+    return l ? { lens: l.getAttribute("data-lens"), figure: l.querySelector("[data-lens-figure]")?.getAttribute("data-lens-figure") ?? null, y: Math.round(scrollY) } : null;
+  });
+  await p.mouse.move(8, Math.round(H / 2));
+  await sleep(1200);
+  const lensBefore = await lens();
   await p.click("#deadeye-call");
   await p.waitForSelector('#kill-list[data-deadeye="on"]', { timeout: 8000 });
   await sleep(800);
@@ -70,6 +83,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     }));
     console.log(W, "de.release +" + at + "ms", JSON.stringify(l));
   }
+  // back where the lens was read (the round centres the killed block), no row hovered
+  await p.evaluate((y) => (window.__lenis ? window.__lenis.scrollTo(y, { immediate: true, force: true }) : window.scrollTo({ top: y, behavior: "instant" })), lensBefore?.y ?? 0);
+  await p.mouse.move(8, Math.round(H / 2));
+  await sleep(1200);
+  console.log(W, "de.release lens", JSON.stringify({ before: lensBefore, after: await lens() }));
   console.log(W, "slow interactions (> 200 ms):", JSON.stringify(await p.evaluate(() => window.__ev)));
   await b.close();
 })();

@@ -224,7 +224,11 @@ export function AboutPillars({
                 <span
                   className={cn(
                     "transition-colors duration-(--dur-micro) motion-off:transition-none",
-                    lit === i && "text-(--w-brass)",
+                    // lit in brass on a solid ground (phones, as before); on
+                    // DESKTOP_FINE the live stage plate sits behind the
+                    // scrim, where brass (a decorative ink, globals.css)
+                    // dipped to 4.22:1 at 1024 (W3 gate AA): ink there
+                    lit === i && (fine ? "text-fg" : "text-(--w-brass)"),
                   )}
                 >
                   {BEARINGS[i]}

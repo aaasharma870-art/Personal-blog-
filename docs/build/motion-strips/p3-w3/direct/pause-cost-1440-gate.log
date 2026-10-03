@@ -1,0 +1,10 @@
+1440 top {"lenisGoneMs":5,"clickHandlerMs":5,"t0":6675}
+   loaf {"t":6675,"dur":218,"block":168,"work":97,"style":111,"scripts":[{"d":87,"inv":"VoidFunction","src":"3jh1u-s3k0bkk.js","fn":"","fsl":32}]}
+1440 work {"lenisGoneMs":3,"clickHandlerMs":3,"t0":11812}
+   loaf {"t":11799,"dur":206,"block":143,"work":93,"style":97,"scripts":[{"d":74,"inv":"VoidFunction","src":"3jh1u-s3k0bkk.js","fn":"","fsl":22},{"d":5,"inv":"FrameRequestCallback","src":"3u_vlb8_9wwtr.js","fn":"","fsl":5}]}
+   loaf {"t":12025,"dur":209,"block":0,"work":205,"style":2,"scripts":[]}
+1440 kill-list {"lenisGoneMs":2,"clickHandlerMs":2,"t0":16979}
+   loaf {"t":16979,"dur":188,"block":138,"work":67,"style":112,"scripts":[{"d":61,"inv":"VoidFunction","src":"3jh1u-s3k0bkk.js","fn":"","fsl":21}]}
+   loaf {"t":17267,"dur":107,"block":0,"work":104,"style":2,"scripts":[]}
+1440 contact {"lenisGoneMs":2,"clickHandlerMs":2,"t0":22089}
+   loaf {"t":22082,"dur":286,"block":230,"work":97,"style":170,"scripts":[{"d":83,"inv":"VoidFunction","src":"3jh1u-s3k0bkk.js","fn":"","fsl":34},{"d":6,"inv":"FrameRequestCallback","src":"31ldopvygyepf.js","fn":"v","fsl":0}]}

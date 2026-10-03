@@ -7,7 +7,7 @@
     },
     "rm": false,
     "path": "/?skip=intro",
-    "date": "2026-10-02T23:46:11.495Z",
+    "date": "2026-10-03T11:04:05.253Z",
     "chromium": "141.0.7390.37",
     "probes": [
       "aa-scrim",
@@ -23,18 +23,20 @@
       "layout-gates",
       "lenis",
       "loaf",
+      "nav",
       "plates-live",
       "research-font",
       "sound",
       "split",
       "spotlight",
+      "toys",
       "words"
     ]
   },
   "results": {
     "aa-scrim": {
-      "pass": false,
-      "liveBoxes": 772,
+      "pass": true,
+      "liveBoxes": 240,
       "widths": {
         "1440x900": [
           {
@@ -42,7 +44,7 @@
             "samples": 2,
             "liveBoxes": 21,
             "worst": {
-              "ratio": 7.42,
+              "ratio": 7.34,
               "text": "Act IV • AFTER HARRY POTTER",
               "y": 2610,
               "live": true
@@ -53,264 +55,49 @@
           {
             "item": "about",
             "samples": 4,
-            "liveBoxes": 158,
+            "liveBoxes": 142,
             "worst": {
-              "ratio": 1.9,
-              "text": "I read moral philosophy and let it shape how I e",
-              "y": 3733,
-              "live": true
-            },
-            "failures": [
-              {
-                "y": 3733,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1.9,
-                "min": 4.5
-              },
-              {
-                "y": 3733,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1.9,
-                "min": 4.5
-              },
-              {
-                "y": 4183,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1.9,
-                "min": 4.5
-              }
-            ],
-            "failCount": 3
-          },
-          {
-            "item": "credits",
-            "samples": 5,
-            "liveBoxes": 195,
-            "worst": {
-              "ratio": 1.85,
-              "text": "“Happiness can be found, even in the darkest of ",
-              "y": 42478,
-              "live": true
-            },
-            "failures": [
-              {
-                "y": 42478,
-                "text": "“Happiness can be found, even in the darkest of ",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 42928,
-                "text": "“Happiness can be found, even in the darkest of ",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 42928,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 42928,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 43378,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 43378,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 43828,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 43828,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              }
-            ],
-            "failCount": 8
-          }
-        ],
-        "1024x768": [
-          {
-            "item": "act-1",
-            "samples": 3,
-            "liveBoxes": 22,
-            "worst": {
-              "ratio": 7.42,
-              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
-              "y": 2227,
+              "ratio": 3.78,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2833,
               "live": true
             },
             "failures": [],
             "failCount": 0
           },
           {
-            "item": "about",
-            "samples": 5,
-            "liveBoxes": 208,
-            "worst": {
-              "ratio": 1,
-              "text": "I read moral philosophy and let it shape how I e",
-              "y": 3614,
-              "live": true
-            },
-            "failures": [
-              {
-                "y": 3614,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1.9,
-                "min": 4.5
-              },
-              {
-                "y": 3614,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              },
-              {
-                "y": 3614,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              },
-              {
-                "y": 3614,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              },
-              {
-                "y": 3998,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1.9,
-                "min": 4.5
-              },
-              {
-                "y": 3998,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              },
-              {
-                "y": 3998,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              },
-              {
-                "y": 3998,
-                "text": "I read moral philosophy and let it shape how I e",
-                "ratio": 1,
-                "min": 4.5
-              }
-            ],
-            "failCount": 8
-          },
-          {
             "item": "credits",
             "samples": 5,
-            "liveBoxes": 168,
+            "liveBoxes": 77,
             "worst": {
-              "ratio": 1.85,
-              "text": "“Happiness can be found, even in the darkest of ",
-              "y": 39692,
+              "ratio": 7.69,
+              "text": "Built and documented by Aryan Sharma — treating ",
+              "y": 42928,
               "live": true
             },
-            "failures": [
-              {
-                "y": 39692,
-                "text": "“Happiness can be found, even in the darkest of ",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 39692,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40076,
-                "text": "“Happiness can be found, even in the darkest of ",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40076,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40076,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40460,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40460,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40844,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              },
-              {
-                "y": 40844,
-                "text": "our own prompts; the only image inputs were fram",
-                "ratio": 1.85,
-                "min": 4.5
-              }
-            ],
-            "failCount": 9
+            "failures": [],
+            "failCount": 0
           }
         ]
       },
-      "ms": 65839,
+      "ms": 36170,
       "console": []
     },
     "bundle": {
-      "pass": false,
-      "failed": [
-        "compare"
-      ],
+      "pass": true,
+      "failed": [],
       "checks": {
         "firstLoad.markers": {
           "pass": true,
           "html": {
-            "js": 19,
+            "js": 20,
             "css": 4,
-            "jsGz": 447173,
-            "cssGz": 35533,
+            "jsGz": 443371,
+            "cssGz": 35537,
             "marked": []
           },
           "phone": {
-            "fetched": 22,
+            "fetched": 23,
             "marked": []
           }
         },
@@ -325,18 +112,18 @@
           "lazyGz": 50143
         },
         "compare": {
-          "pass": false,
+          "pass": true,
           "base": "http://localhost:3162",
           "jsGz": [
             439092,
-            447173
+            443371
           ],
           "cssGz": [
             29433,
-            35533
+            35537
           ],
-          "deltaJsGz": 8081,
-          "deltaCssGz": 6100,
+          "deltaJsGz": 4279,
+          "deltaCssGz": 6104,
           "budget": 6144
         },
         "static.ric": {
@@ -344,7 +131,7 @@
           "hits": []
         }
       },
-      "ms": 17733,
+      "ms": 17330,
       "console": []
     },
     "cards": {
@@ -597,11 +384,11 @@
               "p": 1,
               "raw": 1,
               "t": 1,
-              "tier": "css",
+              "tier": "gl",
               "live": true,
               "phase": "e",
               "subtitle": 0,
-              "gl": null,
+              "gl": "on",
               "settled": true,
               "phaseOk": true,
               "subOk": true
@@ -610,7 +397,7 @@
               "card": "seam",
               "p": 0.05,
               "raw": 0.0495,
-              "t": 0.0475,
+              "t": 0.0495,
               "tier": "css",
               "live": true,
               "phase": "a",
@@ -911,7 +698,7 @@
               "id": "act-1",
               "p": 0.47,
               "travel": 810,
-              "landedMs": 837,
+              "landedMs": 525,
               "ok": true
             },
             {
@@ -919,7 +706,7 @@
               "id": "act-2",
               "p": 0.47,
               "travel": 990,
-              "landedMs": 1731,
+              "landedMs": 1156,
               "ok": true
             },
             {
@@ -927,7 +714,7 @@
               "id": "act-3",
               "p": 0.469,
               "travel": 810,
-              "landedMs": 2239,
+              "landedMs": 102,
               "ok": true
             },
             {
@@ -935,7 +722,7 @@
               "id": "act-4",
               "p": 0.47,
               "travel": 990,
-              "landedMs": 1210,
+              "landedMs": 984,
               "ok": true
             }
           ]
@@ -1004,11 +791,11 @@
           "handle": 0
         }
       },
-      "ms": 98258,
+      "ms": 81373,
       "console": []
     },
     "cinema": {
-      "pass": false,
+      "pass": true,
       "checks": {
         "beats": {
           "pass": true,
@@ -1049,10 +836,10 @@
           "text": "▶ Director's cut(sound on)Motion is paused"
         },
         "letterbox": {
-          "pass": false,
+          "pass": true,
           "hold": {
             "attr": true,
-            "scale": 0.8194
+            "scale": 1
           },
           "after": {
             "attr": false,
@@ -1169,7 +956,7 @@
         "dc.run": {
           "pass": true,
           "focus": true,
-          "speed": 86,
+          "speed": 90,
           "twoX": {
             "pressed": "true",
             "running": true
@@ -1202,7 +989,7 @@
           "requests": []
         }
       },
-      "ms": 44355,
+      "ms": 40790,
       "console": []
     },
     "decoder": {
@@ -1212,7 +999,7 @@
         "webm": "probably"
       },
       "intro": {
-        "samples": 81,
+        "samples": 82,
         "maxPlaying": 1,
         "everPlayed": [
           "intro"
@@ -1226,13 +1013,12 @@
         "ok": true
       },
       "scroll": {
-        "samples": 855,
+        "samples": 740,
         "maxPlaying": 1,
         "everPlayed": [
           "top",
           "act-1",
           "stage",
-          "journey",
           "act-2",
           "work",
           "optuna-screener",
@@ -1245,7 +1031,6 @@
           "MV-03",
           "L01",
           "stage",
-          "L20",
           "L08",
           "L18",
           "L09",
@@ -1257,12 +1042,12 @@
           "L15",
           "MV-09"
         ],
-        "crossfadeSamples": 12,
+        "crossfadeSamples": 10,
         "overOne": [],
         "stageDuringCrossfade": [],
         "ok": true
       },
-      "ms": 106575,
+      "ms": 92675,
       "console": []
     },
     "font-network": {
@@ -1297,13 +1082,13 @@
           "text": "Aryan Sharma"
         },
         "nameFaceLoaded": true,
-        "step5": 2562,
+        "step5": 2249,
         "beforeStep5": [
-          "22 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
-          "22 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
-          "22 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
-          "101 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
-          "451 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+          "28 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "28 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "28 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "84 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "458 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
         ],
         "beforeStep5Bad": [],
         "legacyRequested": [],
@@ -1311,19 +1096,19 @@
           "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
         ],
         "worldOrder": [
-          "2580 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
-          "5701 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
-          "5701 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
-          "9044 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
-          "9045 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
-          "9414 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
-          "9415 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2",
-          "11602 ms assets/fonts/film/nothing-you-could-do/nothing-you-could-do-strings.woff2"
+          "2266 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "5133 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "5133 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "8581 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "8581 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "9056 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "9056 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2",
+          "11195 ms assets/fonts/film/nothing-you-could-do/nothing-you-could-do-strings.woff2"
         ],
         "worldMissingAfterScroll": [],
         "filmBytes": 183964,
         "lcp": {
-          "t": 216,
+          "t": 188,
           "el": "SPAN",
           "size": 107550
         },
@@ -1333,20 +1118,20 @@
       "phone": {
         "newFonts": [],
         "legacy": [
-          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
           "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
           "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
           "assets/fonts/film/rye/rye-subset.woff2 13516 B"
         ],
         "legacyBytes": 54336,
         "house": [
           "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
           "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
-          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B",
-          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B"
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
         ],
         "lcp": {
-          "t": 568,
+          "t": 424,
           "el": "IMG",
           "size": 89604
         },
@@ -1354,7 +1139,7 @@
         "cls": 0
       },
       "notes": [],
-      "ms": 29686,
+      "ms": 28580,
       "console": []
     },
     "games": {
@@ -1387,7 +1172,15 @@
           "focus": "drone-field",
           "x0": 751.1,
           "x1": 751.1,
-          "x2": 656.4
+          "x2": 720.3,
+          "blurred": {
+            "frames": 20,
+            "ms": 531
+          },
+          "focused": {
+            "frames": 13,
+            "ms": 213
+          }
         },
         "drone.course": {
           "pass": true,
@@ -1409,7 +1202,7 @@
           "store": {
             "v": 1,
             "drone": {
-              "best": 4633
+              "best": 4617
             }
           },
           "want": [
@@ -1424,17 +1217,20 @@
         },
         "drone.edge": {
           "pass": true,
+          "x0": 751.1,
           "xs": [
             0,
             0,
             0,
             0,
             0
-          ]
+          ],
+          "frames": 120,
+          "ms": 2190
         },
         "drone.esc": {
           "pass": true,
-          "ms": 630,
+          "ms": 621,
           "focus": "drone-takeoff",
           "game": null
         },
@@ -1443,8 +1239,8 @@
           "phase": "idle"
         },
         "drone.pause": {
-          "pass": false,
-          "ms": 336,
+          "pass": true,
+          "ms": 208,
           "phase": "idle",
           "game": null
         },
@@ -1472,13 +1268,13 @@
         "de.targets": {
           "pass": true,
           "marks": 5,
-          "note": "0/5 marked · 3.8 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
+          "note": "0/5 marked · 4.1 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
           "n": 5
         },
         "de.fire": {
           "pass": true,
           "struck": 5,
-          "hud": "5/5 marked · 3.3 s of Dead Eye left",
+          "hud": "5/5 marked · 3.6 s of Dead Eye left",
           "phase": "read"
         },
         "de.read": {
@@ -1511,35 +1307,37 @@
           "games": {
             "v": 1,
             "drone": {
-              "best": 4633
+              "best": 4617
             },
             "deadeye": {
               "n": 5,
-              "left": 3308
+              "left": 3633
             }
           },
           "hunt": {
             "v": 1,
             "found": {},
             "rows": [
-              "f-optuna-screener",
-              "k-Dealer-gamma (GEX) router",
-              "k-VIX-basis deviation alpha",
               "f-trading-algos",
+              "f-optuna-screener",
+              "s-Volatility Breakout",
+              "k-Dealer-gamma (GEX) router",
+              "k-Intraday momentum-continuation",
+              "k-VIX-basis deviation alpha",
               "s-Regime-Gated Intraday Momentum"
             ],
-            "deadEye": 1790984059148
+            "deadEye": 1791024651402
           }
         },
         "de.release": {
-          "pass": false,
+          "pass": true,
           "game": null,
           "de": 0,
           "on": false,
           "layers": [
             {
-              "hidden": false,
-              "kids": 3
+              "hidden": true,
+              "kids": 0
             },
             {
               "hidden": true,
@@ -1547,9 +1345,18 @@
             }
           ],
           "time": "",
-          "at": 199,
-          "before": "ue\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"grade\" hidden=\"\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"marks\" hidden=\"\"></",
-          "after": "ue\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"grade\"><div></div><img alt=\"\" decoding=\"async\" src=\"/_next/image?url=%2Fmedia%2Ffilms%"
+          "beforeY": 19414,
+          "releasedY": 20427,
+          "lens": {
+            "before": {
+              "lens": "closed",
+              "figure": "ta:all"
+            },
+            "after": {
+              "lens": "closed",
+              "figure": "ta:all"
+            }
+          }
         },
         "de.roving": {
           "pass": true,
@@ -1564,13 +1371,25 @@
           ]
         },
         "rows.read": {
-          "pass": false,
+          "pass": true,
           "rendered": 10,
-          "read": 1
+          "read": 10,
+          "scrollY": 21163,
+          "end": 21132,
+          "notch": 59,
+          "notches": 30,
+          "minRowH": 119
         },
         "inp": {
           "pass": false,
-          "maxEventMs": 1576
+          "maxEventMs": 232,
+          "worst": {
+            "name": "keydown",
+            "ms": 232,
+            "at": 23390,
+            "delay": 0,
+            "run": 0
+          }
         },
         "phone": {
           "pass": true,
@@ -1581,18 +1400,18 @@
           "game": false
         }
       },
-      "ms": 35341,
+      "ms": 59988,
       "console": []
     },
     "gl": {
-      "pass": false,
+      "pass": true,
       "checks": {
         "lab": {
           "pass": true,
           "per": {
             "opening": {
               "engaged": true,
-              "engageMs": 1885,
+              "engageMs": 1884,
               "draws": 9,
               "shots": [
                 "lab-opening-p0.05.png",
@@ -1607,7 +1426,7 @@
             },
             "opening-alt": {
               "engaged": true,
-              "engageMs": 427,
+              "engageMs": 317,
               "draws": 9,
               "shots": [
                 "lab-opening-alt-p0.05.png",
@@ -1622,7 +1441,7 @@
             },
             "seam": {
               "engaged": true,
-              "engageMs": 1597,
+              "engageMs": 917,
               "draws": 9,
               "shots": [
                 "lab-seam-p0.05.png",
@@ -1637,7 +1456,7 @@
             },
             "seam-alt": {
               "engaged": true,
-              "engageMs": 414,
+              "engageMs": 409,
               "draws": 9,
               "shots": [
                 "lab-seam-alt-p0.05.png",
@@ -1652,7 +1471,7 @@
             },
             "tintype": {
               "engaged": true,
-              "engageMs": 1193,
+              "engageMs": 864,
               "draws": 9,
               "shots": [
                 "lab-tintype-p0.05.png",
@@ -1667,7 +1486,7 @@
             },
             "tintype-alt": {
               "engaged": true,
-              "engageMs": 417,
+              "engageMs": 361,
               "draws": 9,
               "shots": [
                 "lab-tintype-alt-p0.05.png",
@@ -1682,7 +1501,7 @@
             },
             "ignite": {
               "engaged": true,
-              "engageMs": 1225,
+              "engageMs": 1774,
               "draws": 9,
               "shots": [
                 "lab-ignite-p0.05.png",
@@ -1697,7 +1516,7 @@
             },
             "ignite-alt": {
               "engaged": true,
-              "engageMs": 419,
+              "engageMs": 364,
               "draws": 9,
               "shots": [
                 "lab-ignite-alt-p0.05.png",
@@ -1719,52 +1538,52 @@
           "compilesWhileMoving": [],
           "compiles": [
             {
-              "t": 1174,
+              "t": 1160,
               "flavour": "iris",
               "moving": false
             },
             {
-              "t": 1191,
+              "t": 1188,
               "flavour": "title",
               "moving": false
             },
             {
-              "t": 10108,
+              "t": 9740,
               "flavour": "wave",
               "moving": false
             },
             {
-              "t": 10141,
+              "t": 9769,
               "flavour": "chalk",
               "moving": false
             },
             {
-              "t": 15707,
+              "t": 14724,
               "flavour": "duster",
               "moving": false
             },
             {
-              "t": 20157,
+              "t": 19057,
               "flavour": "develop",
               "moving": false
             },
             {
-              "t": 25643,
+              "t": 24062,
               "flavour": "deadeye",
               "moving": false
             },
             {
-              "t": 30190,
+              "t": 28573,
               "flavour": "burn",
               "moving": false
             },
             {
-              "t": 30257,
+              "t": 28659,
               "flavour": "ink",
               "moving": false
             },
             {
-              "t": 35256,
+              "t": 34106,
               "flavour": "lumos",
               "moving": false
             }
@@ -1774,37 +1593,37 @@
           "pass": true,
           "engagedFirst": true,
           "gone": true,
-          "ms": 63.5,
+          "ms": 58.5,
           "reEngaged": true,
           "log": [
             {
-              "t": 35582,
+              "t": 34386,
               "ev": "settle",
               "card": "ignite",
               "p": 0
             },
             {
-              "t": 39316,
+              "t": 38101,
               "ev": "disengage:now",
               "card": "ignite",
               "p": 0
             },
             {
-              "t": 39391,
+              "t": 38169,
               "ev": "lost"
             },
             {
-              "t": 39414,
+              "t": 38177,
               "ev": "restored"
             },
             {
-              "t": 40537,
+              "t": 39198,
               "ev": "engage",
               "card": "seam",
               "p": 0
             },
             {
-              "t": 40738,
+              "t": 39399,
               "ev": "settle",
               "card": "seam",
               "p": 0
@@ -1814,13 +1633,13 @@
         "pause": {
           "pass": true,
           "engagedFirst": true,
-          "ms": 1.3999999999068677,
+          "ms": 1.1000000005587935,
           "drawsWhilePaused": 0,
           "tier": "off",
           "resumed": true
         },
         "page.force": {
-          "pass": false,
+          "pass": true,
           "per": {
             "act-1": {
               "engaged": true,
@@ -1860,20 +1679,7 @@
             }
           },
           "contexts": 1,
-          "midSwitches": [
-            {
-              "t": 28187,
-              "ev": "disengage",
-              "card": "seam",
-              "p": 0.821
-            },
-            {
-              "t": 42671,
-              "ev": "disengage",
-              "card": "tintype",
-              "p": 0.8
-            }
-          ],
+          "midSwitches": [],
           "aborts": [],
           "bytes": 17064801
         },
@@ -1905,11 +1711,11 @@
           "tier": null
         }
       },
-      "ms": 128220,
+      "ms": 118766,
       "console": []
     },
     "hunt": {
-      "pass": false,
+      "pass": true,
       "checks": {
         "ssr": {
           "pass": true,
@@ -2003,8 +1809,10 @@
           "focus": true
         },
         "hotspot": {
-          "pass": false,
-          "error": "locator.click: Error: strict mode violation: locator('button[data-egg-hotspot=\\'rd-eagle\\']') resolved to 2 elements:"
+          "pass": true,
+          "bound": true,
+          "short": false,
+          "long": true
         },
         "reset": {
           "pass": true
@@ -2029,16 +1837,16 @@
           "tail": 0
         }
       },
-      "ms": 37902,
+      "ms": 39459,
       "console": []
     },
     "keyboard": {
       "skipped": true,
-      "ms": 6,
+      "ms": 3,
       "console": []
     },
     "layout-gates": {
-      "pass": false,
+      "pass": true,
       "pausedReload": {
         "gate": {
           "js": true,
@@ -2050,63 +1858,21 @@
           "bars": false,
           "on": 0
         },
-        "diff": [
-          [
-            "beyond",
-            26242,
-            3813
-          ],
-          [
-            "writing",
-            30056,
-            2482
-          ],
-          [
-            "voices",
-            32538,
-            1393
-          ],
-          [
-            "act-4",
-            33931,
-            900
-          ],
-          [
-            "SPAN",
-            33931,
-            270
-          ],
-          [
-            "SPAN",
-            34651,
-            180
-          ],
-          [
-            "DIV",
-            33931,
-            900
-          ],
-          [
-            "act-4-title",
-            34683,
-            43
-          ],
-          [
-            "principles",
-            34831,
-            2711
-          ],
-          [
-            "contact",
-            37543,
-            917
-          ]
-        ],
+        "diff": [],
         "heights": [
-          26242,
+          39779,
           39779
         ],
-        "ok": false
+        "streamed": true,
+        "streamedAtDcl": {
+          "pending": 14,
+          "hiddenSections": 14
+        },
+        "sections": [
+          20,
+          20
+        ],
+        "ok": true
       },
       "pauseMid": {
         "pauseControl": true,
@@ -2115,11 +1881,50 @@
         "onAfter": 0,
         "layersHidden": true,
         "scroll": [
-          12291,
-          12291
+          12183,
+          12183
         ],
         "shift": 0,
         "diff": [],
+        "settle": {
+          "drift": [
+            {
+              "box": "about",
+              "to": [
+                3283,
+                1090
+              ],
+              "from": [
+                3283,
+                1183
+              ]
+            },
+            {
+              "box": "journey",
+              "to": [
+                4373,
+                2938
+              ],
+              "from": [
+                4466,
+                2938
+              ]
+            },
+            {
+              "box": "act-2",
+              "to": [
+                7311,
+                1890
+              ],
+              "from": [
+                7404,
+                1890
+              ]
+            }
+          ],
+          "fonts": "loaded",
+          "ms": 1210
+        },
         "ok": true
       },
       "zScale": {
@@ -2189,15 +1994,12 @@
         },
         "ok": true
       },
-      "ms": 18161,
+      "ms": 19428,
       "console": []
     },
     "lenis": {
-      "pass": false,
-      "failed": [
-        "fastlane",
-        "pause"
-      ],
+      "pass": true,
+      "failed": [],
       "checks": {
         "lenis.on": {
           "pass": true,
@@ -2247,11 +2049,11 @@
           "y1": 3191
         },
         "fastlane": {
-          "pass": false,
+          "pass": true,
           "label": "SKIP TO THE RESEARCH",
           "overlaySeen": true,
-          "pillCovered": true,
-          "focusedAt": 1193,
+          "pillCovered": false,
+          "focusedAt": 5,
           "workTop": 92,
           "expected": 92,
           "hash": "#work",
@@ -2271,14 +2073,14 @@
           "focusInside": false
         },
         "pause": {
-          "pass": false,
+          "pass": true,
           "button": true,
           "gone": true,
-          "ms": 126,
+          "ms": 3,
           "scrolledAfter": 500,
           "paletteJump": {
             "distinct": 2,
-            "last": 3191
+            "last": 19321
           },
           "back": true
         },
@@ -2308,7 +2110,7 @@
           "lenis": false
         }
       },
-      "ms": 60098,
+      "ms": 56691,
       "console": [
         "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
       ]
@@ -2318,125 +2120,1176 @@
       "mode": "intro",
       "metric": "duration",
       "max": 50,
-      "count": 17,
-      "over": 16,
-      "worstDur": 511,
-      "worstWork": 58,
+      "count": 18,
+      "over": 18,
+      "worstDur": 378,
+      "worstWork": 11,
       "loafs": [
         {
-          "dur": 511,
+          "dur": 378,
           "block": 0,
-          "work": 1,
+          "work": 2,
           "top": null,
-          "t": 565
+          "t": 122
         },
         {
-          "dur": 332,
-          "block": 8,
-          "work": 46,
-          "top": {
-            "d": 44,
-            "inv": "TimerHandler:setTimeout",
-            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
-            "fn": "st"
-          },
-          "t": 1503
-        },
-        {
-          "dur": 271,
-          "block": 0,
-          "work": 1,
-          "top": null,
-          "t": 231
-        },
-        {
-          "dur": 260,
-          "block": 0,
-          "work": 1,
-          "top": null,
-          "t": 2928
-        },
-        {
-          "dur": 206,
+          "dur": 158,
           "block": 0,
           "work": 0,
           "top": null,
-          "t": 1080
+          "t": 570
         },
         {
-          "dur": 203,
+          "dur": 115,
           "block": 0,
-          "work": 58,
+          "work": 0,
+          "top": null,
+          "t": 2020
+        },
+        {
+          "dur": 110,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2564
+        },
+        {
+          "dur": 110,
+          "block": 0,
+          "work": 6,
           "top": {
-            "d": 18,
-            "inv": "MessagePort.onmessage",
-            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
-            "fn": "O"
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/31ldopvygyepf.js",
+            "fn": "v"
           },
-          "t": 1295
+          "t": 2677
         },
         {
-          "dur": 151,
+          "dur": 108,
           "block": 0,
-          "work": 1,
-          "top": null,
-          "t": 2249
-        },
-        {
-          "dur": 138,
-          "block": 0,
-          "work": 1,
-          "top": null,
-          "t": 1840
-        },
-        {
-          "dur": 132,
-          "block": 0,
-          "work": 8,
+          "work": 11,
           "top": {
-            "d": 7,
-            "inv": "MessagePort.onmessage",
-            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
-            "fn": "O"
+            "d": 10,
+            "inv": "IdleRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/1jb6x8un15-63.js",
+            "fn": "r"
           },
-          "t": 2537
+          "t": 2452
         },
         {
-          "dur": 132,
+          "dur": 106,
+          "block": 0,
+          "work": 5,
+          "top": null,
+          "t": 731
+        },
+        {
+          "dur": 102,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1077
+        },
+        {
+          "dur": 99,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1374
+        },
+        {
+          "dur": 95,
           "block": 0,
           "work": 1,
           "top": null,
-          "t": 2789
+          "t": 2790
         },
         {
-          "dur": 122,
+          "dur": 91,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2228
+        },
+        {
+          "dur": 84,
           "block": 0,
           "work": 1,
           "top": null,
-          "t": 2408
-        },
-        {
-          "dur": 120,
-          "block": 0,
-          "work": 1,
-          "top": null,
-          "t": 1983
+          "t": 1557
         }
       ],
       "ladderMs": {
-        "1": 157,
-        "2": 1378,
-        "3": 2249,
-        "4": 3314
+        "1": 732,
+        "2": 1990
       },
       "lenis": true,
-      "ms": 16261,
+      "ms": 15435,
+      "console": []
+    },
+    "nav": {
+      "pass": true,
+      "lenis": true,
+      "landAt": {
+        "act-1": 0.47,
+        "act-2": 0.47,
+        "act-3": 0.47,
+        "act-4": 0.47
+      },
+      "families": {
+        "chapter": {
+          "pass": true,
+          "found": 7,
+          "failed": [],
+          "links": [
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 2589,
+              "y0": 0,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 3,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-1",
+              "how": "click",
+              "pass": true,
+              "ms": 1233,
+              "y0": 0,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 4,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 2063,
+              "y0": 1281,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 5,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1027,
+              "y0": 7776,
+              "y": 21387,
+              "hash": "#films",
+              "histLen": 6,
+              "focus": "#films-title",
+              "top": 244,
+              "height": 5421,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 245,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 926,
+              "y0": 21387,
+              "y": 27463,
+              "hash": "#act-3",
+              "histLen": 7,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27463,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1276,
+              "y0": 27463,
+              "y": 37642,
+              "hash": "#act-4",
+              "histLen": 8,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37642,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#credits",
+              "how": "click",
+              "pass": true,
+              "ms": 1290,
+              "y0": 37642,
+              "y": 42619,
+              "hash": "#credits",
+              "histLen": 9,
+              "focus": "#credits-title",
+              "top": 92,
+              "height": 1859,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            }
+          ]
+        },
+        "waypoints": {
+          "pass": true,
+          "found": 4,
+          "failed": [],
+          "links": [
+            {
+              "href": "#journey-step-1",
+              "how": "key",
+              "pass": true,
+              "ms": 1652,
+              "y0": 4373,
+              "y": 4792,
+              "hash": "#journey-step-1",
+              "histLen": 9,
+              "focus": "#journey-step-1-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1635,
+              "y0": 4792,
+              "y": 5350,
+              "hash": "#journey-step-2",
+              "histLen": 9,
+              "focus": "#journey-step-2-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-3",
+              "how": "click",
+              "pass": true,
+              "ms": 1660,
+              "y0": 5350,
+              "y": 5908,
+              "hash": "#journey-step-3",
+              "histLen": 9,
+              "focus": "#journey-step-3-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1684,
+              "y0": 5908,
+              "y": 6466,
+              "hash": "#journey-step-4",
+              "histLen": 9,
+              "focus": "#journey-step-4-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            }
+          ]
+        },
+        "map": {
+          "pass": true,
+          "found": 13,
+          "failed": [],
+          "links": [
+            {
+              "href": "#about",
+              "how": "key",
+              "pass": true,
+              "ms": 2026,
+              "y0": 0,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 9,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 2182,
+              "y0": 3191,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 9,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 3401,
+              "y0": 4281,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 9,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2333,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 2118,
+              "y0": 9109,
+              "y": 11346,
+              "hash": "#trading-algos",
+              "histLen": 9,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 1890,
+              "y0": 11346,
+              "y": 13224,
+              "hash": "#optuna-screener",
+              "histLen": 9,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2907,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#systems",
+              "how": "click",
+              "pass": true,
+              "ms": 1396,
+              "y0": 13224,
+              "y": 17254,
+              "hash": "#systems",
+              "histLen": 9,
+              "focus": "#systems-title",
+              "top": 92,
+              "height": 2163,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#kill-list",
+              "how": "click",
+              "pass": true,
+              "ms": 1930,
+              "y0": 17254,
+              "y": 19321,
+              "hash": "#kill-list",
+              "histLen": 9,
+              "focus": "#kill-list-title",
+              "top": 188,
+              "height": 2122,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1925,
+              "y0": 19321,
+              "y": 21443,
+              "hash": "#films",
+              "histLen": 9,
+              "focus": "#films-title",
+              "top": 188,
+              "height": 5451,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 245,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 1150,
+              "y0": 21443,
+              "y": 28700,
+              "hash": "#beyond",
+              "histLen": 9,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 1085,
+              "y0": 28700,
+              "y": 33024,
+              "hash": "#writing",
+              "histLen": 9,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2619,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 2040,
+              "y0": 33024,
+              "y": 35643,
+              "hash": "#voices",
+              "histLen": 9,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1202,
+              "y0": 35643,
+              "y": 38975,
+              "hash": "#principles",
+              "histLen": 9,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2690,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 2305,
+              "y0": 38975,
+              "y": 41664,
+              "hash": "#contact",
+              "histLen": 9,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 954,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            }
+          ]
+        },
+        "turner": {
+          "pass": true,
+          "found": 2,
+          "failed": [],
+          "turner": true,
+          "links": [
+            {
+              "href": "#top",
+              "how": "click",
+              "pass": true,
+              "ms": 1194,
+              "y0": 43232,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 43232,
+                "spinning": true
+              },
+              "spinFirst": true
+            },
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 1279,
+              "y0": 43232,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 43232,
+                "spinning": true
+              },
+              "spinFirst": true
+            }
+          ]
+        },
+        "films": {
+          "pass": true,
+          "found": 14,
+          "failed": [],
+          "links": [
+            {
+              "href": "#act-1",
+              "how": "key",
+              "pass": true,
+              "ms": 1064,
+              "y0": 22656,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 10,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act I"
+            },
+            {
+              "href": "#about",
+              "how": "click",
+              "pass": true,
+              "ms": 1064,
+              "y0": 22656,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 11,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "About"
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 1048,
+              "y0": 22656,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 12,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Journey"
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1165,
+              "y0": 23910,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 13,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act II"
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 850,
+              "y0": 23910,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 14,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2333,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Work"
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 842,
+              "y0": 23910,
+              "y": 11346,
+              "hash": "#trading-algos",
+              "histLen": 15,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Trading_Algos"
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 880,
+              "y0": 23910,
+              "y": 13224,
+              "hash": "#optuna-screener",
+              "histLen": 16,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2907,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Optuna"
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 2632,
+              "y0": 25138,
+              "y": 27463,
+              "hash": "#act-3",
+              "histLen": 17,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27463,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act III"
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 1132,
+              "y0": 25138,
+              "y": 28700,
+              "hash": "#beyond",
+              "histLen": 18,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Beyond"
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 928,
+              "y0": 25138,
+              "y": 33024,
+              "hash": "#writing",
+              "histLen": 19,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2619,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Writing"
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 1001,
+              "y0": 25138,
+              "y": 35643,
+              "hash": "#voices",
+              "histLen": 20,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Voices"
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 949,
+              "y0": 26396,
+              "y": 37642,
+              "hash": "#act-4",
+              "histLen": 21,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37642,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act IV"
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1081,
+              "y0": 26396,
+              "y": 38975,
+              "hash": "#principles",
+              "histLen": 22,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2690,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Principles"
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 1063,
+              "y0": 26396,
+              "y": 41664,
+              "hash": "#contact",
+              "histLen": 23,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 954,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Contact"
+            }
+          ]
+        }
+      },
+      "ms": 100056,
       "console": []
     },
     "plates-live": {
-      "pass": false,
+      "pass": true,
       "live": {
-        "samples": 457,
+        "samples": 412,
         "maxPlaying": 1,
         "plates": 35,
         "byHow": {
@@ -2464,7 +3317,7 @@
           {
             "media": "MV-03",
             "host": "hero",
-            "ms": 4548,
+            "ms": 3184,
             "how": "loop",
             "states": [
               "playing"
@@ -2473,7 +3326,7 @@
           {
             "media": "iconic-pearl",
             "host": "card",
-            "ms": 8024,
+            "ms": 6675,
             "how": "camera",
             "states": [
               "poster"
@@ -2482,7 +3335,7 @@
           {
             "media": "L01",
             "host": "card",
-            "ms": 4140,
+            "ms": 3334,
             "how": "loop",
             "states": [
               "poster",
@@ -2493,21 +3346,21 @@
           {
             "media": "stage-0",
             "host": "stage",
-            "ms": 9337,
+            "ms": 7697,
             "how": "loop",
             "states": []
           },
           {
             "media": "stage-1",
             "host": "stage",
-            "ms": 6217,
+            "ms": 5136,
             "how": "camera",
             "states": []
           },
           {
             "media": "MV-05a",
             "host": "section:journey",
-            "ms": 3734,
+            "ms": 3330,
             "how": "canvas",
             "states": [
               "poster"
@@ -2516,7 +3369,7 @@
           {
             "media": "MV-05b",
             "host": "section:journey",
-            "ms": 1278,
+            "ms": 1270,
             "how": "canvas",
             "states": [
               "poster"
@@ -2525,7 +3378,7 @@
           {
             "media": "MV-05c",
             "host": "section:journey",
-            "ms": 1534,
+            "ms": 1272,
             "how": "canvas",
             "states": [
               "poster"
@@ -2534,7 +3387,7 @@
           {
             "media": "MV-05d",
             "host": "section:journey",
-            "ms": 1277,
+            "ms": 1272,
             "how": "canvas",
             "states": [
               "poster"
@@ -2543,7 +3396,7 @@
           {
             "media": "MV-04",
             "host": "card",
-            "ms": 5917,
+            "ms": 5367,
             "how": "camera",
             "states": [
               "poster"
@@ -2552,7 +3405,7 @@
           {
             "media": "MV-04",
             "host": "card",
-            "ms": 4368,
+            "ms": 3839,
             "how": "camera",
             "states": [
               "poster"
@@ -2561,7 +3414,7 @@
           {
             "media": "iconic-ice",
             "host": "card",
-            "ms": 5902,
+            "ms": 5363,
             "how": "camera",
             "states": [
               "poster"
@@ -2570,18 +3423,18 @@
           {
             "media": "L08",
             "host": "card",
-            "ms": 3089,
+            "ms": 2802,
             "how": "loop",
             "states": [
-              "poster",
               "playing",
-              "paused"
+              "paused",
+              "poster"
             ]
           },
           {
             "media": "iconic-pen-alt",
             "host": "section:work",
-            "ms": 1796,
+            "ms": 1784,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2590,7 +3443,7 @@
           {
             "media": "MV-06",
             "host": "section:work",
-            "ms": 2067,
+            "ms": 2035,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2599,14 +3452,14 @@
           {
             "media": "stage-2",
             "host": "stage",
-            "ms": 4918,
+            "ms": 4073,
             "how": "loop",
             "states": []
           },
           {
             "media": "iconic-ice-alt",
             "host": "section:optuna-screener",
-            "ms": 3156,
+            "ms": 2297,
             "how": "loop",
             "states": [
               "poster+poster",
@@ -2616,21 +3469,21 @@
           {
             "media": "stage-3",
             "host": "stage",
-            "ms": 6661,
+            "ms": 5876,
             "how": "camera",
             "states": []
           },
           {
             "media": "stage-4",
             "host": "stage",
-            "ms": 3848,
+            "ms": 3583,
             "how": "camera",
             "states": []
           },
           {
             "media": "iconic-drone",
             "host": "section:systems",
-            "ms": 1538,
+            "ms": 1535,
             "how": "camera",
             "states": [
               "poster"
@@ -2639,7 +3492,7 @@
           {
             "media": "iconic-pen",
             "host": "section:kill-list",
-            "ms": 1546,
+            "ms": 1785,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2648,7 +3501,7 @@
           {
             "media": "iconic-pearl-alt",
             "host": "section:films",
-            "ms": 2222,
+            "ms": 1869,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2657,7 +3510,7 @@
           {
             "media": "F-3I",
             "host": "section:films",
-            "ms": 2123,
+            "ms": 1804,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2666,7 +3519,7 @@
           {
             "media": "iconic-deadeye",
             "host": "section:films",
-            "ms": 2084,
+            "ms": 2055,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2675,7 +3528,7 @@
           {
             "media": "iconic-express",
             "host": "section:films",
-            "ms": 2312,
+            "ms": 1778,
             "how": "camera",
             "states": [
               "poster"
@@ -2684,7 +3537,7 @@
           {
             "media": "MV-10",
             "host": "card",
-            "ms": 2049,
+            "ms": 2043,
             "how": "camera",
             "states": [
               "poster"
@@ -2693,7 +3546,7 @@
           {
             "media": "MV-10",
             "host": "card",
-            "ms": 5642,
+            "ms": 5353,
             "how": "camera",
             "states": [
               "poster"
@@ -2702,7 +3555,7 @@
           {
             "media": "MV-10",
             "host": "section:beyond",
-            "ms": 3593,
+            "ms": 3557,
             "how": "camera",
             "states": [
               "poster"
@@ -2711,14 +3564,14 @@
           {
             "media": "stage-5",
             "host": "stage",
-            "ms": 4382,
+            "ms": 3824,
             "how": "camera",
             "states": []
           },
           {
             "media": "iconic-wanted",
             "host": "section:beyond",
-            "ms": 2053,
+            "ms": 1779,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2727,7 +3580,7 @@
           {
             "media": "iconic-camp",
             "host": "section:voices",
-            "ms": 3364,
+            "ms": 2826,
             "how": "camera",
             "states": [
               "poster"
@@ -2736,7 +3589,7 @@
           {
             "media": "iconic-camp",
             "host": "card",
-            "ms": 2045,
+            "ms": 2535,
             "how": "canvas",
             "states": [
               "poster"
@@ -2745,7 +3598,7 @@
           {
             "media": "iconic-hall",
             "host": "card",
-            "ms": 3903,
+            "ms": 4112,
             "how": "camera",
             "states": [
               "poster"
@@ -2754,7 +3607,7 @@
           {
             "media": "MV-08",
             "host": "section:contact",
-            "ms": 4151,
+            "ms": 3064,
             "how": "loop",
             "states": [
               "poster+playing"
@@ -2763,7 +3616,7 @@
           {
             "media": "stage-6",
             "host": "stage",
-            "ms": 5921,
+            "ms": 5853,
             "how": "loop",
             "states": []
           }
@@ -2827,7 +3680,7 @@
         "button": true,
         "at100": {
           "playing": 0,
-          "weather": 12
+          "weather": 0
         },
         "at300": {
           "playing": 0,
@@ -2836,9 +3689,6 @@
         },
         "requestsAfter": 0
       },
-      "failures": [
-        "pause: video, weather or a camera transform outlived Pause (or new video requests)"
-      ],
       "phone": {
         "playing": 0,
         "videos": 0,
@@ -2942,7 +3792,7 @@
           }
         ]
       },
-      "ms": 163679,
+      "ms": 150332,
       "console": []
     },
     "research-font": {
@@ -2973,11 +3823,11 @@
         "fontWorldRdr2Head",
         "fontWorldRdr2Body"
       ],
-      "ms": 1536,
+      "ms": 1067,
       "console": []
     },
     "sound": {
-      "pass": false,
+      "pass": true,
       "checks": {
         "muted.default": {
           "pass": true,
@@ -3048,60 +3898,60 @@
               "want": "pirates",
               "got": "pirates",
               "ok": true,
-              "ms": 94
+              "ms": 3
             },
             {
               "id": "work",
               "want": "idiots",
               "got": "idiots",
               "ok": true,
-              "ms": 534
+              "ms": 402
             },
             {
               "id": "experiment",
               "want": null,
               "got": null,
               "ok": true,
-              "ms": 1033
+              "ms": 403
             },
             {
               "id": "beyond",
               "want": "rdr2",
               "got": "rdr2",
               "ok": true,
-              "ms": 441
+              "ms": 491
             },
             {
               "id": "principles",
               "want": "hp",
               "got": "hp",
               "ok": true,
-              "ms": 495
+              "ms": 666
             },
             {
               "id": "films",
               "want": "house",
               "got": "house",
               "ok": true,
-              "ms": 578
+              "ms": 465
             }
           ],
           "trims": {
             "pirates": 0.11199021565737984,
-            "idiots": 0.17980221190201862,
-            "rdr2": 0.2787195995664096,
-            "hp": 0.19078426046417815
+            "idiots": 0.17980216521295142,
+            "rdr2": 0.27871961361843794,
+            "hp": 0.19078426787415015
           }
         },
         "pause": {
-          "pass": false,
+          "pass": true,
           "off": {
             "ok": true,
-            "ms": 113
+            "ms": 5
           },
           "on": {
             "ok": true,
-            "ms": 410
+            "ms": 305
           },
           "whilePaused": {
             "exists": true,
@@ -3126,11 +3976,11 @@
           "pass": true,
           "off": {
             "ok": true,
-            "ms": 51
+            "ms": 53
           },
           "on": {
             "ok": true,
-            "ms": 17
+            "ms": 5
           }
         },
         "eggs.typed": {
@@ -3139,8 +3989,8 @@
             "match-strike",
             "shimmer-rise",
             "impact-lumos",
-            "projector-start",
             "letterbox-whum",
+            "projector-start",
             "parley-creak",
             "flag-snap",
             "tts-parley"
@@ -3150,11 +4000,11 @@
           "pass": true,
           "pause": {
             "ok": true,
-            "ms": 132
+            "ms": 2
           },
           "resumed": true,
           "bell": true,
-          "ms": 6,
+          "ms": 17,
           "ctx": "running"
         },
         "letterbox.once": {
@@ -3163,15 +4013,15 @@
         },
         "rm.live": {
           "pass": true,
-          "rmAt": 15332.5,
-          "ms": 53,
+          "rmAt": 13509.5,
+          "ms": 36,
           "state": "suspended",
           "toggle": {
             "exists": true,
             "visible": true,
             "pressed": "false",
             "disabled": "true",
-            "described": "_r_1b_",
+            "described": "_r_s_",
             "note": "Sound follows motion: resume motion to hear it",
             "made": 1
           }
@@ -3219,224 +4069,33 @@
           }
         }
       },
-      "ms": 51686,
+      "ms": 49432,
       "console": []
     },
     "split": {
-      "pass": false,
+      "pass": true,
       "widths": {
         "1440x900": [
           {
             "id": "trading-algos",
             "side": "right",
             "display": "grid",
-            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
-            "top": 0,
-            "bottom": 0,
-            "windowLeft": 0,
-            "textLeft": 0,
+            "columns": "740.141px 528.672px",
+            "top": 12044.734375,
+            "bottom": 13693.796875,
+            "windowLeft": 847,
+            "textLeft": 64,
             "beat": "B19",
             "rack": "B20-rack",
             "stacks": [
-              3,
-              3,
-              3
-            ],
-            "checks": {
-              "grid": true,
-              "side": false,
-              "sticky": false,
-              "neverEmpty": false,
-              "noOverflow": true
-            },
-            "samples": [
-              {
-                "at": "start",
-                "top": 11681,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "middle",
-                "top": 11681,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "end",
-                "top": 11681,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              }
-            ],
-            "ok": false
-          },
-          {
-            "id": "optuna-screener",
-            "side": "right",
-            "display": "grid",
-            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
-            "top": 0,
-            "bottom": 0,
-            "windowLeft": 0,
-            "textLeft": 0,
-            "beat": null,
-            "rack": "B23-rack",
-            "stacks": [
-              3,
-              3,
-              3,
-              3
-            ],
-            "checks": {
-              "grid": true,
-              "side": false,
-              "sticky": false,
-              "neverEmpty": false,
-              "noOverflow": true
-            },
-            "samples": [
-              {
-                "at": "start",
-                "top": 14187,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "middle",
-                "top": 14187,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "end",
-                "top": 14187,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              }
-            ],
-            "ok": false
-          },
-          {
-            "id": "beyond",
-            "side": "left",
-            "display": "grid",
-            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
-            "top": 0,
-            "bottom": 0,
-            "windowLeft": 0,
-            "textLeft": 0,
-            "beat": null,
-            "rack": "B42-rack",
-            "stacks": [
-              3,
-              3,
-              3
-            ],
-            "checks": {
-              "grid": true,
-              "side": false,
-              "sticky": false,
-              "neverEmpty": false,
-              "noOverflow": true
-            },
-            "samples": [
-              {
-                "at": "start",
-                "top": 30194,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "middle",
-                "top": 30194,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              },
-              {
-                "at": "end",
-                "top": 30194,
-                "height": 832,
-                "header": 68,
-                "vh": 900,
-                "on": false,
-                "posterShown": false,
-                "layerShown": false,
-                "overflow": 0,
-                "docOverflow": 0
-              }
-            ],
-            "ok": false
-          }
-        ],
-        "1024x768": [
-          {
-            "id": "trading-algos",
-            "side": "right",
-            "display": "grid",
-            "columns": "523.328px 373.828px",
-            "top": 10605.890625,
-            "bottom": 12631.375,
-            "windowLeft": 602,
-            "textLeft": 48,
-            "beat": "B19",
-            "rack": "B20-rack",
-            "stacks": [
-              1,
-              1,
-              1
+              12,
+              12,
+              2
             ],
             "checks": {
               "grid": true,
               "side": true,
+              "measured": true,
               "sticky": true,
               "neverEmpty": true,
               "noOverflow": true
@@ -3444,10 +4103,10 @@
             "samples": [
               {
                 "at": "start",
-                "top": 231,
-                "height": 700,
+                "top": 270,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": false,
                 "posterShown": true,
                 "layerShown": false,
@@ -3457,21 +4116,21 @@
               {
                 "at": "middle",
                 "top": 68,
-                "height": 700,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": true,
-                "posterShown": true,
+                "posterShown": false,
                 "layerShown": true,
                 "overflow": 0,
                 "docOverflow": 0
               },
               {
                 "at": "end",
-                "top": -108,
-                "height": 700,
+                "top": -22,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": true,
                 "posterShown": false,
                 "layerShown": true,
@@ -3485,22 +4144,23 @@
             "id": "optuna-screener",
             "side": "right",
             "display": "grid",
-            "columns": "523.328px 373.828px",
-            "top": 13256.84375,
-            "bottom": 15652.71875,
-            "windowLeft": 602,
-            "textLeft": 48,
+            "columns": "740.141px 528.672px",
+            "top": 14550.453125,
+            "bottom": 16601.203125,
+            "windowLeft": 847,
+            "textLeft": 64,
             "beat": null,
             "rack": "B23-rack",
             "stacks": [
-              1,
-              1,
-              1,
-              1
+              12,
+              12,
+              2,
+              12
             ],
             "checks": {
               "grid": true,
               "side": true,
+              "measured": true,
               "sticky": true,
               "neverEmpty": true,
               "noOverflow": true
@@ -3508,10 +4168,10 @@
             "samples": [
               {
                 "at": "start",
-                "top": 99,
-                "height": 700,
+                "top": 270,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": true,
                 "posterShown": false,
                 "layerShown": true,
@@ -3521,9 +4181,9 @@
               {
                 "at": "middle",
                 "top": 68,
-                "height": 700,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": true,
                 "posterShown": false,
                 "layerShown": true,
@@ -3532,10 +4192,10 @@
               },
               {
                 "at": "end",
-                "top": -142,
-                "height": 700,
+                "top": -22,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
+                "vh": 900,
                 "on": true,
                 "posterShown": false,
                 "layerShown": true,
@@ -3549,85 +4209,92 @@
             "id": "beyond",
             "side": "left",
             "display": "grid",
-            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
-            "top": 0,
-            "bottom": 0,
-            "windowLeft": 0,
-            "textLeft": 0,
+            "columns": "528.672px 740.141px",
+            "top": 30557.703125,
+            "bottom": 32242.34375,
+            "windowLeft": 64,
+            "textLeft": 636,
             "beat": null,
             "rack": "B42-rack",
             "stacks": [
-              3,
-              3,
-              3
+              1,
+              1,
+              1
             ],
             "checks": {
               "grid": true,
-              "side": false,
-              "sticky": false,
-              "neverEmpty": false,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
               "noOverflow": true
             },
             "samples": [
               {
                 "at": "start",
-                "top": 27704,
-                "height": 700,
+                "top": 270,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
-                "on": false,
+                "vh": 900,
+                "on": true,
                 "posterShown": false,
-                "layerShown": false,
+                "layerShown": true,
                 "overflow": 0,
-                "docOverflow": 0
+                "docOverflow": 0,
+                "drift": [
+                  {
+                    "from": 30031,
+                    "to": 30083
+                  }
+                ]
               },
               {
                 "at": "middle",
-                "top": 27704,
-                "height": 700,
+                "top": 68,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
-                "on": false,
+                "vh": 900,
+                "on": true,
                 "posterShown": false,
-                "layerShown": false,
+                "layerShown": true,
                 "overflow": 0,
                 "docOverflow": 0
               },
               {
                 "at": "end",
-                "top": 27704,
-                "height": 700,
+                "top": -22,
+                "height": 832,
                 "header": 68,
-                "vh": 768,
-                "on": false,
+                "vh": 900,
+                "on": true,
                 "posterShown": false,
-                "layerShown": false,
+                "layerShown": true,
                 "overflow": 0,
                 "docOverflow": 0
               }
             ],
-            "ok": false
+            "ok": true
           }
         ]
       },
-      "ms": 65432,
+      "ms": 9666,
       "console": []
     },
     "spotlight": {
-      "pass": false,
-      "failed": [
-        "idle"
-      ],
+      "pass": true,
+      "failed": [],
       "tests": {
         "start": {
           "pass": true,
-          "y": 2250,
-          "owner": null
+          "y": 2000,
+          "owner": null,
+          "hold": null,
+          "pending": []
         },
         "own": {
           "pass": true,
           "answer": "skip",
-          "ms": 501
+          "ms": 510
         },
         "free": {
           "pass": true,
@@ -3637,7 +4304,7 @@
         "queue": {
           "pass": true,
           "answer": "play",
-          "ms": 401
+          "ms": 405
         },
         "once": {
           "pass": true,
@@ -3646,29 +4313,32 @@
         "release": {
           "pass": true,
           "answer": "play",
-          "ms": 1
+          "ms": 0
         },
         "idle": {
-          "pass": false,
-          "answer": "skip",
-          "msAfterStop": 4085
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 637,
+          "y0": 2000,
+          "range": 600,
+          "ownerDuring": null
         },
         "pause": {
           "pass": true,
           "answer": "skip",
-          "ms": 1
+          "ms": 0
         },
         "page": {
           "pass": true,
           "counts": {
-            "free": 10,
-            "own": 14,
-            "request": 30,
-            "grant": 22,
-            "end": 22,
-            "idle": 3,
-            "wait": 7,
-            "skip": 8
+            "own": 18,
+            "free": 12,
+            "request": 35,
+            "wait": 11,
+            "idle": 4,
+            "grant": 23,
+            "skip": 12,
+            "end": 23
           },
           "overlaps": [],
           "unresolved": [],
@@ -3677,40 +4347,174 @@
       },
       "log": [
         {
-          "t": 9696,
-          "y": 0,
+          "t": 8507,
+          "y": 675,
+          "ev": "own",
+          "id": "B03",
+          "weight": 3
+        },
+        {
+          "t": 9095,
+          "y": 1800,
+          "ev": "own",
+          "id": "B04",
+          "weight": 3
+        },
+        {
+          "t": 10113,
+          "y": 2025,
+          "ev": "free",
+          "id": "B04"
+        },
+        {
+          "t": 10838,
+          "y": 3375,
+          "ev": "own",
+          "id": "B08",
+          "weight": 1
+        },
+        {
+          "t": 10849,
+          "y": 3375,
+          "ev": "request",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 10850,
+          "y": 3375,
+          "ev": "wait",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "owned by B08"
+        },
+        {
+          "t": 10853,
+          "y": 3375,
+          "ev": "request",
+          "id": "B08-compass",
+          "weight": 1
+        },
+        {
+          "t": 10855,
+          "y": 3375,
+          "ev": "wait",
+          "id": "B08-compass",
+          "weight": 1,
+          "why": "owned by B08"
+        },
+        {
+          "t": 10856,
+          "y": 3375,
+          "ev": "request",
+          "id": "B07",
+          "weight": 1
+        },
+        {
+          "t": 10856,
+          "y": 3375,
+          "ev": "wait",
+          "id": "B07",
+          "weight": 1,
+          "why": "owned by B08"
+        },
+        {
+          "t": 11461,
+          "y": 3600,
+          "ev": "idle",
+          "id": "B08-invite"
+        },
+        {
+          "t": 11787,
+          "y": 3825,
           "ev": "free",
           "id": "B08"
         },
         {
-          "t": 17193,
+          "t": 11787,
+          "y": 3825,
+          "ev": "grant",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "waited 938 ms"
+        },
+        {
+          "t": 11793,
+          "y": 3825,
+          "ev": "skip",
+          "id": "B07",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 12354,
+          "y": 4725,
+          "ev": "skip",
+          "id": "B08-compass",
+          "weight": 1,
+          "why": "maxWait 1500 ms"
+        },
+        {
+          "t": 12390,
+          "y": 4950,
+          "ev": "end",
+          "id": "B08-invite",
+          "why": "held"
+        },
+        {
+          "t": 14112,
+          "y": 6525,
+          "ev": "request",
+          "id": "B12",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 14113,
+          "y": 6525,
+          "ev": "wait",
+          "id": "B12",
+          "weight": 2,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 14173,
+          "y": 6750,
+          "ev": "skip",
+          "id": "B12",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 14498,
           "y": 7200,
           "ev": "own",
           "id": "B13",
           "weight": 3
         },
         {
-          "t": 18165,
+          "t": 15607,
           "y": 7875,
           "ev": "own",
           "id": "B14",
           "weight": 3
         },
         {
-          "t": 18836,
-          "y": 9000,
+          "t": 16034,
+          "y": 8775,
           "ev": "free",
           "id": "B14"
         },
         {
-          "t": 19879,
+          "t": 17176,
           "y": 9450,
           "ev": "request",
           "id": "B16",
           "weight": 1
         },
         {
-          "t": 19880,
+          "t": 17176,
           "y": 9450,
           "ev": "grant",
           "id": "B16",
@@ -3718,14 +4522,14 @@
           "why": "waited 0 ms"
         },
         {
-          "t": 20151,
+          "t": 17545,
           "y": 10125,
           "ev": "request",
           "id": "B17",
           "weight": 2
         },
         {
-          "t": 20438,
+          "t": 17777,
           "y": 10575,
           "ev": "request",
           "id": "B18",
@@ -3733,42 +4537,42 @@
           "why": "needs idle"
         },
         {
-          "t": 20487,
+          "t": 17778,
           "y": 10575,
           "ev": "end",
           "id": "B16",
           "why": "held"
         },
         {
-          "t": 20487,
+          "t": 17778,
           "y": 10575,
           "ev": "grant",
           "id": "B17",
           "weight": 2,
-          "why": "waited 336 ms"
+          "why": "waited 232 ms"
         },
         {
-          "t": 21111,
+          "t": 18601,
           "y": 10800,
           "ev": "idle",
           "id": "B18"
         },
         {
-          "t": 21411,
+          "t": 18792,
           "y": 11025,
           "ev": "own",
           "id": "B19",
           "weight": 1
         },
         {
-          "t": 21688,
+          "t": 18979,
           "y": 11250,
           "ev": "end",
           "id": "B17",
           "why": "held"
         },
         {
-          "t": 21688,
+          "t": 18979,
           "y": 11250,
           "ev": "wait",
           "id": "B18",
@@ -3776,7 +4580,7 @@
           "why": "owned by B19"
         },
         {
-          "t": 21759,
+          "t": 19044,
           "y": 11475,
           "ev": "skip",
           "id": "B18",
@@ -3784,14 +4588,14 @@
           "why": "host left the viewport"
         },
         {
-          "t": 21762,
+          "t": 19045,
           "y": 11475,
           "ev": "request",
           "id": "B20",
           "weight": 2
         },
         {
-          "t": 21763,
+          "t": 19045,
           "y": 11475,
           "ev": "wait",
           "id": "B20",
@@ -3799,63 +4603,48 @@
           "why": "owned by B19"
         },
         {
-          "t": 22159,
+          "t": 19608,
           "y": 12375,
           "ev": "free",
           "id": "B19"
         },
         {
-          "t": 22159,
+          "t": 19608,
           "y": 12375,
           "ev": "grant",
           "id": "B20",
           "weight": 2,
-          "why": "waited 397 ms"
+          "why": "waited 564 ms"
         },
         {
-          "t": 22169,
+          "t": 19617,
           "y": 12375,
           "ev": "request",
           "id": "B21-circle",
           "weight": 1
         },
         {
-          "t": 22384,
+          "t": 19670,
           "y": 12600,
           "ev": "own",
           "id": "B21",
           "weight": 1
         },
         {
-          "t": 23316,
+          "t": 20728,
           "y": 13050,
           "ev": "free",
           "id": "B21"
         },
         {
-          "t": 23323,
+          "t": 20734,
           "y": 13050,
           "ev": "request",
           "id": "B22",
           "weight": 2
         },
         {
-          "t": 23360,
-          "y": 13050,
-          "ev": "end",
-          "id": "B20",
-          "why": "held"
-        },
-        {
-          "t": 23362,
-          "y": 13050,
-          "ev": "grant",
-          "id": "B22",
-          "weight": 2,
-          "why": "waited 38 ms"
-        },
-        {
-          "t": 23401,
+          "t": 20813,
           "y": 13275,
           "ev": "skip",
           "id": "B21-circle",
@@ -3863,51 +4652,81 @@
           "why": "host left the viewport"
         },
         {
-          "t": 24562,
+          "t": 20814,
+          "y": 13275,
+          "ev": "end",
+          "id": "B20",
+          "why": "held"
+        },
+        {
+          "t": 20814,
+          "y": 13275,
+          "ev": "grant",
+          "id": "B22",
+          "weight": 2,
+          "why": "waited 79 ms"
+        },
+        {
+          "t": 21061,
+          "y": 13725,
+          "ev": "request",
+          "id": "B23",
+          "weight": 1
+        },
+        {
+          "t": 21490,
+          "y": 14400,
+          "ev": "skip",
+          "id": "B23",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 22014,
           "y": 14400,
           "ev": "end",
           "id": "B22",
           "why": "held"
         },
         {
-          "t": 25086,
+          "t": 22490,
           "y": 14850,
           "ev": "request",
           "id": "B24",
           "weight": 1
         },
         {
-          "t": 25087,
+          "t": 22491,
           "y": 14850,
           "ev": "grant",
           "id": "B24",
           "weight": 1,
-          "why": "waited 0 ms"
+          "why": "waited 1 ms"
         },
         {
-          "t": 25826,
+          "t": 23200,
           "y": 16200,
           "ev": "request",
           "id": "B25",
           "weight": 1
         },
         {
-          "t": 26287,
+          "t": 23692,
           "y": 16200,
           "ev": "end",
           "id": "B24",
           "why": "held"
         },
         {
-          "t": 26288,
+          "t": 23692,
           "y": 16200,
           "ev": "grant",
           "id": "B25",
           "weight": 1,
-          "why": "waited 460 ms"
+          "why": "waited 492 ms"
         },
         {
-          "t": 27013,
+          "t": 24413,
           "y": 17100,
           "ev": "request",
           "id": "B26",
@@ -3915,14 +4734,14 @@
           "why": "needs idle"
         },
         {
-          "t": 27488,
+          "t": 24892,
           "y": 17775,
           "ev": "end",
           "id": "B25",
           "why": "held"
         },
         {
-          "t": 27488,
+          "t": 24892,
           "y": 17775,
           "ev": "wait",
           "id": "B26",
@@ -3930,14 +4749,14 @@
           "why": "waiting for scroll-idle"
         },
         {
-          "t": 27545,
+          "t": 24923,
           "y": 18000,
           "ev": "request",
           "id": "B27",
           "weight": 2
         },
         {
-          "t": 27545,
+          "t": 24923,
           "y": 18000,
           "ev": "grant",
           "id": "B27",
@@ -3945,13 +4764,13 @@
           "why": "waited 0 ms"
         },
         {
-          "t": 28140,
+          "t": 25513,
           "y": 18000,
           "ev": "idle",
           "id": "B26"
         },
         {
-          "t": 28406,
+          "t": 25814,
           "y": 18225,
           "ev": "skip",
           "id": "B26",
@@ -3959,37 +4778,37 @@
           "why": "host left the viewport"
         },
         {
-          "t": 28746,
+          "t": 26123,
           "y": 18675,
           "ev": "end",
           "id": "B27",
           "why": "held"
         },
         {
-          "t": 28907,
-          "y": 19125,
+          "t": 26218,
+          "y": 18900,
           "ev": "request",
           "id": "B28",
           "weight": 1,
           "why": "needs idle"
         },
         {
-          "t": 28908,
-          "y": 19125,
+          "t": 26219,
+          "y": 18900,
           "ev": "wait",
           "id": "B28",
           "weight": 1,
           "why": "waiting for scroll-idle"
         },
         {
-          "t": 29010,
+          "t": 26449,
           "y": 19350,
           "ev": "request",
           "id": "B29",
           "weight": 1
         },
         {
-          "t": 29011,
+          "t": 26450,
           "y": 19350,
           "ev": "grant",
           "id": "B29",
@@ -3997,7 +4816,7 @@
           "why": "waited 0 ms"
         },
         {
-          "t": 29266,
+          "t": 26740,
           "y": 19800,
           "ev": "skip",
           "id": "B28",
@@ -4005,28 +4824,28 @@
           "why": "host left the viewport"
         },
         {
-          "t": 29611,
+          "t": 27051,
           "y": 19800,
           "ev": "end",
           "id": "B29",
           "why": "held"
         },
         {
-          "t": 30564,
+          "t": 27974,
           "y": 20700,
           "ev": "own",
           "id": "B30",
           "weight": 3
         },
         {
-          "t": 30925,
+          "t": 28363,
           "y": 21375,
           "ev": "request",
           "id": "B31",
           "weight": 1
         },
         {
-          "t": 30929,
+          "t": 28365,
           "y": 21375,
           "ev": "wait",
           "id": "B31",
@@ -4034,35 +4853,35 @@
           "why": "owned by B30"
         },
         {
-          "t": 31085,
+          "t": 28431,
           "y": 21600,
           "ev": "free",
           "id": "B30"
         },
         {
-          "t": 31085,
+          "t": 28432,
           "y": 21600,
           "ev": "grant",
           "id": "B31",
           "weight": 1,
-          "why": "waited 159 ms"
+          "why": "waited 67 ms"
         },
         {
-          "t": 31507,
+          "t": 28853,
           "y": 21600,
           "ev": "end",
           "id": "B31",
           "why": "held"
         },
         {
-          "t": 31899,
+          "t": 29308,
           "y": 21825,
           "ev": "request",
           "id": "B31-finale",
           "weight": 1
         },
         {
-          "t": 31900,
+          "t": 29308,
           "y": 21825,
           "ev": "grant",
           "id": "B31-finale",
@@ -4070,36 +4889,36 @@
           "why": "waited 0 ms"
         },
         {
-          "t": 32501,
+          "t": 30021,
           "y": 22725,
           "ev": "request",
           "id": "B32",
           "weight": 1
         },
         {
-          "t": 32675,
-          "y": 22950,
+          "t": 30211,
+          "y": 23175,
           "ev": "request",
           "id": "B32-finale",
           "weight": 2
         },
         {
-          "t": 33100,
+          "t": 30508,
           "y": 23400,
           "ev": "end",
           "id": "B31-finale",
           "why": "held"
         },
         {
-          "t": 33100,
+          "t": 30508,
           "y": 23400,
           "ev": "grant",
           "id": "B32-finale",
           "weight": 2,
-          "why": "waited 425 ms"
+          "why": "waited 297 ms"
         },
         {
-          "t": 33773,
+          "t": 31213,
           "y": 23625,
           "ev": "skip",
           "id": "B32",
@@ -4107,36 +4926,36 @@
           "why": "host left the viewport"
         },
         {
-          "t": 34011,
+          "t": 31415,
           "y": 23850,
           "ev": "request",
           "id": "B33",
           "weight": 1
         },
         {
-          "t": 34255,
+          "t": 31573,
           "y": 24075,
           "ev": "request",
           "id": "B33-finale",
           "weight": 2
         },
         {
-          "t": 34301,
+          "t": 31711,
           "y": 24300,
           "ev": "end",
           "id": "B32-finale",
           "why": "held"
         },
         {
-          "t": 34301,
+          "t": 31711,
           "y": 24300,
           "ev": "grant",
           "id": "B33-finale",
           "weight": 2,
-          "why": "waited 46 ms"
+          "why": "waited 138 ms"
         },
         {
-          "t": 34515,
+          "t": 31918,
           "y": 24750,
           "ev": "skip",
           "id": "B33",
@@ -4144,43 +4963,43 @@
           "why": "host left the viewport"
         },
         {
-          "t": 34785,
+          "t": 32145,
           "y": 25200,
           "ev": "request",
           "id": "B34",
           "weight": 1
         },
         {
-          "t": 35504,
+          "t": 32913,
           "y": 25200,
           "ev": "end",
           "id": "B33-finale",
           "why": "held"
         },
         {
-          "t": 35504,
+          "t": 32913,
           "y": 25200,
           "ev": "grant",
           "id": "B34",
           "weight": 1,
-          "why": "waited 719 ms"
+          "why": "waited 765 ms"
         },
         {
-          "t": 35661,
+          "t": 33043,
           "y": 25425,
           "ev": "request",
           "id": "B34-finale",
           "weight": 2
         },
         {
-          "t": 36027,
+          "t": 33406,
           "y": 26100,
           "ev": "own",
           "id": "B35",
           "weight": 1
         },
         {
-          "t": 36268,
+          "t": 33649,
           "y": 26550,
           "ev": "skip",
           "id": "B34-finale",
@@ -4188,134 +5007,134 @@
           "why": "host left the viewport"
         },
         {
-          "t": 36409,
+          "t": 33813,
           "y": 26775,
           "ev": "end",
           "id": "B34",
           "why": "held"
         },
         {
-          "t": 36507,
+          "t": 33873,
           "y": 27000,
           "ev": "own",
           "id": "B36",
           "weight": 3
         },
         {
-          "t": 37705,
+          "t": 35031,
           "y": 27675,
           "ev": "own",
           "id": "B38",
           "weight": 3
         },
         {
-          "t": 38210,
-          "y": 28575,
+          "t": 35404,
+          "y": 28350,
           "ev": "free",
           "id": "B38"
         },
         {
-          "t": 38217,
-          "y": 28575,
+          "t": 35409,
+          "y": 28350,
           "ev": "request",
           "id": "B40",
           "weight": 1
         },
         {
-          "t": 38218,
-          "y": 28575,
+          "t": 35409,
+          "y": 28350,
           "ev": "grant",
           "id": "B40",
           "weight": 1,
           "why": "waited 0 ms"
         },
         {
-          "t": 38579,
-          "y": 28800,
+          "t": 35769,
+          "y": 28350,
           "ev": "end",
           "id": "B40",
           "why": "held"
         },
         {
-          "t": 39310,
+          "t": 36751,
           "y": 29250,
           "ev": "own",
           "id": "B41",
           "weight": 2
         },
         {
-          "t": 39830,
-          "y": 30150,
+          "t": 37309,
+          "y": 30375,
           "ev": "free",
           "id": "B41"
         },
         {
-          "t": 40916,
+          "t": 38273,
           "y": 30825,
           "ev": "own",
           "id": "B42",
           "weight": 1
         },
         {
-          "t": 41172,
-          "y": 31275,
+          "t": 38393,
+          "y": 31050,
           "ev": "request",
           "id": "B43",
           "weight": 2
         },
         {
-          "t": 41174,
-          "y": 31275,
+          "t": 38394,
+          "y": 31050,
           "ev": "wait",
           "id": "B43",
           "weight": 2,
           "why": "owned by B42"
         },
         {
-          "t": 41346,
+          "t": 38692,
           "y": 31500,
           "ev": "free",
           "id": "B42"
         },
         {
-          "t": 41346,
+          "t": 38693,
           "y": 31500,
           "ev": "grant",
           "id": "B43",
           "weight": 2,
-          "why": "waited 172 ms"
+          "why": "waited 299 ms"
         },
         {
-          "t": 41483,
+          "t": 38768,
           "y": 31725,
           "ev": "request",
           "id": "B43-wanted",
           "weight": 2
         },
         {
-          "t": 42547,
+          "t": 39893,
           "y": 32400,
           "ev": "end",
           "id": "B43",
           "why": "held"
         },
         {
-          "t": 42548,
+          "t": 39893,
           "y": 32400,
           "ev": "grant",
           "id": "B43-wanted",
           "weight": 2,
-          "why": "waited 1065 ms"
+          "why": "waited 1124 ms"
         },
         {
-          "t": 42667,
+          "t": 40030,
           "y": 32625,
           "ev": "request",
           "id": "B44",
           "weight": 2
         },
         {
-          "t": 43054,
+          "t": 40414,
           "y": 33300,
           "ev": "request",
           "id": "B45",
@@ -4323,7 +5142,7 @@
           "why": "needs idle"
         },
         {
-          "t": 43203,
+          "t": 40549,
           "y": 33525,
           "ev": "skip",
           "id": "B44",
@@ -4331,14 +5150,14 @@
           "why": "host left the viewport"
         },
         {
-          "t": 43748,
+          "t": 41093,
           "y": 34200,
           "ev": "end",
           "id": "B43-wanted",
           "why": "held"
         },
         {
-          "t": 43748,
+          "t": 41095,
           "y": 34200,
           "ev": "wait",
           "id": "B45",
@@ -4346,163 +5165,176 @@
           "why": "waiting for scroll-idle"
         },
         {
-          "t": 44106,
+          "t": 41476,
           "y": 34200,
           "ev": "idle",
           "id": "B45"
         },
         {
-          "t": 44106,
+          "t": 41476,
           "y": 34200,
           "ev": "grant",
           "id": "B45",
           "weight": 2,
-          "why": "waited 1051 ms"
+          "why": "waited 1062 ms"
         },
         {
-          "t": 44662,
+          "t": 42094,
           "y": 34875,
           "ev": "own",
           "id": "B46",
           "weight": 1
         },
         {
-          "t": 44934,
+          "t": 42301,
           "y": 35325,
           "ev": "own",
           "id": "B47",
           "weight": 2
         },
         {
-          "t": 45319,
+          "t": 42677,
           "y": 35775,
           "ev": "end",
           "id": "B45",
           "why": "held"
         },
         {
-          "t": 46542,
+          "t": 43922,
           "y": 36900,
           "ev": "free",
           "id": "B47"
         },
         {
-          "t": 46691,
+          "t": 44039,
           "y": 37125,
           "ev": "own",
           "id": "B48",
           "weight": 3
         },
         {
-          "t": 47209,
+          "t": 44441,
           "y": 37800,
           "ev": "own",
           "id": "B50",
           "weight": 3
         },
         {
-          "t": 48439,
-          "y": 38700,
+          "t": 45619,
+          "y": 38475,
           "ev": "free",
           "id": "B50"
         },
         {
-          "t": 48450,
-          "y": 38700,
+          "t": 45624,
+          "y": 38475,
           "ev": "request",
           "id": "B52",
           "weight": 1
         },
         {
-          "t": 48451,
-          "y": 38700,
+          "t": 45625,
+          "y": 38475,
           "ev": "grant",
           "id": "B52",
           "weight": 1,
-          "why": "waited 1 ms"
+          "why": "waited 0 ms"
         },
         {
-          "t": 48517,
+          "t": 45811,
           "y": 38925,
           "ev": "request",
           "id": "B53",
           "weight": 1
         },
         {
-          "t": 49652,
+          "t": 46825,
           "y": 39600,
           "ev": "end",
           "id": "B52",
           "why": "held"
         },
         {
-          "t": 49652,
+          "t": 46825,
           "y": 39600,
           "ev": "grant",
           "id": "B53",
           "weight": 1,
-          "why": "waited 1135 ms"
+          "why": "waited 1014 ms"
         },
         {
-          "t": 50552,
-          "y": 40725,
+          "t": 47726,
+          "y": 40500,
           "ev": "end",
           "id": "B53",
           "why": "held"
         },
         {
-          "t": 50601,
+          "t": 47766,
+          "y": 40950,
+          "ev": "own",
+          "id": "B55",
+          "weight": 1
+        },
+        {
+          "t": 48058,
+          "y": 41400,
+          "ev": "free",
+          "id": "B55"
+        },
+        {
+          "t": 48076,
           "y": 41400,
           "ev": "request",
           "id": "B56",
           "weight": 2
         },
         {
-          "t": 50602,
+          "t": 48076,
           "y": 41400,
           "ev": "grant",
           "id": "B56",
           "weight": 2,
-          "why": "waited 1 ms"
+          "why": "waited 0 ms"
         },
         {
-          "t": 51802,
-          "y": 41400,
+          "t": 49277,
+          "y": 42075,
           "ev": "end",
           "id": "B56",
           "why": "held"
         },
         {
-          "t": 52202,
+          "t": 49515,
           "y": 42750,
           "ev": "request",
           "id": "B57",
           "weight": 2
         },
         {
-          "t": 52204,
+          "t": 49515,
           "y": 42750,
           "ev": "grant",
           "id": "B57",
           "weight": 2,
-          "why": "waited 1 ms"
+          "why": "waited 0 ms"
         },
         {
-          "t": 53404,
-          "y": 43425,
+          "t": 50718,
+          "y": 43650,
           "ev": "end",
           "id": "B57",
           "why": "held"
         },
         {
-          "t": 54565,
+          "t": 51887,
           "y": 43669,
           "ev": "request",
           "id": "B58",
           "weight": 3
         },
         {
-          "t": 54565,
+          "t": 51890,
           "y": 43669,
           "ev": "grant",
           "id": "B58",
@@ -4510,18 +5342,101 @@
           "why": "waited 0 ms"
         },
         {
-          "t": 55766,
+          "t": 53091,
           "y": 43669,
           "ev": "end",
           "id": "B58",
           "why": "held"
         }
       ],
-      "ms": 56006,
+      "ms": 53307,
+      "console": []
+    },
+    "toys": {
+      "pass": true,
+      "checks": {
+        "mount": {
+          "pass": true,
+          "ms": 2163
+        },
+        "arm": {
+          "pass": true,
+          "shown": 29,
+          "total": 29,
+          "litBefore": 29,
+          "litAfter": 0,
+          "events": [
+            "arm"
+          ],
+          "armMs": 11,
+          "cursor": "image-set(url(\"data:image/svg+xml,%3Csvg"
+        },
+        "idle": {
+          "pass": true,
+          "before": 0,
+          "after": 0
+        },
+        "light": {
+          "pass": true,
+          "lit": "29/29",
+          "recentred": 0,
+          "done": 1,
+          "status": "The hall is lit.",
+          "flare": [
+            "0",
+            "1"
+          ],
+          "lights": 10,
+          "moves": 9
+        },
+        "bloom": {
+          "pass": true,
+          "opacity": 0.488517,
+          "layer": "wand-art",
+          "layerZ": "auto",
+          "textInside": false
+        },
+        "offscreen": {
+          "pass": true,
+          "litAll": 29,
+          "total": 29
+        },
+        "lumos": {
+          "pass": true,
+          "darkBefore": "0/29",
+          "lit": "29/29",
+          "ms": 118,
+          "doneMs": 1635,
+          "events": [
+            "arm",
+            "lumos",
+            "light",
+            "done"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "darkBefore": 0,
+          "litAll": "29/29",
+          "toy": false,
+          "cursor": "auto",
+          "bloom": false
+        },
+        "compass": {
+          "pass": true,
+          "start": 315,
+          "click": 45,
+          "enter": 225,
+          "right": 135,
+          "left": 225,
+          "drag": 135
+        }
+      },
+      "ms": 43878,
       "console": []
     },
     "words": {
-      "pass": false,
+      "pass": true,
       "target": "/?skip=intro&debug=words,spotlight",
       "ssr": {
         "pass": true,
@@ -4555,13 +5470,62 @@
         "words": 26
       },
       "fly": {
-        "pass": false,
-        "error": "no fly-through"
+        "pass": true,
+        "expected": [
+          "B12",
+          "B45"
+        ],
+        "failed": [],
+        "zones": {
+          "B12": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 6210,
+            "lingered": false,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for scroll-idle)",
+              "idle",
+              "grant(waited 602 ms)",
+              "end(held)"
+            ]
+          },
+          "B45": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 33480,
+            "lingered": true,
+            "lingerY": 33480,
+            "waitedMs": 706,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "idle",
+              "grant(waited 723 ms)",
+              "end(held)"
+            ]
+          }
+        }
       },
       "titles": {
         "pass": true,
         "played": [
           "title:B07",
+          "fly:B12",
           "title:B16",
           "physical:B23",
           "title:B31",
@@ -4572,75 +5536,42 @@
           "fly:B45",
           "title:B53"
         ],
-        "statics": 2,
+        "statics": 1,
         "leftArmed": 0,
         "overlaps": []
       },
       "identical": {
-        "pass": false,
-        "diff": [
+        "pass": true,
+        "diff": [],
+        "missing": [],
+        "clientOnly": [
           {
-            "k": 2,
-            "kind": "title",
-            "beat": "B16"
+            "key": "fly:B12#0",
+            "state": null,
+            "fxOpen": false
           },
           {
-            "k": 3,
-            "kind": "scrub",
-            "beat": "B21"
-          },
-          {
-            "k": 4,
-            "kind": "physical",
-            "beat": "B23"
-          },
-          {
-            "k": 5,
-            "kind": "physical",
-            "beat": "B29"
-          },
-          {
-            "k": 6,
-            "kind": "title",
-            "beat": "B31"
-          },
-          {
-            "k": 7,
-            "kind": "title",
-            "beat": "B32"
-          },
-          {
-            "k": 8,
-            "kind": "title",
-            "beat": "B33"
-          },
-          {
-            "k": 9,
-            "kind": "title",
-            "beat": "B34"
-          },
-          {
-            "k": 10,
-            "kind": "title",
-            "beat": "B40"
-          },
-          {
-            "k": 11,
-            "kind": "scrub",
-            "beat": "B42"
+            "key": "fly:B45#0",
+            "state": null,
+            "fxOpen": false
           }
-        ]
+        ],
+        "residue": [],
+        "counts": {
+          "ssr": 14,
+          "after": 16
+        }
       },
       "pause": {
-        "pass": false,
+        "pass": true,
         "armedBefore": 0,
         "armedInTheClick": 0,
         "armedAt100ms": 0,
         "openFx": 0,
         "minOpacity": 1,
-        "identical": false
+        "identical": true
       },
-      "ms": 100948,
+      "ms": 95749,
       "console": []
     }
   }

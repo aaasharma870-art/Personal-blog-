@@ -1,0 +1,1027 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T12:14:25.507Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "cards",
+      "split",
+      "words"
+    ]
+  },
+  "results": {
+    "cards": {
+      "pass": true,
+      "checks": {
+        "pins": {
+          "pass": true,
+          "rows": [
+            {
+              "kind": "opening",
+              "id": "act-1",
+              "top": 900,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": "act-1-program",
+              "nextBackdrop": true,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "seam",
+              "id": "act-2",
+              "top": 7404,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            },
+            {
+              "kind": "tintype",
+              "id": "act-3",
+              "top": 27127,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "ignite",
+              "id": "act-4",
+              "top": 36892,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            }
+          ],
+          "program": {
+            "nextId": "act-1-program",
+            "backdrop": true
+          }
+        },
+        "stars": {
+          "pass": true,
+          "stars": [
+            {
+              "card": "opening",
+              "id": "B03",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "opening",
+              "id": "B04",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "seam",
+              "id": "B13",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "seam",
+              "id": "B14",
+              "star": true,
+              "h": 495
+            },
+            {
+              "card": "tintype",
+              "id": "B36",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "tintype",
+              "id": "B38",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "ignite",
+              "id": "B48",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "ignite",
+              "id": "B50",
+              "star": true,
+              "h": 495
+            }
+          ]
+        },
+        "impacts": {
+          "pass": true,
+          "impacts": [
+            "pirates",
+            "idiots",
+            "rdr2",
+            "hp"
+          ],
+          "meets": [
+            "opening",
+            "seam",
+            "tintype",
+            "ignite"
+          ]
+        },
+        "damping": {
+          "pass": true,
+          "card": "seam",
+          "early": {
+            "raw": 0.4495,
+            "t": 0.075,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          },
+          "late": {
+            "raw": 0.4495,
+            "t": 0.4495,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          }
+        },
+        "scrub": {
+          "pass": true,
+          "rows": [
+            {
+              "card": "opening",
+              "p": 0.05,
+              "raw": 0.0506,
+              "t": 0.0506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.45,
+              "raw": 0.4506,
+              "t": 0.4506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.75,
+              "raw": 0.7506,
+              "t": 0.7506,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "css",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.05,
+              "raw": 0.0494,
+              "t": 0.0494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.45,
+              "raw": 0.4494,
+              "t": 0.4494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.75,
+              "raw": 0.7494,
+              "t": 0.7494,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            }
+          ]
+        },
+        "landAt": {
+          "pass": true,
+          "expected": 0.47,
+          "rows": [
+            {
+              "card": "opening",
+              "id": "act-1",
+              "p": 0.47,
+              "travel": 810,
+              "landedMs": 87,
+              "ok": true
+            },
+            {
+              "card": "seam",
+              "id": "act-2",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 786,
+              "ok": true
+            },
+            {
+              "card": "tintype",
+              "id": "act-3",
+              "p": 0.469,
+              "travel": 810,
+              "landedMs": 1118,
+              "ok": true
+            },
+            {
+              "card": "ignite",
+              "id": "act-4",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 790,
+              "ok": true
+            }
+          ]
+        },
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 82007,
+      "console": []
+    },
+    "split": {
+      "pass": true,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 12044.734375,
+            "bottom": 13693.796875,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 14550.453125,
+            "bottom": 16601.203125,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              12,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "528.672px 740.141px",
+            "top": 30557.703125,
+            "bottom": 32242.34375,
+            "windowLeft": 64,
+            "textLeft": 636,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0,
+                "drift": [
+                  {
+                    "from": 30035,
+                    "to": 30083
+                  }
+                ]
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          }
+        ]
+      },
+      "ms": 9860,
+      "console": []
+    },
+    "words": {
+      "pass": true,
+      "target": "/?skip=intro&debug=words,spotlight",
+      "ssr": {
+        "pass": true,
+        "count": 14,
+        "kinds": [
+          "title",
+          "scrub",
+          "physical"
+        ],
+        "textless": []
+      },
+      "rm": {
+        "pass": true,
+        "armed": 0,
+        "spotlight": false,
+        "minOpacity": 1
+      },
+      "phone": {
+        "pass": true,
+        "binder": false,
+        "armed": 0,
+        "detailsContentSupported": true,
+        "summaryDisplay": "none",
+        "contentVisible": true
+      },
+      "scrub": {
+        "pass": true,
+        "dimFirst": 0.28,
+        "litMin": 1,
+        "backFirst": 0.28,
+        "words": 26
+      },
+      "fly": {
+        "pass": true,
+        "expected": [
+          "B12",
+          "B45"
+        ],
+        "failed": [],
+        "zones": {
+          "B12": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 6210,
+            "lingered": false,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for scroll-idle)",
+              "idle",
+              "grant(waited 601 ms)",
+              "end(held)"
+            ]
+          },
+          "B45": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 33480,
+            "lingered": true,
+            "lingerY": 33480,
+            "waitedMs": 701,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "idle",
+              "grant(waited 742 ms)",
+              "end(held)"
+            ]
+          }
+        }
+      },
+      "titles": {
+        "pass": true,
+        "played": [
+          "title:B07",
+          "fly:B12",
+          "title:B16",
+          "physical:B23",
+          "title:B31",
+          "title:B32",
+          "title:B33",
+          "title:B34",
+          "title:B40",
+          "fly:B45",
+          "title:B53"
+        ],
+        "statics": 1,
+        "leftArmed": 0,
+        "overlaps": []
+      },
+      "identical": {
+        "pass": true,
+        "diff": [],
+        "missing": [],
+        "clientOnly": [
+          {
+            "key": "fly:B12#0",
+            "state": null,
+            "fxOpen": false
+          },
+          {
+            "key": "fly:B45#0",
+            "state": null,
+            "fxOpen": false
+          }
+        ],
+        "residue": [],
+        "counts": {
+          "ssr": 14,
+          "after": 16
+        }
+      },
+      "pause": {
+        "pass": true,
+        "armedBefore": 0,
+        "armedInTheClick": 0,
+        "armedAt100ms": 0,
+        "openFx": 0,
+        "minOpacity": 1,
+        "identical": true
+      },
+      "ms": 96121,
+      "console": []
+    }
+  }
+}

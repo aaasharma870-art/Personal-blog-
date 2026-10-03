@@ -23,6 +23,8 @@
        already reached stay reached. Work that must also run with motion off
        (world fonts on a reduced-motion desktop) waits on `whenQuietEnd()` +
        `onIdle`, not on a ladder step.
+   (c) TURNS: `nextTurn()` hands step-2 work out a few pieces per idle slice
+       (the plates' engine parts, the scroll scenes), never one long task.
    performance marks: "p3:quiet-end", "p3:ladder-<n>" (the probes read them).
    Client only: on the server nothing resolves and every hook reads false.
    ========================================================================== */
@@ -320,4 +322,41 @@ export function prefetchChunks(loaders: (() => Promise<unknown>)[]): void {
   const desktop = desktopMotion();
   if (desktop) prefetchedDesktop = true;
   enqueue(desktop ? [...loaders, ...registered] : loaders);
+}
+
+/* — (c) the step-2 hand-out ————————————————————————————————————————————
+   Work that waits for a step (the plates' engine parts, the scroll scenes)
+   takes TURNS: a few waiters per idle slice, each slice after a frame, so
+   it mounts over a few frames instead of one long commit under the first
+   wheel (P3-2 #9: the W3 gate traced 35–72 ms frames at step 2, the plate
+   engine's mount and every ScrollTrigger scene in one task). */
+
+const TURNS_PER_SLICE = 4;
+const turns: (() => void)[] = [];
+let handing = false;
+
+function handOut(): void {
+  if (handing) return;
+  handing = true;
+  requestAnimationFrame(() =>
+    onIdle(
+      () => {
+        handing = false;
+        for (let i = 0; i < TURNS_PER_SLICE && turns.length; i++) turns.shift()!();
+        if (turns.length) handOut();
+      },
+      { timeout: 250 },
+    ),
+  );
+}
+
+/** Resolves on this caller's turn: at most a few callers per idle slice,
+ *  one slice per frame, first come first served. Await the step first
+ *  (`whenLadder(2)`), then the turn. */
+export function nextTurn(): Promise<void> {
+  if (typeof window === "undefined") return never();
+  return new Promise<void>((resolve) => {
+    turns.push(resolve);
+    handOut();
+  });
 }

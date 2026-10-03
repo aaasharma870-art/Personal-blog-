@@ -1,24 +1,24 @@
 {
   "base": "http://localhost:3161",
   "path": "/?skip=intro,smooth&debug=spotlight",
-  "date": "2026-10-02T23:14:43.762Z",
+  "date": "2026-10-03T12:04:46.383Z",
   "results": [
     {
       "width": 1440,
-      "pageVh": 4952.1,
+      "pageVh": 4950.2,
       "heights": {
         "top": 1,
         "act-1": 2.648,
         "about": 1.211,
         "journey": 3.264,
         "act-2": 2.1,
-        "work": 2.593,
-        "trading-algos": 2.087,
+        "work": 2.628,
+        "trading-algos": 2.088,
         "optuna-screener": 3.23,
         "experiment": 1.14,
-        "systems": 2.404,
-        "kill-list": 2.358,
-        "films": 6.056,
+        "systems": 2.343,
+        "kill-list": 2.359,
+        "films": 6.058,
         "act-3": 1.9,
         "beyond": 4.805,
         "writing": 2.91,
@@ -26,24 +26,9 @@
         "act-4": 2.1,
         "principles": 2.989,
         "contact": 1.06,
-        "credits": 2.065
+        "credits": 2.066
       },
-      "gaps": [
-        {
-          "after": "B29",
-          "before": "B30",
-          "vh": 159.4,
-          "fromVh": 2205.6,
-          "toVh": 2365
-        },
-        {
-          "after": "B56",
-          "before": "B57",
-          "vh": 167.1,
-          "fromVh": 4684.1,
-          "toVh": 4851.2
-        }
-      ],
+      "gaps": [],
       "competing": [
         {
           "a": "B06",
@@ -83,7 +68,7 @@
         {
           "a": "B16",
           "b": "B17",
-          "vh": 11.1
+          "vh": 9
         },
         {
           "a": "B17",
@@ -158,44 +143,54 @@
       "notFound": [],
       "spotlight": {
         "counts": {
-          "own": 18,
-          "free": 10,
-          "request": 32,
-          "wait": 3,
+          "own": 16,
+          "request": 34,
+          "wait": 4,
+          "skip": 28,
+          "free": 9,
           "grant": 6,
-          "skip": 26,
           "end": 6
         },
         "log": [
           {
-            "t": 1929,
-            "y": 1080,
-            "ev": "own",
-            "id": "B03",
-            "weight": 3
-          },
-          {
-            "t": 1997,
-            "y": 1620,
-            "ev": "own",
-            "id": "B04",
-            "weight": 3
-          },
-          {
-            "t": 2184,
-            "y": 2160,
-            "ev": "free",
-            "id": "B04"
-          },
-          {
-            "t": 2424,
+            "t": 1514,
             "y": 3240,
             "ev": "own",
             "id": "B08",
             "weight": 1
           },
           {
-            "t": 2434,
+            "t": 1518,
+            "y": 3240,
+            "ev": "request",
+            "id": "B07",
+            "weight": 1
+          },
+          {
+            "t": 1518,
+            "y": 3240,
+            "ev": "wait",
+            "id": "B07",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 1519,
+            "y": 3240,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 1519,
+            "y": 3240,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 1532,
             "y": 3240,
             "ev": "request",
             "id": "B08-invite",
@@ -203,7 +198,7 @@
             "why": "needs idle"
           },
           {
-            "t": 2435,
+            "t": 1533,
             "y": 3240,
             "ev": "wait",
             "id": "B08-invite",
@@ -211,36 +206,29 @@
             "why": "owned by B08"
           },
           {
-            "t": 2441,
-            "y": 3240,
-            "ev": "request",
-            "id": "B08-compass",
-            "weight": 1
-          },
-          {
-            "t": 2443,
-            "y": 3240,
-            "ev": "wait",
-            "id": "B08-compass",
+            "t": 1602,
+            "y": 3780,
+            "ev": "skip",
+            "id": "B07",
             "weight": 1,
-            "why": "owned by B08"
+            "why": "host left the viewport"
           },
           {
-            "t": 2645,
+            "t": 1699,
             "y": 4320,
             "ev": "free",
             "id": "B08"
           },
           {
-            "t": 2645,
+            "t": 1699,
             "y": 4320,
             "ev": "grant",
             "id": "B08-compass",
             "weight": 1,
-            "why": "waited 203 ms"
+            "why": "waited 180 ms"
           },
           {
-            "t": 2652,
+            "t": 1703,
             "y": 4320,
             "ev": "skip",
             "id": "B08-invite",
@@ -248,56 +236,57 @@
             "why": "host left the viewport"
           },
           {
-            "t": 3360,
+            "t": 2141,
+            "y": 6480,
+            "ev": "request",
+            "id": "B12",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 2204,
+            "y": 7020,
+            "ev": "skip",
+            "id": "B12",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2282,
             "y": 7560,
             "ev": "own",
             "id": "B13",
             "weight": 3
           },
           {
-            "t": 3464,
+            "t": 2385,
             "y": 8100,
             "ev": "own",
             "id": "B14",
             "weight": 3
           },
           {
-            "t": 3651,
+            "t": 2568,
             "y": 9180,
             "ev": "free",
             "id": "B14"
           },
           {
-            "t": 3757,
+            "t": 2652,
             "y": 9720,
             "ev": "request",
             "id": "B16",
             "weight": 1
           },
           {
-            "t": 3846,
+            "t": 2755,
             "y": 10260,
             "ev": "request",
             "id": "B17",
             "weight": 2
           },
           {
-            "t": 3847,
-            "y": 10260,
-            "ev": "end",
-            "id": "B08-compass",
-            "why": "held"
-          },
-          {
-            "t": 3847,
-            "y": 10260,
-            "ev": "grant",
-            "id": "B17",
-            "weight": 2,
-            "why": "waited 1 ms"
-          },
-          {
-            "t": 3950,
+            "t": 2837,
             "y": 10800,
             "ev": "request",
             "id": "B18",
@@ -305,7 +294,7 @@
             "why": "needs idle"
           },
           {
-            "t": 3951,
+            "t": 2837,
             "y": 10800,
             "ev": "skip",
             "id": "B16",
@@ -313,14 +302,36 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4043,
+            "t": 2899,
+            "y": 10800,
+            "ev": "end",
+            "id": "B08-compass",
+            "why": "held"
+          },
+          {
+            "t": 2899,
+            "y": 10800,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 144 ms"
+          },
+          {
+            "t": 2931,
             "y": 11340,
             "ev": "own",
             "id": "B19",
             "weight": 1
           },
           {
-            "t": 4132,
+            "t": 3019,
+            "y": 11880,
+            "ev": "request",
+            "id": "B20",
+            "weight": 2
+          },
+          {
+            "t": 3020,
             "y": 11880,
             "ev": "skip",
             "id": "B18",
@@ -328,28 +339,21 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4132,
-            "y": 11880,
-            "ev": "request",
-            "id": "B20",
-            "weight": 2
-          },
-          {
-            "t": 4226,
+            "t": 3118,
             "y": 12420,
             "ev": "request",
             "id": "B21-circle",
             "weight": 1
           },
           {
-            "t": 4305,
+            "t": 3198,
             "y": 12960,
             "ev": "own",
             "id": "B21",
             "weight": 1
           },
           {
-            "t": 4316,
+            "t": 3204,
             "y": 12960,
             "ev": "skip",
             "id": "B20",
@@ -357,13 +361,20 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4404,
+            "t": 3297,
             "y": 13500,
             "ev": "free",
             "id": "B21"
           },
           {
-            "t": 4416,
+            "t": 3301,
+            "y": 13500,
+            "ev": "request",
+            "id": "B22",
+            "weight": 2
+          },
+          {
+            "t": 3302,
             "y": 13500,
             "ev": "skip",
             "id": "B21-circle",
@@ -371,21 +382,22 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4416,
-            "y": 13500,
-            "ev": "request",
-            "id": "B22",
-            "weight": 2
-          },
-          {
-            "t": 4492,
+            "t": 3396,
             "y": 14040,
             "ev": "request",
             "id": "B23",
             "weight": 1
           },
           {
-            "t": 4591,
+            "t": 3485,
+            "y": 14580,
+            "ev": "skip",
+            "id": "B23",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3485,
             "y": 14580,
             "ev": "skip",
             "id": "B22",
@@ -393,22 +405,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4591,
-            "y": 14580,
-            "ev": "skip",
-            "id": "B23",
-            "weight": 1,
-            "why": "host left the viewport"
-          },
-          {
-            "t": 4672,
+            "t": 3567,
             "y": 15120,
             "ev": "request",
             "id": "B24",
             "weight": 1
           },
           {
-            "t": 4857,
+            "t": 3751,
             "y": 16200,
             "ev": "skip",
             "id": "B24",
@@ -416,14 +420,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4857,
+            "t": 3751,
             "y": 16200,
             "ev": "request",
             "id": "B25",
             "weight": 1
           },
           {
-            "t": 5040,
+            "t": 3936,
             "y": 17280,
             "ev": "request",
             "id": "B26",
@@ -431,29 +435,30 @@
             "why": "needs idle"
           },
           {
-            "t": 5051,
-            "y": 17280,
+            "t": 4037,
+            "y": 17820,
+            "ev": "skip",
+            "id": "B25",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4100,
+            "y": 17820,
             "ev": "end",
             "id": "B17",
             "why": "held"
           },
           {
-            "t": 5051,
-            "y": 17280,
-            "ev": "grant",
-            "id": "B25",
+            "t": 4100,
+            "y": 17820,
+            "ev": "wait",
+            "id": "B26",
             "weight": 1,
-            "why": "waited 194 ms"
+            "why": "waiting for scroll-idle"
           },
           {
-            "t": 5223,
-            "y": 18360,
-            "ev": "request",
-            "id": "B27",
-            "weight": 2
-          },
-          {
-            "t": 5223,
+            "t": 4119,
             "y": 18360,
             "ev": "skip",
             "id": "B26",
@@ -461,7 +466,22 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5326,
+            "t": 4120,
+            "y": 18360,
+            "ev": "request",
+            "id": "B27",
+            "weight": 2
+          },
+          {
+            "t": 4120,
+            "y": 18360,
+            "ev": "grant",
+            "id": "B27",
+            "weight": 2,
+            "why": "waited 0 ms"
+          },
+          {
+            "t": 4220,
             "y": 18900,
             "ev": "request",
             "id": "B28",
@@ -469,14 +489,14 @@
             "why": "needs idle"
           },
           {
-            "t": 5407,
+            "t": 4301,
             "y": 19440,
             "ev": "request",
             "id": "B29",
             "weight": 1
           },
           {
-            "t": 5495,
+            "t": 4406,
             "y": 19980,
             "ev": "skip",
             "id": "B29",
@@ -484,15 +504,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5495,
-            "y": 19980,
-            "ev": "skip",
-            "id": "B27",
-            "weight": 2,
-            "why": "host left the viewport"
-          },
-          {
-            "t": 5495,
+            "t": 4406,
             "y": 19980,
             "ev": "skip",
             "id": "B28",
@@ -500,41 +512,34 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5702,
+            "t": 4600,
             "y": 21060,
             "ev": "own",
             "id": "B30",
             "weight": 3
           },
           {
-            "t": 5877,
+            "t": 4765,
             "y": 21600,
             "ev": "free",
             "id": "B30"
           },
           {
-            "t": 5899,
+            "t": 4773,
             "y": 21600,
             "ev": "request",
             "id": "B31",
             "weight": 1
           },
           {
-            "t": 5920,
+            "t": 4809,
             "y": 22140,
             "ev": "request",
             "id": "B31-finale",
             "weight": 1
           },
           {
-            "t": 6072,
-            "y": 22680,
-            "ev": "request",
-            "id": "B32",
-            "weight": 1
-          },
-          {
-            "t": 6073,
+            "t": 4969,
             "y": 22680,
             "ev": "skip",
             "id": "B31",
@@ -542,7 +547,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6093,
+            "t": 4970,
+            "y": 22680,
+            "ev": "request",
+            "id": "B32",
+            "weight": 1
+          },
+          {
+            "t": 4988,
             "y": 23220,
             "ev": "skip",
             "id": "B31-finale",
@@ -550,14 +562,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6093,
+            "t": 4988,
             "y": 23220,
             "ev": "request",
             "id": "B32-finale",
             "weight": 2
           },
           {
-            "t": 6186,
+            "t": 5087,
             "y": 23760,
             "ev": "skip",
             "id": "B32",
@@ -565,36 +577,29 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6261,
-            "y": 23760,
-            "ev": "end",
-            "id": "B25",
-            "why": "held"
-          },
-          {
-            "t": 6261,
-            "y": 23760,
-            "ev": "grant",
-            "id": "B32-finale",
-            "weight": 2,
-            "why": "waited 168 ms"
-          },
-          {
-            "t": 6281,
+            "t": 5169,
             "y": 24300,
             "ev": "request",
             "id": "B33-finale",
             "weight": 2
           },
           {
-            "t": 6282,
+            "t": 5170,
+            "y": 24300,
+            "ev": "skip",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5170,
             "y": 24300,
             "ev": "request",
             "id": "B33",
             "weight": 1
           },
           {
-            "t": 6374,
+            "t": 5255,
             "y": 24840,
             "ev": "skip",
             "id": "B33",
@@ -602,36 +607,43 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6751,
-            "y": 25399,
+            "t": 5398,
+            "y": 24840,
+            "ev": "end",
+            "id": "B27",
+            "why": "held"
+          },
+          {
+            "t": 5398,
+            "y": 24840,
+            "ev": "grant",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "waited 228 ms"
+          },
+          {
+            "t": 5410,
+            "y": 25380,
             "ev": "request",
             "id": "B34",
             "weight": 1
           },
           {
-            "t": 6751,
-            "y": 25399,
-            "ev": "skip",
-            "id": "B33-finale",
-            "weight": 2,
-            "why": "host left the viewport"
-          },
-          {
-            "t": 6768,
+            "t": 5502,
             "y": 25920,
             "ev": "request",
             "id": "B34-finale",
             "weight": 2
           },
           {
-            "t": 6868,
+            "t": 5697,
             "y": 26460,
             "ev": "own",
             "id": "B35",
             "weight": 1
           },
           {
-            "t": 6874,
+            "t": 5707,
             "y": 26460,
             "ev": "skip",
             "id": "B34",
@@ -639,14 +651,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6948,
+            "t": 5730,
             "y": 27000,
             "ev": "own",
             "id": "B36",
             "weight": 3
           },
           {
-            "t": 6954,
+            "t": 5735,
             "y": 27000,
             "ev": "skip",
             "id": "B34-finale",
@@ -654,34 +666,34 @@
             "why": "host left the viewport"
           },
           {
-            "t": 7138,
+            "t": 5916,
             "y": 28080,
             "ev": "own",
             "id": "B38",
             "weight": 3
           },
           {
-            "t": 7241,
+            "t": 6043,
             "y": 28620,
             "ev": "free",
             "id": "B38"
           },
           {
-            "t": 7246,
+            "t": 6049,
             "y": 28620,
             "ev": "request",
             "id": "B40",
             "weight": 1
           },
           {
-            "t": 7418,
+            "t": 6210,
             "y": 29700,
             "ev": "own",
             "id": "B41",
             "weight": 2
           },
           {
-            "t": 7423,
+            "t": 6217,
             "y": 29700,
             "ev": "skip",
             "id": "B40",
@@ -689,78 +701,62 @@
             "why": "host left the viewport"
           },
           {
-            "t": 7461,
-            "y": 29700,
-            "ev": "end",
-            "id": "B32-finale",
-            "why": "held"
-          },
-          {
-            "t": 7500,
+            "t": 6281,
             "y": 30240,
             "ev": "free",
             "id": "B41"
           },
           {
-            "t": 7705,
+            "t": 6464,
             "y": 31320,
             "ev": "own",
             "id": "B42",
             "weight": 1
           },
           {
-            "t": 7712,
+            "t": 6469,
             "y": 31320,
             "ev": "request",
             "id": "B43",
             "weight": 2
           },
           {
-            "t": 7713,
-            "y": 31320,
-            "ev": "wait",
-            "id": "B43",
-            "weight": 2,
-            "why": "owned by B42"
-          },
-          {
-            "t": 7791,
+            "t": 6566,
             "y": 31860,
             "ev": "free",
             "id": "B42"
           },
           {
-            "t": 7792,
-            "y": 31860,
-            "ev": "grant",
-            "id": "B43",
-            "weight": 2,
-            "why": "waited 79 ms"
-          },
-          {
-            "t": 7798,
+            "t": 6569,
             "y": 31860,
             "ev": "request",
             "id": "B43-wanted",
             "weight": 2
           },
           {
-            "t": 7976,
+            "t": 6598,
+            "y": 31860,
+            "ev": "end",
+            "id": "B33-finale",
+            "why": "held"
+          },
+          {
+            "t": 6598,
+            "y": 31860,
+            "ev": "grant",
+            "id": "B43",
+            "weight": 2,
+            "why": "waited 129 ms"
+          },
+          {
+            "t": 6737,
             "y": 32940,
             "ev": "request",
             "id": "B44",
             "weight": 2
           },
           {
-            "t": 8072,
-            "y": 33480,
-            "ev": "skip",
-            "id": "B44",
-            "weight": 2,
-            "why": "host left the viewport"
-          },
-          {
-            "t": 8072,
+            "t": 6836,
             "y": 33480,
             "ev": "skip",
             "id": "B43-wanted",
@@ -768,7 +764,15 @@
             "why": "host left the viewport"
           },
           {
-            "t": 8203,
+            "t": 6836,
+            "y": 33480,
+            "ev": "skip",
+            "id": "B44",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6962,
             "y": 33480,
             "ev": "request",
             "id": "B45",
@@ -776,21 +780,21 @@
             "why": "needs idle"
           },
           {
-            "t": 8400,
+            "t": 7147,
             "y": 35100,
             "ev": "own",
             "id": "B46",
             "weight": 1
           },
           {
-            "t": 8484,
+            "t": 7248,
             "y": 35640,
             "ev": "own",
             "id": "B47",
             "weight": 2
           },
           {
-            "t": 8490,
+            "t": 7251,
             "y": 35640,
             "ev": "skip",
             "id": "B45",
@@ -798,76 +802,76 @@
             "why": "host left the viewport"
           },
           {
-            "t": 8787,
+            "t": 7525,
             "y": 37260,
             "ev": "own",
             "id": "B48",
             "weight": 3
           },
           {
-            "t": 8895,
+            "t": 7619,
             "y": 37800,
             "ev": "own",
             "id": "B50",
             "weight": 3
           },
           {
-            "t": 8997,
-            "y": 37800,
-            "ev": "end",
-            "id": "B43",
-            "why": "held"
-          },
-          {
-            "t": 9140,
+            "t": 7801,
             "y": 38880,
             "ev": "free",
             "id": "B50"
           },
           {
-            "t": 9156,
+            "t": 7805,
             "y": 38880,
             "ev": "request",
             "id": "B53",
             "weight": 1
           },
           {
-            "t": 9156,
-            "y": 38880,
-            "ev": "grant",
-            "id": "B53",
-            "weight": 1,
-            "why": "waited 0 ms"
-          },
-          {
-            "t": 9160,
+            "t": 7806,
             "y": 38880,
             "ev": "request",
             "id": "B52",
             "weight": 1
           },
           {
-            "t": 9485,
+            "t": 7807,
+            "y": 38880,
+            "ev": "end",
+            "id": "B43",
+            "why": "held"
+          },
+          {
+            "t": 7807,
+            "y": 38880,
+            "ev": "grant",
+            "id": "B53",
+            "weight": 1,
+            "why": "waited 2 ms"
+          },
+          {
+            "t": 8182,
             "y": 41040,
             "ev": "own",
             "id": "B55",
             "weight": 1
           },
           {
-            "t": 9586,
+            "t": 8265,
             "y": 41580,
             "ev": "free",
             "id": "B55"
           },
           {
-            "t": 9596,
+            "t": 8270,
             "y": 41580,
             "ev": "request",
             "id": "B56",
             "weight": 2
           },
           {
-            "t": 9690,
+            "t": 8370,
             "y": 42120,
             "ev": "skip",
             "id": "B52",
@@ -875,14 +879,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 9788,
-            "y": 42660,
-            "ev": "request",
-            "id": "B57",
-            "weight": 2
-          },
-          {
-            "t": 9789,
+            "t": 8460,
             "y": 42660,
             "ev": "skip",
             "id": "B56",
@@ -890,7 +887,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 9813,
+            "t": 8465,
+            "y": 42660,
+            "ev": "request",
+            "id": "B57",
+            "weight": 2
+          },
+          {
+            "t": 8471,
             "y": 42660,
             "ev": "skip",
             "id": "B57",
@@ -898,8 +902,8 @@
             "why": "host left the viewport"
           },
           {
-            "t": 10058,
-            "y": 43762,
+            "t": 8707,
+            "y": 43740,
             "ev": "end",
             "id": "B53",
             "why": "held"
@@ -1057,72 +1061,72 @@
           "id": "B16",
           "star": true,
           "weight": 1,
-          "topVh": 1112.9,
-          "hPx": 217
+          "topVh": 1114.3,
+          "hPx": 192
         },
         {
           "id": "B17",
           "star": true,
           "weight": 2,
-          "topVh": 1201.8,
-          "hPx": 548
+          "topVh": 1205.4,
+          "hPx": 549
         },
         {
           "id": "B18",
           "star": true,
           "weight": 1,
-          "topVh": 1263.9,
+          "topVh": 1267.4,
           "hPx": 44
         },
         {
           "id": "B19",
           "star": true,
           "weight": 1,
-          "topVh": 1294.3,
+          "topVh": 1297.9,
           "hPx": 832,
-          "stickyPx": 816
+          "stickyPx": 817
         },
         {
           "id": "B20-rack",
           "star": false,
           "weight": null,
-          "topVh": 1294.3,
+          "topVh": 1297.9,
           "hPx": 832,
-          "stickyPx": 816
+          "stickyPx": 817
         },
         {
           "id": "B20",
           "star": true,
           "weight": 2,
-          "topVh": 1346.8,
-          "hPx": 519
+          "topVh": 1350.4,
+          "hPx": 520
         },
         {
           "id": "B21-circle",
           "star": true,
           "weight": 1,
-          "topVh": 1458.7,
+          "topVh": 1462.3,
           "hPx": 109
         },
         {
           "id": "B21",
           "star": true,
           "weight": 1,
-          "topVh": 1461.9,
+          "topVh": 1465.6,
           "hPx": 49
         },
         {
           "id": "B22",
           "star": true,
           "weight": 2,
-          "topVh": 1503.1,
+          "topVh": 1506.7,
           "hPx": 562
         },
         {
           "id": "B23-rack",
           "star": false,
           "weight": null,
-          "topVh": 1572.6,
+          "topVh": 1576.3,
           "hPx": 832,
           "stickyPx": 1219
         },
@@ -1130,133 +1134,140 @@
           "id": "B23",
           "star": true,
           "weight": 1,
-          "topVh": 1592.4,
+          "topVh": 1596,
           "hPx": 22
         },
         {
           "id": "B24",
           "star": true,
           "weight": 1,
-          "topVh": 1727.7,
+          "topVh": 1731.3,
           "hPx": 24
         },
         {
           "id": "B25",
           "star": true,
           "weight": 1,
-          "topVh": 1850.9,
+          "topVh": 1854.6,
           "hPx": 572
         },
         {
           "id": "B26",
           "star": true,
           "weight": 1,
-          "topVh": 1940.1,
+          "topVh": 1943.8,
           "hPx": 562
         },
         {
           "id": "B27",
           "star": true,
           "weight": 2,
-          "topVh": 2054,
+          "topVh": 2051.6,
           "hPx": 908
         },
         {
           "id": "B28",
           "star": true,
           "weight": 1,
-          "topVh": 2183.2,
+          "topVh": 2180.8,
           "hPx": 44
         },
         {
           "id": "B29",
           "star": true,
           "weight": 1,
-          "topVh": 2203.2,
+          "topVh": 2200.8,
           "hPx": 22
+        },
+        {
+          "id": "B29-lens",
+          "star": false,
+          "weight": null,
+          "topVh": 2232.3,
+          "hPx": 1359
         },
         {
           "id": "B30",
           "star": true,
           "weight": 3,
-          "topVh": 2365,
+          "topVh": 2362.7,
           "hPx": 360
         },
         {
           "id": "B31",
           "star": true,
           "weight": 1,
-          "topVh": 2460.7,
+          "topVh": 2458.4,
           "hPx": 60
         },
         {
           "id": "B31-finale",
           "star": true,
           "weight": 1,
-          "topVh": 2470,
+          "topVh": 2467.7,
           "hPx": 549
         },
         {
           "id": "B31-bars",
           "star": false,
           "weight": null,
-          "topVh": 2480.5,
+          "topVh": 2478.2,
           "hPx": 360
         },
         {
           "id": "B32",
           "star": true,
           "weight": 1,
-          "topVh": 2595.2,
+          "topVh": 2592.9,
           "hPx": 63
         },
         {
           "id": "B32-finale",
           "star": true,
           "weight": 2,
-          "topVh": 2604.9,
+          "topVh": 2602.6,
           "hPx": 549
         },
         {
           "id": "B33",
           "star": true,
           "weight": 1,
-          "topVh": 2734.4,
+          "topVh": 2732.4,
           "hPx": 51
         },
         {
           "id": "B33-finale",
           "star": true,
           "weight": 2,
-          "topVh": 2742.7,
+          "topVh": 2740.7,
           "hPx": 549
         },
         {
           "id": "B34",
           "star": true,
           "weight": 1,
-          "topVh": 2870.9,
+          "topVh": 2868.9,
           "hPx": 70
         },
         {
           "id": "B34-finale",
           "star": true,
           "weight": 2,
-          "topVh": 2881.3,
+          "topVh": 2879.3,
           "hPx": 549
         },
         {
           "id": "B35",
           "star": true,
           "weight": 1,
-          "topVh": 2976.3,
+          "topVh": 2974.2,
           "hPx": 360
         },
         {
           "id": "B35-sun",
           "star": false,
           "weight": null,
-          "topVh": 3017.4,
+          "topVh": 3015.4,
           "hPx": 536,
           "stickyPx": 810
         },
@@ -1264,21 +1275,21 @@
           "id": "B36",
           "star": true,
           "weight": 3,
-          "topVh": 3059.1,
+          "topVh": 3057,
           "hPx": 365
         },
         {
           "id": "B36-impact",
           "star": false,
           "weight": null,
-          "topVh": 3061.8,
+          "topVh": 3059.7,
           "hPx": 0
         },
         {
           "id": "B38-subtitle",
           "star": false,
           "weight": null,
-          "topVh": 3091.2,
+          "topVh": 3089.2,
           "hPx": 161,
           "stickyPx": 810
         },
@@ -1286,35 +1297,35 @@
           "id": "B38",
           "star": true,
           "weight": 3,
-          "topVh": 3104.1,
+          "topVh": 3102,
           "hPx": 405
         },
         {
           "id": "B39-drift",
           "star": false,
           "weight": null,
-          "topVh": 3199.1,
+          "topVh": 3197,
           "hPx": 720
         },
         {
           "id": "B40",
           "star": true,
           "weight": 1,
-          "topVh": 3215.8,
+          "topVh": 3213.7,
           "hPx": 208
         },
         {
           "id": "B41",
           "star": true,
           "weight": 2,
-          "topVh": 3324.1,
+          "topVh": 3322.1,
           "hPx": 312
         },
         {
           "id": "B42-rack",
           "star": false,
           "weight": null,
-          "topVh": 3366,
+          "topVh": 3363.9,
           "hPx": 832,
           "stickyPx": 965
         },
@@ -1322,35 +1333,35 @@
           "id": "B42",
           "star": true,
           "weight": 1,
-          "topVh": 3496.7,
+          "topVh": 3494.6,
           "hPx": 65
         },
         {
           "id": "B43",
           "star": true,
           "weight": 2,
-          "topVh": 3525.7,
+          "topVh": 3523.6,
           "hPx": 294
         },
         {
           "id": "B43-wanted",
           "star": true,
           "weight": 2,
-          "topVh": 3572.7,
+          "topVh": 3570.7,
           "hPx": 756
         },
         {
           "id": "B44",
           "star": true,
           "weight": 2,
-          "topVh": 3697.1,
+          "topVh": 3695,
           "hPx": 101
         },
         {
           "id": "B45",
           "star": true,
           "weight": 2,
-          "topVh": 3766.6,
+          "topVh": 3764.6,
           "hPx": 96,
           "stickyPx": 1380
         },
@@ -1358,21 +1369,21 @@
           "id": "B46",
           "star": true,
           "weight": 1,
-          "topVh": 3935.9,
+          "topVh": 3933.9,
           "hPx": 312
         },
         {
           "id": "B47",
           "star": true,
           "weight": 2,
-          "topVh": 3983.4,
+          "topVh": 3981.3,
           "hPx": 1211
         },
         {
           "id": "B47-fireflies",
           "star": false,
           "weight": null,
-          "topVh": 3983.4,
+          "topVh": 3981.3,
           "hPx": 900,
           "stickyPx": 426
         },
@@ -1380,7 +1391,7 @@
           "id": "B48-fireflies",
           "star": false,
           "weight": null,
-          "topVh": 4156.1,
+          "topVh": 4154,
           "hPx": 536,
           "stickyPx": 990
         },
@@ -1388,7 +1399,7 @@
           "id": "B50-motes",
           "star": false,
           "weight": null,
-          "topVh": 4156.1,
+          "topVh": 4154,
           "hPx": 536,
           "stickyPx": 990
         },
@@ -1396,14 +1407,14 @@
           "id": "B48",
           "star": true,
           "weight": 3,
-          "topVh": 4180.7,
+          "topVh": 4178.7,
           "hPx": 446
         },
         {
           "id": "B50-subtitle",
           "star": false,
           "weight": null,
-          "topVh": 4215.6,
+          "topVh": 4213.6,
           "hPx": 136,
           "stickyPx": 990
         },
@@ -1411,63 +1422,70 @@
           "id": "B48-impact",
           "star": false,
           "weight": null,
-          "topVh": 4230.2,
+          "topVh": 4228.2,
           "hPx": 0
         },
         {
           "id": "B50",
           "star": true,
           "weight": 3,
-          "topVh": 4235.7,
+          "topVh": 4233.7,
           "hPx": 495
         },
         {
           "id": "B52",
           "star": true,
           "weight": 1,
-          "topVh": 4353.5,
+          "topVh": 4351.5,
           "hPx": 2459
         },
         {
           "id": "B53",
           "star": true,
           "weight": 1,
-          "topVh": 4376.5,
+          "topVh": 4374.5,
           "hPx": 311
         },
         {
           "id": "B54",
           "star": true,
           "weight": 2,
-          "topVh": 4504.1,
+          "topVh": 4502.1,
           "hPx": 373
         },
         {
           "id": "B55",
           "star": true,
           "weight": 1,
-          "topVh": 4606.4,
+          "topVh": 4604.4,
           "hPx": 82
         },
         {
           "id": "B56",
           "star": true,
           "weight": 2,
-          "topVh": 4677.9,
+          "topVh": 4675.8,
           "hPx": 56
+        },
+        {
+          "id": "B57-roll",
+          "star": false,
+          "weight": null,
+          "topVh": 4756.4,
+          "hPx": 1629
         },
         {
           "id": "B57",
           "star": true,
           "weight": 2,
-          "topVh": 4851.2,
+          "topVh": 4849.2,
           "hPx": 44
         },
         {
           "id": "B58",
           "star": true,
           "weight": 3,
-          "topVh": 4879.4,
+          "topVh": 4877.4,
           "hPx": 540
         }
       ],
@@ -1498,22 +1516,7 @@
         "contact": 1.025,
         "credits": 2.23
       },
-      "gaps": [
-        {
-          "after": "B29",
-          "before": "B30",
-          "vh": 199.5,
-          "fromVh": 2417.7,
-          "toVh": 2617.1
-        },
-        {
-          "after": "B56",
-          "before": "B57",
-          "vh": 178.5,
-          "fromVh": 5084.6,
-          "toVh": 5263.1
-        }
-      ],
+      "gaps": [],
       "competing": [
         {
           "a": "B06",
@@ -1613,44 +1616,31 @@
       "notFound": [],
       "spotlight": {
         "counts": {
-          "own": 17,
-          "free": 11,
+          "own": 16,
           "request": 34,
           "wait": 3,
-          "skip": 27,
-          "grant": 7,
-          "end": 7
+          "skip": 28,
+          "free": 10,
+          "grant": 6,
+          "end": 6
         },
         "log": [
           {
-            "t": 1816,
-            "y": 1383,
-            "ev": "own",
-            "id": "B04",
-            "weight": 3
-          },
-          {
-            "t": 1872,
-            "y": 1844,
-            "ev": "free",
-            "id": "B04"
-          },
-          {
-            "t": 2050,
+            "t": 1570,
             "y": 2766,
             "ev": "own",
             "id": "B08",
             "weight": 1
           },
           {
-            "t": 2056,
+            "t": 1572,
             "y": 2766,
             "ev": "request",
             "id": "B07",
             "weight": 1
           },
           {
-            "t": 2057,
+            "t": 1572,
             "y": 2766,
             "ev": "wait",
             "id": "B07",
@@ -1658,38 +1648,7 @@
             "why": "owned by B08"
           },
           {
-            "t": 2140,
-            "y": 3227,
-            "ev": "request",
-            "id": "B08-invite",
-            "weight": 1,
-            "why": "needs idle"
-          },
-          {
-            "t": 2141,
-            "y": 3227,
-            "ev": "wait",
-            "id": "B08-invite",
-            "weight": 1,
-            "why": "owned by B08"
-          },
-          {
-            "t": 2141,
-            "y": 3227,
-            "ev": "request",
-            "id": "B08-compass",
-            "weight": 1
-          },
-          {
-            "t": 2141,
-            "y": 3227,
-            "ev": "wait",
-            "id": "B08-compass",
-            "weight": 1,
-            "why": "owned by B08"
-          },
-          {
-            "t": 2142,
+            "t": 1672,
             "y": 3227,
             "ev": "skip",
             "id": "B07",
@@ -1697,21 +1656,52 @@
             "why": "host left the viewport"
           },
           {
-            "t": 2252,
+            "t": 1674,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 1674,
+            "y": 3227,
+            "ev": "wait",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 1674,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 1675,
+            "y": 3227,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "owned by B08"
+          },
+          {
+            "t": 1759,
             "y": 3688,
             "ev": "free",
             "id": "B08"
           },
           {
-            "t": 2252,
+            "t": 1759,
             "y": 3688,
             "ev": "grant",
             "id": "B08-compass",
             "weight": 1,
-            "why": "waited 111 ms"
+            "why": "waited 85 ms"
           },
           {
-            "t": 2380,
+            "t": 1860,
             "y": 4149,
             "ev": "skip",
             "id": "B08-invite",
@@ -1719,7 +1709,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 2803,
+            "t": 2245,
             "y": 5993,
             "ev": "request",
             "id": "B12",
@@ -1727,7 +1717,7 @@
             "why": "needs idle"
           },
           {
-            "t": 2878,
+            "t": 2307,
             "y": 6454,
             "ev": "skip",
             "id": "B12",
@@ -1735,41 +1725,41 @@
             "why": "host left the viewport"
           },
           {
-            "t": 2969,
+            "t": 2404,
             "y": 6915,
             "ev": "own",
             "id": "B13",
             "weight": 3
           },
           {
-            "t": 3057,
+            "t": 2491,
             "y": 7376,
             "ev": "own",
             "id": "B14",
             "weight": 3
           },
           {
-            "t": 3152,
+            "t": 2588,
             "y": 7837,
             "ev": "free",
             "id": "B14"
           },
           {
-            "t": 3339,
+            "t": 2775,
             "y": 8759,
             "ev": "request",
             "id": "B16",
             "weight": 1
           },
           {
-            "t": 3442,
+            "t": 2858,
             "y": 9220,
             "ev": "request",
             "id": "B17",
             "weight": 2
           },
           {
-            "t": 3442,
+            "t": 2858,
             "y": 9220,
             "ev": "skip",
             "id": "B16",
@@ -1777,22 +1767,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 3460,
-            "y": 9220,
-            "ev": "end",
-            "id": "B08-compass",
-            "why": "held"
-          },
-          {
-            "t": 3461,
-            "y": 9220,
-            "ev": "grant",
-            "id": "B17",
-            "weight": 2,
-            "why": "waited 19 ms"
-          },
-          {
-            "t": 3527,
+            "t": 2963,
             "y": 9681,
             "ev": "request",
             "id": "B18",
@@ -1800,14 +1775,29 @@
             "why": "needs idle"
           },
           {
-            "t": 3617,
+            "t": 2964,
+            "y": 9681,
+            "ev": "end",
+            "id": "B08-compass",
+            "why": "held"
+          },
+          {
+            "t": 2964,
+            "y": 9681,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 107 ms"
+          },
+          {
+            "t": 3039,
             "y": 10142,
             "ev": "own",
             "id": "B19",
             "weight": 1
           },
           {
-            "t": 3706,
+            "t": 3142,
             "y": 10603,
             "ev": "skip",
             "id": "B18",
@@ -1815,20 +1805,20 @@
             "why": "host left the viewport"
           },
           {
-            "t": 3706,
+            "t": 3142,
             "y": 10603,
             "ev": "request",
             "id": "B20",
             "weight": 2
           },
           {
-            "t": 3800,
+            "t": 3220,
             "y": 11064,
             "ev": "free",
             "id": "B19"
           },
           {
-            "t": 3889,
+            "t": 3324,
             "y": 11525,
             "ev": "skip",
             "id": "B20",
@@ -1836,34 +1826,34 @@
             "why": "host left the viewport"
           },
           {
-            "t": 3985,
+            "t": 3404,
             "y": 11986,
             "ev": "own",
             "id": "B21",
             "weight": 1
           },
           {
-            "t": 3994,
+            "t": 3408,
             "y": 11986,
             "ev": "request",
             "id": "B21-circle",
             "weight": 1
           },
           {
-            "t": 4070,
+            "t": 3505,
             "y": 12447,
             "ev": "free",
             "id": "B21"
           },
           {
-            "t": 4080,
+            "t": 3511,
             "y": 12447,
             "ev": "request",
             "id": "B22",
             "weight": 2
           },
           {
-            "t": 4173,
+            "t": 3591,
             "y": 12908,
             "ev": "skip",
             "id": "B21-circle",
@@ -1871,7 +1861,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4261,
+            "t": 3692,
+            "y": 13369,
+            "ev": "request",
+            "id": "B23",
+            "weight": 1
+          },
+          {
+            "t": 3693,
             "y": 13369,
             "ev": "skip",
             "id": "B22",
@@ -1879,14 +1876,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4261,
-            "y": 13369,
-            "ev": "request",
-            "id": "B23",
-            "weight": 1
-          },
-          {
-            "t": 4357,
+            "t": 3775,
             "y": 13830,
             "ev": "skip",
             "id": "B23",
@@ -1894,14 +1884,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4441,
+            "t": 3873,
             "y": 14291,
             "ev": "request",
             "id": "B24",
             "weight": 1
           },
           {
-            "t": 4625,
+            "t": 4057,
             "y": 15213,
             "ev": "skip",
             "id": "B24",
@@ -1909,29 +1899,29 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4661,
-            "y": 15213,
-            "ev": "end",
-            "id": "B17",
-            "why": "held"
-          },
-          {
-            "t": 4723,
+            "t": 4142,
             "y": 15674,
             "ev": "request",
             "id": "B25",
             "weight": 1
           },
           {
-            "t": 4723,
+            "t": 4165,
+            "y": 15674,
+            "ev": "end",
+            "id": "B17",
+            "why": "held"
+          },
+          {
+            "t": 4165,
             "y": 15674,
             "ev": "grant",
             "id": "B25",
             "weight": 1,
-            "why": "waited 0 ms"
+            "why": "waited 23 ms"
           },
           {
-            "t": 4807,
+            "t": 4242,
             "y": 16135,
             "ev": "request",
             "id": "B26",
@@ -1939,7 +1929,7 @@
             "why": "needs idle"
           },
           {
-            "t": 4989,
+            "t": 4424,
             "y": 17057,
             "ev": "skip",
             "id": "B26",
@@ -1947,14 +1937,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 4990,
+            "t": 4424,
             "y": 17057,
             "ev": "request",
             "id": "B27",
             "weight": 2
           },
           {
-            "t": 5297,
+            "t": 4607,
             "y": 17979,
             "ev": "request",
             "id": "B28",
@@ -1962,14 +1952,14 @@
             "why": "needs idle"
           },
           {
-            "t": 5394,
+            "t": 4690,
             "y": 18440,
             "ev": "request",
             "id": "B29",
             "weight": 1
           },
           {
-            "t": 5394,
+            "t": 4691,
             "y": 18440,
             "ev": "skip",
             "id": "B27",
@@ -1977,7 +1967,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5492,
+            "t": 4790,
             "y": 18901,
             "ev": "skip",
             "id": "B28",
@@ -1985,7 +1975,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5493,
+            "t": 4790,
             "y": 18901,
             "ev": "skip",
             "id": "B29",
@@ -1993,63 +1983,49 @@
             "why": "host left the viewport"
           },
           {
-            "t": 5791,
+            "t": 4970,
             "y": 19823,
             "ev": "own",
             "id": "B30",
             "weight": 3
           },
           {
-            "t": 5963,
-            "y": 20284,
+            "t": 5153,
+            "y": 20745,
             "ev": "free",
             "id": "B30"
           },
           {
-            "t": 5982,
-            "y": 20284,
+            "t": 5157,
+            "y": 20745,
             "ev": "request",
             "id": "B31",
             "weight": 1
           },
           {
-            "t": 5984,
-            "y": 20284,
-            "ev": "end",
-            "id": "B25",
-            "why": "held"
-          },
-          {
-            "t": 5984,
-            "y": 20284,
-            "ev": "grant",
-            "id": "B31",
-            "weight": 1,
-            "why": "waited 3 ms"
-          },
-          {
-            "t": 6017,
+            "t": 5157,
             "y": 20745,
             "ev": "request",
             "id": "B31-finale",
             "weight": 1
           },
           {
-            "t": 6171,
+            "t": 5335,
             "y": 21206,
+            "ev": "skip",
+            "id": "B31",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5344,
+            "y": 21667,
             "ev": "request",
             "id": "B32",
             "weight": 1
           },
           {
-            "t": 6195,
-            "y": 21667,
-            "ev": "request",
-            "id": "B32-finale",
-            "weight": 2
-          },
-          {
-            "t": 6235,
+            "t": 5345,
             "y": 21667,
             "ev": "skip",
             "id": "B31-finale",
@@ -2057,7 +2033,29 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6396,
+            "t": 5345,
+            "y": 21667,
+            "ev": "request",
+            "id": "B32-finale",
+            "weight": 2
+          },
+          {
+            "t": 5365,
+            "y": 21667,
+            "ev": "end",
+            "id": "B25",
+            "why": "held"
+          },
+          {
+            "t": 5365,
+            "y": 21667,
+            "ev": "grant",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "waited 20 ms"
+          },
+          {
+            "t": 5440,
             "y": 22128,
             "ev": "skip",
             "id": "B32",
@@ -2065,36 +2063,21 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6405,
-            "y": 22128,
-            "ev": "end",
-            "id": "B31",
-            "why": "held"
-          },
-          {
-            "t": 6405,
-            "y": 22128,
-            "ev": "grant",
-            "id": "B32-finale",
-            "weight": 2,
-            "why": "waited 210 ms"
-          },
-          {
-            "t": 6619,
-            "y": 22589,
-            "ev": "request",
-            "id": "B33",
-            "weight": 1
-          },
-          {
-            "t": 6619,
+            "t": 5523,
             "y": 22589,
             "ev": "request",
             "id": "B33-finale",
             "weight": 2
           },
           {
-            "t": 6721,
+            "t": 5523,
+            "y": 22589,
+            "ev": "request",
+            "id": "B33",
+            "weight": 1
+          },
+          {
+            "t": 5817,
             "y": 23050,
             "ev": "skip",
             "id": "B33",
@@ -2102,14 +2085,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6814,
-            "y": 23511,
-            "ev": "request",
-            "id": "B34",
-            "weight": 1
-          },
-          {
-            "t": 6815,
+            "t": 5827,
             "y": 23511,
             "ev": "skip",
             "id": "B33-finale",
@@ -2117,14 +2093,21 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6815,
+            "t": 5827,
+            "y": 23511,
+            "ev": "request",
+            "id": "B34",
+            "weight": 1
+          },
+          {
+            "t": 5828,
             "y": 23511,
             "ev": "request",
             "id": "B34-finale",
             "weight": 2
           },
           {
-            "t": 6905,
+            "t": 5922,
             "y": 23972,
             "ev": "skip",
             "id": "B34",
@@ -2132,14 +2115,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 6984,
+            "t": 6020,
             "y": 24433,
             "ev": "own",
             "id": "B35",
             "weight": 1
           },
           {
-            "t": 6991,
+            "t": 6023,
             "y": 24433,
             "ev": "skip",
             "id": "B34-finale",
@@ -2147,34 +2130,34 @@
             "why": "host left the viewport"
           },
           {
-            "t": 7082,
+            "t": 6103,
             "y": 24894,
             "ev": "own",
             "id": "B36",
             "weight": 3
           },
           {
-            "t": 7171,
+            "t": 6190,
             "y": 25355,
             "ev": "own",
             "id": "B38",
             "weight": 3
           },
           {
-            "t": 7268,
+            "t": 6287,
             "y": 25816,
             "ev": "free",
             "id": "B38"
           },
           {
-            "t": 7355,
+            "t": 6373,
             "y": 26277,
             "ev": "request",
             "id": "B40",
             "weight": 1
           },
           {
-            "t": 7460,
+            "t": 6474,
             "y": 26738,
             "ev": "skip",
             "id": "B40",
@@ -2182,47 +2165,47 @@
             "why": "host left the viewport"
           },
           {
-            "t": 7533,
+            "t": 6556,
             "y": 27199,
             "ev": "own",
             "id": "B41",
             "weight": 2
           },
           {
-            "t": 7606,
+            "t": 6565,
             "y": 27199,
             "ev": "end",
             "id": "B32-finale",
             "why": "held"
           },
           {
-            "t": 7634,
+            "t": 6654,
             "y": 27660,
             "ev": "free",
             "id": "B41"
           },
           {
-            "t": 7819,
+            "t": 6837,
             "y": 28582,
             "ev": "own",
             "id": "B42",
             "weight": 1
           },
           {
-            "t": 7902,
+            "t": 6920,
             "y": 29043,
             "ev": "free",
             "id": "B42"
           },
           {
-            "t": 7909,
+            "t": 6923,
             "y": 29043,
             "ev": "request",
             "id": "B43",
             "weight": 2
           },
           {
-            "t": 7909,
+            "t": 6923,
             "y": 29043,
             "ev": "grant",
             "id": "B43",
@@ -2230,21 +2213,21 @@
             "why": "waited 0 ms"
           },
           {
-            "t": 8010,
-            "y": 29502,
+            "t": 7026,
+            "y": 29503,
             "ev": "request",
             "id": "B43-wanted",
             "weight": 2
           },
           {
-            "t": 8192,
+            "t": 7207,
             "y": 30426,
             "ev": "request",
             "id": "B44",
             "weight": 2
           },
           {
-            "t": 8291,
+            "t": 7290,
             "y": 30887,
             "ev": "skip",
             "id": "B43-wanted",
@@ -2252,7 +2235,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 8291,
+            "t": 7290,
             "y": 30887,
             "ev": "skip",
             "id": "B44",
@@ -2260,7 +2243,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 8382,
+            "t": 7325,
             "y": 30887,
             "ev": "request",
             "id": "B45",
@@ -2268,21 +2251,21 @@
             "why": "needs idle"
           },
           {
-            "t": 8567,
+            "t": 7586,
             "y": 32270,
             "ev": "own",
             "id": "B46",
             "weight": 1
           },
           {
-            "t": 8668,
+            "t": 7686,
             "y": 32731,
             "ev": "own",
             "id": "B47",
             "weight": 2
           },
           {
-            "t": 8755,
+            "t": 7775,
             "y": 33192,
             "ev": "skip",
             "id": "B45",
@@ -2290,56 +2273,56 @@
             "why": "host left the viewport"
           },
           {
-            "t": 9040,
+            "t": 8059,
             "y": 34575,
             "ev": "own",
             "id": "B48",
             "weight": 3
           },
           {
-            "t": 9111,
+            "t": 8124,
             "y": 34575,
             "ev": "end",
             "id": "B43",
             "why": "held"
           },
           {
-            "t": 9247,
+            "t": 8239,
             "y": 35497,
             "ev": "own",
             "id": "B50",
             "weight": 3
           },
           {
-            "t": 9328,
+            "t": 8321,
             "y": 35958,
             "ev": "free",
             "id": "B50"
           },
           {
-            "t": 9368,
+            "t": 8332,
             "y": 35958,
             "ev": "request",
             "id": "B52",
             "weight": 1
           },
           {
-            "t": 9369,
+            "t": 8332,
             "y": 35958,
             "ev": "grant",
             "id": "B52",
             "weight": 1,
-            "why": "waited 1 ms"
+            "why": "waited 0 ms"
           },
           {
-            "t": 9437,
+            "t": 8427,
             "y": 36419,
             "ev": "request",
             "id": "B53",
             "weight": 1
           },
           {
-            "t": 9543,
+            "t": 8509,
             "y": 36880,
             "ev": "skip",
             "id": "B53",
@@ -2347,27 +2330,27 @@
             "why": "host left the viewport"
           },
           {
-            "t": 9817,
+            "t": 8788,
             "y": 38263,
             "ev": "own",
             "id": "B55",
             "weight": 1
           },
           {
-            "t": 9824,
+            "t": 8794,
             "y": 38263,
             "ev": "request",
             "id": "B56",
             "weight": 2
           },
           {
-            "t": 9918,
+            "t": 8874,
             "y": 38724,
             "ev": "free",
             "id": "B55"
           },
           {
-            "t": 10027,
+            "t": 8978,
             "y": 39185,
             "ev": "skip",
             "id": "B56",
@@ -2375,14 +2358,14 @@
             "why": "host left the viewport"
           },
           {
-            "t": 10124,
+            "t": 9058,
             "y": 39646,
             "ev": "request",
             "id": "B57",
             "weight": 2
           },
           {
-            "t": 10136,
+            "t": 9072,
             "y": 39646,
             "ev": "skip",
             "id": "B57",
@@ -2390,7 +2373,7 @@
             "why": "host left the viewport"
           },
           {
-            "t": 10569,
+            "t": 9532,
             "y": 40449,
             "ev": "end",
             "id": "B52",
@@ -2666,6 +2649,13 @@
           "weight": 1,
           "topVh": 2414.8,
           "hPx": 22
+        },
+        {
+          "id": "B29-lens",
+          "star": false,
+          "weight": null,
+          "topVh": 2436.6,
+          "hPx": 1555
         },
         {
           "id": "B30",
@@ -2947,6 +2937,13 @@
           "weight": 2,
           "topVh": 5077.3,
           "hPx": 56
+        },
+        {
+          "id": "B57-roll",
+          "star": false,
+          "weight": null,
+          "topVh": 5154.4,
+          "hPx": 1549
         },
         {
           "id": "B57",

@@ -28,8 +28,9 @@
 export default async function probe(page, ctx) {
   const SKIP = new Set(String(ctx.args["lenis-skip"] ?? "").split(",").filter(Boolean));
   const checks = {};
+  // null = not applicable here (a skip), never a failure
   const set = (name, pass, detail = {}) => {
-    checks[name] = { pass: Boolean(pass), ...detail };
+    checks[name] = { pass: pass === null ? null : Boolean(pass), ...detail };
   };
   const want = (name) => !SKIP.has(name.split(".")[0]) && !SKIP.has(name);
   const sleep = ctx.sleep;
@@ -155,10 +156,14 @@ export default async function probe(page, ctx) {
       const y1 = await page.evaluate(() => scrollY);
       set("lock.palette", y1 === y0, { y0, y1 });
       await page.keyboard.press("Escape");
+      // the palette (and its backdrop) must be gone before the next step clicks the header
+      await page.waitForSelector("#cmd-list", { state: "detached", timeout: 3000 }).catch(() => {});
       await sleep(400);
     }
 
     if (on && want("fastlane")) {
+      // no dialog left over from an earlier step (its backdrop would cover the pill)
+      await page.waitForSelector("#cmd-list", { state: "detached", timeout: 3000 }).catch(() => {});
       await page.evaluate(() => scrollTo(0, 0));
       await waitStill(page);
       await sleep(300);
@@ -176,14 +181,26 @@ export default async function probe(page, ctx) {
                 let pillCovered = false;
                 let focusedAt = null;
                 const t0 = performance.now();
+                const seeFocus = () => {
+                  if (focusedAt == null && document.activeElement?.closest?.("#work")) focusedAt = Math.round(performance.now() - t0);
+                };
+                // the jump moves focus a few microtasks after the click (the loaded jump chunk, the
+                // unlock wait): time it when it happens (focusin), not at the next headless frame
+                // (a SwiftShader frame here is 300-450 ms)
+                const onIn = (e) => {
+                  if (e.target instanceof Element && e.target.closest("#work")) seeFocus();
+                };
+                document.addEventListener("focusin", onIn, true);
                 pill.click();
+                queueMicrotask(seeFocus);
                 const f = () => {
                   const t = performance.now() - t0;
                   if (overlay && +getComputedStyle(overlay).opacity > 0.05) overlaySeen = true;
                   const top = document.elementFromPoint(x, y);
                   if (!top || !top.closest("[data-fast-lane]")) pillCovered = true;
-                  if (focusedAt == null && document.activeElement?.closest?.("#work")) focusedAt = Math.round(t);
+                  seeFocus();
                   if (t > 900) {
+                    document.removeEventListener("focusin", onIn, true);
                     const w = document.getElementById("work").getBoundingClientRect().top;
                     const off = parseFloat(getComputedStyle(document.getElementById("work")).scrollMarginTop) + parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
                     resolve({ overlaySeen, pillCovered, focusedAt, workTop: Math.round(w), expected: Math.round(off), hash: location.hash, fonts: document.documentElement.dataset.fonts ?? "" });

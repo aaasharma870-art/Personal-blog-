@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T11:31:08.007Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "decoder"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 509,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 21,
+            "worst": {
+              "ratio": 7.42,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 2610,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 142,
+            "worst": {
+              "ratio": 3.78,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2833,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 77,
+            "worst": {
+              "ratio": 7.69,
+              "text": "Built and documented by Aryan Sharma — treating ",
+              "y": 42928,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 22,
+            "worst": {
+              "ratio": 7.35,
+              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
+              "y": 2227,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 188,
+            "worst": {
+              "ratio": 4.2,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2462,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 59,
+            "worst": {
+              "ratio": 6.96,
+              "text": "Titles, names and quoted lines belong to their o",
+              "y": 39692,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 67452,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 85,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 553,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-1",
+          "stage",
+          "act-2",
+          "work",
+          "optuna-screener",
+          "kill-list",
+          "films",
+          "beyond",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L01",
+          "stage",
+          "L08",
+          "L18",
+          "L09",
+          "L16",
+          "L17",
+          "L14",
+          "L22",
+          "L21",
+          "L15",
+          "MV-09"
+        ],
+        "crossfadeSamples": 12,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 72754,
+      "console": []
+    }
+  }
+}

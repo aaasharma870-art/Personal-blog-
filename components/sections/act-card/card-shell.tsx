@@ -1,9 +1,10 @@
 "use client";
 
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useDesktopFine, useMediaQuery, useMotionPausedAtBoot, useOsReducedMotion, useReducedMotion } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 import { useVariant } from "@/lib/use-variant";
 import { cn } from "@/lib/utils";
 import type { Variant, VariantChoice } from "@/lib/variants";
@@ -18,7 +19,9 @@ import { ProgressLine } from "@/components/sections/act-card/progress-line";
 /* Phase 3 pin mode (DP-13): everything the pinned card does beyond Phase 2
    — the damped p, impacts, the GL layer, the title mask, the push-ins, the
    kraken, weather — is ONE lazy chunk, loaded on DESKTOP_FINE only. */
-const CardP3 = lazy(() => import("@/components/sections/act-card/card-p3").then((m) => ({ default: m.CardP3 })));
+// safeLazy: a failed chunk leaves the static card (its travel reserved by
+// CSS), never an application error (W3 review #6)
+const CardP3 = safeLazy(() => import("@/components/sections/act-card/card-p3").then((m) => ({ default: m.CardP3 })));
 
 /**
  * CardShell — the letterboxed loading-reel grammar every derived act card

@@ -1,0 +1,1598 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1024,
+      "height": 768
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T11:50:01.215Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "cinema",
+      "decoder",
+      "games",
+      "layout-gates",
+      "loaf",
+      "plates-live",
+      "sound"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 276,
+      "widths": {
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 22,
+            "worst": {
+              "ratio": 7.42,
+              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
+              "y": 2227,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 188,
+            "worst": {
+              "ratio": 4.26,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2462,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 66,
+            "worst": {
+              "ratio": 6.52,
+              "text": "Titles, names and quoted lines belong to their o",
+              "y": 39592,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 30584,
+      "console": []
+    },
+    "cinema": {
+      "pass": true,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "out": {
+            "B30": 1,
+            "B31-bars": 1,
+            "B31": 1,
+            "B32": 1,
+            "B33": 1,
+            "B34": 1,
+            "B31-finale": 1,
+            "B32-finale": 1,
+            "B33-finale": 1,
+            "B34-finale": 1,
+            "B35": 1,
+            "B57": 1
+          },
+          "titles": true,
+          "finales": true,
+          "b30": {
+            "star": true,
+            "w": "3",
+            "h": 307
+          },
+          "b35": {
+            "star": true,
+            "h": 320
+          },
+          "missing": []
+        },
+        "button": {
+          "pass": true,
+          "display": "flex",
+          "queue": "[data-dc=\"hero\"]",
+          "shots": 20,
+          "cards": 4,
+          "disabled": null,
+          "text": "▶ Director's cut(sound on)Motion is paused"
+        },
+        "letterbox": {
+          "pass": true,
+          "hold": {
+            "attr": true,
+            "scale": 1
+          },
+          "after": {
+            "attr": false,
+            "scale": 0
+          },
+          "flips": 2
+        },
+        "plates": {
+          "pass": true,
+          "screens": [
+            {
+              "id": "pirates",
+              "plate": "loop",
+              "media": "iconic-pearl-alt",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0317, 0, 0, 1.0317, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "idiots",
+              "plate": "loop",
+              "media": "F-3I",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0317, 0, 0, 1.0317, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "rdr2",
+              "plate": "loop",
+              "media": "iconic-deadeye",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0316, 0, 0, 1.0316, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "hp",
+              "plate": "still",
+              "media": "iconic-express",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 0,
+              "transformB": "matrix(1.0316, 0, 0, 1.0316, 0, 0)",
+              "pass": true
+            }
+          ],
+          "maxPlaying": 1
+        },
+        "carry": {
+          "pass": true,
+          "mid": {
+            "visibility": "visible",
+            "transform": "translate3d(251.3px, 30.7px, 0px) scale(0.734)",
+            "opacity": "1"
+          },
+          "end": {
+            "visibility": "hidden",
+            "transform": "translate3d(251.3px, 30.7px, 0px) scale(0.734)",
+            "opacity": "1"
+          }
+        },
+        "credits": {
+          "pass": true,
+          "details": true,
+          "open": false,
+          "summary": true,
+          "tribute": true,
+          "end": true,
+          "last": true,
+          "ai": true
+        },
+        "chapter": {
+          "pass": true,
+          "firstIsPlay": true,
+          "tiles": [
+            "top",
+            "act-1",
+            "act-2",
+            "films",
+            "act-3",
+            "act-4",
+            "credits"
+          ],
+          "imgs": 7,
+          "lazy": true,
+          "widths": [
+            384,
+            384,
+            384,
+            384,
+            384,
+            384,
+            384
+          ],
+          "ratio": [
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78
+          ],
+          "landAt": 0.47,
+          "land": {
+            "y": 6969,
+            "want": 6969,
+            "hash": "#act-2",
+            "menu": false,
+            "focus": true
+          }
+        },
+        "dc.run": {
+          "pass": true,
+          "focus": true,
+          "speed": 92,
+          "twoX": {
+            "pressed": "true",
+            "running": true
+          },
+          "stop": true
+        },
+        "dc.esc": {
+          "pass": true
+        },
+        "dc.pause": {
+          "pass": true
+        },
+        "dc.fastlane": {
+          "pass": true
+        },
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 38078,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 84,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 547,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-1",
+          "stage",
+          "act-2",
+          "work",
+          "optuna-screener",
+          "kill-list",
+          "films",
+          "beyond",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L01",
+          "stage",
+          "L08",
+          "L18",
+          "L09",
+          "L16",
+          "L17",
+          "L14",
+          "L22",
+          "L21",
+          "L15",
+          "MV-09"
+        ],
+        "crossfadeSamples": 13,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 70516,
+      "console": []
+    },
+    "games": {
+      "pass": false,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.keys": {
+          "pass": true,
+          "game": "drone",
+          "focus": "drone-field",
+          "x0": 531.3,
+          "x1": 531.3,
+          "x2": 509.5,
+          "blurred": {
+            "frames": 19,
+            "ms": 316
+          },
+          "focused": {
+            "frames": 13,
+            "ms": 218
+          }
+        },
+        "drone.course": {
+          "pass": true,
+          "said": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem. 7/7 gates · 4.6 s"
+          ],
+          "phase": "done",
+          "game": null,
+          "link": {
+            "href": "#kill-list",
+            "text": "Next: the kill-list ↓"
+          },
+          "store": {
+            "v": 1,
+            "drone": {
+              "best": 4620
+            }
+          },
+          "want": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem"
+          ]
+        },
+        "drone.edge": {
+          "pass": true,
+          "x0": 531.3,
+          "xs": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "frames": 120,
+          "ms": 2162
+        },
+        "drone.esc": {
+          "pass": true,
+          "ms": 620,
+          "focus": "drone-takeoff",
+          "game": null
+        },
+        "drone.off": {
+          "pass": true,
+          "phase": "idle"
+        },
+        "drone.pause": {
+          "pass": true,
+          "ms": 3,
+          "inClick": true,
+          "phase": "idle",
+          "game": null
+        },
+        "de.start": {
+          "pass": false,
+          "game": "deadeye",
+          "top": -0.09375,
+          "bottom": 612.78125,
+          "vh": 768,
+          "n": 5
+        },
+        "de.time": {
+          "pass": true,
+          "css": "0.25",
+          "slowed": 124
+        },
+        "de.grade": {
+          "pass": true,
+          "hidden": false,
+          "z": "-1",
+          "bg": "rgb(13, 21, 19)",
+          "transition": "all",
+          "bg0": "rgb(13, 21, 19)"
+        },
+        "de.targets": {
+          "pass": true,
+          "marks": 5,
+          "note": "0/5 marked · 4.0 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
+          "n": 5
+        },
+        "de.fire": {
+          "pass": true,
+          "struck": 5,
+          "hud": "5/5 marked · 3.6 s of Dead Eye left",
+          "phase": "read"
+        },
+        "de.read": {
+          "pass": true,
+          "rows": [
+            {
+              "reason": "Untradeable net of costs.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "t-stat was an overlap artifact.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Real in-sample; decayed out-of-sample.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Beta-confounded; not a standalone edge.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Filled at roughly chance.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            }
+          ]
+        },
+        "de.store": {
+          "pass": true,
+          "games": {
+            "v": 1,
+            "drone": {
+              "best": 4620
+            },
+            "deadeye": {
+              "n": 5,
+              "left": 3550
+            }
+          },
+          "hunt": {
+            "v": 1,
+            "found": {},
+            "rows": [
+              "f-trading-algos",
+              "f-optuna-screener",
+              "s-Volatility Breakout",
+              "k-Intraday momentum-continuation",
+              "k-VIX-basis deviation alpha",
+              "k-VIX3M directional",
+              "k-Dealer-gamma (GEX) router"
+            ],
+            "deadEye": 1791027957288
+          }
+        },
+        "de.release": {
+          "pass": true,
+          "game": null,
+          "de": 0,
+          "on": false,
+          "layers": [
+            {
+              "hidden": true,
+              "kids": 0
+            },
+            {
+              "hidden": true,
+              "kids": 0
+            }
+          ],
+          "time": "",
+          "beforeY": 18194,
+          "releasedY": 19271,
+          "lens": {
+            "before": {
+              "lens": "closed",
+              "figure": "ta:all"
+            },
+            "after": {
+              "lens": "closed",
+              "figure": "ta:all"
+            }
+          }
+        },
+        "de.roving": {
+          "pass": true,
+          "seen": [
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed"
+          ]
+        },
+        "rows.read": {
+          "pass": true,
+          "rendered": 10,
+          "read": 10,
+          "scrollY": 19929,
+          "end": 19924,
+          "notch": 59,
+          "notches": 32,
+          "minRowH": 119
+        },
+        "inp": {
+          "pass": true,
+          "maxEventMs": 64,
+          "worst": {
+            "name": "pointerdown",
+            "ms": 64,
+            "at": 2727,
+            "delay": 10,
+            "run": 2
+          }
+        },
+        "phone": {
+          "pass": true,
+          "pills": [
+            "none",
+            "none"
+          ],
+          "game": false
+        }
+      },
+      "ms": 60415,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": true,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [],
+        "heights": [
+          39779,
+          39779
+        ],
+        "streamed": true,
+        "streamedAtDcl": {
+          "pending": 14,
+          "hiddenSections": 14
+        },
+        "sections": [
+          20,
+          20
+        ],
+        "ok": true
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          12198,
+          12198
+        ],
+        "shift": 0,
+        "diff": [],
+        "settle": {
+          "drift": [
+            {
+              "box": "about",
+              "to": [
+                3283,
+                1090
+              ],
+              "from": [
+                3283,
+                1183
+              ]
+            },
+            {
+              "box": "journey",
+              "to": [
+                4373,
+                2938
+              ],
+              "from": [
+                4466,
+                2938
+              ]
+            },
+            {
+              "box": "act-2",
+              "to": [
+                7311,
+                1890
+              ],
+              "from": [
+                7404,
+                1890
+              ]
+            }
+          ],
+          "fonts": "loaded",
+          "ms": 1211
+        },
+        "ok": true
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "carry",
+            "22"
+          ],
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 19457,
+      "console": []
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 21,
+      "over": 21,
+      "worstDur": 138,
+      "worstWork": 12,
+      "loafs": [
+        {
+          "dur": 138,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1415
+        },
+        {
+          "dur": 134,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 199
+        },
+        {
+          "dur": 121,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 698
+        },
+        {
+          "dur": 117,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1555
+        },
+        {
+          "dur": 113,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1182
+        },
+        {
+          "dur": 110,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1301
+        },
+        {
+          "dur": 104,
+          "block": 0,
+          "work": 5,
+          "top": null,
+          "t": 1893
+        },
+        {
+          "dur": 97,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 903
+        },
+        {
+          "dur": 76,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 820
+        },
+        {
+          "dur": 72,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1812
+        },
+        {
+          "dur": 72,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2268
+        },
+        {
+          "dur": 70,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1999
+        }
+      ],
+      "ladderMs": {
+        "1": 360,
+        "2": 1653,
+        "3": 3206
+      },
+      "lenis": true,
+      "ms": 14726,
+      "console": []
+    },
+    "plates-live": {
+      "pass": true,
+      "live": {
+        "samples": 313,
+        "maxPlaying": 1,
+        "plates": 34,
+        "byHow": {
+          "loop": 17,
+          "camera": 13,
+          "canvas": 4
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 10,
+          "stage": 7,
+          "section:journey": 3,
+          "section:work": 2,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:kill-list": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [],
+        "deadOther": [],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 2939,
+            "how": "loop",
+            "states": [
+              "playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 4097,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L01",
+            "host": "card",
+            "ms": 1792,
+            "how": "loop",
+            "states": [
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "stage-0",
+            "host": "stage",
+            "ms": 5906,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-1",
+            "host": "stage",
+            "ms": 4122,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 2606,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05b",
+            "host": "section:journey",
+            "ms": 1030,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05c",
+            "host": "section:journey",
+            "ms": 1026,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 4350,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 3068,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 4354,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L08",
+            "host": "card",
+            "ms": 2297,
+            "how": "loop",
+            "states": [
+              "playing",
+              "paused",
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1532,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "MV-06",
+            "host": "section:work",
+            "ms": 1284,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-2",
+            "host": "stage",
+            "ms": 3840,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1273,
+            "how": "loop",
+            "states": [
+              "poster+poster",
+              "poster+starting",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-3",
+            "host": "stage",
+            "ms": 5127,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-4",
+            "host": "stage",
+            "ms": 3071,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1024,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen",
+            "host": "section:kill-list",
+            "ms": 1285,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1275,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 1648,
+            "how": "loop",
+            "states": [
+              "poster+starting",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 1527,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1018,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 1038,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 2817,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 1782,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-5",
+            "host": "stage",
+            "ms": 3324,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1274,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 2574,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "card",
+            "ms": 1029,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 2500,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 2041,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-6",
+            "host": "stage",
+            "ms": 5610,
+            "how": "loop",
+            "states": []
+          }
+        ],
+        "seq": {
+          "peakMB": 87.9,
+          "sampled": true
+        },
+        "requests": {
+          "count": 14,
+          "webm": 14,
+          "mp4": 0,
+          "urls": [
+            "/media/films/hero-sea-loop.webm",
+            "/media/films/iconic-pearl-loop.webm",
+            "/media/films/voyage-a-loop.webm",
+            "/media/films/iconic-ice-loop.webm",
+            "/media/films/iconic-pen-alt-loop.webm",
+            "/media/films/board-dawn-loop.webm",
+            "/media/films/iconic-corridor-loop.webm",
+            "/media/films/iconic-ice-alt-loop.webm",
+            "/media/films/iconic-pen-loop.webm",
+            "/media/films/iconic-pearl-alt-loop.webm",
+            "/media/films/films-idiots-loop.webm",
+            "/media/films/iconic-deadeye-loop.webm",
+            "/media/films/iconic-wanted-loop.webm",
+            "/media/films/last-light-loop.webm"
+          ]
+        },
+        "codecPicks": {
+          "/media/films/hero-sea-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-loop.mp4": "video/webm",
+          "/media/films/voyage-a-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-alt-loop.mp4": "video/webm",
+          "/media/films/board-dawn-loop.mp4": "video/webm",
+          "/media/films/iconic-corridor-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-alt-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-alt-loop.mp4": "video/webm",
+          "/media/films/films-idiots-loop.mp4": "video/webm",
+          "/media/films/iconic-deadeye-loop.mp4": "video/webm",
+          "/media/films/iconic-wanted-loop.mp4": "video/webm",
+          "/media/films/last-light-loop.mp4": "video/webm"
+        }
+      },
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 1,
+          "weather": 6,
+          "stageRoot": true,
+          "moved": 15
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "translate3d(0%, 0%, 0px) scale(1.35)",
+        "depthFarAt0": "translate3d(-0.9%, 0%, 0px) scale(1.018)",
+        "weather": [
+          {
+            "kind": "spray",
+            "dots": 14,
+            "running": 14
+          },
+          {
+            "kind": "chalk",
+            "dots": 12,
+            "running": 12
+          },
+          {
+            "kind": "fireflies",
+            "dots": 9,
+            "running": 9
+          },
+          {
+            "kind": "motes",
+            "dots": 12,
+            "running": 12
+          }
+        ],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": "loop",
+            "states": [
+              "iconic-ice:poster",
+              "L08:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": "loop",
+            "states": [
+              "MV-05a:poster",
+              "L06:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": "loop",
+            "states": [
+              "iconic-corridor:poster",
+              "L10:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": "depth",
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": "depth",
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": "still",
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": "still",
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": "loop",
+            "states": [
+              "iconic-deadeye:poster",
+              "L21:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 123414,
+      "console": []
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [
+            "webm"
+          ],
+          "bytes": 46946,
+          "files": {
+            "tts-lumos": "ok",
+            "tts-nox": "ok",
+            "tts-solemn": "ok",
+            "tts-mischief": "ok",
+            "tts-parley": "ok"
+          }
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 53
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 351
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 387
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 393
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 405
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 452
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980216521295142,
+            "rdr2": 0.2787196549198825,
+            "hp": 0.19078429448121487,
+            "house": 0.23462027162090177
+          }
+        },
+        "pause": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 4
+          },
+          "on": {
+            "ok": true,
+            "ms": 260
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 48
+          },
+          "on": {
+            "ok": true,
+            "ms": 11
+          }
+        },
+        "eggs.typed": {
+          "pass": true,
+          "got": [
+            "match-strike",
+            "shimmer-rise",
+            "impact-lumos",
+            "letterbox-whum",
+            "projector-start",
+            "parley-creak",
+            "flag-snap",
+            "tts-parley"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": true,
+          "pause": {
+            "ok": true,
+            "ms": 2
+          },
+          "resumed": true,
+          "bell": true,
+          "ms": 7,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": true,
+          "rmAt": 13196.299999998882,
+          "ms": 29,
+          "state": "suspended",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_s_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 48763,
+      "console": []
+    }
+  }
+}

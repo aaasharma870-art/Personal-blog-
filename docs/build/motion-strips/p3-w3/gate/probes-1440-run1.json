@@ -1,0 +1,5571 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T10:08:34.395Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "nav",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "toys",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 238,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 21,
+            "worst": {
+              "ratio": 7.34,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 2610,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 140,
+            "worst": {
+              "ratio": 3.78,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2833,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 77,
+            "worst": {
+              "ratio": 7.69,
+              "text": "Built and documented by Aryan Sharma — treating ",
+              "y": 42928,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 39472,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 443171,
+            "cssGz": 35537,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": true,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            443171
+          ],
+          "cssGz": [
+            29433,
+            35537
+          ],
+          "deltaJsGz": 4079,
+          "deltaCssGz": 6104,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17425,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "pins": {
+          "pass": true,
+          "rows": [
+            {
+              "kind": "opening",
+              "id": "act-1",
+              "top": 900,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": "act-1-program",
+              "nextBackdrop": true,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "seam",
+              "id": "act-2",
+              "top": 7404,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            },
+            {
+              "kind": "tintype",
+              "id": "act-3",
+              "top": 27127,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "ignite",
+              "id": "act-4",
+              "top": 36892,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            }
+          ],
+          "program": {
+            "nextId": "act-1-program",
+            "backdrop": true
+          }
+        },
+        "stars": {
+          "pass": true,
+          "stars": [
+            {
+              "card": "opening",
+              "id": "B03",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "opening",
+              "id": "B04",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "seam",
+              "id": "B13",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "seam",
+              "id": "B14",
+              "star": true,
+              "h": 495
+            },
+            {
+              "card": "tintype",
+              "id": "B36",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "tintype",
+              "id": "B38",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "ignite",
+              "id": "B48",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "ignite",
+              "id": "B50",
+              "star": true,
+              "h": 495
+            }
+          ]
+        },
+        "impacts": {
+          "pass": true,
+          "impacts": [
+            "pirates",
+            "idiots",
+            "rdr2",
+            "hp"
+          ],
+          "meets": [
+            "opening",
+            "seam",
+            "tintype",
+            "ignite"
+          ]
+        },
+        "damping": {
+          "pass": true,
+          "card": "seam",
+          "early": {
+            "raw": 0.4495,
+            "t": 0.075,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          },
+          "late": {
+            "raw": 0.4495,
+            "t": 0.4495,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          }
+        },
+        "scrub": {
+          "pass": true,
+          "rows": [
+            {
+              "card": "opening",
+              "p": 0.05,
+              "raw": 0.0506,
+              "t": 0.0506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.45,
+              "raw": 0.4506,
+              "t": 0.4506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.75,
+              "raw": 0.7506,
+              "t": 0.7506,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.05,
+              "raw": 0.0494,
+              "t": 0.0494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.45,
+              "raw": 0.4494,
+              "t": 0.4494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.75,
+              "raw": 0.7494,
+              "t": 0.7494,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            }
+          ]
+        },
+        "landAt": {
+          "pass": true,
+          "expected": 0.47,
+          "rows": [
+            {
+              "card": "opening",
+              "id": "act-1",
+              "p": 0.47,
+              "travel": 810,
+              "landedMs": 771,
+              "ok": true
+            },
+            {
+              "card": "seam",
+              "id": "act-2",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 132,
+              "ok": true
+            },
+            {
+              "card": "tintype",
+              "id": "act-3",
+              "p": 0.469,
+              "travel": 810,
+              "landedMs": 1118,
+              "ok": true
+            },
+            {
+              "card": "ignite",
+              "id": "act-4",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 1044,
+              "ok": true
+            }
+          ]
+        },
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 86972,
+      "console": []
+    },
+    "cinema": {
+      "pass": true,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "out": {
+            "B30": 1,
+            "B31-bars": 1,
+            "B31": 1,
+            "B32": 1,
+            "B33": 1,
+            "B34": 1,
+            "B31-finale": 1,
+            "B32-finale": 1,
+            "B33-finale": 1,
+            "B34-finale": 1,
+            "B35": 1,
+            "B57": 1
+          },
+          "titles": true,
+          "finales": true,
+          "b30": {
+            "star": true,
+            "w": "3",
+            "h": 360
+          },
+          "b35": {
+            "star": true,
+            "h": 360
+          },
+          "missing": []
+        },
+        "button": {
+          "pass": true,
+          "display": "flex",
+          "queue": "[data-dc=\"hero\"]",
+          "shots": 20,
+          "cards": 4,
+          "disabled": null,
+          "text": "▶ Director's cut(sound on)Motion is paused"
+        },
+        "letterbox": {
+          "pass": true,
+          "hold": {
+            "attr": true,
+            "scale": 1
+          },
+          "after": {
+            "attr": false,
+            "scale": 0
+          },
+          "flips": 2
+        },
+        "plates": {
+          "pass": true,
+          "screens": [
+            {
+              "id": "pirates",
+              "plate": "loop",
+              "media": "iconic-pearl-alt",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "idiots",
+              "plate": "loop",
+              "media": "F-3I",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "rdr2",
+              "plate": "loop",
+              "media": "iconic-deadeye",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "hp",
+              "plate": "still",
+              "media": "iconic-express",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 0,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            }
+          ],
+          "maxPlaying": 1
+        },
+        "carry": {
+          "pass": true,
+          "mid": {
+            "visibility": "visible",
+            "transform": "translate3d(356.1px, 21.6px, 0px) scale(1.008)",
+            "opacity": "1"
+          },
+          "end": {
+            "visibility": "hidden",
+            "transform": "translate3d(356.1px, 21.6px, 0px) scale(1.008)",
+            "opacity": "1"
+          }
+        },
+        "credits": {
+          "pass": true,
+          "details": true,
+          "open": false,
+          "summary": true,
+          "tribute": true,
+          "end": true,
+          "last": true,
+          "ai": true
+        },
+        "chapter": {
+          "pass": true,
+          "firstIsPlay": true,
+          "tiles": [
+            "top",
+            "act-1",
+            "act-2",
+            "films",
+            "act-3",
+            "act-4",
+            "credits"
+          ],
+          "imgs": 7,
+          "lazy": true,
+          "widths": [
+            384,
+            384,
+            384,
+            384,
+            384,
+            384,
+            384
+          ],
+          "ratio": [
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78
+          ],
+          "landAt": 0.47,
+          "land": {
+            "y": 7776,
+            "want": 7776,
+            "hash": "#act-2",
+            "menu": false,
+            "focus": true
+          }
+        },
+        "dc.run": {
+          "pass": true,
+          "focus": true,
+          "speed": 91,
+          "twoX": {
+            "pressed": "true",
+            "running": true
+          },
+          "stop": true
+        },
+        "dc.esc": {
+          "pass": true
+        },
+        "dc.pause": {
+          "pass": true
+        },
+        "dc.fastlane": {
+          "pass": true
+        },
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 40507,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 84,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 750,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-1",
+          "stage",
+          "act-2",
+          "work",
+          "optuna-screener",
+          "kill-list",
+          "films",
+          "beyond",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L01",
+          "stage",
+          "L08",
+          "L18",
+          "L09",
+          "L16",
+          "L17",
+          "L14",
+          "L22",
+          "L21",
+          "L15",
+          "MV-09"
+        ],
+        "crossfadeSamples": 9,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 92809,
+      "console": []
+    },
+    "font-network": {
+      "pass": true,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": true,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "165.888px",
+          "fontSize": "172.8px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": 1994,
+        "beforeStep5": [
+          "17 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "17 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "17 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "78 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "415 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "beforeStep5Bad": [],
+        "legacyRequested": [],
+        "worldsAtRest": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "worldOrder": [
+          "2013 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "4861 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "4861 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "8294 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "8294 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "8659 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2",
+          "8659 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "10886 ms assets/fonts/film/nothing-you-could-do/nothing-you-could-do-strings.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 183964,
+        "lcp": {
+          "t": 168,
+          "el": "SPAN",
+          "size": 107550
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "lcp": {
+          "t": 352,
+          "el": "IMG",
+          "size": 89604
+        },
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [],
+      "ms": 29217,
+      "console": []
+    },
+    "games": {
+      "pass": false,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.keys": {
+          "pass": true,
+          "game": "drone",
+          "focus": "drone-field",
+          "x0": 751.1,
+          "x1": 751.1,
+          "x2": 728.2,
+          "blurred": {
+            "frames": 20,
+            "ms": 438
+          },
+          "focused": {
+            "frames": 11,
+            "ms": 176
+          }
+        },
+        "drone.course": {
+          "pass": true,
+          "said": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem. 7/7 gates · 4.6 s"
+          ],
+          "phase": "done",
+          "game": null,
+          "link": {
+            "href": "#kill-list",
+            "text": "Next: the kill-list ↓"
+          },
+          "store": {
+            "v": 1,
+            "drone": {
+              "best": 4601
+            }
+          },
+          "want": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem"
+          ]
+        },
+        "drone.edge": {
+          "pass": true,
+          "x0": 751.1,
+          "xs": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "frames": 120,
+          "ms": 2156
+        },
+        "drone.esc": {
+          "pass": true,
+          "ms": 609,
+          "focus": "drone-takeoff",
+          "game": null
+        },
+        "drone.off": {
+          "pass": true,
+          "phase": "idle"
+        },
+        "drone.pause": {
+          "pass": true,
+          "ms": 218,
+          "phase": "idle",
+          "game": null
+        },
+        "de.start": {
+          "pass": true,
+          "game": "deadeye",
+          "top": 107.09375,
+          "bottom": 699.59375,
+          "vh": 900,
+          "n": 5
+        },
+        "de.time": {
+          "pass": true,
+          "css": "0.25",
+          "slowed": 124
+        },
+        "de.grade": {
+          "pass": true,
+          "hidden": false,
+          "z": "-1",
+          "bg": "rgb(13, 21, 19)",
+          "transition": "all",
+          "bg0": "rgb(13, 21, 19)"
+        },
+        "de.targets": {
+          "pass": true,
+          "marks": 5,
+          "note": "0/5 marked · 3.8 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
+          "n": 5
+        },
+        "de.fire": {
+          "pass": true,
+          "struck": 5,
+          "hud": "5/5 marked · 3.5 s of Dead Eye left",
+          "phase": "read"
+        },
+        "de.read": {
+          "pass": true,
+          "rows": [
+            {
+              "reason": "Untradeable net of costs.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "t-stat was an overlap artifact.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Real in-sample; decayed out-of-sample.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Beta-confounded; not a standalone edge.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Filled at roughly chance.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            }
+          ]
+        },
+        "de.store": {
+          "pass": true,
+          "games": {
+            "v": 1,
+            "drone": {
+              "best": 4601
+            },
+            "deadeye": {
+              "n": 5,
+              "left": 3541
+            }
+          },
+          "hunt": {
+            "v": 1,
+            "found": {},
+            "rows": [
+              "f-trading-algos",
+              "f-optuna-screener",
+              "s-Regime-Gated Intraday Momentum",
+              "k-Dealer-gamma (GEX) router",
+              "k-Intraday momentum-continuation",
+              "k-VIX-basis deviation alpha"
+            ],
+            "deadEye": 1791021312592
+          }
+        },
+        "de.release": {
+          "pass": true,
+          "game": null,
+          "de": 0,
+          "on": false,
+          "layers": [
+            {
+              "hidden": true,
+              "kids": 0
+            },
+            {
+              "hidden": true,
+              "kids": 0
+            }
+          ],
+          "time": "",
+          "beforeY": 19414,
+          "releasedY": 20427,
+          "lens": {
+            "before": {
+              "lens": "closed",
+              "figure": "ta:all"
+            },
+            "after": {
+              "lens": "open",
+              "figure": "ta:survivors"
+            }
+          }
+        },
+        "de.roving": {
+          "pass": true,
+          "seen": [
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed"
+          ]
+        },
+        "rows.read": {
+          "pass": true,
+          "rendered": 10,
+          "read": 10,
+          "scrollY": 21189,
+          "end": 21132,
+          "notch": 59,
+          "notches": 31,
+          "minRowH": 119
+        },
+        "inp": {
+          "pass": false,
+          "maxEventMs": 544,
+          "worst": {
+            "name": "pointerdown",
+            "ms": 544,
+            "at": 2774,
+            "delay": 16,
+            "run": 2
+          }
+        },
+        "phone": {
+          "pass": true,
+          "pills": [
+            "none",
+            "none"
+          ],
+          "game": false
+        }
+      },
+      "ms": 60893,
+      "console": []
+    },
+    "gl": {
+      "pass": true,
+      "checks": {
+        "lab": {
+          "pass": true,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 1838,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 359,
+              "draws": 9,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 1081,
+              "draws": 9,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 720,
+              "draws": 9,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 915,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 370,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 1035,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 1768,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 7971136,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 1125,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 1175,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 9776,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 9810,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 14859,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 19576,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 24594,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 29002,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 29025,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 33805,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 46.5,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 35422,
+              "ev": "settle",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 39131,
+              "ev": "disengage:now",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 39187,
+              "ev": "lost"
+            },
+            {
+              "t": 39198,
+              "ev": "restored"
+            },
+            {
+              "t": 40179,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 40379,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.3000000002793968,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": true,
+          "per": {
+            "act-1": {
+              "engaged": true,
+              "shots": [
+                "page-act-1-p0.1.png",
+                "page-act-1-p0.3.png",
+                "page-act-1-p0.45.png",
+                "page-act-1-p0.8.png"
+              ]
+            },
+            "act-2": {
+              "engaged": true,
+              "shots": [
+                "page-act-2-p0.1.png",
+                "page-act-2-p0.3.png",
+                "page-act-2-p0.45.png",
+                "page-act-2-p0.8.png"
+              ]
+            },
+            "act-3": {
+              "engaged": true,
+              "shots": [
+                "page-act-3-p0.1.png",
+                "page-act-3-p0.3.png",
+                "page-act-3-p0.45.png",
+                "page-act-3-p0.8.png"
+              ]
+            },
+            "act-4": {
+              "engaged": true,
+              "shots": [
+                "page-act-4-p0.1.png",
+                "page-act-4-p0.3.png",
+                "page-act-4-p0.45.png",
+                "page-act-4-p0.8.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "midSwitches": [],
+          "aborts": [],
+          "bytes": 17064801
+        },
+        "page.default": {
+          "pass": true,
+          "tier": "gl",
+          "on": 0,
+          "note": "context not probed yet (no card approached)"
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": "css",
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 122533,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "hydrate": {
+          "pass": true,
+          "text": "0/12"
+        },
+        "width": {
+          "pass": true,
+          "w0": 42.59375,
+          "w12": 42.609375
+        },
+        "typed": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ],
+          "toast": "Egg 1 of 12 · The right of parley",
+          "tick": true
+        },
+        "game": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "before": 1,
+          "n": 1,
+          "mid": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          },
+          "after": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          }
+        },
+        "lumos": {
+          "pass": true,
+          "bloom": true,
+          "running": true,
+          "found": [
+            "pc-parley",
+            "hp-lumos"
+          ]
+        },
+        "browse": {
+          "pass": true,
+          "empty": [
+            "cmd-egg-obliviate",
+            "cmd-egg-intro",
+            "cmd-egg-eggs-off",
+            "cmd-play-drone",
+            "cmd-play-deadeye",
+            "cmd-play-hints",
+            "cmd-play-reset",
+            "cmd-play-dc"
+          ],
+          "solemn": [
+            "cmd-egg-map"
+          ],
+          "lumos": [
+            "cmd-egg-lumos"
+          ],
+          "map": []
+        },
+        "sync": {
+          "pass": true,
+          "chip": "3/12",
+          "n": 3
+        },
+        "obliviate": {
+          "pass": true,
+          "before": 3
+        },
+        "eggsoff": {
+          "pass": true,
+          "gone": true
+        },
+        "panel": {
+          "pass": true,
+          "slots": 12,
+          "expanded": "true",
+          "closed": true,
+          "focus": true
+        },
+        "hotspot": {
+          "pass": true,
+          "bound": true,
+          "short": false,
+          "long": true
+        },
+        "reset": {
+          "pass": true
+        },
+        "complete": {
+          "pass": true,
+          "done": true,
+          "gold": true,
+          "rows": 12,
+          "seeker": false
+        },
+        "tail": {
+          "pass": true,
+          "h": 0.6,
+          "played": true,
+          "extended": true,
+          "again": false
+        },
+        "phone": {
+          "pass": true,
+          "chip": "none",
+          "tail": 0
+        }
+      },
+      "ms": 39750,
+      "console": []
+    },
+    "keyboard": {
+      "skipped": true,
+      "ms": 5,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": true,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [],
+        "heights": [
+          39779,
+          39779
+        ],
+        "streamed": true,
+        "streamedAtDcl": {
+          "pending": 13,
+          "hiddenSections": 13
+        },
+        "sections": [
+          20,
+          20
+        ],
+        "ok": true
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          12198,
+          12198
+        ],
+        "shift": 0,
+        "diff": [],
+        "settle": {
+          "drift": [
+            {
+              "box": "about",
+              "to": [
+                3283,
+                1090
+              ],
+              "from": [
+                3283,
+                1183
+              ]
+            },
+            {
+              "box": "journey",
+              "to": [
+                4373,
+                2938
+              ],
+              "from": [
+                4466,
+                2938
+              ]
+            },
+            {
+              "box": "act-2",
+              "to": [
+                7311,
+                1890
+              ],
+              "from": [
+                7404,
+                1890
+              ]
+            }
+          ],
+          "fonts": "loaded",
+          "ms": 1211
+        },
+        "ok": true
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "carry",
+            "22"
+          ],
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 19815,
+      "console": []
+    },
+    "lenis": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 44609,
+          "vh": 900,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 1
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 3191,
+          "y1": 3191
+        },
+        "fastlane": {
+          "pass": true,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 391,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 3,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 19321
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 56813,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 25,
+      "over": 25,
+      "worstDur": 307,
+      "worstWork": 36,
+      "loafs": [
+        {
+          "dur": 307,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 115
+        },
+        {
+          "dur": 145,
+          "block": 0,
+          "work": 5,
+          "top": {
+            "d": 5,
+            "inv": "FrameRequestCallback",
+            "src": "http://localhost:3161/_next/static/chunks/31ldopvygyepf.js",
+            "fn": "v"
+          },
+          "t": 551
+        },
+        {
+          "dur": 138,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 963
+        },
+        {
+          "dur": 138,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2219
+        },
+        {
+          "dur": 128,
+          "block": 0,
+          "work": 21,
+          "top": {
+            "d": 21,
+            "inv": "MessagePort.onmessage",
+            "src": "http://localhost:3161/_next/static/chunks/3jh1u-s3k0bkk.js",
+            "fn": "_"
+          },
+          "t": 2571
+        },
+        {
+          "dur": 122,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 427
+        },
+        {
+          "dur": 119,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2093
+        },
+        {
+          "dur": 115,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1574
+        },
+        {
+          "dur": 114,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 847
+        },
+        {
+          "dur": 111,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1152
+        },
+        {
+          "dur": 109,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2362
+        },
+        {
+          "dur": 108,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1778
+        }
+      ],
+      "ladderMs": {
+        "1": 551,
+        "2": 2571
+      },
+      "lenis": true,
+      "ms": 14714,
+      "console": []
+    },
+    "nav": {
+      "pass": true,
+      "lenis": true,
+      "landAt": {
+        "act-1": 0.47,
+        "act-2": 0.47,
+        "act-3": 0.47,
+        "act-4": 0.47
+      },
+      "families": {
+        "chapter": {
+          "pass": true,
+          "found": 7,
+          "failed": [],
+          "links": [
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 2618,
+              "y0": 0,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 3,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-1",
+              "how": "click",
+              "pass": true,
+              "ms": 1054,
+              "y0": 0,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 4,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1919,
+              "y0": 1281,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 5,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1087,
+              "y0": 7776,
+              "y": 21387,
+              "hash": "#films",
+              "histLen": 6,
+              "focus": "#films-title",
+              "top": 244,
+              "height": 5421,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 245,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 960,
+              "y0": 21387,
+              "y": 27463,
+              "hash": "#act-3",
+              "histLen": 7,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27463,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1199,
+              "y0": 27463,
+              "y": 37642,
+              "hash": "#act-4",
+              "histLen": 8,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37642,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#credits",
+              "how": "click",
+              "pass": true,
+              "ms": 872,
+              "y0": 37642,
+              "y": 42619,
+              "hash": "#credits",
+              "histLen": 9,
+              "focus": "#credits-title",
+              "top": 92,
+              "height": 1859,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            }
+          ]
+        },
+        "waypoints": {
+          "pass": true,
+          "found": 4,
+          "failed": [],
+          "links": [
+            {
+              "href": "#journey-step-1",
+              "how": "key",
+              "pass": true,
+              "ms": 1660,
+              "y0": 4373,
+              "y": 4792,
+              "hash": "#journey-step-1",
+              "histLen": 9,
+              "focus": "#journey-step-1-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1626,
+              "y0": 4792,
+              "y": 5350,
+              "hash": "#journey-step-2",
+              "histLen": 9,
+              "focus": "#journey-step-2-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-3",
+              "how": "click",
+              "pass": true,
+              "ms": 1687,
+              "y0": 5350,
+              "y": 5908,
+              "hash": "#journey-step-3",
+              "histLen": 9,
+              "focus": "#journey-step-3-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1671,
+              "y0": 5908,
+              "y": 6466,
+              "hash": "#journey-step-4",
+              "histLen": 9,
+              "focus": "#journey-step-4-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            }
+          ]
+        },
+        "map": {
+          "pass": true,
+          "found": 13,
+          "failed": [],
+          "links": [
+            {
+              "href": "#about",
+              "how": "key",
+              "pass": true,
+              "ms": 2136,
+              "y0": 0,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 9,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 2127,
+              "y0": 3191,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 9,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 2343,
+              "y0": 4281,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 9,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2333,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 2073,
+              "y0": 9109,
+              "y": 11346,
+              "hash": "#trading-algos",
+              "histLen": 9,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 1873,
+              "y0": 11346,
+              "y": 13224,
+              "hash": "#optuna-screener",
+              "histLen": 9,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2907,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#systems",
+              "how": "click",
+              "pass": true,
+              "ms": 1240,
+              "y0": 13224,
+              "y": 17254,
+              "hash": "#systems",
+              "histLen": 9,
+              "focus": "#systems-title",
+              "top": 92,
+              "height": 2163,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#kill-list",
+              "how": "click",
+              "pass": true,
+              "ms": 1994,
+              "y0": 17254,
+              "y": 19321,
+              "hash": "#kill-list",
+              "histLen": 9,
+              "focus": "#kill-list-title",
+              "top": 188,
+              "height": 2122,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1913,
+              "y0": 19321,
+              "y": 21443,
+              "hash": "#films",
+              "histLen": 9,
+              "focus": "#films-title",
+              "top": 188,
+              "height": 5451,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 245,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 1128,
+              "y0": 21443,
+              "y": 28700,
+              "hash": "#beyond",
+              "histLen": 9,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 1097,
+              "y0": 28700,
+              "y": 33024,
+              "hash": "#writing",
+              "histLen": 9,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2619,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 2046,
+              "y0": 33024,
+              "y": 35643,
+              "hash": "#voices",
+              "histLen": 9,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1287,
+              "y0": 35643,
+              "y": 38975,
+              "hash": "#principles",
+              "histLen": 9,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2690,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 2079,
+              "y0": 38975,
+              "y": 41664,
+              "hash": "#contact",
+              "histLen": 9,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 954,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            }
+          ]
+        },
+        "turner": {
+          "pass": true,
+          "found": 2,
+          "failed": [],
+          "turner": true,
+          "links": [
+            {
+              "href": "#top",
+              "how": "click",
+              "pass": true,
+              "ms": 1262,
+              "y0": 43232,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 43232,
+                "spinning": true
+              },
+              "spinFirst": true
+            },
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 1267,
+              "y0": 43232,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 43232,
+                "spinning": true
+              },
+              "spinFirst": true
+            }
+          ]
+        },
+        "films": {
+          "pass": true,
+          "found": 14,
+          "failed": [],
+          "links": [
+            {
+              "href": "#act-1",
+              "how": "key",
+              "pass": true,
+              "ms": 1072,
+              "y0": 22656,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 10,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act I"
+            },
+            {
+              "href": "#about",
+              "how": "click",
+              "pass": true,
+              "ms": 1280,
+              "y0": 22656,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 11,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "About"
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 977,
+              "y0": 22656,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 12,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Journey"
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1275,
+              "y0": 23910,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 13,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act II"
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 850,
+              "y0": 23910,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 14,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2333,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Work"
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 865,
+              "y0": 23910,
+              "y": 11346,
+              "hash": "#trading-algos",
+              "histLen": 15,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Trading_Algos"
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 853,
+              "y0": 23910,
+              "y": 13224,
+              "hash": "#optuna-screener",
+              "histLen": 16,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2907,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Optuna"
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 2650,
+              "y0": 25138,
+              "y": 27463,
+              "hash": "#act-3",
+              "histLen": 17,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27463,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act III"
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 1146,
+              "y0": 25138,
+              "y": 28700,
+              "hash": "#beyond",
+              "histLen": 18,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Beyond"
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 930,
+              "y0": 25138,
+              "y": 33024,
+              "hash": "#writing",
+              "histLen": 19,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2619,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Writing"
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 1345,
+              "y0": 25138,
+              "y": 35643,
+              "hash": "#voices",
+              "histLen": 20,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Voices"
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1064,
+              "y0": 26396,
+              "y": 37642,
+              "hash": "#act-4",
+              "histLen": 21,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37642,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act IV"
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1024,
+              "y0": 26396,
+              "y": 38975,
+              "hash": "#principles",
+              "histLen": 22,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2690,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Principles"
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 949,
+              "y0": 26396,
+              "y": 41664,
+              "hash": "#contact",
+              "histLen": 23,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 954,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Contact"
+            }
+          ]
+        }
+      },
+      "ms": 98524,
+      "console": []
+    },
+    "plates-live": {
+      "pass": true,
+      "live": {
+        "samples": 414,
+        "maxPlaying": 1,
+        "plates": 35,
+        "byHow": {
+          "loop": 15,
+          "camera": 15,
+          "canvas": 5
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 10,
+          "stage": 7,
+          "section:journey": 4,
+          "section:work": 2,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:kill-list": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [],
+        "deadOther": [],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 4153,
+            "how": "loop",
+            "states": [
+              "playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 6895,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L01",
+            "host": "card",
+            "ms": 3065,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "stage-0",
+            "host": "stage",
+            "ms": 7476,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-1",
+            "host": "stage",
+            "ms": 5176,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 3465,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05b",
+            "host": "section:journey",
+            "ms": 1023,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05c",
+            "host": "section:journey",
+            "ms": 1277,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05d",
+            "host": "section:journey",
+            "ms": 1020,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 5614,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 4347,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 5616,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L08",
+            "host": "card",
+            "ms": 3329,
+            "how": "loop",
+            "states": [
+              "starting",
+              "playing",
+              "paused",
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 2040,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "MV-06",
+            "host": "section:work",
+            "ms": 2033,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-2",
+            "host": "stage",
+            "ms": 4096,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1786,
+            "how": "loop",
+            "states": [
+              "poster+poster",
+              "poster+starting",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-3",
+            "host": "stage",
+            "ms": 5859,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "stage-4",
+            "host": "stage",
+            "ms": 3313,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1785,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen",
+            "host": "section:kill-list",
+            "ms": 1793,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1894,
+            "how": "loop",
+            "states": [
+              "poster+playing",
+              "poster+paused"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 2040,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 2063,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1783,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 2032,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 5096,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 3052,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-5",
+            "host": "stage",
+            "ms": 3812,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1786,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 2801,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "card",
+            "ms": 1786,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 4363,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 3078,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-6",
+            "host": "stage",
+            "ms": 5606,
+            "how": "loop",
+            "states": []
+          }
+        ],
+        "seq": {
+          "peakMB": 87.9,
+          "sampled": true
+        },
+        "requests": {
+          "count": 13,
+          "webm": 13,
+          "mp4": 0,
+          "urls": [
+            "/media/films/hero-sea-loop.webm",
+            "/media/films/iconic-pearl-loop.webm",
+            "/media/films/iconic-ice-loop.webm",
+            "/media/films/iconic-pen-alt-loop.webm",
+            "/media/films/board-dawn-loop.webm",
+            "/media/films/iconic-corridor-loop.webm",
+            "/media/films/iconic-ice-alt-loop.webm",
+            "/media/films/iconic-pen-loop.webm",
+            "/media/films/iconic-pearl-alt-loop.webm",
+            "/media/films/films-idiots-loop.webm",
+            "/media/films/iconic-deadeye-loop.webm",
+            "/media/films/iconic-wanted-loop.webm",
+            "/media/films/last-light-loop.webm"
+          ]
+        },
+        "codecPicks": {
+          "/media/films/hero-sea-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-alt-loop.mp4": "video/webm",
+          "/media/films/board-dawn-loop.mp4": "video/webm",
+          "/media/films/iconic-corridor-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-alt-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-alt-loop.mp4": "video/webm",
+          "/media/films/films-idiots-loop.mp4": "video/webm",
+          "/media/films/iconic-deadeye-loop.mp4": "video/webm",
+          "/media/films/iconic-wanted-loop.mp4": "video/webm",
+          "/media/films/last-light-loop.mp4": "video/webm"
+        }
+      },
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 1,
+          "weather": 6,
+          "stageRoot": true,
+          "moved": 15
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "translate3d(0%, 0%, 0px) scale(1.35)",
+        "depthFarAt0": "translate3d(-0.9%, 0%, 0px) scale(1.018)",
+        "weather": [
+          {
+            "kind": "spray",
+            "dots": 14,
+            "running": 14
+          },
+          {
+            "kind": "chalk",
+            "dots": 12,
+            "running": 12
+          },
+          {
+            "kind": "fireflies",
+            "dots": 9,
+            "running": 9
+          },
+          {
+            "kind": "motes",
+            "dots": 12,
+            "running": 12
+          }
+        ],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": "loop",
+            "states": [
+              "iconic-ice:poster",
+              "L08:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": "loop",
+            "states": [
+              "MV-05a:poster",
+              "L06:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": "loop",
+            "states": [
+              "iconic-corridor:poster",
+              "L10:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": "depth",
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": "depth",
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": "still",
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": "still",
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": "loop",
+            "states": [
+              "iconic-deadeye:poster",
+              "L21:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 152485,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 237,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1297,
+      "console": []
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [
+            "webm"
+          ],
+          "bytes": 46946,
+          "files": {
+            "tts-lumos": "ok",
+            "tts-nox": "ok",
+            "tts-solemn": "ok",
+            "tts-mischief": "ok",
+            "tts-parley": "ok"
+          }
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 4
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 391
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 469
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 444
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 458
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 596
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980216521295142,
+            "rdr2": 0.27871960298937953,
+            "hp": 0.1907842779621953
+          }
+        },
+        "pause": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 5
+          },
+          "on": {
+            "ok": true,
+            "ms": 265
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 48
+          },
+          "on": {
+            "ok": true,
+            "ms": 6
+          }
+        },
+        "eggs.typed": {
+          "pass": true,
+          "got": [
+            "shimmer-rise",
+            "impact-lumos",
+            "letterbox-whum",
+            "projector-start",
+            "letterbox-whum",
+            "parley-creak",
+            "flag-snap",
+            "tts-parley"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": true,
+          "pause": {
+            "ok": true,
+            "ms": 3
+          },
+          "resumed": true,
+          "bell": true,
+          "ms": 16,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": true,
+          "rmAt": 13555.5,
+          "ms": 27,
+          "state": "suspended",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_18_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 49418,
+      "console": []
+    },
+    "split": {
+      "pass": true,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 12044.734375,
+            "bottom": 13693.796875,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 269,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 14550.453125,
+            "bottom": 16601.203125,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              12,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "528.672px 740.141px",
+            "top": 30557.703125,
+            "bottom": 32242.34375,
+            "windowLeft": 64,
+            "textLeft": 636,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0,
+                "drift": [
+                  {
+                    "from": 30031,
+                    "to": 30083
+                  }
+                ]
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          }
+        ]
+      },
+      "ms": 9787,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "failed": [],
+      "tests": {
+        "start": {
+          "pass": true,
+          "y": 2050,
+          "owner": null,
+          "hold": null,
+          "pending": []
+        },
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 501
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 830,
+          "y0": 2050,
+          "range": 600,
+          "ownerDuring": null
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 18,
+            "free": 12,
+            "request": 35,
+            "grant": 24,
+            "end": 24,
+            "wait": 9,
+            "idle": 4,
+            "skip": 11
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 9972,
+          "y": 675,
+          "ev": "own",
+          "id": "B03",
+          "weight": 3
+        },
+        {
+          "t": 10392,
+          "y": 1350,
+          "ev": "own",
+          "id": "B04",
+          "weight": 3
+        },
+        {
+          "t": 11488,
+          "y": 2025,
+          "ev": "free",
+          "id": "B04"
+        },
+        {
+          "t": 12008,
+          "y": 2925,
+          "ev": "request",
+          "id": "B07",
+          "weight": 1
+        },
+        {
+          "t": 12009,
+          "y": 2925,
+          "ev": "grant",
+          "id": "B07",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 12177,
+          "y": 3150,
+          "ev": "own",
+          "id": "B08",
+          "weight": 1
+        },
+        {
+          "t": 12189,
+          "y": 3150,
+          "ev": "request",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 12190,
+          "y": 3150,
+          "ev": "request",
+          "id": "B08-compass",
+          "weight": 1
+        },
+        {
+          "t": 12429,
+          "y": 3150,
+          "ev": "end",
+          "id": "B07",
+          "why": "held"
+        },
+        {
+          "t": 12429,
+          "y": 3150,
+          "ev": "wait",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "owned by B08"
+        },
+        {
+          "t": 12429,
+          "y": 3150,
+          "ev": "wait",
+          "id": "B08-compass",
+          "weight": 1,
+          "why": "owned by B08"
+        },
+        {
+          "t": 13095,
+          "y": 3600,
+          "ev": "idle",
+          "id": "B08-invite"
+        },
+        {
+          "t": 13236,
+          "y": 3825,
+          "ev": "free",
+          "id": "B08"
+        },
+        {
+          "t": 13236,
+          "y": 3825,
+          "ev": "grant",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "waited 1047 ms"
+        },
+        {
+          "t": 13690,
+          "y": 4500,
+          "ev": "skip",
+          "id": "B08-compass",
+          "weight": 1,
+          "why": "maxWait 1500 ms"
+        },
+        {
+          "t": 13849,
+          "y": 4950,
+          "ev": "end",
+          "id": "B08-invite",
+          "why": "held"
+        },
+        {
+          "t": 15493,
+          "y": 6300,
+          "ev": "request",
+          "id": "B12",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 15493,
+          "y": 6300,
+          "ev": "wait",
+          "id": "B12",
+          "weight": 2,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 15663,
+          "y": 6750,
+          "ev": "skip",
+          "id": "B12",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 16008,
+          "y": 7200,
+          "ev": "own",
+          "id": "B13",
+          "weight": 3
+        },
+        {
+          "t": 17034,
+          "y": 7875,
+          "ev": "own",
+          "id": "B14",
+          "weight": 3
+        },
+        {
+          "t": 17708,
+          "y": 9000,
+          "ev": "free",
+          "id": "B14"
+        },
+        {
+          "t": 18809,
+          "y": 9675,
+          "ev": "request",
+          "id": "B16",
+          "weight": 1
+        },
+        {
+          "t": 18809,
+          "y": 9675,
+          "ev": "grant",
+          "id": "B16",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 19042,
+          "y": 10125,
+          "ev": "request",
+          "id": "B17",
+          "weight": 2
+        },
+        {
+          "t": 19283,
+          "y": 10575,
+          "ev": "request",
+          "id": "B18",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 19409,
+          "y": 10800,
+          "ev": "end",
+          "id": "B16",
+          "why": "held"
+        },
+        {
+          "t": 19410,
+          "y": 10800,
+          "ev": "grant",
+          "id": "B17",
+          "weight": 2,
+          "why": "waited 367 ms"
+        },
+        {
+          "t": 19971,
+          "y": 10800,
+          "ev": "idle",
+          "id": "B18"
+        },
+        {
+          "t": 20272,
+          "y": 11025,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 20549,
+          "y": 11475,
+          "ev": "request",
+          "id": "B20",
+          "weight": 2
+        },
+        {
+          "t": 20550,
+          "y": 11475,
+          "ev": "skip",
+          "id": "B18",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 20610,
+          "y": 11475,
+          "ev": "end",
+          "id": "B17",
+          "why": "held"
+        },
+        {
+          "t": 20610,
+          "y": 11475,
+          "ev": "wait",
+          "id": "B20",
+          "weight": 2,
+          "why": "owned by B19"
+        },
+        {
+          "t": 21023,
+          "y": 12375,
+          "ev": "free",
+          "id": "B19"
+        },
+        {
+          "t": 21023,
+          "y": 12375,
+          "ev": "grant",
+          "id": "B20",
+          "weight": 2,
+          "why": "waited 473 ms"
+        },
+        {
+          "t": 21031,
+          "y": 12375,
+          "ev": "request",
+          "id": "B21-circle",
+          "weight": 1
+        },
+        {
+          "t": 21317,
+          "y": 12600,
+          "ev": "own",
+          "id": "B21",
+          "weight": 1
+        },
+        {
+          "t": 22223,
+          "y": 12825,
+          "ev": "end",
+          "id": "B20",
+          "why": "held"
+        },
+        {
+          "t": 22223,
+          "y": 12825,
+          "ev": "wait",
+          "id": "B21-circle",
+          "weight": 1,
+          "why": "owned by B21"
+        },
+        {
+          "t": 22404,
+          "y": 13500,
+          "ev": "free",
+          "id": "B21"
+        },
+        {
+          "t": 22405,
+          "y": 13500,
+          "ev": "grant",
+          "id": "B21-circle",
+          "weight": 1,
+          "why": "waited 1374 ms"
+        },
+        {
+          "t": 22418,
+          "y": 13500,
+          "ev": "request",
+          "id": "B22",
+          "weight": 2
+        },
+        {
+          "t": 22621,
+          "y": 13725,
+          "ev": "request",
+          "id": "B23",
+          "weight": 1
+        },
+        {
+          "t": 22870,
+          "y": 14175,
+          "ev": "skip",
+          "id": "B22",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 23026,
+          "y": 14400,
+          "ev": "skip",
+          "id": "B23",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 23605,
+          "y": 14400,
+          "ev": "end",
+          "id": "B21-circle",
+          "why": "held"
+        },
+        {
+          "t": 24004,
+          "y": 14850,
+          "ev": "request",
+          "id": "B24",
+          "weight": 1
+        },
+        {
+          "t": 24004,
+          "y": 14850,
+          "ev": "grant",
+          "id": "B24",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 24668,
+          "y": 16200,
+          "ev": "request",
+          "id": "B25",
+          "weight": 1
+        },
+        {
+          "t": 25209,
+          "y": 16200,
+          "ev": "end",
+          "id": "B24",
+          "why": "held"
+        },
+        {
+          "t": 25209,
+          "y": 16200,
+          "ev": "grant",
+          "id": "B25",
+          "weight": 1,
+          "why": "waited 541 ms"
+        },
+        {
+          "t": 25910,
+          "y": 17100,
+          "ev": "request",
+          "id": "B26",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 26384,
+          "y": 18000,
+          "ev": "request",
+          "id": "B27",
+          "weight": 2
+        },
+        {
+          "t": 26414,
+          "y": 18000,
+          "ev": "end",
+          "id": "B25",
+          "why": "held"
+        },
+        {
+          "t": 26414,
+          "y": 18000,
+          "ev": "grant",
+          "id": "B27",
+          "weight": 2,
+          "why": "waited 30 ms"
+        },
+        {
+          "t": 26980,
+          "y": 18000,
+          "ev": "idle",
+          "id": "B26"
+        },
+        {
+          "t": 27309,
+          "y": 18225,
+          "ev": "skip",
+          "id": "B26",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 27615,
+          "y": 18675,
+          "ev": "end",
+          "id": "B27",
+          "why": "held"
+        },
+        {
+          "t": 27672,
+          "y": 18900,
+          "ev": "request",
+          "id": "B28",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 27674,
+          "y": 18900,
+          "ev": "wait",
+          "id": "B28",
+          "weight": 1,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 27902,
+          "y": 19350,
+          "ev": "request",
+          "id": "B29",
+          "weight": 1
+        },
+        {
+          "t": 27903,
+          "y": 19350,
+          "ev": "grant",
+          "id": "B29",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 28267,
+          "y": 19800,
+          "ev": "skip",
+          "id": "B28",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 28503,
+          "y": 19800,
+          "ev": "end",
+          "id": "B29",
+          "why": "held"
+        },
+        {
+          "t": 29417,
+          "y": 20700,
+          "ev": "own",
+          "id": "B30",
+          "weight": 3
+        },
+        {
+          "t": 29813,
+          "y": 21375,
+          "ev": "request",
+          "id": "B31",
+          "weight": 1
+        },
+        {
+          "t": 29814,
+          "y": 21375,
+          "ev": "wait",
+          "id": "B31",
+          "weight": 1,
+          "why": "owned by B30"
+        },
+        {
+          "t": 29879,
+          "y": 21600,
+          "ev": "free",
+          "id": "B30"
+        },
+        {
+          "t": 29879,
+          "y": 21600,
+          "ev": "grant",
+          "id": "B31",
+          "weight": 1,
+          "why": "waited 65 ms"
+        },
+        {
+          "t": 30301,
+          "y": 21600,
+          "ev": "end",
+          "id": "B31",
+          "why": "held"
+        },
+        {
+          "t": 30774,
+          "y": 21825,
+          "ev": "request",
+          "id": "B31-finale",
+          "weight": 1
+        },
+        {
+          "t": 30774,
+          "y": 21825,
+          "ev": "grant",
+          "id": "B31-finale",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 31488,
+          "y": 22950,
+          "ev": "request",
+          "id": "B32",
+          "weight": 1
+        },
+        {
+          "t": 31492,
+          "y": 22950,
+          "ev": "request",
+          "id": "B32-finale",
+          "weight": 2
+        },
+        {
+          "t": 31974,
+          "y": 23400,
+          "ev": "end",
+          "id": "B31-finale",
+          "why": "held"
+        },
+        {
+          "t": 31975,
+          "y": 23400,
+          "ev": "grant",
+          "id": "B32-finale",
+          "weight": 2,
+          "why": "waited 483 ms"
+        },
+        {
+          "t": 32695,
+          "y": 23625,
+          "ev": "skip",
+          "id": "B32",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 32838,
+          "y": 23850,
+          "ev": "request",
+          "id": "B33",
+          "weight": 1
+        },
+        {
+          "t": 33032,
+          "y": 24075,
+          "ev": "request",
+          "id": "B33-finale",
+          "weight": 2
+        },
+        {
+          "t": 33175,
+          "y": 24300,
+          "ev": "end",
+          "id": "B32-finale",
+          "why": "held"
+        },
+        {
+          "t": 33175,
+          "y": 24300,
+          "ev": "grant",
+          "id": "B33-finale",
+          "weight": 2,
+          "why": "waited 142 ms"
+        },
+        {
+          "t": 33351,
+          "y": 24750,
+          "ev": "skip",
+          "id": "B33",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 33595,
+          "y": 25200,
+          "ev": "request",
+          "id": "B34",
+          "weight": 1
+        },
+        {
+          "t": 34375,
+          "y": 25200,
+          "ev": "end",
+          "id": "B33-finale",
+          "why": "held"
+        },
+        {
+          "t": 34375,
+          "y": 25200,
+          "ev": "grant",
+          "id": "B34",
+          "weight": 1,
+          "why": "waited 780 ms"
+        },
+        {
+          "t": 34458,
+          "y": 25425,
+          "ev": "request",
+          "id": "B34-finale",
+          "weight": 2
+        },
+        {
+          "t": 34805,
+          "y": 26100,
+          "ev": "own",
+          "id": "B35",
+          "weight": 1
+        },
+        {
+          "t": 35065,
+          "y": 26550,
+          "ev": "skip",
+          "id": "B34-finale",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 35275,
+          "y": 26775,
+          "ev": "end",
+          "id": "B34",
+          "why": "held"
+        },
+        {
+          "t": 35305,
+          "y": 27000,
+          "ev": "own",
+          "id": "B36",
+          "weight": 3
+        },
+        {
+          "t": 36473,
+          "y": 27675,
+          "ev": "own",
+          "id": "B38",
+          "weight": 3
+        },
+        {
+          "t": 36976,
+          "y": 28575,
+          "ev": "free",
+          "id": "B38"
+        },
+        {
+          "t": 36982,
+          "y": 28575,
+          "ev": "request",
+          "id": "B40",
+          "weight": 1
+        },
+        {
+          "t": 36983,
+          "y": 28575,
+          "ev": "grant",
+          "id": "B40",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 37343,
+          "y": 28575,
+          "ev": "end",
+          "id": "B40",
+          "why": "held"
+        },
+        {
+          "t": 38217,
+          "y": 29475,
+          "ev": "own",
+          "id": "B41",
+          "weight": 2
+        },
+        {
+          "t": 38575,
+          "y": 30150,
+          "ev": "free",
+          "id": "B41"
+        },
+        {
+          "t": 39688,
+          "y": 30825,
+          "ev": "own",
+          "id": "B42",
+          "weight": 1
+        },
+        {
+          "t": 39828,
+          "y": 31050,
+          "ev": "request",
+          "id": "B43",
+          "weight": 2
+        },
+        {
+          "t": 39829,
+          "y": 31050,
+          "ev": "wait",
+          "id": "B43",
+          "weight": 2,
+          "why": "owned by B42"
+        },
+        {
+          "t": 40156,
+          "y": 31500,
+          "ev": "free",
+          "id": "B42"
+        },
+        {
+          "t": 40156,
+          "y": 31500,
+          "ev": "grant",
+          "id": "B43",
+          "weight": 2,
+          "why": "waited 327 ms"
+        },
+        {
+          "t": 40236,
+          "y": 31725,
+          "ev": "request",
+          "id": "B43-wanted",
+          "weight": 2
+        },
+        {
+          "t": 41356,
+          "y": 32400,
+          "ev": "end",
+          "id": "B43",
+          "why": "held"
+        },
+        {
+          "t": 41356,
+          "y": 32400,
+          "ev": "grant",
+          "id": "B43-wanted",
+          "weight": 2,
+          "why": "waited 1119 ms"
+        },
+        {
+          "t": 41444,
+          "y": 32625,
+          "ev": "request",
+          "id": "B44",
+          "weight": 2
+        },
+        {
+          "t": 41818,
+          "y": 33300,
+          "ev": "request",
+          "id": "B45",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 41971,
+          "y": 33525,
+          "ev": "skip",
+          "id": "B44",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 42556,
+          "y": 34200,
+          "ev": "end",
+          "id": "B43-wanted",
+          "why": "held"
+        },
+        {
+          "t": 42557,
+          "y": 34200,
+          "ev": "wait",
+          "id": "B45",
+          "weight": 2,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 42910,
+          "y": 34200,
+          "ev": "idle",
+          "id": "B45"
+        },
+        {
+          "t": 42910,
+          "y": 34200,
+          "ev": "grant",
+          "id": "B45",
+          "weight": 2,
+          "why": "waited 1092 ms"
+        },
+        {
+          "t": 43425,
+          "y": 34875,
+          "ev": "own",
+          "id": "B46",
+          "weight": 1
+        },
+        {
+          "t": 43725,
+          "y": 35325,
+          "ev": "own",
+          "id": "B47",
+          "weight": 2
+        },
+        {
+          "t": 44110,
+          "y": 36000,
+          "ev": "end",
+          "id": "B45",
+          "why": "held"
+        },
+        {
+          "t": 45321,
+          "y": 36900,
+          "ev": "free",
+          "id": "B47"
+        },
+        {
+          "t": 45438,
+          "y": 37125,
+          "ev": "own",
+          "id": "B48",
+          "weight": 3
+        },
+        {
+          "t": 46117,
+          "y": 37800,
+          "ev": "own",
+          "id": "B50",
+          "weight": 3
+        },
+        {
+          "t": 47069,
+          "y": 38475,
+          "ev": "free",
+          "id": "B50"
+        },
+        {
+          "t": 47076,
+          "y": 38475,
+          "ev": "request",
+          "id": "B52",
+          "weight": 1
+        },
+        {
+          "t": 47076,
+          "y": 38475,
+          "ev": "grant",
+          "id": "B52",
+          "weight": 1,
+          "why": "waited 1 ms"
+        },
+        {
+          "t": 47478,
+          "y": 38925,
+          "ev": "request",
+          "id": "B53",
+          "weight": 1
+        },
+        {
+          "t": 48276,
+          "y": 39600,
+          "ev": "end",
+          "id": "B52",
+          "why": "held"
+        },
+        {
+          "t": 48277,
+          "y": 39600,
+          "ev": "grant",
+          "id": "B53",
+          "weight": 1,
+          "why": "waited 798 ms"
+        },
+        {
+          "t": 49177,
+          "y": 40275,
+          "ev": "end",
+          "id": "B53",
+          "why": "held"
+        },
+        {
+          "t": 49504,
+          "y": 41175,
+          "ev": "own",
+          "id": "B55",
+          "weight": 1
+        },
+        {
+          "t": 49895,
+          "y": 41400,
+          "ev": "free",
+          "id": "B55"
+        },
+        {
+          "t": 49906,
+          "y": 41400,
+          "ev": "request",
+          "id": "B56",
+          "weight": 2
+        },
+        {
+          "t": 49908,
+          "y": 41400,
+          "ev": "grant",
+          "id": "B56",
+          "weight": 2,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 51109,
+          "y": 42300,
+          "ev": "end",
+          "id": "B56",
+          "why": "held"
+        },
+        {
+          "t": 51217,
+          "y": 42750,
+          "ev": "request",
+          "id": "B57",
+          "weight": 2
+        },
+        {
+          "t": 51217,
+          "y": 42750,
+          "ev": "grant",
+          "id": "B57",
+          "weight": 2,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 52417,
+          "y": 43650,
+          "ev": "end",
+          "id": "B57",
+          "why": "held"
+        },
+        {
+          "t": 53567,
+          "y": 43669,
+          "ev": "request",
+          "id": "B58",
+          "weight": 3
+        },
+        {
+          "t": 53572,
+          "y": 43669,
+          "ev": "grant",
+          "id": "B58",
+          "weight": 3,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 54772,
+          "y": 43669,
+          "ev": "end",
+          "id": "B58",
+          "why": "held"
+        }
+      ],
+      "ms": 54986,
+      "console": []
+    },
+    "toys": {
+      "pass": true,
+      "checks": {
+        "mount": {
+          "pass": true,
+          "ms": 1537
+        },
+        "arm": {
+          "pass": true,
+          "shown": 29,
+          "total": 29,
+          "litBefore": 29,
+          "litAfter": 0,
+          "events": [
+            "arm"
+          ],
+          "armMs": 14,
+          "cursor": "image-set(url(\"data:image/svg+xml,%3Csvg"
+        },
+        "idle": {
+          "pass": true,
+          "before": 0,
+          "after": 0
+        },
+        "light": {
+          "pass": true,
+          "lit": "29/29",
+          "recentred": 0,
+          "done": 1,
+          "status": "The hall is lit.",
+          "flare": [
+            "0",
+            "1"
+          ],
+          "lights": 11,
+          "moves": 9
+        },
+        "bloom": {
+          "pass": true,
+          "opacity": 0.488415,
+          "layer": "wand-art",
+          "layerZ": "auto",
+          "textInside": false
+        },
+        "offscreen": {
+          "pass": true,
+          "litAll": 29,
+          "total": 29
+        },
+        "lumos": {
+          "pass": true,
+          "darkBefore": "0/29",
+          "lit": "29/29",
+          "ms": 109,
+          "doneMs": 1623,
+          "events": [
+            "arm",
+            "lumos",
+            "light",
+            "done"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "darkBefore": 0,
+          "litAll": "29/29",
+          "toy": false,
+          "cursor": "auto",
+          "bloom": false
+        },
+        "compass": {
+          "pass": true,
+          "start": 315,
+          "click": 45,
+          "enter": 225,
+          "right": 135,
+          "left": 225,
+          "drag": 135
+        }
+      },
+      "ms": 44428,
+      "console": []
+    },
+    "words": {
+      "pass": true,
+      "target": "/?skip=intro&debug=words,spotlight",
+      "ssr": {
+        "pass": true,
+        "count": 14,
+        "kinds": [
+          "title",
+          "scrub",
+          "physical"
+        ],
+        "textless": []
+      },
+      "rm": {
+        "pass": true,
+        "armed": 0,
+        "spotlight": false,
+        "minOpacity": 1
+      },
+      "phone": {
+        "pass": true,
+        "binder": false,
+        "armed": 0,
+        "detailsContentSupported": true,
+        "summaryDisplay": "none",
+        "contentVisible": true
+      },
+      "scrub": {
+        "pass": true,
+        "dimFirst": 0.28,
+        "litMin": 1,
+        "backFirst": 0.28,
+        "words": 26
+      },
+      "fly": {
+        "pass": true,
+        "expected": [
+          "B12",
+          "B45"
+        ],
+        "failed": [],
+        "zones": {
+          "B12": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 6210,
+            "lingered": false,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for scroll-idle)",
+              "idle",
+              "grant(waited 601 ms)",
+              "end(held)"
+            ]
+          },
+          "B45": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 33480,
+            "lingered": true,
+            "lingerY": 33480,
+            "waitedMs": 701,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "idle",
+              "grant(waited 734 ms)",
+              "end(held)"
+            ]
+          }
+        }
+      },
+      "titles": {
+        "pass": true,
+        "played": [
+          "title:B07",
+          "fly:B12",
+          "title:B16",
+          "physical:B23",
+          "title:B31",
+          "title:B32",
+          "title:B33",
+          "title:B34",
+          "title:B40",
+          "fly:B45",
+          "title:B53"
+        ],
+        "statics": 1,
+        "leftArmed": 0,
+        "overlaps": []
+      },
+      "identical": {
+        "pass": true,
+        "diff": [],
+        "missing": [],
+        "clientOnly": [
+          {
+            "key": "fly:B12#0",
+            "state": null,
+            "fxOpen": false
+          },
+          {
+            "key": "fly:B45#0",
+            "state": null,
+            "fxOpen": false
+          }
+        ],
+        "residue": [],
+        "counts": {
+          "ssr": 14,
+          "after": 16
+        }
+      },
+      "pause": {
+        "pass": true,
+        "armedBefore": 0,
+        "armedInTheClick": 0,
+        "armedAt100ms": 0,
+        "openFx": 0,
+        "minOpacity": 1,
+        "identical": true
+      },
+      "ms": 95802,
+      "console": []
+    }
+  }
+}
