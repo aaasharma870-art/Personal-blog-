@@ -368,6 +368,10 @@ export default async function probe(page, ctx) {
   await run("de.release", async () => {
     await page.keyboard.press("Escape");
     await sleep(600);
+    // the grade fades out over 300 ms (run.ts), then clears; its \`finished\` lands late at headless frame rates
+    await page
+      .waitForFunction(() => [...document.querySelectorAll("#kill-list [data-deadeye-layer]")].every((l) => l.hidden && !l.childElementCount), null, { timeout: 4000 })
+      .catch(() => {});
     const after = await page.evaluate(() => document.getElementById("kill-list")?.outerHTML ?? "");
     const game = await gameAttr();
     // the ledger's own interaction state (the active row's colours, the lens
@@ -404,8 +408,14 @@ export default async function probe(page, ctx) {
     await sleep(500);
   });
 
+  let inpSoFar = 0;
   await run("rows.read", async () => {
     await page.evaluate(() => localStorage.setItem("aryan:hunt:v1", JSON.stringify({ v: 1, found: {}, rows: [] })));
+    // the ledger keeps the rows it already counted in memory (a reset store is not re-read): start a fresh view
+    // (keep the Event Timing maximum so far: the reload resets it)
+    inpSoFar = await page.evaluate(() => window.__gamesInp ?? 0);
+    await ctx.goto();
+    await sleep(1500);
     await page.evaluate(() => document.getElementById("kill-list")?.scrollIntoView({ block: "start", behavior: "instant" }));
     const h = await page.evaluate(() => document.getElementById("kill-list").offsetHeight);
     for (let y = 0; y < h; y += 60) {
@@ -421,7 +431,8 @@ export default async function probe(page, ctx) {
   });
 
   await run("inp", async () => {
-    const inp = await page.evaluate(() => window.__gamesInp ?? null);
+    const now = await page.evaluate(() => window.__gamesInp ?? null);
+    const inp = now === null ? null : Math.max(now, inpSoFar);
     set("inp", inp !== null && inp <= 200, { maxEventMs: inp });
   });
 

@@ -11,7 +11,7 @@
 //   button       [data-dc="hero"] is shown (DESKTOP_FINE), records early clicks (data-enhance-queue), carries a
 //                shot list (data-dc-shots ≥ 10 items, act cards as "c"), not aria-disabled
 //   letterbox    house lights down: walking the films head, html[data-letterbox] is set and the top bar is closed
-//                (scaleY ≥ .98) when the first frame's top is at the viewport's bottom; open again (attribute gone)
+//                (scaleY ≥ .98) once the first frame's top is at 80 % of the viewport (close ends at 85 %); open again (attribute gone)
 //                once the frame has passed centre; the attribute flips ≤ 2 times per pass (rule 33)
 //   plates       each films screen's LivePlate is engaged (data-plate loop | depth | still) and its camera moves
 //                (the .plate-cam transform is not identity mid-passage); ≤ 1 playing <video> at every sample (P3-2 #5)
@@ -157,6 +157,10 @@ export default async function probe(page, ctx) {
       // before the close, the hold (the frame's top at the viewport bottom), after the open
       const ys = [geo.top - 1.6 * geo.vh, geo.top - 1.4 * geo.vh, geo.top - 1.2 * geo.vh, geo.top - 1.0 * geo.vh, geo.top - 0.9 * geo.vh];
       for (const y of ys) await jump(page, y);
+      // the hold: past the close's end (LIGHTS close "top 125%" → "top 85%"), read on the LIVE frame top
+      // (the page above moves after the first read: lazy content), so the frame's top sits at 80% of the viewport
+      const liveTop = await page.evaluate(() => document.querySelector("[data-films-frame]").getBoundingClientRect().top + scrollY);
+      await jump(page, liveTop - 0.8 * geo.vh);
       const hold = await read();
       for (const k of [0.6, 0.4, 0.2, 0]) await jump(page, geo.top + geo.h / 2 - k * geo.vh);
       const after = await read();

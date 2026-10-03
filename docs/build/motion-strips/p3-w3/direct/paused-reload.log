@@ -1,0 +1,8 @@
+after run 1 {"dcl":[39779,36,0],"load":[39779,36,0],"hydrated":[39779,36,0,true],"late":[39779,36,0]}
+   moved between load and +3 s (index-wise): []
+after run 2 {"dcl":[39779,36,0],"load":[39779,36,0],"hydrated":[39779,36,0,true],"late":[39779,36,0]}
+   moved between load and +3 s (index-wise): []
+base run 1 {"dcl":[41851,36,0],"load":[41851,36,0],"hydrated":[38802,36,0,false],"late":[38802,36,0]}
+   moved between load and +3 s (index-wise): [["journey","3781+3168","3781+1163"],["act-2","6949+1422","4944+900"],["SPAN","6949+270","4944+270"],["SPAN","8191+180","5664+180"],["DIV","6949+900","4944+900"],["act-2-title","7702+43","5698+43"],["work","8371+2292","5844+2292"],["trading-algos","10663+1733","8136+1733"]]
+base run 2 {"dcl":[41851,36,0],"load":[38802,36,0],"hydrated":[38802,36,0,false],"late":[38802,36,0]}
+   moved between load and +3 s (index-wise): []

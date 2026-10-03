@@ -67,6 +67,9 @@ export default async function probe(page, ctx) {
       } catch {}
     });
     await p.goto(ctx.url("/?skip=intro"), { waitUntil: "domcontentloaded" });
+    // the server layout = every streamed Suspense boundary revealed (React reveals the $RC
+    // boundaries in batches, sometimes after DOMContentLoaded): not a reflow after hydration
+    await p.waitForFunction(() => !document.querySelector("template[id^='B:']"), null, { timeout: 5000 }).catch(() => {});
     const early = await p.evaluate(layoutSnapshot);
     await p.waitForLoadState("load");
     await p.waitForTimeout(3000);

@@ -1,0 +1,4647 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-02T23:46:11.495Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": false,
+      "liveBoxes": 772,
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 21,
+            "worst": {
+              "ratio": 7.42,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 2610,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 158,
+            "worst": {
+              "ratio": 1.9,
+              "text": "I read moral philosophy and let it shape how I e",
+              "y": 3733,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 3733,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1.9,
+                "min": 4.5
+              },
+              {
+                "y": 3733,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1.9,
+                "min": 4.5
+              },
+              {
+                "y": 4183,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1.9,
+                "min": 4.5
+              }
+            ],
+            "failCount": 3
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 195,
+            "worst": {
+              "ratio": 1.85,
+              "text": "“Happiness can be found, even in the darkest of ",
+              "y": 42478,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 42478,
+                "text": "“Happiness can be found, even in the darkest of ",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 42928,
+                "text": "“Happiness can be found, even in the darkest of ",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 42928,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 42928,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 43378,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 43378,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 43828,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 43828,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              }
+            ],
+            "failCount": 8
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 22,
+            "worst": {
+              "ratio": 7.42,
+              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
+              "y": 2227,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 208,
+            "worst": {
+              "ratio": 1,
+              "text": "I read moral philosophy and let it shape how I e",
+              "y": 3614,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 3614,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1.9,
+                "min": 4.5
+              },
+              {
+                "y": 3614,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 3614,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 3614,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 3998,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1.9,
+                "min": 4.5
+              },
+              {
+                "y": 3998,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 3998,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              },
+              {
+                "y": 3998,
+                "text": "I read moral philosophy and let it shape how I e",
+                "ratio": 1,
+                "min": 4.5
+              }
+            ],
+            "failCount": 8
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 168,
+            "worst": {
+              "ratio": 1.85,
+              "text": "“Happiness can be found, even in the darkest of ",
+              "y": 39692,
+              "live": true
+            },
+            "failures": [
+              {
+                "y": 39692,
+                "text": "“Happiness can be found, even in the darkest of ",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 39692,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40076,
+                "text": "“Happiness can be found, even in the darkest of ",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40076,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40076,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40460,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40460,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40844,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              },
+              {
+                "y": 40844,
+                "text": "our own prompts; the only image inputs were fram",
+                "ratio": 1.85,
+                "min": 4.5
+              }
+            ],
+            "failCount": 9
+          }
+        ]
+      },
+      "ms": 65839,
+      "console": []
+    },
+    "bundle": {
+      "pass": false,
+      "failed": [
+        "compare"
+      ],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 19,
+            "css": 4,
+            "jsGz": 447173,
+            "cssGz": 35533,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 22,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "scrollTrigger",
+            "gsap"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": false,
+          "base": "http://localhost:3162",
+          "jsGz": [
+            439092,
+            447173
+          ],
+          "cssGz": [
+            29433,
+            35533
+          ],
+          "deltaJsGz": 8081,
+          "deltaCssGz": 6100,
+          "budget": 6144
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 17733,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "pins": {
+          "pass": true,
+          "rows": [
+            {
+              "kind": "opening",
+              "id": "act-1",
+              "top": 900,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": "act-1-program",
+              "nextBackdrop": true,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "seam",
+              "id": "act-2",
+              "top": 7404,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            },
+            {
+              "kind": "tintype",
+              "id": "act-3",
+              "top": 27127,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "ignite",
+              "id": "act-4",
+              "top": 36892,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            }
+          ],
+          "program": {
+            "nextId": "act-1-program",
+            "backdrop": true
+          }
+        },
+        "stars": {
+          "pass": true,
+          "stars": [
+            {
+              "card": "opening",
+              "id": "B03",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "opening",
+              "id": "B04",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "seam",
+              "id": "B13",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "seam",
+              "id": "B14",
+              "star": true,
+              "h": 495
+            },
+            {
+              "card": "tintype",
+              "id": "B36",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "tintype",
+              "id": "B38",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "ignite",
+              "id": "B48",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "ignite",
+              "id": "B50",
+              "star": true,
+              "h": 495
+            }
+          ]
+        },
+        "impacts": {
+          "pass": true,
+          "impacts": [
+            "pirates",
+            "idiots",
+            "rdr2",
+            "hp"
+          ],
+          "meets": [
+            "opening",
+            "seam",
+            "tintype",
+            "ignite"
+          ]
+        },
+        "damping": {
+          "pass": true,
+          "card": "seam",
+          "early": {
+            "raw": 0.4495,
+            "t": 0.075,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          },
+          "late": {
+            "raw": 0.4495,
+            "t": 0.4495,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          }
+        },
+        "scrub": {
+          "pass": true,
+          "rows": [
+            {
+              "card": "opening",
+              "p": 0.05,
+              "raw": 0.0506,
+              "t": 0.0506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.45,
+              "raw": 0.4506,
+              "t": 0.4506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.75,
+              "raw": 0.7506,
+              "t": 0.7506,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "css",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0475,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.05,
+              "raw": 0.0494,
+              "t": 0.0494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.45,
+              "raw": 0.4494,
+              "t": 0.4494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.75,
+              "raw": 0.7494,
+              "t": 0.7494,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            }
+          ]
+        },
+        "landAt": {
+          "pass": true,
+          "expected": 0.47,
+          "rows": [
+            {
+              "card": "opening",
+              "id": "act-1",
+              "p": 0.47,
+              "travel": 810,
+              "landedMs": 837,
+              "ok": true
+            },
+            {
+              "card": "seam",
+              "id": "act-2",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 1731,
+              "ok": true
+            },
+            {
+              "card": "tintype",
+              "id": "act-3",
+              "p": 0.469,
+              "travel": 810,
+              "landedMs": 2239,
+              "ok": true
+            },
+            {
+              "card": "ignite",
+              "id": "act-4",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 1210,
+              "ok": true
+            }
+          ]
+        },
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 98258,
+      "console": []
+    },
+    "cinema": {
+      "pass": false,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "out": {
+            "B30": 1,
+            "B31-bars": 1,
+            "B31": 1,
+            "B32": 1,
+            "B33": 1,
+            "B34": 1,
+            "B31-finale": 1,
+            "B32-finale": 1,
+            "B33-finale": 1,
+            "B34-finale": 1,
+            "B35": 1,
+            "B57": 1
+          },
+          "titles": true,
+          "finales": true,
+          "b30": {
+            "star": true,
+            "w": "3",
+            "h": 360
+          },
+          "b35": {
+            "star": true,
+            "h": 360
+          },
+          "missing": []
+        },
+        "button": {
+          "pass": true,
+          "display": "flex",
+          "queue": "[data-dc=\"hero\"]",
+          "shots": 20,
+          "cards": 4,
+          "disabled": null,
+          "text": "▶ Director's cut(sound on)Motion is paused"
+        },
+        "letterbox": {
+          "pass": false,
+          "hold": {
+            "attr": true,
+            "scale": 0.8194
+          },
+          "after": {
+            "attr": false,
+            "scale": 0
+          },
+          "flips": 2
+        },
+        "plates": {
+          "pass": true,
+          "screens": [
+            {
+              "id": "pirates",
+              "plate": "loop",
+              "media": "iconic-pearl-alt",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "idiots",
+              "plate": "loop",
+              "media": "F-3I",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "rdr2",
+              "plate": "loop",
+              "media": "iconic-deadeye",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "hp",
+              "plate": "still",
+              "media": "iconic-express",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 0,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            }
+          ],
+          "maxPlaying": 1
+        },
+        "carry": {
+          "pass": true,
+          "mid": {
+            "visibility": "visible",
+            "transform": "translate3d(356.1px, 21.6px, 0px) scale(1.008)",
+            "opacity": "1"
+          },
+          "end": {
+            "visibility": "hidden",
+            "transform": "translate3d(356.1px, 21.6px, 0px) scale(1.008)",
+            "opacity": "1"
+          }
+        },
+        "credits": {
+          "pass": true,
+          "details": true,
+          "open": false,
+          "summary": true,
+          "tribute": true,
+          "end": true,
+          "last": true,
+          "ai": true
+        },
+        "chapter": {
+          "pass": true,
+          "firstIsPlay": true,
+          "tiles": [
+            "top",
+            "act-1",
+            "act-2",
+            "films",
+            "act-3",
+            "act-4",
+            "credits"
+          ],
+          "imgs": 7,
+          "lazy": true,
+          "widths": [
+            384,
+            384,
+            384,
+            384,
+            384,
+            384,
+            384
+          ],
+          "ratio": [
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78
+          ],
+          "landAt": 0.47,
+          "land": {
+            "y": 7776,
+            "want": 7776,
+            "hash": "#act-2",
+            "menu": false,
+            "focus": true
+          }
+        },
+        "dc.run": {
+          "pass": true,
+          "focus": true,
+          "speed": 86,
+          "twoX": {
+            "pressed": "true",
+            "running": true
+          },
+          "stop": true
+        },
+        "dc.esc": {
+          "pass": true
+        },
+        "dc.pause": {
+          "pass": true
+        },
+        "dc.fastlane": {
+          "pass": true
+        },
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 44355,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 81,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 855,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-1",
+          "stage",
+          "journey",
+          "act-2",
+          "work",
+          "optuna-screener",
+          "kill-list",
+          "films",
+          "beyond",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L01",
+          "stage",
+          "L20",
+          "L08",
+          "L18",
+          "L09",
+          "L16",
+          "L17",
+          "L14",
+          "L22",
+          "L21",
+          "L15",
+          "MV-09"
+        ],
+        "crossfadeSamples": 12,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 106575,
+      "console": []
+    },
+    "font-network": {
+      "pass": true,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": true,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "165.888px",
+          "fontSize": "172.8px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": 2562,
+        "beforeStep5": [
+          "22 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "22 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "22 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "101 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "451 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "beforeStep5Bad": [],
+        "legacyRequested": [],
+        "worldsAtRest": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "worldOrder": [
+          "2580 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "5701 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "5701 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "9044 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "9045 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "9414 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "9415 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2",
+          "11602 ms assets/fonts/film/nothing-you-could-do/nothing-you-could-do-strings.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 183964,
+        "lcp": {
+          "t": 216,
+          "el": "SPAN",
+          "size": 107550
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B"
+        ],
+        "lcp": {
+          "t": 568,
+          "el": "IMG",
+          "size": 89604
+        },
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [],
+      "ms": 29686,
+      "console": []
+    },
+    "games": {
+      "pass": false,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.keys": {
+          "pass": true,
+          "game": "drone",
+          "focus": "drone-field",
+          "x0": 751.1,
+          "x1": 751.1,
+          "x2": 656.4
+        },
+        "drone.course": {
+          "pass": true,
+          "said": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem. 7/7 gates · 4.6 s"
+          ],
+          "phase": "done",
+          "game": null,
+          "link": {
+            "href": "#kill-list",
+            "text": "Next: the kill-list ↓"
+          },
+          "store": {
+            "v": 1,
+            "drone": {
+              "best": 4633
+            }
+          },
+          "want": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem"
+          ]
+        },
+        "drone.edge": {
+          "pass": true,
+          "xs": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "drone.esc": {
+          "pass": true,
+          "ms": 630,
+          "focus": "drone-takeoff",
+          "game": null
+        },
+        "drone.off": {
+          "pass": true,
+          "phase": "idle"
+        },
+        "drone.pause": {
+          "pass": false,
+          "ms": 336,
+          "phase": "idle",
+          "game": null
+        },
+        "de.start": {
+          "pass": true,
+          "game": "deadeye",
+          "top": 107.09375,
+          "bottom": 699.59375,
+          "vh": 900,
+          "n": 5
+        },
+        "de.time": {
+          "pass": true,
+          "css": "0.25",
+          "slowed": 124
+        },
+        "de.grade": {
+          "pass": true,
+          "hidden": false,
+          "z": "-1",
+          "bg": "rgb(13, 21, 19)",
+          "transition": "all",
+          "bg0": "rgb(13, 21, 19)"
+        },
+        "de.targets": {
+          "pass": true,
+          "marks": 5,
+          "note": "0/5 marked · 3.8 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
+          "n": 5
+        },
+        "de.fire": {
+          "pass": true,
+          "struck": 5,
+          "hud": "5/5 marked · 3.3 s of Dead Eye left",
+          "phase": "read"
+        },
+        "de.read": {
+          "pass": true,
+          "rows": [
+            {
+              "reason": "Untradeable net of costs.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "t-stat was an overlap artifact.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Real in-sample; decayed out-of-sample.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Beta-confounded; not a standalone edge.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Filled at roughly chance.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            }
+          ]
+        },
+        "de.store": {
+          "pass": true,
+          "games": {
+            "v": 1,
+            "drone": {
+              "best": 4633
+            },
+            "deadeye": {
+              "n": 5,
+              "left": 3308
+            }
+          },
+          "hunt": {
+            "v": 1,
+            "found": {},
+            "rows": [
+              "f-optuna-screener",
+              "k-Dealer-gamma (GEX) router",
+              "k-VIX-basis deviation alpha",
+              "f-trading-algos",
+              "s-Regime-Gated Intraday Momentum"
+            ],
+            "deadEye": 1790984059148
+          }
+        },
+        "de.release": {
+          "pass": false,
+          "game": null,
+          "de": 0,
+          "on": false,
+          "layers": [
+            {
+              "hidden": false,
+              "kids": 3
+            },
+            {
+              "hidden": true,
+              "kids": 0
+            }
+          ],
+          "time": "",
+          "at": 199,
+          "before": "ue\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"grade\" hidden=\"\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"marks\" hidden=\"\"></",
+          "after": "ue\"></div><div aria-hidden=\"true\" data-deadeye-layer=\"grade\"><div></div><img alt=\"\" decoding=\"async\" src=\"/_next/image?url=%2Fmedia%2Ffilms%"
+        },
+        "de.roving": {
+          "pass": true,
+          "seen": [
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed"
+          ]
+        },
+        "rows.read": {
+          "pass": false,
+          "rendered": 10,
+          "read": 1
+        },
+        "inp": {
+          "pass": false,
+          "maxEventMs": 1576
+        },
+        "phone": {
+          "pass": true,
+          "pills": [
+            "none",
+            "none"
+          ],
+          "game": false
+        }
+      },
+      "ms": 35341,
+      "console": []
+    },
+    "gl": {
+      "pass": false,
+      "checks": {
+        "lab": {
+          "pass": true,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 1885,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 427,
+              "draws": 9,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 1597,
+              "draws": 9,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 414,
+              "draws": 9,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 1193,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 417,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 1225,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 419,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 7971136,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 1174,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 1191,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 10108,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 10141,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 15707,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 20157,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 25643,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 30190,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 30257,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 35256,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 63.5,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 35582,
+              "ev": "settle",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 39316,
+              "ev": "disengage:now",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 39391,
+              "ev": "lost"
+            },
+            {
+              "t": 39414,
+              "ev": "restored"
+            },
+            {
+              "t": 40537,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 40738,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.3999999999068677,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": false,
+          "per": {
+            "act-1": {
+              "engaged": true,
+              "shots": [
+                "page-act-1-p0.1.png",
+                "page-act-1-p0.3.png",
+                "page-act-1-p0.45.png",
+                "page-act-1-p0.8.png"
+              ]
+            },
+            "act-2": {
+              "engaged": true,
+              "shots": [
+                "page-act-2-p0.1.png",
+                "page-act-2-p0.3.png",
+                "page-act-2-p0.45.png",
+                "page-act-2-p0.8.png"
+              ]
+            },
+            "act-3": {
+              "engaged": true,
+              "shots": [
+                "page-act-3-p0.1.png",
+                "page-act-3-p0.3.png",
+                "page-act-3-p0.45.png",
+                "page-act-3-p0.8.png"
+              ]
+            },
+            "act-4": {
+              "engaged": true,
+              "shots": [
+                "page-act-4-p0.1.png",
+                "page-act-4-p0.3.png",
+                "page-act-4-p0.45.png",
+                "page-act-4-p0.8.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "midSwitches": [
+            {
+              "t": 28187,
+              "ev": "disengage",
+              "card": "seam",
+              "p": 0.821
+            },
+            {
+              "t": 42671,
+              "ev": "disengage",
+              "card": "tintype",
+              "p": 0.8
+            }
+          ],
+          "aborts": [],
+          "bytes": 17064801
+        },
+        "page.default": {
+          "pass": true,
+          "tier": "gl",
+          "on": 0,
+          "note": "context not probed yet (no card approached)"
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": "css",
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 128220,
+      "console": []
+    },
+    "hunt": {
+      "pass": false,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "hydrate": {
+          "pass": true,
+          "text": "0/12"
+        },
+        "width": {
+          "pass": true,
+          "w0": 42.59375,
+          "w12": 42.609375
+        },
+        "typed": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ],
+          "toast": "Egg 1 of 12 · The right of parley",
+          "tick": true
+        },
+        "game": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "before": 1,
+          "n": 1,
+          "mid": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          },
+          "after": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          }
+        },
+        "lumos": {
+          "pass": true,
+          "bloom": true,
+          "running": true,
+          "found": [
+            "pc-parley",
+            "hp-lumos"
+          ]
+        },
+        "browse": {
+          "pass": true,
+          "empty": [
+            "cmd-egg-obliviate",
+            "cmd-egg-intro",
+            "cmd-egg-eggs-off",
+            "cmd-play-drone",
+            "cmd-play-deadeye",
+            "cmd-play-hints",
+            "cmd-play-reset",
+            "cmd-play-dc"
+          ],
+          "solemn": [
+            "cmd-egg-map"
+          ],
+          "lumos": [
+            "cmd-egg-lumos"
+          ],
+          "map": []
+        },
+        "sync": {
+          "pass": true,
+          "chip": "3/12",
+          "n": 3
+        },
+        "obliviate": {
+          "pass": true,
+          "before": 3
+        },
+        "eggsoff": {
+          "pass": true,
+          "gone": true
+        },
+        "panel": {
+          "pass": true,
+          "slots": 12,
+          "expanded": "true",
+          "closed": true,
+          "focus": true
+        },
+        "hotspot": {
+          "pass": false,
+          "error": "locator.click: Error: strict mode violation: locator('button[data-egg-hotspot=\\'rd-eagle\\']') resolved to 2 elements:"
+        },
+        "reset": {
+          "pass": true
+        },
+        "complete": {
+          "pass": true,
+          "done": true,
+          "gold": true,
+          "rows": 12,
+          "seeker": false
+        },
+        "tail": {
+          "pass": true,
+          "h": 0.6,
+          "played": true,
+          "extended": true,
+          "again": false
+        },
+        "phone": {
+          "pass": true,
+          "chip": "none",
+          "tail": 0
+        }
+      },
+      "ms": 37902,
+      "console": []
+    },
+    "keyboard": {
+      "skipped": true,
+      "ms": 6,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": false,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [
+          [
+            "beyond",
+            26242,
+            3813
+          ],
+          [
+            "writing",
+            30056,
+            2482
+          ],
+          [
+            "voices",
+            32538,
+            1393
+          ],
+          [
+            "act-4",
+            33931,
+            900
+          ],
+          [
+            "SPAN",
+            33931,
+            270
+          ],
+          [
+            "SPAN",
+            34651,
+            180
+          ],
+          [
+            "DIV",
+            33931,
+            900
+          ],
+          [
+            "act-4-title",
+            34683,
+            43
+          ],
+          [
+            "principles",
+            34831,
+            2711
+          ],
+          [
+            "contact",
+            37543,
+            917
+          ]
+        ],
+        "heights": [
+          26242,
+          39779
+        ],
+        "ok": false
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          12291,
+          12291
+        ],
+        "shift": 0,
+        "diff": [],
+        "ok": true
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "carry",
+            "22"
+          ],
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 18161,
+      "console": []
+    },
+    "lenis": {
+      "pass": false,
+      "failed": [
+        "fastlane",
+        "pause"
+      ],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 44609,
+          "vh": 900,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 1
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 3191,
+          "y1": 3191
+        },
+        "fastlane": {
+          "pass": false,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": true,
+          "focusedAt": 1193,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": false,
+          "button": true,
+          "gone": true,
+          "ms": 126,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 3191
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 60098,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 17,
+      "over": 16,
+      "worstDur": 511,
+      "worstWork": 58,
+      "loafs": [
+        {
+          "dur": 511,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 565
+        },
+        {
+          "dur": 332,
+          "block": 8,
+          "work": 46,
+          "top": {
+            "d": 44,
+            "inv": "TimerHandler:setTimeout",
+            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
+            "fn": "st"
+          },
+          "t": 1503
+        },
+        {
+          "dur": 271,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 231
+        },
+        {
+          "dur": 260,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2928
+        },
+        {
+          "dur": 206,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1080
+        },
+        {
+          "dur": 203,
+          "block": 0,
+          "work": 58,
+          "top": {
+            "d": 18,
+            "inv": "MessagePort.onmessage",
+            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
+            "fn": "O"
+          },
+          "t": 1295
+        },
+        {
+          "dur": 151,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2249
+        },
+        {
+          "dur": 138,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1840
+        },
+        {
+          "dur": 132,
+          "block": 0,
+          "work": 8,
+          "top": {
+            "d": 7,
+            "inv": "MessagePort.onmessage",
+            "src": "http://localhost:3161/_next/static/chunks/3p9eevrhj-twl.js",
+            "fn": "O"
+          },
+          "t": 2537
+        },
+        {
+          "dur": 132,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2789
+        },
+        {
+          "dur": 122,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2408
+        },
+        {
+          "dur": 120,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 1983
+        }
+      ],
+      "ladderMs": {
+        "1": 157,
+        "2": 1378,
+        "3": 2249,
+        "4": 3314
+      },
+      "lenis": true,
+      "ms": 16261,
+      "console": []
+    },
+    "plates-live": {
+      "pass": false,
+      "live": {
+        "samples": 457,
+        "maxPlaying": 1,
+        "plates": 35,
+        "byHow": {
+          "loop": 15,
+          "camera": 15,
+          "canvas": 5
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 10,
+          "stage": 7,
+          "section:journey": 4,
+          "section:work": 2,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:kill-list": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [],
+        "deadOther": [],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 4548,
+            "how": "loop",
+            "states": [
+              "playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 8024,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L01",
+            "host": "card",
+            "ms": 4140,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "stage-0",
+            "host": "stage",
+            "ms": 9337,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-1",
+            "host": "stage",
+            "ms": 6217,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 3734,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05b",
+            "host": "section:journey",
+            "ms": 1278,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05c",
+            "host": "section:journey",
+            "ms": 1534,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05d",
+            "host": "section:journey",
+            "ms": 1277,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 5917,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 4368,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 5902,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L08",
+            "host": "card",
+            "ms": 3089,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1796,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "MV-06",
+            "host": "section:work",
+            "ms": 2067,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-2",
+            "host": "stage",
+            "ms": 4918,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 3156,
+            "how": "loop",
+            "states": [
+              "poster+poster",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-3",
+            "host": "stage",
+            "ms": 6661,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "stage-4",
+            "host": "stage",
+            "ms": 3848,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1538,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen",
+            "host": "section:kill-list",
+            "ms": 1546,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 2222,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 2123,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 2084,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 2312,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 2049,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 5642,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 3593,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-5",
+            "host": "stage",
+            "ms": 4382,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 2053,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 3364,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "card",
+            "ms": 2045,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 3903,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 4151,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-6",
+            "host": "stage",
+            "ms": 5921,
+            "how": "loop",
+            "states": []
+          }
+        ],
+        "seq": {
+          "peakMB": 87.9,
+          "sampled": true
+        },
+        "requests": {
+          "count": 13,
+          "webm": 13,
+          "mp4": 0,
+          "urls": [
+            "/media/films/hero-sea-loop.webm",
+            "/media/films/iconic-pearl-loop.webm",
+            "/media/films/iconic-ice-loop.webm",
+            "/media/films/iconic-pen-alt-loop.webm",
+            "/media/films/board-dawn-loop.webm",
+            "/media/films/iconic-corridor-loop.webm",
+            "/media/films/iconic-ice-alt-loop.webm",
+            "/media/films/iconic-pen-loop.webm",
+            "/media/films/iconic-pearl-alt-loop.webm",
+            "/media/films/films-idiots-loop.webm",
+            "/media/films/iconic-deadeye-loop.webm",
+            "/media/films/iconic-wanted-loop.webm",
+            "/media/films/last-light-loop.webm"
+          ]
+        },
+        "codecPicks": {
+          "/media/films/hero-sea-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-alt-loop.mp4": "video/webm",
+          "/media/films/board-dawn-loop.mp4": "video/webm",
+          "/media/films/iconic-corridor-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-alt-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-alt-loop.mp4": "video/webm",
+          "/media/films/films-idiots-loop.mp4": "video/webm",
+          "/media/films/iconic-deadeye-loop.mp4": "video/webm",
+          "/media/films/iconic-wanted-loop.mp4": "video/webm",
+          "/media/films/last-light-loop.mp4": "video/webm"
+        }
+      },
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 1,
+          "weather": 6,
+          "stageRoot": true,
+          "moved": 15
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 12
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "failures": [
+        "pause: video, weather or a camera transform outlived Pause (or new video requests)"
+      ],
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "translate3d(0%, 0%, 0px) scale(1.35)",
+        "depthFarAt0": "translate3d(-0.9%, 0%, 0px) scale(1.018)",
+        "weather": [
+          {
+            "kind": "spray",
+            "dots": 14,
+            "running": 14
+          },
+          {
+            "kind": "chalk",
+            "dots": 12,
+            "running": 12
+          },
+          {
+            "kind": "fireflies",
+            "dots": 9,
+            "running": 9
+          },
+          {
+            "kind": "motes",
+            "dots": 12,
+            "running": 12
+          }
+        ],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": "loop",
+            "states": [
+              "iconic-ice:poster",
+              "L08:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": "loop",
+            "states": [
+              "MV-05a:poster",
+              "L06:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": "loop",
+            "states": [
+              "iconic-corridor:poster",
+              "L10:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": "depth",
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": "depth",
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": "still",
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": "still",
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": "loop",
+            "states": [
+              "iconic-deadeye:poster",
+              "L21:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 163679,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 237,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 176,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1536,
+      "console": []
+    },
+    "sound": {
+      "pass": false,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [
+            "webm"
+          ],
+          "bytes": 46946,
+          "files": {
+            "tts-lumos": "ok",
+            "tts-nox": "ok",
+            "tts-solemn": "ok",
+            "tts-mischief": "ok",
+            "tts-parley": "ok"
+          }
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 94
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 534
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 1033
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 441
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 495
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 578
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980221190201862,
+            "rdr2": 0.2787195995664096,
+            "hp": 0.19078426046417815
+          }
+        },
+        "pause": {
+          "pass": false,
+          "off": {
+            "ok": true,
+            "ms": 113
+          },
+          "on": {
+            "ok": true,
+            "ms": 410
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_smtb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 51
+          },
+          "on": {
+            "ok": true,
+            "ms": 17
+          }
+        },
+        "eggs.typed": {
+          "pass": true,
+          "got": [
+            "match-strike",
+            "shimmer-rise",
+            "impact-lumos",
+            "projector-start",
+            "letterbox-whum",
+            "parley-creak",
+            "flag-snap",
+            "tts-parley"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": true,
+          "pause": {
+            "ok": true,
+            "ms": 132
+          },
+          "resumed": true,
+          "bell": true,
+          "ms": 6,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": true,
+          "rmAt": 15332.5,
+          "ms": 53,
+          "state": "suspended",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1b_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 51686,
+      "console": []
+    },
+    "split": {
+      "pass": false,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 11681,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 11681,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 11681,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "minmax(0px, 7fr) minmax(0px, 5fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 14187,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 14187,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 14187,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 30194,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 30194,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 30194,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ],
+        "1024x768": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 10605.890625,
+            "bottom": 12631.375,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 231,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -108,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 13256.84375,
+            "bottom": 15652.71875,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 99,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -142,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "minmax(0px, 5fr) minmax(0px, 7fr)",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              3,
+              3,
+              3
+            ],
+            "checks": {
+              "grid": true,
+              "side": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 27704,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 27704,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 27704,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ]
+      },
+      "ms": 65432,
+      "console": []
+    },
+    "spotlight": {
+      "pass": false,
+      "failed": [
+        "idle"
+      ],
+      "tests": {
+        "start": {
+          "pass": true,
+          "y": 2250,
+          "owner": null
+        },
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 501
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 401
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "idle": {
+          "pass": false,
+          "answer": "skip",
+          "msAfterStop": 4085
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "free": 10,
+            "own": 14,
+            "request": 30,
+            "grant": 22,
+            "end": 22,
+            "idle": 3,
+            "wait": 7,
+            "skip": 8
+          },
+          "overlaps": [],
+          "unresolved": [],
+          "stillPending": []
+        }
+      },
+      "log": [
+        {
+          "t": 9696,
+          "y": 0,
+          "ev": "free",
+          "id": "B08"
+        },
+        {
+          "t": 17193,
+          "y": 7200,
+          "ev": "own",
+          "id": "B13",
+          "weight": 3
+        },
+        {
+          "t": 18165,
+          "y": 7875,
+          "ev": "own",
+          "id": "B14",
+          "weight": 3
+        },
+        {
+          "t": 18836,
+          "y": 9000,
+          "ev": "free",
+          "id": "B14"
+        },
+        {
+          "t": 19879,
+          "y": 9450,
+          "ev": "request",
+          "id": "B16",
+          "weight": 1
+        },
+        {
+          "t": 19880,
+          "y": 9450,
+          "ev": "grant",
+          "id": "B16",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 20151,
+          "y": 10125,
+          "ev": "request",
+          "id": "B17",
+          "weight": 2
+        },
+        {
+          "t": 20438,
+          "y": 10575,
+          "ev": "request",
+          "id": "B18",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 20487,
+          "y": 10575,
+          "ev": "end",
+          "id": "B16",
+          "why": "held"
+        },
+        {
+          "t": 20487,
+          "y": 10575,
+          "ev": "grant",
+          "id": "B17",
+          "weight": 2,
+          "why": "waited 336 ms"
+        },
+        {
+          "t": 21111,
+          "y": 10800,
+          "ev": "idle",
+          "id": "B18"
+        },
+        {
+          "t": 21411,
+          "y": 11025,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1
+        },
+        {
+          "t": 21688,
+          "y": 11250,
+          "ev": "end",
+          "id": "B17",
+          "why": "held"
+        },
+        {
+          "t": 21688,
+          "y": 11250,
+          "ev": "wait",
+          "id": "B18",
+          "weight": 1,
+          "why": "owned by B19"
+        },
+        {
+          "t": 21759,
+          "y": 11475,
+          "ev": "skip",
+          "id": "B18",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 21762,
+          "y": 11475,
+          "ev": "request",
+          "id": "B20",
+          "weight": 2
+        },
+        {
+          "t": 21763,
+          "y": 11475,
+          "ev": "wait",
+          "id": "B20",
+          "weight": 2,
+          "why": "owned by B19"
+        },
+        {
+          "t": 22159,
+          "y": 12375,
+          "ev": "free",
+          "id": "B19"
+        },
+        {
+          "t": 22159,
+          "y": 12375,
+          "ev": "grant",
+          "id": "B20",
+          "weight": 2,
+          "why": "waited 397 ms"
+        },
+        {
+          "t": 22169,
+          "y": 12375,
+          "ev": "request",
+          "id": "B21-circle",
+          "weight": 1
+        },
+        {
+          "t": 22384,
+          "y": 12600,
+          "ev": "own",
+          "id": "B21",
+          "weight": 1
+        },
+        {
+          "t": 23316,
+          "y": 13050,
+          "ev": "free",
+          "id": "B21"
+        },
+        {
+          "t": 23323,
+          "y": 13050,
+          "ev": "request",
+          "id": "B22",
+          "weight": 2
+        },
+        {
+          "t": 23360,
+          "y": 13050,
+          "ev": "end",
+          "id": "B20",
+          "why": "held"
+        },
+        {
+          "t": 23362,
+          "y": 13050,
+          "ev": "grant",
+          "id": "B22",
+          "weight": 2,
+          "why": "waited 38 ms"
+        },
+        {
+          "t": 23401,
+          "y": 13275,
+          "ev": "skip",
+          "id": "B21-circle",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 24562,
+          "y": 14400,
+          "ev": "end",
+          "id": "B22",
+          "why": "held"
+        },
+        {
+          "t": 25086,
+          "y": 14850,
+          "ev": "request",
+          "id": "B24",
+          "weight": 1
+        },
+        {
+          "t": 25087,
+          "y": 14850,
+          "ev": "grant",
+          "id": "B24",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 25826,
+          "y": 16200,
+          "ev": "request",
+          "id": "B25",
+          "weight": 1
+        },
+        {
+          "t": 26287,
+          "y": 16200,
+          "ev": "end",
+          "id": "B24",
+          "why": "held"
+        },
+        {
+          "t": 26288,
+          "y": 16200,
+          "ev": "grant",
+          "id": "B25",
+          "weight": 1,
+          "why": "waited 460 ms"
+        },
+        {
+          "t": 27013,
+          "y": 17100,
+          "ev": "request",
+          "id": "B26",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 27488,
+          "y": 17775,
+          "ev": "end",
+          "id": "B25",
+          "why": "held"
+        },
+        {
+          "t": 27488,
+          "y": 17775,
+          "ev": "wait",
+          "id": "B26",
+          "weight": 1,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 27545,
+          "y": 18000,
+          "ev": "request",
+          "id": "B27",
+          "weight": 2
+        },
+        {
+          "t": 27545,
+          "y": 18000,
+          "ev": "grant",
+          "id": "B27",
+          "weight": 2,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 28140,
+          "y": 18000,
+          "ev": "idle",
+          "id": "B26"
+        },
+        {
+          "t": 28406,
+          "y": 18225,
+          "ev": "skip",
+          "id": "B26",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 28746,
+          "y": 18675,
+          "ev": "end",
+          "id": "B27",
+          "why": "held"
+        },
+        {
+          "t": 28907,
+          "y": 19125,
+          "ev": "request",
+          "id": "B28",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 28908,
+          "y": 19125,
+          "ev": "wait",
+          "id": "B28",
+          "weight": 1,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 29010,
+          "y": 19350,
+          "ev": "request",
+          "id": "B29",
+          "weight": 1
+        },
+        {
+          "t": 29011,
+          "y": 19350,
+          "ev": "grant",
+          "id": "B29",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 29266,
+          "y": 19800,
+          "ev": "skip",
+          "id": "B28",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 29611,
+          "y": 19800,
+          "ev": "end",
+          "id": "B29",
+          "why": "held"
+        },
+        {
+          "t": 30564,
+          "y": 20700,
+          "ev": "own",
+          "id": "B30",
+          "weight": 3
+        },
+        {
+          "t": 30925,
+          "y": 21375,
+          "ev": "request",
+          "id": "B31",
+          "weight": 1
+        },
+        {
+          "t": 30929,
+          "y": 21375,
+          "ev": "wait",
+          "id": "B31",
+          "weight": 1,
+          "why": "owned by B30"
+        },
+        {
+          "t": 31085,
+          "y": 21600,
+          "ev": "free",
+          "id": "B30"
+        },
+        {
+          "t": 31085,
+          "y": 21600,
+          "ev": "grant",
+          "id": "B31",
+          "weight": 1,
+          "why": "waited 159 ms"
+        },
+        {
+          "t": 31507,
+          "y": 21600,
+          "ev": "end",
+          "id": "B31",
+          "why": "held"
+        },
+        {
+          "t": 31899,
+          "y": 21825,
+          "ev": "request",
+          "id": "B31-finale",
+          "weight": 1
+        },
+        {
+          "t": 31900,
+          "y": 21825,
+          "ev": "grant",
+          "id": "B31-finale",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 32501,
+          "y": 22725,
+          "ev": "request",
+          "id": "B32",
+          "weight": 1
+        },
+        {
+          "t": 32675,
+          "y": 22950,
+          "ev": "request",
+          "id": "B32-finale",
+          "weight": 2
+        },
+        {
+          "t": 33100,
+          "y": 23400,
+          "ev": "end",
+          "id": "B31-finale",
+          "why": "held"
+        },
+        {
+          "t": 33100,
+          "y": 23400,
+          "ev": "grant",
+          "id": "B32-finale",
+          "weight": 2,
+          "why": "waited 425 ms"
+        },
+        {
+          "t": 33773,
+          "y": 23625,
+          "ev": "skip",
+          "id": "B32",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 34011,
+          "y": 23850,
+          "ev": "request",
+          "id": "B33",
+          "weight": 1
+        },
+        {
+          "t": 34255,
+          "y": 24075,
+          "ev": "request",
+          "id": "B33-finale",
+          "weight": 2
+        },
+        {
+          "t": 34301,
+          "y": 24300,
+          "ev": "end",
+          "id": "B32-finale",
+          "why": "held"
+        },
+        {
+          "t": 34301,
+          "y": 24300,
+          "ev": "grant",
+          "id": "B33-finale",
+          "weight": 2,
+          "why": "waited 46 ms"
+        },
+        {
+          "t": 34515,
+          "y": 24750,
+          "ev": "skip",
+          "id": "B33",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 34785,
+          "y": 25200,
+          "ev": "request",
+          "id": "B34",
+          "weight": 1
+        },
+        {
+          "t": 35504,
+          "y": 25200,
+          "ev": "end",
+          "id": "B33-finale",
+          "why": "held"
+        },
+        {
+          "t": 35504,
+          "y": 25200,
+          "ev": "grant",
+          "id": "B34",
+          "weight": 1,
+          "why": "waited 719 ms"
+        },
+        {
+          "t": 35661,
+          "y": 25425,
+          "ev": "request",
+          "id": "B34-finale",
+          "weight": 2
+        },
+        {
+          "t": 36027,
+          "y": 26100,
+          "ev": "own",
+          "id": "B35",
+          "weight": 1
+        },
+        {
+          "t": 36268,
+          "y": 26550,
+          "ev": "skip",
+          "id": "B34-finale",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 36409,
+          "y": 26775,
+          "ev": "end",
+          "id": "B34",
+          "why": "held"
+        },
+        {
+          "t": 36507,
+          "y": 27000,
+          "ev": "own",
+          "id": "B36",
+          "weight": 3
+        },
+        {
+          "t": 37705,
+          "y": 27675,
+          "ev": "own",
+          "id": "B38",
+          "weight": 3
+        },
+        {
+          "t": 38210,
+          "y": 28575,
+          "ev": "free",
+          "id": "B38"
+        },
+        {
+          "t": 38217,
+          "y": 28575,
+          "ev": "request",
+          "id": "B40",
+          "weight": 1
+        },
+        {
+          "t": 38218,
+          "y": 28575,
+          "ev": "grant",
+          "id": "B40",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 38579,
+          "y": 28800,
+          "ev": "end",
+          "id": "B40",
+          "why": "held"
+        },
+        {
+          "t": 39310,
+          "y": 29250,
+          "ev": "own",
+          "id": "B41",
+          "weight": 2
+        },
+        {
+          "t": 39830,
+          "y": 30150,
+          "ev": "free",
+          "id": "B41"
+        },
+        {
+          "t": 40916,
+          "y": 30825,
+          "ev": "own",
+          "id": "B42",
+          "weight": 1
+        },
+        {
+          "t": 41172,
+          "y": 31275,
+          "ev": "request",
+          "id": "B43",
+          "weight": 2
+        },
+        {
+          "t": 41174,
+          "y": 31275,
+          "ev": "wait",
+          "id": "B43",
+          "weight": 2,
+          "why": "owned by B42"
+        },
+        {
+          "t": 41346,
+          "y": 31500,
+          "ev": "free",
+          "id": "B42"
+        },
+        {
+          "t": 41346,
+          "y": 31500,
+          "ev": "grant",
+          "id": "B43",
+          "weight": 2,
+          "why": "waited 172 ms"
+        },
+        {
+          "t": 41483,
+          "y": 31725,
+          "ev": "request",
+          "id": "B43-wanted",
+          "weight": 2
+        },
+        {
+          "t": 42547,
+          "y": 32400,
+          "ev": "end",
+          "id": "B43",
+          "why": "held"
+        },
+        {
+          "t": 42548,
+          "y": 32400,
+          "ev": "grant",
+          "id": "B43-wanted",
+          "weight": 2,
+          "why": "waited 1065 ms"
+        },
+        {
+          "t": 42667,
+          "y": 32625,
+          "ev": "request",
+          "id": "B44",
+          "weight": 2
+        },
+        {
+          "t": 43054,
+          "y": 33300,
+          "ev": "request",
+          "id": "B45",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 43203,
+          "y": 33525,
+          "ev": "skip",
+          "id": "B44",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 43748,
+          "y": 34200,
+          "ev": "end",
+          "id": "B43-wanted",
+          "why": "held"
+        },
+        {
+          "t": 43748,
+          "y": 34200,
+          "ev": "wait",
+          "id": "B45",
+          "weight": 2,
+          "why": "waiting for scroll-idle"
+        },
+        {
+          "t": 44106,
+          "y": 34200,
+          "ev": "idle",
+          "id": "B45"
+        },
+        {
+          "t": 44106,
+          "y": 34200,
+          "ev": "grant",
+          "id": "B45",
+          "weight": 2,
+          "why": "waited 1051 ms"
+        },
+        {
+          "t": 44662,
+          "y": 34875,
+          "ev": "own",
+          "id": "B46",
+          "weight": 1
+        },
+        {
+          "t": 44934,
+          "y": 35325,
+          "ev": "own",
+          "id": "B47",
+          "weight": 2
+        },
+        {
+          "t": 45319,
+          "y": 35775,
+          "ev": "end",
+          "id": "B45",
+          "why": "held"
+        },
+        {
+          "t": 46542,
+          "y": 36900,
+          "ev": "free",
+          "id": "B47"
+        },
+        {
+          "t": 46691,
+          "y": 37125,
+          "ev": "own",
+          "id": "B48",
+          "weight": 3
+        },
+        {
+          "t": 47209,
+          "y": 37800,
+          "ev": "own",
+          "id": "B50",
+          "weight": 3
+        },
+        {
+          "t": 48439,
+          "y": 38700,
+          "ev": "free",
+          "id": "B50"
+        },
+        {
+          "t": 48450,
+          "y": 38700,
+          "ev": "request",
+          "id": "B52",
+          "weight": 1
+        },
+        {
+          "t": 48451,
+          "y": 38700,
+          "ev": "grant",
+          "id": "B52",
+          "weight": 1,
+          "why": "waited 1 ms"
+        },
+        {
+          "t": 48517,
+          "y": 38925,
+          "ev": "request",
+          "id": "B53",
+          "weight": 1
+        },
+        {
+          "t": 49652,
+          "y": 39600,
+          "ev": "end",
+          "id": "B52",
+          "why": "held"
+        },
+        {
+          "t": 49652,
+          "y": 39600,
+          "ev": "grant",
+          "id": "B53",
+          "weight": 1,
+          "why": "waited 1135 ms"
+        },
+        {
+          "t": 50552,
+          "y": 40725,
+          "ev": "end",
+          "id": "B53",
+          "why": "held"
+        },
+        {
+          "t": 50601,
+          "y": 41400,
+          "ev": "request",
+          "id": "B56",
+          "weight": 2
+        },
+        {
+          "t": 50602,
+          "y": 41400,
+          "ev": "grant",
+          "id": "B56",
+          "weight": 2,
+          "why": "waited 1 ms"
+        },
+        {
+          "t": 51802,
+          "y": 41400,
+          "ev": "end",
+          "id": "B56",
+          "why": "held"
+        },
+        {
+          "t": 52202,
+          "y": 42750,
+          "ev": "request",
+          "id": "B57",
+          "weight": 2
+        },
+        {
+          "t": 52204,
+          "y": 42750,
+          "ev": "grant",
+          "id": "B57",
+          "weight": 2,
+          "why": "waited 1 ms"
+        },
+        {
+          "t": 53404,
+          "y": 43425,
+          "ev": "end",
+          "id": "B57",
+          "why": "held"
+        },
+        {
+          "t": 54565,
+          "y": 43669,
+          "ev": "request",
+          "id": "B58",
+          "weight": 3
+        },
+        {
+          "t": 54565,
+          "y": 43669,
+          "ev": "grant",
+          "id": "B58",
+          "weight": 3,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 55766,
+          "y": 43669,
+          "ev": "end",
+          "id": "B58",
+          "why": "held"
+        }
+      ],
+      "ms": 56006,
+      "console": []
+    },
+    "words": {
+      "pass": false,
+      "target": "/?skip=intro&debug=words,spotlight",
+      "ssr": {
+        "pass": true,
+        "count": 14,
+        "kinds": [
+          "title",
+          "scrub",
+          "physical"
+        ],
+        "textless": []
+      },
+      "rm": {
+        "pass": true,
+        "armed": 0,
+        "spotlight": false,
+        "minOpacity": 1
+      },
+      "phone": {
+        "pass": true,
+        "binder": false,
+        "armed": 0,
+        "detailsContentSupported": true,
+        "summaryDisplay": "none",
+        "contentVisible": true
+      },
+      "scrub": {
+        "pass": true,
+        "dimFirst": 0.28,
+        "litMin": 1,
+        "backFirst": 0.28,
+        "words": 26
+      },
+      "fly": {
+        "pass": false,
+        "error": "no fly-through"
+      },
+      "titles": {
+        "pass": true,
+        "played": [
+          "title:B07",
+          "title:B16",
+          "physical:B23",
+          "title:B31",
+          "title:B32",
+          "title:B33",
+          "title:B34",
+          "title:B40",
+          "fly:B45",
+          "title:B53"
+        ],
+        "statics": 2,
+        "leftArmed": 0,
+        "overlaps": []
+      },
+      "identical": {
+        "pass": false,
+        "diff": [
+          {
+            "k": 2,
+            "kind": "title",
+            "beat": "B16"
+          },
+          {
+            "k": 3,
+            "kind": "scrub",
+            "beat": "B21"
+          },
+          {
+            "k": 4,
+            "kind": "physical",
+            "beat": "B23"
+          },
+          {
+            "k": 5,
+            "kind": "physical",
+            "beat": "B29"
+          },
+          {
+            "k": 6,
+            "kind": "title",
+            "beat": "B31"
+          },
+          {
+            "k": 7,
+            "kind": "title",
+            "beat": "B32"
+          },
+          {
+            "k": 8,
+            "kind": "title",
+            "beat": "B33"
+          },
+          {
+            "k": 9,
+            "kind": "title",
+            "beat": "B34"
+          },
+          {
+            "k": 10,
+            "kind": "title",
+            "beat": "B40"
+          },
+          {
+            "k": 11,
+            "kind": "scrub",
+            "beat": "B42"
+          }
+        ]
+      },
+      "pause": {
+        "pass": false,
+        "armedBefore": 0,
+        "armedInTheClick": 0,
+        "armedAt100ms": 0,
+        "openFx": 0,
+        "minOpacity": 1,
+        "identical": false
+      },
+      "ms": 100948,
+      "console": []
+    }
+  }
+}

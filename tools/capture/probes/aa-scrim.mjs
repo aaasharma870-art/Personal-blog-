@@ -14,6 +14,7 @@
 //   4. screenshot with the section's text made transparent: the pixels under each box are
 //      exactly what the text sits on (plate + scrim + ground); find the brightest and the
 //      darkest pixel under it and take the worse contrast;
+//   (text that is not rendered, e.g. a closed <details>, is skipped; --aa-open opens every collapse first)
 //   5. threshold 4.5:1, or 3:1 for large text (≥ 24 px, or ≥ 18.66 px at weight ≥ 700).
 // pass = no box under its threshold at any step; `live: false` sections are reported, not failed
 // (the stage never showed them, so they rendered opaque as today).
@@ -67,6 +68,8 @@ function collectBoxes() {
       const el = n.parentElement;
       // decorative ink (aria-hidden: the ghost "•" separators, motifs) is incidental text
       if (!el || el.closest('[aria-hidden="true"]')) continue;
+      // not rendered (a CLOSED <details>' content: content-visibility hidden still has client rects)
+      if (typeof el.checkVisibility === "function" && !el.checkVisibility()) continue;
       const cs = getComputedStyle(el);
       if (cs.visibility !== "visible" || Number(cs.opacity) === 0) continue;
       const range = document.createRange();
@@ -139,6 +142,9 @@ async function runWidth(page, ctx, vw, step) {
   await page.setViewportSize(vw);
   await ctx.goto("/?skip=intro,smooth");
   await page.waitForTimeout(1500);
+  // --aa-open: measure with every collapse OPEN (the text a reader sees after opening it)
+  if (ctx.args["aa-open"]) await page.evaluate(() => document.querySelectorAll("details[data-collapse]").forEach((d) => (d.open = true)));
+  if (ctx.args["aa-open"]) await page.waitForTimeout(600);
   const sections = await page.evaluate(() =>
     [...document.querySelectorAll(".stage-backdrop")].map((el) => {
       const r = el.getBoundingClientRect();
