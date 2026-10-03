@@ -1,0 +1,309 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": true,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T14:47:42.636Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "keyboard"
+    ]
+  },
+  "results": {
+    "keyboard": {
+      "pass": true,
+      "checks": {
+        "walk": {
+          "pass": true,
+          "stops": 68,
+          "wrapped": true,
+          "notInView": 0,
+          "notInViewList": [],
+          "covered": 0,
+          "coveredList": []
+        },
+        "walk.covered": {
+          "pass": true,
+          "n": 0
+        },
+        "op.pause": {
+          "pass": true,
+          "stop": 6,
+          "paused": true,
+          "resumed": true,
+          "toast": false,
+          "counted": 0
+        },
+        "op.sound": {
+          "pass": true,
+          "stop": 5,
+          "rm": true,
+          "disabled": true,
+          "states": [
+            "false",
+            "false",
+            "false"
+          ]
+        },
+        "op.chip": {
+          "pass": true,
+          "stop": 4,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button[Easter-egg hunt: 0 of 12 found. Show hin]"
+        },
+        "op.menu": {
+          "pass": true,
+          "stop": 7,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button"
+        },
+        "op.compass": {
+          "pass": true,
+          "stop": 16,
+          "rest": 0,
+          "enter": 45,
+          "arrow": 225
+        },
+        "op.coin": {
+          "pass": true,
+          "stop": 18,
+          "egg": "pc-coin",
+          "counted": true,
+          "focus": "button#egg-pc-coin[Hold the coin to the moonlight]"
+        },
+        "op.kraken": {
+          "pass": true,
+          "stop": 20,
+          "egg": "pc-kraken",
+          "counted": true,
+          "focus": "button"
+        },
+        "op.run": {
+          "pass": true,
+          "stop": 23,
+          "counted": true
+        },
+        "op.aal": {
+          "pass": true,
+          "stop": 26,
+          "egg": "3i-aal",
+          "counted": true,
+          "focus": "button#egg-3i-aal[A chalk heart on the board's ledge]"
+        },
+        "op.drone": {
+          "pass": true,
+          "stop": 32,
+          "rm": true,
+          "phase": "plan",
+          "game": null,
+          "focusInGame": true,
+          "focusBackAfterEsc": true
+        },
+        "op.pen": {
+          "pass": true,
+          "stop": 34,
+          "afterDeadEyeWin": true,
+          "counted": true,
+          "toast": "Worthy.Egg 5 of 12 · The astronaut pen",
+          "note": "pressed after the Dead Eye win: counts"
+        },
+        "op.deadeye": {
+          "pass": true,
+          "stop": 33,
+          "started": true,
+          "focusOnFirstRow": true,
+          "killedRows": 5,
+          "struck": 5,
+          "hud": "5/5 markedBest 5/5 · 0.0 sRelease5/5 marked",
+          "released": true,
+          "focusBack": true,
+          "focus": "button#deadeye-call"
+        },
+        "op.eagle": {
+          "pass": true,
+          "stop": 57,
+          "egg": "rd-eagle",
+          "counted": true,
+          "focus": "button#egg-rd-eagle[The eagle eye]"
+        },
+        "op.bone": {
+          "pass": true,
+          "stop": 59,
+          "egg": "rd-bone",
+          "counted": true,
+          "focus": "button#egg-rd-bone[The fossil bone]"
+        },
+        "op.fire": {
+          "pass": true,
+          "stop": 60,
+          "egg": "rd-fire",
+          "counted": true,
+          "focus": "button#egg-rd-fire[Warm your hands by the fire]"
+        },
+        "op.lumos": {
+          "pass": true,
+          "rm": true,
+          "note": "no candle toy under reduced motion (all candles lit)",
+          "present": true
+        },
+        "op.snitch": {
+          "pass": true,
+          "stop": 66,
+          "egg": "hp-snitch",
+          "counted": true,
+          "focus": "button[Snitch caught]"
+        },
+        "reach.fastlane": {
+          "pass": true,
+          "stop": 3
+        },
+        "reach.dc": {
+          "pass": true,
+          "stop": 9
+        },
+        "op.pen.afterDeadEye": {
+          "pass": true,
+          "note": "already counted"
+        },
+        "typed.parley": {
+          "pass": true
+        },
+        "typed.aal": {
+          "pass": true,
+          "note": "3i-aal may already count from the heart (counts once)"
+        },
+        "typed.nox-lumos": {
+          "pass": true,
+          "paused": true,
+          "resumed": true
+        },
+        "typed.map": {
+          "pass": true,
+          "open": true,
+          "label": "ARYAN SHARMA • A RESEARCH JOURNAL IN FOUR ACTSAfter Pirates ",
+          "focusInDialog": true,
+          "closedMs": 23,
+          "focusAfter": "a"
+        },
+        "palette.map": {
+          "pass": true,
+          "open": true,
+          "listed": [
+            "Open the Marauder's Map"
+          ],
+          "dialog": true,
+          "closedMs": 18,
+          "focusAfter": "body"
+        },
+        "palette.drone": {
+          "pass": true,
+          "focusOnPill": true,
+          "phase": "idle",
+          "focus": "button#drone-takeoff"
+        },
+        "jump.fastlane": {
+          "pass": true,
+          "focus": "h2#work-title"
+        },
+        "jump.dc": {
+          "pass": true,
+          "rm": true,
+          "started": false,
+          "label": "▶ Director's cut(sound on)Motion is paused"
+        },
+        "jump.chapter": {
+          "pass": true,
+          "focus": "h2#act-2-title",
+          "hash": "#act-2"
+        },
+        "count": {
+          "pass": true,
+          "counted": 12,
+          "missing": [],
+          "lenis": false
+        }
+      },
+      "walk": [
+        "1 a \"Skip to content\" #-",
+        "2 a \"Aryan Sharma — back to the top\" #header",
+        "3 a \"WorkSkip to the research\" #header",
+        "4 button \"Easter-egg hunt: 0 of 12 found. Show hints\" #header",
+        "5 button \"Sound\" #header",
+        "6 button \"Pause motion\" #header",
+        "7 button \"Menu\" #header",
+        "8 a \"View the quant portfolio↓\" #top",
+        "9 button \"▶ Director's cut(sound on)Motion is paused\" #top",
+        "10 a \"The CrossingAct I • AFTER PIRATES OF THE CARIBBEAN\" #act-1",
+        "11 a \"The WorkshopAct II • AFTER 3 IDIOTS\" #act-1",
+        "12 a \"Three films and a gameIntermission\" #act-1",
+        "13 a \"The FrontierAct III • AFTER RED DEAD REDEMPTION 2\" #act-1",
+        "14 a \"The LightAct IV • AFTER HARRY POTTER\" #act-1",
+        "15 summary \"The philosophy note\" #about",
+        "16 button \"Spin Jack's compass\" #about",
+        "17 button#journey-tab-1 \"01Origin\" #journey",
+        "18 button#egg-pc-coin \"Hold the coin to the moonlight\" #journey",
+        "19 button \"Next step\" #journey",
+        "20 button \"HERE BE MONSTERS\" #act-2",
+        "21 button#gauntlet-tab-_r_7_-0 \"01Pre-registration\" #work",
+        "22 div#gauntlet-panel-_r_7_ \"GATE 01 / 07Pre-registrationHypothesis, parameters\" #work",
+        "23 button \"Run 12 illustrative hypotheses\" #work",
+        "24 a \"Trading_Algos-\" #trading-algos",
+        "25 a \"Optuna-Screener\" #optuna-screener",
+        "26 button#egg-3i-aal \"A chalk heart on the board's ledge\" #optuna-screener",
+        "27 summary \"Where the discipline started · Automated 0DTE Opti\" #optuna-screener",
+        "28 summary \"Tools, pipelines, automation.\" #optuna-screener",
+        "29 summary \"Also on GitHub\" #optuna-screener",
+        "30 button \"Naïve · zero-cost · in-sample\" #experiment",
+        "31 button \"Realistic costs · out-of-sample\" #experiment",
+        "32 button#drone-takeoff \"▲ Take off\" #systems",
+        "33 button#deadeye-call \"DEAD EYE\" #kill-list",
+        "34 button#egg-3i-pen \"The astronaut pen\" #kill-list",
+        "35 button \"Quantitative Trading Research\" #kill-list",
+        "36 a \"Quantitative Trading Research: the Trading_Algos- \" #kill-list",
+        "37 a \"Automated Strategy Research Pipeline: the Optuna-S\" #kill-list",
+        "38 a \"Post-mortem for Dealer-gamma (GEX) router: the Tra\" #kill-list",
+        "39 a \"Post-mortem for Intraday momentum-continuation: th\" #kill-list",
+        "40 a \"Post-mortem for VIX-basis deviation alpha: the Tra\" #kill-list",
+        "41 a \"Post-mortem for VIX3M directional: the Trading_Alg\" #kill-list",
+        "42 a \"Post-mortem for Smart-Money patterns (FVG, order b\" #kill-list",
+        "43 a \"Act I\" #films",
+        "44 a \"About\" #films",
+        "45 a \"Journey\" #films",
+        "46 a \"Act II\" #films",
+        "47 a \"Work\" #films",
+        "48 a \"Trading_Algos\" #films",
+        "49 a \"Optuna\" #films",
+        "50 a \"Act III\" #films",
+        "51 a \"Beyond\" #films",
+        "52 a \"Writing\" #films",
+        "53 a \"Voices\" #films",
+        "54 a \"Act IV\" #films",
+        "55 a \"Principles\" #films",
+        "56 a \"Contact\" #films",
+        "57 button#egg-rd-eagle \"The eagle eye\" #beyond",
+        "58 a \"Reply by email →\" #beyond",
+        "59 button#egg-rd-bone \"The fossil bone\" #writing",
+        "60 button#egg-rd-fire \"Warm your hands by the fire\" #voices",
+        "61 button \"Copy email address aaasharma870@gmail.com\" #contact",
+        "62 a \"Open in your mail app\" #contact",
+        "63 a \"GitHub\" #contact",
+        "64 summary \"More credits: media, fonts and quotes\" #credits",
+        "65 a \"↑ Back to the opening\" #credits",
+        "66 button \"Catch the snitch\" #credits",
+        "67 a \"GitHub profile\" #credits",
+        "68 a \"Email Aryan Sharma\" #credits",
+        "70 → wraps to 1"
+      ],
+      "ms": 143614,
+      "console": []
+    }
+  }
+}

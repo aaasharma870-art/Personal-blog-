@@ -1,0 +1,5703 @@
+{
+ "meta": {
+  "tool": "tools/capture/clips.mjs",
+  "source": "docs/build/motion-strips/p3-r1/screencast/reader-1024/screencast.json",
+  "profile": "reader",
+  "viewport": "1024x768",
+  "browserMode": "headed (xvfb-run)",
+  "clipS": 2,
+  "from": "recording start",
+  "sheets": [
+   "sheets-panel/sheet-01.jpg",
+   "sheets-panel/sheet-02.jpg",
+   "sheets-panel/sheet-03.jpg",
+   "sheets-panel/sheet-04.jpg",
+   "sheets-panel/sheet-05.jpg",
+   "sheets-panel/sheet-06.jpg",
+   "sheets-panel/sheet-07.jpg",
+   "sheets-panel/sheet-08.jpg",
+   "sheets-panel/sheet-09.jpg",
+   "sheets-panel/sheet-10.jpg",
+   "sheets-panel/sheet-11.jpg",
+   "sheets-panel/sheet-12.jpg"
+  ],
+  "plain": true,
+  "strips": "docs/build/motion-strips/p3-r1/raw/screencast/reader-1024/clips (local only)",
+  "definitions": {
+   "stars": "spotlight log (?debug=spotlight): scroll star own → next own/free; time star grant → end/release",
+   "maxConcurrent": "most stars active at one instant inside the clip (the O.4 bar counts this)",
+   "overlapMs": "how long two or more stars are active together inside the clip (context for a 2+ clip)",
+   "unregistered": "declared scroll stars (lib/page.ts, lib/film.ts) that never owned the spotlight in this run, listed while their box crosses the middle 60 % (shown as '(+id unreg.)'; totals.withDeclared counts them)",
+   "distinct": "stars seen anywhere in the clip (a hand-off inside one second lists two in sequence)",
+   "breath": "the clip's scrollY lies in a beat-map row marked ⟂ (PHASE3-SPEC §2.3), placed on this run's geometry",
+   "intro": "the prologue (play screen → titles → quiet window), outside the page rules; excluded from the page totals"
+  }
+ },
+ "totals": {
+  "clips": 118,
+  "introClips": 6,
+  "pageClips": 112,
+  "exactlyOne": 78,
+  "exactlyOnePct": 69.6,
+  "twoPlus": 0,
+  "twoPlusClips": [],
+  "twoPlusOver100ms": 0,
+  "none": 34,
+  "noneInBreath": 5,
+  "noneOutsideBreath": 29,
+  "noneOutsideBreathPct": 25.9,
+  "noneOutsideBreathBySection": [
+   [
+    "journey",
+    5
+   ],
+   [
+    "writing",
+    4
+   ],
+   [
+    "optuna-screener",
+    3
+   ],
+   [
+    "principles",
+    3
+   ],
+   [
+    "top",
+    2
+   ],
+   [
+    "experiment",
+    2
+   ],
+   [
+    "systems",
+    2
+   ],
+   [
+    "kill-list",
+    2
+   ],
+   [
+    "contact",
+    2
+   ],
+   [
+    "credits",
+    2
+   ],
+   [
+    "work",
+    1
+   ],
+   [
+    "beyond",
+    1
+   ]
+  ],
+  "distinctTwoPlus": 17,
+  "unregisteredScrollStars": [
+   "B02",
+   "B09",
+   "B10",
+   "B11",
+   "B54"
+  ],
+  "withDeclared": {
+   "note": "the spotlight's stars plus declared scroll stars that never registered with it in this run, counted while their box crosses the middle 60 %",
+   "exactlyOne": 84,
+   "exactlyOnePct": 75,
+   "twoPlus": 3,
+   "twoPlusClips": [
+    {
+     "i": 9,
+     "t": 16,
+     "y": 350,
+     "stars": [
+      "B03",
+      "B02"
+     ]
+    },
+    {
+     "i": 21,
+     "t": 40,
+     "y": 4197,
+     "stars": [
+      "B09",
+      "B10"
+     ]
+    },
+    {
+     "i": 24,
+     "t": 46,
+     "y": 5681,
+     "stars": [
+      "B12",
+      "B11"
+     ]
+    }
+   ],
+   "noneOutsideBreath": 20
+  },
+  "starsSeen": 46,
+  "breathRows": [
+   "B06",
+   "B07",
+   "B16",
+   "B31",
+   "B39",
+   "B40",
+   "B52"
+  ]
+ },
+ "rows": [
+  {
+   "row": "B02",
+   "from": 0,
+   "to": 768,
+   "breath": false,
+   "stars": [
+    "B02"
+   ]
+  },
+  {
+   "row": "B03",
+   "from": 768,
+   "to": 1121,
+   "breath": false,
+   "stars": [
+    "B03"
+   ]
+  },
+  {
+   "row": "B04",
+   "from": 1121,
+   "to": 1474,
+   "breath": false,
+   "stars": [
+    "B04"
+   ]
+  },
+  {
+   "row": "B06",
+   "from": 1474,
+   "to": 2078,
+   "breath": true,
+   "stars": [
+    "B06"
+   ]
+  },
+  {
+   "row": "B07",
+   "from": 2078,
+   "to": 2846,
+   "breath": true,
+   "stars": [
+    "B07"
+   ]
+  },
+  {
+   "row": "B08",
+   "from": 2846,
+   "to": 3620,
+   "breath": false,
+   "stars": [
+    "B08",
+    "B08-invite"
+   ]
+  },
+  {
+   "row": "B09",
+   "from": 3620,
+   "to": 4131,
+   "breath": false,
+   "stars": [
+    "B09"
+   ]
+  },
+  {
+   "row": "B10",
+   "from": 4131,
+   "to": 4936,
+   "breath": false,
+   "stars": [
+    "B10"
+   ]
+  },
+  {
+   "row": "B11",
+   "from": 4936,
+   "to": 5736,
+   "breath": false,
+   "stars": [
+    "B11"
+   ]
+  },
+  {
+   "row": "B12",
+   "from": 5736,
+   "to": 6603,
+   "breath": false,
+   "stars": [
+    "B12"
+   ]
+  },
+  {
+   "row": "B13",
+   "from": 6603,
+   "to": 7025,
+   "breath": false,
+   "stars": [
+    "B13"
+   ]
+  },
+  {
+   "row": "B14",
+   "from": 7025,
+   "to": 7448,
+   "breath": false,
+   "stars": [
+    "B14"
+   ]
+  },
+  {
+   "row": "B16",
+   "from": 7448,
+   "to": 8216,
+   "breath": true,
+   "stars": [
+    "B16"
+   ]
+  },
+  {
+   "row": "B17",
+   "from": 8216,
+   "to": 9018,
+   "breath": false,
+   "stars": [
+    "B17"
+   ]
+  },
+  {
+   "row": "B18",
+   "from": 9018,
+   "to": 9525,
+   "breath": false,
+   "stars": [
+    "B18"
+   ]
+  },
+  {
+   "row": "B19",
+   "from": 9525,
+   "to": 10293,
+   "breath": false,
+   "stars": [
+    "B19"
+   ]
+  },
+  {
+   "row": "B20",
+   "from": 10293,
+   "to": 11304,
+   "breath": false,
+   "stars": [
+    "B20"
+   ]
+  },
+  {
+   "row": "B21",
+   "from": 11304,
+   "to": 12505,
+   "breath": false,
+   "stars": [
+    "B21",
+    "B21-circle"
+   ]
+  },
+  {
+   "row": "B22",
+   "from": 12505,
+   "to": 13281,
+   "breath": false,
+   "stars": [
+    "B22"
+   ]
+  },
+  {
+   "row": "B23",
+   "from": 13281,
+   "to": 14109,
+   "breath": false,
+   "stars": [
+    "B23"
+   ]
+  },
+  {
+   "row": "B24",
+   "from": 14109,
+   "to": 15516,
+   "breath": false,
+   "stars": [
+    "B24"
+   ]
+  },
+  {
+   "row": "B25",
+   "from": 15516,
+   "to": 16439,
+   "breath": false,
+   "stars": [
+    "B25"
+   ]
+  },
+  {
+   "row": "B26",
+   "from": 16439,
+   "to": 17201,
+   "breath": false,
+   "stars": [
+    "B26"
+   ]
+  },
+  {
+   "row": "B27",
+   "from": 17201,
+   "to": 18312,
+   "breath": false,
+   "stars": [
+    "B27"
+   ]
+  },
+  {
+   "row": "B28",
+   "from": 18312,
+   "to": 18932,
+   "breath": false,
+   "stars": [
+    "B28"
+   ]
+  },
+  {
+   "row": "B29",
+   "from": 18932,
+   "to": 20154,
+   "breath": false,
+   "stars": [
+    "B29"
+   ]
+  },
+  {
+   "row": "B30",
+   "from": 20154,
+   "to": 20497,
+   "breath": false,
+   "stars": [
+    "B30"
+   ]
+  },
+  {
+   "row": "B31",
+   "from": 20497,
+   "to": 21311,
+   "breath": true,
+   "stars": [
+    "B31",
+    "B31-finale"
+   ]
+  },
+  {
+   "row": "B32",
+   "from": 21311,
+   "to": 22289,
+   "breath": false,
+   "stars": [
+    "B32",
+    "B32-finale"
+   ]
+  },
+  {
+   "row": "B33",
+   "from": 22289,
+   "to": 23267,
+   "breath": false,
+   "stars": [
+    "B33",
+    "B33-finale"
+   ]
+  },
+  {
+   "row": "B34",
+   "from": 23267,
+   "to": 24245,
+   "breath": false,
+   "stars": [
+    "B34",
+    "B34-finale"
+   ]
+  },
+  {
+   "row": "B35",
+   "from": 24245,
+   "to": 24939,
+   "breath": false,
+   "stars": [
+    "B35"
+   ]
+  },
+  {
+   "row": "B36",
+   "from": 24939,
+   "to": 25285,
+   "breath": false,
+   "stars": [
+    "B36"
+   ]
+  },
+  {
+   "row": "B38",
+   "from": 25285,
+   "to": 25630,
+   "breath": false,
+   "stars": [
+    "B38"
+   ]
+  },
+  {
+   "row": "B39",
+   "from": 25630,
+   "to": 26398,
+   "breath": true,
+   "stars": []
+  },
+  {
+   "row": "B40",
+   "from": 26398,
+   "to": 27283,
+   "breath": true,
+   "stars": [
+    "B40"
+   ]
+  },
+  {
+   "row": "B41",
+   "from": 27283,
+   "to": 28184,
+   "breath": false,
+   "stars": [
+    "B41"
+   ]
+  },
+  {
+   "row": "B42",
+   "from": 28184,
+   "to": 29085,
+   "breath": false,
+   "stars": [
+    "B42"
+   ]
+  },
+  {
+   "row": "B43",
+   "from": 29085,
+   "to": 30726,
+   "breath": false,
+   "stars": [
+    "B43",
+    "B43-wanted"
+   ]
+  },
+  {
+   "row": "B44",
+   "from": 30726,
+   "to": 31554,
+   "breath": false,
+   "stars": [
+    "B44"
+   ]
+  },
+  {
+   "row": "B45",
+   "from": 31554,
+   "to": 32900,
+   "breath": false,
+   "stars": [
+    "B45"
+   ]
+  },
+  {
+   "row": "B46",
+   "from": 32900,
+   "to": 33212,
+   "breath": false,
+   "stars": [
+    "B46"
+   ]
+  },
+  {
+   "row": "B47",
+   "from": 33212,
+   "to": 34784,
+   "breath": false,
+   "stars": [
+    "B47"
+   ]
+  },
+  {
+   "row": "B48",
+   "from": 34784,
+   "to": 35206,
+   "breath": false,
+   "stars": [
+    "B48"
+   ]
+  },
+  {
+   "row": "B50",
+   "from": 35206,
+   "to": 35629,
+   "breath": false,
+   "stars": [
+    "B50"
+   ]
+  },
+  {
+   "row": "B52",
+   "from": 35629,
+   "to": 36397,
+   "breath": true,
+   "stars": [
+    "B52"
+   ]
+  },
+  {
+   "row": "B53",
+   "from": 36397,
+   "to": 37234,
+   "breath": false,
+   "stars": [
+    "B53"
+   ]
+  },
+  {
+   "row": "B54",
+   "from": 37234,
+   "to": 38038,
+   "breath": false,
+   "stars": [
+    "B54"
+   ]
+  },
+  {
+   "row": "B55",
+   "from": 38038,
+   "to": 38940,
+   "breath": false,
+   "stars": [
+    "B55"
+   ]
+  },
+  {
+   "row": "B56",
+   "from": 38940,
+   "to": 39727,
+   "breath": false,
+   "stars": [
+    "B56"
+   ]
+  },
+  {
+   "row": "B57",
+   "from": 39727,
+   "to": 40576,
+   "breath": false,
+   "stars": [
+    "B57"
+   ]
+  },
+  {
+   "row": "B58",
+   "from": 40576,
+   "to": 41462,
+   "breath": false,
+   "stars": [
+    "B58"
+   ]
+  }
+ ],
+ "clips": [
+  {
+   "i": 1,
+   "t": 0,
+   "tPage": 1222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "play-screen",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00002.jpg",
+    "f00009.jpg",
+    "f00020.jpg",
+    "f00032.jpg"
+   ],
+   "fps": 15.9,
+   "p95": 133.3,
+   "maxDt": 466.6,
+   "loaf50": 6,
+   "loafWork50": 3
+  },
+  {
+   "i": 2,
+   "t": 2,
+   "tPage": 3222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "flight",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00043.jpg",
+    "f00052.jpg",
+    "f00059.jpg",
+    "f00068.jpg"
+   ],
+   "fps": 17.8,
+   "p95": 116.6,
+   "maxDt": 116.7,
+   "loaf50": 20,
+   "loafWork50": 0
+  },
+  {
+   "i": 3,
+   "t": 4,
+   "tPage": 5222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "flight",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00077.jpg",
+    "f00085.jpg",
+    "f00095.jpg",
+    "f00103.jpg"
+   ],
+   "fps": 21.7,
+   "p95": 66.7,
+   "maxDt": 66.7,
+   "loaf50": 24,
+   "loafWork50": 0
+  },
+  {
+   "i": 4,
+   "t": 6,
+   "tPage": 7222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "flight",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00109.jpg",
+    "f00117.jpg",
+    "f00126.jpg",
+    "f00130.jpg"
+   ],
+   "fps": 18,
+   "p95": 83.4,
+   "maxDt": 100.1,
+   "loaf50": 25,
+   "loafWork50": 0
+  },
+  {
+   "i": 5,
+   "t": 8,
+   "tPage": 9222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "reveal",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00137.jpg",
+    "f00143.jpg",
+    "f00146.jpg",
+    "f00153.jpg"
+   ],
+   "fps": 18,
+   "p95": 116.6,
+   "maxDt": 250.1,
+   "loaf50": 23,
+   "loafWork50": 0
+  },
+  {
+   "i": 6,
+   "t": 10,
+   "tPage": 11222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": "titles",
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": null,
+   "rowStars": [],
+   "breath": null,
+   "frames": [
+    "f00162.jpg",
+    "f00172.jpg",
+    "f00182.jpg",
+    "f00192.jpg"
+   ],
+   "fps": 30,
+   "p95": 66.5,
+   "maxDt": 83.3,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 7,
+   "t": 12,
+   "tPage": 13222,
+   "y": 0,
+   "yRange": [
+    0,
+    0
+   ],
+   "section": "top",
+   "intro": null,
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B02"
+   ],
+   "unregistered": [
+    "B02"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B02",
+   "rowStars": [
+    "B02 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00199.jpg",
+    "f00209.jpg",
+    "f00217.jpg",
+    "f00226.jpg"
+   ],
+   "fps": 23.5,
+   "p95": 66.7,
+   "maxDt": 116.6,
+   "loaf50": 9,
+   "loafWork50": 0
+  },
+  {
+   "i": 8,
+   "t": 14,
+   "tPage": 15222,
+   "y": 0,
+   "yRange": [
+    0,
+    81
+   ],
+   "section": "top",
+   "intro": null,
+   "screen": 1,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B02"
+   ],
+   "unregistered": [
+    "B02"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B02",
+   "rowStars": [
+    "B02 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00236.jpg",
+    "f00244.jpg",
+    "f00252.jpg",
+    "f00257.jpg"
+   ],
+   "fps": 20.2,
+   "p95": 116.6,
+   "maxDt": 116.7,
+   "loaf50": 10,
+   "loafWork50": 1
+  },
+  {
+   "i": 9,
+   "t": 16,
+   "tPage": 17222,
+   "y": 350,
+   "yRange": [
+    124,
+    550
+   ],
+   "section": "top",
+   "intro": null,
+   "screen": 1,
+   "stars": [
+    {
+     "id": "B03",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B02"
+   ],
+   "unregistered": [
+    "B02"
+   ],
+   "withDeclared": 2,
+   "skips": [],
+   "row": "B02",
+   "rowStars": [
+    "B02 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00260.jpg",
+    "f00266.jpg",
+    "f00271.jpg",
+    "f00277.jpg"
+   ],
+   "fps": 10.6,
+   "p95": 133.3,
+   "maxDt": 350.1,
+   "loaf50": 23,
+   "loafWork50": 0
+  },
+  {
+   "i": 10,
+   "t": 18,
+   "tPage": 19222,
+   "y": 894,
+   "yRange": [
+    700,
+    1053
+   ],
+   "section": "act-1",
+   "intro": null,
+   "screen": 2,
+   "stars": [
+    {
+     "id": "B03",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B04",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B03",
+    "B04"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B03",
+   "rowStars": [
+    "B03 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00286.jpg",
+    "f00298.jpg",
+    "f00305.jpg",
+    "f00312.jpg"
+   ],
+   "fps": 17.5,
+   "p95": 116.7,
+   "maxDt": 133.3,
+   "loaf50": 15,
+   "loafWork50": 0
+  },
+  {
+   "i": 11,
+   "t": 20,
+   "tPage": 21222,
+   "y": 1150,
+   "yRange": [
+    1137,
+    1150
+   ],
+   "section": "act-1",
+   "intro": null,
+   "screen": 2,
+   "stars": [
+    {
+     "id": "B04",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B03",
+    "B04"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B04",
+   "rowStars": [
+    "B04 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00319.jpg",
+    "f00325.jpg",
+    "f00330.jpg",
+    "f00341.jpg"
+   ],
+   "fps": 18.2,
+   "p95": 100,
+   "maxDt": 150.1,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 12,
+   "t": 22,
+   "tPage": 23222,
+   "y": 1189,
+   "yRange": [
+    1150,
+    1297
+   ],
+   "section": "act-1",
+   "intro": null,
+   "screen": 2,
+   "stars": [
+    {
+     "id": "B04",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B03",
+    "B04"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B04",
+   "rowStars": [
+    "B04 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00351.jpg",
+    "f00361.jpg",
+    "f00371.jpg",
+    "f00375.jpg"
+   ],
+   "fps": 15.5,
+   "p95": 100.1,
+   "maxDt": 383.3,
+   "loaf50": 9,
+   "loafWork50": 0
+  },
+  {
+   "i": 13,
+   "t": 24,
+   "tPage": 25222,
+   "y": 1567,
+   "yRange": [
+    1394,
+    1744
+   ],
+   "section": "act-1",
+   "intro": null,
+   "screen": 3,
+   "stars": [
+    {
+     "id": "B04",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B04"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B06",
+   "rowStars": [
+    "B06 w1"
+   ],
+   "breath": "B06",
+   "frames": [
+    "f00379.jpg",
+    "f00382.jpg",
+    "f00386.jpg",
+    "f00391.jpg"
+   ],
+   "fps": 8.6,
+   "p95": 166.8,
+   "maxDt": 166.8,
+   "loaf50": 16,
+   "loafWork50": 1
+  },
+  {
+   "i": 14,
+   "t": 26,
+   "tPage": 27222,
+   "y": 2078,
+   "yRange": [
+    1857,
+    2272
+   ],
+   "section": "act-1",
+   "intro": null,
+   "screen": 3,
+   "stars": [
+    {
+     "id": "B07",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B07",
+   "rowStars": [
+    "B07 w1"
+   ],
+   "breath": "B07",
+   "frames": [
+    "f00396.jpg",
+    "f00402.jpg",
+    "f00408.jpg",
+    "f00413.jpg"
+   ],
+   "fps": 10.9,
+   "p95": 150,
+   "maxDt": 150.1,
+   "loaf50": 17,
+   "loafWork50": 0
+  },
+  {
+   "i": 15,
+   "t": 28,
+   "tPage": 29222,
+   "y": 2552,
+   "yRange": [
+    2365,
+    2676
+   ],
+   "section": "about",
+   "intro": null,
+   "screen": 4,
+   "stars": [
+    {
+     "id": "B07",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B07",
+   "rowStars": [
+    "B07 w1"
+   ],
+   "breath": "B07",
+   "frames": [
+    "f00417.jpg",
+    "f00421.jpg",
+    "f00426.jpg",
+    "f00429.jpg"
+   ],
+   "fps": 7.7,
+   "p95": 249.9,
+   "maxDt": 249.9,
+   "loaf50": 15,
+   "loafWork50": 0
+  },
+  {
+   "i": 16,
+   "t": 30,
+   "tPage": 31222,
+   "y": 2700,
+   "yRange": [
+    2700,
+    2700
+   ],
+   "section": "about",
+   "intro": null,
+   "screen": 4,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B07",
+   "rowStars": [
+    "B07 w1"
+   ],
+   "breath": "B07",
+   "frames": [
+    "f00436.jpg",
+    "f00448.jpg",
+    "f00461.jpg",
+    "f00474.jpg"
+   ],
+   "fps": 23.7,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 17,
+   "t": 32,
+   "tPage": 33222,
+   "y": 2902,
+   "yRange": [
+    2731,
+    3066
+   ],
+   "section": "about",
+   "intro": null,
+   "screen": 4,
+   "stars": [
+    {
+     "id": "B08",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B08"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B08",
+   "rowStars": [
+    "B08 w1",
+    "B08-invite w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f00482.jpg",
+    "f00489.jpg",
+    "f00496.jpg",
+    "f00502.jpg"
+   ],
+   "fps": 13.6,
+   "p95": 116.7,
+   "maxDt": 116.7,
+   "loaf50": 23,
+   "loafWork50": 0
+  },
+  {
+   "i": 18,
+   "t": 34,
+   "tPage": 35222,
+   "y": 3361,
+   "yRange": [
+    3180,
+    3582
+   ],
+   "section": "about",
+   "intro": null,
+   "screen": 5,
+   "stars": [
+    {
+     "id": "B08",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B08"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B08-compass (maxWait 1500 ms)",
+    "B08-invite (host left the viewport)"
+   ],
+   "row": "B08",
+   "rowStars": [
+    "B08 w1",
+    "B08-invite w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f00508.jpg",
+    "f00514.jpg",
+    "f00520.jpg",
+    "f00527.jpg"
+   ],
+   "fps": 12.3,
+   "p95": 133.3,
+   "maxDt": 150,
+   "loaf50": 22,
+   "loafWork50": 0
+  },
+  {
+   "i": 19,
+   "t": 36,
+   "tPage": 37222,
+   "y": 3856,
+   "yRange": [
+    3652,
+    3949
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 6,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B09"
+   ],
+   "unregistered": [
+    "B09"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B09",
+   "rowStars": [
+    "B09 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f00531.jpg",
+    "f00535.jpg",
+    "f00542.jpg",
+    "f00548.jpg"
+   ],
+   "fps": 11.4,
+   "p95": 133.3,
+   "maxDt": 299.9,
+   "loaf50": 17,
+   "loafWork50": 0
+  },
+  {
+   "i": 20,
+   "t": 38,
+   "tPage": 39222,
+   "y": 3950,
+   "yRange": [
+    3950,
+    3950
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 6,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B09"
+   ],
+   "unregistered": [
+    "B09"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B09",
+   "rowStars": [
+    "B09 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f00555.jpg",
+    "f00561.jpg",
+    "f00570.jpg",
+    "f00579.jpg"
+   ],
+   "fps": 16.6,
+   "p95": 83.3,
+   "maxDt": 133.3,
+   "loaf50": 24,
+   "loafWork50": 0
+  },
+  {
+   "i": 21,
+   "t": 40,
+   "tPage": 41222,
+   "y": 4197,
+   "yRange": [
+    3989,
+    4373
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 6,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B09",
+    "B10"
+   ],
+   "unregistered": [
+    "B09",
+    "B10"
+   ],
+   "withDeclared": 2,
+   "skips": [],
+   "row": "B10",
+   "rowStars": [
+    "B10 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00587.jpg",
+    "f00594.jpg",
+    "f00605.jpg",
+    "f00616.jpg"
+   ],
+   "fps": 18.8,
+   "p95": 100.1,
+   "maxDt": 116.6,
+   "loaf50": 12,
+   "loafWork50": 0
+  },
+  {
+   "i": 22,
+   "t": 42,
+   "tPage": 43222,
+   "y": 4675,
+   "yRange": [
+    4516,
+    4785
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 7,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B10"
+   ],
+   "unregistered": [
+    "B10"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B10",
+   "rowStars": [
+    "B10 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00627.jpg",
+    "f00634.jpg",
+    "f00642.jpg",
+    "f00645.jpg"
+   ],
+   "fps": 14.1,
+   "p95": 100.1,
+   "maxDt": 266.6,
+   "loaf50": 15,
+   "loafWork50": 1
+  },
+  {
+   "i": 23,
+   "t": 44,
+   "tPage": 45222,
+   "y": 5159,
+   "yRange": [
+    5000,
+    5318
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 7,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B11"
+   ],
+   "unregistered": [
+    "B11"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B11",
+   "rowStars": [
+    "B11 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00654.jpg",
+    "f00662.jpg",
+    "f00669.jpg",
+    "f00673.jpg"
+   ],
+   "fps": 13,
+   "p95": 133.3,
+   "maxDt": 150,
+   "loaf50": 18,
+   "loafWork50": 2
+  },
+  {
+   "i": 24,
+   "t": 46,
+   "tPage": 47222,
+   "y": 5681,
+   "yRange": [
+    5474,
+    5838
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 8,
+   "stars": [
+    {
+     "id": "B12",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B11"
+   ],
+   "unregistered": [
+    "B11"
+   ],
+   "withDeclared": 2,
+   "skips": [],
+   "row": "B11",
+   "rowStars": [
+    "B11 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00680.jpg",
+    "f00689.jpg",
+    "f00697.jpg",
+    "f00704.jpg"
+   ],
+   "fps": 16.8,
+   "p95": 83.3,
+   "maxDt": 83.4,
+   "loaf50": 21,
+   "loafWork50": 0
+  },
+  {
+   "i": 25,
+   "t": 48,
+   "tPage": 49222,
+   "y": 6097,
+   "yRange": [
+    5984,
+    6354
+   ],
+   "section": "journey",
+   "intro": null,
+   "screen": 8,
+   "stars": [
+    {
+     "id": "B12",
+     "w": 2,
+     "how": "time"
+    },
+    {
+     "id": "B13",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B12",
+   "rowStars": [
+    "B12 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00712.jpg",
+    "f00717.jpg",
+    "f00724.jpg",
+    "f00733.jpg"
+   ],
+   "fps": 15.2,
+   "p95": 100,
+   "maxDt": 366.6,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 26,
+   "t": 50,
+   "tPage": 51222,
+   "y": 6644,
+   "yRange": [
+    6491,
+    6763
+   ],
+   "section": "act-2",
+   "intro": null,
+   "screen": 9,
+   "stars": [
+    {
+     "id": "B13",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B13"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B13",
+   "rowStars": [
+    "B13 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00744.jpg",
+    "f00752.jpg",
+    "f00757.jpg",
+    "f00760.jpg"
+   ],
+   "fps": 11.5,
+   "p95": 183.2,
+   "maxDt": 200.1,
+   "loaf50": 14,
+   "loafWork50": 0
+  },
+  {
+   "i": 27,
+   "t": 52,
+   "tPage": 53222,
+   "y": 7032,
+   "yRange": [
+    6855,
+    7056
+   ],
+   "section": "act-2",
+   "intro": null,
+   "screen": 10,
+   "stars": [
+    {
+     "id": "B13",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B14",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B13",
+    "B14"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B14",
+   "rowStars": [
+    "B14 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00763.jpg",
+    "f00767.jpg",
+    "f00770.jpg",
+    "f00775.jpg"
+   ],
+   "fps": 9.4,
+   "p95": 199.9,
+   "maxDt": 199.9,
+   "loaf50": 11,
+   "loafWork50": 0
+  },
+  {
+   "i": 28,
+   "t": 54,
+   "tPage": 55222,
+   "y": 7056,
+   "yRange": [
+    7056,
+    7110
+   ],
+   "section": "act-2",
+   "intro": null,
+   "screen": 10,
+   "stars": [
+    {
+     "id": "B14",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B13",
+    "B14"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B14",
+   "rowStars": [
+    "B14 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00787.jpg",
+    "f00800.jpg",
+    "f00812.jpg",
+    "f00824.jpg"
+   ],
+   "fps": 24.7,
+   "p95": 50.1,
+   "maxDt": 50.1,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 29,
+   "t": 56,
+   "tPage": 57222,
+   "y": 7383,
+   "yRange": [
+    7224,
+    7535
+   ],
+   "section": "act-2",
+   "intro": null,
+   "screen": 10,
+   "stars": [
+    {
+     "id": "B14",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B14"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B14",
+   "rowStars": [
+    "B14 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f00835.jpg",
+    "f00841.jpg",
+    "f00848.jpg",
+    "f00854.jpg"
+   ],
+   "fps": 14.6,
+   "p95": 100,
+   "maxDt": 166.6,
+   "loaf50": 17,
+   "loafWork50": 0
+  },
+  {
+   "i": 30,
+   "t": 58,
+   "tPage": 59222,
+   "y": 7920,
+   "yRange": [
+    7727,
+    8109
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 11,
+   "stars": [
+    {
+     "id": "B14",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B16",
+   "rowStars": [
+    "B16 w1"
+   ],
+   "breath": "B16",
+   "frames": [
+    "f00865.jpg",
+    "f00875.jpg",
+    "f00888.jpg",
+    "f00898.jpg"
+   ],
+   "fps": 22.3,
+   "p95": 66.8,
+   "maxDt": 100,
+   "loaf50": 7,
+   "loafWork50": 0
+  },
+  {
+   "i": 31,
+   "t": 60,
+   "tPage": 61222,
+   "y": 8417,
+   "yRange": [
+    8218,
+    8505
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 11,
+   "stars": [
+    {
+     "id": "B16",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B17",
+   "rowStars": [
+    "B17 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00909.jpg",
+    "f00918.jpg",
+    "f00932.jpg",
+    "f00942.jpg"
+   ],
+   "fps": 28.8,
+   "p95": 66.7,
+   "maxDt": 166.5,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 32,
+   "t": 62,
+   "tPage": 63222,
+   "y": 8506,
+   "yRange": [
+    8506,
+    8506
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 12,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B17",
+   "rowStars": [
+    "B17 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00947.jpg",
+    "f00959.jpg",
+    "f00971.jpg",
+    "f00984.jpg"
+   ],
+   "fps": 59.5,
+   "p95": 16.7,
+   "maxDt": 33.3,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 33,
+   "t": 64,
+   "tPage": 65222,
+   "y": 8732,
+   "yRange": [
+    8561,
+    8878
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 12,
+   "stars": [
+    {
+     "id": "B17",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B17",
+   "rowStars": [
+    "B17 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f00994.jpg",
+    "f01010.jpg",
+    "f01025.jpg",
+    "f01034.jpg"
+   ],
+   "fps": 26,
+   "p95": 83.3,
+   "maxDt": 183.4,
+   "loaf50": 5,
+   "loafWork50": 0
+  },
+  {
+   "i": 34,
+   "t": 66,
+   "tPage": 67222,
+   "y": 9233,
+   "yRange": [
+    9031,
+    9419
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 13,
+   "stars": [
+    {
+     "id": "B17",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B18",
+   "rowStars": [
+    "B18 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01043.jpg",
+    "f01053.jpg",
+    "f01065.jpg",
+    "f01076.jpg"
+   ],
+   "fps": 22.5,
+   "p95": 66.7,
+   "maxDt": 83.4,
+   "loaf50": 7,
+   "loafWork50": 0
+  },
+  {
+   "i": 35,
+   "t": 68,
+   "tPage": 69222,
+   "y": 9732,
+   "yRange": [
+    9550,
+    9933
+   ],
+   "section": "work",
+   "intro": null,
+   "screen": 13,
+   "stars": [
+    {
+     "id": "B19",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B19",
+   "rowStars": [
+    "B19 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01089.jpg",
+    "f01102.jpg",
+    "f01117.jpg",
+    "f01132.jpg"
+   ],
+   "fps": 28.7,
+   "p95": 50,
+   "maxDt": 66.8,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 36,
+   "t": 70,
+   "tPage": 71222,
+   "y": 10056,
+   "yRange": [
+    10037,
+    10056
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 14,
+   "stars": [
+    {
+     "id": "B19",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B19"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B19",
+   "rowStars": [
+    "B19 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01146.jpg",
+    "f01156.jpg",
+    "f01165.jpg",
+    "f01182.jpg"
+   ],
+   "fps": 35.2,
+   "p95": 50,
+   "maxDt": 66.6,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 37,
+   "t": 72,
+   "tPage": 73222,
+   "y": 10085,
+   "yRange": [
+    10056,
+    10234
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 14,
+   "stars": [
+    {
+     "id": "B19",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B19"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B18 (host left the viewport)"
+   ],
+   "row": "B19",
+   "rowStars": [
+    "B19 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01198.jpg",
+    "f01216.jpg",
+    "f01231.jpg",
+    "f01244.jpg"
+   ],
+   "fps": 31.1,
+   "p95": 50,
+   "maxDt": 66.6,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 38,
+   "t": 74,
+   "tPage": 75222,
+   "y": 10562,
+   "yRange": [
+    10308,
+    10732
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 14,
+   "stars": [
+    {
+     "id": "B19",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B19"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B20 (maxWait 1500 ms)"
+   ],
+   "row": "B20",
+   "rowStars": [
+    "B20 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f01251.jpg",
+    "f01257.jpg",
+    "f01272.jpg",
+    "f01286.jpg"
+   ],
+   "fps": 20.6,
+   "p95": 100,
+   "maxDt": 233.3,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 39,
+   "t": 76,
+   "tPage": 77222,
+   "y": 11060,
+   "yRange": [
+    10871,
+    11249
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 15,
+   "stars": [
+    {
+     "id": "B19",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B20",
+   "rowStars": [
+    "B20 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f01299.jpg",
+    "f01315.jpg",
+    "f01327.jpg",
+    "f01342.jpg"
+   ],
+   "fps": 28.5,
+   "p95": 66.6,
+   "maxDt": 66.7,
+   "loaf50": 3,
+   "loafWork50": 0
+  },
+  {
+   "i": 40,
+   "t": 78,
+   "tPage": 79222,
+   "y": 11567,
+   "yRange": [
+    11370,
+    11749
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 16,
+   "stars": [
+    {
+     "id": "B21",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B21"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B21",
+   "rowStars": [
+    "B21 w1",
+    "B21-circle w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01355.jpg",
+    "f01370.jpg",
+    "f01384.jpg",
+    "f01398.jpg"
+   ],
+   "fps": 28,
+   "p95": 50.1,
+   "maxDt": 50.1,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 41,
+   "t": 80,
+   "tPage": 81222,
+   "y": 12060,
+   "yRange": [
+    11870,
+    12218
+   ],
+   "section": "trading-algos",
+   "intro": null,
+   "screen": 16,
+   "stars": [
+    {
+     "id": "B21",
+     "w": 1,
+     "how": "scroll"
+    },
+    {
+     "id": "B22",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B21",
+    "B19"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B21-circle (maxWait 1500 ms)"
+   ],
+   "row": "B21",
+   "rowStars": [
+    "B21 w1",
+    "B21-circle w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01411.jpg",
+    "f01424.jpg",
+    "f01437.jpg",
+    "f01445.jpg"
+   ],
+   "fps": 21.5,
+   "p95": 83.3,
+   "maxDt": 83.4,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 42,
+   "t": 82,
+   "tPage": 83222,
+   "y": 12510,
+   "yRange": [
+    12327,
+    12738
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 17,
+   "stars": [
+    {
+     "id": "B22",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B22",
+   "rowStars": [
+    "B22 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f01451.jpg",
+    "f01458.jpg",
+    "f01468.jpg",
+    "f01482.jpg"
+   ],
+   "fps": 20.8,
+   "p95": 83.3,
+   "maxDt": 100,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 43,
+   "t": 84,
+   "tPage": 85222,
+   "y": 12756,
+   "yRange": [
+    12755,
+    12756
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 17,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B22",
+   "rowStars": [
+    "B22 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f01491.jpg",
+    "f01499.jpg",
+    "f01514.jpg",
+    "f01528.jpg"
+   ],
+   "fps": 32.3,
+   "p95": 50,
+   "maxDt": 50,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 44,
+   "t": 86,
+   "tPage": 87222,
+   "y": 12884,
+   "yRange": [
+    12756,
+    12990
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 17,
+   "stars": [
+    {
+     "id": "B23",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B22",
+   "rowStars": [
+    "B22 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f01544.jpg",
+    "f01558.jpg",
+    "f01571.jpg",
+    "f01576.jpg"
+   ],
+   "fps": 21.9,
+   "p95": 83.4,
+   "maxDt": 149.9,
+   "loaf50": 9,
+   "loafWork50": 0
+  },
+  {
+   "i": 45,
+   "t": 88,
+   "tPage": 89222,
+   "y": 13288,
+   "yRange": [
+    13103,
+    13554
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 18,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B23",
+   "rowStars": [
+    "B23 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01581.jpg",
+    "f01586.jpg",
+    "f01591.jpg",
+    "f01600.jpg"
+   ],
+   "fps": 13.9,
+   "p95": 133.3,
+   "maxDt": 166.6,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 46,
+   "t": 90,
+   "tPage": 91222,
+   "y": 13875,
+   "yRange": [
+    13684,
+    14065
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 19,
+   "stars": [
+    {
+     "id": "B24",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B23",
+   "rowStars": [
+    "B23 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01612.jpg",
+    "f01625.jpg",
+    "f01636.jpg",
+    "f01647.jpg"
+   ],
+   "fps": 22.5,
+   "p95": 66.6,
+   "maxDt": 66.7,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 47,
+   "t": 92,
+   "tPage": 93222,
+   "y": 14378,
+   "yRange": [
+    14180,
+    14554
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 19,
+   "stars": [
+    {
+     "id": "B24",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B24",
+   "rowStars": [
+    "B24 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01656.jpg",
+    "f01667.jpg",
+    "f01680.jpg",
+    "f01691.jpg"
+   ],
+   "fps": 22.6,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 48,
+   "t": 94,
+   "tPage": 95222,
+   "y": 14869,
+   "yRange": [
+    14684,
+    15063
+   ],
+   "section": "optuna-screener",
+   "intro": null,
+   "screen": 20,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B24",
+   "rowStars": [
+    "B24 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01702.jpg",
+    "f01713.jpg",
+    "f01724.jpg",
+    "f01736.jpg"
+   ],
+   "fps": 22.7,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 5,
+   "loafWork50": 0
+  },
+  {
+   "i": 49,
+   "t": 96,
+   "tPage": 97222,
+   "y": 15304,
+   "yRange": [
+    15185,
+    15306
+   ],
+   "section": "experiment",
+   "intro": null,
+   "screen": 20,
+   "stars": [
+    {
+     "id": "B25",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B24",
+   "rowStars": [
+    "B24 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01748.jpg",
+    "f01763.jpg",
+    "f01771.jpg",
+    "f01782.jpg"
+   ],
+   "fps": 37.2,
+   "p95": 49.9,
+   "maxDt": 66.6,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 50,
+   "t": 98,
+   "tPage": 99222,
+   "y": 15306,
+   "yRange": [
+    15306,
+    15400
+   ],
+   "section": "experiment",
+   "intro": null,
+   "screen": 20,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B24",
+   "rowStars": [
+    "B24 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01785.jpg",
+    "f01786.jpg",
+    "f01794.jpg",
+    "f01809.jpg"
+   ],
+   "fps": 49.4,
+   "p95": 33.4,
+   "maxDt": 50,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 51,
+   "t": 100,
+   "tPage": 101222,
+   "y": 15688,
+   "yRange": [
+    15520,
+    15875
+   ],
+   "section": "experiment",
+   "intro": null,
+   "screen": 21,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B25",
+   "rowStars": [
+    "B25 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01825.jpg",
+    "f01842.jpg",
+    "f01854.jpg",
+    "f01865.jpg"
+   ],
+   "fps": 26.2,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 52,
+   "t": 102,
+   "tPage": 103222,
+   "y": 16201,
+   "yRange": [
+    16010,
+    16383
+   ],
+   "section": "systems",
+   "intro": null,
+   "screen": 22,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B25",
+   "rowStars": [
+    "B25 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01876.jpg",
+    "f01887.jpg",
+    "f01899.jpg",
+    "f01910.jpg"
+   ],
+   "fps": 21.8,
+   "p95": 66.7,
+   "maxDt": 133.3,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 53,
+   "t": 104,
+   "tPage": 105222,
+   "y": 16692,
+   "yRange": [
+    16507,
+    16706
+   ],
+   "section": "systems",
+   "intro": null,
+   "screen": 22,
+   "stars": [
+    {
+     "id": "B26",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B26",
+   "rowStars": [
+    "B26 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01919.jpg",
+    "f01934.jpg",
+    "f01948.jpg",
+    "f01951.jpg"
+   ],
+   "fps": 29.8,
+   "p95": 50.1,
+   "maxDt": 66.6,
+   "loaf50": 3,
+   "loafWork50": 0
+  },
+  {
+   "i": 54,
+   "t": 106,
+   "tPage": 107222,
+   "y": 16706,
+   "yRange": [
+    16706,
+    16723
+   ],
+   "section": "systems",
+   "intro": null,
+   "screen": 22,
+   "stars": [
+    {
+     "id": "B26",
+     "w": 1,
+     "how": "time"
+    },
+    {
+     "id": "B27",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B26",
+   "rowStars": [
+    "B26 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01964.jpg",
+    "f01969.jpg",
+    "f01969.jpg",
+    "f01973.jpg"
+   ],
+   "fps": 46.8,
+   "p95": 50,
+   "maxDt": 66.6,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 55,
+   "t": 108,
+   "tPage": 109222,
+   "y": 16986,
+   "yRange": [
+    16808,
+    17200
+   ],
+   "section": "systems",
+   "intro": null,
+   "screen": 23,
+   "stars": [
+    {
+     "id": "B27",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B26",
+   "rowStars": [
+    "B26 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f01982.jpg",
+    "f01990.jpg",
+    "f01998.jpg",
+    "f02008.jpg"
+   ],
+   "fps": 18.8,
+   "p95": 83.3,
+   "maxDt": 100,
+   "loaf50": 16,
+   "loafWork50": 0
+  },
+  {
+   "i": 56,
+   "t": 110,
+   "tPage": 111222,
+   "y": 17525,
+   "yRange": [
+    17330,
+    17713
+   ],
+   "section": "systems",
+   "intro": null,
+   "screen": 23,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B27",
+   "rowStars": [
+    "B27 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02023.jpg",
+    "f02037.jpg",
+    "f02051.jpg",
+    "f02065.jpg"
+   ],
+   "fps": 28.2,
+   "p95": 50,
+   "maxDt": 66.7,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 57,
+   "t": 112,
+   "tPage": 113222,
+   "y": 18023,
+   "yRange": [
+    17831,
+    18190
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 24,
+   "stars": [
+    {
+     "id": "B29",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B27",
+   "rowStars": [
+    "B27 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02077.jpg",
+    "f02089.jpg",
+    "f02103.jpg",
+    "f02114.jpg"
+   ],
+   "fps": 24.7,
+   "p95": 66.7,
+   "maxDt": 83.4,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 58,
+   "t": 114,
+   "tPage": 115222,
+   "y": 18206,
+   "yRange": [
+    18205,
+    18206
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 24,
+   "stars": [
+    {
+     "id": "B28",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B27",
+   "rowStars": [
+    "B27 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02123.jpg",
+    "f02131.jpg",
+    "f02144.jpg",
+    "f02156.jpg"
+   ],
+   "fps": 47,
+   "p95": 33.4,
+   "maxDt": 83.3,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 59,
+   "t": 116,
+   "tPage": 117222,
+   "y": 18332,
+   "yRange": [
+    18206,
+    18518
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 24,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B28",
+   "rowStars": [
+    "B28 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f02167.jpg",
+    "f02180.jpg",
+    "f02194.jpg",
+    "f02205.jpg"
+   ],
+   "fps": 30.8,
+   "p95": 50,
+   "maxDt": 66.7,
+   "loaf50": 3,
+   "loafWork50": 0
+  },
+  {
+   "i": 60,
+   "t": 118,
+   "tPage": 119222,
+   "y": 18810,
+   "yRange": [
+    18611,
+    18995
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 25,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B28",
+   "rowStars": [
+    "B28 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f02214.jpg",
+    "f02227.jpg",
+    "f02237.jpg",
+    "f02249.jpg"
+   ],
+   "fps": 22,
+   "p95": 83.4,
+   "maxDt": 100,
+   "loaf50": 11,
+   "loafWork50": 0
+  },
+  {
+   "i": 61,
+   "t": 120,
+   "tPage": 121222,
+   "y": 19324,
+   "yRange": [
+    19133,
+    19499
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 26,
+   "stars": [
+    {
+     "id": "B30",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B29",
+   "rowStars": [
+    "B29 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f02261.jpg",
+    "f02272.jpg",
+    "f02282.jpg",
+    "f02292.jpg"
+   ],
+   "fps": 21.2,
+   "p95": 83.3,
+   "maxDt": 116.7,
+   "loaf50": 12,
+   "loafWork50": 0
+  },
+  {
+   "i": 62,
+   "t": 122,
+   "tPage": 123222,
+   "y": 19823,
+   "yRange": [
+    19619,
+    20016
+   ],
+   "section": "kill-list",
+   "intro": null,
+   "screen": 26,
+   "stars": [
+    {
+     "id": "B30",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B30"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B29",
+   "rowStars": [
+    "B29 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f02301.jpg",
+    "f02310.jpg",
+    "f02320.jpg",
+    "f02331.jpg"
+   ],
+   "fps": 19.2,
+   "p95": 83.3,
+   "maxDt": 100,
+   "loaf50": 14,
+   "loafWork50": 1
+  },
+  {
+   "i": 63,
+   "t": 124,
+   "tPage": 125222,
+   "y": 20299,
+   "yRange": [
+    20122,
+    20306
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 27,
+   "stars": [
+    {
+     "id": "B30",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B30"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B30",
+   "rowStars": [
+    "B30 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f02341.jpg",
+    "f02354.jpg",
+    "f02367.jpg",
+    "f02370.jpg"
+   ],
+   "fps": 40,
+   "p95": 50,
+   "maxDt": 83.3,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 64,
+   "t": 126,
+   "tPage": 127222,
+   "y": 20306,
+   "yRange": [
+    20306,
+    20351
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 27,
+   "stars": [
+    {
+     "id": "B30",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B30"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B31 (maxWait 1500 ms)"
+   ],
+   "row": "B30",
+   "rowStars": [
+    "B30 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f02382.jpg",
+    "f02394.jpg",
+    "f02406.jpg",
+    "f02419.jpg"
+   ],
+   "fps": 51.9,
+   "p95": 33.4,
+   "maxDt": 50,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 65,
+   "t": 128,
+   "tPage": 129222,
+   "y": 20608,
+   "yRange": [
+    20448,
+    20835
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 27,
+   "stars": [
+    {
+     "id": "B31-finale",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B31",
+   "rowStars": [
+    "B31 w1",
+    "B31-finale w1"
+   ],
+   "breath": "B31",
+   "frames": [
+    "f02432.jpg",
+    "f02439.jpg",
+    "f02450.jpg",
+    "f02464.jpg"
+   ],
+   "fps": 21.5,
+   "p95": 83.3,
+   "maxDt": 83.3,
+   "loaf50": 14,
+   "loafWork50": 0
+  },
+  {
+   "i": 66,
+   "t": 130,
+   "tPage": 131222,
+   "y": 21151,
+   "yRange": [
+    20926,
+    21333
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 28,
+   "stars": [
+    {
+     "id": "B32",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B31",
+   "rowStars": [
+    "B31 w1",
+    "B31-finale w1"
+   ],
+   "breath": "B31",
+   "frames": [
+    "f02473.jpg",
+    "f02486.jpg",
+    "f02500.jpg",
+    "f02513.jpg"
+   ],
+   "fps": 24.2,
+   "p95": 83.3,
+   "maxDt": 100,
+   "loaf50": 2,
+   "loafWork50": 1
+  },
+  {
+   "i": 67,
+   "t": 132,
+   "tPage": 133222,
+   "y": 21609,
+   "yRange": [
+    21441,
+    21791
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 29,
+   "stars": [
+    {
+     "id": "B32-finale",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B32",
+   "rowStars": [
+    "B32 w1",
+    "B32-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02523.jpg",
+    "f02532.jpg",
+    "f02538.jpg",
+    "f02550.jpg"
+   ],
+   "fps": 19.2,
+   "p95": 83.4,
+   "maxDt": 116.6,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 68,
+   "t": 134,
+   "tPage": 135222,
+   "y": 22071,
+   "yRange": [
+    21896,
+    22273
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 29,
+   "stars": [
+    {
+     "id": "B33",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B32",
+   "rowStars": [
+    "B32 w1",
+    "B32-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02562.jpg",
+    "f02571.jpg",
+    "f02583.jpg",
+    "f02597.jpg"
+   ],
+   "fps": 23.7,
+   "p95": 66.6,
+   "maxDt": 116.7,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 69,
+   "t": 136,
+   "tPage": 137222,
+   "y": 22568,
+   "yRange": [
+    22394,
+    22773
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 30,
+   "stars": [
+    {
+     "id": "B33",
+     "w": 1,
+     "how": "time"
+    },
+    {
+     "id": "B33-finale",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B33",
+   "rowStars": [
+    "B33 w1",
+    "B33-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02610.jpg",
+    "f02621.jpg",
+    "f02629.jpg",
+    "f02642.jpg"
+   ],
+   "fps": 23.3,
+   "p95": 83.3,
+   "maxDt": 83.4,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 70,
+   "t": 138,
+   "tPage": 139222,
+   "y": 23049,
+   "yRange": [
+    22855,
+    23228
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 31,
+   "stars": [
+    {
+     "id": "B34",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B33",
+   "rowStars": [
+    "B33 w1",
+    "B33-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02656.jpg",
+    "f02670.jpg",
+    "f02685.jpg",
+    "f02701.jpg"
+   ],
+   "fps": 29,
+   "p95": 50,
+   "maxDt": 66.7,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 71,
+   "t": 140,
+   "tPage": 141222,
+   "y": 23542,
+   "yRange": [
+    23355,
+    23682
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 31,
+   "stars": [
+    {
+     "id": "B34",
+     "w": 1,
+     "how": "time"
+    },
+    {
+     "id": "B34-finale",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B34",
+   "rowStars": [
+    "B34 w1",
+    "B34-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02714.jpg",
+    "f02729.jpg",
+    "f02740.jpg",
+    "f02748.jpg"
+   ],
+   "fps": 22.2,
+   "p95": 66.7,
+   "maxDt": 83.4,
+   "loaf50": 9,
+   "loafWork50": 0
+  },
+  {
+   "i": 72,
+   "t": 142,
+   "tPage": 143222,
+   "y": 24045,
+   "yRange": [
+    23856,
+    24228
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 32,
+   "stars": [
+    {
+     "id": "B34-finale",
+     "w": 2,
+     "how": "time"
+    },
+    {
+     "id": "B35",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B34",
+   "rowStars": [
+    "B34 w1",
+    "B34-finale w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f02760.jpg",
+    "f02775.jpg",
+    "f02788.jpg",
+    "f02803.jpg"
+   ],
+   "fps": 28.3,
+   "p95": 50,
+   "maxDt": 83.3,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 73,
+   "t": 144,
+   "tPage": 145222,
+   "y": 24528,
+   "yRange": [
+    24362,
+    24715
+   ],
+   "section": "films",
+   "intro": null,
+   "screen": 32,
+   "stars": [
+    {
+     "id": "B35",
+     "w": 1,
+     "how": "scroll"
+    },
+    {
+     "id": "B36",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B35"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B35",
+   "rowStars": [
+    "B35 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f02818.jpg",
+    "f02829.jpg",
+    "f02841.jpg",
+    "f02852.jpg"
+   ],
+   "fps": 24,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 5,
+   "loafWork50": 0
+  },
+  {
+   "i": 74,
+   "t": 146,
+   "tPage": 147222,
+   "y": 24999,
+   "yRange": [
+    24828,
+    25166
+   ],
+   "section": "act-3",
+   "intro": null,
+   "screen": 33,
+   "stars": [
+    {
+     "id": "B36",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B38",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B36"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B36",
+   "rowStars": [
+    "B36 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f02862.jpg",
+    "f02872.jpg",
+    "f02876.jpg",
+    "f02882.jpg"
+   ],
+   "fps": 13.6,
+   "p95": 150,
+   "maxDt": 150.1,
+   "loaf50": 14,
+   "loafWork50": 0
+  },
+  {
+   "i": 75,
+   "t": 148,
+   "tPage": 149222,
+   "y": 25300,
+   "yRange": [
+    25278,
+    25300
+   ],
+   "section": "act-3",
+   "intro": null,
+   "screen": 33,
+   "stars": [
+    {
+     "id": "B38",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B36",
+    "B38"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B38",
+   "rowStars": [
+    "B38 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f02887.jpg",
+    "f02893.jpg",
+    "f02897.jpg",
+    "f02897.jpg"
+   ],
+   "fps": 39.7,
+   "p95": 100,
+   "maxDt": 183.3,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 76,
+   "t": 150,
+   "tPage": 151222,
+   "y": 25334,
+   "yRange": [
+    25300,
+    25480
+   ],
+   "section": "act-3",
+   "intro": null,
+   "screen": 33,
+   "stars": [
+    {
+     "id": "B38",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B36",
+    "B38"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B38",
+   "rowStars": [
+    "B38 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f02897.jpg",
+    "f02898.jpg",
+    "f02909.jpg",
+    "f02919.jpg"
+   ],
+   "fps": 34.8,
+   "p95": 66.7,
+   "maxDt": 100,
+   "loaf50": 7,
+   "loafWork50": 0
+  },
+  {
+   "i": 77,
+   "t": 152,
+   "tPage": 153222,
+   "y": 25751,
+   "yRange": [
+    25607,
+    25971
+   ],
+   "section": "act-3",
+   "intro": null,
+   "screen": 34,
+   "stars": [
+    {
+     "id": "B38",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B40",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B38"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B39",
+   "rowStars": [],
+   "breath": "B39",
+   "frames": [
+    "f02927.jpg",
+    "f02934.jpg",
+    "f02940.jpg",
+    "f02947.jpg"
+   ],
+   "fps": 14.1,
+   "p95": 83.4,
+   "maxDt": 150,
+   "loaf50": 25,
+   "loafWork50": 0
+  },
+  {
+   "i": 78,
+   "t": 154,
+   "tPage": 155222,
+   "y": 26247,
+   "yRange": [
+    26106,
+    26250
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 35,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B39",
+   "rowStars": [],
+   "breath": "B39",
+   "frames": [
+    "f02955.jpg",
+    "f02965.jpg",
+    "f02974.jpg",
+    "f02974.jpg"
+   ],
+   "fps": 39.3,
+   "p95": 66.6,
+   "maxDt": 66.8,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 79,
+   "t": 156,
+   "tPage": 157222,
+   "y": 26250,
+   "yRange": [
+    26250,
+    26327
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 35,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B39",
+   "rowStars": [],
+   "breath": "B39",
+   "frames": [
+    "f02974.jpg",
+    "f02974.jpg",
+    "f02974.jpg",
+    "f02986.jpg"
+   ],
+   "fps": 47.3,
+   "p95": 50,
+   "maxDt": 50.1,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 80,
+   "t": 158,
+   "tPage": 159222,
+   "y": 26608,
+   "yRange": [
+    26444,
+    26830
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 35,
+   "stars": [
+    {
+     "id": "B41",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B40",
+   "rowStars": [
+    "B40 w1"
+   ],
+   "breath": "B40",
+   "frames": [
+    "f02998.jpg",
+    "f03006.jpg",
+    "f03013.jpg",
+    "f03025.jpg"
+   ],
+   "fps": 20.2,
+   "p95": 66.7,
+   "maxDt": 166.7,
+   "loaf50": 10,
+   "loafWork50": 0
+  },
+  {
+   "i": 81,
+   "t": 160,
+   "tPage": 161222,
+   "y": 27133,
+   "yRange": [
+    26964,
+    27326
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 36,
+   "stars": [
+    {
+     "id": "B41",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B41"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B40",
+   "rowStars": [
+    "B40 w1"
+   ],
+   "breath": "B40",
+   "frames": [
+    "f03041.jpg",
+    "f03058.jpg",
+    "f03074.jpg",
+    "f03088.jpg"
+   ],
+   "fps": 30.5,
+   "p95": 50,
+   "maxDt": 66.6,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 82,
+   "t": 162,
+   "tPage": 163222,
+   "y": 27622,
+   "yRange": [
+    27445,
+    27821
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 36,
+   "stars": [
+    {
+     "id": "B41",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B41"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B41",
+   "rowStars": [
+    "B41 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03099.jpg",
+    "f03109.jpg",
+    "f03121.jpg",
+    "f03132.jpg"
+   ],
+   "fps": 22.1,
+   "p95": 66.7,
+   "maxDt": 66.7,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 83,
+   "t": 164,
+   "tPage": 165222,
+   "y": 28142,
+   "yRange": [
+    27947,
+    28326
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 37,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B41",
+   "rowStars": [
+    "B41 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03143.jpg",
+    "f03155.jpg",
+    "f03167.jpg",
+    "f03179.jpg"
+   ],
+   "fps": 23.5,
+   "p95": 50.1,
+   "maxDt": 50.1,
+   "loaf50": 3,
+   "loafWork50": 0
+  },
+  {
+   "i": 84,
+   "t": 166,
+   "tPage": 167222,
+   "y": 28639,
+   "yRange": [
+    28445,
+    28819
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 38,
+   "stars": [
+    {
+     "id": "B42",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B42"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B42",
+   "rowStars": [
+    "B42 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f03190.jpg",
+    "f03200.jpg",
+    "f03213.jpg",
+    "f03224.jpg"
+   ],
+   "fps": 22.2,
+   "p95": 66.6,
+   "maxDt": 66.7,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 85,
+   "t": 168,
+   "tPage": 169222,
+   "y": 29124,
+   "yRange": [
+    28944,
+    29304
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 38,
+   "stars": [
+    {
+     "id": "B42",
+     "w": 1,
+     "how": "scroll"
+    },
+    {
+     "id": "B43",
+     "w": 2,
+     "how": "time"
+    },
+    {
+     "id": "B43-wanted",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 3,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B43",
+   "rowStars": [
+    "B43 w2",
+    "B43-wanted w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03234.jpg",
+    "f03244.jpg",
+    "f03253.jpg",
+    "f03262.jpg"
+   ],
+   "fps": 18.8,
+   "p95": 66.7,
+   "maxDt": 66.8,
+   "loaf50": 17,
+   "loafWork50": 0
+  },
+  {
+   "i": 86,
+   "t": 170,
+   "tPage": 171222,
+   "y": 29572,
+   "yRange": [
+    29402,
+    29824
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 39,
+   "stars": [
+    {
+     "id": "B43-wanted",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B43",
+   "rowStars": [
+    "B43 w2",
+    "B43-wanted w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03269.jpg",
+    "f03274.jpg",
+    "f03281.jpg",
+    "f03293.jpg"
+   ],
+   "fps": 16.3,
+   "p95": 183.3,
+   "maxDt": 199.9,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 87,
+   "t": 172,
+   "tPage": 173222,
+   "y": 30124,
+   "yRange": [
+    29943,
+    30311
+   ],
+   "section": "beyond",
+   "intro": null,
+   "screen": 40,
+   "stars": [
+    {
+     "id": "B44",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B43",
+   "rowStars": [
+    "B43 w2",
+    "B43-wanted w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03305.jpg",
+    "f03318.jpg",
+    "f03329.jpg",
+    "f03339.jpg"
+   ],
+   "fps": 22.6,
+   "p95": 66.6,
+   "maxDt": 66.8,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 88,
+   "t": 174,
+   "tPage": 175222,
+   "y": 30548,
+   "yRange": [
+    30425,
+    30550
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 40,
+   "stars": [
+    {
+     "id": "B44",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B43",
+   "rowStars": [
+    "B43 w2",
+    "B43-wanted w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03349.jpg",
+    "f03359.jpg",
+    "f03366.jpg",
+    "f03371.jpg"
+   ],
+   "fps": 24,
+   "p95": 66.7,
+   "maxDt": 83.4,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 89,
+   "t": 176,
+   "tPage": 177222,
+   "y": 30550,
+   "yRange": [
+    30550,
+    30649
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 40,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B43",
+   "rowStars": [
+    "B43 w2",
+    "B43-wanted w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03383.jpg",
+    "f03395.jpg",
+    "f03408.jpg",
+    "f03422.jpg"
+   ],
+   "fps": 46.9,
+   "p95": 50,
+   "maxDt": 66.7,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 90,
+   "t": 178,
+   "tPage": 179222,
+   "y": 30931,
+   "yRange": [
+    30773,
+    31122
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 41,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B44",
+   "rowStars": [
+    "B44 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03435.jpg",
+    "f03450.jpg",
+    "f03459.jpg",
+    "f03468.jpg"
+   ],
+   "fps": 23,
+   "p95": 66.7,
+   "maxDt": 116.8,
+   "loaf50": 9,
+   "loafWork50": 0
+  },
+  {
+   "i": 91,
+   "t": 180,
+   "tPage": 181222,
+   "y": 31428,
+   "yRange": [
+    31258,
+    31601
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 41,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B44",
+   "rowStars": [
+    "B44 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03479.jpg",
+    "f03486.jpg",
+    "f03494.jpg",
+    "f03502.jpg"
+   ],
+   "fps": 17,
+   "p95": 99.9,
+   "maxDt": 116.7,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 92,
+   "t": 182,
+   "tPage": 183222,
+   "y": 31930,
+   "yRange": [
+    31745,
+    32113
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 42,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B45",
+   "rowStars": [
+    "B45 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03514.jpg",
+    "f03528.jpg",
+    "f03541.jpg",
+    "f03553.jpg"
+   ],
+   "fps": 26.5,
+   "p95": 50.1,
+   "maxDt": 66.7,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 93,
+   "t": 184,
+   "tPage": 185222,
+   "y": 32433,
+   "yRange": [
+    32243,
+    32622
+   ],
+   "section": "writing",
+   "intro": null,
+   "screen": 43,
+   "stars": [
+    {
+     "id": "B46",
+     "w": 1,
+     "how": "scroll"
+    },
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B46"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B45",
+   "rowStars": [
+    "B45 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03568.jpg",
+    "f03582.jpg",
+    "f03594.jpg",
+    "f03609.jpg"
+   ],
+   "fps": 27.3,
+   "p95": 50.1,
+   "maxDt": 83.4,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 94,
+   "t": 186,
+   "tPage": 187222,
+   "y": 32921,
+   "yRange": [
+    32738,
+    33062
+   ],
+   "section": "voices",
+   "intro": null,
+   "screen": 43,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B46",
+    "B47"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [
+    "B45 (host left the viewport)"
+   ],
+   "row": "B46",
+   "rowStars": [
+    "B46 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f03622.jpg",
+    "f03633.jpg",
+    "f03644.jpg",
+    "f03655.jpg"
+   ],
+   "fps": 23,
+   "p95": 50.1,
+   "maxDt": 66.7,
+   "loaf50": 5,
+   "loafWork50": 0
+  },
+  {
+   "i": 95,
+   "t": 188,
+   "tPage": 189222,
+   "y": 33068,
+   "yRange": [
+    33068,
+    33068
+   ],
+   "section": "voices",
+   "intro": null,
+   "screen": 44,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B47"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B46",
+   "rowStars": [
+    "B46 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f03660.jpg",
+    "f03669.jpg",
+    "f03681.jpg",
+    "f03694.jpg"
+   ],
+   "fps": 26.4,
+   "p95": 50.1,
+   "maxDt": 50.1,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 96,
+   "t": 190,
+   "tPage": 191222,
+   "y": 33219,
+   "yRange": [
+    33080,
+    33386
+   ],
+   "section": "voices",
+   "intro": null,
+   "screen": 44,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B47"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B47",
+   "rowStars": [
+    "B47 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03707.jpg",
+    "f03719.jpg",
+    "f03727.jpg",
+    "f03733.jpg"
+   ],
+   "fps": 17.2,
+   "p95": 133.3,
+   "maxDt": 133.4,
+   "loaf50": 13,
+   "loafWork50": 0
+  },
+  {
+   "i": 97,
+   "t": 192,
+   "tPage": 193222,
+   "y": 33680,
+   "yRange": [
+    33460,
+    33876
+   ],
+   "section": "voices",
+   "intro": null,
+   "screen": 44,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B47"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B47",
+   "rowStars": [
+    "B47 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03737.jpg",
+    "f03742.jpg",
+    "f03749.jpg",
+    "f03755.jpg"
+   ],
+   "fps": 11.2,
+   "p95": 166.6,
+   "maxDt": 200,
+   "loaf50": 23,
+   "loafWork50": 0
+  },
+  {
+   "i": 98,
+   "t": 194,
+   "tPage": 195222,
+   "y": 34213,
+   "yRange": [
+    34003,
+    34390
+   ],
+   "section": "voices",
+   "intro": null,
+   "screen": 45,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B47"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B47",
+   "rowStars": [
+    "B47 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03762.jpg",
+    "f03768.jpg",
+    "f03776.jpg",
+    "f03784.jpg"
+   ],
+   "fps": 15.4,
+   "p95": 149.9,
+   "maxDt": 183.3,
+   "loaf50": 18,
+   "loafWork50": 0
+  },
+  {
+   "i": 99,
+   "t": 196,
+   "tPage": 197222,
+   "y": 34727,
+   "yRange": [
+    34537,
+    34854
+   ],
+   "section": "act-4",
+   "intro": null,
+   "screen": 46,
+   "stars": [
+    {
+     "id": "B47",
+     "w": 2,
+     "how": "scroll"
+    },
+    {
+     "id": "B48",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B48"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B47",
+   "rowStars": [
+    "B47 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f03794.jpg",
+    "f03804.jpg",
+    "f03815.jpg",
+    "f03820.jpg"
+   ],
+   "fps": 16.8,
+   "p95": 133.2,
+   "maxDt": 150,
+   "loaf50": 11,
+   "loafWork50": 0
+  },
+  {
+   "i": 100,
+   "t": 198,
+   "tPage": 199222,
+   "y": 35086,
+   "yRange": [
+    34944,
+    35256
+   ],
+   "section": "act-4",
+   "intro": null,
+   "screen": 46,
+   "stars": [
+    {
+     "id": "B48",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B50",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [
+    "B48",
+    "B50"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B48",
+   "rowStars": [
+    "B48 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f03824.jpg",
+    "f03828.jpg",
+    "f03832.jpg",
+    "f03835.jpg"
+   ],
+   "fps": 7.9,
+   "p95": 283.3,
+   "maxDt": 283.3,
+   "loaf50": 16,
+   "loafWork50": 0
+  },
+  {
+   "i": 101,
+   "t": 200,
+   "tPage": 201222,
+   "y": 35268,
+   "yRange": [
+    35268,
+    35268
+   ],
+   "section": "act-4",
+   "intro": null,
+   "screen": 46,
+   "stars": [
+    {
+     "id": "B50",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B48",
+    "B50"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B50",
+   "rowStars": [
+    "B50 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f03842.jpg",
+    "f03852.jpg",
+    "f03862.jpg",
+    "f03872.jpg"
+   ],
+   "fps": 19,
+   "p95": 66.7,
+   "maxDt": 83.4,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 102,
+   "t": 202,
+   "tPage": 203222,
+   "y": 35428,
+   "yRange": [
+    35306,
+    35632
+   ],
+   "section": "act-4",
+   "intro": null,
+   "screen": 47,
+   "stars": [
+    {
+     "id": "B50",
+     "w": 3,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B50"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B50",
+   "rowStars": [
+    "B50 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f03880.jpg",
+    "f03886.jpg",
+    "f03891.jpg",
+    "f03896.jpg"
+   ],
+   "fps": 11.4,
+   "p95": 116.7,
+   "maxDt": 116.7,
+   "loaf50": 20,
+   "loafWork50": 0
+  },
+  {
+   "i": 103,
+   "t": 204,
+   "tPage": 205222,
+   "y": 35973,
+   "yRange": [
+    35747,
+    36137
+   ],
+   "section": "act-4",
+   "intro": null,
+   "screen": 47,
+   "stars": [
+    {
+     "id": "B50",
+     "w": 3,
+     "how": "scroll"
+    },
+    {
+     "id": "B52",
+     "w": 1,
+     "how": "time"
+    },
+    {
+     "id": "B53",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 3,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B52",
+   "rowStars": [
+    "B52 w1"
+   ],
+   "breath": "B52",
+   "frames": [
+    "f03901.jpg",
+    "f03907.jpg",
+    "f03916.jpg",
+    "f03922.jpg"
+   ],
+   "fps": 13.1,
+   "p95": 133.3,
+   "maxDt": 133.3,
+   "loaf50": 21,
+   "loafWork50": 0
+  },
+  {
+   "i": 104,
+   "t": 206,
+   "tPage": 207222,
+   "y": 36368,
+   "yRange": [
+    36306,
+    36368
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 48,
+   "stars": [
+    {
+     "id": "B53",
+     "w": 1,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B52",
+   "rowStars": [
+    "B52 w1"
+   ],
+   "breath": "B52",
+   "frames": [
+    "f03930.jpg",
+    "f03940.jpg",
+    "f03943.jpg",
+    "f03943.jpg"
+   ],
+   "fps": 39.2,
+   "p95": 50.1,
+   "maxDt": 83.4,
+   "loaf50": 4,
+   "loafWork50": 0
+  },
+  {
+   "i": 105,
+   "t": 208,
+   "tPage": 209222,
+   "y": 36368,
+   "yRange": [
+    36368,
+    36368
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 48,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B52",
+   "rowStars": [
+    "B52 w1"
+   ],
+   "breath": "B52",
+   "frames": [
+    "f03943.jpg",
+    "f03943.jpg",
+    "f03943.jpg",
+    "f03943.jpg"
+   ],
+   "fps": 60,
+   "p95": 16.7,
+   "maxDt": 16.8,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 106,
+   "t": 210,
+   "tPage": 211222,
+   "y": 36368,
+   "yRange": [
+    36368,
+    36482
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 48,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B52",
+   "rowStars": [
+    "B52 w1"
+   ],
+   "breath": "B52",
+   "frames": [
+    "f03943.jpg",
+    "f03943.jpg",
+    "f03948.jpg",
+    "f03959.jpg"
+   ],
+   "fps": 41,
+   "p95": 66.7,
+   "maxDt": 83.3,
+   "loaf50": 7,
+   "loafWork50": 0
+  },
+  {
+   "i": 107,
+   "t": 212,
+   "tPage": 213222,
+   "y": 36742,
+   "yRange": [
+    36591,
+    36881
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 48,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B53",
+   "rowStars": [
+    "B53 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f03967.jpg",
+    "f03973.jpg",
+    "f03977.jpg",
+    "f03981.jpg"
+   ],
+   "fps": 9.7,
+   "p95": 166.6,
+   "maxDt": 166.6,
+   "loaf50": 19,
+   "loafWork50": 0
+  },
+  {
+   "i": 108,
+   "t": 214,
+   "tPage": 215222,
+   "y": 37186,
+   "yRange": [
+    37004,
+    37399
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 49,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B54"
+   ],
+   "unregistered": [
+    "B54"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B53",
+   "rowStars": [
+    "B53 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f03985.jpg",
+    "f03989.jpg",
+    "f03994.jpg",
+    "f03998.jpg"
+   ],
+   "fps": 8.4,
+   "p95": 166.6,
+   "maxDt": 166.6,
+   "loaf50": 16,
+   "loafWork50": 0
+  },
+  {
+   "i": 109,
+   "t": 216,
+   "tPage": 217222,
+   "y": 37650,
+   "yRange": [
+    37538,
+    37872
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 50,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [
+    "B54"
+   ],
+   "unregistered": [
+    "B54"
+   ],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B54",
+   "rowStars": [
+    "B54 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04002.jpg",
+    "f04005.jpg",
+    "f04008.jpg",
+    "f04012.jpg"
+   ],
+   "fps": 7,
+   "p95": 233.3,
+   "maxDt": 233.3,
+   "loaf50": 14,
+   "loafWork50": 0
+  },
+  {
+   "i": 110,
+   "t": 218,
+   "tPage": 219222,
+   "y": 38160,
+   "yRange": [
+    37987,
+    38347
+   ],
+   "section": "principles",
+   "intro": null,
+   "screen": 50,
+   "stars": [
+    {
+     "id": "B55",
+     "w": 1,
+     "how": "scroll"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [
+    "B55"
+   ],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B55",
+   "rowStars": [
+    "B55 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f04015.jpg",
+    "f04017.jpg",
+    "f04021.jpg",
+    "f04024.jpg"
+   ],
+   "fps": 5.9,
+   "p95": 383.4,
+   "maxDt": 383.4,
+   "loaf50": 12,
+   "loafWork50": 0
+  },
+  {
+   "i": 111,
+   "t": 220,
+   "tPage": 221222,
+   "y": 38643,
+   "yRange": [
+    38461,
+    38817
+   ],
+   "section": "contact",
+   "intro": null,
+   "screen": 51,
+   "stars": [
+    {
+     "id": "B55",
+     "w": 1,
+     "how": "scroll"
+    },
+    {
+     "id": "B56",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 2,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B55",
+   "rowStars": [
+    "B55 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f04027.jpg",
+    "f04030.jpg",
+    "f04037.jpg",
+    "f04051.jpg"
+   ],
+   "fps": 16.7,
+   "p95": 216.6,
+   "maxDt": 316.7,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 112,
+   "t": 222,
+   "tPage": 223222,
+   "y": 38818,
+   "yRange": [
+    38818,
+    38818
+   ],
+   "section": "contact",
+   "intro": null,
+   "screen": 51,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B55",
+   "rowStars": [
+    "B55 w1"
+   ],
+   "breath": null,
+   "frames": [
+    "f04063.jpg",
+    "f04073.jpg",
+    "f04084.jpg",
+    "f04096.jpg"
+   ],
+   "fps": 48.6,
+   "p95": 33.4,
+   "maxDt": 66.7,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 113,
+   "t": 224,
+   "tPage": 225222,
+   "y": 39047,
+   "yRange": [
+    38878,
+    39234
+   ],
+   "section": "contact",
+   "intro": null,
+   "screen": 51,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B56",
+   "rowStars": [
+    "B56 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04107.jpg",
+    "f04121.jpg",
+    "f04133.jpg",
+    "f04144.jpg"
+   ],
+   "fps": 24.7,
+   "p95": 50.1,
+   "maxDt": 83.3,
+   "loaf50": 2,
+   "loafWork50": 0
+  },
+  {
+   "i": 114,
+   "t": 226,
+   "tPage": 227222,
+   "y": 39467,
+   "yRange": [
+    39365,
+    39468
+   ],
+   "section": "credits",
+   "intro": null,
+   "screen": 52,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B56",
+   "rowStars": [
+    "B56 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04156.jpg",
+    "f04168.jpg",
+    "f04175.jpg",
+    "f04183.jpg"
+   ],
+   "fps": 26.3,
+   "p95": 50.1,
+   "maxDt": 50.1,
+   "loaf50": 0,
+   "loafWork50": 0
+  },
+  {
+   "i": 115,
+   "t": 228,
+   "tPage": 229222,
+   "y": 39468,
+   "yRange": [
+    39468,
+    39551
+   ],
+   "section": "credits",
+   "intro": null,
+   "screen": 52,
+   "stars": [
+    {
+     "id": "B57",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B56",
+   "rowStars": [
+    "B56 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04196.jpg",
+    "f04209.jpg",
+    "f04221.jpg",
+    "f04233.jpg"
+   ],
+   "fps": 24.4,
+   "p95": 50.1,
+   "maxDt": 66.7,
+   "loaf50": 1,
+   "loafWork50": 0
+  },
+  {
+   "i": 116,
+   "t": 230,
+   "tPage": 231222,
+   "y": 39863,
+   "yRange": [
+    39652,
+    40043
+   ],
+   "section": "credits",
+   "intro": null,
+   "screen": 52,
+   "stars": [
+    {
+     "id": "B57",
+     "w": 2,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B57",
+   "rowStars": [
+    "B57 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04242.jpg",
+    "f04252.jpg",
+    "f04263.jpg",
+    "f04273.jpg"
+   ],
+   "fps": 19.8,
+   "p95": 100,
+   "maxDt": 100.1,
+   "loaf50": 6,
+   "loafWork50": 0
+  },
+  {
+   "i": 117,
+   "t": 232,
+   "tPage": 233222,
+   "y": 40362,
+   "yRange": [
+    40180,
+    40542
+   ],
+   "section": "credits",
+   "intro": null,
+   "screen": 53,
+   "stars": [],
+   "maxConcurrent": 0,
+   "overlapMs": 0,
+   "distinct": 0,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 0,
+   "skips": [],
+   "row": "B57",
+   "rowStars": [
+    "B57 w2"
+   ],
+   "breath": null,
+   "frames": [
+    "f04283.jpg",
+    "f04294.jpg",
+    "f04305.jpg",
+    "f04315.jpg"
+   ],
+   "fps": 20.8,
+   "p95": 66.7,
+   "maxDt": 66.7,
+   "loaf50": 5,
+   "loafWork50": 0
+  },
+  {
+   "i": 118,
+   "t": 234,
+   "tPage": 235222,
+   "y": 40694,
+   "yRange": [
+    40664,
+    40694
+   ],
+   "section": "credits",
+   "intro": null,
+   "screen": 53,
+   "stars": [
+    {
+     "id": "B58",
+     "w": 3,
+     "how": "time"
+    }
+   ],
+   "maxConcurrent": 1,
+   "overlapMs": 0,
+   "distinct": 1,
+   "geoScroll": [],
+   "unregistered": [],
+   "withDeclared": 1,
+   "skips": [],
+   "row": "B58",
+   "rowStars": [
+    "B58 w3"
+   ],
+   "breath": null,
+   "frames": [
+    "f04325.jpg",
+    "f04332.jpg",
+    "f04336.jpg",
+    "f04348.jpg"
+   ],
+   "fps": 21.9,
+   "p95": 50.1,
+   "maxDt": 250.1,
+   "loaf50": 3,
+   "loafWork50": 0
+  }
+ ]
+}

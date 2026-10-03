@@ -75,3 +75,10 @@ next-env.d.ts
 # Phase 3 probe screenshots (raw PNG; summaries/JSON/JPG strips are committed instead)
 /docs/build/motion-strips/p3-w*/probes-*/**/*.png
 /docs/build/motion-strips/p3-w*/probes-*/*.png
+
+# Phase 3 critic-loop rounds: raw screencast video, frames, per-clip strips and PNG probe shots stay local
+# (tools/capture/screencast.mjs --raw, clips.mjs --raw); JSON, Markdown and JPG contact sheets are committed
+/docs/build/motion-strips/p3-r*/raw/
+/docs/build/motion-strips/p3-r*/**/*.png
+/docs/build/motion-strips/p3-r*/**/*.mp4
+/docs/build/motion-strips/p3-r*/**/*.webm

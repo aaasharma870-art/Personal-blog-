@@ -135,7 +135,13 @@ async function scrollAll(page, step = 600) {
       // smooth scroll: none under OS reduced motion; under Pause it is destroyed (spec §3.1)
       R.lenis[mode + 'Before'] = await page.evaluate(() => !!window.__lenis);
       if (mode === 'pause') {
-        const btn = await page.$('header button[aria-pressed], header [data-motion-toggle], header button[aria-label*="otion" i]');
+        // the Pause control by its own hook first: a selector LIST returns the first match in document order,
+        // and the header's sound toggle (aria-pressed, Phase 3) sits before Pause (P3-11.0 fix)
+        let btn = null;
+        for (const sel of ['header [data-motion-toggle]', '[data-motion-toggle]', 'header button[aria-label*="otion" i]']) {
+          btn = await page.$(sel);
+          if (btn) break;
+        }
         R.motion.pauseButton = btn ? await btn.evaluate(b => b.outerHTML.slice(0, 160)) : null;
         if (btn) { await btn.click(); await sleep(500); }
         R.lenis.pauseAfter = await page.evaluate(() => !!window.__lenis);

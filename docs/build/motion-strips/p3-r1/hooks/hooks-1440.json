@@ -1,0 +1,106 @@
+{
+ "meta": {
+  "tool": "tools/capture/hooks.mjs",
+  "base": "http://localhost:3161",
+  "viewport": "1440x900",
+  "date": "2026-10-03T12:59:26.368Z"
+ },
+ "rows": [
+  {
+   "width": 1440,
+   "tier": "css",
+   "card": "opening",
+   "p": 0.05,
+   "raw": 0.0506,
+   "t": 0.0506,
+   "gl": null,
+   "phase": "a",
+   "y": 941,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-css/opening-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "css",
+   "card": "seam",
+   "p": 0.05,
+   "raw": 0.0495,
+   "t": 0.0495,
+   "gl": null,
+   "phase": "a",
+   "y": 7360,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-css/seam-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "gl",
+   "card": "tintype",
+   "p": 0.05,
+   "raw": 0.0494,
+   "t": 0.0494,
+   "gl": "on",
+   "phase": "a",
+   "y": 27122,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-css/tintype-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "css",
+   "card": "ignite",
+   "p": 0.05,
+   "raw": 0.0495,
+   "t": 0.0495,
+   "gl": null,
+   "phase": "a",
+   "y": 37226,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-css/ignite-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "gl",
+   "card": "opening",
+   "p": 0.05,
+   "raw": 0.0506,
+   "t": 0.0506,
+   "gl": "on",
+   "phase": "a",
+   "y": 941,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-gl/opening-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "gl",
+   "card": "seam",
+   "p": 0.05,
+   "raw": 0.0495,
+   "t": 0.0495,
+   "gl": "on",
+   "phase": "a",
+   "y": 7360,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-gl/seam-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "gl",
+   "card": "tintype",
+   "p": 0.05,
+   "raw": 0.0494,
+   "t": 0.0494,
+   "gl": "on",
+   "phase": "a",
+   "y": 27122,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-gl/tintype-p05.jpg"
+  },
+  {
+   "width": 1440,
+   "tier": "gl",
+   "card": "ignite",
+   "p": 0.05,
+   "raw": 0.0495,
+   "t": 0.0495,
+   "gl": "on",
+   "phase": "a",
+   "y": 37226,
+   "jpg": "docs/build/motion-strips/p3-r1/hooks/1440-gl/ignite-p05.jpg"
+  }
+ ]
+}

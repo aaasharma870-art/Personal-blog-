@@ -1,0 +1,945 @@
+{
+ "meta": {
+  "tool": "tools/capture/deadscreen.mjs",
+  "date": "2026-10-03T12:52:19.264Z",
+  "beats": "docs/build/motion-strips/p3-r1/beats/beats.json"
+ },
+ "gaps": [
+  {
+   "width": 1440,
+   "pageVh": 4950.2,
+   "gaps": [],
+   "missing": [],
+   "spans": [],
+   "notFound": [],
+   "pass": true
+  },
+  {
+   "width": 1024,
+   "pageVh": 5366.8,
+   "gaps": [],
+   "missing": [],
+   "spans": [],
+   "notFound": [],
+   "pass": true
+  }
+ ],
+ "runs": [
+  {
+   "profile": "reader",
+   "viewport": "1440x900",
+   "source": "docs/build/motion-strips/p3-r1/screencast/reader-1440/clips.json",
+   "fills": [
+    {
+     "id": "D1",
+     "today": "1650–3750 (2.33vh), program tail → About → journey head",
+     "rows": [
+      {
+       "row": "B03",
+       "stars": [
+        "B03"
+       ],
+       "shown": [
+        "B03"
+       ],
+       "skipped": [],
+       "clips": 1,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B04",
+       "stars": [
+        "B04"
+       ],
+       "shown": [
+        "B04"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B05",
+       "stars": [],
+       "shown": [],
+       "skipped": [],
+       "clips": 0,
+       "clipsNoStar": 0,
+       "pass": null
+      },
+      {
+       "row": "B06",
+       "stars": [
+        "B06"
+       ],
+       "shown": [],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 2,
+       "pass": false
+      },
+      {
+       "row": "B07",
+       "stars": [
+        "B07"
+       ],
+       "shown": [
+        "B07"
+       ],
+       "skipped": [],
+       "clips": 8,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B08",
+       "stars": [
+        "B08",
+        "B08-invite"
+       ],
+       "shown": [
+        "B08"
+       ],
+       "skipped": [
+        "B08-invite (host left the viewport)"
+       ],
+       "clips": 3,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B09",
+       "stars": [
+        "B09"
+       ],
+       "shown": [
+        "B09"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D2",
+     "today": "6.6k–6.9k hard cut in the seam",
+     "rows": [
+      {
+       "row": "B13",
+       "stars": [
+        "B13"
+       ],
+       "shown": [
+        "B13"
+       ],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D3",
+     "today": "~8k, empty first Work screen",
+     "rows": [
+      {
+       "row": "B16",
+       "stars": [
+        "B16"
+       ],
+       "shown": [
+        "B16"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 2,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D4",
+     "today": "9.9k–11.4k trading-algos",
+     "rows": [
+      {
+       "row": "B19",
+       "stars": [
+        "B19"
+       ],
+       "shown": [
+        "B19"
+       ],
+       "skipped": [],
+       "clips": 7,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B20",
+       "stars": [
+        "B20"
+       ],
+       "shown": [],
+       "skipped": [
+        "B20 (maxWait 1500 ms)"
+       ],
+       "clips": 3,
+       "clipsNoStar": 0,
+       "pass": false
+      },
+      {
+       "row": "B21",
+       "stars": [
+        "B21",
+        "B21-circle"
+       ],
+       "shown": [
+        "B21",
+        "B21-circle"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D5",
+     "today": "12.6k–16.2k (worst)",
+     "rows": [
+      {
+       "row": "B22",
+       "stars": [
+        "B22"
+       ],
+       "shown": [
+        "B22"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 4,
+       "pass": true
+      },
+      {
+       "row": "B23",
+       "stars": [
+        "B23"
+       ],
+       "shown": [
+        "B23"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 1,
+       "pass": true
+      },
+      {
+       "row": "B24",
+       "stars": [
+        "B24"
+       ],
+       "shown": [
+        "B24"
+       ],
+       "skipped": [],
+       "clips": 8,
+       "clipsNoStar": 6,
+       "pass": true
+      },
+      {
+       "row": "B25",
+       "stars": [
+        "B25"
+       ],
+       "shown": [
+        "B25"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 4,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D6",
+     "today": "17.4k–18.3k systems matrix",
+     "rows": [
+      {
+       "row": "B26",
+       "stars": [
+        "B26"
+       ],
+       "shown": [
+        "B26"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B27",
+       "stars": [
+        "B27"
+       ],
+       "shown": [
+        "B27"
+       ],
+       "skipped": [],
+       "clips": 8,
+       "clipsNoStar": 6,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D7",
+     "today": "19.05k–20.7k kill-list rows → films head",
+     "rows": [
+      {
+       "row": "B28",
+       "stars": [
+        "B28"
+       ],
+       "shown": [
+        "B28"
+       ],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B29",
+       "stars": [
+        "B29"
+       ],
+       "shown": [
+        "B29"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B30",
+       "stars": [
+        "B30"
+       ],
+       "shown": [
+        "B30"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D8",
+     "today": "25.5k–25.95k black",
+     "rows": [
+      {
+       "row": "B35",
+       "stars": [
+        "B35"
+       ],
+       "shown": [
+        "B35"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B36",
+       "stars": [
+        "B36"
+       ],
+       "shown": [
+        "B36"
+       ],
+       "skipped": [],
+       "clips": 1,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B37",
+       "stars": [],
+       "shown": [],
+       "skipped": [],
+       "clips": 0,
+       "clipsNoStar": 0,
+       "pass": null
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D9",
+     "today": "27.75k–29.25k beyond notes",
+     "rows": [
+      {
+       "row": "B41",
+       "stars": [
+        "B41"
+       ],
+       "shown": [
+        "B41"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B42",
+       "stars": [
+        "B42"
+       ],
+       "shown": [
+        "B42"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D10",
+     "today": "30.6k–33k writing",
+     "rows": [
+      {
+       "row": "B45",
+       "stars": [
+        "B45"
+       ],
+       "shown": [],
+       "skipped": [
+        "B45 (host left the viewport)"
+       ],
+       "clips": 5,
+       "clipsNoStar": 2,
+       "pass": false
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D11",
+     "today": "39.15k–40.65k credits",
+     "rows": [
+      {
+       "row": "B57",
+       "stars": [
+        "B57"
+       ],
+       "shown": [
+        "B57"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 3,
+       "pass": true
+      },
+      {
+       "row": "B58",
+       "stars": [
+        "B58"
+       ],
+       "shown": [
+        "B58"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 1,
+       "pass": true
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": false
+  },
+  {
+   "profile": "reader",
+   "viewport": "1024x768",
+   "source": "docs/build/motion-strips/p3-r1/screencast/reader-1024/clips.json",
+   "fills": [
+    {
+     "id": "D1",
+     "today": "1650–3750 (2.33vh), program tail → About → journey head",
+     "rows": [
+      {
+       "row": "B03",
+       "stars": [
+        "B03"
+       ],
+       "shown": [
+        "B03"
+       ],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B04",
+       "stars": [
+        "B04"
+       ],
+       "shown": [
+        "B04"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B05",
+       "stars": [],
+       "shown": [],
+       "skipped": [],
+       "clips": 0,
+       "clipsNoStar": 0,
+       "pass": null
+      },
+      {
+       "row": "B06",
+       "stars": [
+        "B06"
+       ],
+       "shown": [],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 1,
+       "pass": false
+      },
+      {
+       "row": "B07",
+       "stars": [
+        "B07"
+       ],
+       "shown": [
+        "B07"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 3,
+       "pass": true
+      },
+      {
+       "row": "B08",
+       "stars": [
+        "B08",
+        "B08-invite"
+       ],
+       "shown": [
+        "B08"
+       ],
+       "skipped": [
+        "B08-invite (host left the viewport)"
+       ],
+       "clips": 3,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B09",
+       "stars": [
+        "B09"
+       ],
+       "shown": [
+        "B09"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D2",
+     "today": "6.6k–6.9k hard cut in the seam",
+     "rows": [
+      {
+       "row": "B13",
+       "stars": [
+        "B13"
+       ],
+       "shown": [
+        "B13"
+       ],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D3",
+     "today": "~8k, empty first Work screen",
+     "rows": [
+      {
+       "row": "B16",
+       "stars": [
+        "B16"
+       ],
+       "shown": [
+        "B16"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 1,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D4",
+     "today": "9.9k–11.4k trading-algos",
+     "rows": [
+      {
+       "row": "B19",
+       "stars": [
+        "B19"
+       ],
+       "shown": [
+        "B19"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B20",
+       "stars": [
+        "B20"
+       ],
+       "shown": [],
+       "skipped": [
+        "B20 (maxWait 1500 ms)"
+       ],
+       "clips": 4,
+       "clipsNoStar": 1,
+       "pass": false
+      },
+      {
+       "row": "B21",
+       "stars": [
+        "B21",
+        "B21-circle"
+       ],
+       "shown": [
+        "B21"
+       ],
+       "skipped": [
+        "B21-circle (maxWait 1500 ms)"
+       ],
+       "clips": 5,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D5",
+     "today": "12.6k–16.2k (worst)",
+     "rows": [
+      {
+       "row": "B22",
+       "stars": [
+        "B22"
+       ],
+       "shown": [
+        "B22"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 5,
+       "pass": true
+      },
+      {
+       "row": "B23",
+       "stars": [
+        "B23"
+       ],
+       "shown": [
+        "B23"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B24",
+       "stars": [
+        "B24"
+       ],
+       "shown": [
+        "B24"
+       ],
+       "skipped": [],
+       "clips": 8,
+       "clipsNoStar": 5,
+       "pass": true
+      },
+      {
+       "row": "B25",
+       "stars": [
+        "B25"
+       ],
+       "shown": [
+        "B25"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 4,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D6",
+     "today": "17.4k–18.3k systems matrix",
+     "rows": [
+      {
+       "row": "B26",
+       "stars": [
+        "B26"
+       ],
+       "shown": [
+        "B26"
+       ],
+       "skipped": [],
+       "clips": 6,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B27",
+       "stars": [
+        "B27"
+       ],
+       "shown": [
+        "B27"
+       ],
+       "skipped": [],
+       "clips": 7,
+       "clipsNoStar": 5,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D7",
+     "today": "19.05k–20.7k kill-list rows → films head",
+     "rows": [
+      {
+       "row": "B28",
+       "stars": [
+        "B28"
+       ],
+       "shown": [
+        "B28"
+       ],
+       "skipped": [],
+       "clips": 2,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B29",
+       "stars": [
+        "B29"
+       ],
+       "shown": [
+        "B29"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B30",
+       "stars": [
+        "B30"
+       ],
+       "shown": [
+        "B30"
+       ],
+       "skipped": [],
+       "clips": 5,
+       "clipsNoStar": 0,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D8",
+     "today": "25.5k–25.95k black",
+     "rows": [
+      {
+       "row": "B35",
+       "stars": [
+        "B35"
+       ],
+       "shown": [
+        "B35"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B36",
+       "stars": [
+        "B36"
+       ],
+       "shown": [
+        "B36"
+       ],
+       "skipped": [],
+       "clips": 1,
+       "clipsNoStar": 0,
+       "pass": true
+      },
+      {
+       "row": "B37",
+       "stars": [],
+       "shown": [],
+       "skipped": [],
+       "clips": 0,
+       "clipsNoStar": 0,
+       "pass": null
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D9",
+     "today": "27.75k–29.25k beyond notes",
+     "rows": [
+      {
+       "row": "B41",
+       "stars": [
+        "B41"
+       ],
+       "shown": [
+        "B41"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 2,
+       "pass": true
+      },
+      {
+       "row": "B42",
+       "stars": [
+        "B42"
+       ],
+       "shown": [
+        "B42"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 1,
+       "pass": true
+      }
+     ],
+     "pass": true
+    },
+    {
+     "id": "D10",
+     "today": "30.6k–33k writing",
+     "rows": [
+      {
+       "row": "B45",
+       "stars": [
+        "B45"
+       ],
+       "shown": [],
+       "skipped": [
+        "B45 (host left the viewport)"
+       ],
+       "clips": 6,
+       "clipsNoStar": 3,
+       "pass": false
+      }
+     ],
+     "pass": false
+    },
+    {
+     "id": "D11",
+     "today": "39.15k–40.65k credits",
+     "rows": [
+      {
+       "row": "B57",
+       "stars": [
+        "B57"
+       ],
+       "shown": [
+        "B57"
+       ],
+       "skipped": [],
+       "clips": 4,
+       "clipsNoStar": 3,
+       "pass": true
+      },
+      {
+       "row": "B58",
+       "stars": [
+        "B58"
+       ],
+       "shown": [
+        "B58"
+       ],
+       "skipped": [],
+       "clips": 3,
+       "clipsNoStar": 1,
+       "pass": true
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": false
+  }
+ ],
+ "pass": false
+}

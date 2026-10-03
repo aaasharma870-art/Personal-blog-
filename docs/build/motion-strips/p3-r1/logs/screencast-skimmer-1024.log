@@ -1,0 +1,5 @@
+screencast: skimmer 1024x768 headed (xvfb-run) http://localhost:3161/?skip=intro&debug=spotlight
+  Lenis ON
+  video: docs/build/motion-strips/p3-r1/raw/screencast/skimmer-1024/video.mp4
+  984 frames; scroll 78.3 s; rAF 12.8 fps p95 183.4 ms >50ms 56%; screencast 12.4 fps; LoAF 559 (552 > 50 ms, work > 50: 10); CLS 0.0174; spotlight events 140; errors 0
+  → docs/build/motion-strips/p3-r1/screencast/skimmer-1024/screencast.json
