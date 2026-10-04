@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
+import { useDesktopFine } from "@/lib/flags";
 import type { CaptionKey } from "@/lib/film";
 import { getMedia, rectOf, type MediaId } from "@/lib/media";
 import { dur, easeDraw } from "@/lib/motion";
@@ -333,6 +334,8 @@ export function MachineBoard({
   const fid = useSvgId("machine-u");
   const rect = id ? rectOf(id, "boardRect") : null;
   const circleOn = alt && quotes["Q-3I-3"].text.includes(CIRCLED);
+  // the brisk answer is desktop's (P3-11 r1); phones keep 1.55 s / 1.5 s
+  const fine = useDesktopFine();
   const camera = driftOf((id ? getMedia(id).focal : null) ?? [0.5, 0.5]);
 
   // the board rect in the band box, ≥ 640 (21:9) and below (4:3)
@@ -433,9 +436,9 @@ export function MachineBoard({
               className="relative mt-tier-pair [--fg-muted:#d6dcd5] sm:pointer-events-auto sm:absolute sm:top-(--ma-t-lg) sm:left-(--ma-l-lg) sm:mt-0 sm:w-(--ma-w-lg)"
             >
               {/* the answer follows the question at once and writes briskly
-                  (P3-11 r1 strangers, 1440: a frame caught it at "…reduces
-                  h"; a line half-written for 1.5 s reads as stuck) */}
-              <ChalkWrite phase={phase} write={!alt} delay={1.2} duration={1.05} block>
+                  on desktop (P3-11 r1 strangers, 1440: a frame caught it at
+                  "…reduces h"; a line half-written for 1.5 s reads as stuck) */}
+              <ChalkWrite phase={phase} write={!alt} delay={fine ? 1.2 : 1.55} duration={fine ? 1.05 : 1.5} block>
                 <p className="text-[clamp(1.125rem,0.9rem+1vw,1.5rem)] leading-[1.25] text-(--w-chalk) sm:text-[length:1.95cqw]">
                   <FilmQuote id="Q-3I-3" rendition="lettered" attribution="speaker" />
                 </p>

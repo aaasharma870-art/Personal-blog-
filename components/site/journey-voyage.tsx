@@ -464,11 +464,13 @@ export function JourneyVoyage({
             {...beatAttrs("B09-window")}
           >
             {/* B12-push: the picture (stills, sequence, loop, gull) rides one
-                compositor scale toward the horizon; the caption veil stays */}
+                compositor scale toward the horizon (its own layer while
+                motion is on: the scale never re-rasters the stills); the
+                caption veil stays */}
             <motion.div
               ref={pictureRef}
               aria-hidden="true"
-              className="absolute inset-0"
+              className={cn("absolute inset-0", !reduced && "will-change-transform")}
               style={{ scale: reduced ? 1 : push, transformOrigin: "50% 45%" }}
             >
               {/* the stills: the active step's, crossfading (steps reached so far) */}

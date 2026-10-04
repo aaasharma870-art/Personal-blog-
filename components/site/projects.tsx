@@ -71,7 +71,7 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridVeil="transparent 18%, var(--color-bg) 72%"
+      gridVeil="transparent 18%, var(--bg) 72%"
       fadeIn
       lead={
         head ? (

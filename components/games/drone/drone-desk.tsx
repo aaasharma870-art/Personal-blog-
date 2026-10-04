@@ -21,9 +21,9 @@ import { armInvite } from "@/components/games/invite";
       rAF-coalesced and only while the band is near, and HOLDS it while the
       drone flies (`game:start` → `game:stop`), so the plate under the
       course never moves. P3-11 (J8 #1): under Lenis the passage is Lenis's
-      own position against the band's box, measured once per approach (no
-      getBoundingClientRect per frame: it forced a layout in every rAF
-      while the band was near).
+      own position against the band's box, measured once per approach and
+      again when the page's height changes (no getBoundingClientRect per
+      frame: it forced a layout in every rAF while the band was near).
    2. THE INVITE (B26, a toy-invite time star): on scroll-idle, once, the
       chalk drone beside "▲ Take off" lifts 8 px (the IC-3I-08 lift
       microbeat, ≤ 400 ms up) through the spotlight (components/games/
@@ -88,6 +88,10 @@ export default function DroneDesk({
       { rootMargin: "25% 0px" },
     );
     io.observe(el);
+    // a layout change above the band (a collapse, a font swap, a re-land)
+    // moves its document top without an IO crossing: measure again
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(remeasure);
+    ro?.observe(document.body);
     window.addEventListener("scroll", ask, { passive: true });
     window.addEventListener("resize", remeasure);
     const offStart = on("game:start", (d) => {
@@ -101,6 +105,7 @@ export default function DroneDesk({
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      ro?.disconnect();
       window.removeEventListener("scroll", ask);
       window.removeEventListener("resize", remeasure);
       offStart();

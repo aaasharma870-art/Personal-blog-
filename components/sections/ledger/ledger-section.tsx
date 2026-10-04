@@ -122,7 +122,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
       labelledBy={titleId}
       className="scroll-mt-24"
       grid
-      gridVeil="color-mix(in srgb, var(--color-bg) 50%, transparent) 0%, color-mix(in srgb, var(--color-bg) 50%, transparent) var(--ledger-grid-a, 25%), var(--color-bg) var(--ledger-grid-b, 88%)"
+      gridVeil="color-mix(in srgb, var(--bg) 50%, transparent) 0%, color-mix(in srgb, var(--bg) 50%, transparent) var(--ledger-grid-a, 25%), var(--bg) var(--ledger-grid-b, 88%)"
       fadeOut
       layers={
         game ? (

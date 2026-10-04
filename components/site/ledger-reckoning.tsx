@@ -259,19 +259,22 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
   // (`true`). `false` with the ledger off the line is the window's end
   // (pointer / focus travel as before). A hold is ≤ 1.2 s; the 1.5 s
   // timer frees the lens if the hand-back never comes (scrolled away).
-  const [yielded, setYielded] = useState(false);
+  // the row the lens holds at while yielded (null: not yielded); its figure,
+  // route and label stay that row's until the hand-back moves the lens
+  const [held, setHeld] = useState<number | null>(null);
   const yieldTimer = useRef(0);
   const onLensOwn = useCallback((owned: boolean) => {
     window.clearTimeout(yieldTimer.current);
     if (owned) {
-      setYielded(false);
+      setHeld(null);
       return;
     }
     const r = listRef.current?.getBoundingClientRect();
     const line = window.innerHeight / 2;
     const onLine = Boolean(r && r.top < line && r.bottom > line);
-    setYielded(onLine);
-    if (onLine) yieldTimer.current = window.setTimeout(() => setYielded(false), 1500);
+    const at = onLine ? placed.current : null;
+    setHeld(at);
+    if (at !== null) yieldTimer.current = window.setTimeout(() => setHeld(null), 1500);
   }, []);
   useEffect(() => () => window.clearTimeout(yieldTimer.current), []);
   // the window is the markup's (beatAttrs below); this registration adds the gate
@@ -286,7 +289,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
     if (!g) return;
     // yielded to a time star: hold still (placed keeps the old row, so the
     // hand-back travels)
-    if (yielded && !reduced && placed.current !== null) return;
+    if (held !== null && !reduced) return;
     const targetLens = g.mid - figH / 2;
     // only a change of ROW travels; a layout change (first measure, resize,
     // a font swap) jumps, so nothing moves on its own
@@ -305,7 +308,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
       a.stop();
       b.stop();
     };
-  }, [lensRow, geo, figH, reduced, yielded, ly, by, bh]);
+  }, [lensRow, geo, figH, reduced, held, ly, by, bh]);
 
   /* — row events ———————————————————————————————————————————————— */
   const onPointerMove = (i: number) => (e: PointerEvent<HTMLLIElement>) => {
@@ -332,7 +335,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
     void scrollToTarget(b, { block: "nearest" });
   };
 
-  const lensRowData = rows[lensRow] ?? rows[0];
+  const lensRowData = rows[held !== null && !reduced ? held : lensRow] ?? rows[0];
 
   return (
     <div

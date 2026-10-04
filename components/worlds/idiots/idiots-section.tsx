@@ -52,7 +52,7 @@ export function IdiotsSection({
   containerClassName?: string;
   grid?: boolean;
   /** The stops of a top → bottom gradient of the plane colour over the grid,
-   *  e.g. "transparent 18%, var(--color-bg) 72%" (the grid full to 18 %,
+   *  e.g. "transparent 18%, var(--bg) 72%" (the grid full to 18 %,
    *  gone by 72 %). */
   gridVeil?: string;
   fadeIn?: boolean;

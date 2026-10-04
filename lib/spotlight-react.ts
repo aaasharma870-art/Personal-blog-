@@ -3,8 +3,9 @@
 /* ============================================================================
    useScrollStar — a client host registers its element as a SCROLL star
    (lib/spotlight.ts: THE WINDOW). Desktop-fine with motion on only (the
-   facade is a no-op elsewhere); unregisters on unmount or when `on` goes
-   false. A gated host passes `onOwn` and holds its visual until it is told
+   facade is a no-op elsewhere): it registers when both turn true, and
+   unregisters when either turns false, on unmount or when `on` goes false.
+   A gated host passes `onOwn` and holds its visual until it is told
    `true` (it waits out a time star's hold).
 
      const ref = useRef<SVGSVGElement>(null);
@@ -18,6 +19,7 @@
 import { useEffect, useRef } from "react";
 import type { RefObject } from "react";
 import type { BeatWeight } from "./beats";
+import { DESKTOP_FINE, motionOffNow, onMotionOffChange } from "./flags";
 import { spotlight } from "./spotlight";
 
 export function useScrollStar(
@@ -34,10 +36,31 @@ export function useScrollStar(
   useEffect(() => {
     const el = ref.current;
     if (!on || !el) return;
-    return spotlight.registerScrollStar(id, el, weight, {
-      own,
-      live,
-      onOwn: gated ? (owned) => cb.current?.(owned) : undefined,
-    });
+    // follows eligibility (the facade is a no-op while it is false): a view
+    // that boots paused or narrow registers when motion / the width returns,
+    // so the words binder's registration of the same element keeps the gate
+    const mq = window.matchMedia(DESKTOP_FINE);
+    let off: (() => void) | null = null;
+    const sync = () => {
+      const want = mq.matches && !motionOffNow();
+      if (want && !off) {
+        off = spotlight.registerScrollStar(id, el, weight, {
+          own,
+          live,
+          onOwn: gated ? (owned) => cb.current?.(owned) : undefined,
+        });
+      } else if (!want && off) {
+        off();
+        off = null;
+      }
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    const offMotion = onMotionOffChange(sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      offMotion();
+      off?.();
+    };
   }, [ref, id, weight, own, live, gated, on]);
 }

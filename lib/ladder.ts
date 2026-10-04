@@ -33,7 +33,8 @@
    (c) TURNS: `nextTurn()` hands step-2 work out a few pieces per idle slice
        (the plates' engine parts, the scroll scenes), never one long task,
        and never while the page is scrolling (J8 #1: ≤ 2 per slice, each
-       slice after the scroll has been still for 200 ms or 2 s have gone).
+       slice after the scroll has been still for 200 ms or 2 s have gone;
+       a scroll that never settles waits 2 s once, then one slice a frame).
    performance marks: "p3:quiet-end", "p3:ladder-<n>" (the probes read them).
    Client only: on the server nothing resolves and every hook reads false.
    ========================================================================== */
@@ -114,7 +115,10 @@ function install(): void {
   if (installed || typeof window === "undefined") return;
   installed = true;
   const moved = () => {
-    lastScroll = performance.now();
+    const now = performance.now();
+    // the scroll settled since the last event: a new burst waits again
+    if (now - lastScroll >= SCROLL_IDLE_MS) unsettled = false;
+    lastScroll = now;
   };
   window.addEventListener("scroll", moved, { passive: true });
   window.addEventListener("wheel", moved, { passive: true });
@@ -340,10 +344,17 @@ function pump(): void {
   const load = pending.shift();
   if (!load) return;
   pumping = true;
-  const run = () =>
-    whenScrollIdle().then(() =>
+  // nothing new starts inside the quiet window, nor in its grace; before
+  // warm (the play screen, the flight) it runs (spec §3.1(a))
+  const held = () => isQuiet() || inQuietGrace();
+  const run = (): void =>
+    void whenScrollIdle().then(() =>
       onIdle(
         () => {
+          if (held()) {
+            void whenSettled().then(run);
+            return;
+          }
           load()
             .catch(() => undefined)
             .then(() => {
@@ -354,8 +365,8 @@ function pump(): void {
         { timeout: 2000 },
       ),
     );
-  // nothing new starts inside the quiet window, nor in its grace
-  void whenSettled().then(run);
+  if (held()) void whenSettled().then(run);
+  else run();
 }
 
 function enqueue(loaders: readonly Loader[]): void {
@@ -401,11 +412,18 @@ const TURNS_PER_SLICE = 2;
 const TURN_CAP_MS = 2000;
 const turns: (() => void)[] = [];
 let handing = false;
+/** A slice met a scroll still moving after TURN_CAP_MS: until it settles,
+ *  the next slices stop waiting for it (one per frame), so a backlog of
+ *  plate turns never holds the scroll-scene drain TURN_CAP_MS a slice. */
+let unsettled = false;
 
 function handOut(): void {
   if (handing) return;
   handing = true;
-  void whenScrollIdle(SCROLL_IDLE_MS, TURN_CAP_MS).then(() =>
+  const moving = () => performance.now() - lastScroll < SCROLL_IDLE_MS;
+  const gate = unsettled && moving() ? Promise.resolve() : whenScrollIdle(SCROLL_IDLE_MS, TURN_CAP_MS);
+  void gate.then(() => {
+    unsettled = moving();
     requestAnimationFrame(() =>
       onIdle(
         () => {
@@ -415,8 +433,8 @@ function handOut(): void {
         },
         { timeout: 250 },
       ),
-    ),
-  );
+    );
+  });
 }
 
 /** Resolves on this caller's turn: at most a few callers per idle slice,

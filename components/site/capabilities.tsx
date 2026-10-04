@@ -75,7 +75,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridVeil="transparent 22%, color-mix(in srgb, var(--color-bg) 50%, transparent) 100%"
+      gridVeil="transparent 22%, color-mix(in srgb, var(--bg) 50%, transparent) 100%"
     >
       {entry.props.media ? (
         <DroneBand
@@ -125,7 +125,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
                 {COLS.map(([label, key]) => (
                   <dl key={key}>
                     <dt className="type-meta text-fg-muted lg:sr-only">{label}</dt>
-                    <dd className="mt-1 type-body text-fg-muted lg:mt-0">{c[key]}</dd>
+                    <dd className="mt-1 type-small text-fg-muted lg:mt-0 lg:type-body">{c[key]}</dd>
                   </dl>
                 ))}
               </Rise>
