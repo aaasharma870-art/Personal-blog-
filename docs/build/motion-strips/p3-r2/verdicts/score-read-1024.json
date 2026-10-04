@@ -1,0 +1,388 @@
+{
+ "kind": "captioned",
+ "width": "1024",
+ "name": "Aryan Sharma",
+ "heroIds": [
+  "C005"
+ ],
+ "nameOk": 3,
+ "nameRows": [
+  {
+   "judge": 1,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 2,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 3,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  }
+ ],
+ "cantRead": [
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Top of the page is clipped under the header: the 'quantitative systems.' heading is cut at the top and the right-hand caption shows only '...YOU WANT MOST' half-hidden above 'PIRATES OF THE CARIBBEAN'"
+  },
+  {
+   "judge": 1,
+   "frame": "C003",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three...' heading cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D40-contact",
+   "text": "Grey serif paragraph under the headline is low-contrast on black"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D40-contact",
+   "text": "'Lumos' link gives no hint of what it does"
+  },
+  {
+   "judge": 1,
+   "frame": "C005",
+   "scene": "D01-hero",
+   "text": "'DIRECTOR'S CUT (SOUND ON)' button text is dim grey"
+  },
+  {
+   "judge": 1,
+   "frame": "C005",
+   "scene": "D01-hero",
+   "text": "'SELF-TAUGHT HIGH-SCHOOL QUANT • LANDON SCHOOL, CLASS OF 2027' is small and low-contrast"
+  },
+  {
+   "judge": 1,
+   "frame": "C006",
+   "scene": "D29-systems",
+   "text": "Intro line 'A working map, not a skills cloud: the...' cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C008",
+   "scene": "D24-work",
+   "text": "'STANDING RULE' body text cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is unfinished: '“A machine is anything' with no ending (mid-write or truncated)"
+  },
+  {
+   "judge": 1,
+   "frame": "C010",
+   "scene": "D28-experiment",
+   "text": "Unselected toggle 'Realistic costs · out-of-sample' is dim"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "'I solemnly swear...' subtitle is tiny and faint"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "Quill drawing overlaps the 'Y' of 'PHILOSOPHY'"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "Bracketed 'FIG. · OPTUNA-SCREENER' diagram crowds the 02 project text column"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "'Killed and never retuned' reads like a typo for 'returned' at first glance"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "Last line of the 02 description cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C013",
+   "scene": "D36-writing",
+   "text": "Entry I description cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C015",
+   "scene": "D43-films-pirates",
+   "text": "A blackletter title fragment is stuck half under the header at the top (only the bottom half of 'PIRATES OF THE CARIBBEAN' shows)"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D21-journey-step-1",
+   "text": "Top body line half hidden under the header ('...of it failed me first. Step through it.')"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D21-journey-step-1",
+   "text": "'parley?' script label is small"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D41-credits",
+   "text": "Small 'CREDITS' label sits directly under the skip pill and crowds it"
+  },
+  {
+   "judge": 2,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Top-right heading is cut off by the header bar: only '...YOU WANT MOST' shows, half hidden, above 'PIRATES OF THE CARIBBEAN'"
+  },
+  {
+   "judge": 2,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "First headline line clipped at the top; only 'quantitative systems.' visible"
+  },
+  {
+   "judge": 2,
+   "frame": "C004",
+   "scene": "D40-contact",
+   "text": "'RÉSUMÉ · COMING SOON' is small, low-contrast grey"
+  },
+  {
+   "judge": 2,
+   "frame": "C004",
+   "scene": "D40-contact",
+   "text": "The 'A [candle] S' monogram is only readable as initials, not as a name"
+  },
+  {
+   "judge": 2,
+   "frame": "C005",
+   "scene": "D01-hero",
+   "text": "'▶ DIRECTOR'S CUT (SOUND ON)' button text is very dim against the sea"
+  },
+  {
+   "judge": 2,
+   "frame": "C008",
+   "scene": "D24-work",
+   "text": "'STANDING RULE' body text runs off the bottom of the frame"
+  },
+  {
+   "judge": 2,
+   "frame": "C009",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is truncated: '\"A machine is anything' with no ending, attributed '— RANCHO'"
+  },
+  {
+   "judge": 2,
+   "frame": "C010",
+   "scene": "D28-experiment",
+   "text": "Unselected toggle 'Realistic costs · out-of-sample' is low-contrast grey"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "'I SOLEMNLY SWEAR...' under the banner is tiny and faint"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "Last letter of 'PHILOSOPHY' fades under the quill (mid-write)"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "Typo: 'Killed and never retuned' (should read 'returned')"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "Figure label wraps awkwardly: 'FIG. · OPTUNA- / SCREENER'"
+  },
+  {
+   "judge": 2,
+   "frame": "C013",
+   "scene": "D36-writing",
+   "text": "Handwritten 'Entry II' in the journal sketch is faint pencil"
+  },
+  {
+   "judge": 2,
+   "frame": "C013",
+   "scene": "D36-writing",
+   "text": "The only name on the frame is 'ARTHUR MORGAN'S JOURNAL', which a skimmer could take as the author"
+  },
+  {
+   "judge": 2,
+   "frame": "C015",
+   "scene": "D43-films-pirates",
+   "text": "Blackletter title above the ship image is sliced off by the header; only the bottom half of '...PIRATES OF THE CARIBBEAN' shows"
+  },
+  {
+   "judge": 2,
+   "frame": "C016",
+   "scene": "D21-journey-step-1",
+   "text": "Top line '...of it failed me first. Step through it.' is clipped under the header"
+  },
+  {
+   "judge": 2,
+   "frame": "C016",
+   "scene": "D21-journey-step-1",
+   "text": "Map labels ('01 ORIGIN', '03 THE BREAK', 'parley?') are small; '03 THE BREAK' spills below the map frame"
+  },
+  {
+   "judge": 2,
+   "frame": "C017",
+   "scene": "D41-credits",
+   "text": "Header 'CREDITS' label under the pill is small grey"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D21-journey-step-1",
+   "text": "Top line 'of it failed me first. Step through it.' is sliced in half by the sticky top bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C015",
+   "scene": "D43-films-pirates",
+   "text": "A blackletter line ('Pirates of the Caribbean') at the very top is hidden under the sticky bar; only the lower half of the letters shows"
+  },
+  {
+   "judge": 3,
+   "frame": "C013",
+   "scene": "D36-writing",
+   "text": "Handwritten 'Entry II' is faint pencil"
+  },
+  {
+   "judge": 3,
+   "frame": "C013",
+   "scene": "D36-writing",
+   "text": "Description under 'How I try not to fool myself' is cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "'FIG. · OPTUNA-SCREENER' label breaks mid-word onto two lines and the bracket diagram is wedged between the description and the right-hand meta column"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "'Trading_Algos-' link ends in a hyphen and looks truncated"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D30-kill-list",
+   "text": "Last line of project 02 description cut at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "'I solemnly swear…' is tiny faint small-caps"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D38-principles",
+   "text": "The quill sits on the last letter of 'PHILOSOPHY', so the Y reads faded"
+  },
+  {
+   "judge": 3,
+   "frame": "C010",
+   "scene": "D28-experiment",
+   "text": "Chart caption is cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is still typing: '“A machine is anything' ends mid-sentence"
+  },
+  {
+   "judge": 3,
+   "frame": "C008",
+   "scene": "D24-work",
+   "text": "'STANDING RULE' body text is cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C005",
+   "scene": "D01-hero",
+   "text": "'DIRECTOR'S CUT (SOUND ON)' label is dim grey"
+  },
+  {
+   "judge": 3,
+   "frame": "C004",
+   "scene": "D40-contact",
+   "text": "'RÉSUMÉ · COMING SOON' is small and dim"
+  },
+  {
+   "judge": 3,
+   "frame": "C003",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' heading and athletics columns cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C002",
+   "scene": "D26-trading-algos",
+   "text": "'Trading_Algos-' link (and 'TRADING_ALGOS-' in the figure label) ends in a hyphen and reads as truncated"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Right-hand blackletter caption ('…you want most') is half-hidden under the sticky top bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D20-about-120",
+   "text": "Bottom of the four-principles grid is cut off"
+  }
+ ],
+ "fastLane": [
+  {
+   "judge": 1,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the header; 'VIEW THE QUANT PORTFOLIO ↓' under the intro"
+  },
+  {
+   "judge": 2,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill top centre, plus 'VIEW THE QUANT PORTFOLIO ↓' button under the intro"
+  },
+  {
+   "judge": 3,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the top bar; 'VIEW THE QUANT PORTFOLIO ↓' under the intro also works"
+  }
+ ],
+ "fastLaneOk": 3
+}

@@ -1,0 +1,94 @@
+{
+ "kind": "hooks",
+ "width": "1440",
+ "rows": [
+  {
+   "id": "H008",
+   "frame": "css-ignite-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "The burn-hole now shows a single candle flame inside, so a Western campfire burning through to a Hogwarts candle reads as intentional and magical. It makes me want to keep scrolling. The HP title over an RDR2 caption is still briefly confusing.",
+    "The burn hole now shows a single candle flame inside: a sharp tease of the next world (Hogwarts candles) through the last one (the camp). Heading/caption mismatch remains.",
+    "A glowing burn-hole is eating through the bright campfire plate and a lone candle shows inside it, so the next world is literally burning through. It begs one more scroll. Small snag: the act title says HARRY POTTER while the big caption still says 'The Campfire · Red Dead Redemption 2', which reads as a mislabel for a beat."
+   ]
+  },
+  {
+   "id": "H007",
+   "frame": "css-opening-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Title plus a porthole on a completely black field, with no sea or horizon behind it. The empty left two-thirds makes the page look like it is still loading, not like a scene about to open.",
+    "Pure black page with a title top-left and a small ship porthole bottom-right; nothing behind the porthole yet. It reads as a page that hasn't finished loading rather than an opening shot.",
+    "Big blackletter title, then about 60% of the frame is flat black with a small dull porthole of the ghost ship at far right. It reads as 'still loading', not as an invitation. The porthole needs more glow or more of the sea around it."
+   ]
+  },
+  {
+   "id": "H002",
+   "frame": "css-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A glowing teal stock-chart line is the seam where the storm sea gives way to the classroom underneath. Markets as the horizon is a smart, on-theme idea. Confusing: the title says '3 IDIOTS' while the plate still says 'THE KRAKEN'S STORM · PIRATES OF THE CARIBBEAN'.",
+    "The storm wave turning into a glowing equity-curve line that peels back to reveal a classroom bench is the cleverest image in the set: markets as weather. The heading '3 IDIOTS / The Workshop' and the caption 'THE KRAKEN'S STORM · PIRATES OF THE CARIBBEAN' contradict each other mid-transition.",
+    "Clever: a glowing teal equity-curve line rises from the bottom and wipes the storm away to reveal the stone classroom and desk. It ties the film world to the trading theme in one gesture. Strongest hook of the set."
+   ]
+  },
+  {
+   "id": "H004",
+   "frame": "css-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Western slab title over a sepia tintype in a cream mat. Instantly sets a new era and mood, and the photo-plate treatment is classy. It is calm, not dramatic, but it clearly says a new chapter has started.",
+    "Big western wood-type title over a sepia tintype in a cream mount, like a period photograph; calm and confident, and it makes me want to see what the 'act' holds.",
+    "Same frame as H006: dim sepia tintype, nothing moving, large dark band under it. Pretty, but it does not pull."
+   ]
+  },
+  {
+   "id": "H003",
+   "frame": "gl-ignite-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "A glowing burn-hole opens in the RDR2 camp, but it is an empty black blob, and the heading 'HARRY POTTER' sits over a cowboy camp captioned 'RED DEAD REDEMPTION 2'. At this instant it reads more like a rendering glitch than a reveal.",
+    "A burn hole eating through the RDR camp plate is a dramatic 'something is coming through' moment. The 'HARRY POTTER' heading over an RDR plate and an RDR caption is confusing for a beat.",
+    "Burn-hole just starting in the warm camp plate. The glowing edge is an immediate 'what's under there?' Same title/caption mismatch as H008."
+   ]
+  },
+  {
+   "id": "H001",
+   "frame": "gl-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Big blackletter 'PIRATES OF THE CARIBBEAN' plus a glowing brass porthole framing the Black Pearl's lit stern over a faintly visible night sea: it feels like a spyglass peek and I want to see the whole ship. Weakness: about two-thirds of the frame is near-black.",
+    "The bright gold porthole ring with the lantern-lit stern inside, and the dark sea just starting to bleed in behind it, reads as an iris about to open onto the whole scene. The big empty left half still feels underused.",
+    "Opening act: blackletter title plus a glowing brass porthole framing the lantern-lit ghost ship, with a faint sea behind. It promises a voyage. Still a lot of empty dark on the left."
+   ]
+  },
+  {
+   "id": "H005",
+   "frame": "gl-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A white lightning-tear rips the storm open onto a sunlit classroom window. Dramatic, on-theme for 'storm to workshop', and the most cinematic transition in the set. The outgoing PotC caption is still up, but the tear explains it.",
+    "A white lightning-edged tear splitting a misty classroom from a teal storm sea is dramatic and clearly in motion. Same heading/caption mismatch (3 Idiots heading, Pirates caption).",
+    "A lightning-white tear rips the Kraken storm open to show the sunlit classroom behind it: dramatic and clearly mid-transformation. 'HERE BE MONSTERS' is a nice tease. Caption/title mismatch (3 IDIOTS over a Pirates caption) is readable as 'leaving the last world'."
+   ]
+  },
+  {
+   "id": "H006",
+   "frame": "gl-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Same as H004: clear act title and an elegant sepia photo plate. It reads as a deliberate chapter card.",
+    "Same tintype as H004. Still handsome, though it is a static frame and relies on the type to pull me on.",
+    "Handsome wood-type title, but the sepia print is muddy and low-contrast. The left half of the plate is a black tree mass and nothing suggests motion or a reveal, so it reads as a static postcard. Identical to H004."
+   ]
+  }
+ ]
+}

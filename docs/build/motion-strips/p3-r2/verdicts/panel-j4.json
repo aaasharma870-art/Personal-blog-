@@ -1,0 +1,1061 @@
+{
+ "judge": "J4 (film-loving, design-literate, gimmick-averse)",
+ "round": 2,
+ "screens": [
+  {
+   "width": 1440,
+   "screen": 1,
+   "clip": "1-11",
+   "keep": "yes",
+   "why": "Play screen with candles, a broom swoop over Hogwarts into a glowing sea, then the name lands. A real cold open."
+  },
+  {
+   "width": 1440,
+   "screen": 2,
+   "clip": "12-14",
+   "keep": "yes",
+   "why": "A porthole iris opens on the Black Pearl, then 'The Crossing' card. I'm in."
+  },
+  {
+   "width": 1440,
+   "screen": 3,
+   "clip": "15-16",
+   "keep": "yes",
+   "why": "The ship drifts back to 'A research journal in four acts'. A contents page that tells me how long this is."
+  },
+  {
+   "width": 1440,
+   "screen": 4,
+   "clip": "17-19",
+   "keep": "yes",
+   "why": "The title burns in with a light sweep and the compass medallion turns. The three columns are small but readable at this width."
+  },
+  {
+   "width": 1440,
+   "screen": 5,
+   "clip": "20-22",
+   "keep": "yes",
+   "why": "'How the methodology was earned' with a sticky Port Royal plate. The scrollytelling starts."
+  },
+  {
+   "width": 1440,
+   "screen": 6,
+   "clip": "23-24",
+   "keep": "yes",
+   "why": "The plate swaps from harbour to storm as the steps advance, and the route chart ticks along."
+  },
+  {
+   "width": 1440,
+   "screen": 7,
+   "clip": "25-26",
+   "keep": "yes",
+   "why": "The storm-to-sunset grade keeps the plate alive."
+  },
+  {
+   "width": 1440,
+   "screen": 8,
+   "clip": "27-28",
+   "keep": "no",
+   "why": "The chart exits, then about 4 s of near-black with a thin sea strip and the Kraken caption. It feels like a loading bar."
+  },
+  {
+   "width": 1440,
+   "screen": 9,
+   "clip": "29-31",
+   "keep": "yes",
+   "why": "A torn chalk edge rips open the 3 Idiots lecture hall. A great act change."
+  },
+  {
+   "width": 1440,
+   "screen": 10,
+   "clip": "32-33",
+   "keep": "yes",
+   "why": "'The Workshop' title card. The black breath after it is short, and the pen rises out of it."
+  },
+  {
+   "width": 1440,
+   "screen": 11,
+   "clip": "34-36",
+   "keep": "yes",
+   "why": "The astronaut pen plate, then a word reveal of 'Led by what survived scrutiny.'"
+  },
+  {
+   "width": 1440,
+   "screen": 12,
+   "clip": "37-38",
+   "keep": "yes",
+   "why": "A chalkboard bar chart for the gauntlet. The 3 Idiots skin earns its keep."
+  },
+  {
+   "width": 1440,
+   "screen": 13,
+   "clip": "39-42",
+   "keep": "yes",
+   "why": "First project card: a corridor photo, and the Rancho blueprint draws itself. Fresh the first time."
+  },
+  {
+   "width": 1440,
+   "screen": 14,
+   "clip": "43",
+   "keep": "yes",
+   "why": "The stats get chalk circles. Playful."
+  },
+  {
+   "width": 1440,
+   "screen": 15,
+   "clip": "44-45",
+   "keep": "yes",
+   "why": "'What is a machine?' is handwritten on the board. Charming."
+  },
+  {
+   "width": 1440,
+   "screen": 16,
+   "clip": "46-48",
+   "keep": "yes",
+   "why": "The second card opens under the chalkboard. Still okay."
+  },
+  {
+   "width": 1440,
+   "screen": 17,
+   "clip": "49-50",
+   "keep": "no",
+   "why": "The same blueprint, the same stat block and chalk circles again. Seen it 60 s ago."
+  },
+  {
+   "width": 1440,
+   "screen": 18,
+   "clip": "51-53",
+   "keep": "yes",
+   "why": "'See the thesis, not just read it.' The chart draws itself and there is a toggle to try."
+  },
+  {
+   "width": 1440,
+   "screen": 19,
+   "clip": "54-55",
+   "keep": "yes",
+   "why": "The chart hands off to the homemade drone with a Take off pill."
+  },
+  {
+   "width": 1440,
+   "screen": 20,
+   "clip": "56-59",
+   "keep": "no",
+   "why": "Skills table: three columns of tiny text for 8 s. Clutter."
+  },
+  {
+   "width": 1440,
+   "screen": 21,
+   "clip": "60",
+   "keep": "no",
+   "why": "More table. The blueprint panel doesn't save it."
+  },
+  {
+   "width": 1440,
+   "screen": 22,
+   "clip": "61-63",
+   "keep": "yes",
+   "why": "Kill-list header with the Dead Eye chip and the pen plate. The honest part, framed well."
+  },
+  {
+   "width": 1440,
+   "screen": 23,
+   "clip": "64-65",
+   "keep": "no",
+   "why": "Rows of tiny text with a small lens box riding them. Monotone, and the lens reads as decoration."
+  },
+  {
+   "width": 1440,
+   "screen": 24,
+   "clip": "66-68",
+   "keep": "yes",
+   "why": "'Three films and a game': finally I'm told there's a game. The film index is lovely."
+  },
+  {
+   "width": 1440,
+   "screen": 25,
+   "clip": "69-70",
+   "keep": "yes",
+   "why": "The Pirates plate slit-opens under a typed-on title."
+  },
+  {
+   "width": 1440,
+   "screen": 26,
+   "clip": "71-72",
+   "keep": "yes",
+   "why": "A quote, then the yellow scooter at Pangong. A tonal jump that works."
+  },
+  {
+   "width": 1440,
+   "screen": 27,
+   "clip": "73-74",
+   "keep": "yes",
+   "why": "'Aal izz well.', then the RDR2 red plate rises."
+  },
+  {
+   "width": 1440,
+   "screen": 28,
+   "clip": "75",
+   "keep": "yes",
+   "why": "The Dead Eye plate. Strong colour."
+  },
+  {
+   "width": 1440,
+   "screen": 29,
+   "clip": "76-77",
+   "keep": "yes",
+   "why": "The Hogwarts Express. Fourth identical template, but the image carries it."
+  },
+  {
+   "width": 1440,
+   "screen": 30,
+   "clip": "78-79",
+   "keep": "yes",
+   "why": "A sun dot drops into a grey RDR2 plate. A new trick that makes me curious."
+  },
+  {
+   "width": 1440,
+   "screen": 31,
+   "clip": "80-82",
+   "keep": "yes",
+   "why": "The plate grades from grey to gold as I scroll. Best moment on the page."
+  },
+  {
+   "width": 1440,
+   "screen": 32,
+   "clip": "83-84",
+   "keep": "yes",
+   "why": "'The Frontier' card, then a fade to black. A proper cut."
+  },
+  {
+   "width": 1440,
+   "screen": 33,
+   "clip": "85-87",
+   "keep": "yes",
+   "why": "Full-bleed golden heartlands under 'Discipline, service, and a trained eye.'"
+  },
+  {
+   "width": 1440,
+   "screen": 34,
+   "clip": "88-89",
+   "keep": "yes",
+   "why": "The parchment trail map draws itself and the horse silhouette arrives."
+  },
+  {
+   "width": 1440,
+   "screen": 35,
+   "clip": "90-91",
+   "keep": "no",
+   "why": "Three blocks of small mono text on brown beside a static horse. Reading, not watching."
+  },
+  {
+   "width": 1440,
+   "screen": 36,
+   "clip": "92-93",
+   "keep": "yes",
+   "why": "The satchel inventory and the WANTED poster. Game-like and funny."
+  },
+  {
+   "width": 1440,
+   "screen": 37,
+   "clip": "94-96",
+   "keep": "yes",
+   "why": "The poster lifts away and parchment curls up into the journal. A great wipe."
+  },
+  {
+   "width": 1440,
+   "screen": 38,
+   "clip": "97-98",
+   "keep": "yes",
+   "why": "Journal entries with sketches that draw themselves, and a little horse runs along the margin."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "clip": "99",
+   "keep": "yes",
+   "why": "More sketches. The running-horse egg keeps me looking."
+  },
+  {
+   "width": 1440,
+   "screen": 40,
+   "clip": "100-103",
+   "keep": "yes",
+   "why": "A treeline rises out of the paper into the campfire. Gorgeous."
+  },
+  {
+   "width": 1440,
+   "screen": 41,
+   "clip": "104",
+   "keep": "yes",
+   "why": "Real testimonials over the fire. Earned."
+  },
+  {
+   "width": 1440,
+   "screen": 42,
+   "clip": "105-106",
+   "keep": "yes",
+   "why": "The campfire plate burns through to the next world. Cinematic."
+  },
+  {
+   "width": 1440,
+   "screen": 43,
+   "clip": "107-110",
+   "keep": "yes",
+   "why": "The Great Hall, a winged thing flies across, then 'The Light' card."
+  },
+  {
+   "width": 1440,
+   "screen": 44,
+   "clip": "111-114",
+   "keep": "yes",
+   "why": "The map rises out of black and unfolds, and footprints walk."
+  },
+  {
+   "width": 1440,
+   "screen": 45,
+   "clip": "115-116",
+   "keep": "yes",
+   "why": "Principles with tiny animated footprints. Still charming."
+  },
+  {
+   "width": 1440,
+   "screen": 46,
+   "clip": "117-118",
+   "keep": "no",
+   "why": "The fifth identical panel, and the capture drops to about 4 fps here. It feels sticky."
+  },
+  {
+   "width": 1440,
+   "screen": 47,
+   "clip": "119-121",
+   "keep": "yes",
+   "why": "Floating candles and 'A S'. A warm call to action."
+  },
+  {
+   "width": 1440,
+   "screen": 48,
+   "clip": "122-124",
+   "keep": "no",
+   "why": "Credits: tiny grey type on black for 6 s."
+  },
+  {
+   "width": 1440,
+   "screen": 49,
+   "clip": "125-126",
+   "keep": "yes",
+   "why": "'Mischief managed.' bookends the opening line. It made me smile."
+  },
+  {
+   "width": 1024,
+   "screen": 1,
+   "clip": "1-10",
+   "keep": "yes",
+   "why": "The same cold open fits 4:3 well. The hero exit leaves a mostly empty frame for about 1 s."
+  },
+  {
+   "width": 1024,
+   "screen": 2,
+   "clip": "11-13",
+   "keep": "yes",
+   "why": "The porthole iris opens and the Black Pearl holds."
+  },
+  {
+   "width": 1024,
+   "screen": 3,
+   "clip": "14-15",
+   "keep": "yes",
+   "why": "'The Crossing' card and the four-act contents."
+  },
+  {
+   "width": 1024,
+   "screen": 4,
+   "clip": "16-18",
+   "keep": "yes",
+   "why": "The title reveal with a light sweep."
+  },
+  {
+   "width": 1024,
+   "screen": 5,
+   "clip": "19-20",
+   "keep": "no",
+   "why": "Three cramped columns of small serif, with the compass squeezed into the gutter. A wall of text."
+  },
+  {
+   "width": 1024,
+   "screen": 6,
+   "clip": "21-22",
+   "keep": "yes",
+   "why": "The methodology heading with the Port Royal plate."
+  },
+  {
+   "width": 1024,
+   "screen": 7,
+   "clip": "23-24",
+   "keep": "yes",
+   "why": "The plate swaps with the steps."
+  },
+  {
+   "width": 1024,
+   "screen": 8,
+   "clip": "25-26",
+   "keep": "no",
+   "why": "The chart and the storm push overlap, then near-black with a sea strip. A dead gap."
+  },
+  {
+   "width": 1024,
+   "screen": 9,
+   "clip": "27",
+   "keep": "yes",
+   "why": "A torn chalk reveal of the lecture hall."
+  },
+  {
+   "width": 1024,
+   "screen": 10,
+   "clip": "28-30",
+   "keep": "yes",
+   "why": "The chalk drone, then 'The Workshop' card."
+  },
+  {
+   "width": 1024,
+   "screen": 11,
+   "clip": "31",
+   "keep": "yes",
+   "why": "A black breath, then the pen rises. Short enough to read as a cut."
+  },
+  {
+   "width": 1024,
+   "screen": 12,
+   "clip": "32-34",
+   "keep": "yes",
+   "why": "The pen, 'Led by what survived scrutiny', and the gauntlet."
+  },
+  {
+   "width": 1024,
+   "screen": 13,
+   "clip": "35-37",
+   "keep": "yes",
+   "why": "The chalkboard gauntlet leads into the first card."
+  },
+  {
+   "width": 1024,
+   "screen": 14,
+   "clip": "38-39",
+   "keep": "yes",
+   "why": "The blueprint draws itself."
+  },
+  {
+   "width": 1024,
+   "screen": 15,
+   "clip": "40",
+   "keep": "yes",
+   "why": "Chalk circles on the stats."
+  },
+  {
+   "width": 1024,
+   "screen": 16,
+   "clip": "41-42",
+   "keep": "yes",
+   "why": "'What is a machine?' in chalk."
+  },
+  {
+   "width": 1024,
+   "screen": 17,
+   "clip": "43-45",
+   "keep": "yes",
+   "why": "The second card header. Fine."
+  },
+  {
+   "width": 1024,
+   "screen": 18,
+   "clip": "46",
+   "keep": "no",
+   "why": "The same blueprint again."
+  },
+  {
+   "width": 1024,
+   "screen": 19,
+   "clip": "47-48",
+   "keep": "no",
+   "why": "The same stat block with chalk circles, plus the lawn. Seen it."
+  },
+  {
+   "width": 1024,
+   "screen": 20,
+   "clip": "49-51",
+   "keep": "yes",
+   "why": "The 'See the thesis' chart draws itself, with a toggle."
+  },
+  {
+   "width": 1024,
+   "screen": 21,
+   "clip": "52",
+   "keep": "yes",
+   "why": "The chart leads into the drone plate."
+  },
+  {
+   "width": 1024,
+   "screen": 22,
+   "clip": "53-55",
+   "keep": "yes",
+   "why": "The drone with Take off, then 'What I can actually do'."
+  },
+  {
+   "width": 1024,
+   "screen": 23,
+   "clip": "56-57",
+   "keep": "no",
+   "why": "Skills table with tiny, dense columns."
+  },
+  {
+   "width": 1024,
+   "screen": 24,
+   "clip": "58-60",
+   "keep": "yes",
+   "why": "Kill-list header with the Dead Eye chip."
+  },
+  {
+   "width": 1024,
+   "screen": 25,
+   "clip": "61",
+   "keep": "no",
+   "why": "Rows of tiny text with the lens."
+  },
+  {
+   "width": 1024,
+   "screen": 26,
+   "clip": "62-63",
+   "keep": "no",
+   "why": "More rows. The longest monotone stretch at this width."
+  },
+  {
+   "width": 1024,
+   "screen": 27,
+   "clip": "64-66",
+   "keep": "yes",
+   "why": "'Three films and a game' with the film index. The game is finally explained."
+  },
+  {
+   "width": 1024,
+   "screen": 28,
+   "clip": "67",
+   "keep": "yes",
+   "why": "The Pirates plate slit-opens."
+  },
+  {
+   "width": 1024,
+   "screen": 29,
+   "clip": "68-69",
+   "keep": "yes",
+   "why": "A quote, then the scooter."
+  },
+  {
+   "width": 1024,
+   "screen": 30,
+   "clip": "70",
+   "keep": "yes",
+   "why": "'Aal izz well', then RDR2."
+  },
+  {
+   "width": 1024,
+   "screen": 31,
+   "clip": "71-72",
+   "keep": "yes",
+   "why": "The Dead Eye plate, then HP."
+  },
+  {
+   "width": 1024,
+   "screen": 32,
+   "clip": "73",
+   "keep": "yes",
+   "why": "The Hogwarts Express."
+  },
+  {
+   "width": 1024,
+   "screen": 33,
+   "clip": "74-75",
+   "keep": "yes",
+   "why": "A sun dot drops into the grey plate."
+  },
+  {
+   "width": 1024,
+   "screen": 34,
+   "clip": "76-78",
+   "keep": "yes",
+   "why": "The grey-to-gold grade, then 'The Frontier' card."
+  },
+  {
+   "width": 1024,
+   "screen": 35,
+   "clip": "79-81",
+   "keep": "yes",
+   "why": "A cut to black, then the full-bleed heartlands."
+  },
+  {
+   "width": 1024,
+   "screen": 36,
+   "clip": "82",
+   "keep": "yes",
+   "why": "The trail map draws itself."
+  },
+  {
+   "width": 1024,
+   "screen": 37,
+   "clip": "83-84",
+   "keep": "yes",
+   "why": "The horse silhouette at sunset."
+  },
+  {
+   "width": 1024,
+   "screen": 38,
+   "clip": "85",
+   "keep": "no",
+   "why": "Mono text blocks on brown. Reading, not watching."
+  },
+  {
+   "width": 1024,
+   "screen": 39,
+   "clip": "86-87",
+   "keep": "yes",
+   "why": "The satchel inventory."
+  },
+  {
+   "width": 1024,
+   "screen": 40,
+   "clip": "88",
+   "keep": "yes",
+   "why": "The WANTED poster."
+  },
+  {
+   "width": 1024,
+   "screen": 41,
+   "clip": "89-91",
+   "keep": "yes",
+   "why": "The paper curls up into the journal."
+  },
+  {
+   "width": 1024,
+   "screen": 42,
+   "clip": "92-93",
+   "keep": "yes",
+   "why": "Sketches and the running horse."
+  },
+  {
+   "width": 1024,
+   "screen": 43,
+   "clip": "94",
+   "keep": "yes",
+   "why": "The treeline starts to rise."
+  },
+  {
+   "width": 1024,
+   "screen": 44,
+   "clip": "95-97",
+   "keep": "yes",
+   "why": "The campfire and 'In their words.'"
+  },
+  {
+   "width": 1024,
+   "screen": 45,
+   "clip": "98-99",
+   "keep": "yes",
+   "why": "The testimonials."
+  },
+  {
+   "width": 1024,
+   "screen": 46,
+   "clip": "100",
+   "keep": "yes",
+   "why": "The campfire plate."
+  },
+  {
+   "width": 1024,
+   "screen": 47,
+   "clip": "101-103",
+   "keep": "yes",
+   "why": "The burn-through to the Great Hall, then 'The Light'."
+  },
+  {
+   "width": 1024,
+   "screen": 48,
+   "clip": "104-107",
+   "keep": "yes",
+   "why": "The map rises and unfolds."
+  },
+  {
+   "width": 1024,
+   "screen": 49,
+   "clip": "108-109",
+   "keep": "yes",
+   "why": "Principles and footprints."
+  },
+  {
+   "width": 1024,
+   "screen": 50,
+   "clip": "110-111",
+   "keep": "no",
+   "why": "The same panels at about 5 fps. Sticky and repetitive."
+  },
+  {
+   "width": 1024,
+   "screen": 51,
+   "clip": "112-113",
+   "keep": "yes",
+   "why": "Into the candles and the contact section."
+  },
+  {
+   "width": 1024,
+   "screen": 52,
+   "clip": "114-116",
+   "keep": "no",
+   "why": "The contact section slides off into tiny credits on black."
+  },
+  {
+   "width": 1024,
+   "screen": 53,
+   "clip": "117-118",
+   "keep": "yes",
+   "why": "'Mischief managed.' arrives."
+  },
+  {
+   "width": 1024,
+   "screen": 54,
+   "clip": "119",
+   "keep": "yes",
+   "why": "A held ending."
+  }
+ ],
+ "acts": [
+  {
+   "act": "Opening: play screen, broom flight, name",
+   "screens": {
+    "1440": "1",
+    "1024": "1"
+   },
+   "yesRate": 100.0,
+   "yesRate1440": "1/1",
+   "yesRate1024": "1/1",
+   "tempo": "medium",
+   "feel": "A held breath, then a swoop. About 8 s to the name, and it's earned. The best first 10 s I've seen on a portfolio."
+  },
+  {
+   "act": "Act I: The Crossing (Pirates: porthole, contents, about, journey, Kraken gap)",
+   "screens": {
+    "1440": "2-8",
+    "1024": "2-8"
+   },
+   "yesRate": 78.6,
+   "yesRate1440": "6/7",
+   "yesRate1024": "5/7",
+   "tempo": "brisk",
+   "feel": "It moves well: an iris, a title card, a contents page and a sticky-plate journey. It stalls only in the Kraken black gap and, at 1024, in the about columns."
+  },
+  {
+   "act": "Act II: The Workshop (3 Idiots: gauntlet, two project cards, experiment, drone, skills, kill-list)",
+   "screens": {
+    "1440": "9-23",
+    "1024": "9-26"
+   },
+   "yesRate": 72.7,
+   "yesRate1440": "11/15",
+   "yesRate1024": "13/18",
+   "tempo": "slow",
+   "feel": "The longest act, about 70 s, in one dark-green palette. The chalk moments (torn reveal, handwriting, circles) are lovely, but the second card repeats the first, then the skills table and kill-list rows drag."
+  },
+  {
+   "act": "Intermission: Three films and a game",
+   "screens": {
+    "1440": "24-30",
+    "1024": "27-33"
+   },
+   "yesRate": 100.0,
+   "yesRate1440": "7/7",
+   "yesRate1024": "7/7",
+   "tempo": "brisk",
+   "feel": "Four worlds in about 25 s, each slit-opening into a plate. Snappy, but it's one template four times."
+  },
+  {
+   "act": "Act III: The Frontier (RDR2: sun grade, discipline, satchel, wanted, journal, campfire voices)",
+   "screens": {
+    "1440": "31-41",
+    "1024": "34-45"
+   },
+   "yesRate": 91.3,
+   "yesRate1440": "10/11",
+   "yesRate1024": "11/12",
+   "tempo": "medium",
+   "feel": "The best-paced act. The grey-to-gold grade, a real title card and a cut to black, then real variety (map, satchel, poster, page-curl, treeline). One text-heavy dip."
+  },
+  {
+   "act": "Act IV: The Light (HP: burn-through, Great Hall, Marauder's map principles, candles contact)",
+   "screens": {
+    "1440": "42-47",
+    "1024": "46-51"
+   },
+   "yesRate": 83.3,
+   "yesRate1440": "5/6",
+   "yesRate1024": "5/6",
+   "tempo": "medium",
+   "feel": "The burn-through and the Great Hall are gorgeous. The map unfolding is charming, but five identical panels at about 4-5 fps make it feel slow and sticky by the end."
+  },
+  {
+   "act": "Credits and 'Mischief managed.'",
+   "screens": {
+    "1440": "48-49",
+    "1024": "52-54"
+   },
+   "yesRate": 60.0,
+   "yesRate1440": "1/2",
+   "yesRate1024": "2/3",
+   "tempo": "slow",
+   "feel": "Tiny type on black for about 6 s, then a lovely bookend line."
+  }
+ ],
+ "discovery": [
+  {
+   "thing": "'Play' button on the opening, under 'I solemnly swear that I am up to no good.'",
+   "firstScreen": 1,
+   "width": 1440,
+   "firstScreen1024": 1,
+   "wouldTry": "yes",
+   "note": "The clearest invitation on the page, and it pays off at once."
+  },
+  {
+   "thing": "'EGG HUNT 0/12' counter in the top bar",
+   "firstScreen": 1,
+   "width": 1440,
+   "firstScreen1024": 1,
+   "wouldTry": "yes",
+   "note": "It's there from the first screen but tiny and grey. I only understood it at the films intro (1440 s24 / 1024 s27), after two of its eggs had already passed."
+  },
+  {
+   "thing": "'Director's Cut' toggle in the hero link row",
+   "firstScreen": 1,
+   "width": 1440,
+   "firstScreen1024": 1,
+   "wouldTry": "maybe",
+   "note": "Dim grey mono text next to 'View the quant portfolio'. Easy to miss; I'd try it if it looked like a switch."
+  },
+  {
+   "thing": "Jack's compass (hero emblem, then the about medallion with a turning needle)",
+   "firstScreen": 1,
+   "width": 1440,
+   "firstScreen1024": 1,
+   "wouldTry": "maybe",
+   "note": "It moves, so it looks touchable, but nothing says what it does."
+  },
+  {
+   "thing": "Journey route chart with waypoints and a compass end-cap",
+   "firstScreen": 5,
+   "width": 1440,
+   "firstScreen1024": 6,
+   "wouldTry": "maybe",
+   "note": "It reads like a map you could hover. It may just be decoration."
+  },
+  {
+   "thing": "Chalk drone sketch, chalk circles and 'What is a machine?' handwriting",
+   "firstScreen": 9,
+   "width": 1440,
+   "firstScreen1024": 9,
+   "wouldTry": "no",
+   "note": "Delightful to watch. It doesn't invite a click."
+  },
+  {
+   "thing": "Experiment toggle: naive in-sample vs realistic out-of-sample",
+   "firstScreen": 18,
+   "width": 1440,
+   "firstScreen1024": 20,
+   "wouldTry": "yes",
+   "note": "The best 'play with the thesis' moment in Act II, but the segmented control is tiny."
+  },
+  {
+   "thing": "Homemade drone 'Take off' pill",
+   "firstScreen": 19,
+   "width": 1440,
+   "firstScreen1024": 22,
+   "wouldTry": "yes",
+   "note": "Absolutely, once I see it. It's a small pill in the corner of the photo."
+  },
+  {
+   "thing": "'Dead Eye' chip on the kill-list header",
+   "firstScreen": 22,
+   "width": 1440,
+   "firstScreen1024": 24,
+   "wouldTry": "yes",
+   "note": "Yes, but I didn't know it was part of a game until two screens later."
+  },
+  {
+   "thing": "Kill-list lens box riding the rows",
+   "firstScreen": 23,
+   "width": 1440,
+   "firstScreen1024": 25,
+   "wouldTry": "no",
+   "note": "Reads as decoration, not a tool."
+  },
+  {
+   "thing": "Satchel inventory (camera, sketchbook, drone, shoes with ticks)",
+   "firstScreen": 36,
+   "width": 1440,
+   "firstScreen1024": 39,
+   "wouldTry": "yes",
+   "note": "Looks like a game inventory. I'd hover each item."
+  },
+  {
+   "thing": "WANTED poster with a reply link",
+   "firstScreen": 36,
+   "width": 1440,
+   "firstScreen1024": 40,
+   "wouldTry": "yes",
+   "note": "Funny, and the link looks clickable."
+  },
+  {
+   "thing": "Little horse running along the journal margin",
+   "firstScreen": 38,
+   "width": 1440,
+   "firstScreen1024": 42,
+   "wouldTry": "yes",
+   "note": "Feels exactly like a hidden egg."
+  },
+  {
+   "thing": "Winged thing (snitch or owl) crossing the Great Hall",
+   "firstScreen": 43,
+   "width": 1440,
+   "firstScreen1024": 47,
+   "wouldTry": "yes",
+   "note": "I'd try to catch it."
+  },
+  {
+   "thing": "Marauder's map footprints walking the principles",
+   "firstScreen": 44,
+   "width": 1440,
+   "firstScreen1024": 48,
+   "wouldTry": "maybe",
+   "note": "Charming. Unclear whether they react to me."
+  },
+  {
+   "thing": "Floating candles with 'A S' initials in the contact section",
+   "firstScreen": 47,
+   "width": 1440,
+   "firstScreen1024": 51,
+   "wouldTry": "maybe",
+   "note": "Atmospheric. Might be an egg."
+  },
+  {
+   "thing": "'Back to the opening' with a snitch, and 'To be continued' in the credits",
+   "firstScreen": 48,
+   "width": 1440,
+   "firstScreen1024": 52,
+   "wouldTry": "yes",
+   "note": "A replay invitation at the end. I'd take it."
+  }
+ ],
+ "findings": [
+  {
+   "screen": "1440:24 / 1024:27",
+   "t": "2:12 / 2:08",
+   "clip": "67 / 64",
+   "finding": "The egg-hunt rules ('the homemade drone flies in Systems, and Dead Eye marks the kill-list') arrive in the films intro, after the drone (1440 s19, 1024 s22) and the kill-list (1440 s22, 1024 s24) have already scrolled past. The first time through, I meet the eggs before I know there's a hunt.",
+   "severity": "high"
+  },
+  {
+   "screen": "1440:1,18,19,22 / 1024:1,20,22,24",
+   "t": "0:12, 1:40, 1:48, 2:00",
+   "clip": "7, 51, 54, 61",
+   "finding": "Every play affordance is a tiny low-contrast mono pill: the Egg Hunt counter, Director's Cut, the experiment toggle, Take off and Dead Eye. At scroll speed none of them reads as 'press me'. The page's 'game' is almost invisible until the films intro explains it.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440:8 / 1024:8",
+   "t": "0:52-0:56 / 0:48-0:52",
+   "clip": "27-29 / 25-27",
+   "finding": "Kraken gap: the journey chart leaves and about 4 s of near-black follows, with only a thin sea strip and a caption low in the frame, before the 3 Idiots tear. At 1024, clip 26 also has two stars live for 1.2 s (the B12 push and B12). It's the longest dead stretch of the page.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440:13-21 / 1024:13-23",
+   "t": "1:16-1:58 / 1:08-1:52",
+   "clip": "39-60 / 35-57",
+   "finding": "Act II sameness: the second project card repeats the first card's structure (photo, blueprint, stat block with chalk circles), then a dense skills table follows, all in one dark-green palette with small text. Tempo sags for about 40 s in the middle of the page.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440:45-46 / 1024:49-50",
+   "t": "3:48-3:54 / 3:34-3:40",
+   "clip": "115-118 / 109-111",
+   "finding": "The Marauder's map principles capture at 4-6 fps (maxDt up to 500 ms), against 10-20 fps elsewhere. Combined with five identical parchment panels, the end of Act IV feels sticky.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1024:5",
+   "t": "0:36",
+   "clip": "19",
+   "finding": "At 1024 the about section is three cramped columns of small serif. The compass medallion is wedged into the gutter between columns and nearly touches the text. It reads as a wall of text.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440:20-21 / 1024:23",
+   "t": "1:50-1:58 / 1:50",
+   "clip": "56-60 / 56-57",
+   "finding": "The 'What I can actually do' skills table is 3-4 columns of tiny text held for 8-10 s. Clutter, and no motion to carry it.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:22-23 / 1024:25-26",
+   "t": "2:04-2:08 / 2:00-2:06",
+   "clip": "63-65 / 61-63",
+   "finding": "Kill-list rows are 10px-ish text. The lens box that tracks them is small and blueprint-blue on dark green, so it reads as decoration, not a game element.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:42-43 / 1024:47",
+   "t": "3:30-3:32 / 3:20",
+   "clip": "106-107 / 101",
+   "finding": "On the burn-through from the campfire to the Great Hall, 'THE CAMPFIRE · RED DEAD REDEMPTION 2' stays on screen over the incoming HP title and plate for a beat. In a still frame the burn looks like a black blob on the photo.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:24-30 / 1024:27-33",
+   "t": "2:12-2:36 / 2:08-2:28",
+   "clip": "66-79 / 64-75",
+   "finding": "The films intermission uses one template four times (title, slit-open plate, caption, quote and paragraph), then Acts III and IV reuse the RDR2 and HP worlds seconds later. RDR2 red, HP express and RDR2 sunset all fall within about 10 s, so it risks 'seen it'.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:10,32,43 / 1024:11,35,48",
+   "t": "1:04, 2:46, 3:38 / 1:00, 2:36, 3:26",
+   "clip": "33, 84, 110 / 31, 79, 104",
+   "finding": "The breaths all use the same move: fade to near-black, then the next thing rises from the bottom edge. Each is short, but by the third one it reads as a pattern rather than a cut.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024:1",
+   "t": "0:18",
+   "clip": "10",
+   "finding": "At 1024 the hero exit ghosts 'The Black Pearl on the horizon' mid-frame. 'PIRATES OF THE CARIBBEAN' then lands in an otherwise empty black viewport, with the porthole only peeking in at the bottom-right corner.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:35-36 / 1024:38-39",
+   "t": "2:58-3:02 / 2:48-2:52",
+   "clip": "90-92 / 85-87",
+   "finding": "The 'three arenas' and satchel area has low-contrast mono text and thin-line icons on dark brown. The horse panel fades to near-black and leaves an empty block on the left.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440:48 / 1024:52",
+   "t": "4:02-4:06 / 3:48-3:50",
+   "clip": "122-124 / 114-116",
+   "finding": "Credits are tiny grey type on near-black for about 6 s, mostly empty frame.",
+   "severity": "low"
+  }
+ ],
+ "scores": {
+  "keepScrolling": 7.5,
+  "tempo": 7,
+  "discovery": 5.5,
+  "scale": "0-10",
+  "yesPct1440": 83.7,
+  "yesPct1024": 81.5,
+  "yes1440": "41/49",
+  "yes1024": "44/54"
+ }
+}

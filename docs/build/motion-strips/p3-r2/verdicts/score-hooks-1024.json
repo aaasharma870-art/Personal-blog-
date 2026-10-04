@@ -1,0 +1,94 @@
+{
+ "kind": "hooks",
+ "width": "1024",
+ "rows": [
+  {
+   "id": "H002",
+   "frame": "css-ignite-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Burn-hole in the RDR2 camp with a candle flame glowing inside: a clear, magical hand-off to Harry Potter. The HP title over an RDR2 caption is briefly confusing.",
+    "A burning hole opening in the middle of the RDR camp with a lone candle flame inside is a real cinematic 'what's on the other side?' moment. The 'HARRY POTTER' heading above an RDR plate and an RDR caption is confusing for a beat.",
+    "Burn-hole has grown and a single candle flame shows inside it: a neat handoff from the campfire to the candlelit next world. Same title/caption mismatch."
+   ]
+  },
+  {
+   "id": "H003",
+   "frame": "css-opening-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Porthole on a pure-black field with no sea behind it, so most of the frame is empty. It reads as not yet loaded rather than as an invitation.",
+    "About 70% of the frame is flat black with a title top-left and a small porthole of the ship bottom-right. It reads as an image that hasn't loaded rather than an iris opening; nothing pulls the eye to the middle.",
+    "Dull porthole on flat black with a lone title: reads as a half-loaded page rather than a reveal. Compare H007, where glow plus sea makes the same moment work."
+   ]
+  },
+  {
+   "id": "H001",
+   "frame": "css-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Teal market-chart line as the seam between storm sea and classroom is clever and on-theme. The mismatch remains: '3 IDIOTS' title over a 'KRAKEN'S STORM · PIRATES OF THE CARIBBEAN' caption.",
+    "The storm's wave crest turns into a glowing teal chart line that peels back to reveal a classroom bench: a clever 'markets as sea' idea I'd scroll to see finish. But the heading says '3 IDIOTS / The Workshop' while the caption still says 'THE KRAKEN'S STORM · PIRATES OF THE CARIBBEAN', so for a moment I didn't know which act I was in.",
+    "Glowing teal equity curve rises from the bottom and wipes the storm away to the stone classroom. It ties the film world to the trading theme. Best hook in the set."
+   ]
+  },
+  {
+   "id": "H005",
+   "frame": "css-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Clear Western title and a sepia tintype plate. Calm, but an unmistakable new-chapter card with strong period mood.",
+    "Strong western wood-type title over a sepia tintype in a cream mount feels like an old photograph being handed to you; calm but confident, and the horse in the valley invites a closer look.",
+    "Duplicate of H006: dim sepia, nothing promises a reveal."
+   ]
+  },
+  {
+   "id": "H008",
+   "frame": "gl-ignite-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Empty black burn-hole under a 'HARRY POTTER' title on a cowboy camp: it looks like a glitch at this instant. The candle that sells the idea in H002 is not there yet.",
+    "The burn hole is wider and the edge glows hotter; it clearly promises a jump into the next world. The heading/caption mismatch ('HARRY POTTER' over 'THE CAMPFIRE · RED DEAD REDEMPTION 2') remains.",
+    "Glowing burn-hole opening in the bright camp plate is an instant 'what's underneath?' At 1024 the 'The Campfire · Red Dead Redemption 2' caption sits right under a HARRY POTTER act title, which is confusing for a beat."
+   ]
+  },
+  {
+   "id": "H007",
+   "frame": "gl-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Glowing brass porthole on the Black Pearl with the faint night sea visible behind it. A spyglass-peek tease that pulls me forward, though there is a lot of dark space.",
+    "Better than H003: the gold ring is brighter and the sea and ship are starting to bleed in behind it, so it reads as a porthole/iris opening rather than an empty page. Still a lot of dead space on the left.",
+    "Brass porthole glows and a faint storm sea shows around it, so the ghost ship feels like it's surfacing. Still mostly empty dark on the left."
+   ]
+  },
+  {
+   "id": "H004",
+   "frame": "gl-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "The lightning tear revealing the classroom window is dramatic and cinematic. Strongest arrival frame at this width.",
+    "A jagged white tear, lightning-like, splits a misty classroom from a teal storm sea; dramatic and clearly mid-transition. The act heading and the plate caption still name different worlds (3 Idiots vs Pirates).",
+    "A white lightning tear splits the storm to reveal the classroom window: clearly a world changing mid-frame. 'HERE BE MONSTERS' teases nicely."
+   ]
+  },
+  {
+   "id": "H006",
+   "frame": "gl-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Same as H005 (only the egg counter differs). Holds up well at 1024.",
+    "Same as H005 (only the egg counter moved to 1/12). Handsome; the egg counter changing quietly makes me want to know what I found.",
+    "Static sepia tintype: muddy, low contrast, left half a black tree mass, no sign of motion. Strong title, weak plate. Same image as H005."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2088 @@
+{
+ "judge": "J1 STAR · one star per screen",
+ "round": "P3-11 round 2",
+ "date": "2026-10-04",
+ "inputs": "R/screencast/{reader,skimmer}-{1440,1024}/sheets/*.jpg; clips.json per run; MANIFEST §1/§2 J1",
+ "method": "Every clip of the four runs judged from its 4 sampled frames (1/8 3/8 5/8 7/8), at sheet size and, where unclear, cropped and enlarged with a scroll-aligned difference map (frames aligned by their vertical shift, sticky header masked) to separate page scroll from anything moving on its own. Counted as a star: a draw/ink/handwriting, iris, wipe, colour grade, burn, title reveal, plate cross-fade or push, a plate moving at its own rate (parallax/drift), a small flying element (dot, horse, glyph). Not a star: rigid scroll, a sticky (fixed) plate under scrolling text, a text block fading up on entry, a caption swap. Reader intro clips #1–12 skipped. Limits: 1 s sampled 4 times at ~1/7 (1440) and ~1/5 (1024) scale; hairline draws, sub-250 ms flickers and very slow drifts can be missed.",
+ "runs": {
+  "reader-1440": {
+   "clipsJudged": 240,
+   "oneStar": 117,
+   "zero": 123,
+   "zeroInBreath": 15,
+   "twoPlus": 0,
+   "oneStarPct": 48.8,
+   "zeroOutsideBreath": 108,
+   "zeroOutsideBreathBySection": {
+    "films": 11,
+    "beyond": 11,
+    "systems": 10,
+    "optuna-screener": 8,
+    "credits": 7,
+    "top": 6,
+    "journey": 6,
+    "contact": 6,
+    "about": 5,
+    "experiment": 5,
+    "kill-list": 5,
+    "voices": 5,
+    "work": 4,
+    "trading-algos": 4,
+    "writing": 4,
+    "act-4": 4,
+    "act-1": 2,
+    "act-2": 2,
+    "act-3": 2,
+    "principles": 1
+   },
+   "judgedClips": "#13–#252 (intro #1–#12 skipped per MANIFEST §2 J1)",
+   "machine": {
+    "oneStar": 153,
+    "oneStarPct": 63.8,
+    "twoPlus": 0,
+    "noneOutsideBreath": 72,
+    "noneInBreath": 15
+   },
+   "agreement": {
+    "sameCount": 182,
+    "matrix": {
+     "machine 0 / seen 0": 76,
+     "machine 1 / seen 0": 47,
+     "machine 1 / seen 1": 106,
+     "machine 0 / seen 1": 11
+    }
+   }
+  },
+  "reader-1024": {
+   "clipsJudged": 227,
+   "oneStar": 104,
+   "zero": 123,
+   "zeroInBreath": 15,
+   "twoPlus": 0,
+   "oneStarPct": 45.8,
+   "zeroOutsideBreath": 108,
+   "zeroOutsideBreathBySection": {
+    "beyond": 11,
+    "systems": 10,
+    "optuna-screener": 8,
+    "trading-algos": 7,
+    "films": 7,
+    "credits": 7,
+    "top": 6,
+    "journey": 6,
+    "about": 5,
+    "experiment": 5,
+    "voices": 5,
+    "act-4": 5,
+    "contact": 5,
+    "act-2": 4,
+    "kill-list": 4,
+    "writing": 4,
+    "work": 3,
+    "act-3": 3,
+    "act-1": 2,
+    "principles": 1
+   },
+   "judgedClips": "#13–#239 (intro #1–#12 skipped per MANIFEST §2 J1)",
+   "machine": {
+    "oneStar": 147,
+    "oneStarPct": 64.8,
+    "twoPlus": 2,
+    "noneOutsideBreath": 65,
+    "noneInBreath": 13
+   },
+   "agreement": {
+    "sameCount": 166,
+    "matrix": {
+     "machine 0 / seen 0": 70,
+     "machine 1 / seen 0": 51,
+     "machine 1 / seen 1": 96,
+     "machine 2+ / seen 0": 2,
+     "machine 0 / seen 1": 8
+    }
+   }
+  },
+  "skimmer-1440": {
+   "clipsJudged": 106,
+   "oneStar": 65,
+   "zero": 41,
+   "zeroInBreath": 3,
+   "twoPlus": 0,
+   "oneStarPct": 61.3,
+   "zeroOutsideBreath": 38,
+   "zeroOutsideBreathBySection": {
+    "systems": 6,
+    "credits": 6,
+    "beyond": 4,
+    "journey": 3,
+    "films": 3,
+    "principles": 3,
+    "about": 2,
+    "work": 2,
+    "optuna-screener": 2,
+    "kill-list": 2,
+    "top": 1,
+    "trading-algos": 1,
+    "experiment": 1,
+    "voices": 1,
+    "contact": 1
+   },
+   "judgedClips": "#1–#106",
+   "machine": {
+    "oneStar": 84,
+    "oneStarPct": 79.2,
+    "twoPlus": 6,
+    "noneOutsideBreath": 12,
+    "noneInBreath": 4
+   },
+   "agreement": {
+    "sameCount": 72,
+    "matrix": {
+     "machine 0 / seen 0": 14,
+     "machine 1 / seen 1": 58,
+     "machine 0 / seen 1": 2,
+     "machine 1 / seen 0": 26,
+     "machine 2+ / seen 1": 5,
+     "machine 2+ / seen 0": 1
+    }
+   }
+  },
+  "skimmer-1024": {
+   "clipsJudged": 79,
+   "oneStar": 47,
+   "zero": 32,
+   "zeroInBreath": 3,
+   "twoPlus": 0,
+   "oneStarPct": 59.5,
+   "zeroOutsideBreath": 29,
+   "zeroOutsideBreathBySection": {
+    "beyond": 5,
+    "credits": 5,
+    "systems": 4,
+    "top": 2,
+    "about": 2,
+    "journey": 2,
+    "optuna-screener": 2,
+    "principles": 2,
+    "act-2": 1,
+    "work": 1,
+    "trading-algos": 1,
+    "experiment": 1,
+    "films": 1
+   },
+   "judgedClips": "#1–#79",
+   "machine": {
+    "oneStar": 65,
+    "oneStarPct": 82.3,
+    "twoPlus": 3,
+    "noneOutsideBreath": 7,
+    "noneInBreath": 4
+   },
+   "agreement": {
+    "sameCount": 52,
+    "matrix": {
+     "machine 0 / seen 1": 2,
+     "machine 1 / seen 0": 22,
+     "machine 1 / seen 1": 43,
+     "machine 0 / seen 0": 9,
+     "machine 2+ / seen 1": 2,
+     "machine 2+ / seen 0": 1
+    }
+   }
+  }
+ },
+ "passBars": {
+  "readerOneStarAtLeast90pct": {
+   "reader-1440": 48.8,
+   "reader-1024": 45.8,
+   "pass": false
+  },
+  "starlessOnlyInDeclaredBreaths": {
+   "reader-1440 starless outside breath": 108,
+   "reader-1024 starless outside breath": 108,
+   "pass": false
+  },
+  "zeroTwoPlus": {
+   "seen 2+ in all four runs": 0,
+   "machine 2+ (reader / skimmer)": "2 / 9",
+   "pass": true,
+   "note": "pass by eye; the log still records 2 reader and 9 skimmer overlaps"
+  }
+ },
+ "disagreements": [
+  {
+   "run": "reader-1440",
+   "clip": 16,
+   "t": "0:15",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical; page at y0, nothing moves (machine B02)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 17,
+   "t": "0:16",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical (machine B02)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 18,
+   "t": "0:17",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical (machine B02)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 29,
+   "t": "0:28",
+   "y": 1757,
+   "section": "act-1",
+   "machine": "no star, after B04",
+   "seen": "1",
+   "note": "title dissolves (breath)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 32,
+   "t": "0:31",
+   "y": 2536,
+   "section": "act-1",
+   "machine": "★B07·w1 | after B04",
+   "seen": "0",
+   "note": "nothing but scroll (machine B07)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 34,
+   "t": "0:33",
+   "y": 3049,
+   "section": "about",
+   "machine": "★B08·w1 ★B08-compass·w1",
+   "seen": "0",
+   "note": "scroll settling; no visible compass motion (machine B08/B08-compass)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 35,
+   "t": "0:34",
+   "y": 3074,
+   "section": "about",
+   "machine": "★B08-compass·w1 ★B08-invite·w1",
+   "seen": "0",
+   "note": "frames identical (machine B08-compass/B08-invite)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 36,
+   "t": "0:35",
+   "y": 3074,
+   "section": "about",
+   "machine": "★B08-invite·w1",
+   "seen": "0",
+   "note": "frames identical (machine B08-invite)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 37,
+   "t": "0:36",
+   "y": 3099,
+   "section": "about",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "the compass lid opens in the About body (frame 3-4) while the machine shows NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 44,
+   "t": "0:43",
+   "y": 4192,
+   "section": "journey",
+   "machine": "★B09·w1",
+   "seen": "0",
+   "note": "sticky plate, text starts to move (machine B09)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 46,
+   "t": "0:45",
+   "y": 4655,
+   "section": "journey",
+   "machine": "★B10·w2",
+   "seen": "0",
+   "note": "sticky plate unchanged, only text scrolls (machine B10)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 54,
+   "t": "0:53",
+   "y": 6578,
+   "section": "journey",
+   "machine": "★B12-push·w1",
+   "seen": "0",
+   "note": "plate holds, scroll ends (machine B12-push)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 56,
+   "t": "0:55",
+   "y": 7093,
+   "section": "act-2",
+   "machine": "★B12-push·w1",
+   "seen": "0",
+   "note": "plate moves rigidly with page (machine B12-push)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 65,
+   "t": "1:04",
+   "y": 8584,
+   "section": "act-2",
+   "machine": "no star, after B14",
+   "seen": "1",
+   "note": "plate fades to dark (breath)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 81,
+   "t": "1:20",
+   "y": 11241,
+   "section": "trading-algos",
+   "machine": "★B20·w2",
+   "seen": "0",
+   "note": "scroll only; blueprint box empty (machine B20)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 82,
+   "t": "1:21",
+   "y": 11317,
+   "section": "trading-algos",
+   "machine": "★B20·w2",
+   "seen": "0",
+   "note": "scroll only; blueprint box still empty (machine B20)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 84,
+   "t": "1:23",
+   "y": 11972,
+   "section": "trading-algos",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "corridor plate parallax under the finished blueprint (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 89,
+   "t": "1:28",
+   "y": 13110,
+   "section": "optuna-screener",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "chalk quote writes in frames 1-3 (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 91,
+   "t": "1:30",
+   "y": 13622,
+   "section": "optuna-screener",
+   "machine": "★B23·w1",
+   "seen": "0",
+   "note": "scroll ends (machine B23)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 94,
+   "t": "1:33",
+   "y": 13753,
+   "section": "optuna-screener",
+   "machine": "★B23-fig·w1",
+   "seen": "0",
+   "note": "scroll only (machine B23-fig)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 96,
+   "t": "1:35",
+   "y": 14059,
+   "section": "optuna-screener",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "classroom plate parallax as blueprint scrolls (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 102,
+   "t": "1:41",
+   "y": 15689,
+   "section": "optuna-screener",
+   "machine": "★B25·w1",
+   "seen": "0",
+   "note": "scroll; plate exits (machine B25)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 109,
+   "t": "1:48",
+   "y": 16749,
+   "section": "systems",
+   "machine": "★B26·w1",
+   "seen": "0",
+   "note": "plate enters (machine B26)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 110,
+   "t": "1:49",
+   "y": 17010,
+   "section": "systems",
+   "machine": "★B26·w1",
+   "seen": "0",
+   "note": "drone plate scrolls rigidly (machine B26)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 120,
+   "t": "1:59",
+   "y": 18838,
+   "section": "systems",
+   "machine": "★B28·w1",
+   "seen": "0",
+   "note": "scroll only (machine B28)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 121,
+   "t": "2:00",
+   "y": 19047,
+   "section": "kill-list",
+   "machine": "★B28·w1 ★B29·w1",
+   "seen": "0",
+   "note": "scroll; kill-list heading and plate enter (machine B28/B29)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 122,
+   "t": "2:01",
+   "y": 19322,
+   "section": "kill-list",
+   "machine": "★B29·w1",
+   "seen": "0",
+   "note": "scroll ends (machine B29)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 132,
+   "t": "2:11",
+   "y": 21055,
+   "section": "kill-list",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "lens keeps tracking then fades (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 133,
+   "t": "2:12",
+   "y": 21337,
+   "section": "films",
+   "machine": "★B30·w3",
+   "seen": "0",
+   "note": "heading scrolls rigidly; nothing visibly performs (machine B30 w3)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 136,
+   "t": "2:15",
+   "y": 21476,
+   "section": "films",
+   "machine": "★B30·w3",
+   "seen": "0",
+   "note": "(machine B30)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 137,
+   "t": "2:16",
+   "y": 21665,
+   "section": "films",
+   "machine": "★B30·w3 ★B31·w1 | after B30",
+   "seen": "0",
+   "note": "breath scroll"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 144,
+   "t": "2:23",
+   "y": 23327,
+   "section": "films",
+   "machine": "★B32-finale·w2",
+   "seen": "0",
+   "note": "plate scrolls rigidly (machine B32-finale w2)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 149,
+   "t": "2:28",
+   "y": 24615,
+   "section": "films",
+   "machine": "★B33-finale·w2",
+   "seen": "0",
+   "note": "plate scrolls rigidly (machine B33-finale w2)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 155,
+   "t": "2:34",
+   "y": 25990,
+   "section": "films",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "small glowing dot (Snitch-like) streaks across the plate (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 164,
+   "t": "2:43",
+   "y": 27800,
+   "section": "act-3",
+   "machine": "★B38·w3",
+   "seen": "0",
+   "note": "frames identical (machine B38 w3)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 174,
+   "t": "2:53",
+   "y": 29448,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "map card scrolls rigidly, no trail draws (machine B41 w2)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 175,
+   "t": "2:54",
+   "y": 29719,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "rigid (machine B41)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 176,
+   "t": "2:55",
+   "y": 29967,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "rigid (machine B41)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 180,
+   "t": "2:59",
+   "y": 30953,
+   "section": "beyond",
+   "machine": "★B42·w1",
+   "seen": "0",
+   "note": "sticky horse plate, text scrolls (machine B42)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 183,
+   "t": "3:02",
+   "y": 31627,
+   "section": "beyond",
+   "machine": "★B43-wanted·w2",
+   "seen": "0",
+   "note": "rigid scroll (machine B43-wanted)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 185,
+   "t": "3:04",
+   "y": 32157,
+   "section": "beyond",
+   "machine": "★B43-wanted·w2",
+   "seen": "0",
+   "note": "poster scrolls rigidly (machine B43-wanted)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 189,
+   "t": "3:08",
+   "y": 33170,
+   "section": "writing",
+   "machine": "★B44-sketch·w1",
+   "seen": "0",
+   "note": "rigid (machine B44-sketch)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 205,
+   "t": "3:24",
+   "y": 35817,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "frames identical (machine B47)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 206,
+   "t": "3:25",
+   "y": 35952,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid (machine B47)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 209,
+   "t": "3:28",
+   "y": 36774,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid (machine B47)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 210,
+   "t": "3:29",
+   "y": 37045,
+   "section": "act-4",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid (machine B47)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 211,
+   "t": "3:30",
+   "y": 37298,
+   "section": "act-4",
+   "machine": "★B48·w3",
+   "seen": "0",
+   "note": "campfire plate scrolls rigidly (machine B48 w3)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 216,
+   "t": "3:35",
+   "y": 37950,
+   "section": "act-4",
+   "machine": "★B50·w3",
+   "seen": "0",
+   "note": "frames identical (machine B50 w3)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 227,
+   "t": "3:46",
+   "y": 39372,
+   "section": "principles",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "footprints shift as the map starts to move (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 237,
+   "t": "3:56",
+   "y": 41669,
+   "section": "contact",
+   "machine": "★B56·w2",
+   "seen": "0",
+   "note": "candles plate rigid (machine B56)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 240,
+   "t": "3:59",
+   "y": 41888,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "nothing visible (machine B56-trail)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 241,
+   "t": "4:00",
+   "y": 42097,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "nothing visible (machine B56-trail)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 242,
+   "t": "4:01",
+   "y": 42351,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "nothing visible (machine B56-trail)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 246,
+   "t": "4:05",
+   "y": 42682,
+   "section": "credits",
+   "machine": "★B57·w2",
+   "seen": "0",
+   "note": "rigid credits (machine B57 w2)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 248,
+   "t": "4:07",
+   "y": 43154,
+   "section": "credits",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "small fluttering glyph in the credits (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 249,
+   "t": "4:08",
+   "y": 43402,
+   "section": "credits",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "small fluttering glyph (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 250,
+   "t": "4:09",
+   "y": 43662,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "rigid (machine B58 w3)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 251,
+   "t": "4:10",
+   "y": 43717,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "frames identical (machine B58 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 16,
+   "t": "0:15",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical, page at y0 (machine B02)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 17,
+   "t": "0:16",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical (machine B02)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 18,
+   "t": "0:17",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "frames identical (machine B02)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 25,
+   "t": "0:24",
+   "y": 1150,
+   "section": "act-1",
+   "machine": "★B04·w3",
+   "seen": "0",
+   "note": "frames identical (machine B04 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 30,
+   "t": "0:29",
+   "y": 2215,
+   "section": "act-1",
+   "machine": "★B07·w1 | after B04",
+   "seen": "0",
+   "note": "breath scroll (machine B07)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 32,
+   "t": "0:31",
+   "y": 2667,
+   "section": "about",
+   "machine": "★B08·w1",
+   "seen": "0",
+   "note": "scroll settles (machine B08)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 35,
+   "t": "0:34",
+   "y": 2786,
+   "section": "about",
+   "machine": "★B08-invite·w1",
+   "seen": "0",
+   "note": "scroll only (machine B08-invite)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 40,
+   "t": "0:39",
+   "y": 3977,
+   "section": "journey",
+   "machine": "★B09·w1",
+   "seen": "0",
+   "note": "heading settles, sticky plate (machine B09)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 43,
+   "t": "0:42",
+   "y": 4067,
+   "section": "journey",
+   "machine": "★B09·w1",
+   "seen": "0",
+   "note": "sticky plate, scroll starts (machine B09)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 44,
+   "t": "0:43",
+   "y": 4356,
+   "section": "journey",
+   "machine": "★B10·w2",
+   "seen": "0",
+   "note": "sticky plate unchanged, text scrolls (machine B10)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 51,
+   "t": "0:50",
+   "y": 6046,
+   "section": "journey",
+   "machine": "2+ AT ONCE (★B12-push·w1 ★B12·w2; overlap 295 ms)",
+   "seen": "0",
+   "note": "dawn plate holds then scrolls off rigidly; nothing performs (machine 2+ B12-push + B12)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 52,
+   "t": "0:51",
+   "y": 6309,
+   "section": "act-2",
+   "machine": "2+ AT ONCE (★B12-push·w1 ★B12·w2; overlap 911 ms)",
+   "seen": "0",
+   "note": "storm plate rises rigidly; nothing performs (machine 2+ B12-push + B12)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 53,
+   "t": "0:52",
+   "y": 6580,
+   "section": "act-2",
+   "machine": "★B12-push·w1 ★B13·w3",
+   "seen": "0",
+   "note": "storm plate rigid then pinned (machine B12-push/B13)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 60,
+   "t": "0:59",
+   "y": 7548,
+   "section": "act-2",
+   "machine": "no star, after B14",
+   "seen": "1",
+   "note": "plate exits (breath)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 62,
+   "t": "1:01",
+   "y": 8103,
+   "section": "work",
+   "machine": "★B16·w1 | after B14",
+   "seen": "0",
+   "note": "breath (machine B16)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 72,
+   "t": "1:11",
+   "y": 9916,
+   "section": "trading-algos",
+   "machine": "★B18·w1",
+   "seen": "0",
+   "note": "scroll settles (machine B18)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 78,
+   "t": "1:17",
+   "y": 10647,
+   "section": "trading-algos",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "blueprint finishes / corridor plate parallax (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 80,
+   "t": "1:19",
+   "y": 11247,
+   "section": "trading-algos",
+   "machine": "★B21·w1",
+   "seen": "0",
+   "note": "sticky corridor plate (machine B21)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 81,
+   "t": "1:20",
+   "y": 11490,
+   "section": "trading-algos",
+   "machine": "★B21·w1 ★B21-circle·w1",
+   "seen": "0",
+   "note": "sticky plate; no circle drawn in the sampled frames (machine B21/B21-circle)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 84,
+   "t": "1:23",
+   "y": 12188,
+   "section": "optuna-screener",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "chalk writes the quote (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 89,
+   "t": "1:28",
+   "y": 12798,
+   "section": "optuna-screener",
+   "machine": "★B23·w1",
+   "seen": "0",
+   "note": "scroll only (machine B23)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 92,
+   "t": "1:31",
+   "y": 13451,
+   "section": "optuna-screener",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "campus plate slides in at its own rate (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 98,
+   "t": "1:37",
+   "y": 15046,
+   "section": "experiment",
+   "machine": "★B25·w1",
+   "seen": "0",
+   "note": "scroll only (machine B25)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 105,
+   "t": "1:44",
+   "y": 16098,
+   "section": "systems",
+   "machine": "★B26·w1",
+   "seen": "0",
+   "note": "drone plate scrolls rigidly (machine B26)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 109,
+   "t": "1:48",
+   "y": 16582,
+   "section": "systems",
+   "machine": "★B27·w2",
+   "seen": "0",
+   "note": "frames identical (machine B27)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 110,
+   "t": "1:49",
+   "y": 16652,
+   "section": "systems",
+   "machine": "★B27·w2",
+   "seen": "0",
+   "note": "rigid scroll (machine B27)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 114,
+   "t": "1:53",
+   "y": 17691,
+   "section": "systems",
+   "machine": "★B28·w1",
+   "seen": "0",
+   "note": "rigid scroll (machine B28)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 115,
+   "t": "1:54",
+   "y": 17912,
+   "section": "systems",
+   "machine": "★B28·w1",
+   "seen": "0",
+   "note": "kill-list heading scrolls in (machine B28)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 116,
+   "t": "1:55",
+   "y": 18168,
+   "section": "kill-list",
+   "machine": "★B29·w1",
+   "seen": "0",
+   "note": "rigid (machine B29)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 127,
+   "t": "2:06",
+   "y": 20141,
+   "section": "kill-list",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "lens fades out (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 130,
+   "t": "2:09",
+   "y": 20360,
+   "section": "films",
+   "machine": "★B30·w3",
+   "seen": "0",
+   "note": "rigid (machine B30 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 131,
+   "t": "2:10",
+   "y": 20531,
+   "section": "films",
+   "machine": "★B30·w3 | after B30",
+   "seen": "0",
+   "note": "breath scroll (machine B30)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 135,
+   "t": "2:14",
+   "y": 21531,
+   "section": "films",
+   "machine": "★B32·w1",
+   "seen": "0",
+   "note": "plate exits rigidly (machine B32)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 141,
+   "t": "2:20",
+   "y": 22996,
+   "section": "films",
+   "machine": "★B33-finale·w2",
+   "seen": "0",
+   "note": "plate rigid (machine B33-finale w2)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 143,
+   "t": "2:22",
+   "y": 23531,
+   "section": "films",
+   "machine": "★B34·w1",
+   "seen": "0",
+   "note": "rigid (machine B34)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 154,
+   "t": "2:33",
+   "y": 25626,
+   "section": "act-3",
+   "machine": "★B38·w3",
+   "seen": "0",
+   "note": "caption swap only (machine B38 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 156,
+   "t": "2:35",
+   "y": 26054,
+   "section": "act-3",
+   "machine": "no star, after B38",
+   "seen": "1",
+   "note": "plate fades out (breath)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 163,
+   "t": "2:42",
+   "y": 27152,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "map card scrolls rigidly (machine B41 w2)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 164,
+   "t": "2:43",
+   "y": 27407,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "rigid (machine B41)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 165,
+   "t": "2:44",
+   "y": 27641,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "rigid (machine B41)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 169,
+   "t": "2:48",
+   "y": 28638,
+   "section": "beyond",
+   "machine": "★B42·w1",
+   "seen": "0",
+   "note": "sticky horse plate (machine B42)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 170,
+   "t": "2:49",
+   "y": 28887,
+   "section": "beyond",
+   "machine": "★B42·w1",
+   "seen": "0",
+   "note": "sticky horse plate (machine B42)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 171,
+   "t": "2:50",
+   "y": 29136,
+   "section": "beyond",
+   "machine": "★B42·w1 ★B43·w2",
+   "seen": "0",
+   "note": "sticky horse plate; satchel not yet drawn (machine B42/B43)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 178,
+   "t": "2:57",
+   "y": 30854,
+   "section": "writing",
+   "machine": "★B44-sketch·w1",
+   "seen": "0",
+   "note": "rigid (machine B44-sketch)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 179,
+   "t": "2:58",
+   "y": 30860,
+   "section": "writing",
+   "machine": "★B44-sketch·w1",
+   "seen": "0",
+   "note": "frames identical (machine B44-sketch)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 193,
+   "t": "3:12",
+   "y": 33360,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "frames identical (machine B47)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 194,
+   "t": "3:13",
+   "y": 33523,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid scroll (machine B47)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 198,
+   "t": "3:17",
+   "y": 34517,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid (machine B47)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 199,
+   "t": "3:18",
+   "y": 34778,
+   "section": "act-4",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid; campfire card plate scrolls in (machine B47)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 200,
+   "t": "3:19",
+   "y": 35034,
+   "section": "act-4",
+   "machine": "★B48·w3",
+   "seen": "0",
+   "note": "rigid (machine B48 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 205,
+   "t": "3:24",
+   "y": 35591,
+   "section": "act-4",
+   "machine": "★B50·w3",
+   "seen": "0",
+   "note": "hall plate nearly still (machine B50 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 210,
+   "t": "3:29",
+   "y": 36709,
+   "section": "principles",
+   "machine": "★B53·w1 | after B50",
+   "seen": "0",
+   "note": "breath (machine B53)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 223,
+   "t": "3:42",
+   "y": 38657,
+   "section": "principles",
+   "machine": "★B56·w2",
+   "seen": "0",
+   "note": "map scrolls rigidly (machine B56)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 227,
+   "t": "3:46",
+   "y": 39160,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "frames identical (machine B56-trail)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 228,
+   "t": "3:47",
+   "y": 39337,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "rigid (machine B56-trail)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 229,
+   "t": "3:48",
+   "y": 39561,
+   "section": "contact",
+   "machine": "★B56-trail·w1",
+   "seen": "0",
+   "note": "rigid (machine B56-trail)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 233,
+   "t": "3:52",
+   "y": 39878,
+   "section": "credits",
+   "machine": "★B57·w2",
+   "seen": "0",
+   "note": "rigid credits (machine B57 w2)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 235,
+   "t": "3:54",
+   "y": 40358,
+   "section": "credits",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "small fluttering glyph (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 236,
+   "t": "3:55",
+   "y": 40613,
+   "section": "credits",
+   "machine": "NO STAR",
+   "seen": "1",
+   "note": "small fluttering glyph (machine NO STAR; weak)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 237,
+   "t": "3:56",
+   "y": 40795,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "rigid (machine B58 w3)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 238,
+   "t": "3:57",
+   "y": 40802,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "frames identical (machine B58 w3)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 8,
+   "t": "0:07",
+   "y": 1780,
+   "section": "act-1",
+   "machine": "no star, after B04",
+   "seen": "1",
+   "note": "The Crossing title flashes past (breath)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 11,
+   "t": "0:10",
+   "y": 2325,
+   "section": "act-1",
+   "machine": "★B07·w1 | after B04",
+   "seen": "0",
+   "note": "breath (machine B07)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 13,
+   "t": "0:12",
+   "y": 3272,
+   "section": "about",
+   "machine": "★B08·w1 ★B08-invite·w1",
+   "seen": "0",
+   "note": "rigid (machine B08/B08-invite)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 14,
+   "t": "0:13",
+   "y": 3317,
+   "section": "about",
+   "machine": "★B09·w1",
+   "seen": "0",
+   "note": "rigid (machine B09)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 21,
+   "t": "0:20",
+   "y": 6527,
+   "section": "journey",
+   "machine": "★B12-push·w1",
+   "seen": "0",
+   "note": "rigid (machine B12-push)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 22,
+   "t": "0:21",
+   "y": 6754,
+   "section": "journey",
+   "machine": "★B12-push·w1 ★B13·w3",
+   "seen": "0",
+   "note": "rigid (machine B12-push/B13)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 26,
+   "t": "0:25",
+   "y": 8743,
+   "section": "act-2",
+   "machine": "no star, after B14",
+   "seen": "1",
+   "note": "plate exits (breath)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 27,
+   "t": "0:26",
+   "y": 9323,
+   "section": "work",
+   "machine": "★B16·w1",
+   "seen": "0",
+   "note": "pen plate slides in rigidly (machine B16)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 29,
+   "t": "0:28",
+   "y": 10557,
+   "section": "work",
+   "machine": "★B19·w1",
+   "seen": "0",
+   "note": "fling past the gauntlet, rigid (machine B19)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 30,
+   "t": "0:29",
+   "y": 11294,
+   "section": "trading-algos",
+   "machine": "★B19·w1 ★B17·w2",
+   "seen": "0",
+   "note": "rigid (machine B19/B17)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 39,
+   "t": "0:38",
+   "y": 14227,
+   "section": "optuna-screener",
+   "machine": "★B24·w1",
+   "seen": "0",
+   "note": "rigid (machine B24)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 42,
+   "t": "0:41",
+   "y": 15814,
+   "section": "experiment",
+   "machine": "★B25·w1",
+   "seen": "0",
+   "note": "fling past the thesis heading (machine B25)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 45,
+   "t": "0:44",
+   "y": 17441,
+   "section": "systems",
+   "machine": "★B26·w1",
+   "seen": "0",
+   "note": "rigid (machine B26)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 46,
+   "t": "0:45",
+   "y": 17666,
+   "section": "systems",
+   "machine": "★B26·w1 ★B27·w2",
+   "seen": "0",
+   "note": "rigid (machine B26/B27)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 47,
+   "t": "0:46",
+   "y": 18339,
+   "section": "systems",
+   "machine": "★B27·w2",
+   "seen": "0",
+   "note": "rigid (machine B27)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 49,
+   "t": "0:48",
+   "y": 18899,
+   "section": "systems",
+   "machine": "★B29·w1",
+   "seen": "0",
+   "note": "rigid (machine B29)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 50,
+   "t": "0:49",
+   "y": 19492,
+   "section": "kill-list",
+   "machine": "★B28·w1",
+   "seen": "0",
+   "note": "rigid (machine B28)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 51,
+   "t": "0:50",
+   "y": 19960,
+   "section": "kill-list",
+   "machine": "★B28·w1 ★B29-lens·w1",
+   "seen": "0",
+   "note": "fling; lens not visibly tracking (machine B28/B29-lens)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 55,
+   "t": "0:54",
+   "y": 21573,
+   "section": "films",
+   "machine": "★B30·w3 ★B31·w1",
+   "seen": "0",
+   "note": "rigid (machine B30/B31)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 57,
+   "t": "0:56",
+   "y": 22708,
+   "section": "films",
+   "machine": "★B31-finale·w1",
+   "seen": "0",
+   "note": "plate exits rigidly (machine B31-finale)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 71,
+   "t": "1:10",
+   "y": 29623,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "map card rigid (machine B41)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 73,
+   "t": "1:12",
+   "y": 30780,
+   "section": "beyond",
+   "machine": "★B42·w1 ★B43·w2",
+   "seen": "0",
+   "note": "sticky horse plate (machine B42/B43)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 80,
+   "t": "1:19",
+   "y": 34533,
+   "section": "writing",
+   "machine": "2+ AT ONCE (★B45·w2 ★B44-page4·w1 ★B46·w1; overlap 335 ms)",
+   "seen": "1",
+   "note": "horse runs (frames 1-3), then the tree-line rises (frame 4): sequential in the samples (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 81,
+   "t": "1:20",
+   "y": 35349,
+   "section": "writing",
+   "machine": "2+ AT ONCE (★B44-page4·w1 ★B46·w1; overlap 12 ms)",
+   "seen": "1",
+   "note": "tree-line rises (machine 2+, 12 ms)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 84,
+   "t": "1:23",
+   "y": 36565,
+   "section": "voices",
+   "machine": "★B47·w2",
+   "seen": "0",
+   "note": "rigid (machine B47)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 89,
+   "t": "1:28",
+   "y": 39154,
+   "section": "principles",
+   "machine": "2+ AT ONCE (★B53·w1 ★B54·w2; overlap 395 ms) | after B50",
+   "seen": "1",
+   "note": "map rises, footprints walk; the quill mark stays still (machine 2+ B53+B54)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 90,
+   "t": "1:29",
+   "y": 39899,
+   "section": "principles",
+   "machine": "2+ AT ONCE (★B53·w1 ★B54·w2; overlap 283 ms)",
+   "seen": "1",
+   "note": "footprints walk the margin; quill mark static (machine 2+ B53+B54)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 93,
+   "t": "1:32",
+   "y": 40230,
+   "section": "principles",
+   "machine": "★B54·w2",
+   "seen": "0",
+   "note": "near-still (machine B54)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 99,
+   "t": "1:38",
+   "y": 41836,
+   "section": "contact",
+   "machine": "2+ AT ONCE (★B56·w2 ★B56-trail·w1; overlap 610 ms)",
+   "seen": "1",
+   "note": "floating candles drift (one element) (machine 2+ B56+B56-trail)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 100,
+   "t": "1:39",
+   "y": 42319,
+   "section": "contact",
+   "machine": "2+ AT ONCE (★B56·w2 ★B56-trail·w1; overlap 20 ms)",
+   "seen": "0",
+   "note": "rigid scroll, nothing performs (machine 2+ B56+B56-trail)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 101,
+   "t": "1:40",
+   "y": 42807,
+   "section": "credits",
+   "machine": "★B57·w2",
+   "seen": "0",
+   "note": "fling to the credits (machine B57)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 102,
+   "t": "1:41",
+   "y": 43443,
+   "section": "credits",
+   "machine": "★B57·w2",
+   "seen": "0",
+   "note": "rigid (machine B57)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 103,
+   "t": "1:42",
+   "y": 43711,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "near-still (machine B58)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 104,
+   "t": "1:43",
+   "y": 43717,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "frames identical (machine B58)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 1,
+   "t": "0:00",
+   "y": 0,
+   "section": "top",
+   "machine": "no star, after B30",
+   "seen": "1",
+   "note": "the wave fades in on the hero (frame 4); machine labels this y0 clip 'breath after B30'"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 2,
+   "t": "0:01",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "hero holds (machine B02)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 3,
+   "t": "0:02",
+   "y": 0,
+   "section": "top",
+   "machine": "★B02·w2",
+   "seen": "0",
+   "note": "page barely moves (machine B02)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 12,
+   "t": "0:11",
+   "y": 3096,
+   "section": "about",
+   "machine": "★B08-compass·w1 ★B08-invite·w1",
+   "seen": "0",
+   "note": "near-still (machine B08-compass/B08-invite)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 13,
+   "t": "0:12",
+   "y": 3570,
+   "section": "about",
+   "machine": "★B09·w1",
+   "seen": "0",
+   "note": "fling, rigid (machine B09)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 18,
+   "t": "0:17",
+   "y": 6140,
+   "section": "journey",
+   "machine": "★B12-push·w1",
+   "seen": "0",
+   "note": "plate exits rigidly (machine B12-push)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 19,
+   "t": "0:18",
+   "y": 6316,
+   "section": "act-2",
+   "machine": "★B12-push·w1 ★B13·w3 ★B14·w3",
+   "seen": "0",
+   "note": "rigid (machine B12-push/B13/B14)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 21,
+   "t": "0:20",
+   "y": 7507,
+   "section": "act-2",
+   "machine": "no star, after B14",
+   "seen": "1",
+   "note": "chalk diagram, plate exits (breath)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 22,
+   "t": "0:21",
+   "y": 8353,
+   "section": "work",
+   "machine": "★B16·w1",
+   "seen": "0",
+   "note": "pen plate rigid (machine B16)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 23,
+   "t": "0:22",
+   "y": 8915,
+   "section": "work",
+   "machine": "2+ AT ONCE (★B16·w1 ★B19·w1; overlap 120 ms)",
+   "seen": "1",
+   "note": "heading writes (frame 1), then chalkboard plate enters (frame 3): sequential in the samples (machine 2+)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 27,
+   "t": "0:26",
+   "y": 11966,
+   "section": "trading-algos",
+   "machine": "★B21-circle·w1",
+   "seen": "0",
+   "note": "rigid (machine B21-circle)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 28,
+   "t": "0:27",
+   "y": 12833,
+   "section": "optuna-screener",
+   "machine": "★B21-circle·w1 ★B22·w2",
+   "seen": "0",
+   "note": "fling past the lecture plate (machine B21-circle/B22)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 30,
+   "t": "0:29",
+   "y": 14038,
+   "section": "optuna-screener",
+   "machine": "★B24·w1",
+   "seen": "0",
+   "note": "sticky campus plate (machine B24)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 31,
+   "t": "0:30",
+   "y": 15086,
+   "section": "experiment",
+   "machine": "★B24·w1 ★B25·w1",
+   "seen": "0",
+   "note": "fling (machine B24/B25)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 34,
+   "t": "0:33",
+   "y": 16846,
+   "section": "systems",
+   "machine": "★B26·w1",
+   "seen": "0",
+   "note": "rigid (machine B26)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 35,
+   "t": "0:34",
+   "y": 17506,
+   "section": "systems",
+   "machine": "★B26·w1 ★B27·w2",
+   "seen": "0",
+   "note": "rigid (machine B26/B27)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 36,
+   "t": "0:35",
+   "y": 17737,
+   "section": "systems",
+   "machine": "★B27·w2 ★B29·w1",
+   "seen": "0",
+   "note": "rigid (machine B27/B29)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 41,
+   "t": "0:40",
+   "y": 20569,
+   "section": "films",
+   "machine": "★B30·w3 ★B31·w1 | after B30",
+   "seen": "0",
+   "note": "breath scroll (machine B30/B31)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 47,
+   "t": "0:46",
+   "y": 24675,
+   "section": "films",
+   "machine": "★B35·w1",
+   "seen": "0",
+   "note": "nothing visible at this size (machine B35)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 50,
+   "t": "0:49",
+   "y": 26786,
+   "section": "beyond",
+   "machine": "★B40·w1",
+   "seen": "0",
+   "note": "Beyond plate holds (machine B40)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 51,
+   "t": "0:50",
+   "y": 27256,
+   "section": "beyond",
+   "machine": "★B41·w2",
+   "seen": "0",
+   "note": "map card rigid (machine B41)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 53,
+   "t": "0:52",
+   "y": 28856,
+   "section": "beyond",
+   "machine": "★B42·w1",
+   "seen": "0",
+   "note": "sticky horse plate (machine B42)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 54,
+   "t": "0:53",
+   "y": 29133,
+   "section": "beyond",
+   "machine": "★B42·w1 ★B43·w2",
+   "seen": "0",
+   "note": "sticky horse plate; satchel not drawn yet (machine B42/B43)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 73,
+   "t": "1:12",
+   "y": 38867,
+   "section": "principles",
+   "machine": "2+ AT ONCE (★B56·w2 ★B56-trail·w1; overlap 169 ms)",
+   "seen": "1",
+   "note": "floating candles rise in (one element) (machine 2+ B56+B56-trail)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 74,
+   "t": "1:13",
+   "y": 39807,
+   "section": "credits",
+   "machine": "2+ AT ONCE (★B56·w2 ★B56-trail·w1 ★B57·w2; overlap 116 ms)",
+   "seen": "0",
+   "note": "fling to the credits, rigid (machine 2+ B56+B56-trail+B57)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 76,
+   "t": "1:15",
+   "y": 40801,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "near-still (machine B58)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 77,
+   "t": "1:16",
+   "y": 40802,
+   "section": "credits",
+   "machine": "★B58·w3",
+   "seen": "0",
+   "note": "frames identical (machine B58)"
+  }
+ ],
+ "findings": [
+  {
+   "screen": "whole page (reader, both widths)",
+   "t": "0:12–4:11",
+   "clip": "reader-1440 #13–252, reader-1024 #13–239",
+   "severity": "high",
+   "finding": "One-star rate by eye is 48.8 % (117/240) at 1440 and 45.8 % (104/227) at 1024, against the 90 % bar and below the machine's 63.8 % / 64.8 %. 108 clips at each width are star-less outside a declared breath. No clip shows two competing animations."
+  },
+  {
+   "screen": "systems · experiment · beyond · contact→credits",
+   "t": "1:43–1:53, 1:56–2:04, 2:52–2:59, 3:56–4:11 (1440)",
+   "clip": "reader-1440 #104–114, #117–125, #173–180, #237–252; reader-1024 #100–103, #105–119, #162–171, #225–239",
+   "severity": "high",
+   "finding": "The longest dead stretches are text-heavy sections read at 250 px/s: 8–11 consecutive clips where text scrolls rigidly past a static or sticky plate and nothing performs (systems lists, the experiment chart once drawn, the Beyond lists beside the sticky horse plate, contact and the credits roll)."
+  },
+  {
+   "screen": "every 2 s reading stop (h2 and act-card settle)",
+   "t": "e.g. 0:24, 0:41, 1:00, 1:18, 1:31, 1:43, 1:52, 2:02, 2:13, 2:42, 3:09, 3:22, 3:34, 3:57, 4:03",
+   "clip": "reader-1440 #25–26, #42–43, #61, #79–80, #92–93, #104–105, #113–114, #123–124, #134–135, #163, #190–191, #203–204, #215, #238–239, #244–245",
+   "severity": "high",
+   "finding": "Each stop yields 1–2 clips of identical frames outside any breath (about 25–30 clips per run). The rule either needs these stops declared as rests, or each stop needs a held star (a slow push or ambient loop on the plate in view)."
+  },
+  {
+   "screen": "top (hero after the titles)",
+   "t": "0:12–0:17",
+   "clip": "reader-1440 #13–18, reader-1024 #13–18",
+   "severity": "medium",
+   "finding": "Six clips of a frozen hero before the first scroll: the wave does not move and only the corner caption swaps. The machine grants ★B02 for #16–18 although yRange is [0,0] and the frames are pixel-identical, which contradicts the stated rule that a scroll star counts only while the page moves ≥ 12 px."
+  },
+  {
+   "screen": "machine over-count (various)",
+   "t": "see disagreements",
+   "clip": "47 clips at 1440, 51 at 1024, 26 skimmer-1440, 22 skimmer-1024",
+   "severity": "medium",
+   "finding": "The log grants a star where nothing visibly performs. Some have identical frames: B08-compass/B08-invite (1440 #35–36), B38·w3 (#164), B50·w3 (#216), B58·w3 (#251), B47 (1024 #193). Others show only rigid scroll: B30·w3 films heading (#133, #136), B32/B33-finale plates (#144, #149), B41 map trail (#174–176), B47 voices (#205–210), B56-trail (#240–242), B57 (#246), B12-push (#54, #56). Weight-3 stars are among them, so the machine's 63.8 % flatters the page."
+  },
+  {
+   "screen": "machine under-count (hosts moving outside the spotlight)",
+   "t": "1:28, 1:23, 1:35, 2:34, 0:36, 2:11, 3:46, 4:07",
+   "clip": "reader-1440 #89, #84, #96, #155, #37, #132, #227, #248–249; reader-1024 #84, #78, #92, #127, #235–236",
+   "severity": "medium",
+   "finding": "Visible motion with NO STAR in the log: the chalk quote writes itself (1440 #89, 1024 #84); the corridor plate drifts under the finished blueprint (#84, 1024 #78); the classroom plate drifts (#96); the campus plate slides in (1024 #92); a glowing dot streaks across the viaduct (#155); About's compass lid opens (#37); the kill-list lens fades out (#132, 1024 #127); the map footprints shift (#227); a small glyph flutters in the credits (#248–249, 1024 #235–236). None of these collides with another star here, but the log cannot be the only J1 evidence."
+  },
+  {
+   "screen": "machine 2+ clips",
+   "t": "0:50–0:51 (1024); skimmer 1:19–1:20, 1:28–1:29, 1:38–1:39; skimmer-1024 0:22, 1:12–1:13",
+   "clip": "reader-1024 #51–52; skimmer-1440 #80–81, #89–90, #99–100; skimmer-1024 #23, #73–74",
+   "severity": "low",
+   "finding": "None reads as two competing animations in the samples. reader-1024 #51–52 (B12-push + B12) show nothing performing at all. skimmer-1440 #80 is the horse then the tree-line one frame apart; #89–90 is footprints walking while the quill mark stays still; #99 is one candle plate; #100 and skimmer-1024 #74 are rigid scroll. These are overlaps in the log's hand-off windows (12–610 ms), so tighten them to meet 0 by the log as well."
+  },
+  {
+   "screen": "top (skimmer 1024)",
+   "t": "0:00",
+   "clip": "skimmer-1024 #1",
+   "severity": "low",
+   "finding": "Labelling bug: the first clip (y 0, yRange [0,0]) is tagged \"breath after B30\" and row B58, although that breath spans y 20500–21268. It inflates noneInBreath by one and suggests stale state at the first frame."
+  },
+  {
+   "screen": "films → act-3; writing; credits",
+   "t": "2:34–2:39, 3:15–3:16, 4:06–4:08",
+   "clip": "reader-1440 #155–160, #196–197, #247–249",
+   "severity": "low",
+   "finding": "Some screens rest on a very small star: a ~20 px glowing dot crossing the viaduct and the RDR2 sky, a thumb-sized horse running along the journal page, a small glyph in the credits. They count as one star, but a skimming reader can miss them, so those screens read as near-dead."
+  },
+  {
+   "screen": "act cards and set pieces",
+   "t": "0:20–0:28, 0:56–1:03, 2:40–2:46, 3:31–3:38",
+   "clip": "reader-1440 #21–29, #57–64, #161–167, #212–219",
+   "severity": "info",
+   "finding": "The four act cards are clean single-star sequences: iris porthole → plate push → title → breath; torn wipe → chalk diagram → title; colour grade → title; burn hole → Great Hall → title. The journey plate sequence (#47–53), the journal sketches with the horse (#193–198) and the map footprints (#228–234) also hand off one at a time."
+  }
+ ],
+ "score": 2,
+ "scoreReason": "Zero visible 2+ across 652 judged clips is a real pass. The main bar fails by a wide margin: about 47 % one-star by eye at both reader widths, with 108 star-less clips per width outside breaths, in long rigid-text stretches and at every reading stop. The machine overstates the one-star rate by about 15–19 points."
+}

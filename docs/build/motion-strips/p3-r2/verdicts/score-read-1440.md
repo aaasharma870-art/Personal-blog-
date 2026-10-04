@@ -1,0 +1,62 @@
+CAPTIONED @1440: name "Aryan Sharma" read correctly by 3/3 (j1: Aryan Sharma; j2: Aryan Sharma; j3: Aryan Sharma)
+can't read: 59 finding(s)
+- j1 C001 (D41-credits): Large decorative quote marks clipped at the very bottom edge of the frame (only the tops of the glyphs show)
+- j1 C002 (D26-trading-algos): Second lines of the Fig. 1 stage boxes are cut by the bottom edge ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE' only half visible)
+- j1 C003 (D21-journey-step-1): Top body line is half hidden under the header ('...of it failed me first. Step through it.')
+- j1 C003 (D21-journey-step-1): 'parley?' script label on the map is small
+- j1 C004 (D01-hero): 'DIRECTOR'S CUT (SOUND ON)' button text is dim grey on near-black
+- j1 C004 (D01-hero): 'SELF-TAUGHT HIGH-SCHOOL QUANT • LANDON SCHOOL, CLASS OF 2027' line is small and low-contrast
+- j1 C005 (D27-optuna-screener): Chalkboard quote is truncated mid-word: '“A n' and attribution '— RANCI' (cut off, reads like a rendering bug unless it is mid-animation)
+- j1 C005 (D27-optuna-screener): 'Automated Strategy...' heading and its problem paragraph cut by the bottom edge
+- j1 C006 (D32-beyond): 'Discipline, in three arenas' heading and the wrestling description clipped by the bottom edge
+- j1 C007 (D24-work): Section heading 'Led by what...' cut off at the bottom; its meaning is incomplete in this frame
+- j1 C009 (D28-experiment): Unselected toggle 'Realistic costs · out-of-sample' is dim grey
+- j1 C011 (D29-systems): Heading 'What I can actually do' is cut through the second line by the bottom edge
+- j1 C012 (D40-contact): Grey serif body paragraph under the headline is low-contrast
+- j1 C012 (D40-contact): 'Lumos' link has no hint of what it does
+- j1 C014 (D38-principles): 'I solemnly swear...' subtitle under the banner is tiny and faint
+- j1 C014 (D38-principles): 'AFTER MENGZI' tag is small and light
+- j1 C015 (D30-kill-list): Struck-through red 'Killed' at the start of the sub-line is small
+- j1 C016 (D43-films-pirates): Right-column body text cut by the bottom edge
+- j1 C017 (D20-about-120): Two-line blackletter caption 'JACK'S COMPASS – IT POINTS TO WHAT YOU WANT MOST' is slow to parse
+- j1 C017 (D20-about-120): Faint ship/harbour image sits behind the left body column
+- j2 C001 (D41-credits): Giant blackletter text at the very bottom edge is cut off (only an opening quote mark and 'A...' show)
+- j2 C002 (D26-trading-algos): Blueprint box sub-labels ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut by the bottom edge
+- j2 C003 (D21-journey-step-1): Top line '...of it failed me first. Step through it.' is clipped under the header
+- j2 C003 (D21-journey-step-1): '03 THE BREAK' label spills below the map frame
+- j2 C003 (D21-journey-step-1): '02 · EARLY WORK' at the bottom edge is cut
+- j2 C004 (D01-hero): '▶ DIRECTOR'S CUT (SOUND ON)' is dim grey on dark
+- j2 C005 (D27-optuna-screener): Chalkboard quote is caught mid-write: '"A n' and '— RANCI' only
+- j2 C006 (D32-beyond): 'Discipline, in three arenas' heading and the wrestling detail line are cut at the bottom edge
+- j2 C007 (D24-work): Section headline below the image is cut at 'Led by what'
+- j2 C009 (D28-experiment): Unselected toggle 'Realistic costs · out-of-sample' is low-contrast
+- j2 C010 (D36-writing): Handwritten 'Entry II' is faint pencil
+- j2 C010 (D36-writing): The only person's name on the frame is 'ARTHUR MORGAN'S JOURNAL', which a skimmer could take as the author
+- j2 C011 (D29-systems): Headline 'What I can actually do.' is cut at the bottom edge
+- j2 C012 (D40-contact): 'RÉSUMÉ · COMING SOON' small grey
+- j2 C012 (D40-contact): The 'A [candle] S' monogram reads only as initials
+- j2 C014 (D38-principles): 'I SOLEMNLY SWEAR...' under the banner is tiny and faint
+- j2 C015 (D30-kill-list): Typo: 'Killed and never retuned' (should read 'returned')
+- j2 C017 (D20-about-120): Blackletter caption 'JACK'S COMPASS — IT POINTS TO WHAT YOU WANT MOST' is readable but slow (dense condensed blackletter)
+- j3 C017 (D20-about-120): Blackletter heading 'Jack's compass — it points to what you want most' is legible but slow to parse at that weight and size
+- j3 C016 (D43-films-pirates): Body paragraph at bottom right is cut off by the viewport ('The real crossing began when I stopped steering by what I hoped and…')
+- j3 C015 (D30-kill-list): 'Trading_Algos-' repo link ends in a hyphen and reads as truncated
+- j3 C015 (D30-kill-list): Grey project descriptions are low-contrast against the dark green grid
+- j3 C014 (D38-principles): 'I solemnly swear…' tagline under the ribbon is tiny small-caps, faint on parchment
+- j3 C012 (D40-contact): 'RÉSUMÉ · COMING SOON' is tiny and dim
+- j3 C012 (D40-contact): Grey body copy under the headline is low-contrast on black
+- j3 C011 (D29-systems): Section heading 'What I can actually do' is cut off at the bottom edge
+- j3 C010 (D36-writing): Handwritten 'Entry II' on the sketch page is faint grey pencil
+- j3 C009 (D28-experiment): Inactive toggle 'Realistic costs · out-of-sample' is dim
+- j3 C009 (D28-experiment): Small grey caption under the chart is low-contrast
+- j3 C007 (D24-work): Section heading 'Led by what…' is cut off at the bottom edge
+- j3 C006 (D32-beyond): 'Discipline, in three arenas' and the athletics columns are cut off at the bottom edge
+- j3 C005 (D27-optuna-screener): Chalkboard quote is cut mid-word: '“A n' with attribution '— RANCI' (half-typed)
+- j3 C005 (D27-optuna-screener): 'Automated Strategy…' heading and the problem text are cut off at the bottom
+- j3 C004 (D01-hero): 'DIRECTOR'S CUT (SOUND ON)' button label is dim grey
+- j3 C003 (D21-journey-step-1): Top line 'of it failed me first. Step through it.' is sliced in half by the sticky top bar
+- j3 C003 (D21-journey-step-1): '02 · EARLY WORK' label cut at the bottom edge
+- j3 C002 (D26-trading-algos): Blueprint box sub-labels ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut at the bottom edge
+- j3 C002 (D26-trading-algos): 'Trading_Algos-' link ends in a hyphen and looks truncated
+- j3 C001 (D41-credits): Large blackletter quote at the very bottom is cut off (only opening and closing quote marks visible)
+fast lane found ≤ 10 s: 3/3 (j1: 1 s, 'SKIP TO THE RESEARCH' pill top-right; also 'VIEW THE QUANT PORTFOLIO ↓' button under the intro; j2: 1 s, 'SKIP TO THE RESEARCH' pill top right, plus 'VIEW THE QUANT PORTFOLIO ↓' under the intro; j3: 1 s, 'SKIP TO THE RESEARCH' pill in the top bar; 'VIEW THE QUANT PORTFOLIO ↓' button under the intro also works)

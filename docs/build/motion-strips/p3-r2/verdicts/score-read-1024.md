@@ -1,0 +1,59 @@
+CAPTIONED @1024: name "Aryan Sharma" read correctly by 3/3 (j1: Aryan Sharma; j2: Aryan Sharma; j3: Aryan Sharma)
+can't read: 56 finding(s)
+- j1 C001 (D20-about-120): Top of the page is clipped under the header: the 'quantitative systems.' heading is cut at the top and the right-hand caption shows only '...YOU WANT MOST' half-hidden above 'PIRATES OF THE CARIBBEAN'
+- j1 C003 (D32-beyond): 'Discipline, in three...' heading cut by the bottom edge
+- j1 C004 (D40-contact): Grey serif paragraph under the headline is low-contrast on black
+- j1 C004 (D40-contact): 'Lumos' link gives no hint of what it does
+- j1 C005 (D01-hero): 'DIRECTOR'S CUT (SOUND ON)' button text is dim grey
+- j1 C005 (D01-hero): 'SELF-TAUGHT HIGH-SCHOOL QUANT • LANDON SCHOOL, CLASS OF 2027' is small and low-contrast
+- j1 C006 (D29-systems): Intro line 'A working map, not a skills cloud: the...' cut by the bottom edge
+- j1 C008 (D24-work): 'STANDING RULE' body text cut by the bottom edge
+- j1 C009 (D27-optuna-screener): Chalkboard quote is unfinished: '“A machine is anything' with no ending (mid-write or truncated)
+- j1 C010 (D28-experiment): Unselected toggle 'Realistic costs · out-of-sample' is dim
+- j1 C011 (D38-principles): 'I solemnly swear...' subtitle is tiny and faint
+- j1 C011 (D38-principles): Quill drawing overlaps the 'Y' of 'PHILOSOPHY'
+- j1 C012 (D30-kill-list): Bracketed 'FIG. · OPTUNA-SCREENER' diagram crowds the 02 project text column
+- j1 C012 (D30-kill-list): 'Killed and never retuned' reads like a typo for 'returned' at first glance
+- j1 C012 (D30-kill-list): Last line of the 02 description cut by the bottom edge
+- j1 C013 (D36-writing): Entry I description cut by the bottom edge
+- j1 C015 (D43-films-pirates): A blackletter title fragment is stuck half under the header at the top (only the bottom half of 'PIRATES OF THE CARIBBEAN' shows)
+- j1 C016 (D21-journey-step-1): Top body line half hidden under the header ('...of it failed me first. Step through it.')
+- j1 C016 (D21-journey-step-1): 'parley?' script label is small
+- j1 C017 (D41-credits): Small 'CREDITS' label sits directly under the skip pill and crowds it
+- j2 C001 (D20-about-120): Top-right heading is cut off by the header bar: only '...YOU WANT MOST' shows, half hidden, above 'PIRATES OF THE CARIBBEAN'
+- j2 C001 (D20-about-120): First headline line clipped at the top; only 'quantitative systems.' visible
+- j2 C004 (D40-contact): 'RÉSUMÉ · COMING SOON' is small, low-contrast grey
+- j2 C004 (D40-contact): The 'A [candle] S' monogram is only readable as initials, not as a name
+- j2 C005 (D01-hero): '▶ DIRECTOR'S CUT (SOUND ON)' button text is very dim against the sea
+- j2 C008 (D24-work): 'STANDING RULE' body text runs off the bottom of the frame
+- j2 C009 (D27-optuna-screener): Chalkboard quote is truncated: '"A machine is anything' with no ending, attributed '— RANCHO'
+- j2 C010 (D28-experiment): Unselected toggle 'Realistic costs · out-of-sample' is low-contrast grey
+- j2 C011 (D38-principles): 'I SOLEMNLY SWEAR...' under the banner is tiny and faint
+- j2 C011 (D38-principles): Last letter of 'PHILOSOPHY' fades under the quill (mid-write)
+- j2 C012 (D30-kill-list): Typo: 'Killed and never retuned' (should read 'returned')
+- j2 C012 (D30-kill-list): Figure label wraps awkwardly: 'FIG. · OPTUNA- / SCREENER'
+- j2 C013 (D36-writing): Handwritten 'Entry II' in the journal sketch is faint pencil
+- j2 C013 (D36-writing): The only name on the frame is 'ARTHUR MORGAN'S JOURNAL', which a skimmer could take as the author
+- j2 C015 (D43-films-pirates): Blackletter title above the ship image is sliced off by the header; only the bottom half of '...PIRATES OF THE CARIBBEAN' shows
+- j2 C016 (D21-journey-step-1): Top line '...of it failed me first. Step through it.' is clipped under the header
+- j2 C016 (D21-journey-step-1): Map labels ('01 ORIGIN', '03 THE BREAK', 'parley?') are small; '03 THE BREAK' spills below the map frame
+- j2 C017 (D41-credits): Header 'CREDITS' label under the pill is small grey
+- j3 C016 (D21-journey-step-1): Top line 'of it failed me first. Step through it.' is sliced in half by the sticky top bar
+- j3 C015 (D43-films-pirates): A blackletter line ('Pirates of the Caribbean') at the very top is hidden under the sticky bar; only the lower half of the letters shows
+- j3 C013 (D36-writing): Handwritten 'Entry II' is faint pencil
+- j3 C013 (D36-writing): Description under 'How I try not to fool myself' is cut at the bottom edge
+- j3 C012 (D30-kill-list): 'FIG. · OPTUNA-SCREENER' label breaks mid-word onto two lines and the bracket diagram is wedged between the description and the right-hand meta column
+- j3 C012 (D30-kill-list): 'Trading_Algos-' link ends in a hyphen and looks truncated
+- j3 C012 (D30-kill-list): Last line of project 02 description cut at the bottom
+- j3 C011 (D38-principles): 'I solemnly swear…' is tiny faint small-caps
+- j3 C011 (D38-principles): The quill sits on the last letter of 'PHILOSOPHY', so the Y reads faded
+- j3 C010 (D28-experiment): Chart caption is cut at the bottom edge
+- j3 C009 (D27-optuna-screener): Chalkboard quote is still typing: '“A machine is anything' ends mid-sentence
+- j3 C008 (D24-work): 'STANDING RULE' body text is cut at the bottom edge
+- j3 C005 (D01-hero): 'DIRECTOR'S CUT (SOUND ON)' label is dim grey
+- j3 C004 (D40-contact): 'RÉSUMÉ · COMING SOON' is small and dim
+- j3 C003 (D32-beyond): 'Discipline, in three arenas' heading and athletics columns cut at the bottom edge
+- j3 C002 (D26-trading-algos): 'Trading_Algos-' link (and 'TRADING_ALGOS-' in the figure label) ends in a hyphen and reads as truncated
+- j3 C001 (D20-about-120): Right-hand blackletter caption ('…you want most') is half-hidden under the sticky top bar
+- j3 C001 (D20-about-120): Bottom of the four-principles grid is cut off
+fast lane found ≤ 10 s: 3/3 (j1: 1 s, 'SKIP TO THE RESEARCH' pill in the header; 'VIEW THE QUANT PORTFOLIO ↓' under the intro; j2: 1 s, 'SKIP TO THE RESEARCH' pill top centre, plus 'VIEW THE QUANT PORTFOLIO ↓' button under the intro; j3: 1 s, 'SKIP TO THE RESEARCH' pill in the top bar; 'VIEW THE QUANT PORTFOLIO ↓' under the intro also works)

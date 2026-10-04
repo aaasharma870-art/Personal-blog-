@@ -1,0 +1,10 @@
+[
+  { "frame": "H008", "hook": true, "why": "A glowing burn-hole is eating through the bright campfire plate and a lone candle shows inside it, so the next world is literally burning through. It begs one more scroll. Small snag: the act title says HARRY POTTER while the big caption still says 'The Campfire · Red Dead Redemption 2', which reads as a mislabel for a beat." },
+  { "frame": "H007", "hook": false, "why": "Big blackletter title, then about 60% of the frame is flat black with a small dull porthole of the ghost ship at far right. It reads as 'still loading', not as an invitation. The porthole needs more glow or more of the sea around it." },
+  { "frame": "H006", "hook": false, "why": "Handsome wood-type title, but the sepia print is muddy and low-contrast. The left half of the plate is a black tree mass and nothing suggests motion or a reveal, so it reads as a static postcard. Identical to H004." },
+  { "frame": "H005", "hook": true, "why": "A lightning-white tear rips the Kraken storm open to show the sunlit classroom behind it: dramatic and clearly mid-transformation. 'HERE BE MONSTERS' is a nice tease. Caption/title mismatch (3 IDIOTS over a Pirates caption) is readable as 'leaving the last world'." },
+  { "frame": "H004", "hook": false, "why": "Same frame as H006: dim sepia tintype, nothing moving, large dark band under it. Pretty, but it does not pull." },
+  { "frame": "H003", "hook": true, "why": "Burn-hole just starting in the warm camp plate. The glowing edge is an immediate 'what's under there?' Same title/caption mismatch as H008." },
+  { "frame": "H002", "hook": true, "why": "Clever: a glowing teal equity-curve line rises from the bottom and wipes the storm away to reveal the stone classroom and desk. It ties the film world to the trading theme in one gesture. Strongest hook of the set." },
+  { "frame": "H001", "hook": true, "why": "Opening act: blackletter title plus a glowing brass porthole framing the lantern-lit ghost ship, with a faint sea behind. It promises a voyage. Still a lot of empty dark on the left." }
+]

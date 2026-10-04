@@ -1,0 +1,193 @@
+{
+  "judge": "J8 SMOOTH",
+  "round": 2,
+  "date": "2026-10-04",
+  "score": 2.5,
+  "scoreNote": "1440 misses the headline floor (14.8 < 15.2) and is slower than round 1 in every run. 1024 meets the headline. Most frame-time misses are SwiftShader raster waits: 77-85 % of LoAFs over 50 ms carry under 5 ms of main-thread work. But there are real app stalls of 0.2-0.7 s in the first seconds of scrolling, in the opening card and in films. CLS is still above 0, and the relative raster hotspots (the Map of the principles, the opening card, card stages repainting outside their window) are app content.",
+  "inputs": [
+    "R/MANIFEST.md §1 + J8 section",
+    "R/motion/{1440,1024}/summary.md, motion.json, strips/*.jpg",
+    "docs/build/motion-strips/p3-before/summary.md",
+    "R/screencast/{reader,skimmer}-{1440,1024}/ and director-1440/ screencast.json (summary, raf, loaf, marks, geo) + clips.json (+ sheets viewed: reader-1440 sheet-24, skimmer-1440 sheet-01)",
+    "R/probes-{1440,1024}/p3-probes.json results.loaf, results.games",
+    "PHASE3-SPEC §12.1, §4.4"
+  ],
+  "targets": [
+    { "measure": "§12.1 desktop (Lenis default) fps, floor", "target": ">= 15.2", "v1440": 14.8, "v1024": 21.7, "met": "1024 only", "note": "r1 17.0 / 23.4. 1440 is 13 % slower than r1. P3-0 has no 1024 baseline, so 1024 is judged against the 1440 floor." },
+    { "measure": "§12.1 desktop fps, stretch", "target": ">= 18", "v1440": 14.8, "v1024": 21.7, "met": "1024 only" },
+    { "measure": "§12.1 desktop p95", "target": "<= 316.7 ms", "v1440": 233.3, "v1024": 150, "met": true },
+    { "measure": "§12.1 desktop work fps", "target": ">= 4.8 (1.5x 3.2)", "v1440": 19.7, "v1024": 34.1, "met": true },
+    { "measure": "§12.1 desktop principles fps", "target": ">= 4.95 (1.5x 3.3)", "v1440": 4.2, "v1024": 19.1, "met": "1024 only", "note": "17 frames at 1440. Principles is the slowest place in every screencast: B54, the Map of the principles." },
+    { "measure": "§12.1 desktop journey fps", "target": ">= 5.25 (1.5x 3.5)", "v1440": 7.6, "v1024": 9.9, "met": true },
+    { "measure": "§12.1 desktop kill-list fps", "target": ">= 5.85 (1.5x 3.9)", "v1440": 5.4, "v1024": 11.2, "met": "1024 only", "note": "12 frames at 1440 (r1 12.3 fps on 27 frames), so this row is fragile" },
+    { "measure": "§12.1 desktop pops", "target": "<= 12 (baseline 27)", "v1440": 4, "v1024": 6, "met": true },
+    { "measure": "§12.1 desktop CLS", "target": "0", "v1440": 0.006, "v1024": 0.0133, "met": false, "note": "App. Sources: the scrubbed sentence in #beyond (0.0028 / 0.0095), the world-face film names in scene captions (trading-algos, kill-list, beyond, act-4: 0.0003-0.0018), and the writing h3s. Down from r1 0.0196 / 0.0435." },
+    { "measure": "§12.1 native (?skip=smooth) fps / p95", "target": ">= 15.2 / <= 316.7 ms", "v1440": "8.1 / 433.3", "v1024": "14.0 / 250.1", "met": false, "note": "Same scroll method as P3-0 (15.2 / 316.7 at 1440). Like for like, the page now rasterises at about half the baseline rate. r1 10.2 / 16.1." },
+    { "measure": "§12.1 native work / principles / journey / kill-list fps", "target": ">= 4.8 / 4.95 / 5.25 / 5.85", "v1440": "12.6 / 3.1 / 4.1 / 3.2", "v1024": "33.1 / 4.0 / 5.8 / 8.3", "met": false, "note": "principles misses at both widths; journey and kill-list miss at 1440" },
+    { "measure": "§12.1 native pops", "target": "<= 12", "v1440": 52, "v1024": 40, "met": false, "note": "Many are timed set pieces that play while the notch-scrolled page stands still (act-4 ×5 at y 37998, principles ×6). r1 42 / 35; P3-0 27." },
+    { "measure": "§12.1 native CLS", "target": "0", "v1440": 0.0173, "v1024": 0.0149, "met": false },
+    { "measure": "§12.1 gl (?gl=force) fps / p95", "target": ">= 15.2 / <= 316.7 ms", "v1440": "16.1 / 200.1", "v1024": "22.9 / 133.3", "met": true, "note": "r1 18.7 / 25.8 (-14 % / -11 %)" },
+    { "measure": "§12.1 gl section floors (work / principles / journey / kill-list)", "target": ">= 4.8 / 4.95 / 5.25 / 5.85", "v1440": "23.3 / 4.8 / 8.8 / 6.0", "v1024": "34.6 / 18.1 / 12.0 / 12.6", "met": "1024 only", "note": "1440 principles 4.8 < 4.95" },
+    { "measure": "§12.1 gl pops / CLS", "target": "<= 12 / 0", "v1440": "7 / 0.0141", "v1024": "11 / 0.0139", "met": false, "note": "pops pass; CLS fails (same sources as the desktop run)" },
+    { "measure": "§12.1 rm fps / CLS", "target": "- / 0", "v1440": "59.7 / 0", "v1024": "59.8 / 0", "met": true, "note": "the r1 reduced-motion shift (0.061 / 0.1164) is gone" },
+    { "measure": "§4.4 intro run fps", "target": ">= 29.5", "v1440": 20.8, "v1024": 31.8, "met": "1024 only", "note": "Environment: the intro's main-thread work from warm to titles-end is at most 8 ms, so 1440 is raster-bound (1.65x the pixels of 1024)" },
+    { "measure": "§4.4 intro run p95", "target": "<= 116.6 ms", "v1440": 116.7, "v1024": 66.7, "met": "1024 only", "note": "1440 is over by 0.1 ms, one frame quantum. Treated as at the bar." },
+    { "measure": "§4.4 LoAF > 50 ms, warm to titles-end", "target": "none", "v1440": "45 (max 657 ms, blocking 25)", "v1024": "25 (max 405, blocking 24)", "met": false, "note": "Environment: raster waits with at most 8 ms of work. The only bigger item in the screencasts is a 63/64 ms PerformanceObserverCallback (no script URL) exactly at intro:hold, and it is absent from the motion.js intro run, so it reads as harness/debug overhead. Probe warm-up: 15 / 16 over 50 ms, worst work 8 / 2 ms." },
+    { "measure": "§4.4 #intro repaints during the reveal", "target": "0", "v1440": 0, "v1024": 0, "met": true, "note": "Proxy: the intro:reveal repaint list holds only #document and the hero video. The dedicated trace was not re-run." },
+    { "measure": "§4.4 landing raster", "target": "<= 150 ms/s", "v1440": 371.2, "v1024": 185, "met": false, "note": "Proxy: intro:reveal (= landing) window, one frame at 1440. The hold window is 1,573 / 526 ms/s. P3-0 was 644.6. Mostly raster, so environment-amplified." },
+    { "measure": "§4.4 hand-off script", "target": "< 10 ms", "v1440": null, "v1024": null, "met": "not measured", "note": "not in motion.js standard output; not re-measured this round (MANIFEST J8)" },
+    { "measure": "§4.4 name visible on the 2nd reveal frame, no pop", "target": "2nd reveal frame, no pop", "v1440": "t 7.92 s (reveal 5.79), flagged pop: change, 10.7 % area", "v1024": "t 7.07 s (reveal 5.94), flagged pop: fill-in, 9.2 % area", "met": false, "note": "The name still lands as a one-frame cut (strips/pop-intro-90.jpg at 1440). The delay may be the title sequence by design; the pop is the miss." },
+    { "measure": "§4.4 sea never still at reveal t0", "target": "loop playing before the reveal", "v1440": "wave moves hold to reveal to titles (strip)", "v1024": "same", "met": true, "note": "visual proxy from strips/intro-landing.jpg; data-media-state is not in the J8 inputs" },
+    { "measure": "§12.1 CLS 0 in the intro run", "target": "0", "v1440": 0, "v1024": 0.0094, "met": "1440 only", "note": "App: svg[data-instrument=jack-compass] in #top shifts on the play screen (the new static hero compass)" },
+    { "measure": "§12.1 main thread after the titles: no LoAF > 50 ms in the 3 s after quiet-end while wheel-scrolling", "target": "none", "v1440": "skimmer: 15 (max work 233 ms, hydration); director: 19 (max work 242 ms); reader: not exercised (scroll starts 3.1 s after quiet-end)", "v1024": "skimmer: 24 (max work 321 ms, idle-callback task at the opening card); reader: not exercised", "met": false, "note": "App. With the intro skipped, p3:quiet-end (1.03-1.18 s) fires before page:hydrated (1.49-1.64 s), so the first fling meets hydration and warm-up tasks." },
+    { "measure": "§12.1 no LoAF at GL context creation or compile", "target": "none", "v1440": "gl run, ignite card t 61.8 s: a 934 ms frame, 865 ms blocking, 16 ms attributed script", "v1024": "not isolated", "met": "not measured", "note": "Suspected: blocking with almost no attributed script looks like synchronous GL work such as a compile or upload. SwiftShader amplifies it." },
+    { "measure": "§12.1 INP (game input)", "target": "<= 200 ms", "v1440": "272 ms (pointerdown, input delay 5 ms)", "v1024": "176 ms (keyup)", "met": "1024 only", "note": "The 5 ms input delay suggests the time is processing plus presentation; the split is not in the data. Likely mostly presentation under SwiftShader." },
+    { "measure": "§12.1 desktop lab LCP", "target": "<= 400 ms", "v1440": "772 / 624 / 280", "v1024": "748 / 904 / 748", "met": false, "note": "Mixed: a 0.53-0.65 s hydration task (React scheduler) runs at t 0.3-0.65 s in every screencast load, which is app work. Raster is environment." },
+    { "measure": "§12.1 idle 60 fps (headless idle probe)", "target": "60 fps at rest", "v1440": "journey 0.5, act-1 28, top 29.2; others 60", "v1024": "journey 20.5 (raster 143 ms/s); others 57-61", "met": false, "note": "Journey at rest is app: something keeps repainting (P3-0 was 60.3). act-1/top at about 30 with zero raster matches the sea loop's cadence (P3-0 top was 31.9), so environment." },
+    { "measure": "§12.1 real GPU row (p95 <= 20 ms, <= 2 % > 33 ms, no frame > 50 ms in card transitions / push-ins / hold to titles / the cut; HW decoder)", "target": "Aryan's laptop", "v1440": "not measured. Headless proxy (reader): card windows with frames > 50 ms: opening 96 %, seam 88 %, tintype 32 %, ignite 35 %", "v1024": "not measured. Proxy: opening 60 %, seam 38 %, tintype 11 %, ignite 15 %", "met": "not measured", "note": "These are the targets that count. The proxies rank the cards but cannot pass or fail them." },
+    { "measure": "skimmer screencast rAF fps (relative to r1)", "target": "no regression", "v1440": "9.2 (r1 9.6), p95 233.4, 86.9 % > 50 ms", "v1024": "13.1 (r1 12.8), p95 166.7, 55 % > 50 ms", "met": "1024 only", "note": "within likely run spread; 77-78 % of LoAFs over 50 ms have < 5 ms work" },
+    { "measure": "reader screencast rAF fps (relative to r1)", "target": "no regression", "v1440": "15.8 (r1 17.0), p95 150, 53.4 % > 50 ms", "v1024": "21.9 (r1 23.6), p95 100.1, 23.1 % > 50 ms", "met": false, "note": "-7 % at both widths, the same direction as every motion.js run" }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "class": "app",
+      "title": "Warm-up work runs as single idle-callback tasks of 0.1-0.7 s while the reader is scrolling",
+      "evidence": "IdleRequestCallback (chunk 3-hs4lm3bz94q.js:192, a once-guarded run-when-idle wrapper): skimmer-1440 t 7.78 s, y 2117, opening card: 708 ms of script in a 1,010 ms frame (clips #7-#9, sheet-01; it lands on 'The Crossing' act title). skimmer-1024 t 3.85 s, act-1: 320 ms; about: 155 ms. reader-1440 at the first scroll: 285 ms; journey 100 ms; films 89 ms. motion.js desktop 1440 journey 435 ms, voices 147/137 ms; native act-1 256 ms; gl voices 133 ms. Director's cut start: 96-222 ms (413abgslcjtg9.js:192) at t 3.7-6.3 s.",
+      "why": "An idle callback that ignores its deadline is a main-thread freeze. A real GPU does not shorten it."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "class": "app",
+      "title": "With the intro skipped, the quiet window ends before hydration, and the first 3 s of scrolling meet long tasks",
+      "evidence": "Skimmer and director runs: p3:quiet-end at 1.03 / 1.08 / 1.18 s, page:hydrated at 1.57 / 1.49 / 1.64 s. LoAFs over 50 ms in the 3 s after quiet-end while scrolling: 15 (max work 233 ms, React scheduler) at 1440, 24 (max work 321 ms) at 1024, 19 (max work 242 ms) in the cut. Hydration's biggest task is 528-652 ms at t 0.3-0.65 s in every load. In the intro run at 1024 it is 808 ms on the play screen (P3-0: 137 ms).",
+      "why": "The §12.1 post-titles target fails on real work, not raster."
+    },
+    {
+      "id": "F3",
+      "severity": "high",
+      "class": "app",
+      "title": "A resize-triggered full re-measure costs 100-320 ms and fires mid-scroll",
+      "evidence": "TimerHandler:setTimeout at chunk 1_2f9ddauvl4s.js:18755. The snippet shows a ResizeObserver, then a 180 ms debounce, then a re-measure. Hits: motion.js desktop act-1 318 ms (1440) / 258 ms (1024); skimmer-1440 optuna-screener 158 ms; skimmer-1024 voices 251 ms; reader about 138 / 145 ms (2erqtathnql84.js:18755); director act-1 113 ms; alt act-1 103 ms.",
+      "why": "Content size changes after load make the page re-measure everything in one long task."
+    },
+    {
+      "id": "F4",
+      "severity": "high",
+      "class": "app (raster cost; environment amplifies the magnitude)",
+      "title": "The page is about twice as expensive to rasterise as P3-0, and slower than round 1 in every run",
+      "evidence": "Native scroll is the same method as the P3-0 baseline: 8.1 fps vs 15.2, p95 433 vs 317, pops 52 vs 27 at 1440. Against r1, every motion.js run is slower: desktop -13 % / -7 %, gl -14 % / -11 %, native -21 % / -13 %, reader screencast -7 % / -7 %. Desktop-run LoAF main-thread work is 2,081 ms at 1440 (P3-0 345 ms), and busy∩jank is 4.2 % (P3-0 1.7 %).",
+      "why": "Lenis hides part of it by drawing smaller steps, but the cost per frame has grown."
+    },
+    {
+      "id": "F5",
+      "severity": "high",
+      "class": "app (relative hotspot)",
+      "title": "The opening card (act-1) is the worst transition at both widths",
+      "evidence": "motion.js desktop act-1 transition: 6.7 fps at 1440 (P3-0 26.2), 10.8 at 1024. Reader card window: 96 % of frames > 50 ms at 1440, 60 % at 1024. Skimmer: 98 % / 86 %. On screen: 18 will-change layers, 14 infinite animations, 4 masks, and the act-card-stage repainting ×18. F1 (708 ms) and F3 (318 ms) both land here. Strips: motion/1440/strips/desktop-act-1.jpg, pop-desktop-27.jpg (the subtitle lands in one step).",
+      "why": "It is the first set piece every visitor sees."
+    },
+    {
+      "id": "F6",
+      "severity": "high",
+      "class": "app (raster; environment amplifies)",
+      "title": "B54, the Map of the principles, is the slowest place in every capture",
+      "evidence": "reader-1440 clips #231-#235 (y 40131-41218, B54/B55): 3.9-4.5 fps, maxDt up to 500 ms, 0 ms work (sheet-24). reader-1024 #220-#224: 4.2-6.0 fps. skimmer-1440 #90-#95: 2.7-4.5. skimmer-1024 #66-#71: 3.1-5.5. director #182-#186: 4.7-5.5. motion.js desktop principles: 4.2 fps (1440, misses 4.95). Raster 854 ms/s, 7 will-change, and the act-4 card stage repainting ×17 under it.",
+      "why": "Pure raster: a full-width textured parchment with masked panels and footprint marks."
+    },
+    {
+      "id": "F7",
+      "severity": "medium",
+      "class": "app (raster)",
+      "title": "Layers keep repainting outside their window",
+      "evidence": "Top repainting nodes while scrolling (motion.js 1440 desktop/gl): act-card-stage in #act-3 ×100 in films and ×41 in beyond; act-card-stage in #act-4 ×41 in writing, ×17 in principles, ×3 in contact (contact 2.5 fps, raster about 1,000 ms/s); the hero video in #top ×22 in journey, ×15 in work, ×11 in trading-algos; the journey sticky column ×5-10 in top/about (raster diet item 3 unfinished); voices campSticky ×26-43 in act-4/writing (item 6 unfinished); the systems frame ×12-45 in optuna/systems/kill-list.",
+      "why": "Each of these is raster spent on something the reader cannot see."
+    },
+    {
+      "id": "F8",
+      "severity": "medium",
+      "class": "app",
+      "title": "Journey keeps repainting at rest",
+      "evidence": "Idle probe: journey 0.5 fps at 1440 (paints 4.7/s; repainting div.relative.mx-auto.w-full, a will-change-transform layer and an svg 600x180) and 20.5 fps at 1024 (raster 143 ms/s). P3-0: 60.3.",
+      "why": "The §12.1 idle target. Something in journey animates or decodes continuously while still."
+    },
+    {
+      "id": "F9",
+      "severity": "medium",
+      "class": "app",
+      "title": "Motion-library frames of 64-175 ms of script in films",
+      "evidence": "FrameRequestCallback 0-0b3v37mf8ek.js:13052 (the Motion frameloop): reader-1440 films 81 / 69 ms; reader-1024 74 / 70 ms; director 105 / 71 ms; motion.js top script in films 144 ms (1024 desktop) and 175 ms (gl). A second rAF (29bl5kt6u0_n3.js:3239) adds 64-77 ms in films in the skimmer runs.",
+      "why": "Many animations start at once as the films bill scrolls in."
+    },
+    {
+      "id": "F10",
+      "severity": "medium",
+      "class": "app",
+      "title": "CLS is still above 0",
+      "evidence": "desktop 0.006 / 0.0133, gl 0.0141 / 0.0139, native 0.0173 / 0.0149. Sources: the scrubbed sentence in #beyond (span[data-w], data-words=scrub): 0.0028 / 0.0095; scene-caption world-face film names swapping metrics (trading-algos 0.0009 / 0.0018, kill-list, beyond, act-4); writing h3s. Intro at 1024: 0.0094 from the new hero jack-compass svg on the play screen.",
+      "why": "§12.1 CLS 0. Improved from r1 but not closed."
+    },
+    {
+      "id": "F11",
+      "severity": "medium",
+      "class": "app (likely)",
+      "title": "A one-frame grey-box flash on the tintype card at 1024, default URL only",
+      "evidence": "motion/1024/strips/pop-desktop-582.jpg: at t 43.53 s, y 25367, the plate shows a lighter grey frame for one frame (change, 45.7 % area). There is no act-3 pop in the 1024 gl=force run. The MANIFEST notes the tintype card engages the GL tier by itself on the default URL.",
+      "why": "Consistent with a tier or layer switch mid-card; §12.1 says tier switches happen only at p ends."
+    },
+    {
+      "id": "F12",
+      "severity": "low",
+      "class": "app",
+      "title": "The intro name still lands as a single-frame pop",
+      "evidence": "motion/1440/strips/pop-intro-90.jpg: no name at 7.84 s, full name at 7.92 s (diff 11.7, 10.7 % area); 1024 fill-in at 7.07 s. P3-0 had the same fill-in pop at 7.02 s.",
+      "why": "§4.4 asks for no pop. At low frame rates a hard cut reads as a glitch."
+    },
+    {
+      "id": "F13",
+      "severity": "info",
+      "class": "environment",
+      "title": "Most frame-time misses are SwiftShader raster waits",
+      "evidence": "Share of LoAFs over 50 ms during the scroll phase with < 5 ms main-thread work: reader 83 % / 85 %, skimmer 77 % / 78 %, director 85 %. Intro warm to titles-end: at most 8 ms of work (motion.js), so the 45 / 25 LoAF count is raster. Probe warm-up: worst work 8 / 2 ms. Games INP 272 ms with 5 ms input delay. act-1/top idle at about 30 fps with zero raster (sea loop cadence; P3-0 top 31.9). Skimmer-1440 clip #64 (films, 750 ms frame, 0 work).",
+      "why": "These do not indicate app work. They rank hotspots only."
+    },
+    {
+      "id": "F14",
+      "severity": "info",
+      "class": "environment / tooling",
+      "title": "Measurement caveats",
+      "evidence": "A 63/64 ms PerformanceObserverCallback (no script URL) sits exactly at intro:hold in both reader screencasts and is absent from motion.js, so it is harness/debug overhead. The §4.4 hand-off, landing-raster and name-frame rows were not re-measured. Run-to-run spread was not measured, and single-section rows rest on 12-17 frames. The real-GPU row is unmeasured. What improved: the tintype card is 29.8 fps at 1440 (P3-0 16.1), desktop pops are 4 / 6, rm is 59.7 / 59.8 with CLS 0, and alt pops dropped from 21 to 5.",
+      "why": "This is context for the triage."
+    }
+  ],
+  "worst": {
+    "sections": [
+      "principles / B54 Map (every capture; reader-1440 clips #231-#235, reader-1024 #220-#224, skimmer-1440 #90-#95, skimmer-1024 #66-#71, director #182-#186)",
+      "act-1 opening card (motion.js transition 6.7 / 10.8 fps; skimmer-1440 clips #7-#9 with the 708 ms freeze; strips desktop-act-1.jpg)",
+      "contact (2.5-2.8 fps at 1440 in every Lenis run, 2.6 at 1024; few frames)",
+      "about / journey (reader-1024 clip #39 about 5.6 fps; native about 2.3-3.2 fps; journey idle 0.5 fps)",
+      "films finale B34 (reader-1440 clip #154, 3.5 fps; skimmer-1440 clip #64, 750 ms frame) plus the Motion rAF spikes in films"
+    ],
+    "transitions": [
+      "opening (act-1): worst at both widths",
+      "seam (act-2): 12.5 fps at 1440, flat vs P3-0; reader window 88 % > 50 ms",
+      "ignite (act-4): 17.1 fps at 1440 vs P3-0 29.2; gl run has a 934 ms frame (865 ms blocking) here",
+      "tintype (act-3): best (29.8 / 42), but has the one-frame flash at 1024 (pop-desktop-582.jpg)"
+    ]
+  },
+  "recommendations": [
+    "1. No long task while the page moves. Split all warm-up and deferred setup (the idle-callback work, 0.1-0.7 s today) into slices that yield within the idle deadline. Pause the warm-up ladder while the page is scrolling and while an act card is in its set piece.",
+    "2. Make the post-titles quiet window hold when the intro is skipped. quiet-end must not come before hydration finishes. Hydrate below-the-fold sections later or in smaller pieces so the first 3 s of a fling meet no task over 50 ms.",
+    "3. Stop the whole-page re-measure on content resizes. Re-measure only what changed, or only on a real viewport resize. Keep content heights stable after load so the 100-320 ms re-measure never fires mid-scroll.",
+    "4. Cut raster where the reader actually is: make the Map of the principles (B54) one static layer that moves by transform; stop card stages painting outside their window (act-3 through films and beyond, act-4 through writing, principles and contact); stop and hide the hero video once it leaves the screen; finish raster-diet items 3 (journey sticky) and 6 (voices campSticky).",
+    "5. Lighten the opening card: pause off-screen infinite animations and drop will-change from layers that are not moving, so its 18 layers and 14 loops do not all raster while it plays.",
+    "6. Journey must go quiet at rest: whatever repaints there while still (idle 0.5 / 20.5 fps) should stop when the page is not moving.",
+    "7. Films: stagger the Motion-driven entrances so no frame runs 64-175 ms of animation script.",
+    "8. Close CLS to 0: the scrubbed sentence in beyond reserves its final layout; world-face film names in scene captions swap without changing metrics; the hero compass reserves its box on the play screen.",
+    "9. GL: switch tier only at p ends (the 1024 tintype flash), and compile or upload before the ignite card, not inside it (the 934 ms frame in the gl run).",
+    "10. Let the intro name arrive with a short fade or wipe that still reads at low frame rates, not a one-frame cut.",
+    "11. Measurement: run the §12.1 real-GPU row on Aryan's laptop, which is the actual target. Re-run the §4.4 intro trace (hand-off, landing raster, name frame). Take 3 runs per width before acting on single-section rows. Keep the harness's PerformanceObserver cost out of the intro count."
+  ]
+}
