@@ -1,0 +1,14 @@
+drift: tier css @1024x768
+drift: tier gl @1024x768
+  registration css opening #1: SSIM aligned 0.9586 (raw 0.8569, full-res 0.8569; noise floor 1; luma Δ -1.12, contrast ×1.0493, shift -0.85,-0.88 scale 1.00185; aligned 0.9586, tone-matched 0.9629) PASS (p 0.4964 → 0.5036, gl -)
+  registration css seam #2: SSIM aligned 0.9534 (raw 0.8723, full-res 0.8723; noise floor 1; luma Δ -0.68, contrast ×1.0134, shift -0.07,0.28 scale 1.00222; aligned 0.9534, tone-matched 0.9543) PASS (p 0.497 → 0.503, gl -)
+  registration css tintype (sun push, extra): SSIM aligned 0.979 (raw 0.9528, full-res 0.9528; noise floor 1; luma Δ -0.03, contrast ×0.9964, shift -0.52,0.02 scale 1.00128; aligned 0.979, tone-matched 0.9676) PASS (p 0.4978 → 0.5036, gl on)
+  registration css ignite #3: SSIM aligned 0.9227 (raw 0.8989, full-res 0.8989; noise floor 1; luma Δ -2.33, contrast ×0.9866, shift -0.01,0.09 scale 1.00107; aligned 0.9227, tone-matched 0.9384) FAIL (p 0.497 → 0.503, gl -)
+  registration gl opening #1: SSIM aligned 0.9519 (raw 0.8575, full-res 0.8575; noise floor 1; luma Δ -1.05, contrast ×1.05, shift -1.1,-0.94 scale 1.00365; aligned 0.9519, tone-matched 0.956) PASS (p 0.4964 → 0.5036, gl on)
+  registration gl seam #2: SSIM aligned 0.9534 (raw 0.8723, full-res 0.8723; noise floor 1; luma Δ -0.52, contrast ×1.0157, shift 0.05,0.27 scale 1.00192; aligned 0.9534, tone-matched 0.9541) PASS (p 0.497 → 0.503, gl on)
+  registration gl tintype (sun push, extra): SSIM aligned 0.9782 (raw 0.9528, full-res 0.9528; noise floor 1; luma Δ -0.03, contrast ×0.9964, shift -0.42,0.02 scale 1.0011; aligned 0.9782, tone-matched 0.9668) PASS (p 0.4978 → 0.5036, gl on)
+  registration gl ignite #3: SSIM aligned 0.923 (raw 0.8999, full-res 0.8999; noise floor 1; luma Δ -2.24, contrast ×0.9889, shift -0.01,0.08 scale 1.00104; aligned 0.923, tone-matched 0.9385) FAIL (p 0.497 → 0.503, gl on)
+  FIG drift css: max 1.08 px (DOM 0.68 px) PASS
+  FIG drift gl: max 1.09 px (DOM 0.69 px) PASS
+  tiers (gl vs css, seam): p0.5 ssim 0.9983 shift 0,0 scale 1 · p0.54 ssim 0.9985 shift 0,0 scale 1 · p0.58 ssim 0.9965 shift 0,0 scale 1.00001 · p0.62 ssim 0.9957 shift 0,0 scale 1.00001 · p0.66 ssim 0.9975 shift 0,0 scale 1.00001
+drift: FAIL → /home/user/Personal-blog-/docs/build/motion-strips/p3-r2/drift/drift-1024.json

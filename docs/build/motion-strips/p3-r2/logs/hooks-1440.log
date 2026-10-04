@@ -1,0 +1,9 @@
+  1440 css opening p0.05: damped 0.0506 (raw 0.0506) tier css gl -
+  1440 css seam p0.05: damped 0.0495 (raw 0.0495) tier css gl -
+  1440 css tintype p0.05: damped 0.0506 (raw 0.0506) tier gl gl on
+  1440 css ignite p0.05: damped 0.0505 (raw 0.0505) tier css gl -
+  1440 gl opening p0.05: damped 0.0506 (raw 0.0506) tier gl gl on
+  1440 gl seam p0.05: damped 0.0495 (raw 0.0495) tier gl gl on
+  1440 gl tintype p0.05: damped 0.0506 (raw 0.0506) tier gl gl on
+  1440 gl ignite p0.05: damped 0.0505 (raw 0.0505) tier gl gl on
+hooks: 8 frame(s) → /home/user/Personal-blog-/docs/build/motion-strips/p3-r2/hooks

@@ -1,0 +1,307 @@
+{
+ "vw": {
+  "width": 1440,
+  "height": 900
+ },
+ "date": "2026-10-04T20:54:01.413Z",
+ "compass": {
+  "instruments": [
+   {
+    "section": "top",
+    "needle": null,
+    "inToy": false
+   },
+   {
+    "section": "about",
+    "needle": "275.0",
+    "inToy": false
+   },
+   {
+    "section": "journey",
+    "needle": "24.3",
+    "inToy": false
+   }
+  ],
+  "probeSelectorPicks": {
+   "section": "top",
+   "needle": null,
+   "inToy": false
+  },
+  "toy": {
+   "rest": {
+    "section": "about",
+    "needle": "275.0"
+   },
+   "afterClick": {
+    "section": "about",
+    "needle": "45.3"
+   },
+   "afterRight": {
+    "section": "about",
+    "needle": "225.0"
+   }
+  }
+ },
+ "hunt": {
+  "ssrMarkup": "|Egg hunt|–/12|",
+  "hydrated": {
+   "full": "Egg hunt0/12",
+   "word": "Egg hunt",
+   "count": "0/12"
+  }
+ },
+ "letterbox": {
+  "geo": {
+   "top": 22511.203125,
+   "h": 548.953125,
+   "vh": 900
+  },
+  "lenis": true,
+  "steps": [
+   {
+    "y": 21071,
+    "frameTopPct": 160,
+    "frameCentrePct": 191,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 21161,
+    "frameTopPct": 150,
+    "frameCentrePct": 181,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 21251,
+    "frameTopPct": 140,
+    "frameCentrePct": 171,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 21341,
+    "frameTopPct": 130,
+    "frameCentrePct": 161,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 21431,
+    "frameTopPct": 120,
+    "frameCentrePct": 151,
+    "attr": true,
+    "barScale": 0.1244,
+    "barExists": true
+   },
+   {
+    "y": 21521,
+    "frameTopPct": 110,
+    "frameCentrePct": 141,
+    "attr": true,
+    "barScale": 0.3744,
+    "barExists": true
+   },
+   {
+    "y": 21611,
+    "frameTopPct": 100,
+    "frameCentrePct": 131,
+    "attr": true,
+    "barScale": 0.6244,
+    "barExists": true
+   },
+   {
+    "y": 21701,
+    "frameTopPct": 90,
+    "frameCentrePct": 121,
+    "attr": true,
+    "barScale": 0.8744,
+    "barExists": true
+   },
+   {
+    "y": 21791,
+    "frameTopPct": 80,
+    "frameCentrePct": 111,
+    "attr": true,
+    "barScale": 1,
+    "barExists": true
+   },
+   {
+    "y": 21881,
+    "frameTopPct": 70,
+    "frameCentrePct": 101,
+    "attr": true,
+    "barScale": 1,
+    "barExists": true
+   },
+   {
+    "y": 21971,
+    "frameTopPct": 60,
+    "frameCentrePct": 91,
+    "attr": true,
+    "barScale": 0.963,
+    "barExists": true
+   },
+   {
+    "y": 22061,
+    "frameTopPct": 50,
+    "frameCentrePct": 81,
+    "attr": true,
+    "barScale": 0.713,
+    "barExists": true
+   },
+   {
+    "y": 22151,
+    "frameTopPct": 40,
+    "frameCentrePct": 71,
+    "attr": true,
+    "barScale": 0.463,
+    "barExists": true
+   },
+   {
+    "y": 22241,
+    "frameTopPct": 30,
+    "frameCentrePct": 61,
+    "attr": true,
+    "barScale": 0.213,
+    "barExists": true
+   },
+   {
+    "y": 22331,
+    "frameTopPct": 20,
+    "frameCentrePct": 51,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22441,
+    "frameTopPct": 10,
+    "frameCentrePct": 41,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22511,
+    "frameTopPct": 2,
+    "frameCentrePct": 33,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22601,
+    "frameTopPct": -8,
+    "frameCentrePct": 23,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22691,
+    "frameTopPct": -18,
+    "frameCentrePct": 13,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22781,
+    "frameTopPct": -28,
+    "frameCentrePct": 3,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22871,
+    "frameTopPct": -38,
+    "frameCentrePct": -7,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 22961,
+    "frameTopPct": -48,
+    "frameCentrePct": -17,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 23051,
+    "frameTopPct": -58,
+    "frameCentrePct": -27,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   },
+   {
+    "y": 23141,
+    "frameTopPct": -68,
+    "frameCentrePct": -37,
+    "attr": false,
+    "barScale": 0,
+    "barExists": true
+   }
+  ]
+ },
+ "spotlight": {
+  "owners": [
+   {
+    "y": 0,
+    "owner": "B02",
+    "hold": null,
+    "pending": []
+   },
+   {
+    "y": 900,
+    "owner": "B03",
+    "hold": null,
+    "pending": []
+   },
+   {
+    "y": 1800,
+    "owner": null,
+    "hold": null,
+    "pending": []
+   },
+   {
+    "y": 2250,
+    "owner": null,
+    "hold": null,
+    "pending": []
+   },
+   {
+    "y": 2700,
+    "owner": null,
+    "hold": null,
+    "pending": []
+   },
+   {
+    "y": 3600,
+    "owner": null,
+    "hold": "B08-compass",
+    "pending": [
+     "B08-invite"
+    ]
+   }
+  ],
+  "b02": {
+   "id": "B02",
+   "weight": 2,
+   "own": "top 0%, bottom 0%",
+   "how": "live",
+   "gated": false,
+   "a": 0,
+   "b": 900,
+   "placed": true
+  }
+ }
+}

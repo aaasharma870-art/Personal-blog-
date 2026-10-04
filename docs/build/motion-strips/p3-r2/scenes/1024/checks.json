@@ -1,0 +1,52 @@
+{
+ "consoleErrors": [],
+ "overflow": [],
+ "h1": {
+  "1024": 1,
+  "1024-alt": 1,
+  "1024-rm": 1
+ },
+ "hydration": [],
+ "cardFit": {
+  "default": [
+   {
+    "id": "act-2",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   },
+   {
+    "id": "act-3",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   },
+   {
+    "id": "act-4",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   }
+  ],
+  "alt": [
+   {
+    "id": "act-2",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   },
+   {
+    "id": "act-3",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   },
+   {
+    "id": "act-4",
+    "h": 768,
+    "vh": 768,
+    "fits": true
+   }
+  ]
+ }
+}
