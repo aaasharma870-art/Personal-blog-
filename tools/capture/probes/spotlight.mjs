@@ -15,6 +15,8 @@
 //   queue    a second request waits for the first one's hold, then plays
 //   once     asking again for an id that played answers "skip"
 //   release  release() ends a hold early and the next request plays at once
+//   fullRun  a request past the 1.2 s cap holds for its whole durationMs only when it asks `fullRun`
+//            (B58's scene); without it the hold ends at 1.2 s
 //   lend     C1: a live star with no window, in the band of a still screen, is lent it (≤ 600 ms,
 //            logged own · how live · why still); a time star's request takes it back at once
 //            (logged free before the grant); a scroll of > 2 px releases a new lend
@@ -192,6 +194,24 @@ export default async function probe(page, ctx) {
       const t0 = now();
       const a = await S.request("probe-after", { weight: 1, durationMs: 100 });
       res.release = { pass: a === "play" && now() - t0 < 100, answer: a, ms: Math.round(now() - t0) };
+      await sleep(150);
+    }
+    // fullRun: a hold past the 1.2 s cap lasts its durationMs (B58's whole scene); without it, the cap
+    {
+      const a = await S.request("probe-capped", { weight: 1, durationMs: 1800 });
+      await sleep(1450);
+      const cappedAt1450 = S.state().hold;
+      S.release("probe-capped");
+      await sleep(40);
+      const b = await S.request("probe-run", { weight: 1, durationMs: 1800, fullRun: true });
+      await sleep(1450);
+      const heldAt1450 = S.state().hold;
+      await sleep(450);
+      const heldAt1900 = S.state().hold;
+      res.fullRun = {
+        pass: a === "play" && cappedAt1450 == null && b === "play" && heldAt1450 === "probe-run" && heldAt1900 == null,
+        answers: [a, b], cappedAt1450, heldAt1450, heldAt1900,
+      };
       await sleep(150);
     }
     // lend (C1): a live star with no window, in the band of a still screen

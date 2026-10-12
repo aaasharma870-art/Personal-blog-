@@ -1413,10 +1413,13 @@ export function Stage() {
           // the text blocks (rack focus): marked ones, else the column's children
           let blocks = split.querySelectorAll<HTMLElement>("[data-stage-block]");
           if (!blocks.length) blocks = split.querySelectorAll<HTMLElement>(".stage-split-text > *");
-          blocks.forEach((blk, i, all) => {
+          // (a block with no layout box, e.g. the phone copy of a FIG that is
+          // display:none here, has no edge: its zero rect would read as scrollY)
+          const laid = [...blocks].filter((blk) => blk.getClientRects().length > 0);
+          laid.forEach((blk, i) => {
             const br = blk.getBoundingClientRect();
             edges.push(br.top + sy);
-            if (i === all.length - 1) edges.push(br.bottom + sy);
+            if (i === laid.length - 1) edges.push(br.bottom + sy);
           });
           edges.sort((p, q) => p - q);
           nextHosts.set(k, host);

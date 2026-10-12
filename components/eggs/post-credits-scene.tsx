@@ -57,14 +57,15 @@ export default function PostCreditsScene() {
   useEffect(() => {
     let live = true;
     // P3-11 r3 (F1 handoff: B58 was granted 1.2 s of a 3.6–5.5 s scene):
-    // the hold covers the longest run (the broom, 3.6 s, after the
-    // instruments) and is released when the scene's animations end; a cut
-    // shows the still end state at once (onCut)
+    // a `fullRun` hold covers the longest run (the broom, 3.6 s, after the
+    // instruments; the arbiter would cap any other hold at 1.2 s) and is
+    // released when the scene's animations end; a cut shows the still end
+    // state at once (onCut)
     const runMs = (extended ? INSTRUMENTS_MS : 0) + 3600;
     const onCut = () => {
       if (live) setMode("still");
     };
-    void spotlight.request("B58", { weight: 3, durationMs: runMs, onCut }).then((a) => {
+    void spotlight.request("B58", { weight: 3, durationMs: runMs, fullRun: true, onCut }).then((a) => {
       if (!live) return;
       setMode(a === "play" && !motionOffNow() ? "play" : "still");
     });

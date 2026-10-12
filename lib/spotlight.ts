@@ -8,7 +8,8 @@
    performs. A SCROLL star performs while the reading position lies inside
    its PERFORMANCE WINDOW (below) and the page moves — or always while
    inside it, if it is `live` (it animates on its own: a loop, a timer). A
-   TIME star performs while its grant is held (≤ 1.2 s, or until `release`).
+   TIME star performs while its grant is held (≤ 1.2 s, or until `release`;
+   a `fullRun` request holds for its whole `durationMs`, ≤ 6 s).
      · A time star is granted only when no star performs AND no ungated
        scroll star's window begins within its hold at the current speed.
      · A GATED scroll star (`onOwn`, e.g. a scrub sentence) yields to time
@@ -91,6 +92,11 @@ export type SpotlightRequest = {
   needsIdle?: boolean;
   maxWait?: number;
   durationMs?: number;
+  /** The host owns the screen for its whole run (a scene longer than the
+   *  1.2 s cap, e.g. B58's 3.6–5.5 s): the hold lasts `durationMs`, at most
+   *  6 s, and the host `release`s it when the run ends. Default: capped at
+   *  1.2 s. */
+  fullRun?: boolean;
   /** THE CUT: an ungated scroll star took the screen during the hold (a
    *  fling): show the end state now. The hold has already ended. */
   onCut?: () => void;

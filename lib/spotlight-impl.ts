@@ -18,7 +18,8 @@
      "play" when no star performs and no scroll star's window begins
      within the hold at the current speed (the LOOKAHEAD); the queue grants
      the heaviest waiting star first, then the earliest. A granted star
-     holds the spotlight for its duration (≤ 1.2 s, or until `release`).
+     holds the spotlight for its duration (≤ 1.2 s, or until `release`; a
+     `fullRun` request, B58's whole scene, holds up to 6 s).
      After `maxWait` the answer is "skip": the host shows its end state.
    - A scroll star PERFORMS while it owns and the page moves; a `live` one
      whenever it owns. An ungated scrub owner that has been still for
@@ -74,6 +75,9 @@ import { DEFAULT_WINDOW, LIVE_STARS, SCROLL_WINDOWS, parseWindow, type WindowEdg
 
 const MAX_WAIT = 1500;
 const MAX_HOLD = 1200;
+/** A `fullRun` request (the host owns the screen for its whole run, then
+ *  `release`s) holds for its durationMs, at most this long. */
+const MAX_RUN = 6000;
 /** Reading pace (spec §3.8 "velocity < 300 px/s for 600 ms"), averaged. */
 const IDLE = { ms: 600, below: 300 };
 const SPEED_MS = 500;
@@ -135,6 +139,8 @@ type Pending = {
   weight: BeatWeight;
   needsIdle: boolean;
   durationMs: number;
+  /** The hold may run to MAX_RUN (not MAX_HOLD). */
+  fullRun: boolean;
   seq: number;
   t0: number;
   idle: boolean;
@@ -544,12 +550,18 @@ function settle(p: Pending, a: SpotlightAnswer, why: string, remember = true): v
   p.resolve(a);
 }
 
+/** How long a request's grant holds the spotlight (ms): its durationMs,
+ *  capped at MAX_HOLD, or at MAX_RUN for a `fullRun` request. */
+function holdMs(p: Pending): number {
+  return Math.min(Math.max(p.durationMs, 0), p.fullRun ? MAX_RUN : MAX_HOLD);
+}
+
 /** A scroll star whose window would begin within `ms` at the current speed
  *  (in the scroll's direction), other than the owner. */
 function imminent(ms: number): ScrollStar | null {
   const v = speed();
   if (v <= 0) return null;
-  const reach = (v * Math.min(ms, MAX_HOLD)) / 1000 + LOOK_PAD * viewportH;
+  const reach = (v * ms) / 1000 + LOOK_PAD * viewportH;
   const dir = direction();
   for (const s of stars.values()) {
     // a gated star yields to a hold: it never stops a grant
@@ -591,7 +603,7 @@ function tryGrant(): void {
     recheck(IDLE.ms - (performance.now() - lastBusyT));
     return;
   }
-  const next = imminent(p.durationMs);
+  const next = imminent(holdMs(p));
   if (next) {
     waitNote(p, `${next.id} begins within the hold`);
     recheck(120);
@@ -612,7 +624,7 @@ function tryGrant(): void {
     id: p.id,
     weight: p.weight,
     t0: performance.now(),
-    timer: window.setTimeout(() => endHold("held"), Math.min(Math.max(p.durationMs, 0), MAX_HOLD)),
+    timer: window.setTimeout(() => endHold("held"), holdMs(p)),
     y: lastY,
     onCut: p.onCut,
   };
@@ -724,6 +736,7 @@ export function request(id: string, o: SpotlightRequest): Promise<SpotlightAnswe
     weight: o.weight,
     needsIdle: Boolean(o.needsIdle),
     durationMs: o.durationMs ?? MAX_HOLD,
+    fullRun: Boolean(o.fullRun),
     seq: ++seq,
     t0: performance.now(),
     idle: false,

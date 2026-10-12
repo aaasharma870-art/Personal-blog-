@@ -34,9 +34,10 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
    the other toggle (the curve morphs naive ↔ realistic, the scan line runs,
    the index readout follows), then again every FLIP_MS. It stops the moment
    the spotlight takes the screen back (any scroll), and for good once the
-   reader presses the toggle or a key in the demo, so the reader's own choice
-   is never overridden. A pointer over the demo holds it still (the hover
-   readout). Synthetic and labelled as before: nothing here is a result.
+   reader presses the toggle, presses a key or moves keyboard focus into the
+   demo, so the reader's own choice is never overridden. A pointer over the
+   demo holds it still (the hover readout). Synthetic and labelled as before:
+   nothing here is a result.
    ========================================================================== */
 
 type Line = { x1: string; y1: string; x2: string; y2: string; cls: string; sw: string; dash: string | null };
@@ -60,8 +61,11 @@ function useThesisPlay(host: RefObject<HTMLDivElement | null>, ready: boolean) {
     const plot = h?.querySelector('svg[role="img"]');
     if (!h || !plot || !ready || touched) return;
     let timer = 0;
+    // never under the reader's hand: a pointer over the demo, or keyboard focus
+    // inside it (a focused toggle must not change by itself)
     const flip = () => {
-      if (!h.matches(":hover")) h.querySelector<HTMLButtonElement>('button[aria-pressed="false"]')?.click();
+      if (h.matches(":hover") || h.contains(document.activeElement)) return;
+      h.querySelector<HTMLButtonElement>('button[aria-pressed="false"]')?.click();
     };
     // (the beat map's marker, data-beat="B25-demo", is the plot's server markup)
     const off = spotlight.registerScrollStar("B25-demo", plot, 1, {
@@ -73,15 +77,18 @@ function useThesisPlay(host: RefObject<HTMLDivElement | null>, ready: boolean) {
         timer = window.setInterval(flip, FLIP_MS);
       },
     });
-    // the reader's own press (or a key in the demo) ends the play for good
+    // the reader's own press, a key in the demo, or focus arriving in it (a
+    // Tab onto a toggle) ends the play for good
     const stop = () => setTouched(true);
     h.addEventListener("pointerdown", stop);
     h.addEventListener("keydown", stop);
+    h.addEventListener("focusin", stop);
     return () => {
       window.clearInterval(timer);
       off();
       h.removeEventListener("pointerdown", stop);
       h.removeEventListener("keydown", stop);
+      h.removeEventListener("focusin", stop);
     };
   }, [host, ready, touched]);
 }

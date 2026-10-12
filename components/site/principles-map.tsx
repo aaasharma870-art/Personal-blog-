@@ -538,8 +538,8 @@ function MapRoom({
       className={cn(
         "relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]",
         // the walk's host (B54, a scroll star): its box is the star's span, ≥ 300 px at 1440 too
-        // (P3-11 r3: F5's shorter rooms left it 287 px)
-        index === WALK_BEAT_ROOM && "min-h-[19rem]",
+        // (P3-11 r3: F5's shorter rooms left it 287 px). Desktop only: phones keep today's rooms
+        index === WALK_BEAT_ROOM && "lg:min-h-[19rem]",
       )}
       data-room={index + 1}
       data-active={active ? "" : undefined}
@@ -547,7 +547,7 @@ function MapRoom({
       {/* the room (first in paint order: the walk's own layer, after it,
           then never forces the room's ink and words into a layer of
           their own by overlapping them) */}
-      <div className="relative col-start-2 row-start-1 px-3 py-7 sm:px-8 sm:py-8">
+      <div className="relative col-start-2 row-start-1 px-3 py-8 sm:px-8 sm:py-10 lg:py-8">
         <RoomWalls seed={index} className="stroke-(--world-line) opacity-85" />
         <RoomWalls
           seed={index}

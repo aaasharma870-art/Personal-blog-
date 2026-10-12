@@ -252,10 +252,20 @@ function ctxJob(): boolean {
   loseExt = t.gl.getExtension("WEBGL_lose_context");
   // P3-11 r3 (F6, J8: the first engage re-allocated the drawing buffer
   // inside the engage frame): size the buffer ONCE, here, in this idle
-  // slice — every card frame is one viewport — and afterwards only the
-  // viewport (draw) changes; size() re-allocates on a real resize only
-  const [bw, bh] = bufferFor(window.innerWidth, window.innerHeight);
-  t.size(bw, bh);
+  // slice, from the host that will own first (the visible one nearest the
+  // viewport centre, else any). A card frame is the 2.39:1 letterbox, not
+  // the viewport, so the window is only the fallback (a host with no box);
+  // size() then re-allocates on a real resize only
+  let first: Host | null = null;
+  for (const h of hosts) {
+    if (!first || (h.visible && !first.visible) || (h.visible === first.visible && h.dist < first.dist)) first = h;
+  }
+  const fr = first?.el.getBoundingClientRect();
+  if (first && fr && fr.width >= 1 && fr.height >= 1) size(first);
+  else {
+    const [bw, bh] = bufferFor(window.innerWidth, window.innerHeight);
+    t.size(bw, bh);
+  }
   log("context");
   setContextTier("gl");
   return true;
@@ -553,9 +563,10 @@ function bufferFor(wCss: number, hCss: number): [number, number] {
   return [Math.round(w * k), Math.round(ht * k)];
 }
 
-/** The owner's buffer: allocated at context creation (ctxJob); changed only
- *  when the host's needs differ by more than 2 px (a resize, a frame that
- *  is not one viewport), never re-allocated for an equal box. */
+/** The owner's buffer: allocated at context creation (ctxJob, from the
+ *  first owner's box); changed only when the host's needs differ by more
+ *  than 2 px (a resize, a host of another size), never re-allocated for an
+ *  equal box. */
 function size(h: Host): void {
   if (!tgl) return;
   const r = h.el.getBoundingClientRect();
