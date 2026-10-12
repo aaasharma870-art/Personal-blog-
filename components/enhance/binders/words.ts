@@ -25,7 +25,8 @@
    - collapse  (components/primitives/collapse.tsx): every toggle asks for a
                scroll refresh (Lenis + ScrollTrigger re-measure the page).
    A time star's spotlight hold ends when its effect visibly ends
-   (spotlight.release), never later.
+   (spotlight.release), never later; a cut (a fling into a scroll star's
+   window during the hold) ends the effect on its rest state at once.
 
    It first waits for the page to finish hydrating (`page:hydrated`, ≤ 3 s),
    so it never touches markup a Suspense boundary has yet to hydrate. A title
@@ -138,7 +139,13 @@ class TimeStar implements Item {
       if (this.state !== "asking") return;
       if (!ok) return this.settle("static", "no frames");
       void spotlight
-        .request(this.id, { weight: weightOf(this.el, fly ? 2 : 1), needsIdle: fly || undefined, durationMs: this.hold() })
+        .request(this.id, {
+          weight: weightOf(this.el, fly ? 2 : 1),
+          needsIdle: fly || undefined,
+          durationMs: this.hold(),
+          // a fling into a scroll star's window: the end state now (the cut)
+          onCut: () => this.run?.end(),
+        })
         .then((answer) => {
           if (this.state !== "asking") return;
           this.granted = answer === "play";

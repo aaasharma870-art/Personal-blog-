@@ -216,7 +216,10 @@ export function SeamFrame({
       aria-hidden="true"
       data-frame="seam"
       className="absolute inset-0 overflow-hidden"
-      style={live ? { clipPath: open } : undefined}
+      // pin mode (P3-11 r3): no inset(8 %) opening — its deep margins were
+      // more black round the storm as the card rose, and a clip-path scrub
+      // repaints the whole frame each frame
+      style={live && !pin ? { clipPath: open } : undefined}
     >
       {/* outgoing: the storm (mounted hidden while static, so it has
           decoded before the card goes live) */}

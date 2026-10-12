@@ -14,11 +14,12 @@
      rdr2    DEFAULT poster press    scale 1.02 → 1, a pre-blurred ink duplicate .6 → 0,
                                      the ink fading up over 240 ms                            360 ms
              ALT     typewriter      per-character steps, 28 ms/char (≤ 800 ms), key clicks
-     hp      DEFAULT ink nib         a wipe along the line, a nib riding the edge, a wet-ink
-                                     sheen duplicate that dries                               900 ms
+     hp      DEFAULT ink nib         a wipe along the line word by word, a nib riding the edge,
+                                     a wet-ink sheen duplicate that dries (inside the hold)  900 ms
              ALT     ink bleed       letters bleed in from the centre, a soft ink duplicate     900 ms
-             both: a faint underdrawing of the whole title (.38) until the ink has written it,
-             so a frame caught mid-write still reads every word (P3-11 r1)
+     every wipe (pirates, idiots DEFAULT, hp): a faint underdrawing of the whole title until
+     the front has passed, so a frame caught mid-wipe still reads every word (P3-11 r1 for hp,
+     r3 for all: panel J2 "HARRY P_TTER")
    ========================================================================== */
 
 import { sound } from "@/lib/audio";
@@ -248,6 +249,17 @@ function overlay(fx: HTMLElement, p: Parts, b: Box, style: Record<string, string
   return wrap;
 }
 
+/** The UNDERDRAWING (P3-11 r1 for HP; r3 every wipe, panel J2 "HARRY
+ *  P_TTER", "quantitative syst|"): a faint copy of the whole title under
+ *  the ink until the front has passed, so a frame caught mid-wipe still
+ *  reads every word (over the revealed letters it is the same ink, so only
+ *  the unwritten part shows it). It is gone by `hold` of the arrival. */
+function underdraw(run: Run, fx: HTMLElement | null, p: Parts, b: Box, ms: number, o = 0.42, hold = 0.78): void {
+  if (!fx) return;
+  const guide = overlay(fx, p, b, { opacity: "0", willChange: "opacity" });
+  run.animate(guide, [{ opacity: o }, { opacity: o, offset: hold }, { opacity: 0 }], { duration: ms, easing: "linear", fill: "both" });
+}
+
 /** Letters arriving from the centre outward (per-character opacity). */
 function radial(run: Run, p: Parts, b: Box, o: { charMs: number; spread: number }): void {
   const split = splitChars(p.i);
@@ -348,6 +360,7 @@ function pirates(run: Run, p: Parts, b: Box, v: Variant): void {
   }
   run.style(p.root, { transformOrigin: `${b.x + b.L}px ${b.y + b.h * 0.6}px` });
   run.animate(p.root, [{ transform: "scale(1.04)" }, { transform: "none" }], { duration: TITLE_MS.pirates, easing: EASE_OUT, fill: "both" });
+  underdraw(run, fx, p, b, TITLE_MS.pirates, 0.42, 0.9);
   const track = smooth(EASE_CLIP);
   const T = wipe(run, p, b, "ltr", TITLE_MS.pirates, track);
   if (fx) rider(run, fx, b, T, "ltr", TITLE_MS.pirates, track, { w: 0.55 * b.em, h: b.h + 0.5 * b.em, top: b.y - 0.25 * b.em, bg: SCORCH_EDGE, anchor: 0.72 });
@@ -369,6 +382,7 @@ function idiots(run: Run, p: Parts, b: Box, v: Variant, seed: () => number): voi
     return;
   }
   const track = strokeTrack(stops);
+  underdraw(run, fx, p, b, ms, 0.42, 0.9);
   const T = wipe(run, p, b, "ltr", ms, track);
   if (fx) {
     rider(run, fx, b, T, "ltr", ms, track, { w: 0.5 * b.em, h: b.h + 0.4 * b.em, top: b.y - 0.2 * b.em, bg: CHALK_EDGE, anchor: 0.75 });
@@ -407,16 +421,12 @@ function rdr2(run: Run, p: Parts, b: Box, v: Variant, seed: () => number): void 
 
 function hp(run: Run, p: Parts, b: Box, v: Variant): void {
   const ms = TITLE_MS.hp;
+  // the word stops are read before anything else is written (one layout)
+  const stops = v === "alt" ? null : wordStops(p, b, travelOf(b));
   const fx = openFx(run, p.fx);
-  // the UNDERDRAWING (P3-11 r1, strangers D38: "PHILOSOPH…" caught mid-write):
-  // the whole title stays readable while the nib writes — a faint copy of
-  // the words lies under the ink and fades as the line is finished (over
-  // the revealed letters it is the same ink, so only the unwritten part
-  // shows it)
-  if (fx) {
-    const guide = overlay(fx, p, b, { opacity: "0", willChange: "opacity" });
-    run.animate(guide, [{ opacity: 0.38 }, { opacity: 0.38, offset: 0.78 }, { opacity: 0 }], { duration: ms, easing: "linear", fill: "both" });
-  }
+  // the UNDERDRAWING (P3-11 r1, strangers D38: "PHILOSOPH…" caught mid-write;
+  // r3 a touch stronger, panel J2 "HARRY P_TTER" with the nib on the O)
+  underdraw(run, fx, p, b, ms, 0.46);
   if (v === "alt") {
     run.style(p.root, { transformOrigin: `${b.cx}px ${b.cy}px` });
     radial(run, p, b, { charMs: 300, spread: 520 });
@@ -430,7 +440,9 @@ function hp(run: Run, p: Parts, b: Box, v: Variant): void {
     }
     return;
   }
-  const track = smooth(EASE_DRAW);
+  // stroke by stroke (P3-11 r3, panel J2): the nib writes a word, lifts
+  // between words and rests there, so a held frame never ends mid-word
+  const track = stops ? strokeTrack(stops) : smooth(EASE_DRAW);
   const T = wipe(run, p, b, "ltr", ms, track);
   if (!fx) return;
   // the wet-ink sheen: a gold copy revealed by the same edge, then drying
@@ -448,7 +460,8 @@ function hp(run: Run, p: Parts, b: Box, v: Variant): void {
     run.animate(so, framesOf(track, (f) => `translateX(${(-T * (1 - f)).toFixed(2)}px)`), o);
     run.animate(copy, framesOf(track, (f) => `translateX(${(T * (1 - f)).toFixed(2)}px)`), o);
   }
-  run.animate(sheen, [{ opacity: 0.7 }, { opacity: 0.55, offset: 0.7 }, { opacity: 0 }], { duration: ms + 400, easing: "linear", fill: "both" });
+  // dried inside the spotlight's hold (≤ 1.2 s: TITLE_VISIBLE_MS.hp)
+  run.animate(sheen, [{ opacity: 0.7 }, { opacity: 0.55, offset: 0.7 }, { opacity: 0 }], { duration: TITLE_VISIBLE_MS.hp, easing: "linear", fill: "both" });
   // the nib, its tip on the last line's baseline, riding the edge
   const nh = 1.05 * b.em;
   const nw = 0.42 * b.em;

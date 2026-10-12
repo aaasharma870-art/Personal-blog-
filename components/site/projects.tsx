@@ -1,6 +1,6 @@
 import { GauntletTabs } from "@/components/site/gauntlet-tabs";
 import { FilmQuote } from "@/components/site/film-quote";
-import { ChalkUnderline } from "@/components/site/idiots-chalk";
+import { ChalkDrone, ChalkUnderline } from "@/components/site/idiots-chalk";
 import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -81,6 +81,17 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
             pieceKey="work.head"
             captionKey="cap.work.head"
             className="mb-tier-block"
+            liveStar="B16-pen"
+            registered={
+              // ≥ 1024: Rancho's homemade drone, chalked on the ICE board behind
+              // the pen (both pen plates keep their board in the top band of
+              // the 21:9 crop): the pen alone read "an heirloom pen" to the
+              // blind judges (P3-11 r2 A24 / D24 .50–.70). Already drawn: the
+              // band's own settle is the entrance (one performer).
+              <div aria-hidden="true" className="pointer-events-none absolute hidden lg:block" style={{ left: "38%", top: "1.5%", width: "8.5%" }}>
+                <ChalkDrone still className="w-full" />
+              </div>
+            }
           />
         ) : null
       }

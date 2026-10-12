@@ -13,7 +13,9 @@
 //              residue (no data-words-state, its fx layer hidden).
 //   titles     no title is left armed; titles played through the spotlight, one star at a time
 //   scrub      the first sentence: dim (~.28) with its top at 95% of the viewport, every word at 1
-//              with its bottom at 50%, dim again when scrolled back (reversible)
+//              with its bottom at 50%, and it STAYS lit when scrolled back (r1 F1: complete once its
+//              window is passed, never re-dims); the second sentence, parked dim at 95%, completes
+//              once the page has been still for 400 ms (never unreadable when the reader stops)
 //   fly        a fly-through plays once its zone is half in view and the reader is idle: the slow
 //              walk below lingers (≤ 5 s, no scrolling) the first time each zone is mounted and
 //              half in view. Expected zones: --fly=B12,B45, else the lib/page.ts "fly-through"
@@ -186,8 +188,24 @@ export default async function probe(page, ctx) {
     await raf();
     await new Promise((r) => setTimeout(r, 150));
     const back = op();
-    const pass = dim[0] < 0.35 && lit.every((o) => o > 0.99) && back[0] < 0.35;
-    return { pass, dimFirst: dim[0], litMin: Math.min(...lit), backFirst: back[0], words: words.length };
+    // the reader stops on a dim sentence: it completes within 400 ms + its ≤ 400 ms fade
+    let still = null;
+    const s2 = document.querySelectorAll('[data-words="scrub"]')[1];
+    if (s2) {
+      const w2 = [...s2.querySelectorAll("[data-w]")];
+      const op2 = () => w2.map((w) => Number(getComputedStyle(w).opacity));
+      window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 400));
+      window.scrollTo(0, s2.getBoundingClientRect().top + scrollY - innerHeight * 0.95);
+      await raf();
+      await new Promise((r) => setTimeout(r, 120));
+      const parked = op2();
+      await new Promise((r) => setTimeout(r, 1100));
+      const after = op2();
+      still = { parkedFirst: parked[0], afterMin: Math.min(...after), pass: parked[0] < 0.35 && after.every((o) => o > 0.99) };
+    }
+    const pass = dim[0] < 0.35 && lit.every((o) => o > 0.99) && back.every((o) => o > 0.99) && (still?.pass ?? true);
+    return { pass, dimFirst: dim[0], litMin: Math.min(...lit), backMin: Math.min(...back), still, words: words.length };
   });
 
   // the fly zones to expect (client-mounted on the home page: not in the server markup)

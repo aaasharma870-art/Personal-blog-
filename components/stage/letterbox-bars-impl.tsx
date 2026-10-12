@@ -37,9 +37,10 @@ import "./letterbox.css";
                            bars square it off and the iris lets go.
    Transform / opacity only, written once per ScrollTrigger update.
 
-   While the bars are closed, html[data-letterbox] sets scroll-padding to
-   the bars (stage.css; Lenis's scrollTo reads it), and a focusin on an
-   element under a bar opens them until focus leaves (WCAG 2.4.11).
+   While the bars are closed, the bars' root carries data-state="closed"
+   (P3-11 r3, C3 / rule 33: never an attribute on <html>; the cinema probe
+   reads it there), and a focusin on an element under a bar opens them
+   until focus leaves (WCAG 2.4.11).
    Emits `letterbox` { state: "close" | "open" } when the state flips.
    ========================================================================== */
 
@@ -94,9 +95,7 @@ function apply(): void {
   const nowClosed = p > 0;
   if (nowClosed !== closed) {
     closed = nowClosed;
-    const root = document.documentElement;
-    if (closed) root.setAttribute("data-letterbox", "");
-    else root.removeAttribute("data-letterbox");
+    els.root?.setAttribute("data-state", closed ? "closed" : "open");
     emit("letterbox", { state: closed ? "close" : "open" });
   }
 }
@@ -128,6 +127,8 @@ export function Bars() {
     els.top = top.current;
     els.bottom = bottom.current;
     els.iris = iris.current;
+    // a remount (the ALT toggled) while closed keeps the flag on the new root
+    els.root?.setAttribute("data-state", closed ? "closed" : "open");
     shown = -1;
     apply();
     return () => {
@@ -135,7 +136,6 @@ export function Bars() {
       shown = -1;
       if (closed) {
         closed = false;
-        document.documentElement.removeAttribute("data-letterbox");
         emit("letterbox", { state: "open" });
       }
     };
@@ -169,7 +169,7 @@ export function Bars() {
   }, []);
 
   return (
-    <div ref={root} aria-hidden="true" className="letterbox" data-variant={alt ? "iris-bars" : "slide"}>
+    <div ref={root} aria-hidden="true" className="letterbox" data-variant={alt ? "iris-bars" : "slide"} data-state="open">
       {alt ? <div ref={iris} className="letterbox-iris" /> : null}
       <div ref={top} className="letterbox-bar" data-bar="top" />
       <div ref={bottom} className="letterbox-bar" data-bar="bottom" />

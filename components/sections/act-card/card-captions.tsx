@@ -48,11 +48,15 @@ export type CaptionCue = {
   slot?: "frame";
 };
 
-/** A pinned card (Phase 3): the outgoing caption is gone BY the meet
- *  (star (a)'s progress; the meet is at ≈ .49), so the new world's frame
- *  never carries the old world's name (W2 gate, one caption per screen).
- *  Passage cards (640–1023, 844×390) keep their own `out`, unchanged. */
-const PIN_OUT = [0.36, 0.46] as const;
+/** A pinned card (Phase 3): the outgoing caption leaves AS the new film's
+ *  title lands (star (a) .045: act-card-section.tsx FILM_PIN), so the old
+ *  world's name never sits under the new film's title (P3-11 r3: every
+ *  stranger judge's top finding, "3 IDIOTS" over "THE KRAKEN'S STORM ·
+ *  PIRATES OF THE CARIBBEAN", "HARRY POTTER" over the RDR2 camp's caption,
+ *  in the hooks and through the burn). It names the old picture while the
+ *  card approaches; the new world's caption comes up under the frame at
+ *  the middle. Passage cards (640–1023, 844×390) keep their own `out`. */
+const PIN_OUT = [0.005, 0.045] as const;
 
 export function CardCaptions({ cues, align = "start" }: { cues: readonly CaptionCue[]; align?: "start" | "end" }) {
   const pinMode = useCard().pin != null;

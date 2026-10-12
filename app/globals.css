@@ -1223,6 +1223,36 @@ html[data-motion="paused"] .opening-vignette {
 }
 /* === /hero & cards === */
 
+/* === the header's fade band (P3-11 r3, F6 · C5) ==========================
+   Desktop only: once the page has scrolled, 24 px below the fixed bar fade
+   from the bar's own ground (--bg of its world plane) to nothing, so a line
+   passing under the bar dims out instead of showing half its height. On
+   the header element, never <html>; opacity only; static under RM. */
+.header-band {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .header-band {
+    display: block;
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    height: 1.5rem;
+    background: linear-gradient(to bottom, var(--bg), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-base) ease;
+  }
+  .header-band[data-on] {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-band {
+    transition: none;
+  }
+}
+
 /* === scene captions & world faces (M2, RECOGNIZABILITY §4) ===============
    The fan faces set ONLY registered lettering strings (lib/film.ts
    `lettering`; components/primitives/scene-caption.tsx decides). A missing
@@ -1413,7 +1443,9 @@ html[data-motion="paused"] .opening-vignette {
       --font-world-<world>-<role>-live, which the world's planes get only
       once html[data-fonts~="<world>"] carries the token (<WorldFonts/>,
       lib/world-fonts.ts: on approach, swapped while off screen). The Pirates head
-      is the name's file (already loaded), so it is live from first paint.
+      is the name's file (already loaded), so it is live from first paint;
+      the Pirates body (P3-11 r3) is preloaded too and `optional`, live
+      from first paint when it arrives in time and never swapped later.
       The prologue (first visit, html.intro-armed) letters its two hp
       captions in the hp head before the quiet window; nothing else loads
       before step 5. No JS: app/layout.tsx's <noscript> style makes every
@@ -1436,11 +1468,26 @@ html[data-motion="paused"] .opening-vignette {
     descent-override: 29.5%;
     line-gap-override: 0%;
   }
+  /* the Pirates body (P3-11 r3, J9 F1): preloaded beside the name
+     (app/layout.tsx) and OPTIONAL — used from first paint when it is here
+     in time, else the fallback serif for the whole visit: never a late
+     swap that re-flows #about and the journey under the reader (motion
+     on, reduced or paused alike) */
+  @font-face {
+    font-family: "Film Body Pirates";
+    src: url("/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: optional;
+  }
 
   :root {
     --font-name-pirates: "Film Name Pirates";
     /* the Pirates head IS the name's file (5.3 KB, preloaded): never gated */
     --font-world-pirates-head-live: var(--font-name-pirates);
+    /* the Pirates body (23.3 KB, preloaded, optional): never gated */
+    --font-world-pirates-body: "Film Body Pirates";
+    --font-world-pirates-body-live: var(--font-world-pirates-body);
     /* PHASE3-SPEC §5.3: 68ch is ≈ 96 Geist characters; 35rem ≈ 70 */
     --container-body: 35rem;
   }
@@ -1449,10 +1496,8 @@ html[data-motion="paused"] .opening-vignette {
        world's own planes and captions, never on <html> itself: a token
        restyles only that world's text (P3-11 J8 #1: 80–95 → 11–39 ms of
        style per swap at 1440; an html-level var restyled all 4,300
-       elements). The Pirates head is never gated (:root above). — */
-  [data-fonts~="pirates"] [data-world=pirates] {
-    --font-world-pirates-body-live: var(--font-world-pirates-body);
-  }
+       elements). Pirates is never gated (:root above): its head is the
+       name's file, its body is preloaded and optional. — */
   [data-fonts~="idiots"] :is([data-world=idiots], .world-face-idiots) {
     --font-world-idiots-head-live: var(--font-world-idiots-head);
     --font-world-idiots-lead-live: var(--font-world-idiots-lead);

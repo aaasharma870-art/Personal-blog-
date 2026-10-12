@@ -5,9 +5,15 @@
 
    QUIET WINDOW: `intro:quiet` (the intro controller, at warm) → `intro:quiet-
    end` (after the titles, or on any exit). Nothing new starts inside it.
-   With no intro armed it is over at once; an intro that ends without ever
-   opening it (dismissed on the play screen, the 3 s failsafe) closes it on
-   `intro:end`; a quiet-end that never comes is capped 8 s after `intro:end`.
+   With no intro armed it is over once the page has hydrated; an intro that
+   ends without ever opening it (dismissed on the play screen, the 3 s
+   failsafe) closes it on `intro:end`; a quiet-end that never comes is
+   capped 8 s after `intro:end`.
+   P3-11 r3 (J8 F2): the window never ends before HYDRATION (`page:hydrated`,
+   <PageHydrated/> on "/"; other routes have no sentinel and count as
+   hydrated). With the intro skipped, `p3:quiet-end` came 0.4–0.5 s before
+   `page:hydrated`, so the first fling met hydration's 0.5–0.8 s tasks and
+   the ladder's first steps at once.
 
    (a) PREFETCH: `prefetchChunks()` imports chunks (fetch + evaluate only)
        one per idle slice, before warm or at page idle, held during quiet.
@@ -21,7 +27,10 @@
        P3-11 (J8 #1): after a quiet window that really opened (the titles
        played), nothing climbs and no held prefetch resumes for a 3 s
        grace: the reader's first wheel after the titles meets an idle main
-       thread. A step's React consumers (`useLadder`) re-render in a
+       thread. P3-11 r3 (J8 F2): the FIRST quiet-end of a page view gets the
+       same grace with the intro skipped (the skimmer's first fling comes
+       right after hydration); every idle slice is also held while the page
+       moves (lib/idle.ts). A step's React consumers (`useLadder`) re-render in a
        TRANSITION (interruptible slices), never one long synchronous render
        inside the idle slice that reached it.
        The ladder only times the steps: every consumer still gates its own
@@ -72,6 +81,11 @@ let quietEndAt = 0;
 let quietOpened = false;
 /** The last scroll / wheel (performance.now(); scroll-idle gates). */
 let lastScroll = -1e9;
+/** The page has hydrated (<PageHydrated/> on "/"; at once elsewhere). */
+let hydrated = false;
+/** The first quiet-end of this page view has had its grace (home page
+ *  only: /lab has nothing to protect). */
+let graced = false;
 
 const never = () => new Promise<void>(() => {});
 
@@ -89,9 +103,10 @@ function notify(): void {
 
 const introArmed = (): boolean => document.documentElement.classList.contains("intro-armed");
 
-/** The quiet window is over (and no armed intro is still to open one). */
+/** The quiet window is over (and no armed intro is still to open one, and
+ *  the page has hydrated). */
 function quietOver(): boolean {
-  return !quiet && !introArmed();
+  return !quiet && !introArmed() && hydrated;
 }
 
 function settleQuiet(): void {
@@ -101,8 +116,9 @@ function settleQuiet(): void {
     quietMarked = true;
     mark("p3:quiet-end");
   }
-  if (quietOpened) {
+  if (quietOpened || !graced) {
     quietOpened = false;
+    graced = true;
     quietEndAt = performance.now();
   }
   const waiters = [...quietWaiters];
@@ -122,6 +138,17 @@ function install(): void {
   };
   window.addEventListener("scroll", moved, { passive: true });
   window.addEventListener("wheel", moved, { passive: true });
+  // only the home page has the <PageHydrated/> sentinel
+  const home = window.location.pathname === "/";
+  hydrated = Boolean(window.__pageHydrated) || !home;
+  if (!home) graced = true;
+  if (!hydrated) {
+    const off = on("page:hydrated", () => {
+      off();
+      hydrated = true;
+      settleQuiet();
+    });
+  }
   on("intro:quiet", () => {
     quiet = true;
     quietOpened = true;
@@ -248,9 +275,11 @@ function whenScrollIdle(idleMs = SCROLL_IDLE_MS, capMs = STEP_CAP_MS): Promise<v
   });
 }
 
-const whenIdleSlice = (): Promise<void> =>
+/** An idle slice, held while the page moves for at most `hold` ms (the
+ *  scroll-idle wait already spent the rest of the step's STEP_CAP_MS). */
+const whenIdleSlice = (hold: number): Promise<void> =>
   new Promise<void>((resolve) => {
-    onIdle(resolve, { timeout: 1000 });
+    onIdle(() => resolve(), { timeout: 1000, hold });
   });
 
 function reach(step: LadderStep): void {
@@ -267,8 +296,10 @@ async function climb(): Promise<void> {
   while (reached < 5) {
     await whenSettled();
     await whenMotionOn();
+    const t0 = performance.now();
     await whenScrollIdle();
-    await whenIdleSlice();
+    // a scroll that never settles still climbs one step per STEP_CAP_MS
+    await whenIdleSlice(Math.max(0, STEP_CAP_MS - (performance.now() - t0)));
     // re-check after the waits: an intro replay or a Pause may have come
     if (!quietOver() || motionOffNow()) continue;
     reach((reached + 1) as LadderStep);
@@ -346,7 +377,7 @@ function pump(): void {
   pumping = true;
   // nothing new starts inside the quiet window, nor in its grace; before
   // warm (the play screen, the flight) it runs (spec §3.1(a))
-  const held = () => isQuiet() || inQuietGrace();
+  const held = () => isQuiet() || !hydrated || inQuietGrace();
   const run = (): void =>
     void whenScrollIdle().then(() =>
       onIdle(
@@ -431,7 +462,8 @@ function handOut(): void {
           for (let i = 0; i < TURNS_PER_SLICE && turns.length; i++) turns.shift()!();
           if (turns.length) handOut();
         },
-        { timeout: 250 },
+        // an unsettled scroll already waited TURN_CAP_MS: no second hold
+        { timeout: 250, hold: unsettled ? 0 : TURN_CAP_MS },
       ),
     );
   });

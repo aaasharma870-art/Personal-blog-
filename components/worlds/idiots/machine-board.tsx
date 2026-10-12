@@ -189,7 +189,7 @@ function droneBoxOf(plate: Plate): { u0: number; u1: number; v0: number; v1: num
 
 /** THE HOMEMADE DRONE on the lecture-hall board: chalks in once when the
  *  band enters (`draw`), or is simply drawn (ALT, static, reduced motion). */
-function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; draw: boolean }) {
+function MachineDrone({ id, phase, draw, fine }: { id: MediaId; phase: EnterPhase; draw: boolean; fine: boolean }) {
   const plate = plateOf(id);
   const progress = useMotionValue(1);
   const live = draw && phase !== "static";
@@ -204,7 +204,8 @@ function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; dra
       return;
     }
     let on = true;
-    const a = animate(progress, 1, { duration: 1.1, delay: 0.1, ease: easeDraw });
+    // desktop: inside B22's 1.2 s grant (P3-11 r2 J1 #6); phones as before
+    const a = animate(progress, 1, { duration: fine ? 0.95 : 1.1, delay: fine ? 0.05 : 0.1, ease: easeDraw });
     a.finished.then(() => {
       if (on) setDrawn(true);
     });
@@ -212,7 +213,7 @@ function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; dra
       on = false;
       a.stop();
     };
-  }, [live, phase, progress]);
+  }, [live, phase, progress, fine]);
   const box = plate ? droneBoxOf(plate) : null;
   if (!plate || !box) return null;
   return (
@@ -234,7 +235,7 @@ function MachineDrone({ id, phase, draw }: { id: MediaId; phase: EnterPhase; dra
  *  Range (the line renders only through <FilmQuote>, so the phrase is never
  *  wrapped in markup of ours), re-measured on resize and once the fonts are
  *  in. Nothing until measured. */
-function PhraseCircle({ host, phase, on }: { host: RefObject<HTMLElement | null>; phase: EnterPhase; on: boolean }) {
+function PhraseCircle({ host, phase, on, fine }: { host: RefObject<HTMLElement | null>; phase: EnterPhase; on: boolean; fine: boolean }) {
   const [box, setBox] = useState<Box | null>(null);
   const fid = useSvgId("machine-circle");
   useEffect(() => {
@@ -305,7 +306,7 @@ function PhraseCircle({ host, phase, on }: { host: RefObject<HTMLElement | null>
           strokeWidth={2.4}
           strokeLinecap="round"
           filter={`url(#${fid})`}
-          {...drawn(phase, { delay: 0.45, duration: dur.draw.med })}
+          {...drawn(phase, fine ? { delay: 0.1, duration: 1 } : { delay: 0.45, duration: dur.draw.med })}
         />
       </g>
     </svg>
@@ -378,11 +379,12 @@ export function MachineBoard({
         amount={0.4}
         camera={camera}
         star={{ id: "B22", weight: 2 }}
+        liveStar="B22-board"
         caption={<SceneCaption k={captionKey} place="bl" />}
         registered={(phase) =>
           rect ? (
             <>
-              <MachineDrone id={id} phase={phase} draw={!alt} />
+              <MachineDrone id={id} phase={phase} draw={!alt} fine={fine} />
               {/* the question, chalked on the board (aria-hidden: the caption
                   names the same moment for assistive tech) */}
               <div
@@ -390,7 +392,7 @@ export function MachineBoard({
                 className="pointer-events-none absolute top-(--mq-t) left-(--mq-l) w-(--mq-w) sm:top-(--mq-t-lg) sm:left-(--mq-l-lg) sm:w-(--mq-w-lg)"
               >
                 <span className="relative inline-block pb-[0.28em]">
-                  <ChalkWrite phase={phase} write={!alt} delay={0.25} duration={0.95}>
+                  <ChalkWrite phase={phase} write={!alt} delay={fine ? 0.1 : 0.25} duration={fine ? 0.5 : 0.95}>
                     <Lettered
                       world="idiots"
                       text={QUESTION}
@@ -416,7 +418,7 @@ export function MachineBoard({
                       strokeLinecap="round"
                       vectorEffect="non-scaling-stroke"
                       filter={`url(#${fid})`}
-                      {...drawn(alt ? "static" : phase, { delay: 1.1, duration: dur.draw.short })}
+                      {...drawn(alt ? "static" : phase, { delay: fine ? 0.55 : 1.1, duration: fine ? 0.4 : dur.draw.short })}
                     />
                   </svg>
                 </span>
@@ -437,13 +439,18 @@ export function MachineBoard({
             >
               {/* the answer follows the question at once and writes briskly
                   on desktop (P3-11 r1 strangers, 1440: a frame caught it at
-                  "…reduces h"; a line half-written for 1.5 s reads as stuck) */}
-              <ChalkWrite phase={phase} write={!alt} delay={fine ? 1.2 : 1.55} duration={fine ? 1.05 : 1.5} block>
+                  "…reduces h"; a line half-written for 1.5 s reads as stuck).
+                  P3-11 r2 (J1 #6, strangers "“A n … — RANCI"): on desktop the
+                  whole board (question, underline, drone, answer and its
+                  attribution) is written by 1.15 s, inside B22's 1.2 s grant,
+                  so no chalk moves after the star ends and any stop shows the
+                  line complete; phones keep 1.55 s / 1.5 s */}
+              <ChalkWrite phase={phase} write={!alt} delay={fine ? 0.45 : 1.55} duration={fine ? 0.7 : 1.5} block>
                 <p className="text-[clamp(1.125rem,0.9rem+1vw,1.5rem)] leading-[1.25] text-(--w-chalk) sm:text-[length:1.95cqw]">
                   <FilmQuote id="Q-3I-3" rendition="lettered" attribution="speaker" />
                 </p>
               </ChalkWrite>
-              <PhraseCircle host={answerRef} phase={phase} on={circleOn} />
+              <PhraseCircle host={answerRef} phase={phase} on={circleOn} fine={fine} />
             </div>
           </CameraGroup>
         )}

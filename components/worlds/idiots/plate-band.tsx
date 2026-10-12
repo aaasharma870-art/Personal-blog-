@@ -272,6 +272,7 @@ export function PlateBand({
   amount = 0.3,
   camera,
   star,
+  liveStar,
   enterAt,
 }: {
   /** The resolved plate to show (see headPlateOf / platePick). */
@@ -300,6 +301,8 @@ export function PlateBand({
   camera?: CameraSpec;
   /** The entrance is this time star (spotlight; useEnterOnce `star`). */
   star?: { id: string; weight: BeatWeight };
+  /** The plate's loop is this declared LIVE star (LivePlate `liveStar`). */
+  liveStar?: string;
   /** DESKTOP_FINE: enter as the top crosses ≈ this fraction of the viewport
    *  (and slow-settle is never armed at opacity 0). */
   enterAt?: number;
@@ -333,7 +336,7 @@ export function PlateBand({
       <div className={cn("relative overflow-hidden bg-(--world-deep)", s.box)}>
         <motion.div className={cn("absolute inset-0", imageMoves && "will-change-transform")} style={imageStyle}>
           {plate ? (
-            <LivePlate media={plate} camera={camera} sizes={sizes} className="size-full">
+            <LivePlate media={plate} camera={camera} sizes={sizes} liveStar={liveStar} className="size-full">
               {renderSlot(registered, e.phase)}
             </LivePlate>
           ) : (
@@ -431,6 +434,8 @@ export function HeadBand({
   pieceKey,
   captionKey,
   className,
+  registered,
+  liveStar,
 }: {
   spec: HeadPlate;
   choice: VariantChoice;
@@ -438,6 +443,10 @@ export function HeadBand({
   pieceKey: string;
   captionKey: CaptionKey;
   className?: string;
+  /** Chalk registered to the plate (PlateBand `registered`). */
+  registered?: ReactNode;
+  /** The plate's loop is this declared LIVE star (PlateBand `liveStar`). */
+  liveStar?: string;
 }) {
   const variant = useVariant(choice, pieceKey);
   const id = headPlateOf(spec, variant);
@@ -450,6 +459,8 @@ export function HeadBand({
       sizes="100vw"
       enterAt={0.9}
       className={className}
+      registered={registered}
+      liveStar={liveStar}
       caption={<SceneCaption k={captionKey} place="bl" />}
       captionClassName="px-gutter sm:absolute sm:inset-y-0 sm:left-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:right-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:px-0"
     />
@@ -481,12 +492,15 @@ export function PenInset({
   pieceKey,
   captionKey,
   className,
+  liveStar,
 }: {
   spec: HeadPlate;
   choice: VariantChoice;
   pieceKey: string;
   captionKey: CaptionKey;
   className?: string;
+  /** The plate's loop is this declared LIVE star (PlateBand `liveStar`). */
+  liveStar?: string;
 }) {
   const variant = useVariant(choice, pieceKey);
   const plate = platePick(spec.media, variant);
@@ -505,6 +519,7 @@ export function PenInset({
       sizes="(min-width: 64rem) 50vw, 100vw"
       className={className}
       camera={camera}
+      liveStar={liveStar}
       registered={
         egg ? (
           <Suspense fallback={null}>

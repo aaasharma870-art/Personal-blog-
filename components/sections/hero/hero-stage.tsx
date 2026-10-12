@@ -147,8 +147,10 @@ const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", [number[
   mediaY: spanUnit([0.2, 0.7], [0, -24]),
   textY: spanUnit([0.2, 0.7], [0, -16]),
   darken: spanUnit([0.7, 1], [0, 1]),
-  // cap.hero leaves before the Act I card's film title arrives below it
-  caption: spanUnit([0.1, 0.3], [1, 0]),
+  // cap.hero leaves before the Act I card's film title arrives below it,
+  // and fast: over .1–.3 it hung half-faded mid-frame at 1024 (r2 panel J4
+  // 1024 #10), so it is gone in the first ~100 px of the scroll
+  caption: spanUnit([0.02, 0.12], [1, 0]),
 };
 
 export type HeroPlate = {
@@ -438,6 +440,10 @@ export function HeroStage({
        spyglass zoom), ≥ 16 px right of the h1 (H7). Measured on resize and
        after the fonts land, with the zoom origin and the wake band. — */
   const [geo, setGeo] = useState<HeroGeo>(frames[plateV]);
+  // the mark (Jack's compass) hangs off the MEASURED frame: it renders once
+  // the frame is known, so it never jumps from the SSR reference frame (r2
+  // J8 F10: intro CLS 0.0094 at 1024)
+  const [placed, setPlaced] = useState(false);
   const frame = geo.frame;
   const boxW = useMotionValue(1440);
   const boxH = useMotionValue(900);
@@ -474,6 +480,7 @@ export function HeroStage({
         zoom: g.zoom,
       };
       setGeo((prev) => (sameGeo(prev, next) ? prev : next));
+      setPlaced(true);
     };
     const ro = new ResizeObserver(measure);
     ro.observe(box);
@@ -614,6 +621,31 @@ export function HeroStage({
   const shiftY = useSpring(0, springSoft);
   // performance.now() when the gain ramp starts; Infinity = held
   const gainFrom = useRef(0);
+
+  /* — The camera drift (P3-11 r3; r2 J1 #4: the hero held a still frame
+       for ~6 s after the titles, the sea's own motion too fine to read):
+       hero-drift.ts, a lazy desktop chunk, leans the zoom layer toward the
+       ship and back once the quiet window is over, and makes B02 a live
+       star while it plays (C1). Only while the full desktop plate is live
+       (motion on, fine pointer, on stage); off screen, covered, Pause or RM
+       it is gone (identity, like every hero transform there). — */
+  const zoomRef = useRef<HTMLDivElement>(null);
+  const driftOn = noisy && live;
+  useEffect(() => {
+    const el = zoomRef.current;
+    const host = sectionRef.current;
+    if (!driftOn || !el || !host) return;
+    let stop: (() => void) | undefined;
+    let dead = false;
+    void import("@/components/sections/hero/hero-drift").then((m) => {
+      if (!dead) stop = m.heroDrift(el, host);
+    });
+    return () => {
+      dead = true;
+      stop?.();
+    };
+  }, [driftOn]);
+
   useEffect(() => {
     if (!document.documentElement.classList.contains("intro-armed")) return;
     gainFrom.current = Number.POSITIVE_INFINITY;
@@ -718,6 +750,7 @@ export function HeroStage({
           >
             {/* the spyglass zoom layer (×1 on the DEFAULT side) */}
             <motion.div
+              ref={zoomRef}
               data-hero-zoom=""
               className={cn("absolute inset-0", moving && "will-change-transform")}
               style={{ scale: zoom, transformOrigin: pos(geo.origin) }}
@@ -756,12 +789,13 @@ export function HeroStage({
             be painted by the card, over the whole hero stack) */}
         <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[18vh] bg-[linear-gradient(to_bottom,transparent,var(--bg))]" />
         {/* the hero's mark (hero-section.tsx: Jack's compass), 12 px under
-            the bracket's left arm, 64–96 px wide; ≥ 64rem only */}
-        {mark ? (
+            the bracket's left arm, 80–128 px wide (r2 blind A01 / D01: made
+            legible, the Act I instrument); ≥ 64rem only */}
+        {mark && placed ? (
           <div
             data-hero-mark=""
             className="pointer-events-none absolute hidden lg:block"
-            style={{ left: `${frame.x0 * 100}%`, top: `calc(${frame.y1 * 100}% + 12px)`, width: "clamp(64px, 6vw, 96px)" }}
+            style={{ left: `${frame.x0 * 100}%`, top: `calc(${frame.y1 * 100}% + 12px)`, width: "clamp(80px, 8vw, 128px)" }}
           >
             {mark}
           </div>

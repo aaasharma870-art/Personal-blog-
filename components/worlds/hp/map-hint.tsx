@@ -29,7 +29,9 @@ export function MapHint({ className }: { className: string }) {
       <p
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute hidden text-[1rem] leading-none tracking-[0.04em] text-fg-muted opacity-70 select-none font-world-head df:block",
+          // P3-11 r3 (every judge, both widths: "tiny and faint"): the hint
+          // reads at its size, in the parchment's muted ink (AA), no fade
+          "pointer-events-none absolute hidden text-[1.25rem] leading-none tracking-[0.04em] text-fg-muted select-none font-world-head df:block",
           className,
         )}
         data-egg-hint="marauders-map"

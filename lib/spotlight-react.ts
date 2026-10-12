@@ -12,6 +12,12 @@
      useScrollStar(ref, "B44-ink", { weight: 1, own: "top 85%, bottom 35%" });
      <svg ref={ref} {...beatAttrs("B44-ink", { weight: 1 })}>…</svg>
 
+   A LIVE star (C1: a drift, a loop, a draw that moves while the page is
+   still) passes `live: true` and `on: playing`, so it is registered only
+   while it visibly moves; with no window it is held only when the
+   spotlight lends it a still screen (lib/spotlight.ts THE LENT STAR):
+     useScrollStar(ref, "B44-drift", { weight: 1, live: true, on: playing });
+
    Markup-only hosts need no hook: `beatAttrs(id, { weight, scroll })`
    (lib/beats.ts) and the desktop words binder registers them.
    ========================================================================== */

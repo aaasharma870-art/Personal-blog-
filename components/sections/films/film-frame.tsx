@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { beatAttrs, type BeatWeight } from "@/lib/beats";
 import { film, type CaptionKey, type CaptionWorld } from "@/lib/film";
 import { resolveMedia, resolveVariant, type MediaId } from "@/lib/media";
+import { useDesktopFine } from "@/lib/flags";
 import { dur, easeClip } from "@/lib/motion";
 import { captionKeyFor } from "@/lib/sections";
 import { safeLazy } from "@/lib/safe-lazy";
@@ -57,7 +58,7 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  *   viewport: closed as the first screen arrives) and open over 40vh as
  *   this frame rises to the middle (its centre from 92% to 52%); from
  *   there each screen's own 2.39 matte carries the scene. One close, one
- *   open per pass (html[data-letterbox] flips twice, rule 33). B30 is a
+ *   open per pass (the bars' root `.letterbox[data-state]` flips twice; rule 33: never on <html>). B30 is a
  *   weight-3 scroll star: its marker's box sits above the frame so its
  *   spotlight ownership ends as the close does. The B30 / B31-bars markers
  *   are the server screen's (`marks`, film-screen.tsx: no client code).
@@ -128,7 +129,12 @@ export function FilmFrame({
   // the ALT screens armed — shut — forever (ART-DIRECTOR #1).
   const ref = useRef<HTMLDivElement>(null);
   const phase = useEnterOnce(ref, { amount: 0.5, star: beat ? { id: beat.finale, weight: beat.weight } : undefined });
-  const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? "play" : "final";
+  // desktop: the finale asks the spotlight, so it plays inside the grant
+  // (≤ 1.2 s, its default hold: finales.tsx "quick"; P3-11 r3, J1 #5 / #6:
+  // B32 / B33 granted on rigid scroll, the HP light crossing the viaduct
+  // with no star)
+  const quick = useDesktopFine() && Boolean(beat);
+  const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? (quick ? "quick" : "play") : "final";
 
   // the house lights (first screen) and the warm point (last): desktop, lazy
   const engine = usePlateEngine();

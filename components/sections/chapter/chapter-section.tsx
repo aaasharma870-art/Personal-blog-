@@ -88,6 +88,15 @@ import type { SectionProps } from "@/components/sections/types";
      caveat.
    - The chart-slot placeholders no longer render (spec §11.5; at every
      width: an intended 390 change).
+   TWO RHYTHMS (P3-11 r2; panel J2, J3, J4: "the second project repeats the
+   first's template"): Trading_Algos reads claim → the ICE board (wide, in
+   the split) → the approach beside its figures. The pipeline (a chapter
+   with a `head`) reads the question → the machine → its name: its FIG
+   follows the head band ABOVE the split (a plain full-width block, so no
+   board ever slides over its window, panel J2 low), then the claim, the
+   approach at full width, and its figures as one row under it (stacked in
+   a narrow split column, ≈ 1024; Rancho's circle still round the caveat).
+   Every figure, caveat and limitation keeps its words and its neighbour.
    ========================================================================== */
 
 /** Each flagship's schematic: nodes ONLY from content.ts approach/stack
@@ -127,6 +136,75 @@ function stagesOf(s: SchematicSpec): string {
   return `${n} stages${s.branch ? " • 1 branch" : ""}`;
 }
 
+/** The FIG's ink-on is a time star: trading-algos' B20 (the beat map), and
+ *  the pipeline's FIG, which performed undeclared (P3-11 r1 J1 #4; B23-fig
+ *  is an F1 handoff in lib/page.ts). */
+function figStarOf(id: string) {
+  return id === "trading-algos" ? ({ id: "B20", weight: 2 } as const) : id === "optuna-screener" ? ({ id: "B23-fig", weight: 1 } as const) : undefined;
+}
+
+/** The ICE board: the real system as a Rancho-style blueprint. `wide`: it
+ *  sits inside the split and breaks out over the window (trading-algos);
+ *  otherwise it is a plain full-width block (the pipeline's, above its split). */
+function ChapterFig({
+  p,
+  figNo,
+  entry,
+  wide,
+  phone = false,
+  className = "mt-tier-block",
+}: {
+  p: Project;
+  figNo: number;
+  entry: SectionProps<"chapter">["entry"];
+  wide: boolean;
+  /** The < 1024 copy that keeps today's phone order (the pipeline's FIG
+   *  after its claim): no star and no egg, which are DESKTOP_FINE only. */
+  phone?: boolean;
+  className?: string;
+}) {
+  const s = schematicOf(p);
+  if (!s) return null;
+  const isOptuna = p.id === "optuna-screener";
+  const figStar = phone ? undefined : figStarOf(entry.id);
+  return (
+    <div
+      data-stage-block=""
+      {...(wide ? { "data-stage-wide": "" } : {})}
+      className={className}
+      {...(figStar ? beatAttrs(figStar.id, { weight: figStar.weight }) : {})}
+    >
+      <Rise>
+        {/* the board is NAMED as it comes into view — above it, not under
+            it a screen later (M2 fix round 3, blind D26: the chapter's
+            first view showed the board with no film cue); never beside a
+            metric. A chapter with a `head` is named by its head band. */}
+        {entry.props.head ? null : (
+          <div className="relative">
+            <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
+            {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
+                D26 3I .20–.25: "a generic diagram"). ≥ 1024 only, where the
+                claim grid leaves the right column clear above the board;
+                it rises into that gap, so the board never moves. */}
+            <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
+          </div>
+        )}
+        {/* the optuna board's ledge holds the chalk heart (3i-aal) */}
+        <ChalkboardFrame ledge={isOptuna && !phone ? <LedgeHeart /> : null}>
+          <BlueprintSchematic
+            fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
+            spec={s}
+            choice={variantChoiceOf(entry)}
+            pieceKey={`${entry.id}.schematic`}
+            star={figStar}
+          />
+        </ChalkboardFrame>
+        {/* (the pipeline's film cue is its head band, MachineBoard) */}
+      </Rise>
+    </div>
+  );
+}
+
 function ChapterBody({
   p,
   figNo,
@@ -140,12 +218,16 @@ function ChapterBody({
   titleId: string;
   entry: SectionProps<"chapter">["entry"];
 }) {
-  const s = schematicOf(p);
   const isOptuna = p.id === "optuna-screener";
-  // the FIG's ink-on is a time star: trading-algos' B20 (the beat map), and
-  // the pipeline's FIG, which performed undeclared (P3-11 r1 J1 #4; B23-fig
-  // is an F1 handoff in lib/page.ts)
-  const figStar = entry.id === "trading-algos" ? ({ id: "B20", weight: 2 } as const) : isOptuna ? ({ id: "B23-fig", weight: 1 } as const) : undefined;
+  // P3-11 r2 (panel J2, J3, J4: "the second project repeats the first's
+  // template"): a chapter with a head (the pipeline) has its own rhythm. Its
+  // FIG follows the head band ABOVE the split (the question, then the
+  // machine, then its name: ChapterSection), so no board slides over the
+  // window (panel J2 low); its approach reads full width and its figures
+  // stand in one row under it, a scoreboard (stacked in a narrow split
+  // column, ≈ 1024). Trading_Algos keeps the board in the split and the
+  // figures beside its approach. Phones (< 64rem) render as before.
+  const own = Boolean(entry.props.head);
   return (
     <div>
       {/* the claim, beside the problem it answers */}
@@ -179,50 +261,16 @@ function ChapterBody({
         </div>
       </div>
 
-      {/* the ICE board: the real system as a Rancho-style blueprint */}
-      {s ? (
-        <div
-          data-stage-block=""
-          data-stage-wide=""
-          className="mt-tier-block"
-          {...(figStar ? beatAttrs(figStar.id, { weight: figStar.weight }) : {})}
-        >
-          <Rise>
-            {/* the board is NAMED as it comes into view — above it, not under
-                it a screen later (M2 fix round 3, blind D26: the chapter's
-                first view showed the board with no film cue); never beside a
-                metric. A chapter with a `head` is named by its head band. */}
-            {entry.props.head ? null : (
-              <div className="relative">
-                <SceneCaption k="cap.trading-algos" place="head" className="mb-tier-group" />
-                {/* THE HOMEMADE DRONE in chalk, right of the caption (M5, blind
-                    D26 3I .20–.25: "a generic diagram"). ≥ 1024 only, where the
-                    claim grid leaves the right column clear above the board;
-                    it rises into that gap, so the board never moves. */}
-                <ChalkDrone className="absolute right-[4%] bottom-(--spacing-tier-group) hidden w-[clamp(11rem,16vw,15rem)] lg:block" />
-              </div>
-            )}
-            {/* the optuna board's ledge holds the chalk heart (3i-aal) */}
-            <ChalkboardFrame ledge={isOptuna ? <LedgeHeart /> : null}>
-              <BlueprintSchematic
-                fig={`FIG. ${figNo} • ${p.repo} • ${stagesOf(s)}`}
-                spec={s}
-                choice={variantChoiceOf(entry)}
-                pieceKey={`${entry.id}.schematic`}
-                star={figStar}
-              />
-            </ChalkboardFrame>
-            {/* (the pipeline's film cue is its head band, MachineBoard) */}
-          </Rise>
-        </div>
-      ) : null}
+      {/* the pipeline's FIG sits above its split ≥ 1024 (ChapterSection);
+          below, phones keep today's order: the FIG after the claim */}
+      <ChapterFig p={p} figNo={figNo} entry={entry} wide={!own} phone={own} className={own ? "mt-tier-block lg:hidden" : undefined} />
 
       <div
         id={`${entry.id}-approach`}
         data-stage-block=""
-        className="split-stack mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6"
+        className={own ? "mt-tier-block" : "split-stack mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6"}
       >
-        <div className="lg:col-span-7">
+        <div className={own ? undefined : "lg:col-span-7"}>
           <Meta fields={["Approach"]} />
           <ul className="mt-tier-pair max-w-body list-disc space-y-2 pl-5 type-body text-fg-muted marker:text-fg-ghost">
             {p.approach.map((a) => (
@@ -234,7 +282,11 @@ function ChapterBody({
         </div>
         <dl
           data-research=""
-          className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1"
+          className={
+            own
+              ? "split-stack mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:gap-x-6"
+              : "grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1"
+          }
         >
           {p.metrics.map((m, i) => (
             <MetricTile key={m.label} m={m} circleNote={isOptuna && i === p.metrics.length - 1} />
@@ -438,13 +490,19 @@ export function ChapterSection({ entry, number }: SectionProps<"chapter">) {
           optuna-screener sets `head`): another chapter's `head` would need
           its own scene + caption */}
       {entry.props.head ? (
-        <MachineBoard
-          spec={entry.props.head}
-          choice={variantChoiceOf(entry)}
-          pieceKey={`${entry.id}.head`}
-          captionKey="cap.optuna-screener"
-          className="mb-tier-block"
-        />
+        <>
+          <MachineBoard
+            spec={entry.props.head}
+            choice={variantChoiceOf(entry)}
+            pieceKey={`${entry.id}.head`}
+            captionKey="cap.optuna-screener"
+            className="mb-tier-block"
+          />
+          {/* ≥ 1024 the machine itself, straight under the question it
+              answers (P3-11 r2: its own rhythm; outside the split, so it
+              never covers the window); phones keep it after the claim */}
+          <ChapterFig p={p} figNo={i + 1} entry={entry} wide={false} className="mb-tier-block hidden lg:block" />
+        </>
       ) : null}
       <StageSplit entry={entry}>
         <ChapterBody p={p} figNo={i + 1} number={number} titleId={titleId} entry={entry} />

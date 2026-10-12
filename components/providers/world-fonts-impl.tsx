@@ -7,10 +7,12 @@
    (phones never start it, so they fetch no world face):
    1. waits for the warm-up — ladder step 5 on DESKTOP_FINE (after the
       prologue's quiet window, one idle slice per step); on a wide touch
-      screen the quiet end, then an idle slice (`onIdle`). PIRATES does not
-      wait: its body face (the only gated Pirates face) is wanted by #about,
-      the first section the reader meets, so it loads at once and swaps
-      while #about is still far below the first screen;
+      screen the quiet end, then an idle slice (`onIdle`). PIRATES gates
+      nothing (P3-11 r3, J9 F1): its head is the name's file and its body
+      is preloaded with `font-display: optional` (app/layout.tsx, app/
+      globals.css), live from first paint and never swapped, so #about and
+      the journey never re-flow; its token is still added at once (no face
+      to load, no restyle);
    2. LOADS a world's faces (network only, nothing changes on screen) when
       any of its planes comes within 150% of a viewport (above or below);
    3. SWAPS (lib/world-fonts.ts markWorldFontsReady: the token) once the
@@ -50,6 +52,8 @@ const APPROACH_MARGIN = "150% 0px";
 /** "On screen" for a swap: the viewport plus a small band (a glide's last
  *  frames, the sticky header). */
 const VIEW_MARGIN = "12% 0px";
+/** VIEW_MARGIN as a share of the viewport (the swap's own re-check). */
+const VIEW_PAD = 0.12;
 /** In the grace after the titles, a swap waits for the scroll to be still
  *  this long. */
 const GRACE_STILL_MS = 250;
@@ -61,10 +65,10 @@ const FILM_WORLDS = WORLD_IDS.filter((w): w is FilmWorld => w !== "house");
 const isFilmWorld = (w: string | undefined): w is FilmWorld => FILM_WORLDS.some((f) => f === w);
 
 /** Each world's gated faces as [the next/font var on <html>, weight]
- *  (lib/world-fonts.ts loads the same; the Pirates head is the name's
- *  file and is never gated). */
+ *  (lib/world-fonts.ts loads the same). Pirates has none: its head is the
+ *  name's file and its body is preloaded and optional (never gated). */
 const FACES: Readonly<Record<FilmWorld, readonly (readonly [string, number])[]>> = {
-  pirates: [["--font-world-pirates-body", 500]],
+  pirates: [],
   idiots: [
     ["--font-world-idiots-head", 700],
     ["--font-world-idiots-lead", 400],
@@ -159,6 +163,12 @@ function watchWorlds(ready: Promise<void>, eager: ReadonlySet<FilmWorld>): () =>
     for (const w of [...pendingSwap]) {
       pendingSwap.delete(w);
       if (marked.has(w) || (onScreen.get(w)?.size ?? 0) > 0) continue;
+      // P3-11 r3 (J8 F10: a caption's film name re-flowed ON screen in
+      // trading-algos, work, beyond, act-4): the watched boxes are the ones
+      // present at start; a box React mounted (or re-mounted) since is not
+      // watched. Re-read this world's boxes now: one on screen is watched
+      // from here on and holds the swap until it leaves.
+      if (onScreenNow(w)) continue;
       marked.add(w);
       any = true;
       // loaded: the token lands in this task, while the world is off screen
@@ -166,6 +176,24 @@ function watchWorlds(ready: Promise<void>, eager: ReadonlySet<FilmWorld>): () =>
     }
     if (any) requestScrollRefresh();
   };
+
+  /** Any of `w`'s CURRENT boxes on screen (the viewport ± VIEW_PAD)? New
+   *  boxes join the watch. Runs in the swap's idle slice (layout is clean). */
+  function onScreenNow(w: FilmWorld): boolean {
+    const vh = window.innerHeight;
+    let seen = false;
+    for (const [el, tw] of targets()) {
+      if (tw !== w) continue;
+      if (!byTarget.has(el)) {
+        byTarget.set(el, w);
+        near.observe(el);
+        view.observe(el);
+      }
+      const r = el.getBoundingClientRect();
+      if (r.height > 0 && r.bottom > -vh * VIEW_PAD && r.top < vh * (1 + VIEW_PAD)) seen = true;
+    }
+    return seen;
+  }
 
   function trySwap(w: FilmWorld): void {
     if (dead || marked.has(w) || !loaded.has(w)) return;

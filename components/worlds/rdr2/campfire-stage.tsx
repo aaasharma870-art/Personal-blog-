@@ -160,6 +160,8 @@ export function CampfireStage({
   const live = desktop && !reduced;
   const alt = v === "alt" && Boolean(altMedia);
 
+  // B47 is LIVE while the fire plays (C1, P3-11 r3): the lazy desktop
+  // extras register this stage `live` (worlds/rdr2/rd-desktop.tsx)
   const stageRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const plateRef = useRef<HTMLDivElement>(null);
@@ -168,7 +170,10 @@ export function CampfireStage({
   const fadeUp = useTransform(arrive, [0, 1], [1, 0]);
   // … then night falls on it as you read down, except around the fire.
   const { scrollYProgress: read } = useScroll({ target: stageRef, offset: ["start start", "end end"] });
-  const night = useTransform(read, [0, 1], [0, 0.62]);
+  // (P3-11 r3, r2 blind A31 0.40–0.45 "alone it is just a campsite"): night
+  // falls to 0.42, not 0.62, so the gang's wagon and hitched horses stay
+  // legible beside the fire (the camp reads 0.75 when they show)
+  const night = useTransform(read, [0, 1], [0, 0.42]);
   // the fire (desktop, motion or not: the rd-fire hotspot sits on it)
   const fire = useFirePoint(desktop, alt && altMedia ? altMedia : media, hostRef, plateRef);
   const nightGround =
@@ -196,11 +201,16 @@ export function CampfireStage({
   // the sticky camp's plate out of paint while far (P3-11 r1 integration,
   // J8 #2: the voices sticky layer repainted under principles / contact).
   // The plate is aria-hidden art (the hotspot is a sibling: never hidden)
+  // P3-11 r3 (r2 J8 raster-diet #6: the campSticky still repainted ×26–43
+  // under principles / contact): EVERY art layer of the sticky camp, not
+  // only the plate (the scrim, the two veils, the fireflies), never the
+  // fire's hotspot (a control)
   useEffect(() => {
-    const el = plateRef.current;
-    if (alt || !el || !window.matchMedia(DESKTOP_FINE).matches) return;
-    return hideWhenFar(el, 1);
-  }, [alt]);
+    const host = hostRef.current;
+    if (alt || !host || !window.matchMedia(DESKTOP_FINE).matches) return;
+    const offs = Array.from(host.children, (c) => (c instanceof HTMLElement && !c.hasAttribute("data-fire-spot") ? hideWhenFar(c, 1) : null));
+    return () => offs.forEach((off) => off?.());
+  }, [alt, live, fire]);
 
   const restList = (
     <ul

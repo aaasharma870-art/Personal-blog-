@@ -23,14 +23,33 @@
    - A scroll star PERFORMS while it owns and the page moves; a `live` one
      whenever it owns. An ungated scrub owner that has been still for
      300 ms (the reader stopped) lets a waiting time star play; an ungated
-     star whose window opens during a hold owns at once (the log shows the
-     overlap: it moves with the scroll, nothing can stop it).
+     star whose window opens during a hold, or that moves again during it,
+     cuts the hold (THE CUT, below): it moves with the scroll, nothing can
+     stop it, so the time star shows its end state.
    - A GATED scroll star (`onOwn`) YIELDS: it never blocks a grant nor
      counts for the lookahead; when a time star is granted while it owns,
      or its window opens during a hold, it is told `onOwn(false)` (logged
      "free" / "wait") and holds still, and `onOwn(true)` when the hold ends
      (the scrub sentence then completes with a short fade); for 500 ms
      after that hand-back it blocks grants, so its finish is not cut.
+   - THE LENT STAR (C1, P3-11 r3): a still screen (no scroll for 300 ms)
+     whose spotlight nobody performs (no owner, or an ungated scrub owner,
+     which cannot move while the page is still) and no hold is LENT to one
+     registered `live` star whose box lies in the viewport's middle band
+     (20 %–80 %; the largest overlap, then the nearest the centre): logged
+     "own" (how "live", why "still", weight 1), told `onOwn(true)`. It is
+     released (logged "free", or the scrub owner's "own" again) on scroll
+     start (the page moves > 2 px), when its host unregisters (it stopped
+     playing), and before a time star's grant. A live star with no window
+     anywhere (no `own`, attribute or table entry) is held ONLY this way;
+     one with a window also owns inside it, as before.
+   - THE CUT: an ungated scroll star whose window opens during a hold (a
+     fling outruns the lookahead), an ungated scrub owner the hold was
+     granted over that moves again (the page scrolls > 12 px from where the
+     hold began), or an owner that starts to play `live` during a hold ends
+     the hold first (logged "end", why "cut by <id>") and calls the
+     request's `onCut`, so the host shows its end state now: the log never
+     shows two.
    - needsIdle (invites, fly-throughs) also waits for READING PACE: the
      speed averaged over 500 ms stays under 300 px/s for 600 ms (spec
      §3.8); there is no 1.5 s limit: it is dropped ("skip") when its host —
@@ -66,8 +85,22 @@ const LOOK_PAD = 0.04;
  *  fade) before the next grant. */
 const HANDBACK_MS = 500;
 const HOSTLESS_IDLE_WAIT = 6000;
+/** A lent star is released once the page moves more than this (px): a
+ *  Lenis settle of a pixel is not a scroll start. */
+const LEND_SLOP = 2;
+/** An ungated scrub owner performs again once the page has moved this far
+ *  (px) from where a hold over it began (the clips' 12 px: the eye sees
+ *  nothing smaller in four frames): the hold is cut. */
+const CUT_SLOP = 12;
+/** The viewport band a lent star's box must overlap (C1). */
+const BAND: readonly [number, number] = [0.2, 0.8];
 
 type Window = readonly [WindowEdge, WindowEdge];
+/** A live star with no declared window (C1: it never owns by position). */
+const NO_WINDOW: Window = [
+  { sel: null, f: 0, v: 0 },
+  { sel: null, f: 0, v: 0 },
+];
 type ScrollStar = {
   id: string;
   el: Element;
@@ -79,6 +112,16 @@ type ScrollStar = {
   /** The last thing the host was told (undefined = nothing yet). */
   told: boolean | undefined;
   refs: number;
+  /** Registrations that perform on their own (a host's `live` while it
+   *  plays, the attribute or the table): `how` is "live" while > 0. */
+  liveRefs: number;
+  /** A window was declared (own, attribute, table): a live star without
+   *  one is only ever lent a still screen (C1). */
+  hasWindow: boolean;
+  /** The box the C1 band test reads (page px; a sticky element spans its
+   *  parent, a fixed one the whole page). */
+  top: number;
+  bot: number;
   seq: number;
   /** The window in scroll px, and whether it could be measured. */
   a: number;
@@ -100,8 +143,9 @@ type Pending = {
   timer: number;
   io: IntersectionObserver | null;
   waitLogged: boolean;
+  onCut: (() => void) | null;
 };
-type Hold = { id: string; weight: BeatWeight; timer: number; t0: number };
+type Hold = { id: string; weight: BeatWeight; timer: number; t0: number; y: number; onCut: (() => void) | null };
 export type SpotlightLogEntry = {
   t: number;
   y: number;
@@ -119,6 +163,10 @@ let hold: Hold | null = null;
 let owner: ScrollStar | null = null;
 /** A gated scroll star in its window, waiting for the hold to end. */
 let deferred: ScrollStar | null = null;
+/** C1: the live star a still screen is lent, and the scroll it was lent at. */
+let lent: ScrollStar | null = null;
+let lentY = 0;
+let stillTimer = 0;
 let seq = 0;
 let viewportH = 0;
 let started = false;
@@ -185,18 +233,24 @@ const readingPace = (): boolean => performance.now() - lastBusyT >= IDLE.ms;
 
 /* — scroll-star windows (measured on register and on resize only) ———————— */
 
-const stickyOf = new WeakMap<Element, boolean>();
+const posOf = new WeakMap<Element, string>();
+
+/** An element's computed `position` (read once per element). */
+function position(el: Element): string {
+  let p = posOf.get(el);
+  if (p === undefined) {
+    p = getComputedStyle(el).position;
+    posOf.set(el, p);
+  }
+  return p;
+}
 
 /** An element's page top and height; a sticky element from its parent's
  *  top (its natural place). null when it renders no box. */
 function boxOf(el: Element): { top: number; h: number } | null {
   if (!el.isConnected || !el.getClientRects().length) return null;
   const r = el.getBoundingClientRect();
-  let sticky = stickyOf.get(el);
-  if (sticky === undefined) {
-    sticky = getComputedStyle(el).position === "sticky";
-    stickyOf.set(el, sticky);
-  }
+  const sticky = position(el) === "sticky";
   const top = sticky && el.parentElement ? el.parentElement.getBoundingClientRect().top : r.top;
   return { top: top + window.scrollY, h: r.height };
 }
@@ -214,14 +268,64 @@ function edgeY(s: ScrollStar, e: WindowEdge): number | null {
   return box ? box.top + e.f * box.h - e.v * viewportH : null;
 }
 
-function measure(s: ScrollStar): void {
-  const a = edgeY(s, s.win[0]);
-  const b = edgeY(s, s.win[1]);
-  s.placed = a != null && b != null && b > a;
-  if (a != null && b != null) {
-    s.a = a;
-    s.b = b;
+/** The page span a star can be seen over (C1's band test): its own box;
+ *  inside a sticky element (a pinned card, a sticky plate), that element's
+ *  parent's box (it rides inside it); inside a fixed one, the whole page.
+ *  Each element's `position` is read once (cached). */
+function spanOf(s: ScrollStar): void {
+  const el = s.el;
+  if (!el.isConnected || !el.getClientRects().length) {
+    s.top = s.bot = 0;
+    return;
   }
+  let host: Element = el;
+  for (let e: Element | null = el; e && e !== document.body; e = e.parentElement) {
+    const pos = position(e);
+    if (pos === "fixed") {
+      s.top = -Infinity;
+      s.bot = Infinity;
+      return;
+    }
+    if (pos === "sticky") {
+      host = e.parentElement ?? e;
+      break;
+    }
+  }
+  const r = host.getBoundingClientRect();
+  s.top = r.top + window.scrollY;
+  s.bot = r.bottom + window.scrollY;
+}
+
+/** A live star with no window is measured on the next frame (it is only
+ *  ever lent a still screen, ≥ 300 ms later): a host that registers as its
+ *  loop starts (C1: `on: playing`) never forces a layout mid-scroll. */
+const toSpan = new Set<ScrollStar>();
+let spanRaf = 0;
+function scheduleSpan(s: ScrollStar): void {
+  toSpan.add(s);
+  if (!spanRaf) {
+    spanRaf = requestAnimationFrame(() => {
+      spanRaf = 0;
+      const due = [...toSpan];
+      toSpan.clear();
+      viewportH = window.innerHeight;
+      for (const x of due) if (stars.get(x.id) === x) spanOf(x);
+      evaluate();
+    });
+  }
+}
+
+function measure(s: ScrollStar): void {
+  if (s.hasWindow) {
+    const a = edgeY(s, s.win[0]);
+    const b = edgeY(s, s.win[1]);
+    s.placed = a != null && b != null && b > a;
+    if (a != null && b != null) {
+      s.a = a;
+      s.b = b;
+    }
+  } else s.placed = false;
+  spanOf(s);
 }
 
 function remeasure(): void {
@@ -273,11 +377,94 @@ function tell(s: ScrollStar, owned: boolean): void {
   }
 }
 
+/* — C1: the lent star (a still screen nobody performs) ——————————————— */
+
+/** How much of the viewport's middle band (20 %–80 %) a star's box covers
+ *  at scroll `y` (px; ≤ 0 = outside). No layout reads. */
+function inBand(s: ScrollStar, y: number): number {
+  return Math.min(s.bot, y + BAND[1] * viewportH) - Math.max(s.top, y + BAND[0] * viewportH);
+}
+
+/** The live star a still screen at `y` is lent: the largest share of the
+ *  band, then the nearest the centre, then the heavier. */
+function lendable(y: number): ScrollStar | null {
+  const mid = y + viewportH / 2;
+  let best: ScrollStar | null = null;
+  let bestO = 0;
+  let bestD = 0;
+  for (const s of stars.values()) {
+    if (s.how !== "live") continue;
+    const o = inBand(s, y);
+    if (o <= 0) continue;
+    const d = Math.abs((Math.max(s.top, y) + Math.min(s.bot, y + viewportH)) / 2 - mid);
+    if (!best || o > bestO + 1 || (o >= bestO - 1 && (d < bestD || (d === bestD && s.weight > best.weight)))) {
+      best = s;
+      bestO = o;
+      bestD = d;
+    }
+  }
+  return best;
+}
+
+/** Lends a still screen to a live star (C1): no hold, nothing waiting to
+ *  hand back, and the owner (if any) an ungated scrub star, which cannot
+ *  move while the page is still. */
+function maybeLend(): void {
+  if (off || hold || lent || deferred || !still()) return;
+  if (owner && (owner.how === "live" || owner.onOwn || owner.busyUntil > performance.now())) return;
+  const s = lendable(lastY);
+  if (!s || s === owner) return;
+  lent = s;
+  lentY = lastY;
+  note("own", s.id, { weight: 1, how: "live", why: "still" });
+  tell(s, true);
+}
+
+/** Ends the lend; `reown`: the window owner it was lent over owns again in
+ *  the log (it performs once the page moves). */
+function unlend(why: string, reown = true): void {
+  const s = lent;
+  if (!s) return;
+  lent = null;
+  if (s !== owner) tell(s, false);
+  if (reown && owner) note("own", owner.id, { weight: owner.weight, how: owner.how, why: `after ${s.id}` });
+  else note("free", s.id, { why });
+}
+
+/** An ungated scroll star took the screen during a hold: the hold ends
+ *  first and its host is asked to show its end state (`onCut`). */
+function cut(by: string): void {
+  const h = hold;
+  if (!h) return;
+  endHold(`cut by ${by}`);
+  try {
+    h.onCut?.();
+  } catch {
+    /* a host's callback never breaks the arbiter */
+  }
+}
+
+/** A star's `how` follows its live registrations; the log follows the owner's. */
+function setHow(s: ScrollStar): void {
+  const how = s.liveRefs > 0 ? "live" : "scrub";
+  if (how === s.how) return;
+  s.how = how;
+  if (s === lent && how !== "live") unlend("stopped");
+  else if (s === owner && !off) {
+    // an ungated owner that starts to play during a hold performs: the cut
+    if (how === "live" && hold && !s.onOwn) cut(s.id);
+    note("own", s.id, { weight: s.weight, how, why: how === "live" ? "playing" : "stopped" });
+  }
+}
+
 function evaluate(): void {
   if (off) return;
   lastY = window.scrollY;
   sample(lastY);
+  // C1: released on scroll start
+  if (lent && Math.abs(lastY - lentY) > LEND_SLOP) unlend("scroll");
   const next = inWindowAt(lastY);
+  if (lent && next !== owner) unlend("owner changed", false);
   if (next && hold && next.onOwn && next !== owner) {
     // a gated star whose window opened during a hold waits for it
     if (owner) {
@@ -294,6 +481,8 @@ function evaluate(): void {
   } else if (next !== owner) {
     const prev = owner;
     if (next && next === deferred) next.busyUntil = performance.now() + HANDBACK_MS;
+    // an ungated star cannot wait out a hold: the hold is cut first
+    if (next && hold && !next.onOwn) cut(next.id);
     owner = next;
     deferred = null;
     if (prev) tell(prev, false);
@@ -301,8 +490,14 @@ function evaluate(): void {
       note("own", next.id, { weight: next.weight, how: next.how });
       tell(next, true);
     } else if (prev) note("free", prev.id);
-  } else if (!next) deferred = null;
+  } else {
+    if (!next) deferred = null;
+    // the ungated scrub owner a hold was granted over (the page was still)
+    // moves again: it performs with the scroll, so the hold is cut
+    else if (hold && !next.onOwn && Math.abs(lastY - hold.y) > CUT_SLOP) cut(next.id);
+  }
   tryGrant();
+  maybeLend();
 }
 
 function scheduleEvaluate(): void {
@@ -314,9 +509,21 @@ function scheduleEvaluate(): void {
   }
 }
 
+/** Re-evaluates once the page has been still for FREEZE_MS (C1's lend). */
+function armStill(): void {
+  if (stillTimer) return;
+  const check = (): void => {
+    const left = FREEZE_MS - (performance.now() - lastScrollT);
+    stillTimer = left > 0 ? window.setTimeout(check, Math.ceil(left)) : 0;
+    if (left <= 0) scheduleEvaluate();
+  };
+  stillTimer = window.setTimeout(check, FREEZE_MS);
+}
+
 function onScroll(): void {
   lastScrollT = performance.now();
   scheduleEvaluate();
+  armStill();
 }
 
 /** Re-runs the queue later (stillness, reading pace, a lookahead). */
@@ -390,6 +597,8 @@ function tryGrant(): void {
     recheck(120);
     return;
   }
+  // a lent star yields to a time star (C1)
+  if (lent) unlend(`yields to ${p.id}`);
   if (owner?.onOwn) {
     // a gated owner yields: it holds still until the hold ends
     const s = owner;
@@ -404,6 +613,8 @@ function tryGrant(): void {
     weight: p.weight,
     t0: performance.now(),
     timer: window.setTimeout(() => endHold("held"), Math.min(Math.max(p.durationMs, 0), MAX_HOLD)),
+    y: lastY,
+    onCut: p.onCut,
   };
 }
 
@@ -429,8 +640,11 @@ function shutDown(why: string): void {
   }
   owner = null;
   deferred = null;
+  lent = null;
   window.clearTimeout(recheckTimer);
   recheckTimer = 0;
+  window.clearTimeout(stillTimer);
+  stillTimer = 0;
 }
 
 function wake(): void {
@@ -460,6 +674,7 @@ function start(): void {
       registerScrollStar,
       state: () => ({
         owner: owner?.id ?? null,
+        lent: lent?.id ?? null,
         deferred: deferred?.id ?? null,
         hold: hold?.id ?? null,
         pending: [...pending.keys()],
@@ -472,6 +687,9 @@ function start(): void {
           a: Math.round(s.a),
           b: Math.round(s.b),
           placed: s.placed,
+          window: s.hasWindow,
+          top: Math.round(s.top),
+          bot: Math.round(s.bot),
         })),
         settled: Object.fromEntries(settled),
         speed: Math.round(speed()),
@@ -514,6 +732,7 @@ export function request(id: string, o: SpotlightRequest): Promise<SpotlightAnswe
     timer: 0,
     io: null,
     waitLogged: false,
+    onCut: o.onCut ?? null,
   };
   pending.set(id, p);
 
@@ -547,6 +766,9 @@ export function release(id: string): void {
 export function registerScrollStar(id: string, el: Element, weight: BeatWeight, o: ScrollStarOptions = {}): () => void {
   if (typeof window === "undefined") return () => {};
   start();
+  // this registration performs on its own: the host says so (`live`, while
+  // it plays: C1), or the element / the table does
+  const live = o.live ?? (el.hasAttribute("data-beat-live") || LIVE_STARS.has(id));
   let s = stars.get(id);
   if (s && s.el === el) {
     s.refs++;
@@ -555,20 +777,22 @@ export function registerScrollStar(id: string, el: Element, weight: BeatWeight, 
       if (win) {
         s.spec = o.own;
         s.win = win;
+        s.hasWindow = true;
       }
     }
-    if (o.live) s.how = "live";
+    if (live) s.liveRefs++;
     if (o.onOwn) s.onOwn = o.onOwn;
   } else {
     if (s) {
       // another element under the same id replaces it
+      if (lent === s) unlend("replaced");
       if (owner === s) owner = null;
       if (deferred === s) deferred = null;
     }
     const attr = el.getAttribute("data-beat-scroll")?.trim();
     const candidates = [o.own, attr, SCROLL_WINDOWS[id]];
-    let spec = DEFAULT_WINDOW;
-    let win = parseWindow(DEFAULT_WINDOW)!;
+    let spec = "";
+    let win = null;
     for (const c of candidates) {
       const w = c ? parseWindow(c) : null;
       if (c && w) {
@@ -577,12 +801,39 @@ export function registerScrollStar(id: string, el: Element, weight: BeatWeight, 
         break;
       }
     }
-    const live = o.live ?? (el.hasAttribute("data-beat-live") || LIVE_STARS.has(id));
-    s = { id, el, weight, win, spec, how: live ? "live" : "scrub", onOwn: o.onOwn ?? null, told: undefined, refs: 1, seq: ++seq, a: 0, b: 0, placed: false, busyUntil: 0 };
+    // no window anywhere: a scrub star keeps the old middle band; a live one
+    // is held only when a still screen is lent to it (C1)
+    if (!win && !live) {
+      spec = DEFAULT_WINDOW;
+      win = parseWindow(DEFAULT_WINDOW);
+    }
+    s = {
+      id,
+      el,
+      weight,
+      win: win ?? NO_WINDOW,
+      spec,
+      how: "scrub",
+      onOwn: o.onOwn ?? null,
+      told: undefined,
+      refs: 1,
+      liveRefs: live ? 1 : 0,
+      hasWindow: Boolean(win),
+      top: 0,
+      bot: 0,
+      seq: ++seq,
+      a: 0,
+      b: 0,
+      placed: false,
+      busyUntil: 0,
+    };
     stars.set(id, s);
   }
-  viewportH = window.innerHeight;
-  measure(s);
+  if (s.hasWindow) {
+    viewportH = window.innerHeight;
+    measure(s);
+  } else if (!s.top && !s.bot) scheduleSpan(s);
+  setHow(s);
   evaluate();
   const me = s;
   const gate = o.onOwn;
@@ -592,8 +843,13 @@ export function registerScrollStar(id: string, el: Element, weight: BeatWeight, 
     gone = true;
     if (stars.get(id) !== me) return;
     if (gate && me.onOwn === gate) me.onOwn = null;
+    if (live) {
+      me.liveRefs--;
+      setHow(me);
+    }
     if (--me.refs > 0) return;
     stars.delete(id);
+    if (lent === me) unlend("unregistered");
     if (owner === me) {
       owner = null;
       note("free", id, { why: "unregistered" });

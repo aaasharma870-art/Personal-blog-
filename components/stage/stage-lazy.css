@@ -67,6 +67,38 @@
   html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-window[data-stage-on] .stage-window-poster {
     opacity: 0;
   }
+
+  /* — a wide block over the window (P3-11 r3, F4 → F2; r2 1440 #42: the
+       trading-algos ICE board slid over the window's picture, a hard cut
+       moving up the plate). The window's live layer fades out as the block
+       enters the viewport and back in as it leaves: a scroll-driven
+       opacity whose timeline is the block's own view progress, scoped to
+       its split (no timer, nothing runs at rest; Pause or reduced motion
+       drop the rule; no scroll-timeline support: today's slide). — */
+  .stage-split:has([data-stage-wide]) {
+    timeline-scope: --stage-wide;
+  }
+  .stage-split [data-stage-wide] {
+    view-timeline: --stage-wide block;
+  }
+  html.js[data-stage="live"]:not([data-motion-boot="paused"]):not([data-motion="paused"]) .stage-split:has([data-stage-wide]) > .stage-window[data-stage-on] > .stage-window-host {
+    animation: stage-window-wide linear both;
+    animation-timeline: --stage-wide;
+  }
+}
+@keyframes stage-window-wide {
+  entry 0% {
+    opacity: 1;
+  }
+  entry 35% {
+    opacity: 0;
+  }
+  exit 65% {
+    opacity: 0;
+  }
+  exit 100% {
+    opacity: 1;
+  }
 }
 
 /* — the plates engine (app/p3/plates.css keeps the server markup's boxes) — */
@@ -121,6 +153,10 @@
   display: block;
   border-radius: 50%;
   opacity: 0;
+}
+/* promoted only while the layer runs (P3-11 r3, J8: idle sprites held
+   their own layers under the opening card) */
+.plate-weather[data-run] > i {
   will-change: transform, opacity;
 }
 .plate-weather[data-weather="spray"] > i {

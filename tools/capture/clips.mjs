@@ -26,7 +26,18 @@
 //     `breath: "after <id>"`; `row` / `rowStars` = the beat-map row of the screen and its declared stars;
 //   - the intro phase (play screen, flight, hold, titles) from the intro:* marks: the prologue is outside the
 //     page rules and is counted apart;
-//   - frame timings (rAF fps, p95, max) and LoAFs > 50 ms in the clip.
+//   - frame timings (rAF fps, p95, max) and LoAFs > 50 ms in the clip;
+//   - SELF-MOTION (P3-11 r3, J1's method; `motion`, `moving`): the clip's 4 frames compared pairwise after
+//     lining each pair up by its scroll shift (a pixel counts only if it differs both scroll-compensated AND
+//     uncompensated, so rigid scroll and a sticky / fixed layer both cancel), the sticky header (top 80 CSS px)
+//     masked, ±1 analysis row of alignment slack (--motion-slack); `motion` = the largest share of changed
+//     pixels over the pairs, `moving` = motion > --motion-frac (default 0.003). Calibrated on r2's J1 eye counts
+//     (verdicts/j1-star.json): reader one-star share 47.1 / 46.7 % against the eye's 48.8 / 45.8 % (1440 / 1024),
+//     77 % of reader clips judged the same; skimmers read 7.5 / 13.9 points high (fast flings past sticky
+//     layers). totals.seen counts what the eye counts: `grantedStatic` (a star
+//     in the log, nothing moving: the log over-counts), `motionNoStar` (motion, no star in the log: a host
+//     moving outside the spotlight, or a text fade / caption swap the eye does not count), and the one-star
+//     share by motion. --no-motion skips it (no raw frames).
 // --plain: labels carry only the clip number, the time and the screen number (scrollY / viewport height + 1):
 // a judge of "would you keep scrolling?" sees no star or beat annotation. --name=<n> writes clips-<n>.json and
 // sheets-<n>/ beside the default ones (e.g. --clip=2 --plain --name=panel).
@@ -64,6 +75,8 @@ const QUALITY = Number(flags.quality ?? 70);
 const STRIPS = flags.strips !== "0";
 const STRIP_W = Number(flags["strip-width"] ?? 1280);
 const PLAIN = Boolean(flags.plain);
+const MOTION = flags.motion !== "0" && !flags["no-motion"];
+const MOTION_FRAC = Number(flags["motion-frac"] ?? 0.003);
 const NAME = flags.name ? `-${flags.name}` : "";
 const [VWW, VWH] = SC.meta.viewport.split("x").map(Number);
 
@@ -94,7 +107,8 @@ function breathsFor(geo) {
   const ends = [];
   for (const it of items) {
     const box = byId.get(it.dom);
-    if (!box) continue;
+    // an item not streamed yet (box 0 × 0 at the top) places nothing (r2 J1 #8: a breath at y 0)
+    if (!box || !(box.h > 0)) continue;
     const y = placer(it, box, vh);
     let piece = null;
     for (const b of it.beats) {
@@ -116,7 +130,7 @@ function rowsFor(geo) {
   const starts = [];
   for (const it of items) {
     const box = byId.get(it.dom);
-    if (!box) continue;
+    if (!box || !(box.h > 0)) continue;
     const y = placer(it, box, vh);
     for (const b of it.beats) starts.push({ id: b.id, row: rowOf(b.id), y: y(b.at), star: Boolean(b.star), w: b.weight ?? 0, timing: b.timing });
   }
@@ -290,6 +304,74 @@ const q = (arr, p) => {
 };
 const r1 = (v) => (v == null ? null : Math.round(v * 10) / 10);
 
+/* — self-motion (J1's method: scroll-aligned difference, sticky header masked) ———————————————— */
+const MOTION_W = 480; // analysis width (px): a 960 px frame halved, slightly blurred against JPEG noise
+const MOTION_LEVEL = 20; // a pixel "differs" above this grey-level step (0–255)
+const HEADER_CSS = 80; // the sticky header band (CSS px), masked
+const SLACK = Number(flags["motion-slack"] ?? 1); // rows of alignment slack (analysis px)
+const greyCache = new Map();
+async function greyOf(file) {
+  if (!file) return null;
+  if (greyCache.has(file)) return greyCache.get(file);
+  const fp = path.join(FRAMES, file);
+  const g = fs.existsSync(fp)
+    ? await sharp(fp).greyscale().resize({ width: MOTION_W }).blur(0.6).raw().toBuffer({ resolveWithObject: true }).then(({ data, info }) => ({ d: data, w: info.width, h: info.height }))
+    : null;
+  if (greyCache.size > 64) greyCache.delete(greyCache.keys().next().value);
+  greyCache.set(file, g);
+  return g;
+}
+/** Share of pixels that changed on their own between frames fa → fb: |B − A| both with A shifted by the
+ *  scroll between them (rigid scroll cancels) and unshifted (a sticky / fixed layer cancels). */
+async function selfMotion(fa, fb) {
+  const A = await greyOf(fa?.file);
+  const B = await greyOf(fb?.file);
+  if (!A || !B || A.w !== B.w || A.h !== B.h) return null;
+  const k = A.w / VWW;
+  const d = ((fb.y ?? 0) - (fa.y ?? 0)) * k;
+  const top = Math.ceil(HEADER_CSS * k);
+  let n = 0;
+  let hit = 0;
+  const at = (r, x) => A.d[r * A.w + x];
+  for (let r = top; r < B.h; r++) {
+    const row = r * B.w;
+    for (let x = 0; x < B.w; x++) {
+      const b = B.d[row + x];
+      // the best match within ±SLACK rows of each alignment: a frame's scroll offset and its pixels can
+      // be a few px apart in a fling, and a sticky layer settles by a pixel or two
+      let u = 255;
+      let c = 255;
+      let inside = false;
+      for (let e = -SLACK; e <= SLACK; e++) {
+        const ru = r + e;
+        if (ru >= top && ru < A.h) u = Math.min(u, Math.abs(b - at(ru, x)));
+        const ra = r + d + e;
+        const r0 = Math.floor(ra);
+        if (r0 >= top && r0 + 1 < A.h) {
+          const f = ra - r0;
+          inside = true;
+          c = Math.min(c, Math.abs(b - ((1 - f) * at(r0, x) + f * at(r0 + 1, x))));
+        }
+      }
+      // rows scrolled in from outside the frame cannot be compared: rigid by assumption
+      if (!inside && Math.abs(d) >= 1) c = 0;
+      n++;
+      if (Math.min(u, c) > MOTION_LEVEL) hit++;
+    }
+  }
+  return n ? hit / n : 0;
+}
+/** The clip's self-motion: the largest share over its consecutive frame pairs (null = no frames). */
+async function clipMotion(picks) {
+  let best = null;
+  for (let k = 1; k < picks.length; k++) {
+    if (!picks[k] || !picks[k - 1] || picks[k].file === picks[k - 1].file) continue;
+    const m = await selfMotion(picks[k - 1], picks[k]);
+    if (m != null) best = Math.max(best ?? 0, m);
+  }
+  return best ?? (picks.some(Boolean) ? 0 : null);
+}
+
 /* — build the clips —————————————————————————————————————————————————————— */
 const T0 = flags.from === "scroll" ? SC.tScroll : Math.max(SC.tStart, frames[0]?.t ?? SC.tStart);
 const T1 = Math.min(SC.tEnd, frames.at(-1)?.t ?? SC.tEnd);
@@ -317,6 +399,7 @@ for (let i = 0; i < N; i++) {
   const skips = (SC.spotlight ?? []).filter((e) => e.ev === "skip" && e.t >= a && e.t < b).map((e) => `${e.id} (${e.why})`);
   const geoIds = intro ? [] : geoScrollStars(g, y);
   const unreg = geoIds.filter((id) => UNREGISTERED.has(id) && !ids.some((s) => s.id === id));
+  const motion = MOTION ? await clipMotion(picks) : null;
   clips.push({
     i: i + 1,
     t: r1((a - T0) / 1000),
@@ -337,6 +420,8 @@ for (let i = 0; i < N; i++) {
     row: row?.row ?? null,
     rowStars: row ? row.stars.map((s) => `${s.id} w${s.w}`) : [],
     breath: rest ? `after ${rest.after}` : null,
+    motion: motion == null ? null : Math.round(motion * 1e5) / 1e5,
+    moving: motion == null ? null : motion > MOTION_FRAC,
     frames: picks.map((f) => f?.file ?? null),
     fps: sum ? r1((1000 * raf.length) / sum) : null,
     p95: r1(q(raf, 0.95)),
@@ -384,6 +469,31 @@ const totals = {
   })(),
   starsSeen: [...new Set(STARS.map((s) => s.id))].length,
   breaths: breathsFor(SC.geo.at(-1)),
+  seen: (() => {
+    const judged = pageClips.filter((c) => c.moving != null);
+    if (!judged.length) return null;
+    const brief = (c) => ({ i: c.i, t: c.t, y: c.y, section: c.section, stars: c.stars.map((s) => s.id), motion: c.motion });
+    const grantedStatic = judged.filter((c) => c.maxConcurrent >= 1 && !c.moving);
+    const motionNoStar = judged.filter((c) => c.maxConcurrent === 0 && c.moving);
+    const one = judged.filter((c) => c.moving && c.maxConcurrent <= 1).length;
+    const performing = judged.filter((c) => c.moving && c.maxConcurrent === 1).length;
+    const deadOut = judged.filter((c) => !c.moving && !c.breath);
+    return {
+      note: "J1's method by machine: a clip counts as a star when its frames move on their own (scroll-aligned difference, header masked; motion > motionFrac). exactlyOne = moving with ≤ 1 star in the log (the eye's count); performingOne = moving with exactly one star in the log; grantedStatic = a star in the log while nothing moves; motionNoStar = motion with no star in the log",
+      motionFrac: MOTION_FRAC,
+      judged: judged.length,
+      exactlyOne: one,
+      exactlyOnePct: pct(one, judged.length),
+      performingOne: performing,
+      performingOnePct: pct(performing, judged.length),
+      noneOutsideBreath: deadOut.length,
+      noneOutsideBreathBySection: Object.entries(deadOut.reduce((m, c) => ((m[c.section] = (m[c.section] ?? 0) + 1), m), {})).sort((a, b) => b[1] - a[1]),
+      grantedStatic: grantedStatic.length,
+      grantedStaticClips: grantedStatic.map(brief),
+      motionNoStar: motionNoStar.length,
+      motionNoStarClips: motionNoStar.map(brief),
+    };
+  })(),
 };
 
 /* — images ——————————————————————————————————————————————————————————————— */
@@ -392,7 +502,8 @@ const labelOf = (c) => {
   const mm = `${Math.floor(c.t / 60)}:${String(Math.floor(c.t % 60)).padStart(2, "0")}`;
   if (PLAIN) return { left: `#${c.i} ${mm}`, right: c.intro ? "opening" : `screen ${c.screen}`, alert: false };
   const unreg = c.unregistered.length ? ` (+${c.unregistered.join(" ")} unreg.)` : "";
-  const stars = (c.stars.length ? c.stars.map((s) => `★${s.id}·w${s.w}`).join(" ") : "no star") + unreg;
+  const still = c.moving === false && c.stars.length ? " (static)" : c.moving && !c.stars.length ? " (moves)" : "";
+  const stars = (c.stars.length ? c.stars.map((s) => `★${s.id}·w${s.w}`).join(" ") : "no star") + unreg + still;
   const flag = c.intro ? `intro: ${c.intro}` : c.maxConcurrent >= 2 ? "2+ AT ONCE" : c.maxConcurrent === 0 ? (c.breath ? `breath ${c.breath}` : "NO STAR") : c.breath ? `breath ${c.breath}` : "";
   const right = c.stars.length || c.unregistered.length || !flag ? `${stars}${flag ? " | " + flag : ""}` : flag;
   return { left: `#${c.i} ${mm} y${c.y} ${c.section}`, right, alert: !c.intro && (c.maxConcurrent >= 2 || (c.maxConcurrent === 0 && !c.breath)) };
@@ -493,6 +604,7 @@ const out = {
       distinct: "stars seen anywhere in the clip (a hand-off inside one second lists two in sequence)",
       breath: "the clip's scrollY lies in the viewport after a weight-3 star (lib/beats.ts BREATHS; a card's set piece from the end of its (b)), placed on this run's geometry",
       intro: "the prologue (play screen → titles → quiet window), outside the page rules; excluded from the page totals",
+      motion: "self-motion over the clip's 4 frames: the largest share of pixels changed on their own between two consecutive frames (scroll-compensated AND uncompensated difference > 20 grey levels at 480 px wide, the top 80 CSS px masked); moving = motion > motionFrac (totals.seen)",
     },
   },
   totals,
@@ -501,5 +613,9 @@ const out = {
 };
 fs.writeFileSync(path.join(DIR, `clips${NAME}.json`), JSON.stringify(out, null, 1));
 console.log(
-  `clips: ${clips.length} clips (${totals.introClips} intro) → ${sheets.length} sheet(s); page clips: exactly one star ${totals.exactlyOne} (${totals.exactlyOnePct} %), 2+ at once ${totals.twoPlus}, none ${totals.none} (outside a declared breath ${totals.noneOutsideBreath}); ${path.relative(ROOT, path.join(DIR, `clips${NAME}.json`))}`,
+  `clips: ${clips.length} clips (${totals.introClips} intro) → ${sheets.length} sheet(s); page clips: exactly one star ${totals.exactlyOne} (${totals.exactlyOnePct} %), 2+ at once ${totals.twoPlus}, none ${totals.none} (outside a declared breath ${totals.noneOutsideBreath})` +
+    (totals.seen
+      ? `; by motion (J1's method): one star ${totals.seen.exactlyOne} (${totals.seen.exactlyOnePct} %), dead outside a breath ${totals.seen.noneOutsideBreath}, granted static ${totals.seen.grantedStatic}, motion with no star ${totals.seen.motionNoStar}`
+      : "") +
+    `; ${path.relative(ROOT, path.join(DIR, `clips${NAME}.json`))}`,
 );

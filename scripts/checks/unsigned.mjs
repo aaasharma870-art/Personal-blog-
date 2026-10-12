@@ -7,10 +7,30 @@
 // whether or not a component wires it yet (a key that is built from parts, like
 // `egg.hunt.name.${id}`, cannot be found by a text search), and it never ships unsigned
 // either way. Aryan signs by removing `unsigned` (never by flipping film.copySignedOff).
+//
+// P3-11 r3 (J9 F8): new Phase-3 microcopy JOINS the list. Every film.copy key that is not in
+// scripts/checks/signed-copy.json with the same text (the copy Aryan signed on 2026-09-29,
+// frozen from the pre-Phase-3 base 5aa4587, plus any he signs later) must carry
+// `unsigned: true` (ERROR): a fixer's new or reworded string can never pass as signed.
 import fs from "node:fs";
 import path from "node:path";
 
-export default function run({ ROOT, gate, film, uiFiles }) {
+export default function run({ ROOT, err, gate, film, uiFiles }) {
+  {
+    const signedFile = path.join(ROOT, "scripts", "checks", "signed-copy.json");
+    const snap = fs.existsSync(signedFile) ? JSON.parse(fs.readFileSync(signedFile, "utf8")) : null;
+    if (!snap) err("[P3 #10] scripts/checks/signed-copy.json is missing (the signed copy snapshot)");
+    else {
+      const signed = { ...snap.copy, ...Object.fromEntries(Object.entries(snap.later ?? {}).map(([k, v]) => [k, typeof v === "string" ? v : v?.text])) };
+      const bad = Object.entries(film.copy ?? {}).filter(([k, c]) => c && typeof c === "object" && c.text && c.unsigned !== true && signed[k] !== c.text);
+      for (const [k, c] of bad) {
+        err(
+          `[P3 #10] copy.${k} · "${c.text}" is ${k in signed ? "reworded since" : "not in"} the signed copy (scripts/checks/signed-copy.json): ` +
+            `new or changed page microcopy is \`status: "proposed", unsigned: true\` until Aryan signs it`,
+        );
+      }
+    }
+  }
   /** Every unsigned string: [key, text, how to find its renderers]. */
   const list = [];
   // `find` names the renderer: the quoted key, or (for fields reached through the derived

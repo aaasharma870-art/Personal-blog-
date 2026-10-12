@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { CaptionWorld, Copy } from "@/lib/film";
+import { film, type CaptionWorld, type Copy, type CopyKey } from "@/lib/film";
 import { acts, anchorId, copyText, copyVisible, enabledSections, numeralOf } from "@/lib/sections";
 import { planeAttrs } from "@/lib/worlds";
 import { FilmTitle } from "@/components/primitives/scene-caption";
@@ -35,14 +35,21 @@ function onPage(id: string): boolean {
   return enabledSections.some((s) => anchorId(s) === id);
 }
 
-/** F6's line (`films.play`), gated like every proposed string. */
-function playCopy(): Copy | null {
-  const c = copyText("films.play");
+/** An invitation line by copy key, gated like every proposed string; null
+ *  when the key is not in the manifest (yet). */
+export function playCopy(key: string): Copy | null {
+  if (!(key in film.copy)) return null;
+  const c = copyText(key as CopyKey);
   return copyVisible(c) ? c : null;
 }
 
-export function FilmsPlay() {
-  const c = playCopy();
+/** C4 (P3-11 r3): the game invitation on the act-1 contents page, before
+ *  the drone and Dead Eye (F6's words; F1's copy key, proposed + unsigned).
+ *  The same static desktop-only line as the films one. */
+export const OPENING_PLAY_KEY = "opening.play";
+
+export function FilmsPlay({ copyKey = "films.play", className }: { copyKey?: string; className?: string }) {
+  const c = playCopy(copyKey);
   if (!c) return null;
   const words = Object.keys(LINKS).filter((w) => onPage(LINKS[w]));
   const parts: ReactNode[] = words.length
@@ -57,7 +64,7 @@ export function FilmsPlay() {
       )
     : [c.text];
   return (
-    <p className="mt-tier-group hidden max-w-lead type-small text-fg df:block" data-copy-status={c.status}>
+    <p className={className ?? "mt-tier-group hidden max-w-lead type-small text-fg df:block"} data-copy-status={c.status}>
       {parts}
     </p>
   );

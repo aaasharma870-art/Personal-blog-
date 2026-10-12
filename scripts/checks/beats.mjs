@@ -19,6 +19,8 @@
 // card set piece) are listed in the summary (#12 keeps them weight ≤ 1). #2 judges pairs with
 // a scroll star: two TIME stars never show at once (the spotlight holds one grant at a time and
 // queues the other ≤ 1.5 s, then shows its end state), so their zones may overlap.
+// P3-11 r3 (F1, C1): a host's `useScrollStar(ref, "<id>", { …, live })` names a declared scroll
+// star (ERROR); the spotlight lends such a star a still screen nobody performs.
 
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -109,6 +111,7 @@ export default async function run({ ROOT, RELEASE, err, warn, gate, page, film, 
     if (b.kind === "push-title" && b.push !== "in" && b.push !== "sun") err(`[P3 beats] ${b.id}: a push-title says push: "in" | "sun"`);
     if (b.pairWith !== undefined && b.kind !== "match-cut") err(`[P3 beats] ${b.id}: pairWith is for match-cut beats only`);
     if (b.needsIdle !== undefined && (b.needsIdle !== true || b.timing !== "time")) err(`[P3 beats] ${b.id}: needsIdle (true) is for time beats only`);
+    if (b.live !== undefined && (b.live !== true || !b.star || b.timing !== "scroll")) err(`[P3 beats] ${b.id}: live (true) is for scroll stars only (C1)`);
     if (b.world !== undefined && !worldIds.has(b.world)) err(`[P3 beats] ${b.id}: unknown world "${b.world}"`);
     if (b.act !== undefined && !actIds.has(b.act)) err(`[P3 beats] ${b.id}: unknown act "${b.act}"`);
     if (b.feature !== "existing" && !FEATURE.test(b.feature ?? "")) err(`[P3 beats] ${b.id}: feature must be "P3-<n>" | "existing"`);
@@ -335,20 +338,33 @@ export default async function run({ ROOT, RELEASE, err, warn, gate, page, film, 
   for (const id of sw.LIVE_STARS ?? []) if (!declared.get(id)?.star) err(`[P3 spotlight] lib/spotlight-windows.ts LIVE_STARS ${id}: not a declared star`);
   // windows written on the element: beatAttrs("<id>", { …, scroll: "<window>" })
   const attrWindows = new Map();
+  const liveHosts = new Set();
   for (const f of uiFiles) {
     if (!/\.(t|j)sx?$/.test(f)) continue;
     const src = readFile ? readFile(path.relative(ROOT, f)) : "";
     for (const m of src.matchAll(/beatAttrs\(\s*"(B[0-9a-z-]+)"\s*,\s*\{[^}]*?\bscroll:\s*"([^"]*)"/gi)) attrWindows.set(m[1], { spec: m[2], file: path.relative(ROOT, f) });
     // …or written beside it: {...beatAttrs("<id>", …)} data-beat-scroll="<window>"
     for (const m of src.matchAll(/beatAttrs\(\s*"(B[0-9a-z-]+)"[^)]*\)\s*\}\s*data-beat-scroll="([^"]*)"/g)) attrWindows.set(m[1], { spec: m[2], file: path.relative(ROOT, f) });
+    // a LIVE star a host registers itself (C1, P3-11 r3): useScrollStar(ref, "<id>", { …, live: … })
+    const code = src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:\\])\/\/.*$/gm, "$1"); // not the doc comments
+    for (const m of code.matchAll(/useScrollStar\(\s*[\w.]+\s*,\s*"(B[0-9a-z-]+)"\s*,\s*\{[^}]*?\blive\b/g)) {
+      const b = declared.get(m[1]);
+      liveHosts.add(m[1]);
+      if (!b?.star || b.timing !== "scroll") err(`[P3 spotlight] ${path.relative(ROOT, f)} ${m[1]}: a live star (C1) is a declared SCROLL star (lib/page.ts / lib/film.ts beats; ${b ? (b.star ? "it is a time star" : "it is quiet") : "not declared"})`);
+    }
   }
   for (const [id, { spec, file }] of attrWindows) {
     const b = declared.get(id);
     if (spec && !sw.parseWindow(spec)) err(`[P3 spotlight] ${file} ${id}: data-beat-scroll "${spec}" is not "<start>, <end>", each "[selector] <top|center|bottom|n%> <vp%>"`);
     if (b && !(b.star && b.timing === "scroll")) err(`[P3 spotlight] ${file} ${id}: a scroll window on a ${b.star ? "time star" : "quiet beat"}`);
   }
+  // a LIVE star (C1: declared `live`, in LIVE_STARS, or a host's useScrollStar live) needs no window: the
+  // spotlight lends it a still screen
+  for (const id of liveHosts) if (declared.get(id)?.star && !declared.get(id).live) warn(`[P3 spotlight] ${id}: a host registers it live (C1): declare it \`live: true\` (lib/page.ts / lib/film.ts)`);
+  const isLive = (p) => p.b.live === true || (sw.LIVE_STARS ?? new Set()).has(p.b.id) || liveHosts.has(p.b.id);
   const scrollStars = stars.filter((p) => p.b.timing === "scroll");
   const windowed = scrollStars.filter((p) => p.b.id in (sw.SCROLL_WINDOWS ?? {}) || attrWindows.get(p.b.id)?.spec || p.b.kind === "scrub-sentence");
+  const liveOnly = scrollStars.filter((p) => isLive(p) && !windowed.includes(p));
 
   /* — breaths (lib/beats.ts BREATHS): the viewport after each weight-3 star ———— */
   const breaths = [];
@@ -372,7 +388,8 @@ export default async function run({ ROOT, RELEASE, err, warn, gate, page, film, 
   );
   console.log(
     `  spotlight: ${windowed.length}/${scrollStars.length} scroll stars with a performance window (table, markup or scrub)` +
-      `${windowed.length < scrollStars.length ? `; band default: ${scrollStars.filter((p) => !windowed.includes(p)).map((p) => p.b.id).join(" ")}` : ""}` +
+      `${liveOnly.length ? `, ${liveOnly.length} live only (C1, lent a still screen): ${liveOnly.map((p) => p.b.id).join(" ")}` : ""}` +
+      `${windowed.length + liveOnly.length < scrollStars.length ? `; band default: ${scrollStars.filter((p) => !windowed.includes(p) && !liveOnly.includes(p)).map((p) => p.b.id).join(" ")}` : ""}` +
       `; breaths after ${breaths.map((b) => `${b.id} (${fmt(b.end)}–${fmt(b.end + 100)}vh)`).join(", ")}`,
   );
 }

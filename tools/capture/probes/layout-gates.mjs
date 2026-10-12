@@ -19,7 +19,11 @@
 //   no-js          1440×900, JavaScript disabled: no split grid, no window, no stage root, no
 //                  html.js (so no pinned travel or tail can key on the gate);
 //   phone / rm     390×844 touch, and 1440×900 with reduced motion: no split grid, no window,
-//                  no stage root, no html[data-stage], no letterbox bars after 4 s.
+//                  no stage root, no html[data-stage], no letterbox bars after 4 s;
+//   rm-hash        (P3-11 r3, J9 F1) 1440×900 with reduced motion, and paused-hash with a paused
+//                  reload: /?skip=intro#work (--hash=<id>) lands on the section and stays: its page
+//                  top and the height of every section above it are the same once streamed and 3 s
+//                  after load, and it is in view (top within −2…240 px) at the end.
 // z-scale (#12): in the default run, every fixed Phase-3 layer is outside <main> and
 // <main> / the credits footer sit at --z-main.
 // pass = every run's checks hold.
@@ -208,6 +212,60 @@ export default async function probe(page, ctx) {
     await p.waitForTimeout(4000);
     const gate = await p.evaluate(gateState);
     results[name] = { gate, ok: gate.splitGrid === 0 && gate.windowShown === 0 && !gate.stageRoot && !gate.stage && !gate.bars };
+  }
+
+  // rm-hash / paused-hash (P3-11 r3, J9 F1): a DEEP LINK under reduced motion, and the same on a paused
+  // reload, lands on its section and stays there: the boxes above it are final at first paint (read once
+  // the page has streamed in, and again 3 s after load), so the target's page top does not move and it
+  // is in view at the end (r2: #journey 3,209 → 1,204 px after hydration moved an RM reader ≈ 2,000 px).
+  const HASH = String(ctx.args["hash"] ?? "work");
+  for (const [name, opts, paused] of [
+    ["rmHash", { viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" }, false],
+    ["pausedHash", { viewport: { width: 1440, height: 900 } }, true],
+  ]) {
+    const p = await ctx.newPage(opts);
+    if (paused) {
+      await p.addInitScript(() => {
+        try {
+          sessionStorage.setItem("motion", "paused");
+        } catch {}
+      });
+    }
+    await p.goto(ctx.url(`/?skip=intro#${HASH}`), { waitUntil: "domcontentloaded" });
+    const streamed = await p
+      .waitForFunction(() => {
+        const pending = document.querySelector("template[id^='B:'], div[hidden][id^='S:']");
+        const secs = [...document.querySelectorAll("[data-section]")];
+        return !pending && secs.length > 0 && secs.every((x) => !x.closest("div[hidden][id^='S:']"));
+      }, null, { timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
+    const read = (id) =>
+      p.evaluate((id) => {
+        const t = document.getElementById(id);
+        const r = t?.getBoundingClientRect();
+        // every section wrapper above the target (keyed by data-section: the wrappers carry no id; never the
+        // target's own wrapper, which contains it)
+        const above = [...document.querySelectorAll("[data-section]")]
+          .filter((x) => t && !x.contains(t) && x.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)
+          .map((x) => [x.getAttribute("data-section") || x.id, Math.round(x.getBoundingClientRect().height)]);
+        return { y: Math.round(scrollY), top: r ? Math.round(r.top) : null, pageTop: r ? Math.round(r.top + scrollY) : null, height: document.documentElement.scrollHeight, above };
+      }, id);
+    const early = await read(HASH);
+    await p.waitForLoadState("load");
+    await p.waitForTimeout(3000);
+    const late = await read(HASH);
+    const resized = late.above.filter(([id, h]) => early.above.find(([e]) => e === id)?.[1] !== h).slice(0, 6);
+    results[name] = {
+      hash: HASH,
+      streamed,
+      early,
+      late: { ...late, above: undefined },
+      resized,
+      ok:
+        streamed && late.pageTop != null && Math.abs(late.pageTop - early.pageTop) <= 2 && resized.length === 0 && late.top >= -2 && late.top <= 240,
+    };
+    results[name].early = { ...early, above: undefined };
   }
 
   return { pass: Object.values(results).every((r) => r.ok), ...results };

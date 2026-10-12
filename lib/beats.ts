@@ -81,6 +81,13 @@ export type Beat = {
   pairWith?: string;
   /** Invites, fly-throughs: wait for scroll-idle (§3.8). */
   needsIdle?: true;
+  /** A LIVE scroll star (C1, P3-11 r3; spec §2.1 note): it performs on its
+   *  own (a loop, a drift, a draw) and its host registers it `live` only
+   *  while it plays (`useScrollStar(ref, id, { weight, live: true, on })`).
+   *  It needs no performance window: the spotlight lends it a still screen
+   *  nobody performs (lib/spotlight.ts THE LENT STAR); with a window it
+   *  also owns inside it. */
+  live?: true;
   world?: WorldId;
   act?: ActId;
   feature: `P3-${number}` | "existing";

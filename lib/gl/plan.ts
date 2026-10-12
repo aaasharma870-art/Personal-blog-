@@ -11,8 +11,9 @@ import type { GlCard, GlCardSpec, GlFlavour, GlShape } from "./types";
 /** The OUT/IN meet of a .45 star (a) (§7.1: p .22). */
 export const MEET = 0.22;
 const A_END = 0.45;
-/** The act title's letters start opening at p .68 (§8.1). */
-export const TITLE_IN = 0.68;
+/** The act title's letters start opening at p .70 (§8.1; P3-11 r3: .68 →
+ *  .70 with the css tier's MASK_IN, card-p3.tsx). */
+export const TITLE_IN = 0.7;
 
 export type Pass = { flavour: GlFlavour; r0: number; r1: number; role: "out" | "in" | "one" };
 export type Draw = { kind: "clear" } | { kind: "pass"; pass: Pass; t: number } | { kind: "title"; t: number };
@@ -258,9 +259,12 @@ export type SdfMeta = {
  *  `title`). The tintype's title does not grow at all (the varied one: a
  *  still stencil over the moving push, "developed" rather than dived). */
 export const TITLE_ZOOM: Readonly<Record<GlCard, number>> = { opening: 1.3, seam: 1.3, tintype: 1, ignite: 1.3 };
-/** The title's dissolve (title-local t; p ≈ .856 → .92): the clean push
- *  frame holds after it. The css tier's state fade starts at the same p. */
-export const TITLE_OUT: readonly [number, number] = [0.55, 0.75];
+/** The title's dissolve (title-local t; p ≈ .82 → .86): the clean push
+ *  frame holds after it. The css tier's state fade starts at the same p
+ *  (card-p3.tsx TITLE_DONE). P3-11 r3: the ghost title holds ~12 % of the
+ *  travel (was .856 → .92), so cards 2–4 spend less time on a repeat of
+ *  the h2. */
+export const TITLE_OUT: readonly [number, number] = [0.4, 0.53];
 
 /** frame uv → title SDF uv at title-local t (0 → 1, p .68 → 1): the title
  *  rests centred (cap ≤ 20% of the frame height, ink ≤ 72% of its width)

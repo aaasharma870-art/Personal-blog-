@@ -15,23 +15,41 @@
   display: none;
 }
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  /* P3-11 r3: the Intermission card (films-section.tsx): a silent-film
+     intertitle — double rule, centred house serif, the projector's light */
+  .films-card {
+    max-width: 66rem;
+    margin-inline: auto;
+    padding: clamp(2rem, 6vh, 4rem) clamp(2rem, 5vw, 4.5rem);
+    text-align: center;
+    border: 1px solid color-mix(in oklab, var(--fg) 32%, transparent);
+    outline: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+    outline-offset: 7px;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--fg) 8%, transparent), transparent);
+  }
+  .films-card header,
+  .films-card p {
+    margin-inline: auto;
+  }
+  .films-card h2 {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: clamp(3rem, 5.6vw, 5.5rem);
+    letter-spacing: -0.02em;
+  }
+  .films-card > p {
+    font-size: 1.0625rem;
+  }
   .films-bill {
     display: block;
-    position: relative;
     margin-top: var(--spacing-tier-block);
-  }
-  .films-bill::before {
-    content: "";
-    position: absolute;
-    inset: -90% -8% -10%;
-    z-index: -1;
-    pointer-events: none;
-    background: radial-gradient(closest-side, color-mix(in oklab, var(--fg) 7%, transparent), transparent);
   }
   .films-bill-acts {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
+    /* sized by their names (P3-11 r3: "Red Dead Redemption 2" broke to
+       three lines with an orphaned "2" at 1024 in a quarter column) */
+    grid-auto-columns: auto;
+    justify-content: space-evenly;
     gap: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--rule);

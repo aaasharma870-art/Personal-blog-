@@ -62,7 +62,7 @@ import {
  * the plate's sun on arrival; the flash powder fires at p .03 (the impact,
  * card-p3.tsx). The plate takes its registered crop (`reg`: the horizon on
  * MATCH_ROW of the frame; zoom ≤ 1.1) under the boot gate; star (b) is the
- * code push toward the sun (1 → 1.04, CardShell's content box).
+ * code push toward the sun (1 → 1.1, CardShell's content box; P3-11 r3).
  *
  * MV-10 missing (`plate` null): the plate that develops is its MEDIA-PLAN
  * code alternative, a golden-hour frontier drawn in SVG gradients (sky haze
@@ -149,6 +149,7 @@ export function TintypeFrame({ plate: id, reg = null }: { plate: MediaId | null;
   // the graphite trail recedes once the print is fixed: a faint thread on
   // the grass, not a bright swoosh across it (M2 critic 3 #6)
   const trailOpacity = useTransform(p, (v) => 1 - 0.72 * remap(v, 0.6, 0.9));
+  const DevelopFront = pin?.ui?.DevelopFront;
 
   return (
     <div aria-hidden="true" data-frame="tintype" className="absolute inset-0">
@@ -179,6 +180,8 @@ export function TintypeFrame({ plate: id, reg = null }: { plate: MediaId | null;
             was retired). Live only. */}
         {live ? <motion.div className="absolute inset-0 bg-bg will-change-[opacity]" style={{ opacity: cover }} /> : null}
         <span className="act-tintype-vignette pointer-events-none absolute inset-0 opacity-70" />
+        {/* pin mode, css tier: the develop front (pin-extras.tsx; P3-11 r3) */}
+        {DevelopFront && live ? <DevelopFront /> : null}
       </div>
 
       {/* the low sun (a pre-rendered --w-dusk sprite: world media), sinking

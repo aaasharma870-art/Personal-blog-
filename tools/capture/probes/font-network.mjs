@@ -6,14 +6,16 @@
 // Font files are identified by CONTENT (sha1 of the response body against
 // the repo's files): the film faces under assets/fonts/film/** and
 // public/fonts/film/** — "legacy" = the four M2 *-subset.woff2 (phones),
-// "name" = the Pirata ASCII+ file, "world" = every other film face; any
-// other font is a house face (Geist, Geist Mono, Newsreader).
+// "name" = the Pirata ASCII+ file, "optional" = the preloaded optional
+// Pirates body (P3-11 r3: public/, font-display optional, live from first
+// paint), "world" = every other film face; any other font is a house face
+// (Geist, Geist Mono, Newsreader).
 //
 // DESKTOP (ctx.vw, default 1440×900; ctx.path, default /?skip=intro):
 //   - the name is preloaded: <link rel=preload as=font media="(min-width: 64rem)">
 //     (or the same as a Link header), and the h1 renders in it, mixed case,
 //     line-height .96 (P3-4 #1);
-//   - before ladder step 5 only the name + house faces were requested
+//   - before ladder step 5 only the name, the optional Pirates body + house faces were requested
 //     (P3-4 #7; the prologue's hp head is the documented exception and
 //     does not arise with ?skip=intro);
 //   - the legacy subsets are never requested;
@@ -44,7 +46,13 @@ function filmIndex() {
   for (const abs of [...walk(path.join(ROOT, "assets", "fonts", "film")), ...walk(path.join(ROOT, "public", "fonts", "film"))]) {
     if (!abs.endsWith(".woff2")) continue;
     const rel = path.relative(ROOT, abs);
-    const kind = /-subset\.woff2$/.test(rel) ? "legacy" : /pirata-one-ascii\.woff2$/.test(rel) ? "name" : "world";
+    const kind = /-subset\.woff2$/.test(rel)
+      ? "legacy"
+      : /pirata-one-ascii\.woff2$/.test(rel)
+        ? "name"
+        : /^public[\\/]fonts[\\/]film[\\/]cormorant-garamond-500[\\/]/.test(rel)
+          ? "optional"
+          : "world";
     out.set(crypto.createHash("sha1").update(fs.readFileSync(abs)).digest("hex"), { file: rel, kind });
   }
   return out;
@@ -195,7 +203,7 @@ export default async function probe(page, ctx) {
   const legacyBytes = pall.filter((f) => f.kind === "legacy").reduce((a, f) => a + f.bytes, 0);
   const mobileBase = ctx.args["mobile-lcp-base"] ? Number(ctx.args["mobile-lcp-base"]) : null;
   const phoneR = {
-    newFonts: pall.filter((f) => f.kind === "world" || f.kind === "name").map((f) => f.file),
+    newFonts: pall.filter((f) => f.kind === "world" || f.kind === "name" || f.kind === "optional").map((f) => f.file),
     legacy: pall.filter((f) => f.kind === "legacy").map((f) => `${f.file} ${f.bytes} B`),
     legacyBytes,
     house: pall.filter((f) => f.kind === "house").map((f) => `${f.url} ${f.bytes} B`),

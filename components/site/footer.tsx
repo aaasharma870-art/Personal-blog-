@@ -89,6 +89,15 @@ import { beatAttrs } from "@/lib/beats";
    padding, the block gaps at the group tier, a shorter run-in; the last
    line (Q-HP-2) is set at the title size, so the page ends on a composed
    frame. The AI row and the fan-tribute line stay where they were.
+
+   P3-11 r3 (panel J3, J4 "no" at the credits: "tiny grey type on
+   near-black for ~6 s"): ≥ 64rem the fan-tribute line and the closing
+   line (`data-roll-read`) are set at the body size in ink, "To be
+   continued." (`data-roll-end`) at the lead size, the "Credits" head in
+   ink, and the roll's head gap tightened again; nothing is hidden (the AI
+   row and the fan-tribute line stay visible). The roll ends with the
+   header's height of extra room, so its last scroll position never leaves
+   a line sliced under the header (F6, 1024).
    ========================================================================== */
 
 /** The film faces the site ships (PHASE3-SPEC §5.2; `typeCredits` in
@@ -304,15 +313,21 @@ export function Footer({ entry }: SectionProps<"credits">) {
         </dl>
 
         {on ? (
-          <p className="mx-auto mt-tier-block max-w-[56rem] text-center type-small text-fg-muted">
+          <p className="mx-auto mt-tier-block max-w-[56rem] text-center type-small text-fg-muted" data-roll-read="">
             {credits.legal}
             {copyVisible(credits.legalMore) ? ` ${credits.legalMore.text}` : null}
           </p>
         ) : null}
 
         <div className="mt-tier-block flex flex-col items-center gap-tier-pair text-center">
-          <p className="max-w-lead type-small text-fg-muted">{footerLine}</p>
-          {on && copyVisible(credits.end) ? <p className="type-body text-fg">{credits.end.text}</p> : null}
+          <p className="max-w-lead type-small text-fg-muted" data-roll-read="">
+            {footerLine}
+          </p>
+          {on && copyVisible(credits.end) ? (
+            <p className="type-body text-fg" data-roll-end="">
+              {credits.end.text}
+            </p>
+          ) : null}
           <div className="flex items-center gap-2" data-credits-return="">
             {hp ? (
               <TimeTurnerLink href={topHref} icon={24} className="type-small text-fg-muted transition-colors hover:text-fg">

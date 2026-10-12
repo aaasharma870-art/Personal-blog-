@@ -17,7 +17,7 @@
 //   sound     [data-sound-toggle]: Enter toggles aria-pressed, Enter restores it               (P3-9)
 //   chip      [data-hunt-chip]: Enter opens the hunt panel, Esc closes it, focus back on the chip (P3-8)
 //   menu      button[aria-controls=site-menu]: Enter opens #site-menu, Esc closes it, focus back
-//   compass   button[data-toy=compass]: Enter spins and the needle settles on a pillar bearing; → steps
+//   compass   #about button[data-toy=compass] (About's toy, C8): Enter spins and the needle settles on a pillar bearing; → steps
 //   coin      #egg-pc-coin  · kraken [data-kraken] · aal #egg-3i-aal · eagle #egg-rd-eagle · bone #egg-rd-bone
 //             · fire #egg-rd-fire · snitch button[data-egg=snitch]: Enter counts the egg (aryan:hunt:v1)
 //   run       the gauntlet's Run button ([data-beat=B18] button): Enter; a clearing run counts 3i-quad
@@ -52,7 +52,7 @@ const TARGETS = {
   sound: "[data-sound-toggle]",
   chip: "[data-hunt-chip]",
   menu: 'button[aria-controls="site-menu"]',
-  compass: 'button[data-toy="compass"]',
+  compass: '#about button[data-toy="compass"]',
   coin: "#egg-pc-coin",
   kraken: "[data-kraken]",
   run: '[data-beat="B18"] button',
@@ -172,7 +172,8 @@ export default async function probe(page, ctx) {
       return { pass: open && closed && back, open, closed, focusBack: back, focus: await activeDesc() };
     },
     async compass() {
-      const needle = () => page.evaluate(() => Number(document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle")));
+      // About's toy only (C8, P3-11 r3): the hero and the journey chart draw static compasses too
+      const needle = () => page.evaluate(() => Number(document.querySelector('#about [data-instrument="jack-compass"]')?.getAttribute("data-needle")));
       const settleRead = async () => {
         let last = null;
         let same = 0;
@@ -324,7 +325,11 @@ export default async function probe(page, ctx) {
             if (el.getAttribute("aria-hidden") === "true" || el.hidden || getComputedStyle(el).display === "none") return "";
             if (el.tagName === "IMG") return el.getAttribute("alt") ?? "";
             if (el !== e && el.getAttribute("aria-label")) return ` ${el.getAttribute("aria-label")} `;
-            return [...el.childNodes].map(textOf).join("");
+            const inner = [...el.childNodes].map(textOf).join("");
+            // P3-11 r3 (F6): a block or flex / grid item is its own run of text (the chip read
+            // "Egg hunt0/12"): space it from its neighbours, as the accessible name does
+            const d = el !== e ? getComputedStyle(el).display : "inline";
+            return d && !d.startsWith("inline") && d !== "contents" ? ` ${inner} ` : el !== e && el.parentElement && /flex|grid/.test(getComputedStyle(el.parentElement).display) ? ` ${inner} ` : inner;
           };
           const by = (e.getAttribute("aria-labelledby") ?? "")
             .split(/\s+/)

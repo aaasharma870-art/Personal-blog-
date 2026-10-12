@@ -66,16 +66,24 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
   const bearing = nextActBearing(entry.id);
   return (
     <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip scroll-mt-24">
-      <SectionHead
-        id={titleId}
-        label="Intermission"
-        title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
-        intro={copyVisible(lead) ? lead.text : undefined}
-      />
-      {/* P3-11 r1 (films-bill.tsx; desktop only): the invitation to play,
-          right under the lead, then the Intermission's programme */}
-      <FilmsPlay />
-      <FilmsBill works={screens} />
+      {/* P3-11 r3 (panel J3 high, J2 / J4 low: "~90 % empty dark with a
+          plain sans heading"): on desktop the head is an INTERMISSION CARD —
+          a silent-film intertitle's double rule round the house-serif title,
+          the lead, the invitation and the bill, centred, the projector's
+          light behind it (app/p3/cinema.css `.films-card`). Phones keep
+          today's head (the wrapper has no rule below 64rem). */}
+      <div className="films-card">
+        <SectionHead
+          id={titleId}
+          label="Intermission"
+          title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
+          intro={copyVisible(lead) ? lead.text : undefined}
+        />
+        {/* P3-11 r1 (films-bill.tsx; desktop only): the invitation to play,
+            right under the lead, then the Intermission's programme */}
+        <FilmsPlay />
+        <FilmsBill works={screens} />
+      </div>
       <div className="mt-tier-block">
         {screens.map((w, i) => (
           <FilmScreen

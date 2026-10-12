@@ -60,6 +60,11 @@ const MAX_PLATES = 3;
 const MAX_BUFFER = 1922 * 804;
 const FADE_MS = 200;
 const QUIET_MS = 180;
+/** The PAGE must have been still this long before a tier switch (P3-11 r3,
+ *  J8 F11: a reader's wheel notches are ~200 ms apart, so a 180 ms gap
+ *  engaged GL on an approaching card at p 0, the next notch started the pin
+ *  and the abort left a one-frame grey-box flash mid-card at 1024). */
+const ENGAGE_QUIET_MS = 600;
 const DEEP: [number, number, number] = [0.04, 0.05, 0.07];
 
 export type GlHostOptions = {
@@ -144,7 +149,7 @@ const moving = () => now() - lastMove < QUIET_MS;
  *  the engage (mount, size, first draw) waits for it (P3-11 r1, F6 / J8
  *  #1: it ran inside the first scroll's observer pass, 180–350 ms). */
 let lastScroll = -1e9;
-const scrolling = () => now() - lastScroll < QUIET_MS;
+const scrolling = (ms = QUIET_MS) => now() - lastScroll < ms;
 /** The visibility observer's work (arbitrate + reprep), coalesced into
  *  ONE idle slice instead of running inside the observer callback. */
 let arbiter: (() => void) | null = null;
@@ -175,11 +180,13 @@ function enqueue(job: Job): boolean {
 }
 
 /** Resolves when a slice may run: motion on, tier gl, visible tab, no p
- *  moving (or nothing left that wants the work). */
+ *  moving and the PAGE still (P3-11 r3, F6 / J8: the GL jobs were the
+ *  last long idle tasks while the page scrolled; or nothing left that
+ *  wants the work). */
 function quiet(): Promise<void> {
   return new Promise((res) => {
     const check = () => {
-      if (!hosts.size || (!motionOffNow() && glTier() === "gl" && !document.hidden && !moving())) res();
+      if (!hosts.size || (!motionOffNow() && glTier() === "gl" && !document.hidden && !moving() && !scrolling())) res();
       else window.setTimeout(check, 120);
     };
     check();
@@ -198,7 +205,9 @@ async function pump(): Promise<void> {
     const wanted = hosts.size > 0 && !lost && !(failed && job.key !== "ctx") && (!job.want || job.want());
     let done = true;
     if (!wanted) job.drop?.();
-    else if (motionOffNow() || moving()) done = false;
+    // the page moved while the slice was awaited: skip it (it runs again
+    // once the page is still), never a compile or an upload mid-scroll
+    else if (motionOffNow() || moving() || scrolling()) done = false;
     else {
       try {
         done = job.run();
@@ -241,6 +250,12 @@ function ctxJob(): boolean {
   }
   tgl = t;
   loseExt = t.gl.getExtension("WEBGL_lose_context");
+  // P3-11 r3 (F6, J8: the first engage re-allocated the drawing buffer
+  // inside the engage frame): size the buffer ONCE, here, in this idle
+  // slice — every card frame is one viewport — and afterwards only the
+  // viewport (draw) changes; size() re-allocates on a real resize only
+  const [bw, bh] = bufferFor(window.innerWidth, window.innerHeight);
+  t.size(bw, bh);
   log("context");
   setContextTier("gl");
   return true;
@@ -528,15 +543,25 @@ function ready(h: Host): boolean {
 
 /* — ownership, engagement ————————————————————————————————————————————— */
 
+/** The drawing buffer for a box of `wCss` × `hCss` CSS px (DPR ≤ 1.5,
+ *  ≤ MAX_BUFFER pixels). */
+function bufferFor(wCss: number, hCss: number): [number, number] {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const w = Math.max(1, wCss * dpr);
+  const ht = Math.max(1, hCss * dpr);
+  const k = Math.min(1, Math.sqrt(MAX_BUFFER / (w * ht)));
+  return [Math.round(w * k), Math.round(ht * k)];
+}
+
+/** The owner's buffer: allocated at context creation (ctxJob); changed only
+ *  when the host's needs differ by more than 2 px (a resize, a frame that
+ *  is not one viewport), never re-allocated for an equal box. */
 function size(h: Host): void {
   if (!tgl) return;
   const r = h.el.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  let w = Math.max(1, r.width * dpr);
-  let ht = Math.max(1, r.height * dpr);
-  const k = Math.min(1, Math.sqrt(MAX_BUFFER / (w * ht)));
-  w = Math.round(w * k);
-  ht = Math.round(ht * k);
+  const [w, ht] = bufferFor(r.width, r.height);
+  const c = tgl.gl.canvas as HTMLCanvasElement;
+  if (Math.abs(c.width - w) <= 2 && Math.abs(c.height - ht) <= 2) return;
   tgl.size(w, ht);
 }
 
@@ -581,8 +606,8 @@ function later(): void {
 
 function tryEngage(h: Host): void {
   if (h !== owner || h.state !== "idle" || mid(h) || !ready(h) || glTier() !== "gl" || motionOffNow()) return;
-  // only at a still p end: the fade never meets a scrub
-  if (moving() || scrolling()) return later();
+  // only at a still p end on a still page: the fade never meets a scrub
+  if (moving() || scrolling(ENGAGE_QUIET_MS)) return later();
   mount(h);
   grab(h);
   draw(h);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, RefObject } from "react";
 import {
   motion,
@@ -11,6 +11,7 @@ import {
   useVelocity,
   type MotionValue,
 } from "motion/react";
+import { onIdle } from "@/lib/idle";
 import { springSoft } from "@/lib/motion";
 import type { Box01 } from "@/components/sections/hero/focal";
 
@@ -76,33 +77,55 @@ const SPRAY = {
 
 export type VelocityDialect = "grain" | "spray";
 
-/* — A seeded grain tile (pure hash; no Math.random), rendered once. — */
-let tileCache: string | null | undefined;
-function grainTile(): string | null {
-  if (tileCache !== undefined) return tileCache;
-  if (typeof document === "undefined") return null;
-  const c = document.createElement("canvas");
-  c.width = TILE;
-  c.height = TILE;
-  const ctx = c.getContext("2d");
-  if (!ctx) return (tileCache = null);
-  const img = ctx.createImageData(TILE, TILE);
-  for (let i = 0; i < TILE * TILE; i++) {
-    let h = Math.imul(i ^ 0x9e3779b9, 0x85ebca6b);
-    h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
-    const g = ((h ^ (h >>> 16)) >>> 0) & 255;
-    img.data[i * 4] = g;
-    img.data[i * 4 + 1] = g;
-    img.data[i * 4 + 2] = g;
-    img.data[i * 4 + 3] = 255;
-  }
-  ctx.putImageData(img, 0, 0);
-  tileCache = c.toDataURL("image/png");
+/* — A seeded grain tile (pure hash; no Math.random), rendered once.
+     P3-11 r3 (F6, J8: hydration's ~965 ms long task was this tile's
+     synchronous toDataURL, called from a useSyncExternalStore getter during
+     the hydration render): it is now built in an idle slice after mount and
+     encoded off the main thread (toBlob → an object URL kept for the page's
+     life). The grain shows only while the page scrolls fast (opacity ∝ vn,
+     0 at rest), so a tile that arrives a moment later is never seen
+     missing. — */
+let tileCache: Promise<string | null> | null = null;
+function grainTile(): Promise<string | null> {
+  if (tileCache) return tileCache;
+  tileCache = new Promise<string | null>((resolve) => {
+    const c = document.createElement("canvas");
+    c.width = TILE;
+    c.height = TILE;
+    const ctx = c.getContext("2d");
+    if (!ctx || typeof c.toBlob !== "function") return resolve(null);
+    const img = ctx.createImageData(TILE, TILE);
+    for (let i = 0; i < TILE * TILE; i++) {
+      let h = Math.imul(i ^ 0x9e3779b9, 0x85ebca6b);
+      h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+      const g = ((h ^ (h >>> 16)) >>> 0) & 255;
+      img.data[i * 4] = g;
+      img.data[i * 4 + 1] = g;
+      img.data[i * 4 + 2] = g;
+      img.data[i * 4 + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    c.toBlob((b) => resolve(b ? URL.createObjectURL(b) : null), "image/png");
+  });
   return tileCache;
 }
-const noop = () => () => {};
-function useGrainTile(): string | null {
-  return useSyncExternalStore(noop, grainTile, () => null);
+/** The grain tile's URL once built (null until then, and for the spray). */
+function useGrainTile(on: boolean): string | null {
+  const [tile, setTile] = useState<string | null>(null);
+  useEffect(() => {
+    if (!on) return;
+    let dead = false;
+    const off = onIdle(() => {
+      void grainTile().then((t) => {
+        if (!dead) setTile(t);
+      });
+    });
+    return () => {
+      dead = true;
+      off();
+    };
+  }, [on]);
+  return tile;
 }
 
 export function VelocityLayers({
@@ -146,7 +169,7 @@ export function VelocityLayers({
     return () => img.removeEventListener("load", take);
   }, [hostRef]);
 
-  const tile = useGrainTile();
+  const tile = useGrainTile(!spray);
   const pct = (f: number) => `${(f * 100).toFixed(2)}%`;
   const soft = 0.06;
   const mask =

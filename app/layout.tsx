@@ -26,7 +26,7 @@ import { SectionRail } from "@/components/site/section-rail";
 import { CommandPalette } from "@/components/site/command-palette";
 import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
-import { NAME_FONT_HREF, NOSCRIPT_WORLD_FONTS_CSS, worldFontVariables } from "@/lib/fonts";
+import { NAME_FONT_HREF, NOSCRIPT_WORLD_FONTS_CSS, PIRATES_BODY_FONT_HREF, worldFontVariables } from "@/lib/fonts";
 import { introModel } from "@/components/intro/intro-model";
 import { IntroHeadScript } from "@/components/intro/intro-head-script";
 import { IntroOverlay } from "@/components/intro/intro-overlay";
@@ -55,7 +55,9 @@ const geistMono = Geist_Mono({
 // name — is set in Pirata One (`type-name`), so the name's 5.3 KB file IS
 // preloaded, desktop only (`media`, below), from public/ (next/font preloads
 // take no media). Phones keep the Geist h1 and fetch no new font. The world
-// faces (lib/fonts.ts) are never preloaded: they load per world, lazily.
+// faces (lib/fonts.ts) are never preloaded: they load per world, lazily;
+// the Pirates body (P3-11 r3) is the one exception, preloaded beside the
+// name with `font-display: optional` so it never swaps in late.
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
@@ -146,6 +148,16 @@ export default function RootLayout({
   // `media` keeps phones from fetching it; the @font-face (app/globals.css)
   // sits under the same query and reads the same URL, so the preload is used.
   preload(NAME_FONT_HREF, {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+    media: "(min-width: 64rem)",
+  });
+  // The Pirates body face, desktop only (P3-11 r3, J9 F1): #about and the
+  // journey's prose. Its @font-face is `font-display: optional` under the
+  // same query: used from first paint when it is here in time, else the
+  // fallback serif for the whole visit; it never swaps (no reflow).
+  preload(PIRATES_BODY_FONT_HREF, {
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",

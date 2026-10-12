@@ -83,11 +83,21 @@ export type CardPinSpec = {
    *  origin in the title's ink box (film.acts[].maskOrigin; the GL SDF's),
    *  and how much the whole title grows over its pass (lib/gl/plan.ts
    *  TITLE_ZOOM; P3-11 r1: never a half-word). */
-  title: { text: string; origin: readonly [number, number]; zoom?: number };
+  title: {
+    text: string;
+    origin: readonly [number, number];
+    zoom?: number;
+    /** P3-11 r3: this card plays the bars reveal (title.mask ALT) whatever
+     *  the manifest chose — the four cards no longer share one move. */
+    bars?: boolean;
+  };
   /** The css tier's static carried shape (the incoming half, §7.3). */
   shape: { id: CarriedShapeId; at: Pos; size: number; range: readonly [number, number] } | null;
   weather: readonly PinWeather[];
   beats: readonly PinBeat[];
+  /** C1 (P3-11 r3): the live-star id the plate's loop registers while it
+   *  plays in star (b) (`<the push-title beat>-loop`). */
+  loopBeat?: string | null;
   /** The iris (opening, css tier) per choreography (its plate's stern):
    *  the disc's centre and radii, in frame HEIGHTS (r0 = .12 × the frame
    *  diagonal; r1 = the farthest corner). */

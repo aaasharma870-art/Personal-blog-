@@ -432,6 +432,11 @@ export function Header() {
         scrolled ? "bg-bg" : "bg-transparent",
       )}
     >
+      {/* P3-11 r3 (C5; read stills: "…of it failed me first" sliced under
+          the bar): once scrolled, a 24 px fade in the header's own ground
+          (desktop only, app/globals.css), so text passing under the bar
+          fades out instead of being cut in half */}
+      <div aria-hidden="true" className="header-band" data-on={scrolled ? "" : undefined} />
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
         <div className="flex min-w-0 items-center gap-4">
           <Logo base={base} />

@@ -2,14 +2,7 @@
 
 import { memo, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
-import {
-  motion,
-  motionValue,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from "motion/react";
+import { motion, motionValue, useMotionValueEvent, useScroll, type MotionValue } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
 import { principles, type Principle } from "@/lib/content";
 import { film } from "@/lib/film";
@@ -96,8 +89,16 @@ import { PARCHMENT_GRAIN } from "@/components/site/parchment-grain";
    layer each only while armed / unfolding (≈ 1 s), so the unfold is a
    compositor change, not a repaint of the sheet (the W1 gate's principles
    stall: 0.2–0.6 fps headless, both after a scroll-through and after a
-   jump). The 40 prints and the active room's ink carry no will-change: a
-   print is a 14 px opacity write (a tiny repaint).
+   jump). The active room's ink carries no will-change.
+   P3-11 r3 (r2 J8 F5: still the slowest place, 3.9–4.5 fps, 0 ms of
+   work): every scroll frame rewrote the opacity of each fading print, so
+   the ink-and-words layer (the whole sheet) re-rastered every frame. Now
+   the walk is QUANTIZED to its lead step (state, ≈ 12 changes a room) and
+   each room's prints sit on their OWN small layer (the corridor column),
+   so a step repaints that box only; the wear joined the sheet's static
+   layer (one full-sheet layer less). Headless 1440, same machine,
+   interleaved: 240 / 217 → 307 / 331 frames over the same 1,500 px of
+   wheel; GPU work per frame −20 to −25 %.
    ========================================================================== */
 
 /** The unfold's time star (spec §2.3 B52: "map unfold", signature · t · 1). */
@@ -146,18 +147,21 @@ const STEPS: readonly StepDef[] = (() => {
   ];
 })();
 
-/** Step opacity with the reading line at `v` of the room: absent ahead of
- *  the walker, full at the lead, fading behind to the trail's 40 %. */
-function stepOpacity(v: number, at: number): number {
-  if (v < at) return 0;
-  return Math.max(0.4, 1 - (v - at) * 2);
+/** The walk QUANTIZED to its lead step (P3-11 r3, J8 F5: the Map was the
+ *  slowest place on the page; every scroll frame rewrote the opacity of
+ *  each fading print, so the sheet's ink layer re-rastered every frame).
+ *  −1 = not yet walking, STEPS.length = walked through; else the index of
+ *  the latest step reached. A print changes only when the lead does
+ *  (≈ 12 times a room), inside the walk's own small layer. */
+function leadIndex(v: number): number {
+  return v <= 0.01 ? -1 : v >= 0.999 ? STEPS.length : STEPS.findLastIndex((s) => s.at <= v);
 }
 
-/** The latest step the walker has reached (for the YOU banner). */
-function leadOf(v: number): StepDef {
-  let lead = STEPS[0];
-  for (const s of STEPS) if (s.at <= v) lead = s;
-  return lead;
+/** A print's opacity with the lead at `k`: absent ahead of the walker,
+ *  full at the lead, fading behind (by steps) to the trail's 40 %. */
+function stepOpacity(k: number, i: number): number {
+  if (i > k) return 0;
+  return Math.max(0.4, 1 - (k - i) * 0.2);
 }
 
 /* — parchment paint (paper tokens; darkening stays ≤ 5 % where text sits) — */
@@ -349,17 +353,17 @@ export function PrinciplesMap({
           animate={{ scaleX: folded ? 0 : 1 }}
           transition={unfold}
         />
+        {/* fold creases + burnt edges, once the sheet lies flat (a one-shot
+            fade): INSIDE the sheet's static layer (P3-11 r3, J8 F5: was a
+            second full-sheet layer, one more viewport of overdraw a frame) */}
+        <motion.div
+          className="pointer-events-none absolute inset-0"
+          style={WEAR}
+          initial={false}
+          animate={{ opacity: folded ? 0 : 1 }}
+          transition={arrive(0.25)}
+        />
       </div>
-      {/* fold creases + burnt edges, once the sheet lies flat (a one-shot
-          opacity fade on its own static layer) */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 will-change-transform"
-        style={WEAR}
-        initial={false}
-        animate={{ opacity: folded ? 0 : 1 }}
-        transition={arrive(0.25)}
-      />
 
       {/* the ink and the words: ≥ 64rem on the middle panel while folded (no
           blank sheet), opening with the outer panels (one clip, in step
@@ -471,18 +475,27 @@ function HallWalls() {
   );
 }
 
-/** Someone's trail across the hall's free upper right (xl: the caption
- *  sits bottom-right, the h2 left), walking to the corridor. */
+/** B54-hall (P3-11 r3; r2 J3 "on arrival the map holds still for about
+ *  6 s", J1 reading stops): someone else's footprints cross the hall's free
+ *  upper right (xl: the caption sits bottom-right, the h2 left), walking to
+ *  the corridor. A LIVE star (C1), GATED: the lazy Act IV toys
+ *  (worlds/hp/contact-toys.tsx: DESKTOP_FINE, motion on; 0 first-load
+ *  bytes) register it and walk it only while the spotlight lends it the
+ *  still screen; scroll, Pause or reduced motion stop it (the trail then
+ *  lies static, as here). Its own small layer: the prints' opacity
+ *  repaints this box only.
+ *  The marker is quiet markup (`data-beat` only, like B10-sea): the toys
+ *  register it with its weight, and its 120 px box is not a scroll span
+ *  (it has no window). It stays in the layout below xl at 0 × 0 (the
+ *  trail inside is hidden), so the beat map finds it at every width; the
+ *  toys register it only when it has a box (≥ xl). */
 function HeadTrail() {
   return (
-    <MapTrail
-      width={300}
-      height={120}
-      pts={[[292, 10], [224, 46], [150, 40], [72, 92], [8, 108]]}
-      strides={[2, 2, 2, 2]}
-      fade={0.22}
-      className="absolute right-8 top-3 hidden xl:block"
-    />
+    <div {...beatAttrs("B54-hall")} className="absolute right-8 top-3">
+      <div className="hidden will-change-transform xl:block">
+        <MapTrail width={300} height={120} pts={[[292, 10], [224, 46], [150, 40], [72, 92], [8, 108]]} strides={[2, 2, 2, 2]} fade={0.22} />
+      </div>
+    </div>
   );
 }
 
@@ -511,51 +524,30 @@ function MapRoom({
   /** The room's furniture (server-rendered, ≥ lg). */
   feature?: ReactNode;
 }) {
-  const [inRoom, setInRoom] = useState(false);
-  useMotionValueEvent(walk, "change", (v) => setInRoom(v >= DOOR && v < 0.999));
-  const active = live && inRoom;
-  const bannerOpacity = useTransform(walk, (v) => (v > 0.01 && v < 0.999 ? 1 : 0));
-  // the banner rides on a transform (never `top`: no layout per step, no
-  // layout shift): a full-height track translated to the lead step's line
-  const bannerY = useTransform(walk, (v) => `translateY(${leadOf(v).top})`);
+  // the lead step (quantized walk): React state, so a print, the YOU
+  // banner and the room's ink change only when the walker takes a step
+  const [k, setK] = useState(() => leadIndex(walk.get()));
+  useMotionValueEvent(walk, "change", (v) => setK(leadIndex(v)));
+  const walking = k >= 0 && k < STEPS.length;
+  const active = live && walking && STEPS[k]!.at >= DOOR;
+  const odd = index % 2 === 1;
 
   return (
     <li
       {...(index === WALK_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
-      className="relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]"
+      className={cn(
+        "relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]",
+        // the walk's host (B54, a scroll star): its box is the star's span, ≥ 300 px at 1440 too
+        // (P3-11 r3: F5's shorter rooms left it 287 px)
+        index === WALK_BEAT_ROOM && "min-h-[19rem]",
+      )}
       data-room={index + 1}
       data-active={active ? "" : undefined}
     >
-      {/* the corridor, the passage to this room's door, and the walk */}
-      <div aria-hidden="true" className="relative">
-        <Corridor seed={index} />
-        {STEPS.map((s, k) => (
-          <Step key={k} def={s} walk={walk} live={live} />
-        ))}
-        {live ? (
-          <motion.span
-            className="pointer-events-none absolute inset-y-0 z-10 w-0 transition-[opacity,transform] ease-(--ease-out) will-change-[transform,opacity] motion-off:transition-none"
-            // it glides between steps (180 ms) instead of jumping
-            style={{ left: HALL_MID, transform: bannerY, opacity: bannerOpacity, transitionDuration: "var(--dur-base), 180ms" }}
-          >
-            <span className="absolute -top-11 left-0 -translate-x-1/2" data-motif="you-banner">
-              <YouBanner />
-            </span>
-          </motion.span>
-        ) : index === 0 ? (
-          // the static map: YOU stand at the first door
-          <span
-            className="pointer-events-none absolute z-10 -translate-x-1/2"
-            style={{ left: HALL_MID, top: `calc(${DOOR * 100}% - 3rem)` }}
-            data-motif="you-banner"
-          >
-            <YouBanner />
-          </span>
-        ) : null}
-      </div>
-
-      {/* the room */}
-      <div className="relative px-3 py-8 sm:px-8 sm:py-10">
+      {/* the room (first in paint order: the walk's own layer, after it,
+          then never forces the room's ink and words into a layer of
+          their own by overlapping them) */}
+      <div className="relative col-start-2 row-start-1 px-3 py-7 sm:px-8 sm:py-8">
         <RoomWalls seed={index} className="stroke-(--world-line) opacity-85" />
         <RoomWalls
           seed={index}
@@ -573,8 +565,56 @@ function MapRoom({
             {ribbons ? <PatronusRibbons className="mt-tier-pair" /> : null}
             {body ?? <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>}
           </div>
-          {p.thinker ? <Meta className="sm:col-span-3 sm:text-right" fields={[p.thinker]} /> : null}
+          {/* the source in ink (r2 J5: "AFTER MENGZI" read faint); rooms 2
+              and 4 set it at the room's foot, their furniture at left
+              (room-features.tsx): the Map's rooms zig-zag (r2 J4) */}
+          {p.thinker ? (
+            <Meta className={cn("text-fg sm:col-span-3 sm:text-right", odd && "min-[88rem]:self-end")} fields={[p.thinker]} />
+          ) : null}
         </div>
+      </div>
+
+      {/* the corridor, the passage to this room's door, and the walk */}
+      <div aria-hidden="true" className="relative col-start-1 row-start-1">
+        <Corridor seed={index} />
+        {live ? (
+          // the walk's prints on their OWN small layer (one column of the
+          // sheet, a little wider for the door's turn): a step repaints this
+          // box only, never the sheet's ink and words
+          <div className="pointer-events-none absolute inset-y-0 left-0 -right-4 will-change-transform">
+            {STEPS.map((s, i) => (
+              <Step key={i} def={s} opacity={stepOpacity(k, i)} />
+            ))}
+          </div>
+        ) : (
+          STEPS.map((s, i) => <Step key={i} def={s} opacity={s.kind === "door" ? 0.85 : 0.5} />)
+        )}
+        {live ? (
+          <span
+            className="pointer-events-none absolute inset-y-0 z-10 w-0 transition-[opacity,transform] ease-(--ease-out) will-change-[transform,opacity] motion-off:transition-none"
+            // it rides on a transform (never `top`: no layout per step) and
+            // glides between steps (180 ms) instead of jumping
+            style={{
+              left: HALL_MID,
+              transform: `translateY(${STEPS[Math.max(0, Math.min(k, STEPS.length - 1))]!.top})`,
+              opacity: walking ? 1 : 0,
+              transitionDuration: "var(--dur-base), 180ms",
+            }}
+          >
+            <span className="absolute -top-11 left-0 -translate-x-1/2" data-motif="you-banner">
+              <YouBanner />
+            </span>
+          </span>
+        ) : index === 0 ? (
+          // the static map: YOU stand at the first door
+          <span
+            className="pointer-events-none absolute z-10 -translate-x-1/2"
+            style={{ left: HALL_MID, top: `calc(${DOOR * 100}% - 3rem)` }}
+            data-motif="you-banner"
+          >
+            <YouBanner />
+          </span>
+        ) : null}
       </div>
     </li>
   );
@@ -636,18 +676,15 @@ const RoomWalls = memo(function RoomWalls({ seed, className }: { seed: number; c
   );
 });
 
-const Step = memo(function Step({ def, walk, live }: { def: StepDef; walk: MotionValue<number>; live: boolean }) {
-  const opacity = useTransform(walk, (v) => stepOpacity(v, def.at));
-  const rest = def.kind === "door" ? 0.85 : 0.5;
+const Step = memo(function Step({ def, opacity }: { def: StepDef; opacity: number }) {
   return (
-    <motion.span
-      // the turn in at the door needs the wider passage (≥ sm): on phones the walk runs straight on.
-      // No will-change (spec §12.1 #1): a print's opacity write repaints only its own 14 px box.
+    <span
+      // the turn in at the door needs the wider passage (≥ sm): on phones the walk runs straight on
       className={cn("pointer-events-none absolute", def.kind === "door" && "hidden sm:block")}
-      style={{ top: def.top, left: def.left, x: "-50%", y: "-50%", rotate: def.rot, opacity: live ? opacity : rest }}
+      style={{ top: def.top, left: def.left, transform: `translate(-50%, -50%) rotate(${def.rot}deg)`, opacity }}
     >
       <Footprint side={def.side} size={PRINT} fill="var(--world-emphasis)" />
-    </motion.span>
+    </span>
   );
 });
 

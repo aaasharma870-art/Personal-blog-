@@ -27,7 +27,10 @@ export function armInvite(host: Element, beat: string, play: () => Animation | n
       if (!e?.isIntersecting || asked) return;
       asked = true;
       io.disconnect();
-      void spotlight.request(beat, { weight: 1, needsIdle: true, durationMs: 1000 }).then((answer) => {
+      // onCut (P3-11 r3, F1): the arbiter cut the hold → the end state now
+      // (an invite ends at its rest state)
+      const onCut = () => anim?.finish();
+      void spotlight.request(beat, { weight: 1, needsIdle: true, durationMs: 1000, onCut }).then((answer) => {
         if (answer !== "play") return;
         if (gone || motionOffNow()) {
           spotlight.release(beat);

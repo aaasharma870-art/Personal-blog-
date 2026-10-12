@@ -15,11 +15,32 @@
        stars: when one is granted while it owns, or its window opens during
        a hold, it is told `onOwn(false)` and holds still; `onOwn(true)`
        when the hold ends. An ungated one moves with the scroll whatever
-       happens (the log then honestly shows two), so it blocks grants while
-       the page moves; once the page has been still for 300 ms a waiting
-       time star may play over it.
+       happens, so it blocks grants while the page moves; once the page has
+       been still for 300 ms a waiting time star may play over it (and is
+       cut if the page moves on: THE CUT).
      · Ownership ends with the window: a star never keeps the spotlight
        after its performance (r1 J1 #3).
+     · THE CUT (P3-11 r3): an ungated scroll star whose window opens during
+       a hold (a fling the lookahead could not see), or the ungated owner a
+       hold was granted over once the page moves > 12 px, ends the hold
+       first and calls the request's `onCut`: the host shows its end state
+       now. Every time-star host passes `onCut`.
+     · THE LENT STAR (C1, P3-11 r3; spec §2.1 note): a STILL screen (no
+       scroll for 300 ms) that no star performs is lent to ONE registered
+       `live` star whose box lies in the viewport's middle band (logged
+       "own", how "live", why "still", weight 1; a gated one is told
+       `onOwn(true)`). It is released on scroll start, when its host
+       unregisters, and before any time star's grant.
+
+   ── HOW A HOST DECLARES A LIVE STAR (C1) ─────────────────────────────────
+   Something that visibly performs while the page is still (a camera push
+   or drift, a loop, a draw) registers `live` ONLY WHILE IT MOVES:
+        useScrollStar(ref, "B44-drift", { weight: 1, live: true, on: playing })
+   With no window anywhere (no `own`, attribute or table entry) it is held
+   only when lent a still screen; with one it also owns inside its window.
+   A host that can hold still passes `onOwn` and performs only while told
+   `true` (it then never competes with a time star); an ungated loop keeps
+   moving whatever the log says, so keep it to one per screen.
 
    ── HOW A HOST DECLARES A SCROLL STAR ────────────────────────────────────
    0. Declare the beat in lib/page.ts (or lib/film.ts acts[].beats):
@@ -65,14 +86,24 @@
 import { DESKTOP_FINE, motionOffNow } from "./flags";
 import type { BeatWeight } from "./beats";
 
-export type SpotlightRequest = { weight: BeatWeight; needsIdle?: boolean; maxWait?: number; durationMs?: number };
+export type SpotlightRequest = {
+  weight: BeatWeight;
+  needsIdle?: boolean;
+  maxWait?: number;
+  durationMs?: number;
+  /** THE CUT: an ungated scroll star took the screen during the hold (a
+   *  fling): show the end state now. The hold has already ended. */
+  onCut?: () => void;
+};
 export type SpotlightAnswer = "play" | "skip";
 /** A scroll star's performance window and kind (see the header). */
 export type ScrollStarOptions = {
   /** "<start>, <end>" (header: THE WINDOW). Default: the element's
    *  `data-beat-scroll`, then lib/spotlight-windows.ts, then the band. */
   own?: string;
-  /** It animates on its own while owned (a loop), not only with the scroll. */
+  /** It performs on its own (a loop, a drift, a draw), not only with the
+   *  scroll: register it only while it moves (C1). Owns inside its window
+   *  if it has one; is lent a still screen in either case. */
   live?: boolean;
   /** GATED: told when it gains / loses the spotlight; it waits out a hold. */
   onOwn?: (owned: boolean) => void;

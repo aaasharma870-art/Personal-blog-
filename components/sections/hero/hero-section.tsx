@@ -221,7 +221,7 @@ export function HeroSection({ entry }: SectionProps<"hero">) {
         <span className="block">{first}</span> <span className="block">{rest.join(" ")}</span>
       </h1>
       <p className="type-lead mt-tier-group max-w-lead text-fg">{site.throughline}</p>
-      <p className="type-meta mt-tier-pair text-fg-muted">
+      <p className="type-meta mt-tier-pair text-fg">
         {identity.map((part, i) => (
           <span key={part}>
             {i > 0 ? " • " : null}

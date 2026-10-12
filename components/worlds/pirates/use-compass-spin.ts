@@ -58,6 +58,9 @@ export type CompassSpin = {
   onPointerCancel(e: PointerEvent<HTMLButtonElement>): void;
   /** The B08 invite: one needle twitch. */
   twitch(): void;
+  /** THE CUT (lib/spotlight.ts): the twitch's end state now (the needle
+   *  back on its bearing, no swing). */
+  settle(): void;
   /** The visitor has used the toy (the invite is then pointless). */
   used(): boolean;
 };
@@ -109,6 +112,8 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
 
   const presses = useRef(0);
   const touched = useRef(false);
+  /** The bearing a twitch in progress returns to (null = none). */
+  const twitchBase = useRef<number | null>(null);
   /** Cancels whatever is running (rAF loops, timers). */
   const running = useRef<(() => void)[]>([]);
   /** The pillar a running spin will rest on (Pause lands it there). */
@@ -416,8 +421,16 @@ export function useCompassSpin(api: CompassApi, o: CompassSpinOptions): CompassS
     twitch() {
       if (motionOffNow() || touched.current) return;
       const base = api.target.get();
+      twitchBase.current = base;
       api.target.set(base + 14);
       later(170, () => api.target.set(base));
+    },
+    settle() {
+      const base = twitchBase.current;
+      twitchBase.current = null;
+      if (base === null || touched.current) return;
+      api.target.jump(base);
+      api.needle.jump(base);
     },
     used: () => touched.current,
   };

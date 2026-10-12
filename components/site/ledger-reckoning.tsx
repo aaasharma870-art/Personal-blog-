@@ -195,7 +195,11 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
       if (host instanceof HTMLElement) {
         const top = base.top - host.getBoundingClientRect().top;
         host.style.setProperty("--ledger-grid-a", `${Math.round(top)}px`);
-        host.style.setProperty("--ledger-grid-b", `${Math.round(top + (next[next.length - 1]?.top ?? 0))}px`);
+        // ≥ 1024 the grid is gone by the second row: the descriptions read on
+        // the plain plane (P3-11 r2 strangers J7: "grey on the green grid");
+        // phones keep today's span (to the last row)
+        const g = window.matchMedia("(min-width: 64rem)").matches ? next[1] : next[next.length - 1];
+        host.style.setProperty("--ledger-grid-b", `${Math.round(top + (g?.top ?? 0))}px`);
       }
       const fh = figRef.current?.getBoundingClientRect().height ?? 0;
       setFigH((h) => (h === fh ? h : fh));
@@ -218,7 +222,12 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
           if (e.isIntersecting) hits.add(i);
           else hits.delete(i);
         }
-        const c = hits.size ? Math.min(...hits) : null;
+        // past the LAST row (it left the line upward) the last row stays the
+        // active one: the lens never fades out after its window with no star
+        // (P3-11 r2 J1 #6, 1440 #132 / 1024 #127); scrolling back re-enters
+        const end = entries.find((e) => Number((e.target as HTMLElement).dataset.row) === rows.length - 1);
+        const past = !hits.size && end !== undefined && !end.isIntersecting && end.boundingClientRect.top < (end.rootBounds?.top ?? 0);
+        const c = hits.size ? Math.min(...hits) : past ? rows.length - 1 : null;
         centreNow.current = c;
         setNav((n) => (n.centre === c ? n : withLast({ ...n, centre: c })));
         if (c !== null) setLensState((s) => (s === "closed" ? "aperture" : s));
@@ -418,7 +427,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                       setRoving(i);
                       touch((n) => ({ ...n, pointer: i }));
                     }}
-                    className={cn("relative min-h-11 text-left", TC, on ? "text-fg" : "text-fg-muted")}
+                    className={cn("relative min-h-11 cursor-pointer text-left", TC, on ? "text-fg" : "text-fg-muted hover:text-fg")}
                   >
                     <span data-name="">{r.name}</span>
                     {r.kind === "killed" ? (
@@ -433,18 +442,18 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                   </button>
                 </h3>
                 <p
-                  className={cn("mt-1 max-w-[64ch] type-small", TC, on ? "text-fg" : "text-fg-muted")}
+                  className={cn("mt-1 max-w-[64ch] type-small lg:type-body", TC, on ? "text-fg" : "text-fg-muted")}
                   {...(r.kind === "killed" ? { "data-reason": "" } : {})}
                 >
                   {r.detail}
                 </p>
                 {r.evidence ? (
-                  <p className={cn("tnum mt-1 max-w-[64ch] type-small", TC, on ? "text-fg" : "text-fg-muted")}>
+                  <p className={cn("tnum mt-1 max-w-[64ch] type-small lg:type-body", TC, on ? "text-fg" : "text-fg-muted")}>
                     {r.evidence}
                   </p>
                 ) : null}
                 {/* the caveat is never dimmer than muted, in every state */}
-                {r.caveat ? <p className="mt-1 max-w-[64ch] type-small text-fg-muted">{r.caveat}</p> : null}
+                {r.caveat ? <p className="mt-1 max-w-[64ch] type-small lg:type-body text-fg-muted">{r.caveat}</p> : null}
               </div>
               {/* cols 8–9: the lens lane, empty in every row */}
               <div aria-hidden="true" className="hidden lg:col-span-2 lg:block" />
@@ -477,7 +486,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
               lane as an empty outlined bar over the FIG label (P3-11 r1: all
               three panels, "a broken image"): it is not drawn until the
               first activation opens it by aperture */}
-          <motion.div className={cn("absolute inset-x-0 top-0 will-change-transform", lensState === "closed" && "invisible")} style={{ y: ly }}>
+          <motion.div className={cn("absolute inset-x-0 top-0 px-4 will-change-transform", lensState === "closed" && "invisible")} style={{ y: ly }}>
             {lensOn ? (
               <>
                 <Lens
@@ -497,7 +506,9 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                     ) : null}
                   </div>
                 </Lens>
-                <p className={cn("mt-3 type-meta", TC, active !== null ? "text-fg-muted" : "text-fg-ghost")}>
+                {/* ≥ 1280 only: in the 1024 lane "FIG. • OPTUNA-SCREENER"
+                    broke mid-word (P3-11 r2 read-1024 C012) */}
+                <p className={cn("mt-3 hidden type-meta xl:block", TC, active !== null ? "text-fg-muted" : "text-fg-ghost")}>
                   {lensRowData?.figLabel}
                 </p>
               </>

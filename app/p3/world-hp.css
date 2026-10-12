@@ -15,6 +15,8 @@
 @media (min-width: 64rem) {
   [data-roll] {
     padding-top: var(--spacing-tier-block);
+    /* P3-11 r3: the header's height of room after the roll (footer.tsx) */
+    padding-bottom: calc(var(--section-pad) + var(--header-h));
   }
   [data-roll] .mt-tier-block {
     margin-top: var(--spacing-tier-group);
@@ -33,5 +35,17 @@
   [data-credits-last] > p {
     font-size: var(--text-title);
     line-height: 1.05;
+  }
+  /* P3-11 r3: the closing lines in ink at the body size (footer.tsx) */
+  [data-roll] h2,
+  [data-roll-read] {
+    color: var(--fg);
+  }
+  [data-roll-read] {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+  [data-roll-end] {
+    font-size: var(--text-lead);
   }
 }

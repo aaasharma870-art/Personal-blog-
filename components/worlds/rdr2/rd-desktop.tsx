@@ -17,7 +17,8 @@ import type { RdPart } from "@/components/worlds/rdr2/kit";
      beyond  B41  the TrailMap figure (its fog lifts as it crosses: CSS view())
      writing B46  the journal's dusk (writing.tsx: the camp fades up out of it)
      voices  B47  the camp stage (the drift toward the fire, the night veil,
-                  the lead quote read into firelight, the fireflies)
+                  the lead quote read into firelight, the fireflies): LIVE
+                  (C1, P3-11 r3) while registered
 
    HUNT EGGS (spec §9.1 #10–12; plan §7.4). The hotspot binder (components/
    enhance/binders/hotspots.ts) fires `triggerEgg(<registry id>)`; the egg
@@ -297,6 +298,31 @@ function riseTrees(trees: SVGSVGElement, box: Element): (() => void) | null {
   return () => a.cancel();
 }
 
+/* — beyond: B41's visible performance (P3-11 r3; r2 J1 #5: the window was
+     granted over "rigid scroll only"). As the map crosses B41's window
+     (lib/spotlight-windows.ts "35% 100%, 55% 45%" ≈ cover 10 % → 56 % of
+     the figure) the fog lifts (app/globals.css) and the trail inks itself in
+     heavier graphite, start → tent, one leg at a time: the rd-eagle copy
+     (`[data-eagle-seg]`, opacity 0 at rest) on a ViewTimeline of the figure
+     (compositor-free but tiny: six SVG paths). Pause / reduced motion: the
+     plain map (the egg's own effect still wins while it runs). — */
+function inkTrail(fig: Element): (() => void) | null {
+  const VT = (window as unknown as { ViewTimeline?: ViewTimelineCtor }).ViewTimeline;
+  const legs = fig.querySelectorAll<SVGElement>("[data-eagle-seg]");
+  if (!VT || !legs.length) return null;
+  const timeline = new VT({ subject: fig });
+  const step = 46 / legs.length;
+  const anims = Array.from(legs, (leg, i) =>
+    leg.animate([{ opacity: 0 }, { opacity: 0.8 }], {
+      timeline,
+      rangeStart: `cover ${(10 + i * step).toFixed(1)}%`,
+      rangeEnd: `cover ${(10 + (i + 1) * step).toFixed(1)}%`,
+      fill: "both",
+    } as KeyframeAnimationOptions),
+  );
+  return () => anims.forEach((a) => a.cancel());
+}
+
 export default function RdDesktopImpl({
   part,
   anchor,
@@ -314,7 +340,28 @@ export default function RdDesktopImpl({
     if (reduced || !el) return;
     const w = Number(el.dataset.beatWeight);
     const weight: BeatWeight = w === 3 ? 3 : w === 2 ? 2 : 1;
-    return spotlight.registerScrollStar(STAR[part], el, weight);
+    // voices: B47 is LIVE (C1, P3-11 r3; r2 J1 #5 "rigid scroll" at
+    // #205–210): with motion on the camp's fireflies drift (ALT: the fire
+    // loop plays) whether or not the page moves, and this registration
+    // exists only then (it leaves on Pause / reduced motion)
+    return spotlight.registerScrollStar(STAR[part], el, weight, part === "voices" ? { live: true } : {});
+  }, [part, anchor, reduced]);
+
+  // beyond: the trail inks itself across B41's window (motion on only)
+  useEffect(() => {
+    const fig = part === "beyond" ? anchor.current?.closest("section")?.querySelector('[data-beat="B41"]') : null;
+    if (!fig || reduced) return;
+    let stop = motionOffNow() ? null : inkTrail(fig);
+    const offMotion = onMotionOffChange(() => {
+      if (motionOffNow()) {
+        stop?.();
+        stop = null;
+      } else stop ??= inkTrail(fig);
+    });
+    return () => {
+      offMotion();
+      stop?.();
+    };
   }, [part, anchor, reduced]);
 
   // writing: the dusk's treeline (drawn always; it rises with motion on)

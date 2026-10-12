@@ -90,10 +90,12 @@ vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clam
 
 /** Each flavour: `vec4 fl()` (≤ ~25 lines). t = uP. */
 const FL: Record<GlFlavour, string> = {
-  // Pirates spyglass: a brass-rimmed disc on the stern opens to the frame
+  // Pirates spyglass: a brass-rimmed disc on the stern opens to the frame.
+  // Outside the disc the night sea at a third of its light (P3-11 r3 hooks:
+  // "a porthole on flat black"; the css tier's SEA, opening-plate.tsx)
   iris: `vec4 fl(){float t=uP,e=t*t*(3.-2.*t),r=uRadius.x*pow(uRadius.y/uRadius.x,e),d=D(uv,uCenter),px=1./uRes.y;
 float k=d/r;vec3 c=T(uCenter+(uv-uCenter)*(1.-.07*k*k*k*k))*(1.-.45*S(.55,1.,k));
-vec3 o2=mix(F(uv)*.4,uDeep,.6);c=mix(c,o2,S(r-px,r+px,d));
+vec3 o2=mix(F(uv)*.62,uDeep,.45);c=mix(c,o2,S(r-px,r+px,d));
 float w=.018,m=S(r-px,r,d)*(1.-S(r+w,r+w+px,d)),b=sin(clamp((d-r)/w,0.,1.)*PI);
 vec3 brass=vec3(.55,.4,.18)+vec3(.45,.38,.25)*b*(.7+.5*N(vec2(atan(uv.y-uCenter.y,(uv.x-uCenter.x)*A)*40.,d*600.)));
 return vec4(mix(c,brass,m),1.);}`,
@@ -123,8 +125,14 @@ vec3 c=mix(MI(1.),T(uv),r)+(st-.5)*.14*r*(1.-t);return vec4(c,1.);}`,
   // then pow(luma, γ) develops outward from the horizon row into golden
   // hour, a light grain; the bone border settles to the inset plate's 1 px
   // line on the world deep (the DOM's settled tintype), or away full-bleed
-  develop: `vec4 fl(){float t=uP;vec3 p=T(uv);float l=L(p),dv=clamp((t*1.25-abs(uv.y-uRow)*1.1+(fbm(G2()*4.)-.5)*.15)/.25,0.,1.);
-vec3 c=mix(mix(vec3(.08,.065,.05),vec3(.88,.76,.58),pow(l,1.15)),vec3(1.,.86,.66)*pow(l,mix(1.8,1.,dv))*1.05,dv);
+  // P3-11 r3 (hooks 2/3, "muddy, low contrast, a black tree mass, static"):
+  // the print is LEVELLED (shadows lifted, so the tree's leaves read) and
+  // the develop is already under way at the hook — a golden band along the
+  // horizon with a bright developer sheen riding its front (the motion cue)
+  develop: `vec4 fl(){float t=uP;vec3 p=T(uv);float l=L(p),q=pow(clamp((l-.015)/.68,0.,1.),.72);
+float dv=clamp((t*1.25+.1-abs(uv.y-uRow)*1.1+(fbm(G2()*4.)-.5)*.15)/.25,0.,1.);
+vec3 c=mix(mix(vec3(.1,.08,.06),vec3(.95,.84,.66),q),vec3(1.,.86,.66)*pow(l,mix(1.6,1.,dv))*1.08,dv);
+c+=vec3(.2,.15,.08)*exp(-pow((dv-.45)*5.,2.))*(1.-S(.4,.8,t));
 c=mix(c,p,S(.55,1.,t))+(N(G2()*300.+t*50.)-.5)*.05*(1.-t);
 return inset(c,S(.83,1.,t));}`,
 
@@ -135,10 +143,16 @@ vec3 c=vec3(T(uv-d*k).r,T(uv).g,T(uv+d*k).b);c=mix(vec3(.42,.36,.28)*(.55+.45*L(
 c*=1.-.35*g*S(.35,.9,D(uv,uCenter));float h=.5/uRes.y,d2=PL();
 c=mix(c,vec3(.9,.85,.74),HI()*S(.83,1.,t)*S(-3.*h,-h,d2));return vec4(mix(c,uDeep,HI()*S(h,3.*h,d2)),1.);}`,
 
-  // RDR2 film burn OUT from the fire: an orange-white rim eats the frame
+  // RDR2 film burn OUT from the fire: an orange-white rim eats the frame.
+  // P3-11 r3 (hooks: "an empty black blob"): the hole opens on the next
+  // world — the candlelit hall, warm, with one candle flame where the camp's
+  // fire was — sinking to the deep as the hole takes the frame (t → 1), so
+  // the `ink` IN half still starts on the deep (no jump at the meet)
   burn: `vec4 fl(){float t=uP,d=D(uv,uCenter)+(fbm(G2()*4.+t*2.)-.5)*.22,r=mix(uRadius.x,uRadius.y,t*t),w=.05;
 vec3 s=F(uv)*(1.-.75*S(r+w+.2,r+w,d));float m=S(r,r+w*.3,d)*(1.-S(r+w*.3,r+w,d));
-vec3 h=mix(vec3(1.,.42,.08),vec3(1.,.96,.82),S(r+w,r,d));return vec4(mix(mix(uDeep,s,S(r-.002,r+.002,d)),h,m),1.);}`,
+vec2 f=(uv-uCenter)*vec2(A,1.)+vec2(0.,.02);float k=1.-t*t;
+vec3 i=mix(uDeep,T(uv)*vec3(1.08,.96,.82),.62*k)+vec3(1.,.72,.36)*exp(-f.x*f.x/4e-4-f.y*f.y/1.6e-3)*k;
+vec3 h=mix(vec3(1.,.42,.08),vec3(1.,.96,.82),S(r+w,r,d));return vec4(mix(mix(i,s,S(r-.002,r+.002,d)),h,m),1.);}`,
 
   // HP ink bleed IN: domain-warped fbm from the hall's lineStart
   ink: `vec4 fl(){float t=uP;vec2 g=G2(),w=vec2(fbm(g*2.+t),fbm(g*2.+vec2(5.2,1.3)-t))-.5;
@@ -152,10 +166,11 @@ return vec4(mix(uDeep,T(uv)*(1.+1.4*b),m)+vec3(1.,.92,.75)*b*.55,1.);}`,
   // the act title as a mask: the world's deep outside the letters (never
   // black: the push still shows through at a fifth), a faint warm lift
   // inside (legible over a dark plate: the candlelit hall);
-  // in over p .68–.76, whole and legible, dissolved by p .92 (plan.ts
-  // TITLE_OUT; P3-11 r1: no half-words, no one-frame cut)
+  // in over p .70–.75, whole and legible, dissolved by p .86 (plan.ts
+  // TITLE_OUT; P3-11 r1: no half-words, no one-frame cut; r3: the letters'
+  // lift .24 → .46 and the world outside .8 → .86, so the title reads)
   title: `vec4 fl(){float s=texture(uTitle,uv*uTitleXf.xy+uTitleXf.zw).r,a=max(fwidth(s),1e-5)*.7,i=S(.5-a,.5+a,s);
-return vec4(mix(uDeep,vec3(1.,.97,.9),i),S(0.,.25,uP)*(1.-S(.55,.75,uP))*mix(.8,.24,i));}`,
+return vec4(mix(uDeep,vec3(1.,.97,.9),i),S(0.,.18,uP)*(1.-S(.4,.53,uP))*mix(.86,.46,i));}`,
 };
 
 /** The fragment source of one flavour (header + shapes + flavour + main). */

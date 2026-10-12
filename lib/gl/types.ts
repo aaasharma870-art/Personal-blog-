@@ -89,6 +89,9 @@ export type GlCardSpec = {
     world: WorldId;
     maskOrigin: readonly [number, number];
     range: readonly [number, number];
+    /** P3-11 r3: the card reveals its title with the bars (the css tier's
+     *  title.mask ALT), so GL draws no title mask for it. */
+    bars?: boolean;
   };
   /** The carried line (MATCH_ROW, 0–1 of the letterbox frame): the develop
    *  front's origin row; the seam's shape row when `center` is absent. */

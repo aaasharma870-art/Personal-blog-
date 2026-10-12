@@ -11,7 +11,7 @@ import type { GlTier } from "@/lib/gl/support";
 import type { GlCardSpec } from "@/lib/gl/types";
 import { impact, trackImpactAnim } from "@/lib/impact";
 import { loopFor } from "@/lib/loops";
-import { isMediaId, resolveMedia } from "@/lib/media";
+import { isMediaId, resolveMedia, type MediaId } from "@/lib/media";
 import { cardPin } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { spotlight } from "@/lib/spotlight";
@@ -30,6 +30,8 @@ import { WeatherLayer } from "@/components/stage/weather-layer";
 import "@/app/p3/cards-pin.css";
 import { useFrameSequence } from "@/components/worlds/pirates/use-frame-sequence";
 import { useCard, type PinState, type PinUi } from "@/components/sections/act-card/card-context";
+import { BoardMotto, DevelopFront, IrisSea } from "@/components/sections/act-card/pin-extras";
+import { plateOf } from "@/components/sections/act-card/plate";
 import type { CardPinSpec, PinWeather, PushSpec } from "@/components/sections/act-card/pin-spec";
 
 /* ============================================================================
@@ -53,7 +55,7 @@ import type { CardPinSpec, PinWeather, PushSpec } from "@/components/sections/ac
                the stern; ALT rack + 1 → 1.15), #2 the camera on L08 toward
                the ICE board (1 → 1.35, FIG. 0 inside; ALT rack + 1 → 1.2),
                #3 SEQ-HALL on the card canvas (+ a 1.06 code scale; ALT the
-               crane on L02), the tintype's push toward the sun (1 → 1.04).
+               crane on L02), the tintype's push toward the sun (1 → 1.1).
      iris      the opening's css-tier aperture: a 12 % disc pre-opened on
                the stern (the hook) that opens to the far corner over star
                (a): a static radial mask on a scaled box, the plate counter-
@@ -115,7 +117,11 @@ export function CardP3(props: Props) {
   const a = useTransform(t, (v) => remap(v, spec.a[0], spec.a[1]));
   const b = useTransform(t, (v) => remap(v, cardPin.b[0], cardPin.b[1]));
   const push = useVariant(choice, `card-${spec.kind}.push`);
-  const title = useVariant(choice, "title.mask");
+  const chosenTitle = useVariant(choice, "title.mask");
+  // P3-11 r3 (panel J3 / J2 / J4: "the same ghosted mask four times"): a
+  // card the pin spec marks `bars` (the tintype) plays the ALT reveal, the
+  // bars closing in and the act title rising in the lower bar
+  const title: Variant = spec.title.bars ? "alt" : chosenTitle;
   const [tier, setTier] = useState<GlTier | null>(null);
   const tierRef = useRef<GlTier | null>(null);
   const liveRef = useRef(live);
@@ -130,9 +136,9 @@ export function CardP3(props: Props) {
 
   // the frames' drivers and pieces (CardShell goes live once they are in)
   useEffect(() => {
-    onPin(pinned ? { kind: spec.kind, t, a, b, enter, kraken, ui: UI, push, title } : null);
+    onPin(pinned ? { kind: spec.kind, t, a, b, enter, kraken, ui: UI, push, title, loopBeat: spec.loopBeat ?? null } : null);
     return () => onPin(null);
-  }, [onPin, pinned, spec.kind, t, a, b, enter, kraken, push, title]);
+  }, [onPin, pinned, spec.kind, spec.loopBeat, t, a, b, enter, kraken, push, title]);
   // the title-mask variant for the lower bar's states (cards.css)
   useEffect(() => {
     const el = section.current;
@@ -143,6 +149,14 @@ export function CardP3(props: Props) {
 
   const active = pinned && live;
   const pushSpec = spec.push[choreo][push];
+  // does a plate loop play in star (b)? (PlateLayers' own rule) — then it is
+  // the card's one performer there, and star (b) weather stays still
+  const toPlate = spec.toPlate[choreo];
+  const loopInB =
+    (spec.kind === "opening" || spec.kind === "seam" || (spec.kind === "ignite" && push === "alt")) &&
+    toPlate != null &&
+    isMediaId(toPlate) &&
+    loopFor(toPlate) != null;
   useDebugHandle(spec.kind, pinned, raw, t, tierRef);
   const stars = useMemo(
     () => spec.beats.filter((x) => x.weight != null).map((x) => [x.from, x.to] as const).sort((x, y) => x[0] - y[0]),
@@ -155,7 +169,8 @@ export function CardP3(props: Props) {
   useCrossings(t, spec, pinned, liveRef, tierRef, frameRef);
   useStars(pinNode, pinned);
   useFarFrame(frame, pinned);
-  useExitDip(pinEl, frame, active && spec.kind !== "opening");
+  usePreRoll(frame, enter, active && (spec.kind === "seam" || spec.kind === "ignite"));
+  useExitDip(pinEl, frame, content, active && spec.kind !== "opening", spec.kind);
   useHeroCover(spec.kind, pinned, enter);
   useKraken(spec, pinned, liveRef, raw, t, kraken, section, pinEl, content, tipRef, massRef);
 
@@ -173,7 +188,11 @@ export function CardP3(props: Props) {
       {active && title === "default" ? <TitleMask t={t} text={spec.title.text} zoom={spec.title.zoom ?? 1.3} /> : null}
       {active && title === "alt" ? <Bars t={t} /> : null}
       {active && spec.shape ? <ShapeLayer t={t} shape={spec.shape} /> : null}
-      {pinned ? spec.weather.map((w) => <WeatherCue key={w.beat} w={w} t={t} live={live} />) : null}
+      {pinned
+        ? spec.weather.map((w) => (
+            <WeatherCue key={w.beat} w={w} t={t} live={live} gate={w.range[0] < 0.4 ? "free" : loopInB ? "off" : "own"} />
+          ))
+        : null}
       {spec.kind === "seam" ? <KrakenLayer tipRef={tipRef} massRef={massRef} at={spec.kraken?.at ?? [0.62, 0.62]} /> : null}
     </>
   );
@@ -366,7 +385,6 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
       right: "auto",
       bottom: "auto",
       "transform-origin": "50% 50%",
-      "will-change": "transform",
     };
     const disc = "radial-gradient(closest-side, #000 calc(100% - 1.5px), transparent 100%)";
     css(outer, { ...box, "mask-image": disc, "-webkit-mask-image": disc });
@@ -378,10 +396,17 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
       right: "auto",
       bottom: "auto",
       "transform-origin": `${(cx * 100).toFixed(3)}% ${(cy * 100).toFixed(3)}%`,
-      "will-change": "transform",
     });
     if (rim) css(rim, { ...box, display: "block" });
+    // P3-11 r3 (J8: the opening card held 18 will-change layers): the disc's
+    // boxes are their own layers only while the iris moves
+    let moving: boolean | null = null;
     const write = (v: number) => {
+      const m = v > 0 && v < 1;
+      if (m !== moving) {
+        moving = m;
+        for (const el of [outer, inner, rim]) if (el) css(el, { "will-change": m ? "transform" : "" });
+      }
       // the radius grows geometrically, eased (the GL iris' curve)
       const e = ss(v);
       const s = (iris.r0 * Math.pow(R / iris.r0, e)) / R;
@@ -524,39 +549,110 @@ function useStars(host: HTMLDivElement | null, pinned: boolean) {
 
 /** J8 #2 (P3-11 r1): a card that has not started or has finished costs
  *  nothing — its frame (aria-hidden art: plates, canvases, the GL host,
- *  weather) is out of paint while the sticky stage is more than a viewport
- *  away (components/stage/far.ts); the bars' text stays (accessible). */
+ *  weather) is out of paint while the sticky stage is away from the
+ *  viewport (components/stage/far.ts); the bars' text stays (accessible).
+ *  P3-11 r3 (J8 F7: the act-3 stage repainted ×100 while the reader was in
+ *  films, the act-4 stage ×41 / ×17 in writing / principles): the margin is
+ *  a third of a viewport, not a whole one — painted from just before it can
+ *  show (the pre-roll's first frame), never while it is a screen away. */
+const FAR_MARGIN = 0.34;
 function useFarFrame(frame: HTMLDivElement | null, pinned: boolean) {
-  useEffect(() => (frame && pinned ? hideWhenFar(frame, 1) : undefined), [frame, pinned]);
+  useEffect(() => (frame && pinned ? hideWhenFar(frame, FAR_MARGIN) : undefined), [frame, pinned]);
+}
+
+/** The card's PRE-ROLL (P3-11 r3; panel J2 / J3 / J4 medium and the must-
+ *  yes "Kraken gap" at 1440 s8: ~1 s of near-black with a sliver of image
+ *  as each card rose, because its upper bar — the header's clearance, the
+ *  Meta and the film title's row, ≈ 250 px of deep — came first). The
+ *  frame now LEADS: it starts at the stage's top edge and sinks into its
+ *  letterbox place as the card arrives (`enter` 0 → 1, eased), so the
+ *  picture fills the screen's foot from the card's first pixel. Transform
+ *  only (a 3D translate: its own layer while it moves). The seam and the
+ *  ignite, whose film title waits for the transition (nothing under the
+ *  frame is shown yet); pin mode, live only (RM / Pause: static). */
+function usePreRoll(frame: HTMLDivElement | null, enter: MotionValue<number>, on: boolean) {
+  useEffect(() => {
+    if (!frame || !on) return;
+    // the frame's top in its stage (the sticky stage is its offset parent)
+    let lead = frame.offsetTop;
+    let cur = Number.NaN;
+    const write = (e: number) => {
+      const y = e >= 1 ? 0 : -lead * (1 - ss(e));
+      if (Math.abs(y - cur) < 0.25) return;
+      cur = y;
+      css(frame, { transform: y === 0 ? "" : `translate3d(0, ${y.toFixed(1)}px, 0)` });
+    };
+    const ro = new ResizeObserver(() => {
+      lead = frame.offsetTop;
+      cur = Number.NaN;
+      write(enter.get());
+    });
+    ro.observe(frame);
+    write(enter.get());
+    const off = enter.on("change", write);
+    return () => {
+      off();
+      ro.disconnect();
+      css(frame, { transform: "" });
+    };
+  }, [frame, enter, on]);
 }
 
 /** The card's EXIT (P3-11 r1; panel J2 #4, J3 #5, J4 #7 and F5's hand-off:
  *  the lecture hall stacked over the pen, the tintype's sunset doubled by
  *  Beyond's band of the same photo): once the pin is done and the stage
- *  scrolls away, its frame dips to the card's deep while the next section's
- *  picture rises into view — gone by the time the pin's foot is at 70 % of
- *  the viewport — so one picture holds the screen at a time and the same
- *  photo is never on screen twice. Opacity only (promoted while it runs),
- *  by position (reverses exactly); not the opening, whose exit frame IS the
- *  stage's next cue. Pin mode, live only. */
-function useExitDip(pinEl: RefObject<HTMLDivElement | null>, frame: HTMLDivElement | null, on: boolean) {
-  const { scrollYProgress: exit } = useScroll({ target: pinEl, offset: ["end end", "end 70%"] });
+ *  scrolls away, its frame dims while the next section's picture rises.
+ *  P3-11 r3 (panel J2 / J3 / J4 medium: ~1 s of near-black at every act
+ *  change, "did it stop loading?"; J4: "the same fade-and-rise at every
+ *  breath"): the dim starts LATER (the pin's foot at 82–85 % of the
+ *  viewport, not at 100 %), so the next picture is already rising while
+ *  the frame goes, and it varies by card —
+ *    seam     the camera pushes on through the board as it dims, to a
+ *             quarter (never a black void; a different picture comes);
+ *    ignite   dims to a quarter (the map is a different picture);
+ *    tintype  dims away entirely: Beyond's band is the same photograph.
+ *  Opacity (+ the seam's `scale` on the content box), promoted while it
+ *  runs, by position (reverses exactly); not the opening, whose exit frame
+ *  IS the stage's next cue. Pin mode, live only. */
+const EXIT: Record<CardPinSpec["kind"], { from: number; to: number; floor: number; push: number }> = {
+  opening: { from: 1, to: 0.7, floor: 0, push: 0 },
+  seam: { from: 0.82, to: 0.5, floor: 0.25, push: 0.08 },
+  tintype: { from: 0.85, to: 0.6, floor: 0, push: 0 },
+  ignite: { from: 0.82, to: 0.5, floor: 0.25, push: 0 },
+};
+function useExitDip(
+  pinEl: RefObject<HTMLDivElement | null>,
+  frame: HTMLDivElement | null,
+  content: RefObject<HTMLDivElement | null>,
+  on: boolean,
+  kind: CardPinSpec["kind"],
+) {
+  const x = EXIT[kind];
+  const { scrollYProgress: exit } = useScroll({
+    target: pinEl,
+    offset: [`end ${Math.round(x.from * 100)}%`, `end ${Math.round(x.to * 100)}%`],
+  });
   useEffect(() => {
     if (!frame || !on) return;
+    const box = content.current;
     let cur = -1;
     const write = (v: number) => {
-      const o = v <= 0 ? 1 : 1 - ss(v);
+      const e = v <= 0 ? 0 : ss(v);
+      const o = 1 - (1 - x.floor) * e;
       if (o === cur) return;
       cur = o;
-      css(frame, { opacity: o >= 1 ? "" : o.toFixed(3), "will-change": o > 0 && o < 1 ? "opacity" : "" });
+      const moving = e > 0 && e < 1;
+      css(frame, { opacity: o >= 1 ? "" : o.toFixed(3), "will-change": moving ? "opacity" : "" });
+      if (box && x.push) css(box, { scale: e > 0 ? (1 + x.push * e).toFixed(4) : "", "will-change": moving ? "transform" : "" });
     };
     write(exit.get());
     const off = exit.on("change", write);
     return () => {
       off();
       css(frame, { opacity: "", "will-change": "" });
+      if (box && x.push) css(box, { scale: "", "will-change": "" });
     };
-  }, [exit, frame, on]);
+  }, [exit, frame, content, on, x]);
 }
 
 /** The CONTRACT with the hero (F3, J8 #3): while the opening card's pinned
@@ -815,8 +911,18 @@ function KrakenLayer({
  *  frame is always 2.39:1, the viewBox's own ratio. */
 const VB_W = 2390;
 const VB_H = 1000;
-/** The css title's masked middle ends here (= GL title t .55). */
-const TITLE_DONE = 0.856;
+/** P3-11 r3 (panel J3 medium, J2 / J4 low: the ghost title held 6–8 s at
+ *  low contrast, four times): the mask comes in a touch later and leaves
+ *  sooner — it holds ~12 % of the travel, not ~18 % — so the logline
+ *  (phase b) and the clean push carry the rest; GL matches (lib/gl/plan.ts
+ *  TITLE_IN / TITLE_OUT). */
+const MASK_IN = 0.7;
+/** The css title's masked middle ends here (= GL title t .4). */
+const TITLE_DONE = 0.82;
+/** The world outside the letters (of the deep) and the warm lift inside
+ *  them: raised from .7 / .24 so the letters read (P3-11 r3). */
+const MASK_DIM = 0.82;
+const MASK_LIFT = 0.46;
 type TitleFit = { size: number; base: number; centre: readonly [number, number]; ink: number };
 /** The title's size, as the GL title sets it (lib/gl/plan.ts `titleXf`):
  *  cap = 20 % of the frame height, the ink ≤ 72 % of its width, centred;
@@ -864,10 +970,10 @@ function TitleMask({ t, text, zoom }: { t: MotionValue<number>; text: string; zo
     };
   }, [text]);
   const zmax = Math.max(1, Math.min(zoom, 0.96 / Math.max(0.1, fit.ink)));
-  const scale = useTransform(t, (v) => 1 + (zmax - 1) * ss(remap(v, cardPin.titleIn, TITLE_DONE)));
+  const scale = useTransform(t, (v) => 1 + (zmax - 1) * ss(remap(v, MASK_IN, TITLE_DONE)));
   // in and out are STATES, not scrubs (W2 gate; P3-11 r1 J8 #5): a reader
   // who stops never keeps a half-faded or giant half-letter over the plate
-  const phase = (v: number) => (v >= TITLE_DONE ? 2 : v >= cardPin.titleIn ? 1 : 0);
+  const phase = (v: number) => (v >= TITLE_DONE ? 2 : v >= MASK_IN ? 1 : 0);
   const [ph, setPh] = useState(() => phase(t.get()));
   useMotionValueEvent(t, "change", (v) => setPh(phase(v)));
   return (
@@ -901,7 +1007,7 @@ function TitleMask({ t, text, zoom }: { t: MotionValue<number>; text: string; zo
         </defs>
         {/* the world outside the letters dims, never to black: the push
             keeps moving behind the title (W2 judge; P3-11 r1) */}
-        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={0.7} mask={`url(#${id}m)`} />
+        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={MASK_DIM} mask={`url(#${id}m)`} />
         {/* a faint warm lift inside the letters: legible over a dark plate
             (the candlelit hall), as the GL title does */}
         <text
@@ -910,7 +1016,7 @@ function TitleMask({ t, text, zoom }: { t: MotionValue<number>; text: string; zo
           textAnchor="middle"
           fontSize={fit.size}
           fill="#fff8e6"
-          fillOpacity={0.24}
+          fillOpacity={MASK_LIFT}
           className="act-card-title-mask-text"
         >
           {text}
@@ -959,17 +1065,30 @@ function ShapeLayer({ t, shape }: { t: MotionValue<number>; shape: NonNullable<C
 }
 
 /** Weather in the card frame (§7.7; WeatherLayer is W2-PLATES'): on over
- *  its beat's range, confined to the frame (never over text). */
-function WeatherCue({ w, t, live }: { w: PinWeather; t: MotionValue<number>; live: boolean }) {
+ *  its beat's range, confined to the frame (never over text).
+ *  C1 (P3-11 r3; F1: never two movers at once) — `gate`:
+ *    own   star (b) weather on a card with no plate loop (B38-fireflies, the
+ *          ignite DEFAULT's B50-motes): a LIVE weight-1 star, GATED — its
+ *          sprites run only while the spotlight lends it a still screen;
+ *    off   star (b) weather on a card whose plate loop plays (B04-spray,
+ *          B14-chalk, the ignite ALT): the loop is the performer, the
+ *          weather does not run;
+ *    free  star (a) weather inside the transition's own scroll star
+ *          (B48-fireflies: 11vh, never a star): runs over its range. */
+function WeatherCue({ w, t, live, gate }: { w: PinWeather; t: MotionValue<number>; live: boolean; gate: "own" | "off" | "free" }) {
   // inside the pin only (p > 0): a card still below the fold, or the hero
   // above it, never pays for the frame's sprites (W2 gate: idle at the top)
   const inRange = (v: number) => v > 0 && v >= w.range[0] && v <= w.range[1];
   const [on, setOn] = useState(() => inRange(t.get()));
   useMotionValueEvent(t, "change", (v) => setOn(inRange(v)));
+  const [owned, setOwned] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useLiveStar(ref, gate === "own" ? w.beat : null, on && live, setOwned);
+  const show = on && live && gate !== "off";
   return (
-    <div aria-hidden="true" className="act-card-weather" data-on={on && live ? "" : undefined} {...beatAttrs(w.beat)}>
+    <div ref={ref} aria-hidden="true" className="act-card-weather" data-on={show ? "" : undefined} {...beatAttrs(w.beat)}>
       {/* paused (not unmounted) outside its range: the 400 ms fade keeps its dots */}
-      {live ? <WeatherLayer kind={w.kind} zone="frame" run={on} /> : null}
+      {live && gate !== "off" ? <WeatherLayer kind={w.kind} zone="frame" run={on && (gate === "free" || owned)} /> : null}
     </div>
   );
 }
@@ -1021,7 +1140,11 @@ function SeqCanvas({
       const i = Math.round(c01(v) * (urls.length - 1));
       index.current = i;
       const img = v > 0 ? frameAt(i) : null;
-      c.style.opacity = img ? "1" : "0";
+      // P3-5 #3 (P3-11 r3: the push's first frame registered .923 at 1024,
+      // SEQ-HALL frame 0 ≠ the hall still in content): the sequence comes
+      // up OVER the still across the push's first stretch — a cross-fade,
+      // so the picture the push starts on IS the settled still
+      c.style.opacity = img ? ss(v / SEQ_IN).toFixed(3) : "0";
       c.style.transform = `scale(${(s0 + (s1 - s0) * c01(v)).toFixed(5)})`;
       if (!img) return;
       const W = c.width;
@@ -1050,6 +1173,8 @@ function SeqCanvas({
   return <canvas ref={ref} aria-hidden="true" className="act-card-seq" data-seq={seq.id} />;
 }
 const EMPTY: readonly string[] = [];
+/** The SEQ canvas fades in over star (b) 0 → this. */
+const SEQ_IN = 0.14;
 
 /* — the frames' pin-mode pieces (pin.ui) ———————————————————————————— */
 
@@ -1073,15 +1198,56 @@ function PlateLayers({ plate, loop = true }: { plate: string; loop?: boolean }) 
   const rack = pin.push === "alt" && (pin.kind === "opening" || pin.kind === "seam");
   const loops = loop && (pin.kind === "opening" || pin.kind === "seam" || (pin.kind === "ignite" && pin.push === "alt"));
   const loopId = loops ? loopFor(plate) : null;
+  // C9 (P3-11 r3): the ICE board's AAL IZZ WELL (pin-extras.tsx)
+  const board = pin.kind === "seam" ? plateOf(plate) : null;
   return (
     <>
-      {loopId && live && on ? (
-        <div className="absolute inset-0" data-plate-loop="">
-          <MediaFrame media={loopId} layout="fill" playOn="desktop" loader={false} sizes="100vw" />
-        </div>
-      ) : null}
+      {loopId && live && on ? <PlateLoop loop={loopId} beat={pin.loopBeat} /> : null}
       {rack && live ? <RackSoft plate={plate} t={pin.t} /> : null}
+      {board ? <BoardMotto plate={board} /> : null}
     </>
+  );
+}
+
+/** C1 (P3-11 r3): a LIVE weight-1 star (lib/spotlight.ts) registered only
+ *  while `on` — a performer that holds a still screen. This chunk runs in
+ *  desktop-fine pin mode only, and Pause / reduced motion take `live` (and
+ *  so `on`) away, so the facade's own gate is enough (no spotlight-react:
+ *  it kept the first-load chunks as they were). */
+function useLiveStar(
+  ref: RefObject<Element | null>,
+  id: string | null | undefined,
+  on: boolean,
+  /** GATED (F1's onOwn): told when it gains / loses the spotlight. */
+  onOwn?: (owned: boolean) => void,
+) {
+  const cb = useRef(onOwn);
+  useEffect(() => {
+    cb.current = onOwn;
+  });
+  const gated = Boolean(onOwn);
+  useEffect(() => {
+    const el = ref.current;
+    if (!on || !id || !el) return;
+    const off = spotlight.registerScrollStar(id, el, 1, { live: true, onOwn: gated ? (o) => cb.current?.(o) : undefined });
+    return () => {
+      off();
+      cb.current?.(false);
+    };
+  }, [ref, id, on, gated]);
+}
+
+/** The plate's registered loop from star (b). C1 (P3-11 r3; J1 #3 / #5:
+ *  the card settles were granted on identical frames): while it plays it
+ *  is a live weight-1 star (`<push beat>-loop`, pin-build.ts), so a reader
+ *  stopped on the push has the loop as the screen's one performer. */
+function PlateLoop({ loop, beat }: { loop: MediaId; beat?: string | null }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useLiveStar(ref, beat, true);
+  return (
+    <div ref={ref} className="absolute inset-0" data-plate-loop="">
+      <MediaFrame media={loop} layout="fill" playOn="desktop" loader={false} sizes="100vw" />
+    </div>
   );
 }
 
@@ -1161,4 +1327,4 @@ const burn: PinUi["burn"] = (deep) => {
   };
 };
 
-const UI: PinUi = { PlateLayers, burn };
+const UI: PinUi = { PlateLayers, burn, IrisSea, DevelopFront };

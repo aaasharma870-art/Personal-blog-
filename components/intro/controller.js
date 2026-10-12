@@ -1371,7 +1371,7 @@
     check();
   }
   /** S3r: the compositor-only feathered wipe, left → right over t.landing
-   *  (easeClip): the name zone clears first. #intro-stage rides from
+   *  (a gentle-start curve, P3-11 r3): the name zone clears first. #intro-stage rides from
    *  −W to +F (its static mask's edge crosses the whole viewport and its
    *  feather clears it) while #intro-film is counter-moved by the same
    *  amount, so the held picture stays put; the two WAAPI transforms are
@@ -1391,7 +1391,11 @@
       return;
     }
     R.classList.add("intro-sweep"); // a phase label: it changes no style
-    var F = M.round(W * C.feather), o = { duration: C.t.landing, easing: curve(C.easeClip), fill: "forwards" };
+    // P3-11 r3 (r2 J8 F12, §4.4 "no pop"): not easeClip here. Its first
+    // tenth sweeps half the stage, so the whole name zone cleared in one
+    // frame; this curve starts at 1.5× the mean speed, and the name wipes
+    // in over ~150–200 ms, still first.
+    var F = M.round(W * C.feather), o = { duration: C.t.landing, easing: "cubic-bezier(.3,.45,.2,1)", fill: "forwards" };
     var a = stage.animate([{ transform: "translateX(" + -W + "px)" }, { transform: "translateX(" + F + "px)" }], o);
     owned.push(a);
     owned.push(film.animate([{ transform: "translateX(0px)" }, { transform: "translateX(" + -(W + F) + "px)" }], o));

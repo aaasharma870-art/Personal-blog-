@@ -124,9 +124,41 @@
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
+  /* P3-11 r3 (hooks: "a dull porthole"): a polished lip on the brass, as
+     the GL rim's highlight, so the ring glows at the 12 % hook */
   box-shadow:
-    inset 0 0 0 36px color-mix(in oklab, var(--w-brass) 88%, #000),
+    inset 0 0 0 13px color-mix(in oklab, var(--w-brass) 52%, #ffe9b0),
+    inset 0 0 0 36px var(--w-brass),
     inset 0 0 0 46px rgb(0 0 0 / 0.45);
+}
+/* the tintype's sepia print in pin mode, css tier (P3-11 r3 hooks: "muddy,
+   low contrast, the left half a black tree mass"): levelled — the shadows
+   lifted and the print brightened — so the tree's leaves, the river and the
+   ridges read at the hook (a static filter: rastered once with the image).
+   GL draws its own levelled print (lib/gl/shaders.ts develop). */
+[data-card-phase] [data-frame="tintype"] .act-tintype img {
+  filter: grayscale(1) sepia(0.5) contrast(0.86) brightness(1.24);
+}
+[data-card-phase] [data-frame="tintype"] .act-tintype-vignette {
+  opacity: 0.4;
+}
+/* …and its develop front (tintype.tsx): a static warm gradient, moved by
+   transform from the carried row */
+.act-tintype-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 34%;
+  translate: 0 -50%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 190 110 / 0),
+    rgb(255 190 110 / 0.2) 30%,
+    rgb(255 214 150 / 0.36) 50%,
+    rgb(255 190 110 / 0.2) 70%,
+    rgb(255 190 110 / 0)
+  );
 }
 /* the carried shape, css tier (§7.3): static, shown by state */
 .act-card-shape {

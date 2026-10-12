@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { MapTrail, Stairs, Turret } from "@/components/worlds/hp/map-ink";
 
 /* ============================================================================
@@ -54,7 +55,13 @@ export function RoomFeature({ index }: { index: number }) {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute bottom-[9%] right-[3%] hidden h-[150px] w-[160px] lg:block"
+      className={cn(
+        "pointer-events-none absolute bottom-[9%] right-[3%] hidden h-[150px] w-[160px] lg:block",
+        // rooms 2 and 4 keep theirs in the lower LEFT corner where the room
+        // is wide enough (≥ 88rem: under the number, clear of the body), so
+        // the Map's rooms zig-zag instead of repeating (P3-11 r3, r2 J4)
+        index % 2 === 1 && "min-[88rem]:left-[3%] min-[88rem]:right-auto",
+      )}
       data-motif="room-feature"
     >
       <MapTrail

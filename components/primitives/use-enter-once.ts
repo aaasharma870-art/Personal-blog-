@@ -92,7 +92,11 @@ export function useEnterOnce(
           if (starId && window.matchMedia(DESKTOP_FINE).matches) {
             // one star at a time: wait for the spotlight (≤ 1.5 s), or skip
             asking = true;
-            void spotlight.request(starId, { weight: starWeight, durationMs: starMs }).then((answer) => {
+            // a cut (a fling into a scroll star's window during the hold,
+            // ≤ 1.2 s after the grant): the end state now. Not gated on
+            // `cancelled`: `done` re-runs this effect right after the grant
+            const onCut = () => setPhase("static");
+            void spotlight.request(starId, { weight: starWeight, durationMs: starMs, onCut }).then((answer) => {
               asking = false;
               if (cancelled) return;
               setPhase(answer === "play" ? "entered" : "static");

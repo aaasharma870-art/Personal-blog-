@@ -20,7 +20,9 @@
 const CARD = "top 50%, bottom 50%";
 
 export const SCROLL_WINDOWS: Readonly<Record<string, string>> = {
-  // hero-stage.tsx: the wave loop + the exit push, while the hero is on screen
+  // hero-stage.tsx: the exit push while the hero is on screen (a scrub);
+  // live (C1) only while hero-drift.ts, its lazy desktop chunk, registers
+  // the zoom layer's drift playing
   B02: "top 0%, bottom 0%",
   // the act cards' two stars (card-p3.tsx BeatMarkers)
   B03: CARD,
@@ -55,8 +57,9 @@ export const SCROLL_WINDOWS: Readonly<Record<string, string>> = {
   // writing.tsx: the camp fades up as the voices' top rises 100 % → 30 %
   B46: "bottom 100%, bottom 30%",
   // campfire-stage.tsx: night falls, the camp drifts, the fire flickers and
-  // the fireflies drift (live) from the fade-up's end until the stage's
-  // bottom passes 30 %
+  // the fireflies drift from the fade-up's end until the stage's bottom
+  // passes 30 % (a scrub; live only while the host registers it playing:
+  // C1, P3-11 r3)
   B47: "top 30%, bottom 30%",
   // principles-map.tsx: the footprints' walk (one useScroll, "start 62%" →
   // "end 62%", split per room) through rooms 1–4; room 1 hosts the beat
@@ -65,9 +68,17 @@ export const SCROLL_WINDOWS: Readonly<Record<string, string>> = {
   B54: "top 62%, [data-room='4'] bottom 62%",
 };
 
-/** Scroll stars that animate on their own while owned (not only with the
- *  scroll): the hero's wave loop, the camp's fire and fireflies. */
-export const LIVE_STARS: ReadonlySet<string> = new Set(["B02", "B47"]);
+/** Scroll stars that animate on their own for as long as they are
+ *  registered (not only with the scroll), whoever registers them: the act
+ *  cards' plate loops in star (b) (card-p3.tsx PlateLoop, registered only
+ *  while the loop is mounted and playing; pin-build.ts `<push>-loop`).
+ *  A host whose motion can stop registers `live: true` itself, only while
+ *  it plays (C1, lib/spotlight.ts): the hero's B02 and the camp's B47 left
+ *  this set in P3-11 r3 (r2 J1 #4 / #5: granted at y 0 while the wave was
+ *  frozen; granted over rigid scroll and identical frames in voices), so
+ *  a markup registration of either is a scrub star until its host says it
+ *  plays. */
+export const LIVE_STARS: ReadonlySet<string> = new Set(["B04-loop", "B14-loop", "B50-loop"]);
 
 /** No window declared anywhere: the old middle-60 % band (the box overlaps
  *  20 %–80 % of the viewport). */

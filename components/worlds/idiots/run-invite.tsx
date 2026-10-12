@@ -81,7 +81,9 @@ export default function RunInvite({ host, variant }: { host: RefObject<HTMLEleme
         if (!entry?.isIntersecting || asking) return;
         io.disconnect();
         asking = true;
-        void spotlight.request(STAR, { weight: 1, needsIdle: true, durationMs: 900 }).then((answer) => {
+        // THE CUT (P3-11 r3, F1): a fling ends the hold early; the invite's
+        // end state is no glow, so the cut just stops it
+        void spotlight.request(STAR, { weight: 1, needsIdle: true, durationMs: 900, onCut: stop }).then((answer) => {
           asking = false;
           if (gone || answer !== "play" || motionOffNow() || !window.matchMedia(DESKTOP_FINE).matches) return;
           anims = play(el, variant);

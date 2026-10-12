@@ -149,7 +149,8 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
           <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg motion-off:transition-none">
             The kill-list
           </MaskReveal>
-          <p className="mt-tier-group max-w-body type-body text-fg-muted">
+          {/* ≥ 1024 at lead size: the struck "Killed" read small (P3-11 r2 J5) */}
+          <p className="mt-tier-group max-w-body type-body text-fg-muted lg:text-[length:var(--text-lead)] lg:leading-[1.45]">
             <PhysicalWord text={INTRO} word="Killed" kind="strike" beat="B29" variant={effectiveVariant(choice, "words.physical", "")} />
           </p>
         </div>
@@ -160,6 +161,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
             pieceKey="kill-list.head"
             captionKey="cap.kill-list"
             className="lg:col-span-6"
+            liveStar="B28-pen"
           />
         ) : (
           <SceneCaption k="cap.kill-list" place="head" className="lg:col-span-6 lg:self-end lg:pb-2" />

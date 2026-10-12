@@ -40,25 +40,36 @@
     align-items: center;
     gap: 0.5rem;
   }
+  /* P3-11 r3 (F4 handoff, blind A29 / D29 0.45–0.65): the band's own
+     chalk drone (existing art, the 3 Idiots drone) at twice the size, so
+     the frame carries one legible 3 Idiots cue beside the pill */
   html.js .drone-pill-row > img {
-    width: 2.75rem;
+    width: 5.5rem;
     height: auto;
   }
 
+  /* P3-11 r3 (F6, panel J4 "a tiny grey pill that doesn't read as press
+     me"): a raised button face — the interactive surface, a full-ink rule
+     and a press — instead of a hairline on the plate's own dark */
   html.js .game-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding: 0 1rem;
-    border: 1px solid var(--rule);
+    padding: 0 1.125rem;
+    border: 1px solid color-mix(in oklab, var(--fg) 70%, transparent);
     border-radius: 999px;
-    background: color-mix(in oklab, var(--color-deep) 80%, transparent);
+    background: color-mix(in oklab, var(--surface-2) 92%, transparent);
     color: var(--fg);
+    font-size: 0.875rem;
     cursor: pointer;
+    transition: border-color var(--dur-micro) ease;
   }
   html.js .game-pill:hover {
-    border-color: var(--fg-muted);
+    border-color: var(--accent-bright);
+  }
+  html.js .game-pill:active {
+    transform: translateY(1px);
   }
   html.js .game-pill:focus-visible {
     outline: 2px solid var(--accent);

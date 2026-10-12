@@ -3,6 +3,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { motionValue, type MotionValue } from "motion/react";
 import type { Variant } from "@/lib/variants";
+import type { Box, Plate } from "@/components/sections/act-card/plate";
 
 /**
  * What every piece of an act card reads (SPEC v2 §8.2, act-cards.BAR §4):
@@ -51,6 +52,9 @@ export type PinState = {
   /** Push / title-mask / shape variants for this card (resolved). */
   push: Variant;
   title: Variant;
+  /** C1 (P3-11 r3): the live-star id of the plate's loop during star (b)
+   *  (`<push beat>-loop`; pin-build.ts), null when the card has none. */
+  loopBeat?: string | null;
 };
 
 /** What the lazy chunk hands the frames (card-p3.tsx `ui`). */
@@ -61,6 +65,10 @@ export type PinUi = {
   /** The ignite's css-tier film burn (P3-11 r1): given the card's deep,
    *  a drawer for frames/ignite.tsx's canvas (null: none). */
   burn?: BurnUi;
+  /** P3-11 r3 pin-mode pieces (pin-extras.tsx, lazy): the opening's sea
+   *  under the iris, the tintype's develop front. */
+  IrisSea?: (props: { plate: Plate; reg: Box | null }) => ReactNode;
+  DevelopFront?: () => ReactNode;
 };
 
 /** (deep) → draw(ctx, star (a) p, the fire's x / y, the frame height). */

@@ -18,7 +18,7 @@ import { useLetterboxScene } from "@/components/stage/letterbox-bars-impl";
       viewport: closed as the first screen arrives) and open over 40vh
       as the frame rises to the middle (its centre from 92% to 52%: P3-11 r1);
       from there each screen's own 2.39 matte carries the scene. One close,
-      one open per pass (html[data-letterbox] flips twice, rule 33). B30's
+      one open per pass (the bars' root `.letterbox[data-state]` flips twice; rule 33: never on <html>). B30's
       marker (server markup in the frame's box, film-screen.tsx, above the
       frame) is registered as a weight-3 scroll star: its spotlight
       ownership ends as the close does.

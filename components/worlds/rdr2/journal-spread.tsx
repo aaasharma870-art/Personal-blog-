@@ -215,9 +215,20 @@ function useDrawGate(fresh: boolean, index: number): boolean | null {
     if (!ask) return;
     const id = `B44-page${index + 1}`;
     let live = true;
-    void spotlight.request(id, { weight: 1, maxWait: 700, durationMs: 1100 }).then((a) => {
-      if (live) setGo(a === "play");
-    });
+    void spotlight
+      .request(id, {
+        weight: 1,
+        maxWait: 700,
+        durationMs: 1100,
+        // THE CUT (lib/spotlight.ts): a scroll star took the screen during
+        // the hold: the vignette shows its end state now (drawn at once)
+        onCut: () => {
+          if (live) setGo(false);
+        },
+      })
+      .then((a) => {
+        if (live) setGo(a === "play");
+      });
     return () => {
       live = false;
       spotlight.release(id);
@@ -246,11 +257,15 @@ function PageVignette({ index, still, ground = false }: { index: number; still: 
   return (
     <>
       {ground ? <Ground phase="static" /> : null}
-      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("absolute inset-0 size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
-        {/* the entry's head in the journal hand (≤ 4 words on the page) */}
-        <text x={50} y={96} fontSize={24} className="font-world-hand fill-(--world-line)">
+      {/* the entry's head in the journal hand (≤ 4 words on the page): in
+          full ink, larger, OFF the graphite tooth (P3-11 r3, r2 J6 / J7:
+          "Entry II" read as faint pencil) */}
+      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className="absolute inset-0 size-full overflow-visible">
+        <text x={50} y={100} fontSize={32} className="font-world-hand fill-(--world-line)">
           {`Entry ${ROMAN[index] ?? index + 1}`}
         </text>
+      </svg>
+      <svg viewBox="0 0 400 500" aria-hidden="true" focusable="false" className={cn("absolute inset-0 size-full", PAGE_SVG)} style={PAGE_GRAPHITE} data-motif="journal-vignette">
         <g transform={VIGNETTE_AT} fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-(--world-line)">
           {v.strokes.map((d, i) => (
             <motion.path key={d} d={d} strokeWidth={VIGNETTE_W} {...draw(i * 0.22)} />
