@@ -35,7 +35,7 @@ All 18 HEAD runs: 0 console errors, 0 page errors, 0 hydration errors, 0 failed 
 
 ### Phones, tablet and landscape against the base (`compare-head-vs-base.json`)
 
-Not strictly "unchanged except the intended changes". 844x390, 390x844 and 320x640 show the same difference set (rendered text via `innerText`, stable across all runs of each build):
+Not strictly "unchanged except the intended changes". 844x390, 390x844 and 320x640 show the same difference set (rendered text via `innerText`; stable across all runs of each build at 390 and 320, but not at 844x390, where both builds vary between runs, see below):
 
 Intended, per PHASE3-SPEC section 13 (line 1416) and D3-9:
 1. capabilities Meta strip: `NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL` became `SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH REDUCED MOTION • CSS + SVG FIRST • WEBGL, WHERE SUPPORTED, ONLY FOR SCENE CHANGES`.
@@ -48,7 +48,7 @@ Not on the section 13 list (found here, all small, all text):
 6. The credits Higgsfield line gained `minimax_h3` (`(GPT Image 2.5, Kling 3.0, nano_banana_pro, minimax_h3)`); the line is built from media provenance (`components/site/footer.tsx:134`, `lib/media.ts:1364`), not typed.
 7. Section heights: systems +18 / +59 / +77 px and credits +27 / +28 / +27 px (the longer pencil body and the credits line), page height -39 / -35 / -53 px at 844 / 390 / 320.
 
-Everything else matches: 390 and 320 have identical text hashes in each build, 20 sections each, h1 1, overflow 0. 844x390 text in the base varies between runs (3 different hashes, one rotating label); HEAD's is stable.
+Everything else matches: 390 and 320 have identical text hashes in each build, 20 sections each, h1 1, overflow 0. 844x390 text varies between runs on both builds, 3 different hashes each (`compare-head-vs-base.json`: HEAD `innerText` 25,280 / 25,312 / 25,313 chars, base 24,975 / 24,957 / 24,990), so no single hash is quoted for either; the cause of the variation was not diagnosed. (This sentence earlier said HEAD's was stable, which the JSON contradicts.)
 
 1024x1366 (touch, wide layout, no Lenis / stage / GL): page height 37,762 / 37,425 / 37,762 against 39,043 (-1,281 to -1,618 px). The rendered text drops by about 3,300 characters (`innerText` 21,704 to 21,717 chars against 25,023 to 25,055) because the >= 64rem collapses are closed `<details>` (PHASE3-SPEC 11.5: optuna appendix, the About philosophy note, the credits lists) plus the systems matrix fold (`components/site/capabilities.tsx:106`, P3-11 r2 D3-9: four area rows closed except the first). `textContent` (collapsed text included) is higher in HEAD (28,160 to 28,172 chars against 25,691 to 25,722), so the collapsed text is still in the page. Section height deltas vs base: about +187, journey +41, work -38, trading-algos -44, optuna-screener -1,116, experiment +69, systems +170, kill-list +104, principles +134. The same items 1 to 6 apply. The tablet text is not stable between runs on either build (rotating labels), so no single hash is quoted.
 
@@ -168,3 +168,12 @@ Both builds fail 2 of 5 on the same two timing-sensitive sub-checks (`scrub` set
 ## Files
 
 `logs/` (tsc, check, eslint, build, base and e91fbd6 builds), `release.txt`, `widths-{head,base}.json`, `compare-head-vs-base.json`, `modes-{rm,paused,normal}-*.json`, `nojs-{head,base}.json`, `nojs-shots/`, `qa/`, `lcp-*.json`, `bundle-*.json`, `probe-bundle-head-1440.json`, `phone-deeplinks-390-*.json`, `cards/`, `METHODS.md`.
+
+## Corrections (2026-10-13, after a source check of `docs/build/PHASE3-REPORT.md`)
+
+- Section 2 (844x390 text): fixed in place above. Both builds vary at 844x390.
+- Section 2 (layout shift, instant jump): the `footdbg.cjs` log behind the "type swap" and "pin spacers" causes and the "net +340 px" is **not stored** in this folder (only the script is, in `METHODS.md`). The section deltas listed (+180, +97, +48, +54, -31) sum to +348, not +340. Treat the font-swap and pin-spacer causes as hypotheses. The stored evidence is in `widths-head.json`: at 1440 the node that moves is `div.stage-scrim` in `footer#credits`, 563 to 900 px tall (scrollY 43,412 in run 2, scrollY 0 in run 3); at 1024x768 the 0.19813 shift has an identical rect before and after.
+- Section 5 (mobile LCP): "Likely cause (bytes, not rendering)" is an untested hypothesis. No run isolates bytes. About +200 ms is an upper bound (all JS and CSS counted as on the critical path); the measured median gap is 122 ms (1,636 against 1,514) and the best-load gap is 176 ms (1,580 against 1,404).
+- Section 5 (desktop LCP): the QA run's own loads and the `qa.js` loads differ. In load 1 of each width (440 ms at 1440, 380 ms at 1024) no video candidate fired, so the video was the LCP in 4 of 6 own loads and 6 of 6 `qa.js` loads. Pooled: 440 to 1,024 ms at 1440, 380 to 1,004 ms at 1024.
+- Section 7 (cards probe): the "HEAD is not worse" reading is low power (3 of 5 against 3 of 5), and the earlier 0 of 5 on `9c5f6fc` is a conflicting result that was not reproduced.
+
