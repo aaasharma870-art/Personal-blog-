@@ -171,18 +171,18 @@ function usePlateEntrance(
       return;
     }
     if (phase === "armed") {
-      captionOpacity.jump(0);
+      captionOpacity.jump(0.001);
       if (kind === "slow-settle") {
         // on the line trigger never armed at opacity 0 (spec §2.4 D3: no
         // empty first Work screen): the plate rises into view at 1.07× and
         // settles as it enters
-        frameOpacity.jump(line === null ? 0 : 1);
+        frameOpacity.jump(line === null ? 0.001 : 1);
         imageScale.jump(1.07);
       } else if (kind === "light-sweep") {
         shade.jump(1);
         sweepX.jump("-75%");
       } else if (kind === "pats") {
-        frameOpacity.jump(0);
+        frameOpacity.jump(0.001);
         frameY.jump(8);
         frameScale.jump(0.96);
       } else {

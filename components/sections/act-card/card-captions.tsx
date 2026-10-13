@@ -80,7 +80,7 @@ function Cue({ cue }: { cue: CaptionCue }) {
     let o = 1;
     if (cue.in) o = Math.min(o, remap(v, cue.in[0], cue.in[1]));
     if (cue.out) o = Math.min(o, 1 - remap(v, cue.out[0], cue.out[1]));
-    return o;
+    return Math.max(o, 0.001);
   });
   if (!live) {
     return cue.settled ? (
@@ -95,7 +95,7 @@ function Cue({ cue }: { cue: CaptionCue }) {
       data-tone="deep"
       data-card-caption={cue.key}
       aria-hidden={cue.settled ? undefined : true}
-      style={{ opacity }}
+      style={{ opacity, visibility: "visible" }}
     >
       {cue.node}
     </motion.div>

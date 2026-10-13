@@ -66,12 +66,21 @@ export function titleParts(root: HTMLElement): Parts | null {
   return { root, o, i, fx: root.querySelector<HTMLElement>(":scope > [data-words-fx]") };
 }
 
-/** The armed (pre-arrival) state: the text at opacity 0 (it stays in the
- *  accessibility tree; only an OFFSCREEN title is ever armed). */
+/** The armed (pre-arrival) state: the text at `ARMED_OPACITY` (it stays in
+ *  the accessibility tree; only an OFFSCREEN title is ever armed). */
 export function armTitle(root: HTMLElement): Restore | null {
   const p = titleParts(root);
-  return p ? setStyle(p.o, { opacity: "0" }) : null;
+  return p ? setStyle(p.o, { opacity: String(ARMED_OPACITY) }) : null;
 }
+
+/** "Hidden" without being invisible to the browser (P3-11 r4, F2: layout
+ *  shift 0). A box at opacity 0 is skipped by the shift tracker, which keeps
+ *  the position it had when it was last painted; a world's face arriving
+ *  while the title waits (the `html[data-fonts]` swap re-wraps it) is then
+ *  reported when the title fades up, as the whole move from the old
+ *  position. One part in a thousand is not visible, and keeps the box
+ *  tracked, so the swap is taken in off screen. */
+export const ARMED_OPACITY = 0.001;
 
 const charCount = (el: HTMLElement): number => (el.textContent ?? "").replace(/\s/g, "").length;
 /** Typewriter: ms per character (28, compressed so the line is ≤ 800 ms). */

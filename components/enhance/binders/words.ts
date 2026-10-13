@@ -8,8 +8,9 @@
 
    - title     (in-character-title.tsx) and physical (physical-word.tsx):
                TIME stars. Only an element OFFSCREEN at bind is armed (its
-               pre-state set: the title at opacity 0, the strike undrawn);
-               one in view stays final. When it enters, it asks the
+               pre-state set: the title at ARMED_OPACITY, never exactly 0
+               (bind/titles.ts: a box at 0 is invisible to the layout-shift
+               tracker), the strike undrawn); one in view stays final. When it enters, it asks the
                spotlight (lib/spotlight.ts) and plays once per page view on
                "play"; "skip" shows the end state at once.
    - fly       (fly-through.tsx): a `needsIdle` time star once its zone is
@@ -49,7 +50,7 @@ import { spotlight } from "@/lib/spotlight";
 import { SCROLL_WINDOWS } from "@/lib/spotlight-windows";
 import type { Variant } from "@/lib/variants";
 import { EASE_OUT, Run, exposeDebug, liveNow, note, type Restore } from "@/components/words/bind/shared";
-import { armTitle, playTitle, titleHold, titleWorldOf, type TitleWorld } from "@/components/words/bind/titles";
+import { ARMED_OPACITY, armTitle, playTitle, titleHold, titleWorldOf, type TitleWorld } from "@/components/words/bind/titles";
 import { PHYSICAL_MS, armPhysical, playPhysical, syncPhysicalVariant } from "@/components/words/bind/physical";
 import { loadFlyFrames, playFly } from "@/components/words/bind/fly";
 import { Scrub } from "@/components/words/bind/scrub";
@@ -196,13 +197,14 @@ class TimeStar implements Item {
 
   /** A title the spotlight skipped is not a star, but it never pops in
    *  (P3-11 r1 integration, J8 #7: "the next block fills in all at once"):
-   *  its armed opacity 0 fades up over 240 ms (WAAPI on the outer wrapper,
-   *  no fill, so the settled inline style wins when it ends). */
+   *  its armed opacity (ARMED_OPACITY, ≈ 0) fades up over 240 ms (WAAPI on
+   *  the outer wrapper, no fill, so the settled inline style wins when it
+   *  ends). */
   private reveal(): void {
     const o = this.unarm ? this.el.querySelector<HTMLElement>(":scope > [data-words-o]") : null;
     this.settle("static", "spotlight skip");
     if (!o || typeof o.animate !== "function") return;
-    const a = o.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: EASE_OUT });
+    const a = o.animate([{ opacity: ARMED_OPACITY }, { opacity: 1 }], { duration: 240, easing: EASE_OUT });
     this.fade = a;
     const done = () => {
       if (this.fade === a) this.fade = null;

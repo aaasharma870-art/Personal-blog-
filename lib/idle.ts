@@ -19,6 +19,19 @@
      never settles still makes progress); `hold: 0` never holds.
    Work that resolves a promise here (`await idleSlice()`) runs its
    continuation in the same task: it inherits the slice, so keep it short.
+
+   P3-11 r3 pass 2 (F3, J8 F2: "an idle task of 100–1,013 ms"): every caller
+   was timed (a guard around `fn`, plus the stack of the `onIdle` call, over
+   the intro and desktop runs of tools/capture/motion.js). One was app-owned
+   and not sliceable by looping: the hero's grain tile (components/sections/
+   hero/velocity-layers.tsx), whose `canvas.toBlob()` blocked on the canvas
+   read-back for 0.7–1.3 s; it is plain bytes now. The rest of the long ones
+   were lib/gl/gl-lock.ts jobs, each a single browser call (context, drawing
+   buffer, program link, first draw), which a slice cannot divide: they run
+   one per slice, after the page has been still, and the context is created
+   on a canvas already at its final size (no second allocation). Every other
+   caller measured under 40 ms. When a new caller reaches 50 ms in a LoAF
+   table, time it the same way before slicing.
    ========================================================================== */
 
 type PostTask = (

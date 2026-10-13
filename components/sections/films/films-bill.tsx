@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { film, type CaptionWorld, type Copy, type CopyKey } from "@/lib/film";
 import { acts, anchorId, copyText, copyVisible, enabledSections, numeralOf } from "@/lib/sections";
 import { planeAttrs } from "@/lib/worlds";
@@ -70,6 +70,38 @@ export function FilmsPlay({ copyKey = "films.play", className }: { copyKey?: str
   );
 }
 
+/** P3-11 r4 (F2, layout shift 0): a title of at most this many characters
+ *  stays on one line ("3 IDIOTS"). */
+const ONE_LINE = 10;
+/** The title's most even two-line break (by characters, at a space), or the
+ *  one line. Explicit lines, each nowrap, make the bill's height independent
+ *  of the face: with wrapping columns, "Red Dead Redemption 2" and
+ *  "Harry Potter" arriving in their own faces squeezed the Pirates title
+ *  from two lines to three, +36 px under everything below the card (the
+ *  0.025 shift of r2–r3, reduced motion included). Four titles, at most
+ *  two lines each, never wrap again. */
+export function billLines(title: string): readonly string[] {
+  const words = title.split(" ");
+  if (words.length < 2 || title.length <= ONE_LINE) return [title];
+  let at = 1;
+  let best = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const left = words.slice(0, i).join(" ").length;
+    const gap = Math.abs(left - (title.length - left - 1));
+    if (gap < best) {
+      best = gap;
+      at = i;
+    }
+  }
+  return [words.slice(0, at).join(" "), words.slice(at).join(" ")];
+}
+
+/** The bill's title size: the card's old clamp, capped at 2.25rem so the
+ *  four titles' widest lines (≈ 21.6 em together, both faces) and three
+ *  2 rem gaps always fit the card's 66 rem (910 px of content): 36 px is
+ *  4.8 % under it, and 1440's 34.56 px is unchanged. */
+const BILL_TITLE: CSSProperties = { fontSize: "clamp(1.6rem, 2.4vw, 2.25rem)", whiteSpace: "nowrap" };
+
 export function FilmsBill({ works }: { works: readonly Work[] }) {
   return (
     <div className="films-bill" aria-hidden="true">
@@ -80,7 +112,7 @@ export function FilmsBill({ works }: { works: readonly Work[] }) {
           return (
             <li key={w.world} {...planeAttrs("deep", w.world)}>
               {n ? <span className="type-meta text-fg-muted">{`Act ${n}`}</span> : null}
-              <FilmTitle world={w.world} as="span" className="films-bill-title" />
+              <FilmTitle world={w.world} as="span" className="films-bill-title" style={BILL_TITLE} lines={billLines} />
             </li>
           );
         })}

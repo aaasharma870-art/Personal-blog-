@@ -14,6 +14,11 @@
      of the card's pinned travel. Jumps longer than 3 viewports never glide
      (≥ 64rem): they are immediate, wrapped in the cut (<CutOverlay/>), and
      the target world's fonts are made ready during the cut's fade-in.
+   - the load-time hash hold (`hashHold`, `reapplyHash()`): a deep link at
+     DESKTOP_FINE is landed instantly and kept at its target through the
+     stream and the late layout, in every motion state, until the visitor
+     scrolls, clicks or jumps. A plain timer and a ResizeObserver: no Lenis,
+     GSAP or <SmoothScroll/> needed.
    - lockScroll()/unlockScroll(): the modal lock (body overflow + lenis.stop).
    - requestScrollRefresh(): 200 ms debounced `lenis.resize()` +
      `ScrollTrigger.sort()/refresh()`, deferred while Lenis glides.
@@ -25,7 +30,7 @@
 import { useSyncExternalStore } from "react";
 import { emit } from "./events";
 import { film, type ActSpec } from "./film";
-import { DESKTOP_FINE, motionOffNow } from "./flags";
+import { DESKTOP_FINE } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import { actCards } from "./sections";
 
@@ -297,26 +302,39 @@ let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let deferredSince = 0;
 let userScrolled = false;
 let inputTracked = false;
-/** A hash on load (`/#act-2`, `/#work`) on the desktop motion path is held
- *  at its target — first at `load`, then through every refresh — until the
- *  visitor scrolls, clicks or jumps themself (W2 gate: late layout, the
- *  Lenis start and the pins used to leave it at the browser's native jump,
- *  or at 0). Phones and reduced motion keep the browser's own jump. */
+/** A hash on load (`/#act-2`, `/#work`) at DESKTOP_FINE is held at its target
+ *  in EVERY motion state (motion on, reduced motion, Pause) — first at `load`,
+ *  through the rest of the stream, then on every change of <main>'s height and
+ *  every refresh — until the visitor scrolls, clicks or jumps themself (W2
+ *  gate: late layout, the Lenis start and the pins used to leave it at the
+ *  browser's native jump, or at 0; P3-11 r3 R01: reduced motion and Pause kept
+ *  that jump, which runs before the streamed sections are placed and never
+ *  retries — 3 of 12 loads landed). The hold needs no Lenis, GSAP or
+ *  <SmoothScroll/>: a plain timer and a ResizeObserver. Phones and touch
+ *  tablets (below DESKTOP_FINE) keep the browser's own jump (Phase 4). */
 let hashHold = false;
-/** An explicit jump supersedes the load-time hash (./smooth-scroll-jump). */
+/** A streamed section the page has not placed yet (it has no box). */
+const HIDDEN_STREAM = "div[hidden][id^='S:']";
+/** Watches <main>'s height while the hash is held (reduced motion and Pause
+ *  mount none of the refresh triggers below). */
+let hashWatch: ResizeObserver | null = null;
+/** The hold is over: the visitor took over, or an explicit jump superseded it
+ *  (./smooth-scroll-jump). */
 export function dropHashHold(): void {
   hashHold = false;
+  hashWatch?.disconnect();
+  hashWatch = null;
 }
 if (typeof window !== "undefined" && window.location.hash.length > 1) {
   try {
-    hashHold = window.matchMedia(DESKTOP_FINE).matches && !motionOffNow();
+    hashHold = window.matchMedia(DESKTOP_FINE).matches;
   } catch {
     hashHold = false;
   }
   if (hashHold) {
     const opts = { capture: true, passive: true } as const;
     const drop = () => {
-      hashHold = false;
+      dropHashHold();
       for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.removeEventListener(ev, drop, opts);
       window.removeEventListener("keydown", onKey, opts);
     };
@@ -325,15 +343,24 @@ if (typeof window !== "undefined" && window.location.hash.length > 1) {
     };
     for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.addEventListener(ev, drop, opts);
     window.addEventListener("keydown", onKey, opts);
-    // a target the stream has not placed yet (its pin wrapper) is retried
-    // for up to 3 s; every later refresh re-lands it while it is held
+    // a target the stream has not placed yet (still in its hidden Suspense
+    // div; an act card without its pin wrapper, ≤ 3 s) is retried every
+    // 150 ms; while the stream is still arriving the target is re-landed on
+    // every tick (≤ 15 s)
     const land = () => {
       let n = 0;
       const tryLand = () => {
         if (!hashHold) return;
         const el = resolveTarget(window.location.hash);
-        if (el && (!el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) reapplyHash();
-        else if (++n < 20) window.setTimeout(tryLand, 150);
+        if (el && !el.closest(HIDDEN_STREAM) && (n >= 20 || !el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) {
+          reapplyHash();
+          if (hashHold && !hashWatch && typeof ResizeObserver === "function") {
+            // late layout (hydration, fonts, media, the pins): re-land on every change
+            hashWatch = new ResizeObserver(reapplyHash);
+            hashWatch.observe(document.getElementById("main") ?? document.body);
+          }
+        }
+        if ((!hashWatch || document.querySelector(`template[id^='B:'], ${HIDDEN_STREAM}`)) && ++n < 100) window.setTimeout(tryLand, 150);
       };
       requestAnimationFrame(tryLand);
     };
@@ -350,7 +377,7 @@ export function trackScrollInput(): void {
   inputTracked = true;
   const mark = () => {
     userScrolled = true;
-    hashHold = false;
+    dropHashHold();
     window.removeEventListener("wheel", mark, true);
     window.removeEventListener("touchmove", mark, true);
     window.removeEventListener("pointerdown", mark, true);
@@ -368,17 +395,19 @@ export function trackScrollInput(): void {
   if (hashHold) requestScrollRefresh();
 }
 
-/** At every refresh while the load-time hash is held: put its target where
- *  scrollToTarget would (an act card at its `landAt`), instantly, with no
- *  cut and no focus move (the browser's own hash jump moves neither). The
- *  cards snap their damped p (`scroll:jump`). */
-function reapplyHash(): void {
+/** While the load-time hash is held (at `load`, on every tick of the stream
+ *  wait, on every height change of <main>, at every refresh and when React is
+ *  fully hydrated): put its target where scrollToTarget would (an act card at
+ *  its `landAt`), instantly, with no cut and no focus move (the browser's own
+ *  hash jump moves neither). Works with no Lenis and no GSAP: a plain
+ *  `window.scrollTo`. The cards snap their damped p (`scroll:jump`). */
+export function reapplyHash(): void {
   if (!hashHold || userScrolled) {
-    hashHold = false;
+    dropHashHold();
     return;
   }
   const el = resolveTarget(window.location.hash);
-  if (!el) return;
+  if (!el || el.closest(HIDDEN_STREAM)) return;
   const y = clampY(targetY(el, "start"));
   if (Math.abs(y - window.scrollY) < 2) return;
   const l = lenis;

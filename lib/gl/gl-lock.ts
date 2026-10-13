@@ -240,6 +240,7 @@ function ctxJob(): boolean {
   }
   dbg.contexts++;
   const forced = glForced();
+  presize(canvas);
   const t = createTransitionGL(canvas, forced);
   if (!t || (t.maxTex < 4096 && !forced)) {
     t?.gl.getExtension("WEBGL_lose_context")?.loseContext();
@@ -250,25 +251,34 @@ function ctxJob(): boolean {
   }
   tgl = t;
   loseExt = t.gl.getExtension("WEBGL_lose_context");
-  // P3-11 r3 (F6, J8: the first engage re-allocated the drawing buffer
-  // inside the engage frame): size the buffer ONCE, here, in this idle
-  // slice, from the host that will own first (the visible one nearest the
-  // viewport centre, else any). A card frame is the 2.39:1 letterbox, not
-  // the viewport, so the window is only the fallback (a host with no box);
-  // size() then re-allocates on a real resize only
+  log("context");
+  setContextTier("gl");
+  return true;
+}
+
+/** The drawing buffer's size, set on the canvas BEFORE its context exists, so
+ *  the context is created at that size and never re-allocated by a later
+ *  resize (P3-11 r3 pass 2, F3 / J8 F2: ctxJob held the main thread 0.3–2.1 s;
+ *  creating the context is a single browser call and stays one job, but
+ *  growing the default 300 × 150 buffer afterwards cost a second allocation
+ *  of 94–346 ms. Timed over five loads each, headless software GL: the job
+ *  as one with the canvas sized first took a median 310 ms; created at the
+ *  default size, then sized in the next slice, 855 ms + 185 ms.)
+ *  P3-11 r3 (F6, J8: the first engage re-allocated the drawing buffer inside
+ *  the engage frame): the buffer is sized ONCE, from the host that will own
+ *  first (the visible one nearest the viewport centre, else any). A card
+ *  frame is the 2.39:1 letterbox, not the viewport, so the window is only
+ *  the fallback (a host with no box); size() then re-allocates on a real
+ *  resize only. */
+function presize(c: HTMLCanvasElement): void {
   let first: Host | null = null;
   for (const h of hosts) {
     if (!first || (h.visible && !first.visible) || (h.visible === first.visible && h.dist < first.dist)) first = h;
   }
   const fr = first?.el.getBoundingClientRect();
-  if (first && fr && fr.width >= 1 && fr.height >= 1) size(first);
-  else {
-    const [bw, bh] = bufferFor(window.innerWidth, window.innerHeight);
-    t.size(bw, bh);
-  }
-  log("context");
-  setContextTier("gl");
-  return true;
+  const [w, ht] = fr && fr.width >= 1 && fr.height >= 1 ? bufferFor(fr.width, fr.height) : bufferFor(window.innerWidth, window.innerHeight);
+  c.width = w;
+  c.height = ht;
 }
 
 function onLost(e: Event): void {

@@ -51,7 +51,7 @@ export function Rise({
       id={id}
       className={className}
       initial={false}
-      animate={phase === "armed" ? { opacity: 0, y: 24 } : { opacity: 1, y: 0 }}
+      animate={phase === "armed" ? { opacity: 0.001, y: 24 } : { opacity: 1, y: 0 }}
       transition={phase === "entered" ? { duration: dur.reveal, ease, delay } : { duration: 0 }}
     >
       {children}
