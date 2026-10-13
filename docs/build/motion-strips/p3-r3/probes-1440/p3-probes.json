@@ -1,0 +1,6532 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": false,
+    "path": "/?skip=intro",
+    "date": "2026-10-12T23:59:58.457Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "nav",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "toys",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 510,
+      "warnCount": 0,
+      "killList": {
+        "1440x900": {
+          "found": true,
+          "dimBoxes": 86,
+          "worstDim": {
+            "ratio": 4.91,
+            "text": "01",
+            "row": 0
+          },
+          "failures": [],
+          "failCount": 0
+        },
+        "1024x768": {
+          "found": true,
+          "dimBoxes": 69,
+          "worstDim": {
+            "ratio": 4.81,
+            "text": "01",
+            "row": 0
+          },
+          "failures": [],
+          "failCount": 0
+        }
+      },
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 20,
+            "worst": {
+              "ratio": 7.42,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 2610,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 3,
+            "liveBoxes": 142,
+            "worst": {
+              "ratio": 3.78,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2833,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 86,
+            "worst": {
+              "ratio": 7.77,
+              "text": "↑ Back to the opening",
+              "y": 42675,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 37,
+            "worst": {
+              "ratio": 6.23,
+              "text": "Act III • AFTER RED DEAD REDEMPTION 2",
+              "y": 2227,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 149,
+            "worst": {
+              "ratio": 5.02,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2846,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 5,
+            "liveBoxes": 76,
+            "worst": {
+              "ratio": 8.91,
+              "text": "©",
+              "y": 40447,
+              "live": true
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 92900,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 442251,
+            "cssGz": 34339,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 23,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": true,
+          "beforeLoad": [],
+          "lazyMarkers": [
+            "lenis",
+            "gsap",
+            "scrollTrigger"
+          ],
+          "lazyGz": 50143
+        },
+        "compare": {
+          "pass": null,
+          "skipped": "pass --compare=<baseUrl> (the pre-Phase-3 build)"
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 18189,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "pins": {
+          "pass": true,
+          "rows": [
+            {
+              "kind": "opening",
+              "id": "act-1",
+              "top": 900,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": "act-1-program",
+              "nextBackdrop": true,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "seam",
+              "id": "act-2",
+              "top": 7311,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            },
+            {
+              "kind": "tintype",
+              "id": "act-3",
+              "top": 26895,
+              "h": 1710,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 810,
+              "wantPx": 810,
+              "ok": true
+            },
+            {
+              "kind": "ignite",
+              "id": "act-4",
+              "top": 36697,
+              "h": 1890,
+              "stageH": 900,
+              "sticky": true,
+              "vh": 900,
+              "nextId": null,
+              "nextBackdrop": false,
+              "travel": 990,
+              "wantPx": 990,
+              "ok": true
+            }
+          ],
+          "program": {
+            "nextId": "act-1-program",
+            "backdrop": true
+          }
+        },
+        "stars": {
+          "pass": true,
+          "stars": [
+            {
+              "card": "opening",
+              "id": "B03",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "opening",
+              "id": "B04",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "seam",
+              "id": "B13",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "seam",
+              "id": "B14",
+              "star": true,
+              "h": 495
+            },
+            {
+              "card": "tintype",
+              "id": "B36",
+              "star": true,
+              "h": 365
+            },
+            {
+              "card": "tintype",
+              "id": "B38",
+              "star": true,
+              "h": 405
+            },
+            {
+              "card": "ignite",
+              "id": "B48",
+              "star": true,
+              "h": 446
+            },
+            {
+              "card": "ignite",
+              "id": "B50",
+              "star": true,
+              "h": 495
+            }
+          ]
+        },
+        "impacts": {
+          "pass": true,
+          "impacts": [
+            "pirates",
+            "idiots",
+            "rdr2",
+            "hp"
+          ],
+          "meets": [
+            "opening",
+            "seam",
+            "tintype",
+            "ignite"
+          ]
+        },
+        "damping": {
+          "pass": true,
+          "card": "seam",
+          "early": {
+            "raw": 0.4495,
+            "t": 0.075,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          },
+          "late": {
+            "raw": 0.4495,
+            "t": 0.4495,
+            "tier": "css",
+            "live": true,
+            "phase": "a",
+            "subtitle": 0,
+            "gl": null
+          }
+        },
+        "scrub": {
+          "pass": true,
+          "rows": [
+            {
+              "card": "opening",
+              "p": 0.05,
+              "raw": 0.0506,
+              "t": 0.0506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.45,
+              "raw": 0.4506,
+              "t": 0.4506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.75,
+              "raw": 0.7506,
+              "t": 0.7506,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "opening",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.05,
+              "raw": 0.0495,
+              "t": 0.0495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.22,
+              "raw": 0.2192,
+              "t": 0.2192,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.45,
+              "raw": 0.4495,
+              "t": 0.4495,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.75,
+              "raw": 0.7495,
+              "t": 0.7495,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "seam",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.05,
+              "raw": 0.0506,
+              "t": 0.0506,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.22,
+              "raw": 0.2198,
+              "t": 0.2198,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.45,
+              "raw": 0.4494,
+              "t": 0.4494,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.75,
+              "raw": 0.7494,
+              "t": 0.7494,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 0,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 0,
+              "gl": null,
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "tintype",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "bars": true,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.05,
+              "raw": 0.0505,
+              "t": 0.0482,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.22,
+              "raw": 0.2202,
+              "t": 0.2202,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.45,
+              "raw": 0.4505,
+              "t": 0.4505,
+              "tier": "css",
+              "live": true,
+              "phase": "a",
+              "subtitle": 0,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.5,
+              "raw": 0.5,
+              "t": 0.5,
+              "tier": "css",
+              "live": true,
+              "phase": "b",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.75,
+              "raw": 0.7505,
+              "t": 0.7505,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 0.9,
+              "raw": 0.9,
+              "t": 0.9,
+              "tier": "css",
+              "live": true,
+              "phase": "m",
+              "subtitle": 1,
+              "gl": null,
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            },
+            {
+              "card": "ignite",
+              "p": 1,
+              "raw": 1,
+              "t": 1,
+              "tier": "gl",
+              "live": true,
+              "phase": "e",
+              "subtitle": 0,
+              "gl": "on",
+              "bars": false,
+              "settled": true,
+              "phaseOk": true,
+              "subOk": true
+            }
+          ]
+        },
+        "landAt": {
+          "pass": true,
+          "expected": 0.47,
+          "rows": [
+            {
+              "card": "opening",
+              "id": "act-1",
+              "p": 0.47,
+              "travel": 810,
+              "landedMs": 375,
+              "ok": true
+            },
+            {
+              "card": "seam",
+              "id": "act-2",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 326,
+              "ok": true
+            },
+            {
+              "card": "tintype",
+              "id": "act-3",
+              "p": 0.47,
+              "travel": 810,
+              "landedMs": 204,
+              "ok": true
+            },
+            {
+              "card": "ignite",
+              "id": "act-4",
+              "p": 0.47,
+              "travel": 990,
+              "landedMs": 291,
+              "ok": true
+            }
+          ]
+        },
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 88033,
+      "console": []
+    },
+    "cinema": {
+      "pass": true,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "out": {
+            "B30": 1,
+            "B31-bars": 1,
+            "B31": 1,
+            "B32": 1,
+            "B33": 1,
+            "B34": 1,
+            "B31-finale": 1,
+            "B32-finale": 1,
+            "B33-finale": 1,
+            "B34-finale": 1,
+            "B35": 1,
+            "B57": 1
+          },
+          "titles": true,
+          "finales": true,
+          "b30": {
+            "star": true,
+            "w": "3",
+            "h": 360
+          },
+          "b35": {
+            "star": true,
+            "h": 360
+          },
+          "missing": []
+        },
+        "button": {
+          "pass": true,
+          "display": "flex",
+          "queue": "[data-dc=\"hero\"]",
+          "shots": 20,
+          "cards": 4,
+          "disabled": null,
+          "text": "▶ Director's cut(sound on)Motion is paused"
+        },
+        "letterbox": {
+          "pass": true,
+          "hold": {
+            "closed": true,
+            "flagAt": ".letterbox[data-state]",
+            "html": false,
+            "bars": true,
+            "scale": 1
+          },
+          "after": {
+            "closed": false,
+            "flagAt": ".letterbox[data-state]",
+            "html": false,
+            "bars": true,
+            "scale": 0
+          },
+          "flips": 2,
+          "htmlMutations": 0,
+          "rule33": true
+        },
+        "plates": {
+          "pass": true,
+          "screens": [
+            {
+              "id": "pirates",
+              "plate": "loop",
+              "media": "iconic-pearl-alt",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0305, 0, 0, 1.0305, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "idiots",
+              "plate": "loop",
+              "media": "F-3I",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0324, 0, 0, 1.0324, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "rdr2",
+              "plate": "loop",
+              "media": "iconic-deadeye",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 1,
+              "transformB": "matrix(1.0312, 0, 0, 1.0312, 0, 0)",
+              "pass": true
+            },
+            {
+              "id": "hp",
+              "plate": "still",
+              "media": "iconic-express",
+              "transform": "matrix(1.025, 0, 0, 1.025, 0, 0)",
+              "playing": 0,
+              "transformB": "matrix(1.0324, 0, 0, 1.0324, 0, 0)",
+              "pass": true
+            }
+          ],
+          "maxPlaying": 1
+        },
+        "carry": {
+          "pass": true,
+          "mid": {
+            "visibility": "visible",
+            "transform": "translate3d(353.7px, 44.8px, 0px) scale(0.771)",
+            "opacity": "1"
+          },
+          "end": {
+            "visibility": "hidden",
+            "transform": "translate3d(353.7px, 44.8px, 0px) scale(0.771)",
+            "opacity": "1"
+          }
+        },
+        "credits": {
+          "pass": true,
+          "details": true,
+          "open": false,
+          "summary": true,
+          "tribute": true,
+          "end": true,
+          "last": true,
+          "ai": true
+        },
+        "chapter": {
+          "pass": true,
+          "firstIsPlay": true,
+          "tiles": [
+            "top",
+            "act-1",
+            "act-2",
+            "films",
+            "act-3",
+            "act-4",
+            "credits"
+          ],
+          "imgs": 7,
+          "lazy": true,
+          "widths": [
+            384,
+            384,
+            384,
+            384,
+            384,
+            384,
+            384
+          ],
+          "ratio": [
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78,
+            1.78
+          ],
+          "landAt": 0.47,
+          "land": {
+            "y": 7776,
+            "want": 7776,
+            "hash": "#act-2",
+            "menu": false,
+            "focus": true
+          }
+        },
+        "dc.run": {
+          "pass": true,
+          "focus": true,
+          "speed": 90,
+          "twoX": {
+            "pressed": "true",
+            "running": true
+          },
+          "stop": true
+        },
+        "dc.esc": {
+          "pass": true
+        },
+        "dc.pause": {
+          "pass": true
+        },
+        "dc.fastlane": {
+          "pass": true
+        },
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 49020,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 80,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "intro"
+        ],
+        "holders": [
+          "intro flight"
+        ],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 861,
+        "maxPlaying": 1,
+        "everPlayed": [
+          "top",
+          "act-2",
+          "work",
+          "stage",
+          "optuna-screener",
+          "kill-list",
+          "films",
+          "beyond",
+          "contact"
+        ],
+        "holders": [
+          "MV-03",
+          "L08",
+          "L18",
+          "L09",
+          "stage",
+          "L16",
+          "L17",
+          "L14",
+          "L22",
+          "L21",
+          "L15",
+          "MV-09"
+        ],
+        "crossfadeSamples": 21,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 106741,
+      "console": []
+    },
+    "font-network": {
+      "pass": true,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": true,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "165.888px",
+          "fontSize": "172.8px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": 5113,
+        "beforeStep5": [
+          "29 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "29 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "29 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "29 ms optional public/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2 23312 B",
+          "104 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "458 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "beforeStep5Bad": [],
+        "legacyRequested": [],
+        "worldsAtRest": [],
+        "worldOrder": [
+          "null ms assets/fonts/film/nothing-you-could-do/nothing-you-could-do-strings.woff2",
+          "8496 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "8496 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "11375 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "11375 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "11375 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2",
+          "11376 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 183964,
+        "lcp": {
+          "t": 196,
+          "el": "SPAN",
+          "size": 107550
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "lcp": {
+          "t": 412,
+          "el": "IMG",
+          "size": 89604
+        },
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [],
+      "ms": 31659,
+      "console": []
+    },
+    "games": {
+      "pass": false,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.keys": {
+          "pass": true,
+          "game": "drone",
+          "focus": "drone-field",
+          "x0": 751.1,
+          "x1": 751.1,
+          "x2": 727.7,
+          "blurred": {
+            "frames": 19,
+            "ms": 334
+          },
+          "focused": {
+            "frames": 9,
+            "ms": 394
+          }
+        },
+        "drone.course": {
+          "pass": true,
+          "said": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem. 7/7 gates · 4.7 s"
+          ],
+          "phase": "done",
+          "game": null,
+          "link": {
+            "href": "#kill-list",
+            "text": "Next: the kill-list ↓"
+          },
+          "store": {
+            "v": 1,
+            "drone": {
+              "best": 4669
+            }
+          },
+          "want": [
+            "Gate 1 of 7 · Pre-registration",
+            "Gate 2 of 7 · A blind holdout, spent once",
+            "Gate 3 of 7 · Deflated Sharpe Ratio",
+            "Gate 4 of 7 · Combinatorial Purged CV",
+            "Gate 5 of 7 · A mandatory cost model",
+            "Gate 6 of 7 · Leak / look-ahead audits",
+            "Gate 7 of 7 · Kill what fails — keep the post-mortem"
+          ]
+        },
+        "drone.edge": {
+          "pass": true,
+          "x0": 751.1,
+          "xs": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "frames": 120,
+          "ms": 2158
+        },
+        "drone.esc": {
+          "pass": true,
+          "ms": 611,
+          "focus": "drone-takeoff",
+          "game": null
+        },
+        "drone.off": {
+          "pass": true,
+          "phase": "idle"
+        },
+        "drone.pause": {
+          "pass": true,
+          "ms": 5,
+          "inClick": true,
+          "phase": "idle",
+          "game": null
+        },
+        "de.start": {
+          "pass": true,
+          "game": "deadeye",
+          "top": 188.4375,
+          "bottom": 804.375,
+          "vh": 900,
+          "n": 5
+        },
+        "de.time": {
+          "pass": true,
+          "css": "0.25",
+          "slowed": 61
+        },
+        "de.grade": {
+          "pass": true,
+          "hidden": false,
+          "z": "-1",
+          "bg": "rgb(13, 21, 19)",
+          "transition": "all",
+          "bg0": "rgb(13, 21, 19)"
+        },
+        "de.targets": {
+          "pass": true,
+          "marks": 5,
+          "note": "0/5 marked · 3.6 s of Dead Eye leftSurvived: not a targetFireReleaseSurvived: not a target",
+          "n": 5
+        },
+        "de.fire": {
+          "pass": true,
+          "struck": 5,
+          "hud": "5/5 marked · 3.2 s of Dead Eye left",
+          "phase": "read"
+        },
+        "de.read": {
+          "pass": true,
+          "rows": [
+            {
+              "reason": "Untradeable net of costs.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "t-stat was an overlap artifact.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Real in-sample; decayed out-of-sample.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Beta-confounded; not a standalone edge.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            },
+            {
+              "reason": "Filled at roughly chance.",
+              "href": "https://github.com/aaasharma870-art/Trading_Algos-"
+            }
+          ]
+        },
+        "de.store": {
+          "pass": true,
+          "games": {
+            "v": 1,
+            "drone": {
+              "best": 4669
+            },
+            "deadeye": {
+              "n": 5,
+              "left": 3185
+            }
+          },
+          "hunt": {
+            "v": 1,
+            "found": {},
+            "rows": [
+              "f-trading-algos",
+              "s-Volatility Breakout",
+              "k-Dealer-gamma (GEX) router",
+              "k-Intraday momentum-continuation",
+              "k-VIX-basis deviation alpha",
+              "s-Regime-Gated Intraday Momentum"
+            ],
+            "deadEye": 1791848627498
+          }
+        },
+        "de.release": {
+          "pass": true,
+          "game": null,
+          "de": 0,
+          "on": false,
+          "layers": [
+            {
+              "hidden": true,
+              "kids": 0
+            },
+            {
+              "hidden": true,
+              "kids": 0
+            }
+          ],
+          "time": "",
+          "beforeY": 19392,
+          "releasedY": 20582,
+          "lens": {
+            "before": {
+              "lens": "closed",
+              "figure": "ta:all"
+            },
+            "after": {
+              "lens": "closed",
+              "figure": "ta:all"
+            }
+          }
+        },
+        "de.roving": {
+          "pass": true,
+          "seen": [
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed",
+            "killed"
+          ]
+        },
+        "rows.read": {
+          "pass": true,
+          "rendered": 10,
+          "read": 10,
+          "scrollY": 21283,
+          "end": 21238,
+          "notch": 61,
+          "notches": 31,
+          "minRowH": 123
+        },
+        "inp": {
+          "pass": false,
+          "maxEventMs": 544,
+          "worst": {
+            "name": "keydown",
+            "ms": 544,
+            "at": 30785,
+            "delay": 0,
+            "run": 7
+          }
+        },
+        "phone": {
+          "pass": true,
+          "pills": [
+            "none",
+            "none"
+          ],
+          "game": false
+        }
+      },
+      "ms": 56402,
+      "console": []
+    },
+    "gl": {
+      "pass": true,
+      "checks": {
+        "lab": {
+          "pass": true,
+          "per": {
+            "opening": {
+              "engaged": true,
+              "engageMs": 2630,
+              "draws": 9,
+              "shots": [
+                "lab-opening-p0.05.png",
+                "lab-opening-p0.15.png",
+                "lab-opening-p0.22.png",
+                "lab-opening-p0.3.png",
+                "lab-opening-p0.45.png",
+                "lab-opening-p0.75.png",
+                "lab-opening-p0.9.png",
+                "lab-opening-p0.97.png"
+              ]
+            },
+            "opening-alt": {
+              "engaged": true,
+              "engageMs": 316,
+              "draws": 9,
+              "shots": [
+                "lab-opening-alt-p0.05.png",
+                "lab-opening-alt-p0.15.png",
+                "lab-opening-alt-p0.22.png",
+                "lab-opening-alt-p0.3.png",
+                "lab-opening-alt-p0.45.png",
+                "lab-opening-alt-p0.75.png",
+                "lab-opening-alt-p0.9.png",
+                "lab-opening-alt-p0.97.png"
+              ]
+            },
+            "seam": {
+              "engaged": true,
+              "engageMs": 9437,
+              "draws": 9,
+              "shots": [
+                "lab-seam-p0.05.png",
+                "lab-seam-p0.15.png",
+                "lab-seam-p0.22.png",
+                "lab-seam-p0.3.png",
+                "lab-seam-p0.45.png",
+                "lab-seam-p0.75.png",
+                "lab-seam-p0.9.png",
+                "lab-seam-p0.97.png"
+              ]
+            },
+            "seam-alt": {
+              "engaged": true,
+              "engageMs": 565,
+              "draws": 9,
+              "shots": [
+                "lab-seam-alt-p0.05.png",
+                "lab-seam-alt-p0.15.png",
+                "lab-seam-alt-p0.22.png",
+                "lab-seam-alt-p0.3.png",
+                "lab-seam-alt-p0.45.png",
+                "lab-seam-alt-p0.75.png",
+                "lab-seam-alt-p0.9.png",
+                "lab-seam-alt-p0.97.png"
+              ]
+            },
+            "tintype": {
+              "engaged": true,
+              "engageMs": 9538,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-p0.05.png",
+                "lab-tintype-p0.15.png",
+                "lab-tintype-p0.22.png",
+                "lab-tintype-p0.3.png",
+                "lab-tintype-p0.45.png",
+                "lab-tintype-p0.75.png",
+                "lab-tintype-p0.9.png",
+                "lab-tintype-p0.97.png"
+              ]
+            },
+            "tintype-alt": {
+              "engaged": true,
+              "engageMs": 673,
+              "draws": 9,
+              "shots": [
+                "lab-tintype-alt-p0.05.png",
+                "lab-tintype-alt-p0.15.png",
+                "lab-tintype-alt-p0.22.png",
+                "lab-tintype-alt-p0.3.png",
+                "lab-tintype-alt-p0.45.png",
+                "lab-tintype-alt-p0.75.png",
+                "lab-tintype-alt-p0.9.png",
+                "lab-tintype-alt-p0.97.png"
+              ]
+            },
+            "ignite": {
+              "engaged": true,
+              "engageMs": 9577,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-p0.05.png",
+                "lab-ignite-p0.15.png",
+                "lab-ignite-p0.22.png",
+                "lab-ignite-p0.3.png",
+                "lab-ignite-p0.45.png",
+                "lab-ignite-p0.75.png",
+                "lab-ignite-p0.9.png",
+                "lab-ignite-p0.97.png"
+              ]
+            },
+            "ignite-alt": {
+              "engaged": true,
+              "engageMs": 568,
+              "draws": 9,
+              "shots": [
+                "lab-ignite-alt-p0.05.png",
+                "lab-ignite-alt-p0.15.png",
+                "lab-ignite-alt-p0.22.png",
+                "lab-ignite-alt-p0.3.png",
+                "lab-ignite-alt-p0.45.png",
+                "lab-ignite-alt-p0.75.png",
+                "lab-ignite-alt-p0.9.png",
+                "lab-ignite-alt-p0.97.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "bytes": 7971136,
+          "midSwitches": [],
+          "aborts": [],
+          "platesFailed": [],
+          "compilesWhileMoving": [],
+          "compiles": [
+            {
+              "t": 715,
+              "flavour": "iris",
+              "moving": false
+            },
+            {
+              "t": 915,
+              "flavour": "title",
+              "moving": false
+            },
+            {
+              "t": 10898,
+              "flavour": "wave",
+              "moving": false
+            },
+            {
+              "t": 11152,
+              "flavour": "chalk",
+              "moving": false
+            },
+            {
+              "t": 24481,
+              "flavour": "duster",
+              "moving": false
+            },
+            {
+              "t": 29264,
+              "flavour": "develop",
+              "moving": false
+            },
+            {
+              "t": 43069,
+              "flavour": "deadeye",
+              "moving": false
+            },
+            {
+              "t": 47846,
+              "flavour": "burn",
+              "moving": false
+            },
+            {
+              "t": 48050,
+              "flavour": "ink",
+              "moving": false
+            },
+            {
+              "t": 61363,
+              "flavour": "lumos",
+              "moving": false
+            }
+          ]
+        },
+        "loss": {
+          "pass": true,
+          "engagedFirst": true,
+          "gone": true,
+          "ms": 110.19999999925494,
+          "reEngaged": true,
+          "log": [
+            {
+              "t": 61810,
+              "ev": "settle",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 65913,
+              "ev": "disengage:now",
+              "card": "ignite",
+              "p": 0
+            },
+            {
+              "t": 66037,
+              "ev": "lost"
+            },
+            {
+              "t": 66061,
+              "ev": "restored"
+            },
+            {
+              "t": 75041,
+              "ev": "engage",
+              "card": "seam",
+              "p": 0
+            },
+            {
+              "t": 75242,
+              "ev": "settle",
+              "card": "seam",
+              "p": 0
+            }
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "engagedFirst": true,
+          "ms": 1.300000000745058,
+          "drawsWhilePaused": 0,
+          "tier": "off",
+          "resumed": true
+        },
+        "page.force": {
+          "pass": true,
+          "per": {
+            "act-1": {
+              "engaged": true,
+              "shots": [
+                "page-act-1-p0.1.png",
+                "page-act-1-p0.3.png",
+                "page-act-1-p0.45.png",
+                "page-act-1-p0.8.png"
+              ]
+            },
+            "act-2": {
+              "engaged": true,
+              "shots": [
+                "page-act-2-p0.1.png",
+                "page-act-2-p0.3.png",
+                "page-act-2-p0.45.png",
+                "page-act-2-p0.8.png"
+              ]
+            },
+            "act-3": {
+              "engaged": true,
+              "shots": [
+                "page-act-3-p0.1.png",
+                "page-act-3-p0.3.png",
+                "page-act-3-p0.45.png",
+                "page-act-3-p0.8.png"
+              ]
+            },
+            "act-4": {
+              "engaged": true,
+              "shots": [
+                "page-act-4-p0.1.png",
+                "page-act-4-p0.3.png",
+                "page-act-4-p0.45.png",
+                "page-act-4-p0.8.png"
+              ]
+            }
+          },
+          "contexts": 1,
+          "midSwitches": [],
+          "aborts": [],
+          "bytes": 15651681
+        },
+        "page.default": {
+          "pass": true,
+          "tier": "gl",
+          "on": 0,
+          "note": "context not probed yet (no card approached)"
+        },
+        "page.off": {
+          "pass": true,
+          "canvas": 0,
+          "on": 0,
+          "tier": "css",
+          "contexts": 0
+        },
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 184239,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12",
+          "chip": "Egg hunt –/12"
+        },
+        "hydrate": {
+          "pass": true,
+          "text": "0/12"
+        },
+        "width": {
+          "pass": true,
+          "w0": 42.59375,
+          "w12": 42.609375
+        },
+        "typed": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ],
+          "toast": "Egg 1 of 12 · The right of parley",
+          "tick": true
+        },
+        "game": {
+          "pass": true,
+          "found": [
+            "pc-parley"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "before": 1,
+          "n": 1,
+          "mid": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          },
+          "after": {
+            "toast": false,
+            "veil": false,
+            "bloom": false
+          }
+        },
+        "lumos": {
+          "pass": true,
+          "bloom": true,
+          "running": true,
+          "found": [
+            "pc-parley",
+            "hp-lumos"
+          ]
+        },
+        "browse": {
+          "pass": true,
+          "empty": [
+            "cmd-egg-obliviate",
+            "cmd-egg-intro",
+            "cmd-egg-eggs-off",
+            "cmd-play-drone",
+            "cmd-play-deadeye",
+            "cmd-play-hints",
+            "cmd-play-reset",
+            "cmd-play-dc"
+          ],
+          "solemn": [
+            "cmd-egg-map"
+          ],
+          "lumos": [
+            "cmd-egg-lumos"
+          ],
+          "map": []
+        },
+        "sync": {
+          "pass": true,
+          "chip": "3/12",
+          "n": 3
+        },
+        "obliviate": {
+          "pass": true,
+          "before": 3
+        },
+        "eggsoff": {
+          "pass": true,
+          "gone": true
+        },
+        "panel": {
+          "pass": true,
+          "slots": 12,
+          "expanded": "true",
+          "closed": true,
+          "focus": true
+        },
+        "hotspot": {
+          "pass": true,
+          "bound": true,
+          "short": false,
+          "long": true
+        },
+        "reset": {
+          "pass": true
+        },
+        "complete": {
+          "pass": true,
+          "done": true,
+          "seekerBefore": true,
+          "gold": true,
+          "rows": 12,
+          "seeker": false
+        },
+        "tail": {
+          "pass": true,
+          "h": 0.6,
+          "played": true,
+          "extended": true,
+          "again": false
+        },
+        "phone": {
+          "pass": true,
+          "chip": "none",
+          "tail": 0
+        }
+      },
+      "ms": 39665,
+      "console": []
+    },
+    "keyboard": {
+      "pass": true,
+      "checks": {
+        "walk": {
+          "pass": true,
+          "stops": 78,
+          "wrapped": true,
+          "notInView": 0,
+          "notInViewList": [],
+          "covered": 0,
+          "coveredList": []
+        },
+        "walk.covered": {
+          "pass": true,
+          "n": 0
+        },
+        "op.pause": {
+          "pass": true,
+          "stop": 6,
+          "paused": true,
+          "resumed": true,
+          "toast": false,
+          "counted": 0
+        },
+        "op.sound": {
+          "pass": true,
+          "stop": 5,
+          "disabled": false,
+          "states": [
+            "false",
+            "true",
+            "false"
+          ]
+        },
+        "op.chip": {
+          "pass": true,
+          "stop": 4,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button[Easter-egg hunt: 0 of 12 found. Show hin]"
+        },
+        "op.menu": {
+          "pass": true,
+          "stop": 7,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button"
+        },
+        "op.compass": {
+          "pass": true,
+          "stop": 18,
+          "rest": 265.8,
+          "enter": 45,
+          "arrow": 225
+        },
+        "op.coin": {
+          "pass": true,
+          "stop": 23,
+          "egg": "pc-coin",
+          "counted": true,
+          "focus": "button#egg-pc-coin[Hold the coin to the moonlight]"
+        },
+        "op.kraken": {
+          "pass": true,
+          "stop": 24,
+          "egg": "pc-kraken",
+          "counted": true,
+          "focus": "button"
+        },
+        "op.run": {
+          "pass": true,
+          "stop": 27,
+          "counted": true
+        },
+        "op.aal": {
+          "pass": true,
+          "stop": 29,
+          "egg": "3i-aal",
+          "counted": true,
+          "focus": "button#egg-3i-aal[A chalk heart on the board's ledge]"
+        },
+        "op.drone": {
+          "pass": true,
+          "stop": 36,
+          "flying": true,
+          "focusInField": true,
+          "moved": 51,
+          "landed": true,
+          "focusBack": true,
+          "game": null
+        },
+        "op.pen": {
+          "pass": true,
+          "stop": 43,
+          "afterDeadEyeWin": true,
+          "counted": true,
+          "toast": "Worthy.Egg 5 of 12 · The astronaut pen",
+          "note": "pressed after the Dead Eye win: counts"
+        },
+        "op.deadeye": {
+          "pass": true,
+          "stop": 42,
+          "started": true,
+          "focusOnFirstRow": true,
+          "killedRows": 5,
+          "struck": 5,
+          "hud": "5/5 marked · 3.4 s of Dead Eye leftBest 5/5 · 3.4 sRelease5/5 marked · 3.4 s of Dead Eye left",
+          "released": true,
+          "focusBack": true,
+          "focus": "button#deadeye-call"
+        },
+        "op.eagle": {
+          "pass": true,
+          "stop": 66,
+          "egg": "rd-eagle",
+          "counted": true,
+          "focus": "button#egg-rd-eagle[The eagle eye]"
+        },
+        "op.bone": {
+          "pass": true,
+          "stop": 68,
+          "egg": "rd-bone",
+          "counted": true,
+          "focus": "button#egg-rd-bone[The fossil bone]"
+        },
+        "op.fire": {
+          "pass": true,
+          "stop": 69,
+          "egg": "rd-fire",
+          "counted": true,
+          "focus": "button#egg-rd-fire[Warm your hands by the fire]"
+        },
+        "op.lumos": {
+          "pass": true,
+          "stop": 73,
+          "before": {
+            "n": 29,
+            "lit": 29
+          },
+          "after": {
+            "n": 29,
+            "lit": 29
+          }
+        },
+        "op.snitch": {
+          "pass": true,
+          "stop": 76,
+          "egg": "hp-snitch",
+          "counted": true,
+          "focus": "button[Snitch caught]"
+        },
+        "reach.fastlane": {
+          "pass": true,
+          "stop": 3
+        },
+        "reach.dc": {
+          "pass": true,
+          "stop": 9
+        },
+        "op.pen.afterDeadEye": {
+          "pass": true,
+          "note": "already counted"
+        },
+        "typed.parley": {
+          "pass": true
+        },
+        "typed.aal": {
+          "pass": true,
+          "note": "3i-aal may already count from the heart (counts once)"
+        },
+        "typed.nox-lumos": {
+          "pass": true,
+          "paused": true,
+          "resumed": true
+        },
+        "typed.map": {
+          "pass": true,
+          "open": true,
+          "label": "ARYAN SHARMA • A RESEARCH JOURNAL IN FOUR ACTSAfter Pirates ",
+          "focusInDialog": true,
+          "closedMs": 8,
+          "focusAfter": "a"
+        },
+        "palette.map": {
+          "pass": true,
+          "open": true,
+          "listed": [
+            "Open the Marauder's Map"
+          ],
+          "dialog": true,
+          "closedMs": 18,
+          "focusAfter": "a"
+        },
+        "palette.drone": {
+          "pass": true,
+          "focusOnPill": true,
+          "phase": "idle",
+          "focus": "button#drone-takeoff"
+        },
+        "jump.fastlane": {
+          "pass": true,
+          "focus": "h2#work-title"
+        },
+        "jump.dc": {
+          "pass": true,
+          "started": true,
+          "focusOnStop": true,
+          "stopped": true,
+          "focus": "button"
+        },
+        "jump.chapter": {
+          "pass": true,
+          "focus": "h2#act-2-title",
+          "hash": "#act-2"
+        },
+        "count": {
+          "pass": true,
+          "counted": 12,
+          "missing": [],
+          "lenis": true
+        }
+      },
+      "walk": [
+        "1 a \"Skip to content\" #-",
+        "2 a \"Aryan Sharma — back to the top\" #header",
+        "3 a \"Skip to the research\" #header",
+        "4 button \"Easter-egg hunt: 0 of 12 found. Show hints\" #header",
+        "5 button \"Sound\" #header",
+        "6 button \"Pause motion\" #header",
+        "7 button \"Menu\" #header",
+        "8 a \"View the quant portfolio\" #top",
+        "9 button \"Director's cut (sound on)\" #top",
+        "10 a \"Systems\" #act-1",
+        "11 a \"kill-list\" #act-1",
+        "12 a \"The Crossing Act I • AFTER PIRATES OF THE CARIBBEA\" #act-1",
+        "13 a \"The Workshop Act II • AFTER 3 IDIOTS\" #act-1",
+        "14 a \"Three films and a game Intermission\" #act-1",
+        "15 a \"The Frontier Act III • AFTER RED DEAD REDEMPTION 2\" #act-1",
+        "16 a \"The Light Act IV • AFTER HARRY POTTER\" #act-1",
+        "17 summary \"The philosophy note\" #about",
+        "18 button \"Spin Jack's compass\" #about",
+        "19 a \"01 Origin\" #journey",
+        "20 a \"02 Early work\" #journey",
+        "21 a \"03 The break\" #journey",
+        "22 a \"04 Now\" #journey",
+        "23 button#egg-pc-coin \"Hold the coin to the moonlight\" #journey",
+        "24 button \"HERE BE MONSTERS\" #act-2",
+        "25 button#gauntlet-tab-_R_egd2nqtb_-0 \"01 Pre-registration\" #work",
+        "26 div#gauntlet-panel-_R_egd2nqtb_ \"01Pre-registration\" #work",
+        "27 button \"Run 12 illustrative hypotheses\" #work",
+        "28 a \"Trading_Algos-\" #trading-algos",
+        "29 button#egg-3i-aal \"A chalk heart on the board's ledge\" #optuna-screener",
+        "30 a \"Optuna-Screener\" #optuna-screener",
+        "31 summary \"Where the discipline started · Automated 0DTE Opti\" #optuna-screener",
+        "32 summary \"Tools, pipelines, automation.\" #optuna-screener",
+        "33 summary \"Also on GitHub\" #optuna-screener",
+        "34 button \"Naïve · zero-cost · in-sample\" #experiment",
+        "35 button \"Realistic costs · out-of-sample\" #experiment",
+        "36 button#drone-takeoff \"▲ Take off\" #systems",
+        "37 summary \"ResearchValidated edges, post-mortems, a kill-list\" #systems",
+        "38 summary \"MarketsStrategy theses with stated risk\" #systems",
+        "39 summary \"EngineeringReproducible research infrastructure\" #systems",
+        "40 summary \"EvaluationHonest, holdout-based numbers\" #systems",
+        "41 summary \"LanguagesWork a stranger can read and trust\" #systems",
+        "42 button#deadeye-call \"DEAD EYE\" #kill-list",
+        "43 button#egg-3i-pen \"The astronaut pen\" #kill-list",
+        "44 button \"Quantitative Trading Research\" #kill-list",
+        "45 a \"Quantitative Trading Research: the Trading_Algos- \" #kill-list",
+        "46 a \"Automated Strategy Research Pipeline: the Optuna-S\" #kill-list",
+        "47 a \"Post-mortem for Dealer-gamma (GEX) router: the Tra\" #kill-list",
+        "48 a \"Post-mortem for Intraday momentum-continuation: th\" #kill-list",
+        "49 a \"Post-mortem for VIX-basis deviation alpha: the Tra\" #kill-list",
+        "50 a \"Post-mortem for VIX3M directional: the Trading_Alg\" #kill-list",
+        "51 a \"Post-mortem for Smart-Money patterns (FVG, order b\" #kill-list",
+        "52 a \"Act I\" #films",
+        "53 a \"About\" #films",
+        "54 a \"Journey\" #films",
+        "55 a \"Act II\" #films",
+        "56 a \"Work\" #films",
+        "57 a \"Trading_Algos\" #films",
+        "58 a \"Optuna\" #films",
+        "59 a \"Act III\" #films",
+        "60 a \"Beyond\" #films",
+        "61 a \"Writing\" #films",
+        "62 a \"Voices\" #films",
+        "63 a \"Act IV\" #films",
+        "64 a \"Principles\" #films",
+        "65 a \"Contact\" #films",
+        "66 button#egg-rd-eagle \"The eagle eye\" #beyond",
+        "67 a \"Reply by email →\" #beyond",
+        "68 button#egg-rd-bone \"The fossil bone\" #writing",
+        "69 button#egg-rd-fire \"Warm your hands by the fire\" #voices",
+        "70 button \"Copy email address aaasharma870@gmail.com\" #contact",
+        "71 a \"Open in your mail app\" #contact",
+        "72 a \"GitHub\" #contact",
+        "73 button \"Lumos\" #contact",
+        "74 summary \"More credits: media, fonts and quotes\" #credits",
+        "75 a \"↑ Back to the opening\" #credits",
+        "76 button \"Catch the snitch\" #credits",
+        "77 a \"GitHub profile\" #credits",
+        "78 a \"Email Aryan Sharma\" #credits",
+        "80 → wraps to 1"
+      ],
+      "ms": 98884,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": true,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [],
+        "heights": [
+          39481,
+          39481
+        ],
+        "streamed": true,
+        "streamedAtDcl": {
+          "pending": 16,
+          "hiddenSections": 16
+        },
+        "sections": [
+          20,
+          20
+        ],
+        "ok": true
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": true,
+        "onBefore": 1,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          12062,
+          12062
+        ],
+        "shift": 0,
+        "diff": [],
+        "settle": {
+          "drift": [
+            {
+              "box": "work",
+              "to": [
+                9201,
+                2198
+              ],
+              "from": [
+                9201,
+                2229
+              ]
+            },
+            {
+              "box": "trading-algos",
+              "to": [
+                11398,
+                1878
+              ],
+              "from": [
+                11430,
+                1879
+              ]
+            },
+            {
+              "box": "optuna-screener",
+              "to": [
+                13277,
+                2962
+              ],
+              "from": [
+                13309,
+                2962
+              ]
+            }
+          ],
+          "fonts": "loaded",
+          "ms": 1217
+        },
+        "ok": true
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "carry",
+            "22"
+          ],
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rmHash": {
+        "hash": "work",
+        "streamed": true,
+        "early": {
+          "y": 7618,
+          "top": 92,
+          "pageTop": 7710,
+          "height": 39481
+        },
+        "late": {
+          "y": 7618,
+          "top": 92,
+          "pageTop": 7710,
+          "height": 39481
+        },
+        "resized": [],
+        "ok": true
+      },
+      "pausedHash": {
+        "hash": "work",
+        "streamed": true,
+        "early": {
+          "y": 7190,
+          "top": 520,
+          "pageTop": 7710,
+          "height": 39481
+        },
+        "late": {
+          "y": 7618,
+          "top": 92,
+          "pageTop": 7710,
+          "height": 39481
+        },
+        "resized": [],
+        "ok": true
+      },
+      "ms": 27908,
+      "console": []
+    },
+    "lenis": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "lenis.on": {
+          "pass": true,
+          "lenisClass": true,
+          "htmlHeight": 43975,
+          "vh": 900,
+          "scrollBehavior": "auto",
+          "quietEnd": true,
+          "ladder": [
+            1
+          ],
+          "js": true
+        },
+        "wheel": {
+          "pass": true,
+          "y0": 0,
+          "y1": 400,
+          "smooth": true
+        },
+        "keyboard.midglide": {
+          "pass": true,
+          "before": "smooth",
+          "after": false,
+          "ms": 2
+        },
+        "anchor.skiplink": {
+          "pass": true,
+          "isSkip": true,
+          "focused": true
+        },
+        "lock.menu": {
+          "pass": true,
+          "y0": 0,
+          "y1": 0
+        },
+        "anchor.menu": {
+          "pass": true,
+          "id": "about",
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": true
+        },
+        "lock.palette": {
+          "pass": true,
+          "y0": 3191,
+          "y1": 3191
+        },
+        "fastlane": {
+          "pass": true,
+          "label": "SKIP TO THE RESEARCH",
+          "overlaySeen": true,
+          "pillCovered": false,
+          "focusedAt": 3,
+          "workTop": 92,
+          "expected": 92,
+          "hash": "#work",
+          "fonts": "pirates idiots"
+        },
+        "cut.z": {
+          "pass": true,
+          "overlay": "35",
+          "header": "40",
+          "position": "fixed"
+        },
+        "hash.load": {
+          "pass": true,
+          "top": 92,
+          "expected": 92,
+          "atEnd": false,
+          "focusInside": false
+        },
+        "pause": {
+          "pass": true,
+          "button": true,
+          "gone": true,
+          "ms": 4,
+          "scrolledAfter": 500,
+          "paletteJump": {
+            "distinct": 2,
+            "last": 19414
+          },
+          "back": true
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 66710,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 18,
+      "over": 18,
+      "worstDur": 600,
+      "worstWork": 5,
+      "loafs": [
+        {
+          "dur": 600,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 736
+        },
+        {
+          "dur": 341,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 41
+        },
+        {
+          "dur": 237,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2775
+        },
+        {
+          "dur": 220,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1802
+        },
+        {
+          "dur": 180,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 2337
+        },
+        {
+          "dur": 173,
+          "block": 0,
+          "work": 1,
+          "top": null,
+          "t": 499
+        },
+        {
+          "dur": 125,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1340
+        },
+        {
+          "dur": 120,
+          "block": 0,
+          "work": 2,
+          "top": null,
+          "t": 2215
+        },
+        {
+          "dur": 100,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 1513
+        },
+        {
+          "dur": 98,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2613
+        },
+        {
+          "dur": 92,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2027
+        },
+        {
+          "dur": 89,
+          "block": 0,
+          "work": 0,
+          "top": null,
+          "t": 2124
+        }
+      ],
+      "ladderMs": {
+        "1": 3624
+      },
+      "lenis": true,
+      "ms": 14821,
+      "console": []
+    },
+    "nav": {
+      "pass": true,
+      "lenis": true,
+      "landAt": {
+        "act-1": 0.47,
+        "act-2": 0.47,
+        "act-3": 0.47,
+        "act-4": 0.47
+      },
+      "families": {
+        "chapter": {
+          "pass": true,
+          "found": 7,
+          "failed": [],
+          "links": [
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 2601,
+              "y0": 0,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 3,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-1",
+              "how": "click",
+              "pass": true,
+              "ms": 1240,
+              "y0": 0,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 4,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1072,
+              "y0": 1281,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 5,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1655,
+              "y0": 7776,
+              "y": 21642,
+              "hash": "#films",
+              "histLen": 6,
+              "focus": "#films-title",
+              "top": 188,
+              "height": 5083,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 1120,
+              "y0": 21642,
+              "y": 27336,
+              "hash": "#act-3",
+              "histLen": 7,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27336,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1531,
+              "y0": 27336,
+              "y": 37548,
+              "hash": "#act-4",
+              "histLen": 8,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37548,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            },
+            {
+              "href": "#credits",
+              "how": "click",
+              "pass": true,
+              "ms": 1500,
+              "y0": 37548,
+              "y": 42450,
+              "hash": "#credits",
+              "histLen": 9,
+              "focus": "#credits-title",
+              "top": 92,
+              "height": 1745,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "menuOpen": false
+            }
+          ]
+        },
+        "waypoints": {
+          "pass": true,
+          "found": 4,
+          "failed": [],
+          "links": [
+            {
+              "href": "#journey-step-1",
+              "how": "key",
+              "pass": true,
+              "ms": 1664,
+              "y0": 4373,
+              "y": 4792,
+              "hash": "#journey-step-1",
+              "histLen": 9,
+              "focus": "#journey-step-1-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1685,
+              "y0": 4792,
+              "y": 5350,
+              "hash": "#journey-step-2",
+              "histLen": 9,
+              "focus": "#journey-step-2-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-3",
+              "how": "click",
+              "pass": true,
+              "ms": 1682,
+              "y0": 5350,
+              "y": 5908,
+              "hash": "#journey-step-3",
+              "histLen": 9,
+              "focus": "#journey-step-3-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            },
+            {
+              "href": "#journey-step-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1677,
+              "y0": 5908,
+              "y": 6466,
+              "hash": "#journey-step-4",
+              "histLen": 9,
+              "focus": "#journey-step-4-title",
+              "top": 171,
+              "height": 558,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "center",
+              "off": 0,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "voyage": true
+            }
+          ]
+        },
+        "map": {
+          "pass": true,
+          "found": 13,
+          "failed": [],
+          "links": [
+            {
+              "href": "#about",
+              "how": "key",
+              "pass": true,
+              "ms": 2265,
+              "y0": 0,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 9,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 2041,
+              "y0": 3191,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 9,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 2189,
+              "y0": 4281,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 9,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2198,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 1947,
+              "y0": 9109,
+              "y": 11210,
+              "hash": "#trading-algos",
+              "histLen": 9,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 2461,
+              "y0": 11210,
+              "y": 13089,
+              "hash": "#optuna-screener",
+              "histLen": 9,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2962,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#systems",
+              "how": "click",
+              "pass": true,
+              "ms": 948,
+              "y0": 13089,
+              "y": 17192,
+              "hash": "#systems",
+              "histLen": 9,
+              "focus": "#systems-title",
+              "top": 92,
+              "height": 2318,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#kill-list",
+              "how": "click",
+              "pass": true,
+              "ms": 2578,
+              "y0": 17192,
+              "y": 19414,
+              "hash": "#kill-list",
+              "histLen": 9,
+              "focus": "#kill-list-title",
+              "top": 188,
+              "height": 2229,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#films",
+              "how": "click",
+              "pass": true,
+              "ms": 1922,
+              "y0": 19414,
+              "y": 21642,
+              "hash": "#films",
+              "histLen": 9,
+              "focus": "#films-title",
+              "top": 188,
+              "height": 5124,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 1018,
+              "y0": 21642,
+              "y": 28573,
+              "hash": "#beyond",
+              "histLen": 9,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 847,
+              "y0": 28573,
+              "y": 32897,
+              "hash": "#writing",
+              "histLen": 9,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2652,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 2400,
+              "y0": 32897,
+              "y": 35550,
+              "hash": "#voices",
+              "histLen": 9,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1498,
+              "y0": 35550,
+              "y": 38881,
+              "hash": "#principles",
+              "histLen": 9,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2610,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 2683,
+              "y0": 38881,
+              "y": 41491,
+              "hash": "#contact",
+              "histLen": 9,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 959,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "mapOpen": false
+            }
+          ]
+        },
+        "turner": {
+          "pass": true,
+          "found": 2,
+          "failed": [],
+          "turner": true,
+          "links": [
+            {
+              "href": "#top",
+              "how": "click",
+              "pass": true,
+              "ms": 1779,
+              "y0": 42885,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 42885,
+                "spinning": true
+              },
+              "spinFirst": true
+            },
+            {
+              "href": "#top",
+              "how": "key",
+              "pass": true,
+              "ms": 1361,
+              "y0": 42885,
+              "y": 0,
+              "hash": "#top",
+              "histLen": 9,
+              "focus": "#top-title",
+              "top": 0,
+              "height": 900,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": true,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "replace",
+              "histWant": "replace",
+              "at300ms": {
+                "y": 42885,
+                "spinning": true
+              },
+              "spinFirst": true
+            }
+          ]
+        },
+        "films": {
+          "pass": true,
+          "found": 14,
+          "failed": [],
+          "links": [
+            {
+              "href": "#act-1",
+              "how": "key",
+              "pass": true,
+              "ms": 938,
+              "y0": 23237,
+              "y": 1281,
+              "hash": "#act-1",
+              "histLen": 10,
+              "focus": "#act-1-title",
+              "top": -381,
+              "height": 2383,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 1281,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act I"
+            },
+            {
+              "href": "#about",
+              "how": "click",
+              "pass": true,
+              "ms": 1186,
+              "y0": 23237,
+              "y": 3191,
+              "hash": "#about",
+              "histLen": 11,
+              "focus": "#about-title",
+              "top": 92,
+              "height": 1090,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "About"
+            },
+            {
+              "href": "#journey",
+              "how": "click",
+              "pass": true,
+              "ms": 1222,
+              "y0": 23237,
+              "y": 4281,
+              "hash": "#journey",
+              "histLen": 12,
+              "focus": "#journey-title",
+              "top": 92,
+              "height": 2938,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Journey"
+            },
+            {
+              "href": "#act-2",
+              "how": "click",
+              "pass": true,
+              "ms": 1073,
+              "y0": 24139,
+              "y": 7776,
+              "hash": "#act-2",
+              "histLen": 13,
+              "focus": "#act-2-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 7776,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act II"
+            },
+            {
+              "href": "#work",
+              "how": "click",
+              "pass": true,
+              "ms": 1074,
+              "y0": 24139,
+              "y": 9109,
+              "hash": "#work",
+              "histLen": 14,
+              "focus": "#work-title",
+              "top": 92,
+              "height": 2198,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Work"
+            },
+            {
+              "href": "#trading-algos",
+              "how": "click",
+              "pass": true,
+              "ms": 960,
+              "y0": 24139,
+              "y": 11210,
+              "hash": "#trading-algos",
+              "histLen": 15,
+              "focus": "#trading-algos-title",
+              "top": 188,
+              "height": 1878,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Trading_Algos"
+            },
+            {
+              "href": "#optuna-screener",
+              "how": "click",
+              "pass": true,
+              "ms": 964,
+              "y0": 24139,
+              "y": 13089,
+              "hash": "#optuna-screener",
+              "histLen": 16,
+              "focus": "#optuna-screener-title",
+              "top": 188,
+              "height": 2962,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 188,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Optuna"
+            },
+            {
+              "href": "#act-3",
+              "how": "click",
+              "pass": true,
+              "ms": 2231,
+              "y0": 25368,
+              "y": 27336,
+              "hash": "#act-3",
+              "histLen": 17,
+              "focus": "#act-3-title",
+              "top": -381,
+              "height": 1710,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 27336,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act III"
+            },
+            {
+              "href": "#beyond",
+              "how": "click",
+              "pass": true,
+              "ms": 951,
+              "y0": 25368,
+              "y": 28573,
+              "hash": "#beyond",
+              "histLen": 18,
+              "focus": "#beyond-title",
+              "top": 92,
+              "height": 4324,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Beyond"
+            },
+            {
+              "href": "#writing",
+              "how": "click",
+              "pass": true,
+              "ms": 840,
+              "y0": 25368,
+              "y": 32897,
+              "hash": "#writing",
+              "histLen": 19,
+              "focus": "#writing-title",
+              "top": 92,
+              "height": 2652,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Writing"
+            },
+            {
+              "href": "#voices",
+              "how": "click",
+              "pass": true,
+              "ms": 1003,
+              "y0": 25368,
+              "y": 35550,
+              "hash": "#voices",
+              "histLen": 20,
+              "focus": "#voices-title",
+              "top": 92,
+              "height": 1441,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Voices"
+            },
+            {
+              "href": "#act-4",
+              "how": "click",
+              "pass": true,
+              "ms": 1600,
+              "y0": 26269,
+              "y": 37548,
+              "hash": "#act-4",
+              "histLen": 21,
+              "focus": "#act-4-title",
+              "top": -465,
+              "height": 1890,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "landAt",
+              "landAt": 0.47,
+              "want": 37548,
+              "off": 0,
+              "inView": true,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Act IV"
+            },
+            {
+              "href": "#principles",
+              "how": "click",
+              "pass": true,
+              "ms": 1209,
+              "y0": 26269,
+              "y": 38881,
+              "hash": "#principles",
+              "histLen": 22,
+              "focus": "#principles-title",
+              "top": 92,
+              "height": 2610,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Principles"
+            },
+            {
+              "href": "#contact",
+              "how": "click",
+              "pass": true,
+              "ms": 870,
+              "y0": 26269,
+              "y": 41491,
+              "hash": "#contact",
+              "histLen": 23,
+              "focus": "#contact-title",
+              "top": 92,
+              "height": 959,
+              "header": 68,
+              "focusOk": true,
+              "focusOn": "heading",
+              "mode": "start",
+              "pad": 92,
+              "inView": true,
+              "atTop": false,
+              "atEnd": false,
+              "hashOk": true,
+              "hist": "push",
+              "histWant": "push",
+              "text": "Contact"
+            }
+          ]
+        }
+      },
+      "ms": 105761,
+      "console": []
+    },
+    "plates-live": {
+      "pass": true,
+      "live": {
+        "samples": 448,
+        "maxPlaying": 1,
+        "plates": 36,
+        "byHow": {
+          "loop": 14,
+          "camera": 19,
+          "canvas": 3
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 11,
+          "stage": 7,
+          "section:journey": 4,
+          "section:work": 2,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:kill-list": 1,
+          "section:films": 4,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [],
+        "deadOther": [],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 4363,
+            "how": "loop",
+            "states": [
+              "playing"
+            ]
+          },
+          {
+            "media": "MV-01",
+            "host": "card",
+            "ms": 2311,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 5996,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L01",
+            "host": "card",
+            "ms": 2918,
+            "how": "loop",
+            "states": [
+              "starting",
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "stage-0",
+            "host": "stage",
+            "ms": 8044,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "stage-1",
+            "host": "stage",
+            "ms": 6239,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 4106,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05b",
+            "host": "section:journey",
+            "ms": 1572,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05c",
+            "host": "section:journey",
+            "ms": 1548,
+            "how": "canvas",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05d",
+            "host": "section:journey",
+            "ms": 1812,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 6180,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-04",
+            "host": "card",
+            "ms": 6180,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 5664,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "L08",
+            "host": "card",
+            "ms": 3092,
+            "how": "loop",
+            "states": [
+              "poster",
+              "playing",
+              "paused"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 2321,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "MV-06",
+            "host": "section:work",
+            "ms": 2575,
+            "how": "loop",
+            "states": [
+              "poster+poster",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-2",
+            "host": "stage",
+            "ms": 1815,
+            "how": "loop",
+            "states": []
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 3370,
+            "how": "loop",
+            "states": [
+              "poster+poster",
+              "poster+starting",
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-3",
+            "host": "stage",
+            "ms": 3886,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "stage-4",
+            "host": "stage",
+            "ms": 3106,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 2303,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen",
+            "host": "section:kill-list",
+            "ms": 2561,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 3602,
+            "how": "loop",
+            "states": [
+              "poster+playing",
+              "poster+paused"
+            ]
+          },
+          {
+            "media": "F-3I",
+            "host": "section:films",
+            "ms": 3342,
+            "how": "loop",
+            "states": [
+              "poster+playing",
+              "poster+paused"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "host": "section:films",
+            "ms": 2325,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "host": "section:films",
+            "ms": 1285,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 1534,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 3845,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 4620,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "stage-5",
+            "host": "stage",
+            "ms": 4905,
+            "how": "camera",
+            "states": []
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 2326,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 4627,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "card",
+            "ms": 2564,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 3308,
+            "how": "camera",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 2573,
+            "how": "loop",
+            "states": [
+              "poster+playing"
+            ]
+          },
+          {
+            "media": "stage-6",
+            "host": "stage",
+            "ms": 5907,
+            "how": "camera",
+            "states": []
+          }
+        ],
+        "seq": {
+          "peakMB": 87.9,
+          "sampled": true
+        },
+        "requests": {
+          "count": 13,
+          "webm": 13,
+          "mp4": 0,
+          "urls": [
+            "/media/films/hero-sea-loop.webm",
+            "/media/films/iconic-pearl-loop.webm",
+            "/media/films/iconic-ice-loop.webm",
+            "/media/films/iconic-pen-alt-loop.webm",
+            "/media/films/board-dawn-loop.webm",
+            "/media/films/iconic-corridor-loop.webm",
+            "/media/films/iconic-ice-alt-loop.webm",
+            "/media/films/iconic-pen-loop.webm",
+            "/media/films/iconic-pearl-alt-loop.webm",
+            "/media/films/films-idiots-loop.webm",
+            "/media/films/iconic-deadeye-loop.webm",
+            "/media/films/iconic-wanted-loop.webm",
+            "/media/films/last-light-loop.webm"
+          ]
+        },
+        "codecPicks": {
+          "/media/films/hero-sea-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-alt-loop.mp4": "video/webm",
+          "/media/films/board-dawn-loop.mp4": "video/webm",
+          "/media/films/iconic-corridor-loop.mp4": "video/webm",
+          "/media/films/iconic-ice-alt-loop.mp4": "video/webm",
+          "/media/films/iconic-pen-loop.mp4": "video/webm",
+          "/media/films/iconic-pearl-alt-loop.mp4": "video/webm",
+          "/media/films/films-idiots-loop.mp4": "video/webm",
+          "/media/films/iconic-deadeye-loop.mp4": "video/webm",
+          "/media/films/iconic-wanted-loop.mp4": "video/webm",
+          "/media/films/last-light-loop.mp4": "video/webm"
+        }
+      },
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 1,
+          "weather": 1,
+          "stageRoot": true,
+          "moved": 1
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "translate3d(0%, 0%, 0px) scale(1.35)",
+        "depthFarAt0": "translate3d(-0.9%, 0%, 0px) scale(1.018)",
+        "weather": [
+          {
+            "kind": "spray",
+            "dots": 14,
+            "running": 14
+          },
+          {
+            "kind": "chalk",
+            "dots": 12,
+            "running": 12
+          },
+          {
+            "kind": "fireflies",
+            "dots": 9,
+            "running": 9
+          },
+          {
+            "kind": "motes",
+            "dots": 12,
+            "running": 12
+          }
+        ],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": "loop",
+            "states": [
+              "iconic-ice:poster",
+              "L08:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": "loop",
+            "states": [
+              "MV-05a:poster",
+              "L06:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": "loop",
+            "states": [
+              "iconic-corridor:poster",
+              "L10:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": "depth",
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": "depth",
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": "still",
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": "still",
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": "loop",
+            "states": [
+              "iconic-deadeye:poster",
+              "L21:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 156330,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 276,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 215,
+        "Geist": 61
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "Film Body Pirates",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1464,
+      "console": []
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "muted.default": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "audioRequests": 0
+        },
+        "unmute": {
+          "pass": true,
+          "ready": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "true",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 1,
+          "ctx": "running",
+          "session": "on",
+          "cues": [
+            "toggle-click"
+          ]
+        },
+        "files": {
+          "pass": true,
+          "requests": 5,
+          "beforeUnmute": 0,
+          "formats": [
+            "webm"
+          ],
+          "bytes": 46946,
+          "files": {
+            "tts-lumos": "ok",
+            "tts-nox": "ok",
+            "tts-solemn": "ok",
+            "tts-mischief": "ok",
+            "tts-parley": "ok"
+          }
+        },
+        "events": {
+          "pass": true,
+          "need": [
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ],
+          "got": [
+            "toggle-click",
+            "letterbox-whum",
+            "impact-chalk",
+            "wave-recede",
+            "duster-swipe",
+            "deadeye-strike"
+          ]
+        },
+        "bed.follow": {
+          "pass": true,
+          "seen": [
+            {
+              "id": "about",
+              "want": "pirates",
+              "got": "pirates",
+              "ok": true,
+              "ms": 65
+            },
+            {
+              "id": "work",
+              "want": "idiots",
+              "got": "idiots",
+              "ok": true,
+              "ms": 473
+            },
+            {
+              "id": "experiment",
+              "want": null,
+              "got": null,
+              "ok": true,
+              "ms": 993
+            },
+            {
+              "id": "beyond",
+              "want": "rdr2",
+              "got": "rdr2",
+              "ok": true,
+              "ms": 469
+            },
+            {
+              "id": "principles",
+              "want": "hp",
+              "got": "hp",
+              "ok": true,
+              "ms": 579
+            },
+            {
+              "id": "films",
+              "want": "house",
+              "got": "house",
+              "ok": true,
+              "ms": 607
+            }
+          ],
+          "trims": {
+            "pirates": 0.11199021565737984,
+            "idiots": 0.17980208593152258,
+            "rdr2": 0.27871965414007915,
+            "hp": 0.19078428029654595,
+            "house": 0.23462027162090177
+          }
+        },
+        "pause": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 5
+          },
+          "on": {
+            "ok": true,
+            "ms": 280
+          },
+          "whilePaused": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_R_t6tb_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          },
+          "afterResume": {
+            "exists": true,
+            "visible": true,
+            "pressed": "true",
+            "disabled": null,
+            "described": null,
+            "note": null,
+            "made": 1
+          }
+        },
+        "hidden": {
+          "pass": true,
+          "off": {
+            "ok": true,
+            "ms": 47
+          },
+          "on": {
+            "ok": true,
+            "ms": 5
+          }
+        },
+        "eggs.typed": {
+          "pass": true,
+          "got": [
+            "impact-flash",
+            "match-strike",
+            "shimmer-rise",
+            "impact-lumos",
+            "projector-start",
+            "parley-creak",
+            "flag-snap",
+            "tts-parley"
+          ]
+        },
+        "eggs.lumos": {
+          "pass": true,
+          "pause": {
+            "ok": true,
+            "ms": 5
+          },
+          "resumed": true,
+          "bell": true,
+          "ms": 8,
+          "ctx": "running"
+        },
+        "letterbox.once": {
+          "pass": true,
+          "voiced": 1
+        },
+        "rm.live": {
+          "pass": true,
+          "rmAt": 14899,
+          "ms": 36,
+          "state": "suspended",
+          "toggle": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_n_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 1
+          }
+        },
+        "newvisit": {
+          "pass": true,
+          "exists": true,
+          "visible": true,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0,
+          "session": null
+        },
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": null,
+          "described": null,
+          "note": null,
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 52098,
+      "console": []
+    },
+    "split": {
+      "pass": true,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 11815.984375,
+            "bottom": 13465.046875,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 269,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "740.141px 528.672px",
+            "top": 14827.078125,
+            "bottom": 16427.078125,
+            "windowLeft": 847,
+            "textLeft": 64,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              3,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "528.672px 740.141px",
+            "top": 30325.390625,
+            "bottom": 32010.03125,
+            "windowLeft": 64,
+            "textLeft": 636,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 270,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0,
+                "drift": [
+                  {
+                    "from": 29785,
+                    "to": 29803
+                  }
+                ]
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -22,
+                "height": 832,
+                "header": 68,
+                "vh": 900,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          }
+        ],
+        "1024x768": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 10655.953125,
+            "bottom": 12681.4375,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 230,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -9,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "grid",
+            "columns": "523.328px 373.828px",
+            "top": 13721.625,
+            "bottom": 15702.78125,
+            "windowLeft": 602,
+            "textLeft": 48,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 230,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": true,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": true,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -9,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "grid",
+            "columns": "373.812px 523.344px",
+            "top": 28101.765625,
+            "bottom": 29989,
+            "windowLeft": 48,
+            "textLeft": 453,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              1,
+              1,
+              1
+            ],
+            "checks": {
+              "grid": true,
+              "side": true,
+              "measured": true,
+              "sticky": true,
+              "neverEmpty": true,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 230,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0,
+                "drift": [
+                  {
+                    "from": 27772,
+                    "to": 27734
+                  }
+                ]
+              },
+              {
+                "at": "middle",
+                "top": 68,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": -9,
+                "height": 700,
+                "header": 68,
+                "vh": 768,
+                "on": true,
+                "posterShown": false,
+                "layerShown": true,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": true
+          }
+        ]
+      },
+      "ms": 20309,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "where": "harness",
+      "failed": [],
+      "tests": {
+        "start": {
+          "pass": true,
+          "y": 1800,
+          "owner": null,
+          "lent": null,
+          "hold": null,
+          "pending": []
+        },
+        "own": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 501,
+          "owner": "probe-live"
+        },
+        "still": {
+          "pass": true,
+          "answer": "play",
+          "owner": "probe-scrub",
+          "ms": 1
+        },
+        "free": {
+          "pass": true,
+          "answer": "play",
+          "ms": 1
+        },
+        "queue": {
+          "pass": true,
+          "answer": "play",
+          "ms": 402
+        },
+        "once": {
+          "pass": true,
+          "answer": "skip"
+        },
+        "release": {
+          "pass": true,
+          "answer": "play",
+          "ms": 0
+        },
+        "fullRun": {
+          "pass": true,
+          "answers": [
+            "play",
+            "play"
+          ],
+          "cappedAt1450": null,
+          "heldAt1450": "probe-run",
+          "heldAt1900": null
+        },
+        "lend": {
+          "pass": true,
+          "lent": "probe-drift",
+          "lentMs": 25,
+          "own": {
+            "t": 6061,
+            "y": 1800,
+            "ev": "own",
+            "id": "probe-drift",
+            "weight": 1,
+            "how": "live",
+            "why": "still"
+          },
+          "answer": "play",
+          "grantMs": 1,
+          "freedWhy": "yields to probe-over-lend",
+          "lentDuringHold": null,
+          "relent": "probe-drift",
+          "afterScroll": null,
+          "releasedWhy": "scroll"
+        },
+        "cut": {
+          "pass": true,
+          "answer": "play",
+          "onCut": true,
+          "hold": null,
+          "why": "cut by probe-opens"
+        },
+        "cutMove": {
+          "pass": true,
+          "answer": "play",
+          "held": "probe-cut-move",
+          "heldAfterNudge": "probe-cut-move",
+          "onCut": true,
+          "why": "cut by probe-scrub-2"
+        },
+        "idle": {
+          "pass": true,
+          "answer": "play",
+          "msAfterStop": 898,
+          "y0": 1800,
+          "range": 600,
+          "ownerDuring": null
+        },
+        "pause": {
+          "pass": true,
+          "answer": "skip",
+          "ms": 1
+        },
+        "page": {
+          "pass": true,
+          "counts": {
+            "own": 28,
+            "free": 16,
+            "request": 40,
+            "wait": 18,
+            "grant": 19,
+            "end": 18,
+            "skip": 21
+          },
+          "overlaps": [],
+          "liveOverlaps": [],
+          "unresolved": [],
+          "stillPending": [],
+          "lends": [
+            "B04-loop",
+            "B10-sea",
+            "B14-loop",
+            "B50-motes"
+          ],
+          "cuts": [
+            "B33-finale (cut by B35)",
+            "B44-sketch (cut by B46)",
+            "B52 (cut by B54)"
+          ]
+        }
+      },
+      "log": [
+        {
+          "t": 2814,
+          "y": 0,
+          "ev": "own",
+          "id": "B02",
+          "weight": 2,
+          "how": "live"
+        },
+        {
+          "t": 3971,
+          "y": 1575,
+          "ev": "own",
+          "id": "B04",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 4110,
+          "y": 1800,
+          "ev": "free",
+          "id": "B04"
+        },
+        {
+          "t": 4453,
+          "y": 1800,
+          "ev": "own",
+          "id": "B04-loop",
+          "weight": 1,
+          "how": "live",
+          "why": "still"
+        },
+        {
+          "t": 4972,
+          "y": 2025,
+          "ev": "free",
+          "id": "B04-loop",
+          "why": "scroll"
+        },
+        {
+          "t": 5595,
+          "y": 3150,
+          "ev": "request",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 5596,
+          "y": 3150,
+          "ev": "wait",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "waiting for reading pace"
+        },
+        {
+          "t": 5596,
+          "y": 3150,
+          "ev": "request",
+          "id": "B08-compass",
+          "weight": 1
+        },
+        {
+          "t": 5597,
+          "y": 3150,
+          "ev": "grant",
+          "id": "B08-compass",
+          "weight": 1,
+          "why": "waited 1 ms"
+        },
+        {
+          "t": 6797,
+          "y": 3825,
+          "ev": "end",
+          "id": "B08-compass",
+          "why": "held"
+        },
+        {
+          "t": 6819,
+          "y": 4050,
+          "ev": "own",
+          "id": "B09",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 6840,
+          "y": 4050,
+          "ev": "skip",
+          "id": "B08-invite",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 7185,
+          "y": 4725,
+          "ev": "free",
+          "id": "B09"
+        },
+        {
+          "t": 7429,
+          "y": 5175,
+          "ev": "own",
+          "id": "B10",
+          "weight": 2,
+          "how": "scrub"
+        },
+        {
+          "t": 8343,
+          "y": 5400,
+          "ev": "own",
+          "id": "B10-sea",
+          "weight": 1,
+          "how": "live",
+          "why": "still"
+        },
+        {
+          "t": 8496,
+          "y": 5625,
+          "ev": "own",
+          "id": "B10",
+          "weight": 2,
+          "how": "scrub",
+          "why": "after B10-sea"
+        },
+        {
+          "t": 8742,
+          "y": 6075,
+          "ev": "own",
+          "id": "B11",
+          "weight": 2,
+          "how": "scrub"
+        },
+        {
+          "t": 9042,
+          "y": 6525,
+          "ev": "own",
+          "id": "B12-push",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 9057,
+          "y": 6525,
+          "ev": "request",
+          "id": "B12",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 9058,
+          "y": 6525,
+          "ev": "wait",
+          "id": "B12",
+          "weight": 2,
+          "why": "owned by B12-push"
+        },
+        {
+          "t": 9183,
+          "y": 6750,
+          "ev": "skip",
+          "id": "B12",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 9268,
+          "y": 6975,
+          "ev": "free",
+          "id": "B12-push"
+        },
+        {
+          "t": 10265,
+          "y": 7425,
+          "ev": "own",
+          "id": "B13",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 10509,
+          "y": 7875,
+          "ev": "own",
+          "id": "B14",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 10752,
+          "y": 8325,
+          "ev": "free",
+          "id": "B14"
+        },
+        {
+          "t": 11586,
+          "y": 9000,
+          "ev": "own",
+          "id": "B14-loop",
+          "weight": 1,
+          "how": "live",
+          "why": "still"
+        },
+        {
+          "t": 12018,
+          "y": 9225,
+          "ev": "free",
+          "id": "B14-loop",
+          "why": "scroll"
+        },
+        {
+          "t": 12146,
+          "y": 9450,
+          "ev": "request",
+          "id": "B16",
+          "weight": 1
+        },
+        {
+          "t": 12146,
+          "y": 9450,
+          "ev": "wait",
+          "id": "B16",
+          "weight": 1,
+          "why": "B19 begins within the hold"
+        },
+        {
+          "t": 12498,
+          "y": 10125,
+          "ev": "request",
+          "id": "B17",
+          "weight": 2
+        },
+        {
+          "t": 12499,
+          "y": 10125,
+          "ev": "wait",
+          "id": "B17",
+          "weight": 2,
+          "why": "B19 begins within the hold"
+        },
+        {
+          "t": 12613,
+          "y": 10350,
+          "ev": "skip",
+          "id": "B16",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 12870,
+          "y": 10800,
+          "ev": "own",
+          "id": "B19",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 12882,
+          "y": 10800,
+          "ev": "request",
+          "id": "B18",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 12882,
+          "y": 10800,
+          "ev": "wait",
+          "id": "B18",
+          "weight": 1,
+          "why": "owned by B19"
+        },
+        {
+          "t": 13168,
+          "y": 10800,
+          "ev": "grant",
+          "id": "B17",
+          "weight": 2,
+          "why": "waited 670 ms"
+        },
+        {
+          "t": 13747,
+          "y": 11025,
+          "ev": "free",
+          "id": "B19"
+        },
+        {
+          "t": 14004,
+          "y": 11475,
+          "ev": "skip",
+          "id": "B18",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 14004,
+          "y": 11475,
+          "ev": "request",
+          "id": "B20",
+          "weight": 2
+        },
+        {
+          "t": 14368,
+          "y": 12150,
+          "ev": "end",
+          "id": "B17",
+          "why": "held"
+        },
+        {
+          "t": 14390,
+          "y": 12150,
+          "ev": "grant",
+          "id": "B20",
+          "weight": 2,
+          "why": "waited 386 ms"
+        },
+        {
+          "t": 14610,
+          "y": 12600,
+          "ev": "wait",
+          "id": "B21",
+          "weight": 1,
+          "why": "held by B20"
+        },
+        {
+          "t": 14620,
+          "y": 12600,
+          "ev": "request",
+          "id": "B21-circle",
+          "weight": 1
+        },
+        {
+          "t": 15591,
+          "y": 12600,
+          "ev": "end",
+          "id": "B20",
+          "why": "held"
+        },
+        {
+          "t": 15682,
+          "y": 13050,
+          "ev": "grant",
+          "id": "B21-circle",
+          "weight": 1,
+          "why": "waited 1061 ms"
+        },
+        {
+          "t": 15700,
+          "y": 13050,
+          "ev": "request",
+          "id": "B22",
+          "weight": 2
+        },
+        {
+          "t": 15956,
+          "y": 13500,
+          "ev": "request",
+          "id": "B23-fig",
+          "weight": 1
+        },
+        {
+          "t": 16346,
+          "y": 14400,
+          "ev": "skip",
+          "id": "B22",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 16346,
+          "y": 14400,
+          "ev": "request",
+          "id": "B23",
+          "weight": 1
+        },
+        {
+          "t": 16884,
+          "y": 14400,
+          "ev": "end",
+          "id": "B21-circle",
+          "why": "held"
+        },
+        {
+          "t": 16964,
+          "y": 14400,
+          "ev": "grant",
+          "id": "B23-fig",
+          "weight": 1,
+          "why": "waited 1008 ms"
+        },
+        {
+          "t": 17346,
+          "y": 14625,
+          "ev": "request",
+          "id": "B24",
+          "weight": 1
+        },
+        {
+          "t": 17430,
+          "y": 14850,
+          "ev": "skip",
+          "id": "B23",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 17746,
+          "y": 15525,
+          "ev": "skip",
+          "id": "B24",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 18071,
+          "y": 15975,
+          "ev": "request",
+          "id": "B25",
+          "weight": 1
+        },
+        {
+          "t": 18164,
+          "y": 16200,
+          "ev": "end",
+          "id": "B23-fig",
+          "why": "held"
+        },
+        {
+          "t": 18299,
+          "y": 16200,
+          "ev": "grant",
+          "id": "B25",
+          "weight": 1,
+          "why": "waited 227 ms"
+        },
+        {
+          "t": 19228,
+          "y": 16875,
+          "ev": "request",
+          "id": "B26",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 19499,
+          "y": 17100,
+          "ev": "end",
+          "id": "B25",
+          "why": "held"
+        },
+        {
+          "t": 19527,
+          "y": 17325,
+          "ev": "wait",
+          "id": "B26",
+          "weight": 1,
+          "why": "waiting for reading pace"
+        },
+        {
+          "t": 19861,
+          "y": 18000,
+          "ev": "skip",
+          "id": "B26",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 19861,
+          "y": 18000,
+          "ev": "request",
+          "id": "B27",
+          "weight": 2
+        },
+        {
+          "t": 19862,
+          "y": 18000,
+          "ev": "grant",
+          "id": "B27",
+          "weight": 2,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 21064,
+          "y": 18675,
+          "ev": "end",
+          "id": "B27",
+          "why": "held"
+        },
+        {
+          "t": 21175,
+          "y": 18900,
+          "ev": "request",
+          "id": "B28",
+          "weight": 1,
+          "why": "needs idle"
+        },
+        {
+          "t": 21176,
+          "y": 18900,
+          "ev": "wait",
+          "id": "B28",
+          "weight": 1,
+          "why": "waiting for reading pace"
+        },
+        {
+          "t": 21519,
+          "y": 19350,
+          "ev": "request",
+          "id": "B29",
+          "weight": 1
+        },
+        {
+          "t": 21520,
+          "y": 19350,
+          "ev": "grant",
+          "id": "B29",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 21684,
+          "y": 19800,
+          "ev": "wait",
+          "id": "B29-lens",
+          "weight": 1,
+          "why": "held by B29"
+        },
+        {
+          "t": 21695,
+          "y": 19800,
+          "ev": "skip",
+          "id": "B28",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 22120,
+          "y": 19800,
+          "ev": "end",
+          "id": "B29",
+          "why": "held"
+        },
+        {
+          "t": 22264,
+          "y": 19800,
+          "ev": "own",
+          "id": "B29-lens",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 23324,
+          "y": 21375,
+          "ev": "free",
+          "id": "B29-lens"
+        },
+        {
+          "t": 24423,
+          "y": 21825,
+          "ev": "own",
+          "id": "B30",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 24554,
+          "y": 22050,
+          "ev": "free",
+          "id": "B30"
+        },
+        {
+          "t": 24563,
+          "y": 22050,
+          "ev": "request",
+          "id": "B31",
+          "weight": 1
+        },
+        {
+          "t": 24563,
+          "y": 22050,
+          "ev": "grant",
+          "id": "B31",
+          "weight": 1,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 24775,
+          "y": 22500,
+          "ev": "request",
+          "id": "B31-finale",
+          "weight": 1
+        },
+        {
+          "t": 25138,
+          "y": 23175,
+          "ev": "request",
+          "id": "B32",
+          "weight": 1
+        },
+        {
+          "t": 25139,
+          "y": 23175,
+          "ev": "request",
+          "id": "B32-finale",
+          "weight": 2
+        },
+        {
+          "t": 25278,
+          "y": 23400,
+          "ev": "skip",
+          "id": "B31-finale",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 25634,
+          "y": 23436,
+          "ev": "end",
+          "id": "B31",
+          "why": "held"
+        },
+        {
+          "t": 25638,
+          "y": 23436,
+          "ev": "grant",
+          "id": "B32-finale",
+          "weight": 2,
+          "why": "waited 499 ms"
+        },
+        {
+          "t": 26487,
+          "y": 24300,
+          "ev": "request",
+          "id": "B33",
+          "weight": 1
+        },
+        {
+          "t": 26488,
+          "y": 24300,
+          "ev": "skip",
+          "id": "B32",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 26488,
+          "y": 24300,
+          "ev": "request",
+          "id": "B33-finale",
+          "weight": 2
+        },
+        {
+          "t": 26840,
+          "y": 24750,
+          "ev": "end",
+          "id": "B32-finale",
+          "why": "held"
+        },
+        {
+          "t": 26915,
+          "y": 24975,
+          "ev": "wait",
+          "id": "B33-finale",
+          "weight": 2,
+          "why": "B35 begins within the hold"
+        },
+        {
+          "t": 26921,
+          "y": 24975,
+          "ev": "skip",
+          "id": "B33",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 27156,
+          "y": 25200,
+          "ev": "grant",
+          "id": "B33-finale",
+          "weight": 2,
+          "why": "waited 668 ms"
+        },
+        {
+          "t": 27864,
+          "y": 25425,
+          "ev": "request",
+          "id": "B34-finale",
+          "weight": 2
+        },
+        {
+          "t": 27867,
+          "y": 25425,
+          "ev": "request",
+          "id": "B34",
+          "weight": 1
+        },
+        {
+          "t": 28322,
+          "y": 26325,
+          "ev": "end",
+          "id": "B33-finale",
+          "why": "cut by B35"
+        },
+        {
+          "t": 28323,
+          "y": 26325,
+          "ev": "own",
+          "id": "B35",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 28323,
+          "y": 26325,
+          "ev": "wait",
+          "id": "B34-finale",
+          "weight": 2,
+          "why": "owned by B35"
+        },
+        {
+          "t": 28323,
+          "y": 26325,
+          "ev": "wait",
+          "id": "B34",
+          "weight": 1,
+          "why": "owned by B35"
+        },
+        {
+          "t": 28334,
+          "y": 26325,
+          "ev": "skip",
+          "id": "B34",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 28449,
+          "y": 26550,
+          "ev": "skip",
+          "id": "B34-finale",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 28690,
+          "y": 27000,
+          "ev": "own",
+          "id": "B36",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 29722,
+          "y": 27450,
+          "ev": "own",
+          "id": "B38",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 30320,
+          "y": 28575,
+          "ev": "free",
+          "id": "B38"
+        },
+        {
+          "t": 30343,
+          "y": 28575,
+          "ev": "request",
+          "id": "B40",
+          "weight": 1
+        },
+        {
+          "t": 30343,
+          "y": 28575,
+          "ev": "wait",
+          "id": "B40",
+          "weight": 1,
+          "why": "B41 begins within the hold"
+        },
+        {
+          "t": 30709,
+          "y": 28800,
+          "ev": "grant",
+          "id": "B40",
+          "weight": 1,
+          "why": "waited 366 ms"
+        },
+        {
+          "t": 31129,
+          "y": 28800,
+          "ev": "end",
+          "id": "B40",
+          "why": "held"
+        },
+        {
+          "t": 31378,
+          "y": 29025,
+          "ev": "own",
+          "id": "B41",
+          "weight": 2,
+          "how": "scrub"
+        },
+        {
+          "t": 31836,
+          "y": 29925,
+          "ev": "free",
+          "id": "B41"
+        },
+        {
+          "t": 32244,
+          "y": 30600,
+          "ev": "own",
+          "id": "B42",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 33041,
+          "y": 30600,
+          "ev": "free",
+          "id": "B42",
+          "why": "unregistered"
+        },
+        {
+          "t": 33225,
+          "y": 31050,
+          "ev": "request",
+          "id": "B43",
+          "weight": 2
+        },
+        {
+          "t": 33227,
+          "y": 31050,
+          "ev": "grant",
+          "id": "B43",
+          "weight": 2,
+          "why": "waited 0 ms"
+        },
+        {
+          "t": 33480,
+          "y": 31500,
+          "ev": "request",
+          "id": "B43-wanted",
+          "weight": 2
+        },
+        {
+          "t": 33960,
+          "y": 32400,
+          "ev": "request",
+          "id": "B44",
+          "weight": 2
+        },
+        {
+          "t": 34433,
+          "y": 32400,
+          "ev": "end",
+          "id": "B43",
+          "why": "held"
+        },
+        {
+          "t": 34438,
+          "y": 32400,
+          "ev": "grant",
+          "id": "B43-wanted",
+          "weight": 2,
+          "why": "waited 958 ms"
+        },
+        {
+          "t": 34880,
+          "y": 32625,
+          "ev": "request",
+          "id": "B44-sketch",
+          "weight": 1
+        },
+        {
+          "t": 35251,
+          "y": 33300,
+          "ev": "skip",
+          "id": "B44",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 35257,
+          "y": 33300,
+          "ev": "request",
+          "id": "B44-page1",
+          "weight": 1
+        },
+        {
+          "t": 35301,
+          "y": 33300,
+          "ev": "request",
+          "id": "B45",
+          "weight": 2,
+          "why": "needs idle"
+        },
+        {
+          "t": 35499,
+          "y": 33750,
+          "ev": "request",
+          "id": "B44-page2",
+          "weight": 1
+        },
+        {
+          "t": 35638,
+          "y": 33750,
+          "ev": "end",
+          "id": "B43-wanted",
+          "why": "held"
+        },
+        {
+          "t": 35692,
+          "y": 33975,
+          "ev": "wait",
+          "id": "B44-sketch",
+          "weight": 1,
+          "why": "B46 begins within the hold"
+        },
+        {
+          "t": 35704,
+          "y": 33975,
+          "ev": "skip",
+          "id": "B44-page1",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 35711,
+          "y": 33975,
+          "ev": "request",
+          "id": "B44-page3",
+          "weight": 1
+        },
+        {
+          "t": 35799,
+          "y": 34200,
+          "ev": "request",
+          "id": "B44-page4",
+          "weight": 1
+        },
+        {
+          "t": 36061,
+          "y": 34200,
+          "ev": "grant",
+          "id": "B44-sketch",
+          "weight": 1,
+          "why": "waited 1181 ms"
+        },
+        {
+          "t": 36166,
+          "y": 34200,
+          "ev": "skip",
+          "id": "B44-page2",
+          "weight": 1,
+          "why": "withdrawn"
+        },
+        {
+          "t": 36167,
+          "y": 34200,
+          "ev": "skip",
+          "id": "B44-page3",
+          "weight": 1,
+          "why": "withdrawn"
+        },
+        {
+          "t": 36502,
+          "y": 34200,
+          "ev": "skip",
+          "id": "B44-page4",
+          "weight": 1,
+          "why": "maxWait 700 ms"
+        },
+        {
+          "t": 36747,
+          "y": 34650,
+          "ev": "request",
+          "id": "B44-page5",
+          "weight": 1
+        },
+        {
+          "t": 36856,
+          "y": 34875,
+          "ev": "end",
+          "id": "B44-sketch",
+          "why": "cut by B46"
+        },
+        {
+          "t": 36856,
+          "y": 34875,
+          "ev": "own",
+          "id": "B46",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 36856,
+          "y": 34875,
+          "ev": "wait",
+          "id": "B45",
+          "weight": 2,
+          "why": "owned by B46"
+        },
+        {
+          "t": 36856,
+          "y": 34875,
+          "ev": "wait",
+          "id": "B44-page5",
+          "weight": 1,
+          "why": "owned by B46"
+        },
+        {
+          "t": 37229,
+          "y": 35550,
+          "ev": "own",
+          "id": "B47",
+          "weight": 2,
+          "how": "live"
+        },
+        {
+          "t": 37237,
+          "y": 35550,
+          "ev": "skip",
+          "id": "B44-page5",
+          "weight": 1,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 37237,
+          "y": 35550,
+          "ev": "skip",
+          "id": "B45",
+          "weight": 2,
+          "why": "host left the viewport"
+        },
+        {
+          "t": 38744,
+          "y": 36900,
+          "ev": "free",
+          "id": "B47"
+        },
+        {
+          "t": 38858,
+          "y": 37125,
+          "ev": "own",
+          "id": "B48",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 39175,
+          "y": 37575,
+          "ev": "free",
+          "id": "B48"
+        },
+        {
+          "t": 39240,
+          "y": 37800,
+          "ev": "own",
+          "id": "B50",
+          "weight": 3,
+          "how": "scrub"
+        },
+        {
+          "t": 39679,
+          "y": 37800,
+          "ev": "own",
+          "id": "B50-motes",
+          "weight": 1,
+          "how": "live",
+          "why": "still"
+        },
+        {
+          "t": 40111,
+          "y": 38025,
+          "ev": "own",
+          "id": "B50",
+          "weight": 3,
+          "how": "scrub",
+          "why": "after B50-motes"
+        },
+        {
+          "t": 40298,
+          "y": 38250,
+          "ev": "free",
+          "id": "B50"
+        },
+        {
+          "t": 40367,
+          "y": 38475,
+          "ev": "request",
+          "id": "B52",
+          "weight": 1
+        },
+        {
+          "t": 40369,
+          "y": 38475,
+          "ev": "wait",
+          "id": "B52",
+          "weight": 1,
+          "why": "B54 begins within the hold"
+        },
+        {
+          "t": 40831,
+          "y": 39375,
+          "ev": "own",
+          "id": "B54",
+          "weight": 2,
+          "how": "scrub"
+        },
+        {
+          "t": 41304,
+          "y": 39600,
+          "ev": "grant",
+          "id": "B52",
+          "weight": 1,
+          "why": "waited 937 ms"
+        },
+        {
+          "t": 41989,
+          "y": 40050,
+          "ev": "end",
+          "id": "B52",
+          "why": "cut by B54"
+        },
+        {
+          "t": 42324,
+          "y": 40500,
+          "ev": "own",
+          "id": "B55",
+          "weight": 1,
+          "how": "scrub"
+        },
+        {
+          "t": 42540,
+          "y": 40950,
+          "ev": "free",
+          "id": "B55"
+        },
+        {
+          "t": 42856,
+          "y": 41400,
+          "ev": "request",
+          "id": "B56",
+          "weight": 2
+        },
+        {
+          "t": 42857,
+          "y": 41400,
+          "ev": "wait",
+          "id": "B56",
+          "weight": 2,
+          "why": "B56-trail begins within the hold"
+        },
+        {
+          "t": 43107,
+          "y": 41400,
+          "ev": "grant",
+          "id": "B56",
+          "weight": 2,
+          "why": "waited 251 ms"
+        },
+        {
+          "t": 44182,
+          "y": 42525,
+          "ev": "request",
+          "id": "B57",
+          "weight": 2
+        },
+        {
+          "t": 44308,
+          "y": 42525,
+          "ev": "end",
+          "id": "B56",
+          "why": "held"
+        },
+        {
+          "t": 44461,
+          "y": 43200,
+          "ev": "grant",
+          "id": "B57",
+          "weight": 2,
+          "why": "waited 278 ms"
+        },
+        {
+          "t": 45661,
+          "y": 43386,
+          "ev": "end",
+          "id": "B57",
+          "why": "held"
+        },
+        {
+          "t": 45894,
+          "y": 43386,
+          "ev": "request",
+          "id": "B58",
+          "weight": 3
+        },
+        {
+          "t": 45996,
+          "y": 43386,
+          "ev": "grant",
+          "id": "B58",
+          "weight": 3,
+          "why": "waited 102 ms"
+        }
+      ],
+      "ms": 61172,
+      "console": []
+    },
+    "toys": {
+      "pass": true,
+      "checks": {
+        "mount": {
+          "pass": true,
+          "ms": 6476
+        },
+        "arm": {
+          "pass": true,
+          "shown": 29,
+          "total": 29,
+          "litBefore": 29,
+          "litAfter": 0,
+          "events": [
+            "arm"
+          ],
+          "armMs": 8,
+          "cursor": "image-set(url(\"data:image/svg+xml,%3Csvg"
+        },
+        "idle": {
+          "pass": true,
+          "before": 0,
+          "after": 0
+        },
+        "light": {
+          "pass": true,
+          "lit": "29/29",
+          "recentred": 0,
+          "done": 1,
+          "status": "The hall is lit.",
+          "flare": [
+            "0",
+            "1"
+          ],
+          "lights": 12,
+          "moves": 9
+        },
+        "bloom": {
+          "pass": true,
+          "opacity": 0.807797,
+          "layer": "wand-art",
+          "layerZ": "auto",
+          "textInside": false
+        },
+        "offscreen": {
+          "pass": true,
+          "litAll": 29,
+          "total": 29
+        },
+        "lumos": {
+          "pass": true,
+          "darkBefore": "0/29",
+          "lit": "29/29",
+          "ms": 114,
+          "doneMs": 1632,
+          "events": [
+            "arm",
+            "lumos",
+            "light",
+            "done"
+          ]
+        },
+        "pause": {
+          "pass": true,
+          "darkBefore": 0,
+          "litAll": "29/29",
+          "toy": false,
+          "cursor": "auto",
+          "bloom": false
+        },
+        "compass": {
+          "pass": true,
+          "start": 315,
+          "click": 45,
+          "enter": 225,
+          "right": 135,
+          "left": 225,
+          "drag": 135
+        }
+      },
+      "ms": 50841,
+      "console": []
+    },
+    "words": {
+      "pass": true,
+      "target": "/lab/p3/words?debug=words,spotlight",
+      "ssr": {
+        "pass": true,
+        "count": 32,
+        "kinds": [
+          "title",
+          "scrub",
+          "physical",
+          "fly"
+        ],
+        "textless": []
+      },
+      "rm": {
+        "pass": true,
+        "armed": 0,
+        "spotlight": false,
+        "minOpacity": 1
+      },
+      "phone": {
+        "pass": true,
+        "binder": false,
+        "armed": 0,
+        "detailsContentSupported": true,
+        "summaryDisplay": "none",
+        "contentVisible": true
+      },
+      "scrub": {
+        "pass": true,
+        "dimFirst": 0.28,
+        "litMin": 1,
+        "backMin": 1,
+        "still": {
+          "parkedFirst": 0.28,
+          "afterMin": 1,
+          "pass": true
+        },
+        "words": 26
+      },
+      "fly": {
+        "pass": true,
+        "expected": [
+          "lab-gull-default",
+          "lab-gull-alt",
+          "lab-horse-default",
+          "lab-horse-alt"
+        ],
+        "failed": [],
+        "zones": {
+          "lab-gull-default": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 0,
+            "lingered": false,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for reading pace)",
+              "idle",
+              "grant(waited 902 ms)",
+              "end(held)"
+            ]
+          },
+          "lab-gull-alt": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 0,
+            "lingered": true,
+            "lingerY": 18900,
+            "waitedMs": 807,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "idle",
+              "grant(waited 949 ms)",
+              "end(held)"
+            ]
+          },
+          "lab-horse-default": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 0,
+            "lingered": true,
+            "lingerY": 19440,
+            "waitedMs": 501,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for reading pace)",
+              "idle",
+              "grant(waited 601 ms)",
+              "end(held)"
+            ]
+          },
+          "lab-horse-alt": {
+            "expected": true,
+            "mounted": true,
+            "mountedAtY": 0,
+            "lingered": true,
+            "lingerY": 19710,
+            "waitedMs": 502,
+            "connected": true,
+            "played": true,
+            "words": [
+              "arm",
+              "ask",
+              "play",
+              "played"
+            ],
+            "spot": [
+              "request(needs idle)",
+              "wait(waiting for reading pace)",
+              "idle",
+              "grant(waited 601 ms)",
+              "end(held)"
+            ]
+          }
+        }
+      },
+      "titles": {
+        "pass": true,
+        "played": [
+          "title:lab-title-pirates-alt",
+          "title:lab-title-idiots-default",
+          "title:lab-title-idiots-alt",
+          "title:lab-title-rdr2-default",
+          "title:lab-title-rdr2-alt",
+          "title:lab-title-hp-default",
+          "title:lab-title-hp-alt",
+          "title:lab-film-pirates-default",
+          "title:lab-film-idiots-default",
+          "title:lab-film-rdr2-default",
+          "title:lab-film-rdr2-alt",
+          "title:lab-film-hp-default",
+          "title:lab-film-hp-alt",
+          "physical:lab-noise-default",
+          "physical:lab-noise-alt",
+          "physical:lab-killed-default",
+          "physical:lab-killed-alt",
+          "fly:lab-gull-default",
+          "fly:lab-gull-alt",
+          "fly:lab-horse-default",
+          "fly:lab-horse-alt"
+        ],
+        "statics": 3,
+        "leftArmed": 0,
+        "overlaps": []
+      },
+      "identical": {
+        "pass": true,
+        "diff": [],
+        "missing": [],
+        "clientOnly": [],
+        "residue": [],
+        "counts": {
+          "ssr": 32,
+          "after": 32
+        }
+      },
+      "pause": {
+        "pass": true,
+        "armedBefore": 1,
+        "armedInTheClick": 0,
+        "armedAt100ms": 0,
+        "openFx": 0,
+        "minOpacity": 1,
+        "identical": true
+      },
+      "ms": 55407,
+      "console": []
+    }
+  }
+}
