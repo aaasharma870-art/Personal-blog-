@@ -114,6 +114,9 @@ function queryStore(query: string) {
 const MOTION_KEY = "motion";
 const PAUSED = "paused";
 const pauseListeners = new Set<() => void>();
+/** Stop-at-once work (Lenis, the sound, the stage plates): run before every
+ *  other listener, so nothing another listener reads or writes delays it. */
+const firstListeners = new Set<() => void>();
 /** Current pause state; null until first read on the client. */
 let paused: boolean | null = null;
 /** The state this page view STARTED in (read once, never updated by later
@@ -141,19 +144,38 @@ export function setMotionPaused(next: boolean): void {
   pausedAtBootSnapshot(); // pin the boot value before the first change
   paused = next;
   writeSession(MOTION_KEY, next ? PAUSED : null);
-  syncMotionAttribute(next);
+  // Resume: the attribute goes first (its readers see motion back on).
+  // Pause: every listener runs BEFORE html[data-motion="paused"] restyles
+  // the whole document, and the stop-at-once set before the rest, so no
+  // layout read inside a listener pays that restyle (W3 gate: Lenis 126 ms,
+  // sound 113 ms after the click; W1/W2: 2-4 ms).
+  if (!next) syncMotionAttribute(false);
+  firstListeners.forEach((l) => l());
   pauseListeners.forEach((l) => l());
+  if (next) syncMotionAttribute(true);
 }
+
+let attrFrame = 0;
 
 /** Mirrors the pause state onto <html data-motion="paused"> for CSS
  *  (globals.css kills CSS animations/transitions under it, like reduced
  *  motion). Called by MotionProvider AFTER hydration, never during render,
- *  so the server-rendered <html> attributes still hydrate cleanly. */
+ *  so the server-rendered <html> attributes still hydrate cleanly.
+ *  Removal is immediate; setting it waits for the next frame, before that
+ *  frame's style pass (its first painted frame is already still), so the
+ *  whole-document restyle lands in the frame, not in the Pause click and
+ *  its re-render. */
 export function syncMotionAttribute(isPaused: boolean): void {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
-  if (isPaused) root.dataset.motion = PAUSED;
-  else delete root.dataset.motion;
+  cancelAnimationFrame(attrFrame);
+  attrFrame = 0;
+  if (!isPaused) delete root.dataset.motion;
+  else if (root.dataset.motion !== PAUSED)
+    attrFrame = requestAnimationFrame(() => {
+      attrFrame = 0;
+      root.dataset.motion = PAUSED;
+    });
 }
 
 /* — Document visibility ——————————————————————————————————————————— */
@@ -309,14 +331,17 @@ export function motionOffNow(): boolean {
  *  reduced-motion preference changed, or the Pause toggle flipped); read
  *  `motionOffNow()` inside it. Synchronous with the change (no React render
  *  in between), so smooth scroll and the ladder can stop within one task.
- *  Returns the unsubscribe; a no-op where there is no window. */
-export function onMotionOffChange(fn: () => void): () => void {
+ *  `first`: run before every other Pause listener (stop-at-once work that
+ *  reads no layout: Lenis, the sound, the stage plates). Returns the
+ *  unsubscribe; a no-op where there is no window. */
+export function onMotionOffChange(fn: () => void, o: { first?: boolean } = {}): () => void {
   if (!hasMatchMedia()) return noop;
   const offOs = reducedMotion.subscribe(fn);
-  pauseListeners.add(fn);
+  const set = o.first ? firstListeners : pauseListeners;
+  set.add(fn);
   return () => {
     offOs();
-    pauseListeners.delete(fn);
+    set.delete(fn);
   };
 }
 

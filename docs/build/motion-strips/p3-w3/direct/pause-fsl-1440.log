@@ -1,0 +1,2 @@
+1440 pause click 138 ms; slow layout reads:
+{"api":"scrollY","ms":127,"on":"[object Window]","stack":["at k (2gtmnwptgq-6o.js:1:1105)","at 2gtmnwptgq-6o.js:1:4396","at eo.offStar (3rb-a5x0cko16.js:1:690)","at eo.reset (2t1vfrmdu1ylm.js:1:31018)","at ef.resetAll (2t1vfrmdu1ylm.js:1:36273)","at ef.check (2t1vfrmdu1ylm.js:1:36132)","at l (2t1vfrmdu1ylm.js:1:35130)"]}

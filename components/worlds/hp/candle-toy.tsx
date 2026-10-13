@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { emit, on } from "@/lib/events";
-import type { Variant } from "@/lib/variants";
+import { copyText, copyVisible } from "@/lib/sections";
+import { useVariant } from "@/lib/use-variant";
+import type { VariantChoice } from "@/lib/variants";
 import { LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { CANDLE_FLAME_AT } from "@/components/worlds/hp/sprites";
 import "@/assets/p3/hp/hp-toys.css";
@@ -10,9 +12,10 @@ import "@/assets/p3/hp/hp-toys.css";
 /* ============================================================================
    CANDLE TOY — Act IV's toy: light the Great Hall's candles with the wand
    (PHASE3-SPEC §9.2 #4, P3-8 #6; plan §7.5). OWNER: W3-HP. LAZY (DP-13):
-   loaded by components/worlds/hp/hp-desktop.tsx only on DESKTOP_FINE with
-   motion on, after ladder step 2; unmounted at once by Pause or reduced
-   motion, which puts every candle back to lit with no transition.
+   mounted by contact-scene.tsx only on DESKTOP_FINE with motion on, after
+   ladder step 2; unmounted at once by Pause or reduced motion, which puts
+   every candle back to lit with no transition. Variant piece
+   `contact.candles` (read here from the contact's manifest choice).
 
    The host is the contact's hall ceiling (contact-scene.tsx HallField, ≥ lg):
    a CandleField with `toy` (hall-ceiling.tsx), every candle LIT by default
@@ -28,9 +31,10 @@ import "@/assets/p3/hp/hp-toys.css";
      Lumos spark at its wick (ALT: a slower 600 ms catch, no spark). Never by
      itself: only the visitor's own wand lights a candle (idle moments are
      deferred, IDEAS O.3; toys never auto-run).
-   - ALL LIT: `toy` { candles, done } → the engine's hall swell, the plate's
-     copy-flare on the MV-08 flame (contact-scene.tsx) and "The hall is lit."
-     (contact-finale.tsx, a polite live region).
+   - ALL LIT: `toy` { candles, done } → the engine's hall swell; `flare()`
+     → the plate's copy-flare on the MV-08 flame (contact-scene.tsx); and
+     "The hall is lit." written into the contact column's polite live region
+     (contact-finale.tsx `[data-candle-status]`; cleared when it arms again).
    - KEYBOARD: the contact column's "Lumos" button emits `toy` { candles,
      lumos }: every dark candle lights in one 1.6 s sweep out from the flame.
    - SOUND (lib/audio, voiced from `toy` events): a soft "fwip" per candle
@@ -58,7 +62,17 @@ const SPARK = 30;
 
 type Pt = { x: number; y: number };
 
-export default function CandleToy({ variant }: { variant: Variant }) {
+const HALL_LIT = copyText("toy.candles.done");
+
+export default function CandleToy({ choice, flare }: { choice: VariantChoice; flare: () => void }) {
+  const variant = useVariant(choice, "contact.candles");
+  // the flare is the scene's (its identity follows reduced motion, which
+  // unmounts this anyway): read through a ref so it never re-arms the toy
+  const flareRef = useRef(flare);
+  useEffect(() => {
+    flareRef.current = flare;
+  }, [flare]);
+
   useEffect(() => {
     const section = document.querySelector<HTMLElement>('[data-world-section="contact"]');
     const candles = section ? Array.from(section.querySelectorAll<SVGSVGElement>("svg[data-candle]")) : [];
@@ -136,10 +150,17 @@ export default function CandleToy({ variant }: { variant: Variant }) {
       a.oncancel = end;
     };
 
+    /** The contact column's live region ("The hall is lit."). */
+    const say = (text: string) => {
+      const el = section.querySelector("[data-candle-status]");
+      if (el) el.textContent = text;
+    };
     const finish = () => {
       if (done) return;
       done = true;
       emit("toy", { toy: "candles", action: "done" });
+      flareRef.current();
+      if (copyVisible(HALL_LIT)) say(HALL_LIT.text);
     };
     /** The swell steps with the count: a third, two thirds, then all. */
     const counted = () => {
@@ -200,6 +221,7 @@ export default function CandleToy({ variant }: { variant: Variant }) {
       done = false;
       wasOff = false;
       emit("toy", { toy: "candles", action: "arm" });
+      say("");
       // the wand lights nothing until the dark has finished falling
       later(() => {
         ready = true;
@@ -221,8 +243,17 @@ export default function CandleToy({ variant }: { variant: Variant }) {
       });
     };
 
+    // the last pointer position seen: Chromium sends a pointermove when the page scrolls under a
+    // still mouse (wheel, the director's cut); that is not the visitor moving, so it never arms the
+    // toy or lights a candle (as ledger-reckoning.tsx filters its rows). The first such move has
+    // no position to compare with, but it carries no movement either.
+    let seenX = NaN;
+    let seenY = NaN;
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      if ((e.clientX === seenX && e.clientY === seenY) || (e.movementX === 0 && e.movementY === 0)) return;
+      seenX = e.clientX;
+      seenY = e.clientY;
       px = e.clientX;
       py = e.clientY;
       if (!raf) raf = requestAnimationFrame(tick);

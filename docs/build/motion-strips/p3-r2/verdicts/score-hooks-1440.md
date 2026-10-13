@@ -1,0 +1,9 @@
+| css-ignite-p05 | 3/3 | PASS | The burn-hole now shows a single candle flame inside, so a Western campfire burning through to a Hogwarts candle reads as intentional and magical. It makes me want to keep scrolling. The HP title over |
+| css-opening-p05 | 0/3 | FAIL | Title plus a porthole on a completely black field, with no sea or horizon behind it. The empty left two-thirds makes the page look like it is still loading, not like a scene about to open. / Pure blac |
+| css-seam-p05 | 3/3 | PASS | A glowing teal stock-chart line is the seam where the storm sea gives way to the classroom underneath. Markets as the horizon is a smart, on-theme idea. Confusing: the title says '3 IDIOTS' while the  |
+| css-tintype-p05 | 2/3 | FAIL | Western slab title over a sepia tintype in a cream mat. Instantly sets a new era and mood, and the photo-plate treatment is classy. It is calm, not dramatic, but it clearly says a new chapter has star |
+| gl-ignite-p05 | 2/3 | FAIL | A glowing burn-hole opens in the RDR2 camp, but it is an empty black blob, and the heading 'HARRY POTTER' sits over a cowboy camp captioned 'RED DEAD REDEMPTION 2'. At this instant it reads more like  |
+| gl-opening-p05 | 3/3 | PASS | Big blackletter 'PIRATES OF THE CARIBBEAN' plus a glowing brass porthole framing the Black Pearl's lit stern over a faintly visible night sea: it feels like a spyglass peek and I want to see the whole |
+| gl-seam-p05 | 3/3 | PASS | A white lightning-tear rips the storm open onto a sunlit classroom window. Dramatic, on-theme for 'storm to workshop', and the most cinematic transition in the set. The outgoing PotC caption is still  |
+| gl-tintype-p05 | 2/3 | FAIL | Same as H004: clear act title and an elegant sepia photo plate. It reads as a deliberate chapter card. / Same tintype as H004. Still handsome, though it is a static frame and relies on the type to pul |
+HOOKS @1440: 4/8 judged a hook 3/3

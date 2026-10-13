@@ -1,0 +1,915 @@
+{
+ "widths": {
+  "1024": {
+   "cards": {
+    "act-1": [
+     2,
+     3
+    ],
+    "act-2": [
+     9,
+     10
+    ],
+    "act-3": [
+     33,
+     34
+    ],
+    "act-4": [
+     46,
+     47,
+     48
+    ]
+   },
+   "firstWork": 11,
+   "inviteScreens": {
+    "B08": 4,
+    "B18": 13,
+    "B26": 22,
+    "B28": 24
+   }
+  },
+  "1440": {
+   "cards": {
+    "act-1": [
+     1,
+     2,
+     3
+    ],
+    "act-2": [
+     8,
+     9,
+     10
+    ],
+    "act-3": [
+     31,
+     32
+    ],
+    "act-4": [
+     42,
+     43
+    ]
+   },
+   "firstWork": 11,
+   "inviteScreens": {
+    "B08": 5,
+    "B18": 12,
+    "B26": 20,
+    "B28": 23
+   }
+  }
+ },
+ "judges": {
+  "J2": {
+   "widths": {
+    "1024": {
+     "overall": "44/54",
+     "overallPct": 81.5,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 5,
+       "of": 7,
+       "pct": 71,
+       "pass": false
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–26",
+       "yes": 11,
+       "of": 18,
+       "pct": 61,
+       "pass": false
+      },
+      {
+       "name": "Films",
+       "screens": "27–33",
+       "yes": 7,
+       "of": 7,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "34–46",
+       "yes": 12,
+       "of": 13,
+       "pct": 92,
+       "pass": true
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "47–51",
+       "yes": 5,
+       "of": 5,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Credits",
+       "screens": "52–54",
+       "yes": 3,
+       "of": 3,
+       "pct": 100,
+       "pass": true
+      }
+     ],
+     "twoConsecutiveNo": [
+      "17–18",
+      "18–19",
+      "25–26"
+     ],
+     "mustYesMissed": [],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": true
+     }
+    },
+    "1440": {
+     "overall": "40/49",
+     "overallPct": 81.6,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 6,
+       "of": 7,
+       "pct": 86,
+       "pass": true
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–23",
+       "yes": 9,
+       "of": 15,
+       "pct": 60,
+       "pass": false
+      },
+      {
+       "name": "Films",
+       "screens": "24–30",
+       "yes": 7,
+       "of": 7,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "31–42",
+       "yes": 10,
+       "of": 12,
+       "pct": 83,
+       "pass": true
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "43–47",
+       "yes": 5,
+       "of": 5,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Credits",
+       "screens": "48–49",
+       "yes": 2,
+       "of": 2,
+       "pct": 100,
+       "pass": true
+      }
+     ],
+     "twoConsecutiveNo": [
+      "16–17",
+      "20–21"
+     ],
+     "mustYesMissed": [
+      "act-2 s8",
+      "act-3 s32"
+     ],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": false
+     }
+    }
+   },
+   "tempo": [
+    {
+     "act": "Opening: play screen, broom flight, name",
+     "said": "brisk",
+     "spec": "slow",
+     "group": "Opening",
+     "right": false
+    },
+    {
+     "act": "The Crossing (Pirates: porthole, contents, about, journey)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act I",
+     "right": true
+    },
+    {
+     "act": "The Workshop (3 Idiots: lecture hall, scrutiny, project cards, thesis chart, drone, skills, kill-list)",
+     "said": "slow",
+     "spec": "brisk",
+     "group": "Act II",
+     "right": false
+    },
+    {
+     "act": "Three films and a game (four film postcards)",
+     "said": "brisk",
+     "spec": "slow",
+     "group": "Films",
+     "right": false
+    },
+    {
+     "act": "The Frontier (Red Dead: grey-to-gold landscape, discipline, satchel, WANTED poster, journal, testimonials)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act III",
+     "right": true
+    },
+    {
+     "act": "The Light (Harry Potter: Great Hall, Marauder's Map principles, contact)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act IV",
+     "right": true
+    },
+    {
+     "act": "Credits and \"Mischief managed\"",
+     "said": "slow",
+     "spec": "slow",
+     "group": "Credits",
+     "right": true
+    }
+   ],
+   "scores10": {
+    "keepScrolling": 7.5,
+    "tempo": 6.5,
+    "discovery": 5,
+    "yesPct1440": 81.6,
+    "yesPct1024": 81.5
+   },
+   "scores5": {
+    "keepScrolling": 3.75,
+    "tempo": 3.25,
+    "discovery": 2.5
+   },
+   "discovery": {
+    "chip": {
+     "firstScreen": 1,
+     "wouldTry": "maybe: I only made it out on a still; while scrolling the top-bar type is too small and dim to read, so I would likely never notice it.",
+     "note": null
+    },
+    "invites": [
+     {
+      "thing": "Small pill button on the homemade-drone photo (reads like \"take off\")",
+      "firstScreen": 19,
+      "firstScreen1024": null
+     }
+    ]
+   }
+  },
+  "J3": {
+   "widths": {
+    "1024": {
+     "overall": "28/54",
+     "overallPct": 51.9,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 4,
+       "of": 7,
+       "pct": 57,
+       "pass": false
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–26",
+       "yes": 13,
+       "of": 18,
+       "pct": 72,
+       "pass": false
+      },
+      {
+       "name": "Films",
+       "screens": "27–33",
+       "yes": 1,
+       "of": 7,
+       "pct": 14,
+       "pass": false
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "34–46",
+       "yes": 6,
+       "of": 13,
+       "pct": 46,
+       "pass": false
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "47–51",
+       "yes": 2,
+       "of": 5,
+       "pct": 40,
+       "pass": false
+      },
+      {
+       "name": "Credits",
+       "screens": "52–54",
+       "yes": 1,
+       "of": 3,
+       "pct": 33,
+       "pass": false
+      }
+     ],
+     "twoConsecutiveNo": [
+      "8–9",
+      "9–10",
+      "10–11",
+      "26–27",
+      "29–30",
+      "30–31",
+      "31–32",
+      "32–33",
+      "33–34",
+      "37–38",
+      "41–42",
+      "42–43",
+      "46–47",
+      "49–50",
+      "52–53"
+     ],
+     "mustYesMissed": [
+      "handoff s0",
+      "act-1 s2",
+      "act-2 s9",
+      "act-2 s10",
+      "act-3 s33",
+      "act-3 s34",
+      "act-4 s46",
+      "act-4 s47",
+      "work s11"
+     ],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": false
+     }
+    },
+    "1440": {
+     "overall": "28/49",
+     "overallPct": 57.1,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 5,
+       "of": 7,
+       "pct": 71,
+       "pass": false
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–23",
+       "yes": 12,
+       "of": 15,
+       "pct": 80,
+       "pass": true
+      },
+      {
+       "name": "Films",
+       "screens": "24–30",
+       "yes": 1,
+       "of": 7,
+       "pct": 14,
+       "pass": false
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "31–42",
+       "yes": 5,
+       "of": 12,
+       "pct": 42,
+       "pass": false
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "43–47",
+       "yes": 3,
+       "of": 5,
+       "pct": 60,
+       "pass": false
+      },
+      {
+       "name": "Credits",
+       "screens": "48–49",
+       "yes": 1,
+       "of": 2,
+       "pct": 50,
+       "pass": false
+      }
+     ],
+     "twoConsecutiveNo": [
+      "8–9",
+      "9–10",
+      "26–27",
+      "27–28",
+      "28–29",
+      "29–30",
+      "30–31",
+      "31–32",
+      "37–38",
+      "38–39",
+      "42–43"
+     ],
+     "mustYesMissed": [
+      "handoff s0",
+      "act-1 s2",
+      "act-2 s8",
+      "act-2 s9",
+      "act-2 s10",
+      "act-3 s31",
+      "act-3 s32",
+      "act-4 s42",
+      "act-4 s43"
+     ],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": false
+     }
+    }
+   },
+   "tempo": [
+    {
+     "act": "Opening (play screen, broom flight, name)",
+     "said": "slow",
+     "spec": "slow",
+     "group": "Opening",
+     "right": true
+    },
+    {
+     "act": "Hero",
+     "said": "medium",
+     "spec": "slow",
+     "group": "Hero",
+     "right": false
+    },
+    {
+     "act": "Act I: The Crossing (Pirates title card, contents, About, Journey)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act I",
+     "right": true
+    },
+    {
+     "act": "Act II: The Workshop (3 Idiots card, Work, projects, Experiment, Systems, Kill-list)",
+     "said": "brisk",
+     "spec": "brisk",
+     "group": "Act II",
+     "right": true
+    },
+    {
+     "act": "Interlude: Three films and a game (four film plates)",
+     "said": "slow",
+     "spec": "slow",
+     "group": "Films",
+     "right": true
+    },
+    {
+     "act": "Act III: The Frontier (RDR2 card, Beyond, satchel and wanted poster, journal, voices)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act III",
+     "right": true
+    },
+    {
+     "act": "Act IV: The Light (Great Hall card, principles map, contact)",
+     "said": "slow",
+     "spec": "medium",
+     "group": "Act IV",
+     "right": false
+    },
+    {
+     "act": "Credits",
+     "said": "slow",
+     "spec": "slow",
+     "group": "Credits",
+     "right": true
+    }
+   ],
+   "scores10": {
+    "keepScrolling": 5,
+    "tempo": 5,
+    "discovery": 4,
+    "yesPct1440": 57.1,
+    "yesPct1024": 51.9
+   },
+   "scores5": {
+    "keepScrolling": 2.5,
+    "tempo": 2.5,
+    "discovery": 2
+   },
+   "discovery": {
+    "chip": {
+     "firstScreen": 1,
+     "wouldTry": "maybe, but only once I knew what it was",
+     "note": null
+    },
+    "invites": [
+     {
+      "thing": "'Take off' pill on the homemade-drone photo",
+      "firstScreen": 19,
+      "firstScreen1024": null
+     },
+     {
+      "thing": "Kill-list 'Dead Eye' pill and the lens that tracks the list",
+      "firstScreen": 22,
+      "firstScreen1024": null
+     }
+    ]
+   }
+  },
+  "J4": {
+   "widths": {
+    "1024": {
+     "overall": "44/54",
+     "overallPct": 81.5,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 5,
+       "of": 7,
+       "pct": 71,
+       "pass": false
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–26",
+       "yes": 13,
+       "of": 18,
+       "pct": 72,
+       "pass": false
+      },
+      {
+       "name": "Films",
+       "screens": "27–33",
+       "yes": 7,
+       "of": 7,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "34–46",
+       "yes": 12,
+       "of": 13,
+       "pct": 92,
+       "pass": true
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "47–51",
+       "yes": 4,
+       "of": 5,
+       "pct": 80,
+       "pass": true
+      },
+      {
+       "name": "Credits",
+       "screens": "52–54",
+       "yes": 2,
+       "of": 3,
+       "pct": 67,
+       "pass": false
+      }
+     ],
+     "twoConsecutiveNo": [
+      "18–19",
+      "25–26"
+     ],
+     "mustYesMissed": [],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": true
+     }
+    },
+    "1440": {
+     "overall": "41/49",
+     "overallPct": 83.7,
+     "acts": [
+      {
+       "name": "Opening (hand-off)",
+       "screens": "1–1",
+       "yes": 1,
+       "of": 1,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act I · The Crossing",
+       "screens": "2–8",
+       "yes": 6,
+       "of": 7,
+       "pct": 86,
+       "pass": true
+      },
+      {
+       "name": "Act II · The Workshop",
+       "screens": "9–23",
+       "yes": 11,
+       "of": 15,
+       "pct": 73,
+       "pass": false
+      },
+      {
+       "name": "Films",
+       "screens": "24–30",
+       "yes": 7,
+       "of": 7,
+       "pct": 100,
+       "pass": true
+      },
+      {
+       "name": "Act III · The Frontier",
+       "screens": "31–42",
+       "yes": 11,
+       "of": 12,
+       "pct": 92,
+       "pass": true
+      },
+      {
+       "name": "Act IV · The Light",
+       "screens": "43–47",
+       "yes": 4,
+       "of": 5,
+       "pct": 80,
+       "pass": true
+      },
+      {
+       "name": "Credits",
+       "screens": "48–49",
+       "yes": 1,
+       "of": 2,
+       "pct": 50,
+       "pass": false
+      }
+     ],
+     "twoConsecutiveNo": [
+      "20–21"
+     ],
+     "mustYesMissed": [
+      "act-2 s8"
+     ],
+     "pass": {
+      "perAct80": false,
+      "noTwoNo": false,
+      "mustYes": false
+     }
+    }
+   },
+   "tempo": [
+    {
+     "act": "Opening: play screen, broom flight, name",
+     "said": "medium",
+     "spec": "slow",
+     "group": "Opening",
+     "right": false
+    },
+    {
+     "act": "Act I: The Crossing (Pirates: porthole, contents, about, journey, Kraken gap)",
+     "said": "brisk",
+     "spec": "medium",
+     "group": "Act I",
+     "right": false
+    },
+    {
+     "act": "Act II: The Workshop (3 Idiots: gauntlet, two project cards, experiment, drone, skills, kill-list)",
+     "said": "slow",
+     "spec": "brisk",
+     "group": "Act II",
+     "right": false
+    },
+    {
+     "act": "Intermission: Three films and a game",
+     "said": "brisk",
+     "spec": "slow",
+     "group": "Films",
+     "right": false
+    },
+    {
+     "act": "Act III: The Frontier (RDR2: sun grade, discipline, satchel, wanted, journal, campfire voices)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act III",
+     "right": true
+    },
+    {
+     "act": "Act IV: The Light (HP: burn-through, Great Hall, Marauder's map principles, candles contact)",
+     "said": "medium",
+     "spec": "medium",
+     "group": "Act IV",
+     "right": true
+    },
+    {
+     "act": "Credits and 'Mischief managed.'",
+     "said": "slow",
+     "spec": "slow",
+     "group": "Credits",
+     "right": true
+    }
+   ],
+   "scores10": {
+    "keepScrolling": 7.5,
+    "tempo": 7,
+    "discovery": 5.5,
+    "scale": "0-10",
+    "yesPct1440": 83.7,
+    "yesPct1024": 81.5,
+    "yes1440": "41/49",
+    "yes1024": "44/54"
+   },
+   "scores5": {
+    "keepScrolling": 3.75,
+    "tempo": 3.5,
+    "discovery": 2.75
+   },
+   "discovery": {
+    "chip": {
+     "firstScreen": 1,
+     "wouldTry": "yes",
+     "note": "It's there from the first screen but tiny and grey. I only understood it at the films intro (1440 s24 / 1024 s27), after two of its eggs had already passed."
+    },
+    "invites": [
+     {
+      "thing": "Jack's compass (hero emblem, then the about medallion with a turning needle)",
+      "firstScreen": 1,
+      "firstScreen1024": 1
+     },
+     {
+      "thing": "Homemade drone 'Take off' pill",
+      "firstScreen": 19,
+      "firstScreen1024": 22
+     },
+     {
+      "thing": "'Dead Eye' chip on the kill-list header",
+      "firstScreen": 22,
+      "firstScreen1024": 24
+     }
+    ]
+   }
+  }
+ },
+ "tempo": {
+  "Opening": {
+   "spec": "slow",
+   "said": [
+    "brisk",
+    "slow",
+    "medium"
+   ],
+   "right": 1,
+   "of": 3,
+   "pass": false
+  },
+  "Hero": {
+   "spec": "slow",
+   "said": [
+    "medium"
+   ],
+   "right": 0,
+   "of": 1,
+   "pass": false
+  },
+  "Act I": {
+   "spec": "medium",
+   "said": [
+    "medium",
+    "medium",
+    "brisk"
+   ],
+   "right": 2,
+   "of": 3,
+   "pass": true
+  },
+  "Act II": {
+   "spec": "brisk",
+   "said": [
+    "slow",
+    "brisk",
+    "slow"
+   ],
+   "right": 1,
+   "of": 3,
+   "pass": false
+  },
+  "Films": {
+   "spec": "slow",
+   "said": [
+    "brisk",
+    "slow",
+    "brisk"
+   ],
+   "right": 1,
+   "of": 3,
+   "pass": false
+  },
+  "Act III": {
+   "spec": "medium",
+   "said": [
+    "medium",
+    "medium",
+    "medium"
+   ],
+   "right": 3,
+   "of": 3,
+   "pass": true
+  },
+  "Act IV": {
+   "spec": "medium",
+   "said": [
+    "medium",
+    "slow",
+    "medium"
+   ],
+   "right": 2,
+   "of": 3,
+   "pass": true
+  },
+  "Credits": {
+   "spec": "slow",
+   "said": [
+    "slow",
+    "slow",
+    "slow"
+   ],
+   "right": 3,
+   "of": 3,
+   "pass": true
+  }
+ },
+ "discovery": {
+  "J2": {
+   "chipNoticedInMotion": false,
+   "invites": 1,
+   "pass": false
+  },
+  "J3": {
+   "chipNoticedInMotion": false,
+   "invites": 2,
+   "pass": false
+  },
+  "J4": {
+   "chipNoticedInMotion": true,
+   "invites": 3,
+   "pass": true
+  }
+ }
+}

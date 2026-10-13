@@ -6,6 +6,7 @@ import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
 import { PenInset } from "@/components/worlds/idiots/plate-band";
 import { PhysicalWord } from "@/components/words/physical-word";
 import { DeadEyeCall } from "@/components/games/dead-eye/dead-eye-call";
+import { EyeRing } from "@/components/games/dead-eye/eye-ring";
 import { deadEyeCopy } from "@/components/games/copy";
 import { featuredProjects, killList, survivors } from "@/lib/content";
 import { variantChoiceOf } from "@/lib/sections";
@@ -27,7 +28,8 @@ import type { SectionProps } from "@/components/sections/types";
    quiet at rest; no chalk, no icons (D-6, H27).
    GROUND: the Act II graph grid (≤ 6 %) arrives here at half strength from
    `systems` and thins row by row to 0 by the LAST row (3I-07, H26: a static
-   mask from the rows' measured span, CSS vars written by the list); then
+   veil from the rows' measured span, CSS vars written by the list; a veil
+   of the plane colour, never a mask: J9 H1); then
    T5 crossfades the idiots canvas into the intermission's deep over the
    last 30vh.
    DEAD EYE (PHASE3-SPEC §9.2 #3, a real game now; W3-GAMES): the Meta pill
@@ -120,7 +122,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
       labelledBy={titleId}
       className="scroll-mt-24"
       grid
-      gridMask="linear-gradient(to bottom, color-mix(in srgb, black 50%, transparent) 0%, color-mix(in srgb, black 50%, transparent) var(--ledger-grid-a, 25%), transparent var(--ledger-grid-b, 88%))"
+      gridVeil="color-mix(in srgb, var(--bg) 50%, transparent) 0%, color-mix(in srgb, var(--bg) 50%, transparent) var(--ledger-grid-a, 25%), var(--bg) var(--ledger-grid-b, 88%)"
       fadeOut
       layers={
         game ? (
@@ -137,16 +139,18 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
             <div className="game-row">
               {meta}
               <DeadEyeCall copy={game} choice={choice}>
+                <EyeRing className="size-5" />
                 <Lettered world="rdr2" text={game.pill} />
               </DeadEyeCall>
             </div>
           ) : (
             meta
           )}
-          <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg">
+          <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg motion-off:transition-none">
             The kill-list
           </MaskReveal>
-          <p className="mt-tier-group max-w-body type-body text-fg-muted">
+          {/* ≥ 1024 at lead size: the struck "Killed" read small (P3-11 r2 J5) */}
+          <p className="mt-tier-group max-w-body type-body text-fg-muted lg:text-[length:var(--text-lead)] lg:leading-[1.45]">
             <PhysicalWord text={INTRO} word="Killed" kind="strike" beat="B29" variant={effectiveVariant(choice, "words.physical", "")} />
           </p>
         </div>
@@ -157,6 +161,7 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
             pieceKey="kill-list.head"
             captionKey="cap.kill-list"
             className="lg:col-span-6"
+            liveStar="B28-pen"
           />
         ) : (
           <SceneCaption k="cap.kill-list" place="head" className="lg:col-span-6 lg:self-end lg:pb-2" />

@@ -9,7 +9,7 @@ import { ArrowUpRight, Search, X } from "lucide-react";
 import { DESKTOP_WIDE, useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { emit } from "@/lib/events";
 import { track } from "@/lib/analytics";
-import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
+import { loadJumps, lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
 import { markWorldFontsReady } from "@/lib/world-fonts";
 import { dur, ease } from "@/lib/motion";
 import { site } from "@/lib/content";
@@ -40,9 +40,11 @@ import { SoundToggle } from "@/components/audio/sound-toggle";
 
 /** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
  *  menu opens on DESKTOP_FINE (plan DP-17). */
-const ChapterSelect = dynamic(() => import("@/components/site/chapter-select").then((m) => m.ChapterSelect), {
-  ssr: false,
-});
+const ChapterSelect = dynamic(
+  // a failed chunk: the menu keeps its section links (never "Application error")
+  () => import("@/components/site/chapter-select").then((m) => m.ChapterSelect, () => () => null),
+  { ssr: false },
+);
 
 /* ============================================================================
    HEADER (SPEC v2 §9.5, DESIGN v3 §8/§9 chrome): [AS] · the act label ·
@@ -83,18 +85,39 @@ function useMounted(): boolean {
    after the last scroll event), the header re-reads the truth from the DOM:
    the anchored section (or act card) spanning the observer's own reading
    band (45–50 % of the viewport). A gap between sections keeps the
-   observer's value. */
+   observer's value. P3-11 (J8 #1): the probe is a one-shot
+   IntersectionObserver on a 1 px line at 47.5 %, answered after the next
+   layout: no getBoundingClientRect sweep in a timer (with native scroll
+   it forced a 100–125 ms layout mid-scroll). */
 const PROBE_IDS: readonly string[] = [...anchors, ...cardAnchors, ...(sectionById("credits") ? [] : ["credits"])];
 const PROBE_SETTLE_MS = 150;
 
-function probeActive(): string | null {
-  const y = window.innerHeight * 0.475;
-  let hit: string | null = null;
-  for (const id of PROBE_IDS) {
-    const r = document.getElementById(id)?.getBoundingClientRect();
-    if (r && r.height > 0 && r.top <= y && r.bottom > y) hit = id;
-  }
-  return hit;
+function probeActive(): Promise<string | null> {
+  return new Promise((resolve) => {
+    const vh = window.innerHeight;
+    const y = Math.round(vh * 0.475);
+    const io = new IntersectionObserver(
+      (entries) => {
+        io.disconnect();
+        const on = new Set(entries.filter((e) => e.isIntersecting).map((e) => e.target.id));
+        let hit: string | null = null;
+        for (const id of PROBE_IDS) if (on.has(id)) hit = id;
+        resolve(hit);
+      },
+      { rootMargin: `-${y}px 0px -${Math.max(0, vh - y - 1)}px 0px` },
+    );
+    let n = 0;
+    for (const id of PROBE_IDS) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      io.observe(el);
+      n++;
+    }
+    if (!n) {
+      io.disconnect();
+      resolve(null);
+    }
+  });
 }
 
 /** The active id for the header: the observer's live value while it moves,
@@ -113,13 +136,16 @@ function useHeaderActive(): string {
   }, [observed]);
   useEffect(() => {
     let t = 0;
+    let dead = false;
     const schedule = () => {
       window.clearTimeout(t);
       t = window.setTimeout(() => {
-        const id = probeActive();
-        const base = observedRef.current;
-        // an unchanged probe keeps its object: no re-render of the header
-        setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
+        void probeActive().then((id) => {
+          if (dead) return;
+          const base = observedRef.current;
+          // an unchanged probe keeps its object: no re-render of the header
+          setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
+        });
       }, PROBE_SETTLE_MS);
     };
     reprobe.current = schedule;
@@ -127,6 +153,7 @@ function useHeaderActive(): string {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     return () => {
+      dead = true;
       reprobe.current = () => {};
       window.clearTimeout(t);
       window.removeEventListener("scroll", schedule);
@@ -208,7 +235,7 @@ const FAST_LANE = copyText("fastlane.label");
 const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
 
 function runFastLane(href: string): void {
-  void markWorldFontsReady("idiots");
+  // the jump readies the target world's fonts (lib/smooth-scroll cutReady)
   emit("fastlane");
   track("fast_lane");
   void scrollToTarget(href, { immediate: true, cut: true, focus: true, history: "push" });
@@ -222,10 +249,12 @@ function WorkPill({ base, href }: { base: string; href: string }) {
     e.preventDefault();
     runFastLane(href);
   };
-  // intent (hover / keyboard focus) warms the target world's faces, so the
-  // cut rarely waits on them (spec §11.3: the fast lane lands ≤ 400 ms)
+  // intent (hover / keyboard focus) warms the target world's faces and the
+  // jump's chunk, so the cut rarely waits on them (spec §11.3: ≤ 400 ms)
   const warm = () => {
-    if (!base && window.matchMedia(DESKTOP_WIDE).matches) void markWorldFontsReady("idiots", 3000);
+    if (base || !window.matchMedia(DESKTOP_WIDE).matches) return;
+    void markWorldFontsReady("idiots", 3000);
+    void loadJumps().catch(() => {});
   };
   return (
     <a
@@ -332,11 +361,20 @@ export function Header() {
 
   const workHref = hrefOfType("gauntlet");
 
+  // "scrolled" = the page is more than 12 px down: a 13 px sentinel at the
+  // document's top leaves the viewport (P3-11 J8 #1: reading scrollY in a
+  // scroll handler forced a layout per event, 61 ms in the kill-list)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const s = document.createElement("div");
+    s.setAttribute("aria-hidden", "true");
+    s.style.cssText = "position:absolute;top:0;left:0;width:1px;height:13px;opacity:0;pointer-events:none";
+    document.body.appendChild(s);
+    const io = new IntersectionObserver(([e]) => setScrolled(!e?.isIntersecting));
+    io.observe(s);
+    return () => {
+      io.disconnect();
+      s.remove();
+    };
   }, []);
 
   const openMenu = () => {
@@ -394,6 +432,11 @@ export function Header() {
         scrolled ? "bg-bg" : "bg-transparent",
       )}
     >
+      {/* P3-11 r3 (C5; read stills: "…of it failed me first" sliced under
+          the bar): once scrolled, a 24 px fade in the header's own ground
+          (desktop only, app/globals.css), so text passing under the bar
+          fades out instead of being cut in half */}
+      <div aria-hidden="true" className="header-band" data-on={scrolled ? "" : undefined} />
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
         <div className="flex min-w-0 items-center gap-4">
           <Logo base={base} />
@@ -419,7 +462,14 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence
+        onExitComplete={() => {
+          // a pick that moved no focus (a jump that did not land, the
+          // director's cut still loading) never leaves it on <body>
+          const a = document.activeElement;
+          if (!a || a === document.body || sheetRef.current?.contains(a)) menuButtonRef.current?.focus();
+        }}
+      >
         {open ? (
           <motion.div
             key="menu"
@@ -450,7 +500,7 @@ export function Header() {
             </div>
 
             <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
-              {fine ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
+              {fine && !base ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
               <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
                 {navGroups.map((g) => {
                   const cardLink = g.href && cardsPresent.has(g.href.slice(1)) ? g.href : null;

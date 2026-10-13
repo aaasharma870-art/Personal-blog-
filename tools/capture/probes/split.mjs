@@ -16,6 +16,10 @@
 //               expected stacked at 1024, two columns at 1440; reported, not failed);
 //   - beats:    the window's data-beat (B19 on trading-algos) and the host's rack beat.
 // pass = grid, overflow, sticky and never-empty hold for every split at every width.
+// Rects (deferred #36): read only once every [data-section] has streamed in (a split inside a
+// still-hidden Suspense boundary reads 0×0, which sent every sample to y = 0), and the split's
+// box is RE-READ live before each sample (lazy content above moves it): the scroll is corrected
+// until the split's top is where the sample wants it (≤ 3 tries; `drift` reports the moves).
 
 function readSplits() {
   return [...document.querySelectorAll("[data-stage-split]")].map((el) => {
@@ -64,22 +68,53 @@ function readWindow(id) {
   };
 }
 
+/** The split's live page box. */
+function splitBox(id) {
+  const el = document.querySelector(`[data-stage-split="${id}"]`);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { top: r.top + scrollY, bottom: r.bottom + scrollY, scrollY: Math.round(scrollY) };
+}
+
+/** Where a sample puts the page, from the split's live box. */
+function sampleY(name, box, vh) {
+  const h = box.bottom - box.top;
+  if (name === "start") return box.top - vh * 0.3;
+  if (name === "middle") return box.top + h / 2 - vh / 2;
+  return box.bottom - vh * 0.9;
+}
+
 async function runWidth(page, ctx, vw) {
   await page.setViewportSize(vw);
   await ctx.goto("/?skip=intro,smooth");
+  // every streamed Suspense boundary revealed: a split still in a hidden S: div has no box
+  const streamed = await page
+    .waitForFunction(() => {
+      const secs = [...document.querySelectorAll("[data-section]")];
+      return !document.querySelector("template[id^='B:'], div[hidden][id^='S:']") && secs.every((x) => !x.closest("div[hidden][id^='S:']"));
+    }, null, { timeout: 8000 })
+    .then(() => true)
+    .catch(() => false);
   const splits = await page.evaluate(readSplits); // before the stage can mount: first paint
   const out = [];
   for (const s of splits) {
-    const checks = { grid: s.display === "grid", side: s.side === "left" ? s.windowLeft < s.textLeft : s.windowLeft > s.textLeft };
+    const checks = {
+      grid: s.display === "grid",
+      side: s.side === "left" ? s.windowLeft < s.textLeft : s.windowLeft > s.textLeft,
+      measured: streamed && s.bottom - s.top > 0,
+    };
     const samples = [];
-    const h = s.bottom - s.top;
-    for (const [name, y] of [
-      ["start", s.top - vw.height * 0.3],
-      ["middle", s.top + h / 2 - vw.height / 2],
-      ["end", s.bottom - vw.height * 0.9],
-    ]) {
-      await page.evaluate((top) => window.scrollTo(0, Math.max(0, top)), Math.round(y));
-      await page.waitForTimeout(900);
+    for (const name of ["start", "middle", "end"]) {
+      const drift = [];
+      for (let k = 0; k < 3; k++) {
+        const box = await page.evaluate(splitBox, s.id);
+        if (!box) break;
+        const want = Math.max(0, Math.round(sampleY(name, box, vw.height)));
+        if (k > 0 && Math.abs(want - box.scrollY) <= 2) break;
+        if (k > 0) drift.push({ from: box.scrollY, to: want });
+        await page.evaluate((top) => window.scrollTo(0, top), want);
+        await page.waitForTimeout(900);
+      }
       // give a lazy poster its fetch + decode
       await page
         .waitForFunction(
@@ -92,7 +127,7 @@ async function runWidth(page, ctx, vw) {
           { timeout: 4000 },
         )
         .catch(() => null);
-      samples.push({ at: name, ...(await page.evaluate(readWindow, s.id)) });
+      samples.push({ at: name, ...(await page.evaluate(readWindow, s.id)), ...(drift.length ? { drift } : {}) });
     }
     const mid = samples.find((x) => x.at === "middle");
     checks.sticky = Boolean(mid && Math.abs(mid.top - mid.header) <= 2 && Math.abs(mid.top + mid.height - mid.vh) <= 2);

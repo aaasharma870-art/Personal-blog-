@@ -233,7 +233,11 @@ export const page: readonly SectionEntry[] = [
     estVh: { d: 1, t: 1 },
     beats: [
       // B00 / B01 (the prologue) live in lib/film.ts `prologue.beats`
-      { id: "B02", at: 0, span: 100, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      // live (C1, P3-11 r3): hero-drift.ts (hero-stage.tsx's lazy desktop
+      // chunk) registers it live only while the zoom layer's drift plays,
+      // from 1 s after the quiet window; otherwise the exit push is a scrub
+      // (r2 J1 #4)
+      { id: "B02", at: 0, span: 100, kind: "signature", timing: "scroll", star: true, weight: 2, live: true, feature: "existing" },
     ],
     props: {
       cta: { label: "View the quant portfolio ↓", to: "work" },
@@ -266,12 +270,15 @@ export const page: readonly SectionEntry[] = [
       ],
     },
     tempo: "medium",
-    estVh: { d: 1.473, t: 1.941 },
+    estVh: { d: 1.211, t: 2.036 },
     beats: [
       { id: "B07", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B07-bio (P3-11 r3, F3's 1024 About layout): the bio block, quiet: from 1024 to 1279 the pillars sit
+      // under the bio, which pushed B08 106vh below B07 (a gap > 100vh); the marker keeps the beat map continuous
+      { id: "B07-bio", at: 0, span: 50, kind: "stage-cue", timing: "scroll", feature: "P3-11" },
       { id: "B08", at: 0, span: 50, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
       { id: "B08-invite", at: 50, span: 22.9, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
-      { id: "B09", at: 72.9, span: 66, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B09-window", feature: "P3-2" },
+      { id: "B09", at: 72.9, span: 40, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B09-window", feature: "P3-2" },
     ],
     props: { variant: "split" },
   },
@@ -285,12 +292,23 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Journey", primary: true },
     stage: { mode: "own" },
     tempo: "medium",
-    estVh: { d: 3.173, t: 3.144 },
+    estVh: { d: 3.264, t: 3.22 },
     beats: [
       { id: "B09-window", at: 0, span: 10, kind: "match-cut", timing: "scroll", feature: "P3-2" },
       { id: "B10", at: 0, span: 106.2, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
       { id: "B11", at: 106.2, span: 105.6, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
-      { id: "B12", at: 211.8, span: 101, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
+      // B10-sea (P3-11 r3, F3; C1): at rest the sea's camera leans in and back
+      // (journey-voyage.tsx DRIFT, ×1.04 over 6 s), a GATED live star: registered
+      // only while the sea rests on a step, it moves only while the spotlight
+      // lends it the still screen (no window). Declared over B10's steps (one
+      // row with the voyage's first scrub); it rests on steps 3–4 too.
+      { id: "B10-sea", at: 0, span: 106.2, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
+      // B12-push (P3-11 r1, F3): the last sea plate's push-in 1 → 1.08, a scroll star from step 4's
+      // centre on the reading line until its bottom is 10vh above it (journey-voyage.tsx,
+      // data-beat-scroll "center 50%, bottom 40%"; P3-11 r3: half the 62vh step + 10vh, ≥ 300 px at
+      // both widths, #11). It ends first, so the gull (B12) flies over a held sea
+      { id: "B12-push", at: 211.8, span: 41, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "P3-11" },
+      { id: "B12", at: 252.8, span: 21, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
     ],
     props: {
       variant: "voyage",
@@ -323,11 +341,20 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Work", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.593, t: 2.713 },
+    estVh: { d: 2.442, t: 2.536 },
     beats: [
       { id: "B16", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B16-pen (P3-11 r3, F4 → F2; C1): the head plate's loop (the astronaut pen, L17 / L18), a LIVE
+      // star while its <video> plays (stage.tsx LiveImpl `liveStar`, via HeadBand); lent a still screen
+      { id: "B16-pen", at: -100, span: 100, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       { id: "B17", at: 0, span: 100.1, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
-      { id: "B18", at: 100.1, span: 54.6, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      // B17-beam (P3-11 r3, F4 → F2; C1): the work board's living beam (L09), the same way
+      // (gauntlet-board.tsx LivePlate `liveStar`)
+      { id: "B17-beam", at: 0, span: 100.1, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
+      // B18's zone ends where trading-algos' split window (B19) starts arriving: work measures
+      // 244.2vh since P3-11 r1 (beats probe --write), so B19 begins at 144.2 (the runtime keeps
+      // them apart anyway: the invite waits for reading pace, B19 owns only while the page moves)
+      { id: "B18", at: 100.1, span: 44.1, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
     ],
     // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
     // "generic architecture"): Virus's astronaut pen on his desk — the
@@ -344,11 +371,14 @@ export const page: readonly SectionEntry[] = [
     // split, window right (spec §3.2): the corridor, panning left, chalk dust
     stage: { mode: "split", side: "right", cues: [{ media: "iconic-corridor", camera: "pan-l", weather: "chalk" }] },
     tempo: "brisk",
-    estVh: { d: 2.134, t: 2.928 },
+    estVh: { d: 2.087, t: 2.849 },
     beats: [
       { id: "B19", at: -100, span: 100, kind: "stage-cue", timing: "scroll", star: true, weight: 1, feature: "P3-2" },
       { id: "B20", at: 0, span: 95.4, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
       { id: "B20-rack", at: 0, span: 95.4, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
+      // B20-window (P3-11 r3, F4 → F2; C1): the split window's corridor loop is a LIVE star while the
+      // stage's one <video> plays it (stage.tsx LIVE_LOOP; the quiet marker is the window's own box)
+      { id: "B20-window", at: 0, span: 95.4, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       { id: "B21", at: 95.4, span: 50, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
       { id: "B21-circle", at: 145.4, span: 33.5, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
     ],
@@ -362,20 +392,31 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Optuna", keywords: ["pipeline", "screener", "optimizer"] },
     // head own (MachineBoard), body split right from the approach (spec §3.2);
     // chalk dust in the window (spec §7.7; W2-PLATES: weather in all three
-    // split windows). Cue 2's depth needs a registered line on
-    // iconic-corridor-alt (none yet: the stage keeps it camera-only).
+    // split windows). Cue 2 (P3-11 r1, F4; panel J2 #2: the corridor repeated
+    // trading-algos'): the homemade drone's ALT plate (iconic-drone-alt,
+    // accepted, unused in the default variant), camera only (no depth line).
     stage: {
       mode: "split",
       side: "right",
       cues: [
         { at: "optuna-screener-approach", media: "iconic-ice", camera: "push", weather: "chalk" },
-        { at: "optuna-screener-metrics", media: "iconic-corridor-alt", camera: "drift", depth: true },
+        { at: "optuna-screener-metrics", media: "iconic-drone-alt", camera: "drift" },
       ],
     },
     tempo: "brisk",
-    estVh: { d: 4.94, t: 6.564 },
+    estVh: { d: 3.291, t: 3.934 },
     beats: [
       { id: "B22", at: 0, span: 83.2, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B23-fig (P3-11 r1, F4): the pipeline FIG's ink, a time star, drawn at 35 % visible. P3-11 r3
+      // (F4: the machine FIG now sits above the split, under the board): its top is 85.9vh into the
+      // section at 1440 (74.9vh at 1024), so it draws at ≈ 0.4vh of scroll (≈ −12vh at 1024; one row
+      // with B23, the spotlight runs them in turn; two time stars never compete). Its zone is the 30vh the
+      // draw takes (it was span 0 = ±50vh), so the live B22-board (a scroll star, below) clears it
+      { id: "B23-fig", at: 0.4, span: 30, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+      // B22-board (P3-11 r3, F4 → F2; C1): the machine board's loop (the lecture hall), a LIVE star while
+      // it plays (machine-board.tsx PlateBand `liveStar`); declared over the board's lower part, after the
+      // FIG's draw zone (B23-fig) and before B23
+      { id: "B22-board", at: 43.2, span: 40, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       { id: "B23", at: 83.2, span: 88.9, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B23-rack", at: 83.2, span: 88.9, kind: "stage-cue", timing: "scroll", feature: "P3-2" },
       { id: "B24", at: 172.1, span: 80.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
@@ -395,9 +436,14 @@ export const page: readonly SectionEntry[] = [
     tone: "raised",
     stage: { mode: "opaque" }, // H4: no film here
     tempo: "brisk",
-    estVh: { d: 1.258, t: 1.338 },
+    estVh: { d: 1.161, t: 1.225 },
     beats: [
       { id: "B25", at: 0, span: 111.1, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B25-demo (P3-11 r3, F4; C1): once the plot has drawn, the demo plays its own toggle
+      // (naive ↔ realistic every 2.2 s) while the spotlight lends it a still screen: a GATED
+      // live star with no window (curve-draw-impl.tsx); any scroll or the reader's own press
+      // stops it. Synthetic and labelled; nothing animated is a result.
+      { id: "B25-demo", at: 0, span: 111.1, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
     ],
     props: { demo: "backtest" },
   },
@@ -409,7 +455,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.404, t: 2.419 },
+    estVh: { d: 2.576, t: 2.508 },
     beats: [
       { id: "B26", at: 0, span: 97.7, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 97.7, span: 119.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -438,10 +484,20 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
     stage: { mode: "opaque" }, // the head inset keeps its own plate
     tempo: "brisk",
-    estVh: { d: 2.358, t: 2.784 },
+    estVh: { d: 2.477, t: 2.96 },
     beats: [
       { id: "B28", at: 0, span: 96.8, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      // B28-pen (P3-11 r3, F4 → F2; C1): the head inset's pen loop, a LIVE star while it plays
+      // (ledger-section.tsx PenInset `liveStar`)
+      { id: "B28-pen", at: 0, span: 96.8, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       { id: "B29", at: 96.8, span: 94.4, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B29-lens (P3-11 r1, F4: a STAR now; the eye saw the bracket and its mini-card perform):
+      // the ledger, where the bracket travels to the row on the reading line. Its runtime
+      // window is on the element (data-beat-scroll "top 50%, bottom 50%": the ledger crossing
+      // the reading line, box ≈ 66.9–217.8vh), GATED (integration r1, ledger-reckoning.tsx
+      // useScrollStar onOwn: it holds still while B29's strike holds the spotlight); the declared range is the B29
+      // row's own (96.8–191.2), so check #2 keeps it clear of B28's zone and of B30
+      { id: "B29-lens", at: 96.8, span: 94.4, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
     ],
     // head: VIRUS'S ASTRONAUT PEN (iconic-pen; ALT iconic-pen-alt)
     props: { include: ["flagships", "survivors", "killed"], head: { media: "iconic-pen" } },
@@ -457,20 +513,23 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     stage: { mode: "own" },
     tempo: "slow",
-    estVh: { d: 6.056, t: 5.816 },
+    estVh: { d: 5.694, t: 5.64 },
     // each screen's title + finale belong to that film's world (rations)
     beats: [
       { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
-      { id: "B31", at: 0, span: 55.5, kind: "title", timing: "time", star: true, weight: 1, world: "pirates", feature: "P3-7" },
-      { id: "B31-finale", at: 55.5, span: 55.5, kind: "signature", timing: "time", star: true, weight: 1, world: "pirates", feature: "existing" },
-      { id: "B31-bars", at: 100, span: 40, kind: "letterbox", timing: "scroll", feature: "P3-6" },
-      { id: "B32", at: 111, span: 66.7, kind: "title", timing: "time", star: true, weight: 1, world: "idiots", feature: "P3-7" },
-      { id: "B32-finale", at: 177.7, span: 66.6, kind: "signature", timing: "time", star: true, weight: 2, world: "idiots", feature: "existing" },
-      { id: "B33", at: 244.3, span: 66.7, kind: "title", timing: "time", star: true, weight: 1, world: "rdr2", feature: "P3-7" },
-      { id: "B33-finale", at: 311, span: 66.7, kind: "signature", timing: "time", star: true, weight: 2, world: "rdr2", feature: "existing" },
-      { id: "B34", at: 377.7, span: 66.6, kind: "title", timing: "time", star: true, weight: 1, world: "hp", feature: "P3-7" },
-      { id: "B34-finale", at: 444.3, span: 66.7, kind: "signature", timing: "time", star: true, weight: 2, world: "hp", feature: "existing" },
-      { id: "B35", at: 511, span: 81.7, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B35-sun", feature: "P3-6" },
+      // P3-11 r3: F2's film layouts shortened the section (6.37 → 5.694 viewports at 1440): the four
+      // screens' time-star partition is rescaled ×0.953 to end where B35 now begins (its marker
+      // straddles the section's bottom edge: 487–569vh), so the match cut no longer reaches into act 3
+      { id: "B31", at: 0, span: 52.9, kind: "title", timing: "time", star: true, weight: 1, world: "pirates", feature: "P3-7" },
+      { id: "B31-finale", at: 52.9, span: 52.9, kind: "signature", timing: "time", star: true, weight: 1, world: "pirates", feature: "existing" },
+      { id: "B31-bars", at: 95.3, span: 38.1, kind: "letterbox", timing: "scroll", feature: "P3-6" },
+      { id: "B32", at: 105.8, span: 63.6, kind: "title", timing: "time", star: true, weight: 1, world: "idiots", feature: "P3-7" },
+      { id: "B32-finale", at: 169.4, span: 63.5, kind: "signature", timing: "time", star: true, weight: 2, world: "idiots", feature: "existing" },
+      { id: "B33", at: 232.9, span: 63.6, kind: "title", timing: "time", star: true, weight: 1, world: "rdr2", feature: "P3-7" },
+      { id: "B33-finale", at: 296.5, span: 63.6, kind: "signature", timing: "time", star: true, weight: 2, world: "rdr2", feature: "existing" },
+      { id: "B34", at: 360.1, span: 63.5, kind: "title", timing: "time", star: true, weight: 1, world: "hp", feature: "P3-7" },
+      { id: "B34-finale", at: 423.6, span: 63.4, kind: "signature", timing: "time", star: true, weight: 2, world: "hp", feature: "existing" },
+      { id: "B35", at: 487, span: 81.7, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B35-sun", feature: "P3-6" },
     ],
     props: { order: "acts" },
   },
@@ -485,16 +544,18 @@ export const page: readonly SectionEntry[] = [
     variant: "default",
     nav: { label: "Beyond", primary: true },
     // own band + the lower half split, window LEFT from Activities (spec
-    // §3.2): MV-10 pushing toward the sun, golden into dusk (lib/sky.ts: the
-    // stage fades a static grade toward the next section's sky), depth on
-    // its horizon (no loop: L04 did not pass), fireflies at dusk (§7.7)
+    // §3.2): F-RD (the Heartlands at dusk, riderless horses; P3-11 r1 F5:
+    // MV-10 is already the FrontierBand's and the act-3 card's) pushing
+    // toward its horses, golden into dusk (lib/sky.ts: the stage fades a
+    // static grade toward the next section's sky), no depth (F-RD has no
+    // horizon mark), fireflies at dusk (§7.7)
     stage: {
       mode: "split",
       side: "left",
-      cues: [{ at: "beyond-activities", media: "MV-10", camera: "push", depth: true, grade: "golden", weather: "fireflies" }],
+      cues: [{ at: "beyond-activities", media: "F-RD", camera: "push", grade: "golden", weather: "fireflies" }],
     },
     tempo: "medium",
-    estVh: { d: 4.805, t: 5.476 },
+    estVh: { d: 4.805, t: 5.684 },
     beats: [
       // B39: the breath after the act-3 card (quiet only): the FrontierBand drift
       { id: "B39-drift", at: -100, span: 100, kind: "stage-cue", timing: "scroll", feature: "existing" },
@@ -521,11 +582,19 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Writing", primary: true },
     stage: { mode: "opaque" }, // paper
     tempo: "medium",
-    estVh: { d: 2.871, t: 3.117 },
+    estVh: { d: 2.947, t: 3.236 },
     beats: [
       { id: "B44", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // P3-11 r1 (F5, journal-spread.tsx): the landscape draws after the NibTitle; each
+      // vignette's first draw is its own time star (estimates: beats.mjs re-measures)
+      { id: "B44-sketch", at: 0, span: 96.9, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page1", at: 30, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page2", at: 65, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page3", at: 100, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page4", at: 140, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
+      { id: "B44-page5", at: 180, span: 0, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-11" },
       { id: "B45", at: 96.9, span: 100, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
-      { id: "B46", at: 196.9, span: 97.9, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
+      { id: "B46", at: 254.5, span: 36.5, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
     ],
     props: { source: "writing", preview: "vignette" },
   },
@@ -545,7 +614,9 @@ export const page: readonly SectionEntry[] = [
     tempo: "slow",
     estVh: { d: 1.602, t: 2.01 },
     beats: [
-      { id: "B47", at: 0, span: 154.8, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "P3-5" },
+      // live (C1, P3-11 r3): campfire-stage.tsx registers it live only while
+      // the fire plays; otherwise a scrub (r2 J1 #5: rigid scroll, #205–210)
+      { id: "B47", at: 0, span: 154.8, kind: "signature", timing: "scroll", star: true, weight: 2, live: true, feature: "P3-5" },
       { id: "B47-fireflies", at: 50, span: 104.8, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
     ],
     props: { source: "testimonials", media: "iconic-camp", altMedia: "MV-11", loop: "MV-11L" },
@@ -560,11 +631,17 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Principles", primary: true },
     stage: { mode: "opaque" }, // the map sheet
     tempo: "medium",
-    estVh: { d: 2.989, t: 3.183 },
+    estVh: { d: 2.9, t: 3.159 },
     beats: [
       { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
-      { id: "B53", at: 0, span: 98.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
-      { id: "B54", at: 98.4, span: 94.5, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      { id: "B53", at: 0, span: 19, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      // B54 (P3-11 r1, F5): the footprints' walk through rooms 1–4 (room 1 hosts it;
+      // lib/spotlight-windows.ts), room 5 being B55's scrubbed sentence
+      { id: "B54", at: 19, span: 155, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "existing" },
+      // B54-hall (P3-11 r3, F5; C1): ≥ xl, someone's prints walk the hall's free upper right to
+      // the corridor (principles-map.tsx HeadTrail), a GATED live star (contact-toys.tsx) lent the
+      // still screen on arrival, after the title (B53); no window
+      { id: "B54-hall", at: 19, span: 40, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       { id: "B55", at: 192.9, span: 65.7, kind: "scrub-sentence", timing: "scroll", star: true, weight: 1, feature: "P3-7" },
     ],
     props: {},
@@ -579,9 +656,17 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Contact" },
     stage: { mode: "own" },
     tempo: "medium",
-    estVh: { d: 1, t: 1 },
+    estVh: { d: 1.065, t: 1.159 },
     beats: [
       { id: "B56", at: 0, span: 100, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B56-trail (P3-11 r1, F5): the last light's trail laid down point by point as it
+      // scrolls through (contact-scene.tsx; its window is on the element). Span ≥ 300 px at
+      // both widths (spec §3.4 #11); beats.mjs re-measures
+      { id: "B56-trail", at: 60, span: 41, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "P3-11" },
+      // B56-flame (P3-11 r3, F5; C1): the last light's loop and drift (contact-scene.tsx) move
+      // while the page is still: a live star (contact-toys.tsx registers it) lent the still
+      // screen after the bracket; no window
+      { id: "B56-flame", at: 0, span: 60, kind: "signature", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
     ],
     props: { media: "MV-08", loop: "MV-09" },
   },
@@ -601,10 +686,17 @@ export const page: readonly SectionEntry[] = [
       cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
     },
     tempo: "slow",
-    estVh: { d: 2.865, t: 3.169 },
+    estVh: { d: 1.938, t: 2.101 },
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 101, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
+      // B57-roll (quiet): the roll itself over the last shot (the backdrop's push); its box (W3
+      // beats probe, 1440) closes the B56 → B57 gap. B57 stays on the Snitch, so the spotlight's
+      // "host left the viewport" test for the dart is unchanged.
+      // (P3-11 r3: not a live star. The stage never plays the credits loop: the own `contact` section is
+      // within one viewport of every credits scroll position (stage.tsx OWN_CLEAR_VH), so there is no
+      // loop to register; see the round-3 notes)
+      { id: "B57-roll", at: 12.7, span: 181, kind: "stage-cue", timing: "scroll", feature: "existing" },
       // B58: "Mischief managed" → the post-credits scene in the +60vh tail
       { id: "B58", at: 101, span: 75.6, kind: "post-credits", timing: "time", star: true, weight: 3, feature: "P3-8" },
     ],

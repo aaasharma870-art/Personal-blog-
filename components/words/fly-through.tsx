@@ -29,6 +29,13 @@ import { HORSE_VIEWBOX } from "@/components/words/words-data";
                    components/words/sprites/horse-frames.ts (the W3 assembler
                    writes it from the staged frames.json). No frames → no
                    fly-through (renders nothing).
+                   `lazyFrames="horse"` (the page host, writing.tsx) renders
+                   the zone with an EMPTY sprite instead: the words binder
+                   imports horse-frames.ts only when the star asks the
+                   spotlight (DESKTOP_FINE, zone half in view; bind/fly.ts
+                   loadFlyFrames), so no path data ships in the server HTML
+                   or the RSC payload on any device (W3 gate, ORCHESTRATOR-
+                   NOTES #1).
 
    PATH: `points` are fractions of the zone ([0,0] top-left, [1,1] bottom-
    right; values outside 0…1 start or end beyond the clipped edge), joined by
@@ -44,6 +51,9 @@ export type FlyThroughProps = {
   kind: "gull" | "horse";
   path: { points: readonly (readonly [number, number])[]; ms: number };
   frames?: readonly string[];
+  /** Load the frames in the browser when the star arms (horse only), so
+   *  none ship in the server HTML / RSC payload. Wins over `frames`. */
+  lazyFrames?: "horse";
   /** The beat id (lib/page.ts `kind: "fly-through"`), e.g. "B12". */
   beat: string;
   /** The star weight (both are 2). */
@@ -65,9 +75,10 @@ const GULL = {
 /** `hidden` on the <svg> (React renders it; SVGProps does not type it). */
 const HIDDEN = { hidden: true } as Record<string, unknown>;
 
-export function FlyThrough({ kind, path, frames, beat, weight = 2, variant, className, viewBox }: FlyThroughProps) {
-  const sprite = kind === "gull" ? GULL.frames : frames;
-  if (!sprite || sprite.length === 0) return null;
+export function FlyThrough({ kind, path, frames, lazyFrames, beat, weight = 2, variant, className, viewBox }: FlyThroughProps) {
+  const lazy = kind === "horse" && lazyFrames === "horse";
+  const sprite = kind === "gull" ? GULL.frames : lazy ? [] : frames;
+  if (!sprite || (sprite.length === 0 && !lazy)) return null;
   const points = path.points.filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1]));
   if (points.length < 2 || !(path.ms > 0)) return null;
   const gull = kind === "gull";
@@ -80,6 +91,7 @@ export function FlyThrough({ kind, path, frames, beat, weight = 2, variant, clas
       data-words-path={JSON.stringify(points)}
       data-words-ms={Math.round(path.ms)}
       data-words-variant={variant ?? film.defaultVariant}
+      data-words-frames={lazy ? lazyFrames : undefined}
       {...beatAttrs(beat, { weight })}
     >
       <svg

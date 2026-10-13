@@ -77,6 +77,8 @@ Words used below:
 - **Tempo** (per item): **slow** = the hero, cards, films frames, voices, credits (long spans; the director's cut runs cards at 140 px/s, where the damped p gives each star its time, and other slow items at 90 px/s); **medium** = about, journey, beyond, writing, principles, contact (110 px/s); **brisk** = work → kill-list including the experiment (150 px/s; weight-1 stars, short gaps).
 - Every beat carries `data-beat="<id>"` in the DOM (§3.4) so the probe can measure it; stars also carry `data-beat-star` and `data-beat-weight`.
 
+> **Superseded (P3-11 round 3, J1 #1–#3, contract C1):** "camera drift" and "living loops" are no longer quiet-only. **A camera drift or loop may hold a still screen as a weight-1 live star, one at a time.** The host registers it `live` only while it visibly moves (`useScrollStar(ref, id, { weight, live: true, on: playing })`); when the page has been still for 300 ms and no star performs (no owner, or a scroll-scrubbed owner, which cannot move while the page is still) and no time star holds, the spotlight lends the screen to ONE such star whose box lies in the viewport's middle band (20–80 %), logs it as a weight-1 live star, and releases it on scroll start, when its host stops, and before any time star's grant (`lib/spotlight-impl.ts`, THE LENT STAR). Every other live loop on that screen stays quiet (a host that can hold still passes `onOwn` and performs only while told `true`). Breaths are unchanged: still derived, never declared; a lent star is weight 1, so it may hold a breath. Reading stops are filled this way, never by declaring more breaths. Such a star is declared `live: true` on its beat (`lib/beats.ts`), needs no performance window, and is listed apart by `scripts/checks/beats.mjs`. **The cut:** a time star's hold ends at once (the host's `onCut` shows its end state) when an ungated scroll star's window opens during it, or when the ungated scrub owner it was granted over moves again (> 12 px), so the log never holds two stars at once.
+
 ### 2.2 Page geometry after Phase 3 (≈; the beat probe re-measures)
 The heights are today's measured heights plus D3-1 travel and minus D3-9 collapses. Page ≈ **42,420 px (47.1 viewports)** at 1440×900 (today 41,499) and ≈ **38,380 px (50.0)** at 1024×768 (today 37,916). Two rows must be re-probed before anything trusts them: row 2 (the opening's new pin wrapper, §7.1) and the split rows at 1024 (the research grids stack inside the split column, §3.2).
 
@@ -108,6 +110,8 @@ Pinned scroll windows at 1440: act-1 900→1710 · act-2 7359→8349 · act-3 25
 ### 2.3 The beat map (1440×900; scrollY = viewport top; one star per row)
 Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂ are breaths (weight ≤ 1 after a weight-3 star).
 
+> **Superseded (P3-11 round 1, J1 #8):** breaths are now DERIVED, never typed in: a breath is the viewport (100vh) right after each weight-3 star (a card's (a) → (b) set piece counts as one, from the end of its (b)) — today after B04, B14, B30, B38, B50 and B58. `lib/beats.ts` (BREATHS) defines them, `scripts/checks/beats.mjs` lists them and keeps them weight ≤ 1 (#12), and `tools/capture/clips.mjs` places them on each run's geometry. The ⟂ marks in the table below are the original plan only: they no longer decide where a rest is, and a reader second with no star outside a derived breath counts as a dead one.
+
 | # | scrollY ≈ | where | beats in order (quiet ones in *italics*) | **THE ONE STAR** | kind · timing · w | tempo | supplied by |
 |---|---|---|---|---|---|---|---|
 | B00 | intro, time | prologue play screen | *IN-01 living loop (L05)*; Play; Skip intro; Skip to the research | the living play screen | signature · t · 2 | slow | P3-5 (L05, only after P3-3) |
@@ -137,7 +141,7 @@ Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂
 | B26 | 16421–17300 | systems head | *DroneBand L07*; the **Take-off invite**: on scroll-idle the band's drone lifts 8 px once beside the "▲ Take off" pill (no fly-through in Act II) | Take-off invite | toy-invite · t · 1 | brisk | P3-8 |
 | B27 | 17300–18379 | systems matrix | FIG. "How this page is built" inks (copy made honest, §8.6); drone game (opt-in) | FIG ink | signature · t · 2 | brisk | existing |
 | B28 | 18379–19250 | kill-list head | h2 in Kalam, quiet MaskReveal; *PenInset L17*; **"DEAD EYE" pill invite** (scroll-idle); `3i-pen` egg | Dead Eye invite | toy-invite · t · 1 | brisk | P3-8 |
-| B29 | 19250–20100 | kill-list rows | **physical word "Killed"** struck through once; lens bracket; Dead Eye game (opt-in) | "Killed" strike | physical-word · t · 1 | brisk | P3-7, P3-8 |
+| B29 | 19250–20100 | kill-list rows | **physical word "Killed"** struck through once; *lens bracket (quiet `B29-lens`: its travel down the ledger, a scroll stage-cue)*; Dead Eye game (opt-in) | "Killed" strike | physical-word · t · 1 | brisk | P3-7, P3-8 |
 | B30 | 20100–20460 | fade-out → films head | **letterbox bars close** over 40vh at the INTERMISSION head: "house lights down" | house lights down | letterbox · s · 3 | slow | P3-6 |
 | B31 ⟂ | 20501–21500 | films: Pirates screen | film title **burned/stamped**; plate opens (*L14*); *the bars open as the Pirates frame centres (≈ 1.5 screens after the close); from here the frame's own 2.39 matte carries the scene*; compass finale (demoted: breath); the reason stays visible in flow | title in character | title · t · 1 | slow | P3-7, P3-5, P3-6 |
 | B32 | 21500–22700 | films: 3 Idiots screen | title **chalked**; plate (*L22*); gates finale | title, then finale (sequential) | title · t · 1; signature · t · 2 | slow | same |
@@ -162,7 +166,7 @@ Key to the kind column: kind · `s` scroll / `t` time · weight. Rows marked ⟂
 | B54 | 38130–38980 | rooms 3–4 | ribbons converge under each title; *footprints* | ribbons converge | signature · s · 2 | medium | existing |
 | B55 | 38980–39571 | room 5 | **scroll-scrubbed sentence (Act IV)**; `hp-map` hint on the banner | scrubbed sentence | scrub-sentence · s · 1 | medium | P3-7, P3-8 |
 | B56 | 39571–40471 | contact | h2 lines ink in → bracket closes [A · flame · S]; *MV-08 → MV-09 loop*; candle toy (armed dark only on the first pointer move inside `#contact`; never self-lights) | bracket close | signature · t · 2 | medium | existing + P3-8 |
-| B57 | 40471–41380 | credits | the roll over the last shot (stage backdrop: MV-08 still → MV-09 loop, push 1 → 1.06); *candle motes*; **the Snitch darts once** (IC-HP-12's existing dart; the §2.1 exception) | Snitch dart | signature · t · 2 | slow | P3-2, existing egg |
+| B57 | 40471–41380 | credits | the roll over the last shot (stage backdrop: MV-08 still → MV-09 loop, push 1 → 1.06); *candle motes*; **the Snitch darts once** (IC-HP-12's existing dart; the §2.1 exception); *the roll itself (quiet `B57-roll`, a scroll stage-cue; the star stays on the Snitch)* | Snitch dart | signature · t · 2 | slow | P3-2, existing egg |
 | B58 | 41380–41520 (+ the 60vh tail) | end + post-credits tail | "Mischief managed" ink fold → **post-credits scene** (riderless broom; the 12/12 extended cut) | post-credits scene | post-credits · t · 3 | slow | P3-8 |
 
 At 1024×768 every range scales by roughly 0.9 (cards scale with vh; reading sections reflow taller). The **P3-2 beat probe** (§3.4) is the authority for both widths. The time stars (every `t` row) run through the spotlight (§3.8); where a row lists two stars they are sequential by construction or by the spotlight.
@@ -519,7 +523,7 @@ Files play through `AudioBufferSourceNode`, never `<audio loop>`.
 ### 3.8 The spotlight (`lib/spotlight.ts`; one star at runtime)
 Static spans cannot see time-based stars; the spotlight arbitrates them at real scroll speeds. It ships in the desktop enhancer chunk (phones and RM never load it; there, time stars behave as today or are static).
 - **Scroll stars own it** while their element's range intersects the middle 60% of the viewport (20%–80%). Ranges come from rects cached on resize (no layout reads per frame).
-- **Time stars ask:** `request(id, { weight, needsIdle?, maxWait = 1500 }) → Promise<"play" | "skip">`. It resolves `play` when no other star owns the spotlight; it waits up to 1.5 s; on timeout it resolves `skip` and the element **jumps to its end state without animating** (a title is simply there; an invite is dropped). A granted time star holds the spotlight for its duration (≤ 1.2 s).
+- **Time stars ask:** `request(id, { weight, needsIdle?, maxWait = 1500 }) → Promise<"play" | "skip">`. It resolves `play` when no other star owns the spotlight; it waits up to 1.5 s; on timeout it resolves `skip` and the element **jumps to its end state without animating** (a title is simply there; an invite is dropped). A granted time star holds the spotlight for its duration (≤ 1.2 s; the post-credits scene, B58, asks `fullRun` and holds its whole run, ≤ 6 s, then `release`s).
 - **`needsIdle`** (toy invites, fly-throughs): additionally waits for scroll-idle (velocity < 300 px/s for 600 ms, from Lenis's `velocity` or scrollY deltas). Each fires once per page view; if its host leaves the viewport first, it is dropped.
 - **Paths:** fly-throughs travel only through image zones and margins, never across a text column (the gull stays in the voyage window's sky; the horse stays on the journal's bottom edge).
 - **Bypass:** egg effects the visitor triggers, toys, and the fast lane's cut never wait.
@@ -1145,7 +1149,7 @@ Both strings render at every width, and phones, RM, Pause and the css/off tiers 
 - **Invite (B28):** the pill pulses once on scroll-idle, through the spotlight.
 - **On start:** `scrollToTarget` centres the killed block (593 px @1440, which fits the 832 px under the header), awaiting completion.
 - **Draw** (0.4 s):
-  - time → 0.25× (WAAPI, videos, `--time-scale`, **and `gsap.globalTimeline.timeScale`**);
+  - time → 0.25× (WAAPI, videos, `--time-scale`, **and `gsap.globalTimeline.timeScale`**). As built (W3), `--time-scale` is set on `#kill-list`, never on `<html>` (rule 33), and no rule reads it yet;
   - the grade is an **opacity overlay on the section's media layer, below the text** (never over DOM text; never transition the 2,122 px section's background: B6);
   - survivors and flagships dim a step to `--fg-muted` at ≥ 4.5:1 on the graded ground, and are never targets.
 - **Paint** (5.0 s core, a draining white ring = IC-RD-09):

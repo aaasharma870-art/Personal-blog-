@@ -1,0 +1,194 @@
+{
+  "judge": "J9 HONEST",
+  "round": "p3-r1",
+  "score": 3,
+  "scoreNote": "Honesty 5/5: every content rule holds in the captures, and RELEASE fails only on Aryan's sign-off items. Accessibility 3/5: keyboard, Pause, sound and the fast lane are excellent, but under reduced motion the 1024 kill-list overprints its research rows, CSS transitions still run at 1440 and the page shifts by itself. Fix H1 and M1-M2 and this would score 4.",
+  "rules": [
+    {
+      "rule": "Never invent facts (CONTENT-RULES: facts come only from Aryan)",
+      "status": "green",
+      "evidence": "Nothing in the D, A or RM stills at either width contradicts the stated facts, and every research claim carries a status label. RELEASE holds all unsigned material until Aryan signs: the 102 unsigned strings (all wired into the page), the 40 Check L2 media items and the 5 TTS lines (R/honest/release.txt). Residual risk: 5 COMMUNITY-sourced quotes are only warned about (finding M5)."
+    },
+    {
+      "rule": "Hard exclusions: no grades, GPA, attendance, family finances, hardship narratives, address or phone",
+      "status": "green",
+      "evidence": "None appear in the 118 scene frames and 28 RM frames per width. The only contact detail is the site email (#contact). The WANTED poster gives sports and weight class and the city 'Washington, DC' only."
+    },
+    {
+      "rule": "Sharpe / PSR / PF figures are never animated or counted up",
+      "status": "green",
+      "evidence": "Every still in the D, A and RM sets at both widths shows the final values, never a partial one: 'Blind-test Sharpe +1.19 (one-shot; in-sample +1.42)', 'profit factor 2.0-2.5 OOS · PSR 0.92', 'OOS Sharpe 1.13' (raw rm-14-kill-list-611 @1440). The Sharpe 2.0 rule is printed in #work (rm-06-work). Limit: no probe times these numbers directly, so this verdict rests on stills."
+    },
+    {
+      "rule": "Research data stays in the Geist face",
+      "status": "green",
+      "evidence": "research-font probe: 1440 checked 236 / 16 islands / 0 offenders (Geist Mono 176, Geist 60); 1024 237 / 0; RM 1440 234 / 0. The world faces (Newsreader, Pirata and others) appear only as 'otherFigures'."
+    },
+    {
+      "rule": "Caveats and limitations stay adjacent; 'Synthetic • illustrative' sits on simulated visuals",
+      "status": "green",
+      "evidence": "Experiment: a 'SYNTHETIC · ILLUSTRATIVE' tag plus 'Synthetic illustration, not my results…' directly under the curve (D28 @1440). Gauntlet board: '12 illustrative hypotheses · not yet run / SYNTHETIC · ILLUSTRATIVE' (D25). The Volatility Breakout's deflated-Sharpe caveat sits on the line under its Sharpe figure. Every kill-list row carries SURVIVED / CANDIDATE → PAPER / KILLED. This holds in default and RM. The 1024 RM overprint is scored under 'text readable'."
+    },
+    {
+      "rule": "Option Alpha bots framed as early, experimental paper trading on a no-code platform",
+      "status": "green",
+      "evidence": "Optuna-screener summary (keyboard stop 29): 'Where the discipline started · Automated 0DTE Options Bots · a paper portfolio on a no-code platform; not a proven edge'."
+    },
+    {
+      "rule": "Killed ideas keep their dignity (post-mortems, equal weight)",
+      "status": "green",
+      "evidence": "'Killed and never retuned — each ships a written post-mortem. This is the part I am proudest of.' (D30). Dead Eye reads 5 killed rows, each with a reason and a post-mortem link (games de.read), and survivors show 'Survived: not a target'."
+    },
+    {
+      "rule": "Writing entries are DRAFT and never links",
+      "status": "green",
+      "evidence": "'ENTRY I · METHODOLOGY · DRAFT', 'ENTRY III · ORIGIN · DRAFT', 'ENTRY IV · DISCIPLINE · DRAFT' are visible (D36/D37, rm-20/21 at both widths). The keyboard walk finds no link in #writing; its only stop is the egg button rd-bone."
+    },
+    {
+      "rule": "Fan-tribute non-affiliation credit stays",
+      "status": "green",
+      "evidence": "Credits frames (D41 / rm-27 at both widths) show 'Fan tribute — not affiliated with Warner Bros., Disney, Vinod Chopra Films or Rockstar Games…', and cinema.credits.tribute = true."
+    },
+    {
+      "rule": "Reduced motion stops ALL motion and sound",
+      "status": "red",
+      "evidence": "Sound and video do stop: sound rm.boot/rm.live suspended in 30 ms with the toggle disabled; decoder RM maxPlaying 0; GL tier off; spotlight not loaded; Lenis off; candles all lit and no toy; cards unpinned; the drone shows its flight plan. Motion does not fully stop: qa-1440 motion.reduced[work] = 6 running CSSTransitions (mt-tier-group / mt-tier-pair headings). The RM run shifts by itself at about→journey (CLS 0.061 @1440, 0.1164 @1024). Under RM the kill-list repaints at 21.8 / 32.7 paints/s (ol.relative ×4 / ×9) with Motion frame-loop callbacks, and at 1024 it overprints (H1)."
+    },
+    {
+      "rule": "Pause stops ALL motion and sound",
+      "status": "green",
+      "evidence": "qa (both widths): 0 running animations and 0 playing videos in 11 sections after Pause, and Lenis is gone. Lenis pause takes 3 ms / 6 ms (≤ 100 ms). Sound: the toggle is disabled while paused ('Sound follows motion…'), off in 30 / 4 ms. layout-gates pauseMid: shift 0, stage layers hidden. hunt.pause: no toast, veil or bloom. drone.pause 4 ms. The keyboard 'nox' pauses."
+    },
+    {
+      "rule": "Sound muted by default",
+      "status": "green",
+      "evidence": "sound muted.default: pressed=false, 0 cues made, 0 audio requests; files.beforeUnmute 0; newvisit pressed=false at both widths. Audio starts only on an explicit unmute or the director's cut, whose label says '(sound on)'."
+    },
+    {
+      "rule": "One h1",
+      "status": "green",
+      "evidence": "qa anchors.h1 = 1; noJs h1 = 1; mediaBlocked h1 = 1 (both widths). scenes checks h1 = 1 for default, alt and rm at 1440 and 1024. font-network oneH1 true, including in RM."
+    },
+    {
+      "rule": "AA contrast",
+      "status": "green",
+      "evidence": "aa-scrim: 507 live boxes, 0 failures at 1440x900 and 1024x768 in both probe runs; RM 0 failures. check-manifest AA: 348 cells, tightest 4.65. Marginal: the tightest live text is 'PIRATES OF THE CARIBBEAN' at 3.78:1 (1440) / 4.20:1 (1024), which passes only as large text (L1). Mid-scrub dim words are transient (L2)."
+    },
+    {
+      "rule": "No hydration errors",
+      "status": "green",
+      "evidence": "qa hydration [] at both widths. scenes checks hydration [] and consoleErrors [] at both widths. Probe consoles are empty apart from the lenis off.404 check's intended 404 and qa's deliberate media-blocked ERR_FAILED (71)."
+    },
+    {
+      "rule": "The intro never gates content",
+      "status": "green",
+      "evidence": "During the intro the fast lane reaches #work: lenis.fastlane overlaySeen true, pillCovered false, lands top 92 / hash #work. Keyboard jump.fastlane focuses h2#work-title. 'SKIP INTRO' is shown beside it in every intro frame. noJs introVisible false. A separate no-JS question is open (M4)."
+    },
+    {
+      "rule": "'Skip to the research' is always visible",
+      "status": "green",
+      "evidence": "It is visible in every captured frame at both widths, including intro play, flight early/mid/late, landed, hero, all sections and all RM frames. In 1024 A00-intro-flight-mid it is dimmer during the header cross-fade but still legible. It is Tab stop 3 in every walk (default, RM), and walk.covered = 0."
+    },
+    {
+      "rule": "Keyboard operable, with focus returned",
+      "status": "green",
+      "evidence": "The keyboard probe passes at 1440 and 1024 (71 stops, 0 off-view, 0 covered, all 12 eggs by keyboard) and in the RM re-run (68 stops, 12 eggs). There is one focus-return gap: palette → Map → Esc leaves focus on <body> (M3)."
+    },
+    {
+      "rule": "Text and research data readable in every captured state",
+      "status": "red",
+      "evidence": "R/scenes/1024/rm-02.jpg tile rm-14-kill-list-685 (raw frame at 1024 RM): a ghost copy of rows 01-02 overprints rows 05-06. 'OOS Sharpe 1.13 · profitable 9 of 9 years · 100% positive CV paths' and the status labels cannot be read. The default and alt sheets at both widths, and RM at 1440, show no such overprint."
+    },
+    {
+      "rule": "RELEASE fails only on the owner's sign-off items",
+      "status": "green",
+      "evidence": "RELEASE=1 exits 1 with exactly 46 errors: 40 'Check L2 awaits Aryan's countersignature' (L01-L23 plus posters, SEQ-HALL, SEQ-HALL-end), 5 TTS 'awaits Aryan' (lumos, mischief, nox, parley, solemn) and 1 unsigned-copy error (102 strings). There are no beats, gap, overlap or pacing errors, even though RELEASE promotes them, and tsc passed. Plain check exits 0 with 66 warnings, of which 46 are those same release-gate items. The eslint and build results were not supplied, so they are not judged."
+    }
+  ],
+  "findings": [
+    {
+      "screen": "kill-list rows 05-06 · 1024x768 · reduced motion",
+      "t": null,
+      "clip": "R/scenes/1024/rm-02.jpg › rm-14-kill-list-685 (scroll +685 px into #kill-list)",
+      "finding": "A ghost copy of rows 01-02 (Quantitative Trading Research and Automated Strategy Research Pipeline, with their numbers and status labels) is painted over rows 05-06 (Regime-Gated Intraday Momentum and Dealer-gamma router). The research figures 'OOS Sharpe 1.13 · profitable 9 of 9 years · 100% positive CV paths' and the CANDIDATE → PAPER label become unreadable on the very path meant for motion-sensitive readers. motion.js corroborates it: the RM kill-list shows 32.7 paints/s and 243 raster ms/s, with ol.relative repainted ×9 and Motion frame-loop callbacks (1440: 21.8 paints/s, ×4, frame clean).",
+      "severity": "high"
+    },
+    {
+      "screen": "#work headings · 1440x900 · reduced motion",
+      "t": null,
+      "clip": "R/qa/qa-1440.json › motion.reduced[id=work]",
+      "finding": "Under reduced motion, 6 CSS transitions are running on the chapter and title headings (mt-tier-group / mt-tier-pair). The 1024 run shows 0, so this is timing-dependent, probably the font-tier swap transitioning spacing. This breaks 'RM stops ALL motion'. MANIFEST §3 reports '0 running animations … in 11 sections' at both widths, which is wrong for 1440.",
+      "severity": "medium"
+    },
+    {
+      "screen": "about → journey · reduced motion",
+      "t": "5.16 s (1440) / 5.04 s (1024)",
+      "clip": "R/motion/1440/summary.md and R/motion/1024/summary.md › rm layout shifts",
+      "finding": "With reduced motion on, the page jumps by itself once: CLS 0.061 at 1440 and 0.1164 at 1024, which is above the 0.1 'good' line. The sources are div.mt-tier-block in #about, li.max-w-[34ch] in #about and the journey ground and svg. The world-font swap reflows content under the reader (P3-2 #7, open since W1).",
+      "severity": "medium"
+    },
+    {
+      "screen": "command palette → Marauder's Map → Esc · all widths, default and RM",
+      "t": null,
+      "clip": "R/probes-{1440,1024}/p3-probes.json and R/probes-1440-rm-keyboard/p3-probes.json › keyboard.checks.palette.map.focusAfter = 'body'",
+      "finding": "After Esc closes the Map that was opened from the palette, focus lands on <body> because the opener (the palette input) no longer exists. A keyboard or screen-reader user loses their place (WCAG 2.4.3). The typed 'I solemnly swear' path returns focus correctly.",
+      "severity": "medium"
+    },
+    {
+      "screen": "no-JS load · 1440 and 1024",
+      "t": null,
+      "clip": "R/qa/qa-{1440,1024}.json › noJs.sections = ['top','credits']",
+      "finding": "The no-JS pass lists only 2 sections, against 19 with media blocked. layout-gates shows 12 sections streamed in hidden at DOMContentLoaded and revealed by script. If noJs.sections is the visible set, everything between the hero and the credits, including the research, is unreachable without JS. That would be JavaScript gating, not an intro gate. qa reports hiddenText [] and the manifest calls it a pass. Unverified: confirm what qa.js counts here.",
+      "severity": "medium"
+    },
+    {
+      "screen": "quotes (films, voices) · both widths",
+      "t": null,
+      "clip": "R/honest/check.txt › 'quote … is COMMUNITY-sourced'",
+      "finding": "Five quotes (Q-PC-1, Q-PC-3, Q-3I-3, Q-RD-1, Q-RD-2) are flagged 'COMMUNITY-sourced: verify it in the work before \"confirmed\"', but RELEASE only warns, so an unverified attribution could ship. Under the 'never invent facts' rule these belong on Aryan's sign-off list as release errors.",
+      "severity": "medium"
+    },
+    {
+      "screen": "#about Jack's-compass caption · both widths",
+      "t": null,
+      "clip": "R/probes-{1440,1024}/p3-probes.json › aa-scrim.widths[*].about.worst",
+      "finding": "The tightest live text is 'PIRATES OF THE CARIBBEAN' at 3.78:1 (1440) and 4.20-4.25:1 (1024). It passes only under the large-text 3:1 threshold; at the rendered size (about 20-24 px display caps) it is close to that line.",
+      "severity": "low"
+    },
+    {
+      "screen": "#about scrubbed sentence · 1024 D20/A20, 1440 A20",
+      "t": null,
+      "clip": "R/scenes/1024/sheet-02.jpg › A20-about-120; R/scenes/1024/sheet-06.jpg › D20-about-120",
+      "finding": "Mid-scrub words ('graveyard of my own ideas that did not survive testing') sit at the dim level, opacity 0.28 per the words probe, and are below AA until the reader scrolls on. This is by design and transient, and reduced motion shows the text fully lit (words.rm minOpacity 1).",
+      "severity": "low"
+    },
+    {
+      "screen": "header fast lane and hero director's-cut button · keyboard walk",
+      "t": null,
+      "clip": "R/probes-1440/p3-probes.json › keyboard.walk stops 3 and 9",
+      "finding": "The walk reads the fast lane as 'WorkSkip to the research' and the hero button as '▶ Director's cut(sound on)Motion is paused', even while motion is running. If the hidden phone label and the paused note reach the accessibility tree, screen readers announce a doubled label and a false 'Motion is paused'. Verify against the accessibility tree.",
+      "severity": "low"
+    },
+    {
+      "screen": "Dead Eye · reduced motion",
+      "t": null,
+      "clip": "R/probes-1440-rm-keyboard/p3-probes.json › keyboard.checks.op.deadeye.hud",
+      "finding": "The untimed RM run records 'Best 5/5 · 0.0 s'. A best time that was never measured is shown and stored. It is game-only, but it is a made-up stat; under RM, record no time.",
+      "severity": "low"
+    },
+    {
+      "screen": "games (drone / Dead Eye) · 1440",
+      "t": "24.8 s",
+      "clip": "R/probes-1440/p3-probes.json › games.checks.inp",
+      "finding": "A 688 ms keydown with 0 ms input delay, the only failing games check. It is likely a SwiftShader raster wait (1024: 56 ms), but keyboard feedback this slow would hurt keyboard players, so recheck it on a GPU.",
+      "severity": "low"
+    },
+    {
+      "screen": "copy hygiene · check-manifest",
+      "t": null,
+      "clip": "R/honest/check.txt › 'confirmed copy still carries draft alternates'",
+      "finding": "Five confirmed strings (the four film reasons and beyond.handbill.reward) still carry draft alternates. Nothing is shown wrongly, but stale alternates could be swapped in by mistake.",
+      "severity": "low"
+    }
+  ]
+}

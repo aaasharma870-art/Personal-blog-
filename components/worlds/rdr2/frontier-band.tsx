@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { ReactNode, RefObject } from "react";
+import { useRef } from "react";
+import type { ReactNode } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
-import { useDesktopFine, useMediaQuery, useReducedMotion } from "@/lib/flags";
+import { useMediaQuery, useReducedMotion } from "@/lib/flags";
 import { markOf, resolveVariant, type MediaId } from "@/lib/media";
 import { spanUnit } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import type { CameraSpec } from "@/components/primitives/camera";
 import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { RD_PIECES, coverPoint } from "@/components/worlds/rdr2/kit";
+import { RD_PIECES } from "@/components/worlds/rdr2/kit";
 import s from "@/components/worlds/rdr2/rdr2.module.css";
 
 /* ============================================================================
@@ -32,7 +32,7 @@ import s from "@/components/worlds/rdr2/rdr2.module.css";
    plate is a <LivePlate>. MV-10 has no passing loop (L04 failed), so it is
    the CODE path: the virtual camera CONTINUES the tintype card's push
    toward the sun from the card's end scale, 1.04 → 1.08 over the band's
-   passage (about `marks.sun` mapped through the cover crop), with depth
+   passage (about `marks.sun`), with depth
    parallax on the registered horizon. Both variants (the ALT's Dead Eye
    layer sits over the moving plate and releases as before). The static
    framing for everyone else (phones, touch, reduced motion, no JS, the
@@ -56,28 +56,6 @@ const DESKTOP = "(min-width: 64rem)";
 const BAND_ZOOM = 1.2;
 /** The card's end scale continued (spec §6.1): 1.04 → 1.08 toward the sun. */
 const PUSH: readonly [number, number] = [1.04, 1.08];
-
-/** The camera's focal: the plate's `sun` mark through the band's cover crop
- *  (box units; resize only, DESKTOP_FINE only). */
-function useSunFocal(on: boolean, plate: MediaId, box: RefObject<HTMLDivElement | null>): readonly [number, number] | undefined {
-  const [f, setF] = useState<readonly [number, number] | undefined>(undefined);
-  useEffect(() => {
-    const el = box.current;
-    const a = resolveVariant(plate, "default");
-    const sun = markOf(plate, "sun");
-    if (!on || !el || !a || !sun || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => {
-      const { width, height } = el.getBoundingClientRect();
-      if (!width || !height) return;
-      const [x, y] = coverPoint(a, sun, width, height);
-      const r = (n: number) => Math.round(Math.min(1, Math.max(0, n)) * 1000) / 1000;
-      setF((o) => (o && o[0] === r(x) && o[1] === r(y) ? o : [r(x), r(y)]));
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [on, plate, box]);
-  return f;
-}
 
 export function FrontierBand({
   media,
@@ -105,9 +83,7 @@ export function FrontierBand({
   const v = useVariant(choice, RD_PIECES.band);
   const reduced = useReducedMotion();
   const desktop = useMediaQuery(DESKTOP);
-  const fine = useDesktopFine();
   const ref = useRef<HTMLDivElement>(null);
-  const plateBox = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // spanUnit (lib/motion.ts): unpadded, the Dead Eye layer came back after .46
   const grade = useTransform(scrollYProgress, ...spanUnit([0.1, 0.46], [1, 0]));
@@ -118,9 +94,10 @@ export function FrontierBand({
   const plate = resolveVariant(media, v)?.id ?? media;
   const mobile = mediaMobile ? (resolveVariant(mediaMobile, v)?.id ?? mediaMobile) : null;
   const deadEyeLive = alt && live && Boolean(deadEye);
-  // B39: the camera continues the card's push toward the sun (both variants)
-  const sun = useSunFocal(fine && !reduced, media, plateBox);
-  const camera: CameraSpec = { kind: "push", scale: PUSH, focal: sun ?? markOf(media, "sun") ?? undefined, driver: "flow" };
+  // B39: the camera continues the card's push toward the sun (both variants).
+  // Its focal is the plate's `sun` mark as is: the band's cover crop moves
+  // it by < .005 of the box at 1024–1440, invisible in a 4 % push.
+  const camera: CameraSpec = { kind: "push", scale: PUSH, focal: markOf(media, "sun") ?? undefined, driver: "flow" };
 
   return (
     <div
@@ -129,7 +106,7 @@ export function FrontierBand({
       data-piece={RD_PIECES.band}
       data-variant={v}
     >
-      <div ref={plateBox} className={s.bandPlate} aria-hidden="true" {...beatAttrs("B39-drift")}>
+      <div className={s.bandPlate} aria-hidden="true" {...beatAttrs("B39-drift")}>
         <div className={cn(s.bandLayer, s.bandZoom)}>
           <LivePlate media={plate} camera={camera} sizes="100vw" className="size-full" />
         </div>

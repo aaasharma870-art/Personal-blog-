@@ -5,39 +5,64 @@
 
    QUIET WINDOW: `intro:quiet` (the intro controller, at warm) → `intro:quiet-
    end` (after the titles, or on any exit). Nothing new starts inside it.
-   With no intro armed it is over at once; an intro that ends without ever
-   opening it (dismissed on the play screen, the 3 s failsafe) closes it on
-   `intro:end`; a quiet-end that never comes is capped 8 s after `intro:end`.
+   With no intro armed it is over once the page has hydrated; an intro that
+   ends without ever opening it (dismissed on the play screen, the 3 s
+   failsafe) closes it on `intro:end`; a quiet-end that never comes is
+   capped 8 s after `intro:end`.
+   P3-11 r3 (J8 F2): the window never ends before HYDRATION (`page:hydrated`,
+   <PageHydrated/> on "/"; other routes have no sentinel and count as
+   hydrated). With the intro skipped, `p3:quiet-end` came 0.4–0.5 s before
+   `page:hydrated`, so the first fling met hydration's 0.5–0.8 s tasks and
+   the ladder's first steps at once.
 
    (a) PREFETCH: `prefetchChunks()` imports chunks (fetch + evaluate only)
        one per idle slice, before warm or at page idle, held during quiet.
        Desktop chunks registered with `registerChunk()` (Lenis, GSAP, the
        enhancer, the stage, GL) ride along on DESKTOP_FINE with motion on.
    (b) LADDER: after quiet-end, one step per idle slice, each gated on
-       scroll-idle (150 ms without wheel/scroll) or its own 1.5 s timeout:
+       scroll-idle (200 ms without wheel/scroll; a scroll that never settles
+       still climbs, one step per 6 s):
          1 Lenis · 2 ScrollTrigger + the desktop enhancer · 3 StageGate ·
          4 GL tier + context · 5 world fonts.
+       P3-11 (J8 #1): after a quiet window that really opened (the titles
+       played), nothing climbs and no held prefetch resumes for a 3 s
+       grace: the reader's first wheel after the titles meets an idle main
+       thread. P3-11 r3 (J8 F2): the FIRST quiet-end of a page view gets the
+       same grace with the intro skipped (the skimmer's first fling comes
+       right after hydration); every idle slice is also held while the page
+       moves (lib/idle.ts). A step's React consumers (`useLadder`) re-render in a
+       TRANSITION (interruptible slices), never one long synchronous render
+       inside the idle slice that reached it.
        The ladder only times the steps: every consumer still gates its own
        work on DESKTOP_FINE / motion. It HALTS while motion is off (OS
        reduced motion or Pause) and resumes when motion returns; steps
        already reached stay reached. Work that must also run with motion off
        (world fonts on a reduced-motion desktop) waits on `whenQuietEnd()` +
        `onIdle`, not on a ladder step.
+   (c) TURNS: `nextTurn()` hands step-2 work out a few pieces per idle slice
+       (the plates' engine parts, the scroll scenes), never one long task,
+       and never while the page is scrolling (J8 #1: ≤ 2 per slice, each
+       slice after the scroll has been still for 200 ms or 2 s have gone;
+       a scroll that never settles waits 2 s once, then one slice a frame).
    performance marks: "p3:quiet-end", "p3:ladder-<n>" (the probes read them).
    Client only: on the server nothing resolves and every hook reads false.
    ========================================================================== */
 
-import { useSyncExternalStore } from "react";
+import { startTransition, useEffect, useState, useSyncExternalStore } from "react";
 import { emit, on } from "./events";
 import { DESKTOP_FINE, motionOffNow, onMotionOffChange } from "./flags";
 import { onIdle } from "./idle";
 
 export type LadderStep = 1 | 2 | 3 | 4 | 5;
 
-const STEP_TIMEOUT_MS = 1500;
-const SCROLL_IDLE_MS = 150;
+/** A scroll that never settles still climbs: one step per this long. */
+const STEP_CAP_MS = 6000;
+const SCROLL_IDLE_MS = 200;
 /** After `intro:end`, a quiet window that never closes is closed anyway. */
 const QUIET_CAP_MS = 8000;
+/** After a quiet window that opened (the titles played): nothing new starts
+ *  for this long (J8 #1, §12.1: the 3 s after the titles stay free). */
+const QUIET_GRACE_MS = 3000;
 
 let installed = false;
 /** Inside the quiet window (intro warm → quiet-end). */
@@ -50,6 +75,17 @@ const quietWaiters = new Set<() => void>();
 let quietCap: ReturnType<typeof setTimeout> | undefined;
 /** "p3:quiet-end" was marked for the current window. */
 let quietMarked = false;
+/** When the last quiet window that really opened ended (0 = none yet). */
+let quietEndAt = 0;
+/** A quiet window opened since the last quiet-end. */
+let quietOpened = false;
+/** The last scroll / wheel (performance.now(); scroll-idle gates). */
+let lastScroll = -1e9;
+/** The page has hydrated (<PageHydrated/> on "/"; at once elsewhere). */
+let hydrated = false;
+/** The first quiet-end of this page view has had its grace (home page
+ *  only: /lab has nothing to protect). */
+let graced = false;
 
 const never = () => new Promise<void>(() => {});
 
@@ -67,9 +103,10 @@ function notify(): void {
 
 const introArmed = (): boolean => document.documentElement.classList.contains("intro-armed");
 
-/** The quiet window is over (and no armed intro is still to open one). */
+/** The quiet window is over (and no armed intro is still to open one, and
+ *  the page has hydrated). */
 function quietOver(): boolean {
-  return !quiet && !introArmed();
+  return !quiet && !introArmed() && hydrated;
 }
 
 function settleQuiet(): void {
@@ -78,6 +115,11 @@ function settleQuiet(): void {
   if (!quietMarked) {
     quietMarked = true;
     mark("p3:quiet-end");
+  }
+  if (quietOpened || !graced) {
+    quietOpened = false;
+    graced = true;
+    quietEndAt = performance.now();
   }
   const waiters = [...quietWaiters];
   quietWaiters.clear();
@@ -88,8 +130,28 @@ function settleQuiet(): void {
 function install(): void {
   if (installed || typeof window === "undefined") return;
   installed = true;
+  const moved = () => {
+    const now = performance.now();
+    // the scroll settled since the last event: a new burst waits again
+    if (now - lastScroll >= SCROLL_IDLE_MS) unsettled = false;
+    lastScroll = now;
+  };
+  window.addEventListener("scroll", moved, { passive: true });
+  window.addEventListener("wheel", moved, { passive: true });
+  // only the home page has the <PageHydrated/> sentinel
+  const home = window.location.pathname === "/";
+  hydrated = Boolean(window.__pageHydrated) || !home;
+  if (!home) graced = true;
+  if (!hydrated) {
+    const off = on("page:hydrated", () => {
+      off();
+      hydrated = true;
+      settleQuiet();
+    });
+  }
   on("intro:quiet", () => {
     quiet = true;
+    quietOpened = true;
     quietMarked = false;
     clearTimeout(quietCap);
     notify();
@@ -117,6 +179,7 @@ function install(): void {
   // after the overlay has gone is capped like one seen on `intro:end`.
   if (window.__introQuiet === 1) {
     quiet = true;
+    quietOpened = true;
     if (!introArmed()) {
       quietCap = setTimeout(() => {
         quiet = false;
@@ -160,6 +223,29 @@ export function whenQuietEnd(): Promise<void> {
   });
 }
 
+/** Inside the 3 s grace after a quiet window that really opened. */
+export function inQuietGrace(): boolean {
+  install();
+  return !quiet && quietEndAt > 0 && performance.now() - quietEndAt < QUIET_GRACE_MS;
+}
+
+/** ms since the last scroll or wheel event (very large before any). */
+export function sinceScroll(): number {
+  install();
+  return performance.now() - lastScroll;
+}
+
+/** The quiet window has ended AND its grace has run out (at once when no
+ *  window opened in this page view). */
+async function whenSettled(): Promise<void> {
+  for (;;) {
+    await whenQuietEnd();
+    const left = quietEndAt ? quietEndAt + QUIET_GRACE_MS - performance.now() : 0;
+    if (left <= 0) return;
+    await new Promise<void>((r) => window.setTimeout(r, left));
+  }
+}
+
 /* — the ladder ———————————————————————————————————————————————————————— */
 
 /** Resolves when motion is on (at once if it is). */
@@ -174,31 +260,26 @@ function whenMotionOn(): Promise<void> {
   });
 }
 
-/** 150 ms without a scroll or wheel event, or 1.5 s, whichever is first. */
-function whenScrollIdleOrTimeout(): Promise<void> {
+/** `idleMs` without a scroll or wheel event (J8 #1: work starts only once
+ *  scrolling settles), or `capMs`, whichever is first. */
+function whenScrollIdle(idleMs = SCROLL_IDLE_MS, capMs = STEP_CAP_MS): Promise<void> {
   return new Promise<void>((resolve) => {
-    let idle: ReturnType<typeof setTimeout> | undefined;
-    const finish = () => {
-      clearTimeout(idle);
-      clearTimeout(cap);
-      window.removeEventListener("scroll", arm);
-      window.removeEventListener("wheel", arm);
-      resolve();
+    const t0 = performance.now();
+    const check = () => {
+      const now = performance.now();
+      const wait = Math.min(lastScroll + idleMs - now, t0 + capMs - now);
+      if (wait <= 0) resolve();
+      else window.setTimeout(check, wait);
     };
-    function arm() {
-      clearTimeout(idle);
-      idle = setTimeout(finish, SCROLL_IDLE_MS);
-    }
-    const cap = setTimeout(finish, STEP_TIMEOUT_MS);
-    window.addEventListener("scroll", arm, { passive: true });
-    window.addEventListener("wheel", arm, { passive: true });
-    arm();
+    check();
   });
 }
 
-const whenIdleSlice = (): Promise<void> =>
+/** An idle slice, held while the page moves for at most `hold` ms (the
+ *  scroll-idle wait already spent the rest of the step's STEP_CAP_MS). */
+const whenIdleSlice = (hold: number): Promise<void> =>
   new Promise<void>((resolve) => {
-    onIdle(resolve, { timeout: 1000 });
+    onIdle(() => resolve(), { timeout: 1000, hold });
   });
 
 function reach(step: LadderStep): void {
@@ -213,10 +294,12 @@ async function climb(): Promise<void> {
   if (climbing) return;
   climbing = true;
   while (reached < 5) {
-    await whenQuietEnd();
+    await whenSettled();
     await whenMotionOn();
-    await whenScrollIdleOrTimeout();
-    await whenIdleSlice();
+    const t0 = performance.now();
+    await whenScrollIdle();
+    // a scroll that never settles still climbs one step per STEP_CAP_MS
+    await whenIdleSlice(Math.max(0, STEP_CAP_MS - (performance.now() - t0)));
     // re-check after the waits: an intro replay or a Pause may have come
     if (!quietOver() || motionOffNow()) continue;
     reach((reached + 1) as LadderStep);
@@ -246,13 +329,31 @@ function subscribe(onChange: () => void): () => void {
   return () => listeners.delete(onChange);
 }
 
-/** Step `s` reached (false on the server and during hydration). */
+/** Step `s` reached (false on the server and during hydration). Steps never
+ *  go back, so it turns true once. The re-render is a TRANSITION (J8 #1):
+ *  the subtree a step enables (the stage, the GL tier) renders in
+ *  interruptible slices after the idle slice, where a store update would
+ *  render it synchronously inside that slice (the 225–500 ms idle tasks). */
 export function useLadder(s: LadderStep): boolean {
-  return useSyncExternalStore(
-    subscribe,
-    () => reached >= s,
-    () => false,
-  );
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    install();
+    let live = true;
+    const check = () => {
+      if (reached < s) return;
+      listeners.delete(check);
+      startTransition(() => {
+        if (live) setOn(true);
+      });
+    };
+    listeners.add(check);
+    check();
+    return () => {
+      live = false;
+      listeners.delete(check);
+    };
+  }, [s]);
+  return on;
 }
 
 /* — (a) chunk prefetch ———————————————————————————————————————————————— */
@@ -274,20 +375,28 @@ function pump(): void {
   const load = pending.shift();
   if (!load) return;
   pumping = true;
-  const run = () =>
-    onIdle(
-      () => {
-        load()
-          .catch(() => undefined)
-          .then(() => {
-            pumping = false;
-            pump();
-          });
-      },
-      { timeout: 2000 },
+  // nothing new starts inside the quiet window, nor in its grace; before
+  // warm (the play screen, the flight) it runs (spec §3.1(a))
+  const held = () => isQuiet() || !hydrated || inQuietGrace();
+  const run = (): void =>
+    void whenScrollIdle().then(() =>
+      onIdle(
+        () => {
+          if (held()) {
+            void whenSettled().then(run);
+            return;
+          }
+          load()
+            .catch(() => undefined)
+            .then(() => {
+              pumping = false;
+              pump();
+            });
+        },
+        { timeout: 2000 },
+      ),
     );
-  // nothing new starts inside the quiet window
-  if (isQuiet()) void whenQuietEnd().then(run);
+  if (held()) void whenSettled().then(run);
   else run();
 }
 
@@ -320,4 +429,53 @@ export function prefetchChunks(loaders: (() => Promise<unknown>)[]): void {
   const desktop = desktopMotion();
   if (desktop) prefetchedDesktop = true;
   enqueue(desktop ? [...loaders, ...registered] : loaders);
+}
+
+/* — (c) the step-2 hand-out ————————————————————————————————————————————
+   Work that waits for a step (the plates' engine parts, the scroll scenes)
+   takes TURNS: a few waiters per idle slice, each slice after a frame, so
+   it mounts over a few frames instead of one long commit under the first
+   wheel (P3-2 #9: the W3 gate traced 35–72 ms frames at step 2, the plate
+   engine's mount and every ScrollTrigger scene in one task). */
+
+const TURNS_PER_SLICE = 2;
+/** A turn waits for the scroll to settle this long at most. */
+const TURN_CAP_MS = 2000;
+const turns: (() => void)[] = [];
+let handing = false;
+/** A slice met a scroll still moving after TURN_CAP_MS: until it settles,
+ *  the next slices stop waiting for it (one per frame), so a backlog of
+ *  plate turns never holds the scroll-scene drain TURN_CAP_MS a slice. */
+let unsettled = false;
+
+function handOut(): void {
+  if (handing) return;
+  handing = true;
+  const moving = () => performance.now() - lastScroll < SCROLL_IDLE_MS;
+  const gate = unsettled && moving() ? Promise.resolve() : whenScrollIdle(SCROLL_IDLE_MS, TURN_CAP_MS);
+  void gate.then(() => {
+    unsettled = moving();
+    requestAnimationFrame(() =>
+      onIdle(
+        () => {
+          handing = false;
+          for (let i = 0; i < TURNS_PER_SLICE && turns.length; i++) turns.shift()!();
+          if (turns.length) handOut();
+        },
+        // an unsettled scroll already waited TURN_CAP_MS: no second hold
+        { timeout: 250, hold: unsettled ? 0 : TURN_CAP_MS },
+      ),
+    );
+  });
+}
+
+/** Resolves on this caller's turn: at most a few callers per idle slice,
+ *  one slice per frame, first come first served. Await the step first
+ *  (`whenLadder(2)`), then the turn. */
+export function nextTurn(): Promise<void> {
+  if (typeof window === "undefined") return never();
+  return new Promise<void>((resolve) => {
+    turns.push(resolve);
+    handOut();
+  });
 }

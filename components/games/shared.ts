@@ -29,6 +29,11 @@ export type DroneCopy = {
   best: string | null;
 };
 
+/** One baked drone sprite (a static image import, resolved on the server). */
+export type DroneSprite = { src: string; width: number; height: number };
+/** The sprite per `systems.drone` variant: default chalk, alt blueprint. */
+export type DroneSprites = { default: DroneSprite; alt: DroneSprite };
+
 /** Dead Eye's strings (lib/film.ts `toy.deadeye.*`). */
 export type DeadEyeCopy = {
   /** "DEAD EYE" (the pill's accessible name; the pill shows it lettered). */

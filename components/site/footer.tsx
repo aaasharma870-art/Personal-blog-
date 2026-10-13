@@ -27,6 +27,7 @@ import { PostCredits } from "@/components/site/post-credits";
 import { StageScrim } from "@/components/stage/scrim";
 import { Collapse } from "@/components/primitives/collapse";
 import { typeCredits } from "@/lib/fonts";
+import { beatAttrs } from "@/lib/beats";
 
 /* ============================================================================
    CREDITS — the closing roll (SPEC v2 SM-13; ICONS §10), rendered as the page
@@ -71,12 +72,32 @@ import { typeCredits } from "@/lib/fonts";
    - COLLAPSE (spec §11.5, D3-9; W3-CINEMA): the long lists — lines quoted,
      the generated-imagery provenance, the type and libraries rows — sit in
      one native <details> ("credits.more.summary"), closed at ≥ 64rem and
-     expanded in flow on phones (the 390 roll is unchanged, order
-     included). The H3 fan-tribute line, "To be continued.", the last line
-     and "Built with AI assistance" stay visible outside it (on desktop the
-     AI row is lifted out of the disclosure; one copy per device).
+     expanded in flow on phones (the 390 roll keeps every row and its look;
+     only the AI row now sits above the lists). The H3 fan-tribute line,
+     "To be continued.", the last line and "Built with AI assistance" stay
+     visible outside it on every width (one row before the disclosure:
+     phones without ::details-content get a closed disclosure and must
+     still see it).
    - THE SNITCH's dart is the credits' star B57 (snitch.tsx asks the
-     spotlight on desktop).
+     spotlight on desktop). The roll block carries the quiet B57-roll
+     (lib/page.ts), so the credits are never a dead screen before the dart.
+
+   P3-11 r1 (panel: credits 0 % keep-scrolling, "tiny grey type on black",
+   "a weak final frame"): ≥ 64rem the roll is BRISKER and READABLE without
+   hiding a row (app/p3/world-hp.css "the roll", keyed on [data-roll]):
+   roles in ink at the small size, names at the lead size, half the row
+   padding, the block gaps at the group tier, a shorter run-in; the last
+   line (Q-HP-2) is set at the title size, so the page ends on a composed
+   frame. The AI row and the fan-tribute line stay where they were.
+
+   P3-11 r3 (panel J3, J4 "no" at the credits: "tiny grey type on
+   near-black for ~6 s"): ≥ 64rem the fan-tribute line and the closing
+   line (`data-roll-read`) are set at the body size in ink, "To be
+   continued." (`data-roll-end`) at the lead size, the "Credits" head in
+   ink, and the roll's head gap tightened again; nothing is hidden (the AI
+   row and the fan-tribute line stay visible). The roll ends with the
+   header's height of extra room, so its last scroll position never leaves
+   a line sliced under the header (F6, 1024).
    ========================================================================== */
 
 /** The film faces the site ships (PHASE3-SPEC §5.2; `typeCredits` in
@@ -192,12 +213,6 @@ export function Footer({ entry }: SectionProps<"credits">) {
           page<Dot />no film stills or game screenshots
         </Row>
       ) : null}
-      {/* phones: in its place inside the (expanded) disclosure */}
-      {ai ? (
-        <Row role="Built with AI assistance" className={more ? "dw:hidden" : undefined}>
-          {ai}
-        </Row>
-      ) : null}
       <Row role="Type">
         Geist<Dot />Geist Mono<Dot />Newsreader
         {faces.length ? (
@@ -232,6 +247,8 @@ export function Footer({ entry }: SectionProps<"credits">) {
     <footer
       id={anchorId(entry)}
       aria-labelledby="credits-title"
+      // P3-11 r1: the desktop roll (app/p3/world-hp.css "the roll")
+      data-roll=""
       {...planeAttrs("deep", "house")}
       className={`relative isolate z-(--z-main) bg-bg py-section text-fg${scrim ? " stage-backdrop" : ""}`}
     >
@@ -244,19 +261,20 @@ export function Footer({ entry }: SectionProps<"credits">) {
           data-seam="credits"
         />
       ) : null}
-      <div className="mx-auto w-full max-w-page px-gutter">
+      {/* B57-roll (quiet, lib/page.ts): the roll itself; the star B57 stays on the Snitch */}
+      <div className="mx-auto w-full max-w-page px-gutter" {...beatAttrs("B57-roll")}>
         <h2 id="credits-title" className="text-center type-meta text-fg-muted">
           Credits
         </h2>
 
         {/* PHASE 3 (spec §11.5, D3-9; W3-CINEMA): the long provenance /
             quote lists sit in ONE native <details>, closed at ≥ 64rem;
-            phones show it expanded in flow (app/p3/words.css), so the 390
-            roll keeps today's order. "Built with AI assistance" stays
-            visible: on desktop it is lifted out of the disclosure (its
-            own <dl>, `hidden dw:block`), on phones it keeps its place
-            inside (`dw:hidden`) — one copy per device. The fan-tribute
-            line (H3), "To be continued." and the last line stay outside. */}
+            phones show it expanded in flow (app/p3/words.css). "Built with
+            AI assistance" stays visible OUTSIDE it on every width (the last
+            row before the disclosure, one copy), so phones without
+            ::details-content, whose disclosure stays closed, still show it.
+            The fan-tribute line (H3), "To be continued." and the last line
+            stay outside. */}
         <dl className="mx-auto mt-tier-block max-w-[56rem]">
           <Row role="A personal research journal by">{site.name}</Row>
           <Row role="Research, systems & writing">{site.name}</Row>
@@ -276,12 +294,8 @@ export function Footer({ entry }: SectionProps<"credits">) {
               </span>
             </Row>
           ) : null}
+          {ai ? <Row role="Built with AI assistance">{ai}</Row> : null}
         </dl>
-        {ai && more ? (
-          <dl className="mx-auto hidden max-w-[56rem] dw:block">
-            <Row role="Built with AI assistance">{ai}</Row>
-          </dl>
-        ) : null}
         {more ? (
           <Collapse
             summary={more}
@@ -299,21 +313,24 @@ export function Footer({ entry }: SectionProps<"credits">) {
         </dl>
 
         {on ? (
-          <p className="mx-auto mt-tier-block max-w-[56rem] text-center type-small text-fg-muted">
+          <p className="mx-auto mt-tier-block max-w-[56rem] text-center type-small text-fg-muted" data-roll-read="">
             {credits.legal}
             {copyVisible(credits.legalMore) ? ` ${credits.legalMore.text}` : null}
           </p>
         ) : null}
 
         <div className="mt-tier-block flex flex-col items-center gap-tier-pair text-center">
-          <p className="max-w-lead type-small text-fg-muted">{footerLine}</p>
-          {on && copyVisible(credits.end) ? <p className="type-body text-fg">{credits.end.text}</p> : null}
+          <p className="max-w-lead type-small text-fg-muted" data-roll-read="">
+            {footerLine}
+          </p>
+          {on && copyVisible(credits.end) ? (
+            <p className="type-body text-fg" data-roll-end="">
+              {credits.end.text}
+            </p>
+          ) : null}
           <div className="flex items-center gap-2" data-credits-return="">
             {hp ? (
-              <TimeTurnerLink
-                href={topHref}
-                className="type-small text-fg-muted transition-colors hover:text-fg [&_[data-motif=time-turner]]:size-6"
-              >
+              <TimeTurnerLink href={topHref} icon={24} className="type-small text-fg-muted transition-colors hover:text-fg">
                 ↑ Back to the opening
               </TimeTurnerLink>
             ) : (
@@ -350,7 +367,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
           <div className="mt-tier-block flex flex-col items-center gap-3 text-center" data-credits-last="">
             <p className="text-(length:--text-heading) leading-(--text-heading--line-height) text-fg">
               <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
-              {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
+              {hp ? <HallowsMark className="ml-3 size-4" style={{ verticalAlign: -1 }} /> : null}
             </p>
             {hp ? <InkFold /> : null}
           </div>

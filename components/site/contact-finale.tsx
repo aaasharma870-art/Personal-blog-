@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import type { PointerEvent, ReactNode } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { emit } from "@/lib/events";
@@ -44,10 +44,13 @@ export function ContactFinale({
   email,
   github,
   onCopied,
+  hint,
 }: {
   email: string;
   github: string;
   onCopied?: () => void;
+  /** What "Lumos" does, beside it (server-rendered: contact.tsx). */
+  hint?: ReactNode;
 }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -73,7 +76,7 @@ export function ContactFinale({
         </span>
         <a
           href={`mailto:${email}`}
-          className="inline-flex min-h-11 items-center type-body text-fg underline decoration-(--fg-ghost) decoration-1 underline-offset-4 transition-colors hover:decoration-current"
+          className={INK_LINK}
         >
           Open in your mail app
         </a>
@@ -88,20 +91,20 @@ export function ContactFinale({
           <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
         </a>
       </div>
-      <p className="mt-tier-group type-meta text-fg-muted">
-        Résumé<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
+      {/* readable at its size (r2 J6 / J7); showing or hiding it until it is
+          real is Aryan's call (CONTINUE #11) */}
+      <p className="mt-tier-group type-meta text-fg-muted lg:type-small lg:text-fg">
+        Résumé<span aria-hidden="true" className="text-fg-ghost lg:text-fg-muted">{" • "}</span>
         <span className="sr-only">, </span>coming soon
       </p>
-      <CandleLumos />
+      <CandleLumos hint={hint} />
     </div>
   );
 }
 
 const LUMOS = copyText("toy.candles.lumos");
-/** "The hall is lit." (the toy writes it too: candle-toy.tsx `HALL_LIT`). */
-export const HALL_LIT = copyText("toy.candles.done");
-
-function CandleLumos() {
+const HALL_LIT = copyText("toy.candles.done");
+function CandleLumos({ hint }: { hint?: ReactNode }) {
   const status = useRef<HTMLSpanElement>(null);
   if (!copyVisible(LUMOS)) return null;
   const onLumos = () => {
@@ -116,16 +119,21 @@ function CandleLumos() {
       <button
         type="button"
         onClick={onLumos}
-        className="inline-flex min-h-11 items-center type-body text-fg underline decoration-(--fg-ghost) decoration-1 underline-offset-4 transition-colors hover:decoration-current"
+        className={INK_LINK}
         data-candle-lumos=""
       >
         {LUMOS.text}
       </button>
+      {hint}
       {/* the live region: written by the toy (or the line above), never by React */}
       <span ref={status} aria-live="polite" className="type-meta text-fg-muted" data-candle-status="" />
     </p>
   );
 }
+
+/** The quiet ink link (mail app; the "Lumos" button). */
+const INK_LINK =
+  "inline-flex min-h-11 items-center type-body text-fg underline decoration-(--fg-ghost) decoration-1 underline-offset-4 transition-colors hover:decoration-current";
 
 const SHELL_MAX = 15;
 const LABEL_MAX = 25;

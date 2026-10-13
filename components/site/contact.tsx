@@ -1,5 +1,6 @@
 import { site } from "@/lib/content";
-import { variantChoiceOf } from "@/lib/sections";
+import { film } from "@/lib/film";
+import { copyVisible, variantChoiceOf } from "@/lib/sections";
 import { MaskReveal } from "@/components/primitives/mask-reveal";
 import { ContactScene } from "@/components/site/contact-scene";
 import { Meta, WorldSection } from "@/components/site/world-kit";
@@ -37,6 +38,12 @@ import type { SectionProps } from "@/components/sections/types";
  * "map-walk"): see contact-scene.tsx. Copy is unchanged (the invitation;
  * the lede keeps its "junior" wording, bar D13, pending Aryan).
  */
+/** What "Lumos" does, set beside it (P3-11 r3, r2 J5 at both widths: the
+ *  button gave no hint). Copy key `toy.candles.lumos.hint` (proposed,
+ *  unsigned; the integrator adds it to lib/film.ts): rendered only once it
+ *  exists and is visible, so nothing shows before it is registered. */
+const LUMOS_HINT = (film.copy as Partial<Record<string, { text: string; status: string }>>)["toy.candles.lumos.hint"];
+
 export function Contact({ entry }: SectionProps<"contact">) {
   const titleId = `${entry.id}-title`;
   return (
@@ -52,6 +59,7 @@ export function Contact({ entry }: SectionProps<"contact">) {
         email={site.email}
         github={site.github}
         initials={site.initials}
+        hint={LUMOS_HINT && copyVisible(LUMOS_HINT) ? <span className="type-small text-fg-muted">{LUMOS_HINT.text}</span> : null}
         text={
           <>
             <Meta fields={[entry.nav?.label ?? "Contact"]} />
@@ -61,7 +69,8 @@ export function Contact({ entry }: SectionProps<"contact">) {
               className="mt-tier-group max-w-[22ch] type-title text-fg"
               lines={["Let’s talk research, markets, or", "building systems that are honest", "about their limits."]}
             />
-            <p className="mt-tier-group max-w-lead type-body text-fg-muted">
+            {/* in ink (P3-11 r3, r2 J5 / J7: the grey serif lede read faint) */}
+            <p className="mt-tier-group max-w-lead type-body text-fg-muted lg:text-fg">
               The most reliable way to reach me is email — I read everything. I&rsquo;m a high-school junior open to
               research conversations, mentorship, and serious collaboration.
             </p>

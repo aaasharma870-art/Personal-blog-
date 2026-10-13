@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, RefObject } from "react";
 import {
   motion,
@@ -11,6 +11,7 @@ import {
   useVelocity,
   type MotionValue,
 } from "motion/react";
+import { onIdle } from "@/lib/idle";
 import { springSoft } from "@/lib/motion";
 import type { Box01 } from "@/components/sections/hero/focal";
 
@@ -24,9 +25,10 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                brightness 1.15, faded in by velocity: the plate's crest
  *                brightens by ≤ 15 % (1 + .15·vn);
  * all from one value `vn` (0–1) that decays on springSoft, so stopping
- * restores clarity (vn < .005 within ~1.5 s). `--vn` is mirrored on the host
- * for tests, written only when it moved by more than .01 (or comes to rest):
- * an inherited custom property restyles the whole plate on every write.
+ * restores clarity (vn < .005 within ~1.5 s). (P3-11 r1: the `--vn` mirror
+ * on the host, for tests no tool reads, is gone: each write restyled the
+ * whole plate while the page scrolled.) The layers mount only while the
+ * hero is in view and not covered by the Act I card (hero-stage.tsx).
  * The wake and the grain are promoted (will-change): a vn step is a
  * compositor opacity/transform change, never a repaint of the plate (spec
  * §12.1 #7). Nothing here touches text; every node is aria-hidden and sits
@@ -46,8 +48,6 @@ import type { Box01 } from "@/components/sections/hero/focal";
  *                      sea is clear ≤ 1.5 s after the scroll stops (H16).
  */
 
-/** `--vn` is mirrored only on a change larger than this (or at rest). */
-const VN_STEP = 0.01;
 
 /** |v| (px/s) below which nothing happens, and the span to full effect. */
 const DEADZONE = 400;
@@ -77,33 +77,58 @@ const SPRAY = {
 
 export type VelocityDialect = "grain" | "spray";
 
-/* — A seeded grain tile (pure hash; no Math.random), rendered once. — */
+/* — A seeded grain tile (pure hash; no Math.random), built once.
+     P3-11 r3 (F6, J8: hydration's ~965 ms long task was this tile's
+     synchronous toDataURL, called from a useSyncExternalStore getter during
+     the hydration render): it is built in an idle slice after mount.
+     P3-11 r3 pass 2 (F3, J8 F2: the idle task of 0.7–1.3 s on the play
+     screen): that slice's `canvas.toBlob()` blocked the main thread on the
+     canvas read-back (measured 703 ms and 1,342 ms; every other step of it
+     took under 3 ms). The tile is now plain bytes, no canvas at all: an
+     8-bit grey BMP (a 54-byte header, a grey ramp and one byte a pixel; the
+     same hash, so the same grain, rows bottom-up) in a Blob, built in
+     3–6 ms. The grain shows only while the page scrolls fast (opacity ∝ vn,
+     0 at rest), so a tile that arrives a moment later is never seen
+     missing. — */
 let tileCache: string | null | undefined;
 function grainTile(): string | null {
   if (tileCache !== undefined) return tileCache;
-  if (typeof document === "undefined") return null;
-  const c = document.createElement("canvas");
-  c.width = TILE;
-  c.height = TILE;
-  const ctx = c.getContext("2d");
-  if (!ctx) return (tileCache = null);
-  const img = ctx.createImageData(TILE, TILE);
-  for (let i = 0; i < TILE * TILE; i++) {
+  const n = TILE * TILE;
+  const at = 54 + 1024;
+  const b = new Uint8Array(at + n);
+  // BITMAPFILEHEADER + BITMAPINFOHEADER (little-endian) for TILE = 128: 17,462
+  // bytes, pixels at 1,078, 128 × 128, 1 plane, 8 bpp, no compression, 16,384
+  // bytes of pixels, 256 colours
+  b.set([66, 77, 54, 68, 0, 0, 0, 0, 0, 0, 54, 4, 0, 0, 40, 0, 0, 0, TILE, 0, 0, 0, TILE, 0, 0, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]);
+  for (let i = 0; i < 256; i++) b.fill(i, 54 + i * 4, 57 + i * 4);
+  for (let i = 0; i < n; i++) {
     let h = Math.imul(i ^ 0x9e3779b9, 0x85ebca6b);
     h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
-    const g = ((h ^ (h >>> 16)) >>> 0) & 255;
-    img.data[i * 4] = g;
-    img.data[i * 4 + 1] = g;
-    img.data[i * 4 + 2] = g;
-    img.data[i * 4 + 3] = 255;
+    b[at + i] = ((h ^ (h >>> 16)) >>> 0) & 255;
   }
-  ctx.putImageData(img, 0, 0);
-  tileCache = c.toDataURL("image/png");
+  try {
+    tileCache = URL.createObjectURL(new Blob([b], { type: "image/bmp" }));
+  } catch {
+    tileCache = null;
+  }
   return tileCache;
 }
-const noop = () => () => {};
-function useGrainTile(): string | null {
-  return useSyncExternalStore(noop, grainTile, () => null);
+/** The grain tile's URL once built (null until then, and for the spray). */
+function useGrainTile(on: boolean): string | null {
+  const [tile, setTile] = useState<string | null>(null);
+  useEffect(() => {
+    if (!on) return;
+    let dead = false;
+    const off = onIdle(() => {
+      const t = grainTile();
+      if (!dead) setTile(t);
+    });
+    return () => {
+      dead = true;
+      off();
+    };
+  }, [on]);
+  return tile;
 }
 
 export function VelocityLayers({
@@ -112,7 +137,7 @@ export function VelocityLayers({
   objectPosition,
   dialect = "grain",
 }: {
-  /** The plate element: the poster <img> is read from it, `--vn` set on it. */
+  /** The plate element: the poster <img> is read from it. */
   hostRef: RefObject<HTMLElement | null>;
   /** The crest band in FRAME fractions (the Lens frame). */
   wake: Box01;
@@ -129,18 +154,6 @@ export function VelocityLayers({
   const vn = useSpring(target, springSoft);
   const grain = useTransform(vn, (n) => n * GRAIN_MAX);
   const chroma = useTransform(vn, (n) => n * CHROMA_MAX_PX);
-  // `--vn` mirrors vn in steps: a write only when it moved by > VN_STEP, when
-  // it crosses under the .005 "clear" line, and when it comes to rest at 0
-  const vnWritten = useRef(0);
-  useMotionValueEvent(vn, "change", (n) => {
-    const last = vnWritten.current;
-    const moved = Math.abs(n - last) > VN_STEP;
-    const cleared = n < 0.005 && last >= 0.005;
-    const rest = n === 0 && last !== 0;
-    if (!moved && !cleared && !rest) return;
-    vnWritten.current = n;
-    hostRef.current?.style.setProperty("--vn", n.toFixed(4));
-  });
 
   // The wake copies the poster the plate ALREADY loaded (its currentSrc), so
   // it never costs a request of its own.
@@ -159,7 +172,7 @@ export function VelocityLayers({
     return () => img.removeEventListener("load", take);
   }, [hostRef]);
 
-  const tile = useGrainTile();
+  const tile = useGrainTile(!spray);
   const pct = (f: number) => `${(f * 100).toFixed(2)}%`;
   const soft = 0.06;
   const mask =

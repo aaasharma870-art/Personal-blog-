@@ -1,0 +1,98 @@
+{
+ "meta": {
+  "base": "http://localhost:3162",
+  "kind": "desktop",
+  "vw": "1440x900",
+  "path": "/?skip",
+  "label": "base",
+  "date": "2026-10-13T10:29:36.218Z",
+  "chromium": "141.0.7390.37"
+ },
+ "runs": [
+  {
+   "lcp": 264,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.055,
+   "shifts": [
+    {
+     "t": 285,
+     "v": 0.055
+    }
+   ],
+   "nav": {
+    "ttfb": 13,
+    "dcl": 364,
+    "load": 365
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 264,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 110004
+    }
+   ]
+  },
+  {
+   "lcp": 380,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.055,
+   "shifts": [
+    {
+     "t": 426,
+     "v": 0.055
+    }
+   ],
+   "nav": {
+    "ttfb": 17,
+    "dcl": 515,
+    "load": 574
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 380,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 110004
+    }
+   ]
+  },
+  {
+   "lcp": 312,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.055,
+   "shifts": [
+    {
+     "t": 335,
+     "v": 0.055
+    }
+   ],
+   "nav": {
+    "ttfb": 15,
+    "dcl": 418,
+    "load": 541
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 312,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 110004
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "n": 3,
+  "min": 264,
+  "median": 312,
+  "max": 380,
+  "mean": 319
+ }
+}

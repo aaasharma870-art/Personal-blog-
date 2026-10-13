@@ -17,6 +17,7 @@
    ========================================================================== */
 
 import { useSyncExternalStore } from "react";
+import { on } from "@/lib/events";
 import { DESKTOP_FINE, motionOffNow } from "@/lib/flags";
 import { sound } from "@/lib/audio";
 
@@ -63,17 +64,41 @@ const loadPlayer = (): Promise<Player> => {
   return player;
 };
 
+const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+
 /** Start the director's cut (call it from the click). */
 export function startDirectorsCut(): void {
   if (!directorsCutAvailable() || state.running) return;
   // the click is the consent and the gesture: borrow the sound NOW
   const borrowed = sound.borrow();
   setDirectorsCutState(true);
+  // input while the player loads (the palette and the chapter select do not
+  // pre-load it) cancels the run, as it stops one that plays (else the late
+  // run would ignore it, then cut the page back to the top)
+  let cancelled = false;
+  const opts = { capture: true, passive: true } as const;
+  const cancel = () => {
+    cancelled = true;
+  };
+  const offFast = on("fastlane", cancel);
+  for (const ev of INPUT) window.addEventListener(ev, cancel, opts);
+  const settle = () => {
+    offFast();
+    for (const ev of INPUT) window.removeEventListener(ev, cancel, opts);
+  };
+  const abort = () => {
+    setDirectorsCutState(false);
+    void borrowed.then((restore) => restore());
+  };
   void loadPlayer().then(
-    (m) => m.play(borrowed),
+    (m) => {
+      settle();
+      if (cancelled) abort();
+      else m.play(borrowed);
+    },
     () => {
-      setDirectorsCutState(false);
-      void borrowed.then((restore) => restore());
+      settle();
+      abort();
     },
   );
 }

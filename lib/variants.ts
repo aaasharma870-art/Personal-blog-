@@ -384,7 +384,7 @@ export const VARIANT_REGISTRY = {
   "words.flythrough": {
     default: { name: "glide-gallop", note: "A gull glides through the voyage window's sky (Act I); a graphite horse gallops along the journal's bottom edge (Act III); image zones only, never across text." },
     alt: { name: "shadow-pass", note: "Only the sprite's shadow crosses the image zone." },
-    files: ["components/words/fly-through.tsx", "components/words/bind/**", "assets/p3/words/**", "app/p3/words.css"],
+    files: ["components/words/fly-through.tsx", "components/words/bind/**", "components/words/sprites/**", "assets/p3/words/**", "app/p3/words.css"],
   },
 
   /* — Phase 3 intro titles + post-credits (SPEC §4.3, §9.4) — */
@@ -452,18 +452,18 @@ export const VARIANT_REGISTRY = {
   "about.compass": {
     default: {
       name: "true-north",
-      note: "Jack's compass at the pillar hub, lid open: on entry it spins once and settles on pillar 1; hovering a pillar turns the red arrow to it and lights its bearing label in brass.",
+      note: "Jack's compass at the pillar hub, lid open: on entry it spins once and settles on pillar 1; hovering a pillar turns the red arrow to it and lights its bearing label in brass. Desktop toy \"Spin Jack's compass\": a press spins it +720–1080° with 3 s⁻¹ friction, then the needle springs onto the next pillar's bearing; dragging turns the case; ←/→ step.",
     },
     alt: {
       name: "taking-bearings",
-      note: "The compass arrives shut, the lid opens, and the arrow takes the four bearings in turn while brass bearing lines draw toward each pillar; then it settles on pillar 1.",
+      note: "The compass arrives shut, the lid opens, and the arrow takes the four bearings in turn while brass bearing lines draw toward each pillar; then it settles on pillar 1. The toy's press takes the four bearings in turn and comes to rest on the next pillar.",
     },
-    files: ["components/site/about-pillars.tsx", "components/worlds/pirates/jack-compass.tsx", "components/site/about.tsx"],
+    files: ["components/site/about-pillars.tsx", "components/worlds/pirates/jack-compass.tsx", "components/worlds/pirates/compass-toy.tsx", "components/worlds/pirates/use-compass-spin.ts", "components/site/about.tsx"],
   },
   "journey.voyage": {
     default: {
       name: "sea-scrub",
-      note: "SM-4: scroll drives the JV frames (exactly MV-05a-d when each step is centred); Jack's compass settles on each leg's heading; the Aztec medallion's moonlight sweep runs once at The break.",
+      note: "SM-4: scroll drives the JV frames (exactly MV-05a-d when each step is centred); Jack's compass settles on each leg's heading; the Aztec medallion's moonlight sweep runs once at The break. JV decodes in window mode (±12 frames, ≤ 1 sequence resident page-wide; both sides); at rest on steps 2 and 4 the plates' living loops (L19 on MV-05b, L20 on MV-05d) swap in over the frame.",
       media: ["JV", "MV-05a", "MV-05b", "MV-05c", "MV-05d"],
     },
     alt: {
@@ -480,6 +480,7 @@ export const VARIANT_REGISTRY = {
       "components/site/journey-chart.tsx",
       "components/worlds/pirates/jack-compass.tsx",
       "components/worlds/pirates/aztec-medallion.tsx",
+      "components/worlds/pirates/coin-moon.tsx",
       "components/worlds/pirates/use-frame-sequence.ts",
       "components/worlds/pirates/voyage-chart.ts",
     ],
@@ -511,6 +512,12 @@ export const VARIANT_REGISTRY = {
     },
     files: ["components/worlds/idiots/plate-band.tsx", "components/site/projects.tsx", "components/worlds/idiots/idiots-section.tsx"],
   },
+  // W3 (P3-8, B18): the Run button's toy invite
+  "work.invite": {
+    default: { name: "pulse", note: "On scroll-idle, once, a chalk ring breathes out of the Run button (B18)." },
+    alt: { name: "nudge", note: "The ▶ glyph steps forward twice." },
+    files: ["components/site/gauntlet-tabs.tsx", "components/worlds/idiots/run-invite.tsx"],
+  },
   "trading-algos.schematic": {
     default: { name: "draw", note: "SM-7: the blueprint of the real pipeline inks itself inside an ICE chalkboard frame; the chalk circle goes around the caveat." },
     alt: { name: "assemble", note: "SM-7: the blueprint's parts drop into place and are taped down on the chalkboard; same circle round the caveat." },
@@ -534,6 +541,12 @@ export const VARIANT_REGISTRY = {
     },
     files: ["components/worlds/idiots/machine-board.tsx", "components/worlds/idiots/plate-band.tsx", "components/sections/chapter/chapter-section.tsx"],
   },
+  // W3 (P3-7, B25): the experiment's synthetic curve
+  "experiment.curve": {
+    default: { name: "draw", note: "The synthetic plot draws once, left to right, behind a soft edge, while its grid holds (B25)." },
+    alt: { name: "fade", note: "The plot comes up whole (opacity)." },
+    files: ["components/sections/experiment/**"],
+  },
   "systems.fig": {
     default: { name: "draw", note: "'How this page is built' inks itself on the chalkboard." },
     alt: { name: "assemble", note: "'How this page is built': the parts drop in and are taped down on the chalkboard." },
@@ -552,6 +565,18 @@ export const VARIANT_REGISTRY = {
     },
     files: ["components/worlds/idiots/drone-band.tsx", "components/site/capabilities.tsx"],
   },
+  // W3 (P3-8): the drone game on the systems band
+  "systems.drone": {
+    default: {
+      name: "chalk-sprite",
+      note: "Fly the homemade drone: the band dims to the slate board, seven chalk gates (the next one aqua), the chalk quadcopter as a pre-rasterized sprite.",
+    },
+    alt: {
+      name: "blueprint",
+      note: "The band dims to the blueprint panel, dashed drafting gates in the blueprint line, the drone as a clean blueprint drawing.",
+    },
+    files: ["components/games/drone/**", "components/games/games.css", "components/worlds/idiots/drone-band.tsx", "assets/p3/games/**", "app/p3/games.css"],
+  },
   "kill-list.reckoning": {
     default: {
       name: "lens-index",
@@ -559,7 +584,7 @@ export const VARIANT_REGISTRY = {
     },
     alt: {
       name: "index-bar",
-      note: "SM-8: the plain ruled ledger with one sliding bar beside the active row. Dead Eye stays an opt-in egg, never a variant.",
+      note: "SM-8: the plain ruled ledger with one sliding bar beside the active row. Dead Eye stays an opt-in game, never a variant.",
     },
     files: ["components/sections/ledger/ledger-section.tsx", "components/sections/ledger/lens-figure.tsx", "components/site/ledger-reckoning.tsx"],
   },
@@ -577,6 +602,18 @@ export const VARIANT_REGISTRY = {
     },
     files: ["components/worlds/idiots/plate-band.tsx", "components/worlds/idiots/chalk.tsx", "components/sections/ledger/ledger-section.tsx"],
   },
+  // W3 (P3-8): the Dead Eye game on the kill-list
+  "kill-list.deadeye": {
+    default: {
+      name: "ember-x",
+      note: "Dead Eye: time slows to 0.25x, the grade fades in below the text, an ember X locks beside each marked killed row's reason, every marked row strikes at once.",
+    },
+    alt: {
+      name: "tally",
+      note: "An ember tally stroke locks beside each marked row's number; the shot resolves the marked rows in turn, top to bottom, 140 ms apart.",
+    },
+    files: ["components/games/dead-eye/**", "components/games/games.css", "components/eggs/dead-eye.ts", "components/sections/ledger/ledger-section.tsx", "components/site/ledger-reckoning.tsx"],
+  },
   "films.screens": {
     default: {
       name: "clip-finales",
@@ -588,7 +625,7 @@ export const VARIANT_REGISTRY = {
       note: "SM-9: each frame irises open from its focal point on the alt stills: a dotted brass course across the moon path to an X before the Pearl's bow (iconic-pearl: the Act I card's other plate, so no variant repeats one), a chalk circle + tick round the scooter, the gang's camp by the lake (iconic-camp-alt, from its fire) as a journal clipping, footprints on the enchanted paper (F-HP).",
       media: ["F-3I-alt", "iconic-camp-alt"],
     },
-    files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts"],
+    files: ["components/sections/films/films-section.tsx", "components/sections/films/film-screen.tsx", "components/sections/films/film-frame.tsx", "components/sections/films/finales.tsx", "components/sections/films/plate-marks.ts", "components/sections/films/films-desktop.tsx", "components/sections/films/film-beats.ts"],
   },
   "beyond.band": {
     default: {
@@ -614,7 +651,7 @@ export const VARIANT_REGISTRY = {
       note: "On iconic-wanted-alt: the handbill is pasted down from the top, WANTED is stamped, then tacks.",
       media: ["iconic-wanted-alt"],
     },
-    files: ["components/worlds/rdr2/wanted-board.tsx", "components/site/beyond.tsx"],
+    files: ["components/worlds/rdr2/wanted-board.tsx", "components/site/beyond.tsx", "components/worlds/rdr2/rd-desktop.tsx", "components/primitives/live-plate.tsx"],
   },
   "beyond.satchel": {
     default: { name: "spill", note: "Arthur's leather satchel: the real kit (camera, sketchbook + charcoal, drone, running shoes) slides out of the bag." },
@@ -622,7 +659,7 @@ export const VARIANT_REGISTRY = {
     files: ["components/worlds/rdr2/satchel.tsx", "components/site/beyond.tsx"],
   },
   "writing.journal": {
-    default: { name: "sketch-at-rest", note: "SM-11: an Arthur-style journal spread; a full-page graphite sketch at rest; hovering an entry swaps the page to its vignette, each drawn once. Drafts stay non-link DRAFT." },
+    default: { name: "sketch-at-rest", note: "SM-11: an Arthur-style journal spread; a full-page graphite sketch at rest; hovering an entry, or the entry at the reading line, swaps the page to its vignette, each drawn once. Drafts stay non-link DRAFT." },
     alt: { name: "leafing", note: "SM-11: scrolling turns the page to each entry's vignette as it crosses the reading line." },
     files: ["components/site/writing.tsx", "components/worlds/rdr2/journal-spread.tsx", "components/worlds/rdr2/journal-sketches.ts"],
   },
@@ -637,7 +674,7 @@ export const VARIANT_REGISTRY = {
       note: "SM-16: the MV-11 band with the MV-11L loop (desktop, one decoder) opens from a letterbox; each quote is read into firelight in turn; caption THE CAMPFIRE.",
       media: ["MV-11", "MV-11L"],
     },
-    files: ["components/site/testimonials.tsx", "components/worlds/rdr2/campfire-stage.tsx"],
+    files: ["components/site/testimonials.tsx", "components/worlds/rdr2/campfire-stage.tsx", "components/worlds/rdr2/rd-desktop.tsx", "components/primitives/live-plate.tsx"],
   },
   "principles.map": {
     default: {
@@ -648,20 +685,43 @@ export const VARIANT_REGISTRY = {
       name: "lumos-candles",
       note: "Floating candles hang in the section's top padding; each principle's own candle lights with a Lumos spark as its row enters; silver-blue ribbons as the underline.",
     },
-    files: ["components/site/principles.tsx", "components/site/principles-stage.tsx", "components/site/principles-map.tsx", "components/site/principles-lumos.tsx", "components/worlds/hp/floating-candle.tsx", "components/worlds/hp/footprints.tsx", "components/worlds/hp/sprites.ts"],
+    files: ["components/site/principles.tsx", "components/site/principles-stage.tsx", "components/site/principles-map.tsx", "components/site/principles-lumos.tsx", "components/worlds/hp/floating-candle.tsx", "components/worlds/hp/footprints.tsx", "components/worlds/hp/sprites.ts", "components/worlds/hp/principle-body.tsx", "components/worlds/hp/map-hint.tsx"],
   },
   "contact.lastlight": {
     default: {
       name: "bracket-close",
-      note: "SM-12: a feathered window onto MV-08 (MV-09 loop on desktop); the bracket halves travel in and turn aqua on arrival round the [ A · flame · S ] monogram.",
+      note: "SM-12: a feathered window onto MV-08 (MV-09 loop on desktop); the bracket halves travel in and turn aqua on arrival round the [ A · flame · S ] monogram. The plate is a <LivePlate> (loopFor: MV-09, or MV-09-alt under plates.loops:alt) under a slow 1 → 1.02 camera drift about the flame on DESKTOP_FINE with motion on.",
       media: ["MV-08", "MV-09"],
     },
     alt: {
       name: "map-walk",
-      note: "SM-12: ink footprints walk out of the dark to the candle, then the bracket is inked closed (MV-09-alt loop).",
+      note: "SM-12: ink footprints walk out of the dark to the candle, then the bracket is inked closed (MV-09-alt loop, its own media, inside the same 1 → 1.02 CameraGroup drift).",
       media: ["MV-08", "MV-09-alt"],
     },
-    files: ["components/site/contact.tsx", "components/site/contact-scene.tsx", "components/site/contact-finale.tsx"],
+    files: ["components/site/contact.tsx", "components/site/contact-scene.tsx", "components/site/contact-finale.tsx", "components/primitives/live-plate.tsx", "components/primitives/camera.tsx"],
+  },
+  // W3 (P3-8, spec §9.2 #4): the hall's candle toy and the wand cursor
+  "contact.candles": {
+    default: {
+      name: "wand-relight",
+      note: "The hall's candles (lit by default) go dark in a 600 ms sweep away from the wand on the first pointer move inside Contact after it was fully offscreen. A candle within 56 px of the wand tip relights with a 300 ms crossfade and a Lumos spark. All lit triggers the flame's copy-flare and 'The hall is lit.' A 'Lumos' button lights them all in a 1.6 s sweep.",
+    },
+    alt: {
+      name: "ember-catch",
+      note: "Same rules, but the dark sweeps down from the ceiling, and a touched candle catches in a slower 600 ms crossfade with no spark.",
+    },
+    files: ["components/worlds/hp/candle-toy.tsx", "components/worlds/hp/hall-ceiling.tsx", "components/site/contact-scene.tsx", "components/site/contact-finale.tsx", "assets/p3/hp/hp-toys.css"],
+  },
+  "contact.wand": {
+    default: {
+      name: "tip-bloom",
+      note: "Wand cursor (url(svg) 3 3) on non-interactive areas of #act-4's hall, Principles and Contact. One 96 px Lumos bloom rides the tip below the text in the media/art layer. rAF runs only while moving, and the bloom fades after 1 s still.",
+    },
+    alt: {
+      name: "trailing-light",
+      note: "The bloom trails the tip on a soft follow (about 1/4 s to catch up).",
+    },
+    files: ["components/worlds/hp/wand-cursor.tsx", "components/site/contact-scene.tsx", "assets/p3/hp/hp-toys.css"],
   },
 
   /* — Eggs and the 404 (opt-in; not section hosts) — */

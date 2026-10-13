@@ -47,6 +47,10 @@ export type StageWindowProps = {
   beat?: Pick<Beat, "id" | "star" | "weight">;
   /** The section's rack-focus beat (data-beat on the portal host). */
   rack?: Pick<Beat, "id">;
+  /** The window loop's LIVE star (`<id>-window`, lib/page.ts, `live: true`):
+   *  a quiet marker over the window's box; the stage registers it only
+   *  while the loop plays (stage.tsx LIVE_LOOP). */
+  live?: Pick<Beat, "id">;
 };
 
 type BeatLike = Pick<Beat, "id" | "star" | "weight">;
@@ -61,7 +65,7 @@ function plateOf(cue: StageCue): MediaAsset | null {
   return a.poster ? resolveMedia(a.poster) : null;
 }
 
-export function StageWindow({ section, cue, side, beat, rack }: StageWindowProps) {
+export function StageWindow({ section, cue, side, beat, rack, live }: StageWindowProps) {
   const plate = plateOf(cue);
   const [fx, fy] = plate?.focal ?? [0.5, 0.5];
   return (
@@ -78,6 +82,7 @@ export function StageWindow({ section, cue, side, beat, rack }: StageWindowProps
         />
       ) : null}
       <div data-stage-window-host="" className="stage-window-host" {...attrsOf(rack)} />
+      {live ? <span aria-hidden="true" className="pointer-events-none invisible absolute inset-0" {...beatAttrs(live.id)} /> : null}
     </div>
   );
 }
@@ -89,12 +94,13 @@ export function StageSplit({ entry, children }: { entry: SectionEntry; children:
   if (!first) return <>{children}</>;
   const side = spec?.side ?? "right";
   const cueBeats = entry.beats?.filter((b) => b.kind === "stage-cue") ?? [];
-  const beat = cueBeats.find((b) => b.star);
+  const beat = cueBeats.find((b) => b.star && !b.live);
   const rack = cueBeats.find((b) => !b.star && b.id.endsWith("-rack"));
+  const live = entry.beats?.find((b) => b.live && b.id.endsWith("-window"));
   return (
     <div data-stage-split={entry.id} data-side={side} className="stage-split">
       <div className="stage-split-text">{children}</div>
-      <StageWindow section={entry.id} cue={first} side={side} beat={beat} rack={rack} />
+      <StageWindow section={entry.id} cue={first} side={side} beat={beat} rack={rack} live={live} />
     </div>
   );
 }

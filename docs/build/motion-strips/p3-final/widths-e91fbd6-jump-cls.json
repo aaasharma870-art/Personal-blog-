@@ -1,0 +1,156 @@
+{
+ "meta": {
+  "base": "http://localhost:3162",
+  "date": "2026-10-13T11:01:07.237Z",
+  "chromium": "141.0.7390.37",
+  "build": "e91fbd6 (scratchpad/qa-base), same widths.cjs jump-scroll sweep as widths-head.json"
+ },
+ "runs": [
+  {
+   "vp": "1440x900",
+   "run": 1,
+   "cls": 0,
+   "shifts": [],
+   "docHeight": 44286,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  },
+  {
+   "vp": "1440x900",
+   "run": 2,
+   "cls": 0.2363,
+   "shifts": [
+    {
+     "t": 8876,
+     "v": 0.2363,
+     "sy": 43412,
+     "src": [
+      {
+       "chain": [
+        "footer#credits.relative.isolate.z-(--z-main).bg-bg.py-sectio",
+        "div.contents",
+        "body.flex.min-h-full.flex-col",
+        "html.geist_deef94d5-module__Sms4YG__variable.geist"
+       ],
+       "prev": [
+        0,
+        0,
+        1440,
+        563
+       ],
+       "cur": [
+        0,
+        0,
+        1440,
+        900
+       ]
+      }
+     ]
+    }
+   ],
+   "docHeight": 44286,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  },
+  {
+   "vp": "1440x900",
+   "run": 3,
+   "cls": 0.2363,
+   "shifts": [
+    {
+     "t": 9008,
+     "v": 0.2363,
+     "sy": 43412,
+     "src": [
+      {
+       "chain": [
+        "div.stage-scrim",
+        "footer#credits.relative.isolate.z-(--z-main).bg-bg.py-sectio",
+        "div.contents",
+        "body.flex.min-h-full.flex-col",
+        "html.geist_deef94d5-module__Sms4YG__variable.geist"
+       ],
+       "prev": [
+        0,
+        0,
+        1440,
+        563
+       ],
+       "cur": [
+        0,
+        0,
+        1440,
+        900
+       ]
+      }
+     ]
+    }
+   ],
+   "docHeight": 44286,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  },
+  {
+   "vp": "1024x768",
+   "run": 1,
+   "cls": 0.09706,
+   "shifts": [
+    {
+     "t": 3425,
+     "v": 0.09706,
+     "sy": 9210,
+     "src": [
+      {
+       "chain": [
+        "div.relative.mx-auto.w-full.max-w-page.px-gutter",
+        "section#work.relative.isolate.bg-bg.py-section.text-fg",
+        "div.contents",
+        "main#main.relative.z-(--z-main).flex-1.outline-none",
+        "body.flex.min-h-full.flex-col"
+       ],
+       "prev": [
+        0,
+        0,
+        1024,
+        768
+       ],
+       "cur": [
+        0,
+        0,
+        1024,
+        768
+       ]
+      }
+     ]
+    }
+   ],
+   "docHeight": 41397,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  },
+  {
+   "vp": "1024x768",
+   "run": 2,
+   "cls": 0,
+   "shifts": [],
+   "docHeight": 41397,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  },
+  {
+   "vp": "1024x768",
+   "run": 3,
+   "cls": 0,
+   "shifts": [],
+   "docHeight": 41397,
+   "console": 0,
+   "pageErrors": 0,
+   "hydration": 0
+  }
+ ]
+}

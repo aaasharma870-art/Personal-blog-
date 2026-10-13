@@ -1,0 +1,19 @@
+[
+  { "frame": "C001", "name": "Aryan Sharma", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar, just right of centre", "seconds": 1 } },
+  { "frame": "C002", "name": null, "cantRead": ["Intro line under 'What I can actually do.' is cut by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C003", "name": null, "cantRead": ["Entry I description is cut by the bottom edge after 'A plain-English tour of the seven-part'"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C004", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar (this frame is already the flagship research)", "seconds": 1 } },
+  { "frame": "C005", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C006", "name": "Aryan Sharma", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar (the 'VIEW THE QUANT PORTFOLIO' button under the intro also works)", "seconds": 1 } },
+  { "frame": "C007", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C008", "name": null, "cantRead": ["Top line ('...of it failed me first. Step through it.') is half-hidden behind the sticky header"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C009", "name": "Aryan Sharma", "cantRead": ["Top-right caption ('Jack's compass – it points to what you want most') is hidden under the header; only the bottom of '...you want most' shows", "End of the 'Intellectual honesty' paragraph ('my own ideas that did not survive testing.') is faded to near-background contrast"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C010", "name": null, "cantRead": ["'Discipline, in three arenas' heading is cut by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C011", "name": "Aryan", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C012", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C013", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar; the flagship 'Automated Strategy Research Pipeline' also starts on screen", "seconds": 1 } },
+  { "frame": "C014", "name": null, "cantRead": ["Last lines of the chart caption are cut by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar (this frame is already research content)", "seconds": 1 } },
+  { "frame": "C015", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar", "seconds": 1 } },
+  { "frame": "C016", "name": null, "cantRead": ["Last line of the 'Automated Strategy Research Pipeline' description is cut by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar; the project list itself is on screen", "seconds": 1 } },
+  { "frame": "C017", "name": null, "cantRead": ["A blackletter heading ('Pirates of the Caribbean'?) at the very top is half-hidden behind the sticky header"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top bar, just right of centre", "seconds": 1 } }
+]

@@ -26,9 +26,11 @@ import { Glyphed } from "@/components/director/glyphed";
 /* ============================================================================
    DVD CHAPTER SELECT (spec §11.2; plan DP-17; P3-10 #2) — OWNER: W3-CINEMA.
    Loaded by the header's menu sheet with next/dynamic (ssr: false), only
-   while the menu is open on DESKTOP_FINE (phones keep today's menu). It
-   sits above the sheet's section links. `onPick` closes the menu (the
-   header passes it; focus is not restored: the jump moves it).
+   while the menu is open on DESKTOP_FINE on the home page (phones and the
+   404 keep today's menu: its targets live on "/"). It sits above the
+   sheet's section links. `onPick` closes the menu (the header passes it;
+   the jump or the cut's ■ Stop moves focus, and the header puts it back on
+   Menu when nothing did).
 
    ▶ Director's cut first (the DVD "Play movie"): it closes the menu and
    starts the cut (components/director/api.ts; the click is the sound

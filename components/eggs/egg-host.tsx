@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { on } from "@/lib/events";
 import { film } from "@/lib/film";
-import { setMotionPaused } from "@/lib/flags";
+import { DESKTOP_FINE, setMotionPaused } from "@/lib/flags";
 import { quotes } from "@/lib/quotes";
 import { copyText, copyVisible } from "@/lib/sections";
 import { quoteAttribution } from "@/components/site/film-quote";
@@ -31,7 +31,8 @@ import type { EggMsg } from "@/components/eggs/egg-runtime";
        "i solemnly swear" → the Marauder's Map    "parley" → parley
        "lumos" / "nox"    → the light spells       "aal izz well" → aal
        "deadeye"          → Dead Eye, when #kill-list is ≥ 50 % in view on a
-                            fine pointer ≥ 64 rem (a toy, not a hunt egg)
+                            DESKTOP_FINE with the DEAD EYE pill present
+                            (#deadeye-call; a toy, not a hunt egg)
    - `hunt:found` from anywhere (the Snitch's catch) wakes the runtime too,
      so every find gets its "Egg n of 12" toast.
    The Pause control is never a trigger (components/primitives/
@@ -134,7 +135,7 @@ export function EggHost({ go }: { go: (id: string) => Promise<void> }) {
       buf = (buf + e.key.toLowerCase()).slice(-24);
       for (const [word, id] of WORDS) {
         if (!buf.endsWith(word)) continue;
-        if (id === "dead-eye" && (!killListInView() || !window.matchMedia("(pointer: fine) and (min-width: 64rem)").matches)) continue;
+        if (id === "dead-eye" && (!killListInView() || !document.getElementById("deadeye-call") || !window.matchMedia(DESKTOP_FINE).matches)) continue;
         buf = "";
         triggerEgg(id);
         return;

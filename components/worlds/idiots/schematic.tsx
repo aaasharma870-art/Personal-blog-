@@ -104,10 +104,11 @@ function horizontal(spec: SchematicSpec): Layout {
   return { W, H, boxes, joints, tapes };
 }
 
-/** < 1024: top → bottom (the M1 stack, plus the fork / branch). */
-function vertical(spec: SchematicSpec): Layout {
+/** < 1024: top → bottom (the M1 stack, plus the fork / branch). `NH`: the
+ *  housing height (taller in a narrow desktop column, where a label and its
+ *  two-line note need the room: systems' FIG at 1024, P3-11 r1). */
+function vertical(spec: SchematicSpec, NH = 64): Layout {
   const W = 360;
-  const NH = 64;
   const GAP = 30;
   const n = spec.chain.length;
   const yOf = (i: number) => 24 + i * (NH + GAP);
@@ -327,7 +328,10 @@ export function BlueprintSchematic({
     >
       <figcaption className="type-meta text-fg-muted">{fig}</figcaption>
       {compact ? (
-        <Drawing layout={vertical(spec)} phase={phase} alt={alt} className="mt-tier-group max-w-[26rem]" />
+        <>
+          <Drawing layout={vertical(spec)} phase={phase} alt={alt} className="mt-tier-group max-w-[26rem] lg:hidden" />
+          <Drawing layout={vertical(spec, 100)} phase={phase} alt={alt} className="mt-tier-group hidden max-w-[26rem] lg:block" />
+        </>
       ) : (
         <>
           <Drawing layout={vertical(spec)} phase={phase} alt={alt} className="mt-tier-group max-w-[26rem] lg:hidden" />

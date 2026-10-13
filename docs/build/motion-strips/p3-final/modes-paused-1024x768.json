@@ -1,0 +1,1013 @@
+{
+ "meta": {
+  "base": "http://localhost:3161",
+  "mode": "paused",
+  "vw": "1024x768",
+  "date": "2026-10-13T09:48:33.471Z",
+  "chromium": "141.0.7390.37"
+ },
+ "loads": [
+  {
+   "i": 1,
+   "hydratedAt": 863,
+   "baseline": {
+    "running": 0,
+    "sample": [],
+    "videosTotal": 0,
+    "videosPlaying": 0,
+    "videosWithSrc": 0,
+    "audioEls": 0,
+    "audioCtxCreated": 0,
+    "audioCtxRunning": 0,
+    "audioPlays": 0,
+    "gl": 0,
+    "htmlAttrs": {
+     "motion": "paused",
+     "boot": "paused",
+     "stage": null
+    },
+    "lenis": false
+   },
+   "raf1s": 0,
+   "clsAtRest": {
+    "cls": 0,
+    "shifts": []
+   },
+   "wheel": {
+    "notches": 390,
+    "secs": 45,
+    "samples": [
+     {
+      "n": 60,
+      "y": 6000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 120,
+      "y": 12000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 180,
+      "y": 18000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 240,
+      "y": 23962,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 300,
+      "y": 30002,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 360,
+      "y": 35516,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     }
+    ]
+   },
+   "afterWheel": {
+    "cls": 0,
+    "shifts": [],
+    "docH": 36284,
+    "h1": 1,
+    "overflow": 0
+   },
+   "walk": [
+    {
+     "id": "top",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-1",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "journey",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-2",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "work",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "films",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-3",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "voices",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-4",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "contact",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "credits",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    }
+   ],
+   "final": {
+    "cls": 0,
+    "shifts": []
+   },
+   "shiftsAfterHydration": [],
+   "net": {
+    "media": 0,
+    "videoBytes": 0,
+    "audioRequests": [],
+    "mediaList": [],
+    "errors": [],
+    "failed": [],
+    "http": []
+   },
+   "ms": 67830
+  },
+  {
+   "i": 2,
+   "hydratedAt": 927,
+   "baseline": {
+    "running": 0,
+    "sample": [],
+    "videosTotal": 0,
+    "videosPlaying": 0,
+    "videosWithSrc": 0,
+    "audioEls": 0,
+    "audioCtxCreated": 0,
+    "audioCtxRunning": 0,
+    "audioPlays": 0,
+    "gl": 0,
+    "htmlAttrs": {
+     "motion": "paused",
+     "boot": "paused",
+     "stage": null
+    },
+    "lenis": false
+   },
+   "raf1s": 0,
+   "clsAtRest": {
+    "cls": 0,
+    "shifts": []
+   },
+   "wheel": {
+    "notches": 390,
+    "secs": 44,
+    "samples": [
+     {
+      "n": 60,
+      "y": 6000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 120,
+      "y": 12000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 180,
+      "y": 18000,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 240,
+      "y": 23962,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 300,
+      "y": 30002,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     },
+     {
+      "n": 360,
+      "y": 35180,
+      "running": 0,
+      "sample": [],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 0,
+      "gl": 0,
+      "htmlAttrs": {
+       "motion": "paused",
+       "boot": "paused",
+       "stage": null
+      },
+      "lenis": false
+     }
+    ]
+   },
+   "afterWheel": {
+    "cls": 0,
+    "shifts": [],
+    "docH": 35948,
+    "h1": 1,
+    "overflow": 0
+   },
+   "walk": [
+    {
+     "id": "top",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-1",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "journey",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-2",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "work",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "films",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-3",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "voices",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "act-4",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "contact",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    },
+    {
+     "id": "credits",
+     "running": 0,
+     "sample": [],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 0,
+     "gl": 0,
+     "htmlAttrs": {
+      "motion": "paused",
+      "boot": "paused",
+      "stage": null
+     },
+     "lenis": false
+    }
+   ],
+   "final": {
+    "cls": 0,
+    "shifts": []
+   },
+   "shiftsAfterHydration": [],
+   "net": {
+    "media": 0,
+    "videoBytes": 0,
+    "audioRequests": [],
+    "mediaList": [],
+    "errors": [],
+    "failed": [],
+    "http": []
+   },
+   "ms": 67162
+  }
+ ],
+ "deeplinks": [
+  {
+   "hash": "work",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "work",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "work",
+   "variant": "skip",
+   "at5_5s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 6922,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "beyond",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 93,
+    "y": 23275,
+    "h": 35987,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 93,
+    "y": 23275,
+    "h": 35987,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "beyond",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 23276,
+    "h": 35987,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 23276,
+    "h": 35987,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "beyond",
+   "variant": "skip",
+   "at5_5s": {
+    "top": 93,
+    "y": 23275,
+    "h": 35987,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 93,
+    "y": 23275,
+    "h": 35987,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "principles",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "principles",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "principles",
+   "variant": "skip",
+   "at5_5s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 31908,
+    "h": 36402,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "journey",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "journey",
+   "variant": "plain",
+   "at5_5s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  },
+  {
+   "hash": "journey",
+   "variant": "skip",
+   "at5_5s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "at9s": {
+    "top": 92,
+    "y": 3564,
+    "h": 36066,
+    "hyd": true
+   },
+   "landed": true,
+   "stable": true,
+   "errors": 0
+  }
+ ]
+}

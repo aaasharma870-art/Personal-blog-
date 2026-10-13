@@ -1,0 +1,16 @@
+(node:21993) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/user/Personal-blog-/lib/page.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/user/Personal-blog-/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+beats @1440: page 4950.2vh; 80 beat element(s), 80 declared
+  estVh: top 1 · act-1 2.648 · about 1.211 · journey 3.264 · act-2 2.1 · work 2.628 · trading-algos 2.088 · optuna-screener 3.23 · experiment 1.14 · systems 2.343 · kill-list 2.359 · films 6.058 · act-3 1.9 · beyond 4.805 · writing 2.91 · voices 1.602 · act-4 2.1 · principles 2.989 · contact 1.06 · credits 2.066
+  competing stars (21): B06 × B07 9.4vh; B07 × B08 10.9vh; B07 × B08-invite 55.2vh; B08-invite × B09 2.4vh; B08-invite × B12 16.4vh; B09 × B12 40vh; B12 × B10 7.5vh; B16 × B17 9vh; B17 × B18 38vh; B18 × B19 19.5vh; B18 × B20 17vh; B19 × B20 89.9vh; B21-circle × B22 55.6vh; B21 × B22 5.5vh; B22 × B23 10.7vh; B25 × B26 10.8vh; B28 × B29 80vh; B42 × B43 7.2vh; B44 × B45 30.5vh; B52 × B53 77vh; B57 × B58 71.8vh
+  spotlight: {"own":16,"request":34,"wait":4,"skip":28,"free":9,"grant":6,"end":6}
+
+beats @1024: page 5366.8vh; 80 beat element(s), 80 declared
+  estVh: top 1 · act-1 2.705 · about 1.633 · journey 3.22 · act-2 2.1 · work 2.713 · trading-algos 2.849 · optuna-screener 3.934 · experiment 1.201 · systems 2.419 · kill-list 2.784 · films 5.816 · act-3 1.9 · beyond 5.611 · writing 3.236 · voices 2.01 · act-4 2.1 · principles 3.183 · contact 1.025 · credits 2.23
+  competing stars (18): B06 × B07 4.7vh; B07 × B08 2.7vh; B07 × B08-invite 35.8vh; B09 × B12 40vh; B12 × B10 7.1vh; B16 × B17 7.9vh; B17 × B18 16.7vh; B18 × B19 22.9vh; B18 × B20 1.9vh; B19 × B20 70.1vh; B21 × B22 2.7vh; B21-circle × B22 60.2vh; B25 × B26 4.1vh; B28 × B29 79.8vh; B42 × B43 5.3vh; B44 × B45 47.2vh; B52 × B53 73.4vh; B57 × B58 67vh
+  spotlight: {"own":16,"request":34,"wait":3,"skip":28,"free":10,"grant":6,"end":6}
+
+beats: wrote docs/build/motion-strips/p3-w3/beats/beats.json

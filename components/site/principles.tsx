@@ -4,6 +4,7 @@ import { pieceVariant } from "@/lib/variants";
 import { SectionHead, WorldSection } from "@/components/site/world-kit";
 import { PrinciplesStage } from "@/components/site/principles-stage";
 import { MapHint } from "@/components/worlds/hp/map-hint";
+import { RoomFeature } from "@/components/worlds/hp/room-features";
 import { PrincipleBody, SCRUB_ROOM } from "@/components/worlds/hp/principle-body";
 import type { SectionProps } from "@/components/sections/types";
 
@@ -49,6 +50,11 @@ export function Principles({ entry, number }: SectionProps<"principles">) {
           map: <MapHint className="inset-x-0 top-full mt-2 text-center" />,
           ceiling: <MapHint className="bottom-2 right-0 text-right" />,
         }}
+        // each room's own furniture on the Map (P3-11 r1), drawn here on the
+        // server: the drawing code stays out of the client bundle
+        features={principles.map((_, i) => (
+          <RoomFeature key={i} index={i} />
+        ))}
         // room 05's body with the Act IV scrubbed sentence (B55), rendered
         // here on the server: the words data stays out of the client bundle
         scrub={{

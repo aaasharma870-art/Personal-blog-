@@ -13,7 +13,7 @@ import { createPortal } from "react-dom";
 import { useScroll, type MotionValue } from "motion/react";
 import { emit } from "@/lib/events";
 import { film, type ActSpec } from "@/lib/film";
-import { useDesktopFine, useDocumentVisible, useReducedMotion } from "@/lib/flags";
+import { motionOffNow, onMotionOffChange, useDesktopFine, useDocumentVisible, useReducedMotion } from "@/lib/flags";
 import { loopFor } from "@/lib/loops";
 import { markOf, resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
@@ -42,7 +42,11 @@ import type { DepthSpec } from "@/components/primitives/depth-plate";
 import type { LivePlateProps } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import type { WeatherKind, WeatherLayerProps } from "./weather-layer";
+import { hideWhenFar } from "./far";
 import { StageVideo } from "./stage-video";
+// the stage's and the plates engine's own layers: loaded with this chunk,
+// not with the page (first-load CSS budget, P3-11 r1)
+import "./stage-lazy.css";
 
 /* ============================================================================
    THE PERSISTENT STAGE (spec §3.2, P3-2) — OWNER: B1-STAGE (W1), W2-PLATES (W2).
@@ -173,6 +177,29 @@ function inViewNow(el: Element): boolean {
   return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
 }
 
+/* Pause / reduced motion stops every plate in the click's own task, before
+   React re-renders and before any other Pause listener (`first`): weather
+   holds, camera and depth bands return to identity. React's unmount (the
+   facades drop the engine; the stage stops its weather) then cleans up as
+   before. Each entry gets `off` (motion off now). */
+const plateStops = new Set<(off: boolean) => void>();
+let plateWatch = false;
+
+function onPlateStop(fn: (off: boolean) => void): () => void {
+  if (!plateWatch) {
+    plateWatch = true;
+    onMotionOffChange(
+      () => {
+        const off = motionOffNow();
+        for (const f of [...plateStops]) f(off);
+      },
+      { first: true },
+    );
+  }
+  plateStops.add(fn);
+  return () => plateStops.delete(fn);
+}
+
 type Writer = { start(t: number): void; set(t: number): void; stop(): void };
 
 /** Writes one element's pose (transform only, unchanged values skipped).
@@ -183,9 +210,12 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
   let t0 = 0;
   let raf = 0;
   let last = "";
+  let dead = false;
+  let offStop = () => {};
   if (origin) el.style.transformOrigin = `${origin[0] * 100}% ${origin[1] * 100}%`;
   const put = () => {
     raf = 0;
+    if (dead) return;
     const q = pose(t);
     const k = t0 ? c01((performance.now() - t0) / EASE_IN_MS) : 1;
     const e = 1 - (1 - k) ** 3;
@@ -197,8 +227,9 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
     if (k < 1) raf = requestAnimationFrame(put);
     else t0 = 0;
   };
-  return {
+  const w: Writer = {
     start(v) {
+      offStop = onPlateStop((off) => off && w.stop());
       t = c01(v);
       if (inViewNow(el)) t0 = performance.now();
       put();
@@ -208,6 +239,8 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
       if (!raf) put();
     },
     stop() {
+      dead = true;
+      offStop();
       cancelAnimationFrame(raf);
       raf = 0;
       el.style.transform = "";
@@ -215,6 +248,7 @@ function poseWriter(el: HTMLElement, pose: (t: number) => CameraPose, origin?: P
       el.style.willChange = "";
     },
   };
+  return w;
 }
 
 /** Feeds a Writer 0–1 from the host's MotionValue (`progress`), else from
@@ -432,6 +466,7 @@ export function LiveImpl({
   playOn = "desktop",
   progress,
   sizes = "100vw",
+  liveStar,
   cam,
   far,
 }: Omit<LivePlateProps, "children"> & {
@@ -456,6 +491,39 @@ export function LiveImpl({
     root.setAttribute("data-plate", mode);
     return () => root.removeAttribute("data-plate");
   }, [cam, mode]);
+
+  // C1 (P3-11 r3; r2 J1 #6): a plate's loop is a LIVE weight-1 star
+  // (`liveStar`, declared in lib/page.ts) for as long as its <video> really
+  // plays: the playing / pause / ended events (capture phase: media events do
+  // not bubble) say so, so a loop the decoder lock paused, or one not yet
+  // started, is never lent a still screen. Pause unmounts this half.
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    const root = cam.current;
+    if (!liveStar || !live || !root) return;
+    const read = () => setPlaying([...root.querySelectorAll("video")].some((v) => !v.paused && !v.ended && v.readyState > 1));
+    const evs = ["playing", "pause", "ended", "emptied", "waiting"] as const;
+    for (const e of evs) root.addEventListener(e, read, true);
+    return () => {
+      for (const e of evs) root.removeEventListener(e, read, true);
+      setPlaying(false);
+    };
+  }, [cam, liveStar, live]);
+  useEffect(() => {
+    const box = cam.current?.parentElement;
+    if (!playing || !liveStar || !box) return;
+    return spotlight.registerScrollStar(liveStar, box, 1, { live: true });
+  }, [cam, playing, liveStar]);
+
+  // Pause: the loop holds in the click's own task (the facade's re-render
+  // then unmounts this half and its video)
+  useEffect(
+    () =>
+      onPlateStop((off) => {
+        if (off) for (const v of cam.current?.querySelectorAll("video") ?? []) v.pause();
+      }),
+    [cam],
+  );
 
   return (
     <>
@@ -577,10 +645,15 @@ export function WeatherImpl({
   const docOn = useDocumentVisible();
   const go = run && seen && docOn;
   const goRef = useRef(go);
+  // P3-11 r3 (J8: the opening card carried 14 idle infinite animations and
+  // their layers): the sprites are built the first time the layer runs,
+  // not at mount, and are their own layers only while they run (data-run)
+  const [built, setBuilt] = useState(go);
+  if (go && !built) setBuilt(true);
 
   useEffect(() => {
     const box = ref.current;
-    if (!box || typeof box.animate !== "function") return;
+    if (!built || !box || typeof box.animate !== "function") return;
     const d = WEATHER[kind];
     const n = clamp(Math.round(count ?? d.n), 0, 16);
     const w = box.offsetWidth || 800;
@@ -599,12 +672,20 @@ export function WeatherImpl({
       list.push(a);
     }
     anims.current = list;
+    // Pause: hold at once (resume plays again only if this layer still runs)
+    const offStop = onPlateStop((off) => {
+      for (const a of list) {
+        if (off) a.pause();
+        else if (goRef.current) a.play();
+      }
+    });
     return () => {
+      offStop();
       for (const a of list) a.cancel();
       anims.current = [];
       box.replaceChildren();
     };
-  }, [kind, count, seed]);
+  }, [kind, count, seed, built]);
 
   useEffect(() => {
     goRef.current = go;
@@ -622,7 +703,16 @@ export function WeatherImpl({
     return () => io.disconnect();
   }, []);
 
-  return <div ref={ref} className={cn("plate-weather", className)} data-weather={kind} data-zone={zone} aria-hidden="true" />;
+  return (
+    <div
+      ref={ref}
+      className={cn("plate-weather", className)}
+      data-weather={kind}
+      data-zone={zone}
+      data-run={go ? "" : undefined}
+      aria-hidden="true"
+    />
+  );
 }
 
 /* — Sequence window (spec §6.2; use-frame-sequence.ts `{ window }`) ———— */
@@ -856,8 +946,27 @@ type LayerEls = {
   row: string;
 };
 
-type VideoState = { k: number; host: HTMLElement | null; play: boolean };
-const NO_VIDEO: VideoState = { k: -1, host: null, play: false };
+/** `n` counts the pauses the frame loop made itself (StageVideo re-checks on
+ *  each, so a pause and a play inside one render never leave it paused). */
+type VideoState = { k: number; host: HTMLElement | null; play: boolean; n: number };
+const NO_VIDEO: VideoState = { k: -1, host: null, play: false, n: 0 };
+
+/** C1 (P3-11 r3; r2 J1 #6 "the window plates play with no star"): the stage's
+ *  one playing loop is a LIVE weight-1 star while it plays, by the item whose
+ *  shot it is: a split window's quiet marker (stage-window.tsx `live`, over
+ *  the window's box). Declared in lib/page.ts (`live: true`); lent a still
+ *  screen only. Only the corridor loop of trading-algos plays in a window:
+ *  optuna's ICE shot is a sliver since the pipeline's relayout (its drone
+ *  shot has no loop) and the credits loop never clears the own `contact`
+ *  section (OWN_CLEAR_VH), so neither has a star to register. */
+const LIVE_LOOP: Readonly<Record<string, string>> = {
+  "trading-algos": "B20-window",
+};
+
+/** The dusk grade's ceiling (P3-11 r3, F5 → F2; panel J2 / J4: the Beyond
+ *  window beside the satchel read as an empty box of black hillside): the
+ *  multiply layer reaches this share of its full ratio at the shot's end. */
+const GRADE_MAX = 0.55;
 
 const FADE_VH = 0.4;
 const MOUNT_MARGIN_VH = 0.5;
@@ -1212,7 +1321,7 @@ export function Stage() {
         }
         if (e.grade && Math.abs(l - e.g) > 0.002) {
           e.g = l;
-          e.grade.style.opacity = l.toFixed(3);
+          e.grade.style.opacity = (l * GRADE_MAX).toFixed(3);
         }
       }
       setRoot(rootWanted);
@@ -1240,7 +1349,16 @@ export function Stage() {
       }
       const v = videoRef.current;
       if (v.k !== kv || v.host !== host || v.play !== play) {
-        videoRef.current = { k: kv, host, play };
+        // the loop stops IN THIS FRAME, with the layers' opacity writes above:
+        // the state below lands a render later, and a crossfade never starts
+        // with the outgoing loop still decoding (0 during a fade, P3-2 #5;
+        // the W3 gate's decoder probe caught one such sample at 1024)
+        let n = v.n;
+        if (v.play && (!play || v.host !== host)) {
+          v.host?.querySelector("video")?.pause();
+          n += 1;
+        }
+        videoRef.current = { k: kv, host, play, n };
         setVideo(videoRef.current);
       }
     };
@@ -1295,10 +1413,13 @@ export function Stage() {
           // the text blocks (rack focus): marked ones, else the column's children
           let blocks = split.querySelectorAll<HTMLElement>("[data-stage-block]");
           if (!blocks.length) blocks = split.querySelectorAll<HTMLElement>(".stage-split-text > *");
-          blocks.forEach((blk, i, all) => {
+          // (a block with no layout box, e.g. the phone copy of a FIG that is
+          // display:none here, has no edge: its zero rect would read as scrollY)
+          const laid = [...blocks].filter((blk) => blk.getClientRects().length > 0);
+          laid.forEach((blk, i) => {
             const br = blk.getBoundingClientRect();
             edges.push(br.top + sy);
-            if (i === all.length - 1) edges.push(br.bottom + sy);
+            if (i === laid.length - 1) edges.push(br.bottom + sy);
           });
           edges.sort((p, q) => p - q);
           nextHosts.set(k, host);
@@ -1367,6 +1488,10 @@ export function Stage() {
       const w = Number(el.dataset.beatWeight ?? 1);
       if (id) stars.push(spotlight.registerScrollStar(id, el, w === 3 ? 3 : w === 2 ? 2 : 1));
     });
+    // a split window outside its section costs nothing (J8 #2, P3-11 r1):
+    // the sticky window (aria-hidden art) is out of paint while it is more
+    // than a viewport away (./far.ts); its layer mounts within half a one
+    const fars = [...document.querySelectorAll<HTMLElement>("[data-stage-window]")].map((el) => hideWhenFar(el, 1));
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
@@ -1376,6 +1501,7 @@ export function Stage() {
       window.removeEventListener("pointermove", onPointer);
       offScroll();
       stars.forEach((off) => off());
+      fars.forEach((off) => off());
       mark(new Set());
     };
   }, [scrollY]);
@@ -1519,6 +1645,12 @@ export function Stage() {
   const vk = video.k;
   const vLoop = vk >= 0 ? loops[vk] : null;
   const vFocal = vk >= 0 ? PLATES[vk]?.focal : undefined;
+  const liveStar = vLoop && video.play && on ? SHOTS[vk]?.items.map((i) => LIVE_LOOP[i]).find(Boolean) : undefined;
+  useEffect(() => {
+    if (!liveStar) return;
+    const el = document.querySelector(`[data-beat="${liveStar}"]`);
+    return el ? spotlight.registerScrollStar(liveStar, el, 1, { live: true }) : undefined;
+  }, [liveStar]);
 
   return (
     <>
@@ -1531,7 +1663,7 @@ export function Stage() {
           const host = hosts.get(k);
           return host ? createPortal(layer(k), host, `stage-${k}`) : null;
         })}
-      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} />
+      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} nonce={video.n} />
     </>
   );
 }

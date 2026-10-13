@@ -26,7 +26,7 @@
    its static / css frame); anything else waits for the next end.
 
    DRAW ONLY ON p CHANGE: one coalesced rAF per change (p, the kraken), plus
-   the 120–180 ms impact pulse. 0 rAF at rest, offscreen or hidden.
+   the 120 ms flash / 520 ms bloom impact pulse. 0 rAF at rest, offscreen or hidden.
    BUDGET: ≤ 3 plates and ≤ 25 MB of textures (LRU; an offscreen owner's
    plates give way to the card approaching), buffer ≤ 1922×804. With no
    host left (Pause, reduced motion, a resize, tier css) the plates, titles
@@ -45,9 +45,9 @@ import { motionOffNow, onMotionOffChange } from "../flags";
 import { onIdle } from "../idle";
 import { whenLadder } from "../ladder";
 import { getMedia, isMediaId, markOf, registeredTo, type MediaId } from "../media";
-import { markWorldFontsReady } from "../world-fonts";
+import { worldFontsMarked } from "../world-fonts";
 import type { GlPeek } from "./gl-debug";
-import { frameAt, programsOf, titleXf, uniformsFor, type Geo } from "./plan";
+import { TITLE_ZOOM, frameAt, programsOf, titleXf, uniformsFor, type Geo } from "./plan";
 import type { SdfTitle, TitleFont } from "./sdf-title";
 import { fragment } from "./shaders";
 import { glForced, glTier, onGlTierChange, setContextTier } from "./support";
@@ -60,6 +60,11 @@ const MAX_PLATES = 3;
 const MAX_BUFFER = 1922 * 804;
 const FADE_MS = 200;
 const QUIET_MS = 180;
+/** The PAGE must have been still this long before a tier switch (P3-11 r3,
+ *  J8 F11: a reader's wheel notches are ~200 ms apart, so a 180 ms gap
+ *  engaged GL on an approaching card at p 0, the next notch started the pin
+ *  and the abort left a one-frame grey-box flash mid-card at 1024). */
+const ENGAGE_QUIET_MS = 600;
 const DEEP: [number, number, number] = [0.04, 0.05, 0.07];
 
 export type GlHostOptions = {
@@ -140,6 +145,25 @@ const log = (ev: string, h?: Host) => {
   if (dbg.log.length > 200) dbg.log.shift();
 };
 const moving = () => now() - lastMove < QUIET_MS;
+/** The PAGE scrolled within QUIET_MS (any scroll, not only a card's p):
+ *  the engage (mount, size, first draw) waits for it (P3-11 r1, F6 / J8
+ *  #1: it ran inside the first scroll's observer pass, 180–350 ms). */
+let lastScroll = -1e9;
+const scrolling = (ms = QUIET_MS) => now() - lastScroll < ms;
+/** The visibility observer's work (arbitrate + reprep), coalesced into
+ *  ONE idle slice instead of running inside the observer callback. */
+let arbiter: (() => void) | null = null;
+function arbitrateSoon(): void {
+  if (arbiter) return;
+  arbiter = onIdle(
+    () => {
+      arbiter = null;
+      arbitrate();
+      if (!holds(owner)) reprep();
+    },
+    { timeout: 600 },
+  );
+}
 
 /** WEBGL_lose_context, taken at creation (getExtension is null once lost). */
 let loseExt: WEBGL_lose_context | null = null;
@@ -156,11 +180,13 @@ function enqueue(job: Job): boolean {
 }
 
 /** Resolves when a slice may run: motion on, tier gl, visible tab, no p
- *  moving (or nothing left that wants the work). */
+ *  moving and the PAGE still (P3-11 r3, F6 / J8: the GL jobs were the
+ *  last long idle tasks while the page scrolled; or nothing left that
+ *  wants the work). */
 function quiet(): Promise<void> {
   return new Promise((res) => {
     const check = () => {
-      if (!hosts.size || (!motionOffNow() && glTier() === "gl" && !document.hidden && !moving())) res();
+      if (!hosts.size || (!motionOffNow() && glTier() === "gl" && !document.hidden && !moving() && !scrolling())) res();
       else window.setTimeout(check, 120);
     };
     check();
@@ -179,7 +205,9 @@ async function pump(): Promise<void> {
     const wanted = hosts.size > 0 && !lost && !(failed && job.key !== "ctx") && (!job.want || job.want());
     let done = true;
     if (!wanted) job.drop?.();
-    else if (motionOffNow() || moving()) done = false;
+    // the page moved while the slice was awaited: skip it (it runs again
+    // once the page is still), never a compile or an upload mid-scroll
+    else if (motionOffNow() || moving() || scrolling()) done = false;
     else {
       try {
         done = job.run();
@@ -212,6 +240,7 @@ function ctxJob(): boolean {
   }
   dbg.contexts++;
   const forced = glForced();
+  presize(canvas);
   const t = createTransitionGL(canvas, forced);
   if (!t || (t.maxTex < 4096 && !forced)) {
     t?.gl.getExtension("WEBGL_lose_context")?.loseContext();
@@ -225,6 +254,31 @@ function ctxJob(): boolean {
   log("context");
   setContextTier("gl");
   return true;
+}
+
+/** The drawing buffer's size, set on the canvas BEFORE its context exists, so
+ *  the context is created at that size and never re-allocated by a later
+ *  resize (P3-11 r3 pass 2, F3 / J8 F2: ctxJob held the main thread 0.3–2.1 s;
+ *  creating the context is a single browser call and stays one job, but
+ *  growing the default 300 × 150 buffer afterwards cost a second allocation
+ *  of 94–346 ms. Timed over five loads each, headless software GL: the job
+ *  as one with the canvas sized first took a median 310 ms; created at the
+ *  default size, then sized in the next slice, 855 ms + 185 ms.)
+ *  P3-11 r3 (F6, J8: the first engage re-allocated the drawing buffer inside
+ *  the engage frame): the buffer is sized ONCE, from the host that will own
+ *  first (the visible one nearest the viewport centre, else any). A card
+ *  frame is the 2.39:1 letterbox, not the viewport, so the window is only
+ *  the fallback (a host with no box); size() then re-allocates on a real
+ *  resize only. */
+function presize(c: HTMLCanvasElement): void {
+  let first: Host | null = null;
+  for (const h of hosts) {
+    if (!first || (h.visible && !first.visible) || (h.visible === first.visible && h.dist < first.dist)) first = h;
+  }
+  const fr = first?.el.getBoundingClientRect();
+  const [w, ht] = fr && fr.width >= 1 && fr.height >= 1 ? bufferFor(fr.width, fr.height) : bufferFor(window.innerWidth, window.innerHeight);
+  c.width = w;
+  c.height = ht;
 }
 
 function onLost(e: Event): void {
@@ -383,7 +437,12 @@ function platePrep(h: Host, which: "from" | "to"): void {
 }
 
 async function fontOf(h: Host): Promise<TitleFont> {
-  await markWorldFontsReady(h.spec.b.world, 1500);
+  // never force a world's face in from here (P3-11 r1, F6: forcing it could
+  // swap the face while that world is on screen); WorldFonts adds the token
+  // while the world is off screen: wait for it (≤ 8 s, a 250 ms poll, no
+  // work), else set the title in the face that is there
+  const w = h.spec.b.world;
+  for (let i = 0; i < 32 && !worldFontsMarked().has(w); i++) await new Promise((r) => window.setTimeout(r, 250));
   const cs = getComputedStyle(h.el);
   const v = (n: string) => cs.getPropertyValue(n).trim();
   const family = v("--world-font-head") || v("--world-font-act") || cs.fontFamily;
@@ -504,15 +563,26 @@ function ready(h: Host): boolean {
 
 /* — ownership, engagement ————————————————————————————————————————————— */
 
+/** The drawing buffer for a box of `wCss` × `hCss` CSS px (DPR ≤ 1.5,
+ *  ≤ MAX_BUFFER pixels). */
+function bufferFor(wCss: number, hCss: number): [number, number] {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const w = Math.max(1, wCss * dpr);
+  const ht = Math.max(1, hCss * dpr);
+  const k = Math.min(1, Math.sqrt(MAX_BUFFER / (w * ht)));
+  return [Math.round(w * k), Math.round(ht * k)];
+}
+
+/** The owner's buffer: allocated at context creation (ctxJob, from the
+ *  first owner's box); changed only when the host's needs differ by more
+ *  than 2 px (a resize, a host of another size), never re-allocated for an
+ *  equal box. */
 function size(h: Host): void {
   if (!tgl) return;
   const r = h.el.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  let w = Math.max(1, r.width * dpr);
-  let ht = Math.max(1, r.height * dpr);
-  const k = Math.min(1, Math.sqrt(MAX_BUFFER / (w * ht)));
-  w = Math.round(w * k);
-  ht = Math.round(ht * k);
+  const [w, ht] = bufferFor(r.width, r.height);
+  const c = tgl.gl.canvas as HTMLCanvasElement;
+  if (Math.abs(c.width - w) <= 2 && Math.abs(c.height - ht) <= 2) return;
   tgl.size(w, ht);
 }
 
@@ -557,8 +627,8 @@ function later(): void {
 
 function tryEngage(h: Host): void {
   if (h !== owner || h.state !== "idle" || mid(h) || !ready(h) || glTier() !== "gl" || motionOffNow()) return;
-  // only at a still p end: the fade never meets a scrub
-  if (moving()) return later();
+  // only at a still p end on a still page: the fade never meets a scrub
+  if (moving() || scrolling(ENGAGE_QUIET_MS)) return later();
   mount(h);
   grab(h);
   draw(h);
@@ -626,7 +696,9 @@ function flashNow(): [number, number] {
   if (!flash.dur) return [0, 0];
   const k = (now() - flash.t0) / flash.dur;
   if (k < 0 || k >= 1) return [0, 0];
-  const v = flash.amt * (k < 0.2 ? k / 0.2 : 1 - (k - 0.2) / 0.8);
+  // up fast, then an ease-out decay (P3-11 r1 J8 #5: the bloom's linear
+  // 180 ms tail read as a one-frame drop back to dark)
+  const v = flash.amt * (k < 0.2 ? k / 0.2 : (1 - (k - 0.2) / 0.8) ** 2);
   return flash.bloom ? [0, v] : [v, 0];
 }
 
@@ -661,7 +733,7 @@ function draw(h: Host): void {
     kraken: h.spec.kraken?.get() ?? 0,
     flash: flashNow(),
     roll: h.roll,
-    titleXf: title?.meta ? titleXf(title.meta, res, d.t) : null,
+    titleXf: title?.meta ? titleXf(title.meta, res, d.t, TITLE_ZOOM[h.spec.card]) : null,
   });
   const name = d.kind === "title" ? "title" : d.pass.flavour;
   tgl.draw(name, u, {
@@ -729,8 +801,7 @@ function install(): void {
           h.visible = e.isIntersecting && e.intersectionRatio > 0;
           h.dist = Math.abs(r.top + r.height / 2 - (e.rootBounds?.height ?? window.innerHeight) / 2);
         });
-        arbitrate();
-        if (!holds(owner)) reprep();
+        arbitrateSoon();
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
     ),
@@ -751,11 +822,18 @@ function install(): void {
   };
   onMotionOffChange(stopAll);
   onGlTierChange(stopAll);
+  window.addEventListener(
+    "scroll",
+    () => {
+      lastScroll = now();
+    },
+    { passive: true },
+  );
   on("impact", ({ world }) => {
     const h = owner;
     if (!h || h.state === "idle" || !h.spec.flash || h.spec.b.world !== world || motionOffNow()) return;
     const bloom = world === "hp";
-    flash = { t0: now(), dur: bloom ? 180 : 120, amt: h.spec.flash.amount, bloom, raf: 0 };
+    flash = { t0: now(), dur: bloom ? 520 : 120, amt: h.spec.flash.amount, bloom, raf: 0 };
     const step = () => {
       if (owner && owner.state !== "idle") draw(owner);
       flash.raf = now() - flash.t0 < flash.dur ? requestAnimationFrame(step) : 0;

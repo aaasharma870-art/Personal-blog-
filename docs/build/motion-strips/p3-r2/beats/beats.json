@@ -1,0 +1,3710 @@
+{
+  "base": "http://localhost:3161",
+  "path": "/?skip=intro,smooth&debug=spotlight",
+  "date": "2026-10-04T00:09:06.744Z",
+  "results": [
+    {
+      "width": 1440,
+      "pageVh": 4959.8,
+      "heights": {
+        "top": 1,
+        "act-1": 2.648,
+        "about": 1.211,
+        "journey": 3.264,
+        "act-2": 2.1,
+        "work": 2.442,
+        "trading-algos": 2.087,
+        "optuna-screener": 3.23,
+        "experiment": 1.14,
+        "systems": 2.576,
+        "kill-list": 2.358,
+        "films": 6.37,
+        "act-3": 1.9,
+        "beyond": 4.805,
+        "writing": 2.91,
+        "voices": 1.602,
+        "act-4": 2.1,
+        "principles": 2.989,
+        "contact": 1.06,
+        "credits": 1.806
+      },
+      "gaps": [],
+      "competing": [
+        {
+          "a": "B06",
+          "b": "B07",
+          "vh": 9.4
+        },
+        {
+          "a": "B07",
+          "b": "B08",
+          "vh": 10.9
+        },
+        {
+          "a": "B07",
+          "b": "B08-invite",
+          "vh": 55.2
+        },
+        {
+          "a": "B08-invite",
+          "b": "B09",
+          "vh": 2.4
+        },
+        {
+          "a": "B08-invite",
+          "b": "B12",
+          "vh": 16.4
+        },
+        {
+          "a": "B09",
+          "b": "B12",
+          "vh": 40
+        },
+        {
+          "a": "B12",
+          "b": "B10",
+          "vh": 7.5
+        },
+        {
+          "a": "B16",
+          "b": "B17",
+          "vh": 26.2
+        },
+        {
+          "a": "B17",
+          "b": "B18",
+          "vh": 38
+        },
+        {
+          "a": "B18",
+          "b": "B19",
+          "vh": 19.5
+        },
+        {
+          "a": "B18",
+          "b": "B20",
+          "vh": 17
+        },
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 89.9
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 55.6
+        },
+        {
+          "a": "B21",
+          "b": "B22",
+          "vh": 5.5
+        },
+        {
+          "a": "B22",
+          "b": "B23",
+          "vh": 10.7
+        },
+        {
+          "a": "B23-fig",
+          "b": "B24",
+          "vh": 4.5
+        },
+        {
+          "a": "B25",
+          "b": "B26",
+          "vh": 10.8
+        },
+        {
+          "a": "B28",
+          "b": "B29",
+          "vh": 80
+        },
+        {
+          "a": "B42",
+          "b": "B43",
+          "vh": 7.2
+        },
+        {
+          "a": "B44-sketch",
+          "b": "B45",
+          "vh": 28.4
+        },
+        {
+          "a": "B44",
+          "b": "B45",
+          "vh": 30.5
+        },
+        {
+          "a": "B44-page1",
+          "b": "B45",
+          "vh": 77.8
+        },
+        {
+          "a": "B45",
+          "b": "B44-page2",
+          "vh": 84.3
+        },
+        {
+          "a": "B45",
+          "b": "B44-page3",
+          "vh": 52.1
+        },
+        {
+          "a": "B45",
+          "b": "B44-page4",
+          "vh": 14.3
+        },
+        {
+          "a": "B44-page5",
+          "b": "B46",
+          "vh": 6.8
+        },
+        {
+          "a": "B52",
+          "b": "B53",
+          "vh": 77
+        },
+        {
+          "a": "B57",
+          "b": "B58",
+          "vh": 72.2
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 23,
+          "free": 13,
+          "request": 38,
+          "wait": 22,
+          "skip": 36,
+          "grant": 2,
+          "end": 2
+        },
+        "log": [
+          {
+            "t": 1531,
+            "y": 0,
+            "ev": "own",
+            "id": "B02",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 1846,
+            "y": 1080,
+            "ev": "free",
+            "id": "B02"
+          },
+          {
+            "t": 2276,
+            "y": 3240,
+            "ev": "own",
+            "id": "B08",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 2284,
+            "y": 3240,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 2285,
+            "y": 3240,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "B09 begins within the hold"
+          },
+          {
+            "t": 2286,
+            "y": 3240,
+            "ev": "request",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 2287,
+            "y": 3240,
+            "ev": "request",
+            "id": "B07",
+            "weight": 1
+          },
+          {
+            "t": 2368,
+            "y": 3780,
+            "ev": "free",
+            "id": "B08"
+          },
+          {
+            "t": 2377,
+            "y": 3780,
+            "ev": "skip",
+            "id": "B07",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2477,
+            "y": 4320,
+            "ev": "skip",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2558,
+            "y": 4860,
+            "ev": "own",
+            "id": "B10",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 2773,
+            "y": 5940,
+            "ev": "own",
+            "id": "B11",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 2881,
+            "y": 6480,
+            "ev": "own",
+            "id": "B12-push",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 2902,
+            "y": 6480,
+            "ev": "request",
+            "id": "B12",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 2902,
+            "y": 6480,
+            "ev": "wait",
+            "id": "B12",
+            "weight": 2,
+            "why": "owned by B12-push"
+          },
+          {
+            "t": 2969,
+            "y": 7020,
+            "ev": "skip",
+            "id": "B12",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3064,
+            "y": 7560,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 3150,
+            "y": 8100,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 3237,
+            "y": 8640,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3429,
+            "y": 9720,
+            "ev": "request",
+            "id": "B16",
+            "weight": 1
+          },
+          {
+            "t": 3519,
+            "y": 10260,
+            "ev": "skip",
+            "id": "B16",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3519,
+            "y": 10260,
+            "ev": "request",
+            "id": "B17",
+            "weight": 2
+          },
+          {
+            "t": 3520,
+            "y": 10260,
+            "ev": "wait",
+            "id": "B17",
+            "weight": 2,
+            "why": "B19 begins within the hold"
+          },
+          {
+            "t": 3597,
+            "y": 10800,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 3602,
+            "y": 10800,
+            "ev": "request",
+            "id": "B18",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 3602,
+            "y": 10800,
+            "ev": "wait",
+            "id": "B18",
+            "weight": 1,
+            "why": "owned by B19"
+          },
+          {
+            "t": 3699,
+            "y": 11340,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 3699,
+            "y": 11340,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 180 ms"
+          },
+          {
+            "t": 3704,
+            "y": 11340,
+            "ev": "skip",
+            "id": "B18",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3704,
+            "y": 11340,
+            "ev": "request",
+            "id": "B20",
+            "weight": 2
+          },
+          {
+            "t": 3786,
+            "y": 11880,
+            "ev": "skip",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "maxWait 1500 ms"
+          },
+          {
+            "t": 3869,
+            "y": 12420,
+            "ev": "wait",
+            "id": "B21",
+            "weight": 1,
+            "why": "held by B17"
+          },
+          {
+            "t": 3874,
+            "y": 12420,
+            "ev": "request",
+            "id": "B21-circle",
+            "weight": 1
+          },
+          {
+            "t": 3982,
+            "y": 12960,
+            "ev": "request",
+            "id": "B22",
+            "weight": 2
+          },
+          {
+            "t": 3983,
+            "y": 12960,
+            "ev": "skip",
+            "id": "B20",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4076,
+            "y": 13500,
+            "ev": "skip",
+            "id": "B21-circle",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4156,
+            "y": 14040,
+            "ev": "request",
+            "id": "B23-fig",
+            "weight": 1
+          },
+          {
+            "t": 4156,
+            "y": 14040,
+            "ev": "skip",
+            "id": "B22",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4156,
+            "y": 14040,
+            "ev": "request",
+            "id": "B23",
+            "weight": 1
+          },
+          {
+            "t": 4256,
+            "y": 14580,
+            "ev": "skip",
+            "id": "B23",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4256,
+            "y": 14580,
+            "ev": "request",
+            "id": "B24",
+            "weight": 1
+          },
+          {
+            "t": 4355,
+            "y": 15120,
+            "ev": "skip",
+            "id": "B23-fig",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4454,
+            "y": 15660,
+            "ev": "skip",
+            "id": "B24",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4536,
+            "y": 16200,
+            "ev": "request",
+            "id": "B25",
+            "weight": 1
+          },
+          {
+            "t": 4718,
+            "y": 17280,
+            "ev": "skip",
+            "id": "B25",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4718,
+            "y": 17280,
+            "ev": "request",
+            "id": "B26",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 4817,
+            "y": 17820,
+            "ev": "request",
+            "id": "B27",
+            "weight": 2
+          },
+          {
+            "t": 4902,
+            "y": 18360,
+            "ev": "skip",
+            "id": "B26",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4902,
+            "y": 18360,
+            "ev": "end",
+            "id": "B17",
+            "why": "held"
+          },
+          {
+            "t": 4912,
+            "y": 18360,
+            "ev": "wait",
+            "id": "B27",
+            "weight": 2,
+            "why": "B30 begins within the hold"
+          },
+          {
+            "t": 5001,
+            "y": 18900,
+            "ev": "request",
+            "id": "B28",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 5084,
+            "y": 19440,
+            "ev": "skip",
+            "id": "B27",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5084,
+            "y": 19440,
+            "ev": "request",
+            "id": "B29",
+            "weight": 1
+          },
+          {
+            "t": 5084,
+            "y": 19440,
+            "ev": "wait",
+            "id": "B29",
+            "weight": 1,
+            "why": "B30 begins within the hold"
+          },
+          {
+            "t": 5182,
+            "y": 19980,
+            "ev": "own",
+            "id": "B29-lens",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 5189,
+            "y": 19980,
+            "ev": "skip",
+            "id": "B29",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5191,
+            "y": 19980,
+            "ev": "skip",
+            "id": "B28",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5432,
+            "y": 21060,
+            "ev": "free",
+            "id": "B29-lens"
+          },
+          {
+            "t": 5600,
+            "y": 21600,
+            "ev": "own",
+            "id": "B30",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 5624,
+            "y": 22140,
+            "ev": "free",
+            "id": "B30"
+          },
+          {
+            "t": 5631,
+            "y": 22140,
+            "ev": "request",
+            "id": "B31",
+            "weight": 1
+          },
+          {
+            "t": 5631,
+            "y": 22140,
+            "ev": "wait",
+            "id": "B31",
+            "weight": 1,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5631,
+            "y": 22140,
+            "ev": "request",
+            "id": "B31-finale",
+            "weight": 1
+          },
+          {
+            "t": 5790,
+            "y": 22680,
+            "ev": "skip",
+            "id": "B31",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5791,
+            "y": 22680,
+            "ev": "wait",
+            "id": "B31-finale",
+            "weight": 1,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5820,
+            "y": 23220,
+            "ev": "request",
+            "id": "B32-finale",
+            "weight": 2
+          },
+          {
+            "t": 5820,
+            "y": 23220,
+            "ev": "wait",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5820,
+            "y": 23220,
+            "ev": "request",
+            "id": "B32",
+            "weight": 1
+          },
+          {
+            "t": 5821,
+            "y": 23220,
+            "ev": "skip",
+            "id": "B31-finale",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5901,
+            "y": 23760,
+            "ev": "skip",
+            "id": "B32",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6003,
+            "y": 24300,
+            "ev": "skip",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6003,
+            "y": 24300,
+            "ev": "request",
+            "id": "B33",
+            "weight": 1
+          },
+          {
+            "t": 6003,
+            "y": 24300,
+            "ev": "wait",
+            "id": "B33",
+            "weight": 1,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 6083,
+            "y": 24840,
+            "ev": "request",
+            "id": "B33-finale",
+            "weight": 2
+          },
+          {
+            "t": 6084,
+            "y": 24840,
+            "ev": "wait",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 6183,
+            "y": 25380,
+            "ev": "skip",
+            "id": "B33",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6183,
+            "y": 25380,
+            "ev": "request",
+            "id": "B34",
+            "weight": 1
+          },
+          {
+            "t": 6266,
+            "y": 25920,
+            "ev": "skip",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6267,
+            "y": 25920,
+            "ev": "request",
+            "id": "B34-finale",
+            "weight": 2
+          },
+          {
+            "t": 6268,
+            "y": 25920,
+            "ev": "wait",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 6368,
+            "y": 26460,
+            "ev": "skip",
+            "id": "B34",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6447,
+            "y": 27000,
+            "ev": "own",
+            "id": "B35",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 6453,
+            "y": 27000,
+            "ev": "skip",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6548,
+            "y": 27540,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 6630,
+            "y": 28080,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 6730,
+            "y": 28620,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 6734,
+            "y": 28620,
+            "ev": "request",
+            "id": "B40",
+            "weight": 1
+          },
+          {
+            "t": 6734,
+            "y": 28620,
+            "ev": "wait",
+            "id": "B40",
+            "weight": 1,
+            "why": "B41 begins within the hold"
+          },
+          {
+            "t": 6913,
+            "y": 29700,
+            "ev": "own",
+            "id": "B41",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 6917,
+            "y": 29700,
+            "ev": "skip",
+            "id": "B40",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6996,
+            "y": 30240,
+            "ev": "free",
+            "id": "B41"
+          },
+          {
+            "t": 7179,
+            "y": 31320,
+            "ev": "own",
+            "id": "B42",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 7183,
+            "y": 31320,
+            "ev": "request",
+            "id": "B43",
+            "weight": 2
+          },
+          {
+            "t": 7183,
+            "y": 31320,
+            "ev": "wait",
+            "id": "B43",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7266,
+            "y": 31860,
+            "ev": "free",
+            "id": "B42"
+          },
+          {
+            "t": 7270,
+            "y": 31860,
+            "ev": "request",
+            "id": "B43-wanted",
+            "weight": 2
+          },
+          {
+            "t": 7372,
+            "y": 32400,
+            "ev": "skip",
+            "id": "B43",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7428,
+            "y": 32400,
+            "ev": "wait",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7451,
+            "y": 32940,
+            "ev": "request",
+            "id": "B44",
+            "weight": 2
+          },
+          {
+            "t": 7550,
+            "y": 33480,
+            "ev": "request",
+            "id": "B44-sketch",
+            "weight": 1
+          },
+          {
+            "t": 7554,
+            "y": 33480,
+            "ev": "skip",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7555,
+            "y": 33480,
+            "ev": "wait",
+            "id": "B44",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7633,
+            "y": 34020,
+            "ev": "skip",
+            "id": "B44",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7639,
+            "y": 34020,
+            "ev": "request",
+            "id": "B44-page2",
+            "weight": 1
+          },
+          {
+            "t": 7642,
+            "y": 34020,
+            "ev": "wait",
+            "id": "B44-sketch",
+            "weight": 1,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7704,
+            "y": 34020,
+            "ev": "request",
+            "id": "B45",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 7751,
+            "y": 34560,
+            "ev": "request",
+            "id": "B44-page3",
+            "weight": 1
+          },
+          {
+            "t": 7835,
+            "y": 35100,
+            "ev": "skip",
+            "id": "B44-page3",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7835,
+            "y": 35100,
+            "ev": "skip",
+            "id": "B44-page2",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7839,
+            "y": 35100,
+            "ev": "request",
+            "id": "B44-page5",
+            "weight": 1
+          },
+          {
+            "t": 7930,
+            "y": 35640,
+            "ev": "own",
+            "id": "B46",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 7930,
+            "y": 35640,
+            "ev": "wait",
+            "id": "B45",
+            "weight": 2,
+            "why": "owned by B46"
+          },
+          {
+            "t": 7930,
+            "y": 35640,
+            "ev": "wait",
+            "id": "B44-page5",
+            "weight": 1,
+            "why": "owned by B46"
+          },
+          {
+            "t": 8030,
+            "y": 36180,
+            "ev": "own",
+            "id": "B47",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 8034,
+            "y": 36180,
+            "ev": "skip",
+            "id": "B44-sketch",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8034,
+            "y": 36180,
+            "ev": "skip",
+            "id": "B45",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8035,
+            "y": 36180,
+            "ev": "skip",
+            "id": "B44-page5",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8237,
+            "y": 37260,
+            "ev": "free",
+            "id": "B47"
+          },
+          {
+            "t": 8316,
+            "y": 37800,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 8416,
+            "y": 38340,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 8526,
+            "y": 38880,
+            "ev": "free",
+            "id": "B50"
+          },
+          {
+            "t": 8543,
+            "y": 38880,
+            "ev": "request",
+            "id": "B52",
+            "weight": 1
+          },
+          {
+            "t": 8544,
+            "y": 38880,
+            "ev": "wait",
+            "id": "B52",
+            "weight": 1,
+            "why": "B54 begins within the hold"
+          },
+          {
+            "t": 8697,
+            "y": 39960,
+            "ev": "own",
+            "id": "B54",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 8881,
+            "y": 41040,
+            "ev": "own",
+            "id": "B55",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 8964,
+            "y": 41580,
+            "ev": "free",
+            "id": "B55"
+          },
+          {
+            "t": 8970,
+            "y": 41580,
+            "ev": "request",
+            "id": "B56",
+            "weight": 2
+          },
+          {
+            "t": 8971,
+            "y": 41580,
+            "ev": "wait",
+            "id": "B56",
+            "weight": 2,
+            "why": "B56-trail begins within the hold"
+          },
+          {
+            "t": 9064,
+            "y": 42120,
+            "ev": "own",
+            "id": "B56-trail",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 9070,
+            "y": 42120,
+            "ev": "skip",
+            "id": "B52",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9150,
+            "y": 42660,
+            "ev": "free",
+            "id": "B56-trail"
+          },
+          {
+            "t": 9150,
+            "y": 42660,
+            "ev": "grant",
+            "id": "B56",
+            "weight": 2,
+            "why": "waited 179 ms"
+          },
+          {
+            "t": 9156,
+            "y": 42660,
+            "ev": "request",
+            "id": "B57",
+            "weight": 2
+          },
+          {
+            "t": 9172,
+            "y": 42660,
+            "ev": "skip",
+            "id": "B57",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 10224,
+            "y": 0,
+            "ev": "own",
+            "id": "B02",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 10352,
+            "y": 0,
+            "ev": "end",
+            "id": "B56",
+            "why": "held"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 900
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 125.3,
+          "hPx": 536,
+          "stickyPx": 810
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 365
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 184.9,
+          "hPx": 136,
+          "stickyPx": 810
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 405
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 673
+        },
+        {
+          "id": "B07",
+          "star": true,
+          "weight": 1,
+          "topVh": 380.6,
+          "hPx": 194
+        },
+        {
+          "id": "B08",
+          "star": true,
+          "weight": 1,
+          "topVh": 419.6,
+          "hPx": 148
+        },
+        {
+          "id": "B08-invite",
+          "star": true,
+          "weight": 1,
+          "topVh": 425.4,
+          "hPx": 207
+        },
+        {
+          "id": "B09",
+          "star": true,
+          "weight": 1,
+          "topVh": 473.1,
+          "hPx": 360
+        },
+        {
+          "id": "B09-window",
+          "star": false,
+          "weight": null,
+          "topVh": 509,
+          "hPx": 362,
+          "stickyPx": 2003
+        },
+        {
+          "id": "B12",
+          "star": true,
+          "weight": 2,
+          "topVh": 509,
+          "hPx": 152,
+          "stickyPx": 2003
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 551.5,
+          "hPx": 558
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 675.5,
+          "hPx": 558
+        },
+        {
+          "id": "B12-push",
+          "star": true,
+          "weight": 1,
+          "topVh": 737.5,
+          "hPx": 558
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 834.6,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 862.3,
+          "hPx": 446
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 894.1,
+          "hPx": 164,
+          "stickyPx": 990
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 911.8,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 917.3,
+          "hPx": 495
+        },
+        {
+          "id": "B16",
+          "star": true,
+          "weight": 1,
+          "topVh": 1112.9,
+          "hPx": 217
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1186.7,
+          "hPx": 548
+        },
+        {
+          "id": "B18",
+          "star": true,
+          "weight": 1,
+          "topVh": 1248.8,
+          "hPx": 44
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1279.3,
+          "hPx": 832,
+          "stickyPx": 816
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1279.3,
+          "hPx": 832,
+          "stickyPx": 816
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1331.8,
+          "hPx": 519
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1443.6,
+          "hPx": 109
+        },
+        {
+          "id": "B21",
+          "star": true,
+          "weight": 1,
+          "topVh": 1446.8,
+          "hPx": 49
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1488,
+          "hPx": 562
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1557.6,
+          "hPx": 832,
+          "stickyPx": 1219
+        },
+        {
+          "id": "B23",
+          "star": true,
+          "weight": 1,
+          "topVh": 1577.3,
+          "hPx": 22
+        },
+        {
+          "id": "B23-fig",
+          "star": true,
+          "weight": 1,
+          "topVh": 1617.1,
+          "hPx": 441
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1712.6,
+          "hPx": 24
+        },
+        {
+          "id": "B25",
+          "star": true,
+          "weight": 1,
+          "topVh": 1835.8,
+          "hPx": 572
+        },
+        {
+          "id": "B26",
+          "star": true,
+          "weight": 1,
+          "topVh": 1925,
+          "hPx": 562
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2038.9,
+          "hPx": 1063
+        },
+        {
+          "id": "B28",
+          "star": true,
+          "weight": 1,
+          "topVh": 2185.3,
+          "hPx": 44
+        },
+        {
+          "id": "B29",
+          "star": true,
+          "weight": 1,
+          "topVh": 2205.3,
+          "hPx": 22
+        },
+        {
+          "id": "B29-lens",
+          "star": true,
+          "weight": 1,
+          "topVh": 2236.7,
+          "hPx": 1359
+        },
+        {
+          "id": "B30",
+          "star": true,
+          "weight": 3,
+          "topVh": 2398.5,
+          "hPx": 360
+        },
+        {
+          "id": "B31-bars",
+          "star": false,
+          "weight": null,
+          "topVh": 2492,
+          "hPx": 360
+        },
+        {
+          "id": "B31",
+          "star": true,
+          "weight": 1,
+          "topVh": 2494.2,
+          "hPx": 60
+        },
+        {
+          "id": "B31-finale",
+          "star": true,
+          "weight": 1,
+          "topVh": 2503.5,
+          "hPx": 549
+        },
+        {
+          "id": "B32",
+          "star": true,
+          "weight": 1,
+          "topVh": 2628.7,
+          "hPx": 63
+        },
+        {
+          "id": "B32-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2638.4,
+          "hPx": 549
+        },
+        {
+          "id": "B33",
+          "star": true,
+          "weight": 1,
+          "topVh": 2767.9,
+          "hPx": 51
+        },
+        {
+          "id": "B33-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2776.2,
+          "hPx": 549
+        },
+        {
+          "id": "B34",
+          "star": true,
+          "weight": 1,
+          "topVh": 2904.4,
+          "hPx": 70
+        },
+        {
+          "id": "B34-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2914.8,
+          "hPx": 549
+        },
+        {
+          "id": "B35",
+          "star": true,
+          "weight": 1,
+          "topVh": 3009.8,
+          "hPx": 360
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3050.9,
+          "hPx": 536,
+          "stickyPx": 810
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3092.6,
+          "hPx": 365
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3095.3,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3124.7,
+          "hPx": 161,
+          "stickyPx": 810
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3137.6,
+          "hPx": 405
+        },
+        {
+          "id": "B39-drift",
+          "star": false,
+          "weight": null,
+          "topVh": 3232.6,
+          "hPx": 720
+        },
+        {
+          "id": "B40",
+          "star": true,
+          "weight": 1,
+          "topVh": 3249.3,
+          "hPx": 208
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3357.6,
+          "hPx": 312
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3399.5,
+          "hPx": 832,
+          "stickyPx": 965
+        },
+        {
+          "id": "B42",
+          "star": true,
+          "weight": 1,
+          "topVh": 3530.2,
+          "hPx": 65
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3559.2,
+          "hPx": 294
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3606.2,
+          "hPx": 756
+        },
+        {
+          "id": "B44-sketch",
+          "star": true,
+          "weight": 1,
+          "topVh": 3728.5,
+          "hPx": 740,
+          "stickyPx": 1380
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 3730.6,
+          "hPx": 101
+        },
+        {
+          "id": "B44-page1",
+          "star": true,
+          "weight": 1,
+          "topVh": 3777.9,
+          "hPx": 340
+        },
+        {
+          "id": "B45",
+          "star": true,
+          "weight": 2,
+          "topVh": 3800.1,
+          "hPx": 96,
+          "stickyPx": 1380
+        },
+        {
+          "id": "B44-page2",
+          "star": true,
+          "weight": 1,
+          "topVh": 3815.8,
+          "hPx": 289
+        },
+        {
+          "id": "B44-page3",
+          "star": true,
+          "weight": 1,
+          "topVh": 3848,
+          "hPx": 340
+        },
+        {
+          "id": "B44-page4",
+          "star": true,
+          "weight": 1,
+          "topVh": 3885.8,
+          "hPx": 362
+        },
+        {
+          "id": "B44-page5",
+          "star": true,
+          "weight": 1,
+          "topVh": 3926.2,
+          "hPx": 340
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 3969.4,
+          "hPx": 312
+        },
+        {
+          "id": "B47",
+          "star": true,
+          "weight": 2,
+          "topVh": 4016.9,
+          "hPx": 1211
+        },
+        {
+          "id": "B47-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4016.9,
+          "hPx": 900,
+          "stickyPx": 426
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4189.6,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4189.6,
+          "hPx": 536,
+          "stickyPx": 990
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4214.2,
+          "hPx": 446
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4249.1,
+          "hPx": 136,
+          "stickyPx": 990
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4263.7,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4269.2,
+          "hPx": 495
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4387,
+          "hPx": 2459
+        },
+        {
+          "id": "B53",
+          "star": true,
+          "weight": 1,
+          "topVh": 4410,
+          "hPx": 311
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4461.6,
+          "hPx": 342
+        },
+        {
+          "id": "B55",
+          "star": true,
+          "weight": 1,
+          "topVh": 4639.9,
+          "hPx": 82
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 4711.4,
+          "hPx": 56
+        },
+        {
+          "id": "B56-trail",
+          "star": true,
+          "weight": 1,
+          "topVh": 4755,
+          "hPx": 460
+        },
+        {
+          "id": "B57-roll",
+          "star": false,
+          "weight": null,
+          "topVh": 4786.3,
+          "hPx": 1447
+        },
+        {
+          "id": "B57",
+          "star": true,
+          "weight": 2,
+          "topVh": 4859.2,
+          "hPx": 44
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 4887,
+          "hPx": 540
+        }
+      ],
+      "pageErrors": []
+    },
+    {
+      "width": 1024,
+      "pageVh": 5383.7,
+      "heights": {
+        "top": 1,
+        "act-1": 2.705,
+        "about": 1.633,
+        "journey": 3.22,
+        "act-2": 2.1,
+        "work": 2.536,
+        "trading-algos": 2.849,
+        "optuna-screener": 3.934,
+        "experiment": 1.201,
+        "systems": 2.673,
+        "kill-list": 2.784,
+        "films": 6.194,
+        "act-3": 1.9,
+        "beyond": 5.611,
+        "writing": 3.236,
+        "voices": 2.01,
+        "act-4": 2.1,
+        "principles": 3.183,
+        "contact": 1.025,
+        "credits": 1.943
+      },
+      "gaps": [],
+      "competing": [
+        {
+          "a": "B06",
+          "b": "B07",
+          "vh": 4.7
+        },
+        {
+          "a": "B07",
+          "b": "B08",
+          "vh": 2.7
+        },
+        {
+          "a": "B07",
+          "b": "B08-invite",
+          "vh": 35.8
+        },
+        {
+          "a": "B09",
+          "b": "B12",
+          "vh": 40
+        },
+        {
+          "a": "B12",
+          "b": "B10",
+          "vh": 7.1
+        },
+        {
+          "a": "B16",
+          "b": "B17",
+          "vh": 25.6
+        },
+        {
+          "a": "B17",
+          "b": "B18",
+          "vh": 16.7
+        },
+        {
+          "a": "B18",
+          "b": "B19",
+          "vh": 22.9
+        },
+        {
+          "a": "B18",
+          "b": "B20",
+          "vh": 1.9
+        },
+        {
+          "a": "B19",
+          "b": "B20",
+          "vh": 70.1
+        },
+        {
+          "a": "B21",
+          "b": "B22",
+          "vh": 2.7
+        },
+        {
+          "a": "B21-circle",
+          "b": "B22",
+          "vh": 60.2
+        },
+        {
+          "a": "B25",
+          "b": "B26",
+          "vh": 4.1
+        },
+        {
+          "a": "B28",
+          "b": "B29",
+          "vh": 79.8
+        },
+        {
+          "a": "B28",
+          "b": "B29-lens",
+          "vh": 8
+        },
+        {
+          "a": "B42",
+          "b": "B43",
+          "vh": 5.3
+        },
+        {
+          "a": "B44-sketch",
+          "b": "B45",
+          "vh": 44.8
+        },
+        {
+          "a": "B44",
+          "b": "B45",
+          "vh": 47.2
+        },
+        {
+          "a": "B45",
+          "b": "B44-page1",
+          "vh": 98.6
+        },
+        {
+          "a": "B45",
+          "b": "B44-page2",
+          "vh": 54.4
+        },
+        {
+          "a": "B45",
+          "b": "B44-page3",
+          "vh": 18.5
+        },
+        {
+          "a": "B44-page5",
+          "b": "B46",
+          "vh": 3.2
+        },
+        {
+          "a": "B52",
+          "b": "B53",
+          "vh": 73.4
+        },
+        {
+          "a": "B57",
+          "b": "B58",
+          "vh": 70.2
+        }
+      ],
+      "spans": [],
+      "pacing": [],
+      "missing": [],
+      "undeclared": [],
+      "notFound": [],
+      "spotlight": {
+        "counts": {
+          "own": 21,
+          "free": 10,
+          "request": 39,
+          "wait": 25,
+          "skip": 37,
+          "grant": 2,
+          "end": 2
+        },
+        "log": [
+          {
+            "t": 1265,
+            "y": 0,
+            "ev": "own",
+            "id": "B02",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 1565,
+            "y": 922,
+            "ev": "free",
+            "id": "B02"
+          },
+          {
+            "t": 1936,
+            "y": 2766,
+            "ev": "own",
+            "id": "B08",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 1941,
+            "y": 2766,
+            "ev": "request",
+            "id": "B07",
+            "weight": 1
+          },
+          {
+            "t": 1942,
+            "y": 2766,
+            "ev": "wait",
+            "id": "B07",
+            "weight": 1,
+            "why": "B09 begins within the hold"
+          },
+          {
+            "t": 2031,
+            "y": 3227,
+            "ev": "free",
+            "id": "B08"
+          },
+          {
+            "t": 2044,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 2047,
+            "y": 3227,
+            "ev": "request",
+            "id": "B08-compass",
+            "weight": 1
+          },
+          {
+            "t": 2048,
+            "y": 3227,
+            "ev": "skip",
+            "id": "B07",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2054,
+            "y": 3227,
+            "ev": "wait",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "B09 begins within the hold"
+          },
+          {
+            "t": 2129,
+            "y": 3688,
+            "ev": "skip",
+            "id": "B08-invite",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2320,
+            "y": 4610,
+            "ev": "own",
+            "id": "B10",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 2544,
+            "y": 5532,
+            "ev": "own",
+            "id": "B11",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 2589,
+            "y": 5993,
+            "ev": "own",
+            "id": "B12-push",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 2617,
+            "y": 5993,
+            "ev": "request",
+            "id": "B12",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 2618,
+            "y": 5993,
+            "ev": "wait",
+            "id": "B12",
+            "weight": 2,
+            "why": "owned by B12-push"
+          },
+          {
+            "t": 2695,
+            "y": 6454,
+            "ev": "skip",
+            "id": "B12",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 2770,
+            "y": 6915,
+            "ev": "own",
+            "id": "B13",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 2872,
+            "y": 7376,
+            "ev": "own",
+            "id": "B14",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 2953,
+            "y": 7837,
+            "ev": "free",
+            "id": "B14"
+          },
+          {
+            "t": 3057,
+            "y": 8298,
+            "ev": "request",
+            "id": "B16",
+            "weight": 1
+          },
+          {
+            "t": 3141,
+            "y": 8759,
+            "ev": "request",
+            "id": "B17",
+            "weight": 2
+          },
+          {
+            "t": 3142,
+            "y": 8759,
+            "ev": "wait",
+            "id": "B17",
+            "weight": 2,
+            "why": "B19 begins within the hold"
+          },
+          {
+            "t": 3245,
+            "y": 9220,
+            "ev": "skip",
+            "id": "B16",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3319,
+            "y": 9681,
+            "ev": "own",
+            "id": "B19",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 3324,
+            "y": 9681,
+            "ev": "request",
+            "id": "B18",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 3324,
+            "y": 9681,
+            "ev": "wait",
+            "id": "B18",
+            "weight": 1,
+            "why": "owned by B19"
+          },
+          {
+            "t": 3420,
+            "y": 10142,
+            "ev": "free",
+            "id": "B19"
+          },
+          {
+            "t": 3420,
+            "y": 10142,
+            "ev": "grant",
+            "id": "B17",
+            "weight": 2,
+            "why": "waited 279 ms"
+          },
+          {
+            "t": 3427,
+            "y": 10142,
+            "ev": "skip",
+            "id": "B18",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3508,
+            "y": 10603,
+            "ev": "request",
+            "id": "B20",
+            "weight": 2
+          },
+          {
+            "t": 3548,
+            "y": 10603,
+            "ev": "skip",
+            "id": "B08-compass",
+            "weight": 1,
+            "why": "maxWait 1500 ms"
+          },
+          {
+            "t": 3688,
+            "y": 11525,
+            "ev": "wait",
+            "id": "B21",
+            "weight": 1,
+            "why": "held by B17"
+          },
+          {
+            "t": 3693,
+            "y": 11525,
+            "ev": "request",
+            "id": "B21-circle",
+            "weight": 1
+          },
+          {
+            "t": 3693,
+            "y": 11525,
+            "ev": "skip",
+            "id": "B20",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3797,
+            "y": 11986,
+            "ev": "request",
+            "id": "B22",
+            "weight": 2
+          },
+          {
+            "t": 3896,
+            "y": 12447,
+            "ev": "skip",
+            "id": "B21-circle",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 3995,
+            "y": 12908,
+            "ev": "request",
+            "id": "B23-fig",
+            "weight": 1
+          },
+          {
+            "t": 3996,
+            "y": 12908,
+            "ev": "request",
+            "id": "B23",
+            "weight": 1
+          },
+          {
+            "t": 3996,
+            "y": 12908,
+            "ev": "skip",
+            "id": "B22",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4092,
+            "y": 13369,
+            "ev": "skip",
+            "id": "B23",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4173,
+            "y": 13830,
+            "ev": "skip",
+            "id": "B23-fig",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4173,
+            "y": 13830,
+            "ev": "request",
+            "id": "B24",
+            "weight": 1
+          },
+          {
+            "t": 4356,
+            "y": 14752,
+            "ev": "skip",
+            "id": "B24",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4459,
+            "y": 15213,
+            "ev": "request",
+            "id": "B25",
+            "weight": 1
+          },
+          {
+            "t": 4621,
+            "y": 15674,
+            "ev": "end",
+            "id": "B17",
+            "why": "held"
+          },
+          {
+            "t": 4635,
+            "y": 16135,
+            "ev": "wait",
+            "id": "B25",
+            "weight": 1,
+            "why": "B30 begins within the hold"
+          },
+          {
+            "t": 4640,
+            "y": 16135,
+            "ev": "request",
+            "id": "B26",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 4725,
+            "y": 16596,
+            "ev": "skip",
+            "id": "B25",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4726,
+            "y": 16596,
+            "ev": "request",
+            "id": "B27",
+            "weight": 2
+          },
+          {
+            "t": 4726,
+            "y": 16596,
+            "ev": "wait",
+            "id": "B27",
+            "weight": 2,
+            "why": "B30 begins within the hold"
+          },
+          {
+            "t": 4804,
+            "y": 17057,
+            "ev": "skip",
+            "id": "B26",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 4988,
+            "y": 17979,
+            "ev": "request",
+            "id": "B28",
+            "weight": 1,
+            "why": "needs idle"
+          },
+          {
+            "t": 5086,
+            "y": 18440,
+            "ev": "own",
+            "id": "B29-lens",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 5090,
+            "y": 18440,
+            "ev": "skip",
+            "id": "B27",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5090,
+            "y": 18440,
+            "ev": "request",
+            "id": "B29",
+            "weight": 1
+          },
+          {
+            "t": 5091,
+            "y": 18440,
+            "ev": "wait",
+            "id": "B29",
+            "weight": 1,
+            "why": "B30 begins within the hold"
+          },
+          {
+            "t": 5174,
+            "y": 18901,
+            "ev": "skip",
+            "id": "B28",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5174,
+            "y": 18901,
+            "ev": "skip",
+            "id": "B29",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5470,
+            "y": 20284,
+            "ev": "free",
+            "id": "B29-lens"
+          },
+          {
+            "t": 5645,
+            "y": 20745,
+            "ev": "request",
+            "id": "B31",
+            "weight": 1
+          },
+          {
+            "t": 5645,
+            "y": 20745,
+            "ev": "wait",
+            "id": "B31",
+            "weight": 1,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5645,
+            "y": 20745,
+            "ev": "request",
+            "id": "B31-finale",
+            "weight": 1
+          },
+          {
+            "t": 5757,
+            "y": 21667,
+            "ev": "request",
+            "id": "B32",
+            "weight": 1
+          },
+          {
+            "t": 5757,
+            "y": 21667,
+            "ev": "skip",
+            "id": "B31-finale",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5757,
+            "y": 21667,
+            "ev": "skip",
+            "id": "B31",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5773,
+            "y": 21667,
+            "ev": "wait",
+            "id": "B32",
+            "weight": 1,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5857,
+            "y": 22128,
+            "ev": "request",
+            "id": "B32-finale",
+            "weight": 2
+          },
+          {
+            "t": 5857,
+            "y": 22128,
+            "ev": "wait",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 5939,
+            "y": 22589,
+            "ev": "skip",
+            "id": "B32",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 5939,
+            "y": 22589,
+            "ev": "request",
+            "id": "B33",
+            "weight": 1
+          },
+          {
+            "t": 6040,
+            "y": 23050,
+            "ev": "skip",
+            "id": "B32-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6040,
+            "y": 23050,
+            "ev": "request",
+            "id": "B33-finale",
+            "weight": 2
+          },
+          {
+            "t": 6040,
+            "y": 23050,
+            "ev": "wait",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 6129,
+            "y": 23511,
+            "ev": "skip",
+            "id": "B33",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6222,
+            "y": 23972,
+            "ev": "request",
+            "id": "B34",
+            "weight": 1
+          },
+          {
+            "t": 6223,
+            "y": 23972,
+            "ev": "request",
+            "id": "B34-finale",
+            "weight": 2
+          },
+          {
+            "t": 6224,
+            "y": 23972,
+            "ev": "skip",
+            "id": "B33-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6257,
+            "y": 23972,
+            "ev": "wait",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "B35 begins within the hold"
+          },
+          {
+            "t": 6303,
+            "y": 24433,
+            "ev": "skip",
+            "id": "B34",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6402,
+            "y": 24894,
+            "ev": "own",
+            "id": "B35",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 6410,
+            "y": 24894,
+            "ev": "skip",
+            "id": "B34-finale",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6488,
+            "y": 25355,
+            "ev": "own",
+            "id": "B36",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 6570,
+            "y": 25816,
+            "ev": "own",
+            "id": "B38",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 6671,
+            "y": 26277,
+            "ev": "free",
+            "id": "B38"
+          },
+          {
+            "t": 6678,
+            "y": 26277,
+            "ev": "request",
+            "id": "B40",
+            "weight": 1
+          },
+          {
+            "t": 6679,
+            "y": 26277,
+            "ev": "wait",
+            "id": "B40",
+            "weight": 1,
+            "why": "B41 begins within the hold"
+          },
+          {
+            "t": 6851,
+            "y": 27199,
+            "ev": "own",
+            "id": "B41",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 6854,
+            "y": 27199,
+            "ev": "skip",
+            "id": "B40",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 6935,
+            "y": 27660,
+            "ev": "free",
+            "id": "B41"
+          },
+          {
+            "t": 7305,
+            "y": 29504,
+            "ev": "request",
+            "id": "B43",
+            "weight": 2
+          },
+          {
+            "t": 7306,
+            "y": 29504,
+            "ev": "wait",
+            "id": "B43",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7407,
+            "y": 29965,
+            "ev": "request",
+            "id": "B43-wanted",
+            "weight": 2
+          },
+          {
+            "t": 7490,
+            "y": 30426,
+            "ev": "request",
+            "id": "B44",
+            "weight": 2
+          },
+          {
+            "t": 7491,
+            "y": 30426,
+            "ev": "skip",
+            "id": "B43",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7546,
+            "y": 30426,
+            "ev": "wait",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7591,
+            "y": 30887,
+            "ev": "skip",
+            "id": "B43-wanted",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7591,
+            "y": 30887,
+            "ev": "request",
+            "id": "B44-sketch",
+            "weight": 1
+          },
+          {
+            "t": 7592,
+            "y": 30887,
+            "ev": "wait",
+            "id": "B44",
+            "weight": 2,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7672,
+            "y": 31348,
+            "ev": "skip",
+            "id": "B44",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7672,
+            "y": 31348,
+            "ev": "wait",
+            "id": "B44-sketch",
+            "weight": 1,
+            "why": "B46 begins within the hold"
+          },
+          {
+            "t": 7677,
+            "y": 31348,
+            "ev": "request",
+            "id": "B44-page1",
+            "weight": 1
+          },
+          {
+            "t": 7696,
+            "y": 31348,
+            "ev": "request",
+            "id": "B45",
+            "weight": 2,
+            "why": "needs idle"
+          },
+          {
+            "t": 7758,
+            "y": 31809,
+            "ev": "request",
+            "id": "B44-page3",
+            "weight": 1
+          },
+          {
+            "t": 7859,
+            "y": 32270,
+            "ev": "skip",
+            "id": "B44-page1",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7862,
+            "y": 32270,
+            "ev": "request",
+            "id": "B44-page4",
+            "weight": 1
+          },
+          {
+            "t": 7935,
+            "y": 32731,
+            "ev": "own",
+            "id": "B46",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 7936,
+            "y": 32731,
+            "ev": "wait",
+            "id": "B45",
+            "weight": 2,
+            "why": "owned by B46"
+          },
+          {
+            "t": 7936,
+            "y": 32731,
+            "ev": "wait",
+            "id": "B44-page3",
+            "weight": 1,
+            "why": "owned by B46"
+          },
+          {
+            "t": 7936,
+            "y": 32731,
+            "ev": "wait",
+            "id": "B44-page4",
+            "weight": 1,
+            "why": "owned by B46"
+          },
+          {
+            "t": 7940,
+            "y": 32731,
+            "ev": "skip",
+            "id": "B44-page3",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 7943,
+            "y": 32731,
+            "ev": "request",
+            "id": "B44-page5",
+            "weight": 1
+          },
+          {
+            "t": 7944,
+            "y": 32731,
+            "ev": "wait",
+            "id": "B44-page5",
+            "weight": 1,
+            "why": "owned by B46"
+          },
+          {
+            "t": 8040,
+            "y": 33192,
+            "ev": "skip",
+            "id": "B44-sketch",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8041,
+            "y": 33192,
+            "ev": "skip",
+            "id": "B44-page4",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8041,
+            "y": 33192,
+            "ev": "skip",
+            "id": "B44-page5",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8041,
+            "y": 33192,
+            "ev": "skip",
+            "id": "B45",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 8122,
+            "y": 33653,
+            "ev": "own",
+            "id": "B47",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 8406,
+            "y": 35036,
+            "ev": "own",
+            "id": "B48",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 8489,
+            "y": 35497,
+            "ev": "own",
+            "id": "B50",
+            "weight": 3,
+            "how": "scrub"
+          },
+          {
+            "t": 8590,
+            "y": 35958,
+            "ev": "free",
+            "id": "B50"
+          },
+          {
+            "t": 8678,
+            "y": 36419,
+            "ev": "request",
+            "id": "B52",
+            "weight": 1
+          },
+          {
+            "t": 8678,
+            "y": 36419,
+            "ev": "wait",
+            "id": "B52",
+            "weight": 1,
+            "why": "B54 begins within the hold"
+          },
+          {
+            "t": 8771,
+            "y": 36880,
+            "ev": "own",
+            "id": "B54",
+            "weight": 2,
+            "how": "scrub"
+          },
+          {
+            "t": 9035,
+            "y": 38263,
+            "ev": "own",
+            "id": "B55",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 9136,
+            "y": 38724,
+            "ev": "free",
+            "id": "B55"
+          },
+          {
+            "t": 9146,
+            "y": 38724,
+            "ev": "request",
+            "id": "B56",
+            "weight": 2
+          },
+          {
+            "t": 9146,
+            "y": 38724,
+            "ev": "wait",
+            "id": "B56",
+            "weight": 2,
+            "why": "B56-trail begins within the hold"
+          },
+          {
+            "t": 9221,
+            "y": 39185,
+            "ev": "own",
+            "id": "B56-trail",
+            "weight": 1,
+            "how": "scrub"
+          },
+          {
+            "t": 9227,
+            "y": 39185,
+            "ev": "skip",
+            "id": "B52",
+            "weight": 1,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 9320,
+            "y": 39646,
+            "ev": "free",
+            "id": "B56-trail"
+          },
+          {
+            "t": 9320,
+            "y": 39646,
+            "ev": "grant",
+            "id": "B56",
+            "weight": 2,
+            "why": "waited 174 ms"
+          },
+          {
+            "t": 9328,
+            "y": 39646,
+            "ev": "request",
+            "id": "B57",
+            "weight": 2
+          },
+          {
+            "t": 9338,
+            "y": 39646,
+            "ev": "skip",
+            "id": "B57",
+            "weight": 2,
+            "why": "host left the viewport"
+          },
+          {
+            "t": 10395,
+            "y": 0,
+            "ev": "own",
+            "id": "B02",
+            "weight": 2,
+            "how": "live"
+          },
+          {
+            "t": 10524,
+            "y": 0,
+            "ev": "end",
+            "id": "B56",
+            "why": "held"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "id": "B02",
+          "star": true,
+          "weight": 2,
+          "topVh": 0,
+          "hPx": 768
+        },
+        {
+          "id": "B04-spray",
+          "star": false,
+          "weight": null,
+          "topVh": 129.7,
+          "hPx": 404,
+          "stickyPx": 691
+        },
+        {
+          "id": "B03",
+          "star": true,
+          "weight": 3,
+          "topVh": 150,
+          "hPx": 311
+        },
+        {
+          "id": "B04-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 182.3,
+          "hPx": 136,
+          "stickyPx": 691
+        },
+        {
+          "id": "B03-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 190.5,
+          "hPx": 0
+        },
+        {
+          "id": "B04",
+          "star": true,
+          "weight": 3,
+          "topVh": 195,
+          "hPx": 346
+        },
+        {
+          "id": "B06",
+          "star": true,
+          "weight": 1,
+          "topVh": 290,
+          "hPx": 619
+        },
+        {
+          "id": "B07",
+          "star": true,
+          "weight": 1,
+          "topVh": 385.3,
+          "hPx": 138
+        },
+        {
+          "id": "B08",
+          "star": true,
+          "weight": 1,
+          "topVh": 432.6,
+          "hPx": 210
+        },
+        {
+          "id": "B08-invite",
+          "star": true,
+          "weight": 1,
+          "topVh": 449.4,
+          "hPx": 207
+        },
+        {
+          "id": "B09",
+          "star": true,
+          "weight": 1,
+          "topVh": 523.1,
+          "hPx": 307
+        },
+        {
+          "id": "B09-window",
+          "star": false,
+          "weight": null,
+          "topVh": 554.2,
+          "hPx": 254,
+          "stickyPx": 1788
+        },
+        {
+          "id": "B12",
+          "star": true,
+          "weight": 2,
+          "topVh": 554.2,
+          "hPx": 107,
+          "stickyPx": 1788
+        },
+        {
+          "id": "B10",
+          "star": true,
+          "weight": 2,
+          "topVh": 597.1,
+          "hPx": 476
+        },
+        {
+          "id": "B11",
+          "star": true,
+          "weight": 2,
+          "topVh": 721.1,
+          "hPx": 476
+        },
+        {
+          "id": "B12-push",
+          "star": true,
+          "weight": 1,
+          "topVh": 783.1,
+          "hPx": 476
+        },
+        {
+          "id": "B14-chalk",
+          "star": false,
+          "weight": null,
+          "topVh": 883.5,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B13",
+          "star": true,
+          "weight": 3,
+          "topVh": 905.8,
+          "hPx": 380
+        },
+        {
+          "id": "B14-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 936.1,
+          "hPx": 151,
+          "stickyPx": 845
+        },
+        {
+          "id": "B13-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 955.3,
+          "hPx": 0
+        },
+        {
+          "id": "B14",
+          "star": true,
+          "weight": 3,
+          "topVh": 960.8,
+          "hPx": 422
+        },
+        {
+          "id": "B16",
+          "star": true,
+          "weight": 1,
+          "topVh": 1145.3,
+          "hPx": 154
+        },
+        {
+          "id": "B17",
+          "star": true,
+          "weight": 2,
+          "topVh": 1219.7,
+          "hPx": 398
+        },
+        {
+          "id": "B18",
+          "star": true,
+          "weight": 1,
+          "topVh": 1303,
+          "hPx": 44
+        },
+        {
+          "id": "B19",
+          "star": true,
+          "weight": 1,
+          "topVh": 1330.1,
+          "hPx": 700,
+          "stickyPx": 1324
+        },
+        {
+          "id": "B20-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1330.1,
+          "hPx": 700,
+          "stickyPx": 1324
+        },
+        {
+          "id": "B20",
+          "star": true,
+          "weight": 2,
+          "topVh": 1401.1,
+          "hPx": 413
+        },
+        {
+          "id": "B21",
+          "star": true,
+          "weight": 1,
+          "topVh": 1561.3,
+          "hPx": 49
+        },
+        {
+          "id": "B21-circle",
+          "star": true,
+          "weight": 1,
+          "topVh": 1575.2,
+          "hPx": 82
+        },
+        {
+          "id": "B22",
+          "star": true,
+          "weight": 2,
+          "topVh": 1615,
+          "hPx": 398
+        },
+        {
+          "id": "B23-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 1675.1,
+          "hPx": 700,
+          "stickyPx": 1696
+        },
+        {
+          "id": "B23",
+          "star": true,
+          "weight": 1,
+          "topVh": 1731,
+          "hPx": 22
+        },
+        {
+          "id": "B23-fig",
+          "star": true,
+          "weight": 1,
+          "topVh": 1746.1,
+          "hPx": 351
+        },
+        {
+          "id": "B24",
+          "star": true,
+          "weight": 1,
+          "topVh": 1890.4,
+          "hPx": 24
+        },
+        {
+          "id": "B25",
+          "star": true,
+          "weight": 1,
+          "topVh": 2032.6,
+          "hPx": 572
+        },
+        {
+          "id": "B26",
+          "star": true,
+          "weight": 1,
+          "topVh": 2128.5,
+          "hPx": 398
+        },
+        {
+          "id": "B27",
+          "star": true,
+          "weight": 2,
+          "topVh": 2234,
+          "hPx": 1079
+        },
+        {
+          "id": "B28",
+          "star": true,
+          "weight": 1,
+          "topVh": 2402.4,
+          "hPx": 44
+        },
+        {
+          "id": "B29",
+          "star": true,
+          "weight": 1,
+          "topVh": 2422.6,
+          "hPx": 22
+        },
+        {
+          "id": "B29-lens",
+          "star": true,
+          "weight": 1,
+          "topVh": 2444.4,
+          "hPx": 1555
+        },
+        {
+          "id": "B30",
+          "star": true,
+          "weight": 3,
+          "topVh": 2662.8,
+          "hPx": 307
+        },
+        {
+          "id": "B31-bars",
+          "star": false,
+          "weight": null,
+          "topVh": 2751,
+          "hPx": 307
+        },
+        {
+          "id": "B31",
+          "star": true,
+          "weight": 1,
+          "topVh": 2759.1,
+          "hPx": 43
+        },
+        {
+          "id": "B31-finale",
+          "star": true,
+          "weight": 1,
+          "topVh": 2767.8,
+          "hPx": 388
+        },
+        {
+          "id": "B32",
+          "star": true,
+          "weight": 1,
+          "topVh": 2889.1,
+          "hPx": 45
+        },
+        {
+          "id": "B32-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 2898.1,
+          "hPx": 388
+        },
+        {
+          "id": "B33",
+          "star": true,
+          "weight": 1,
+          "topVh": 3023.3,
+          "hPx": 36
+        },
+        {
+          "id": "B33-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 3031.1,
+          "hPx": 388
+        },
+        {
+          "id": "B34",
+          "star": true,
+          "weight": 1,
+          "topVh": 3156,
+          "hPx": 50
+        },
+        {
+          "id": "B34-finale",
+          "star": true,
+          "weight": 2,
+          "topVh": 3165.6,
+          "hPx": 388
+        },
+        {
+          "id": "B35",
+          "star": true,
+          "weight": 1,
+          "topVh": 3250.6,
+          "hPx": 320
+        },
+        {
+          "id": "B35-sun",
+          "star": false,
+          "weight": null,
+          "topVh": 3298.4,
+          "hPx": 404,
+          "stickyPx": 691
+        },
+        {
+          "id": "B36",
+          "star": true,
+          "weight": 3,
+          "topVh": 3333,
+          "hPx": 311
+        },
+        {
+          "id": "B36-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 3335.7,
+          "hPx": 0
+        },
+        {
+          "id": "B38-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 3363.7,
+          "hPx": 148,
+          "stickyPx": 691
+        },
+        {
+          "id": "B38",
+          "star": true,
+          "weight": 3,
+          "topVh": 3378,
+          "hPx": 346
+        },
+        {
+          "id": "B39-drift",
+          "star": false,
+          "weight": null,
+          "topVh": 3473,
+          "hPx": 576
+        },
+        {
+          "id": "B40",
+          "star": true,
+          "weight": 1,
+          "topVh": 3492.8,
+          "hPx": 148
+        },
+        {
+          "id": "B41",
+          "star": true,
+          "weight": 2,
+          "topVh": 3610.6,
+          "hPx": 332
+        },
+        {
+          "id": "B42-rack",
+          "star": false,
+          "weight": null,
+          "topVh": 3662.3,
+          "hPx": 700,
+          "stickyPx": 1221
+        },
+        {
+          "id": "B42",
+          "star": true,
+          "weight": 1,
+          "topVh": 3823.8,
+          "hPx": 41
+        },
+        {
+          "id": "B43",
+          "star": true,
+          "weight": 2,
+          "topVh": 3865.1,
+          "hPx": 298
+        },
+        {
+          "id": "B43-wanted",
+          "star": true,
+          "weight": 2,
+          "topVh": 3920.7,
+          "hPx": 707
+        },
+        {
+          "id": "B44-sketch",
+          "star": true,
+          "weight": 1,
+          "topVh": 4047.8,
+          "hPx": 520,
+          "stickyPx": 1500
+        },
+        {
+          "id": "B44",
+          "star": true,
+          "weight": 2,
+          "topVh": 4050.2,
+          "hPx": 72
+        },
+        {
+          "id": "B45",
+          "star": true,
+          "weight": 2,
+          "topVh": 4103,
+          "hPx": 96,
+          "stickyPx": 1500
+        },
+        {
+          "id": "B44-page1",
+          "star": true,
+          "weight": 1,
+          "topVh": 4104.4,
+          "hPx": 338
+        },
+        {
+          "id": "B44-page2",
+          "star": true,
+          "weight": 1,
+          "topVh": 4148.6,
+          "hPx": 274
+        },
+        {
+          "id": "B44-page3",
+          "star": true,
+          "weight": 1,
+          "topVh": 4184.5,
+          "hPx": 310
+        },
+        {
+          "id": "B44-page4",
+          "star": true,
+          "weight": 1,
+          "topVh": 4225,
+          "hPx": 346
+        },
+        {
+          "id": "B44-page5",
+          "star": true,
+          "weight": 1,
+          "topVh": 4270.3,
+          "hPx": 310
+        },
+        {
+          "id": "B46",
+          "star": true,
+          "weight": 1,
+          "topVh": 4317.1,
+          "hPx": 312
+        },
+        {
+          "id": "B47",
+          "star": true,
+          "weight": 2,
+          "topVh": 4368.3,
+          "hPx": 1379
+        },
+        {
+          "id": "B47-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4368.3,
+          "hPx": 768,
+          "stickyPx": 693
+        },
+        {
+          "id": "B48-fireflies",
+          "star": false,
+          "weight": null,
+          "topVh": 4587.2,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B50-motes",
+          "star": false,
+          "weight": null,
+          "topVh": 4587.2,
+          "hPx": 404,
+          "stickyPx": 845
+        },
+        {
+          "id": "B48",
+          "star": true,
+          "weight": 3,
+          "topVh": 4608.6,
+          "hPx": 380
+        },
+        {
+          "id": "B50-subtitle",
+          "star": false,
+          "weight": null,
+          "topVh": 4639.8,
+          "hPx": 144,
+          "stickyPx": 845
+        },
+        {
+          "id": "B48-impact",
+          "star": false,
+          "weight": null,
+          "topVh": 4658.1,
+          "hPx": 0
+        },
+        {
+          "id": "B50",
+          "star": true,
+          "weight": 3,
+          "topVh": 4663.6,
+          "hPx": 422
+        },
+        {
+          "id": "B52",
+          "star": true,
+          "weight": 1,
+          "topVh": 4779.3,
+          "hPx": 2281
+        },
+        {
+          "id": "B53",
+          "star": true,
+          "weight": 1,
+          "topVh": 4805.9,
+          "hPx": 154
+        },
+        {
+          "id": "B54",
+          "star": true,
+          "weight": 2,
+          "topVh": 4855.1,
+          "hPx": 332
+        },
+        {
+          "id": "B55",
+          "star": true,
+          "weight": 1,
+          "topVh": 5056.3,
+          "hPx": 51
+        },
+        {
+          "id": "B56",
+          "star": true,
+          "weight": 2,
+          "topVh": 5122.9,
+          "hPx": 56
+        },
+        {
+          "id": "B56-trail",
+          "star": true,
+          "weight": 1,
+          "topVh": 5164,
+          "hPx": 416
+        },
+        {
+          "id": "B57-roll",
+          "star": false,
+          "weight": null,
+          "topVh": 5197.7,
+          "hPx": 1346
+        },
+        {
+          "id": "B57",
+          "star": true,
+          "weight": 2,
+          "topVh": 5283.2,
+          "hPx": 44
+        },
+        {
+          "id": "B58",
+          "star": true,
+          "weight": 3,
+          "topVh": 5313,
+          "hPx": 461
+        }
+      ],
+      "pageErrors": []
+    }
+  ]
+}

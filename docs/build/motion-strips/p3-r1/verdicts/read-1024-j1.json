@@ -1,0 +1,19 @@
+[
+  { "frame": "C001", "name": "Aryan Sharma", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top centre-right of the header", "seconds": 1 } },
+  { "frame": "C002", "name": null, "cantRead": ["Intro line under 'What I can actually do.' cut off at the bottom edge ('A working map, not a skills cloud: the…')"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C003", "name": null, "cantRead": ["Last line under 'How I try not to fool myself' sliced by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C004", "name": null, "cantRead": ["Repo link 'Trading_Algos-' ends in a hyphen and looks truncated"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header (this frame is already a research project)", "seconds": 1 } },
+  { "frame": "C005", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C006", "name": "Aryan Sharma", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header (also 'VIEW THE QUANT PORTFOLIO ↓' under the intro)", "seconds": 1 } },
+  { "frame": "C007", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C008", "name": null, "cantRead": ["Top line half hidden under the header ('...of it failed me first. Step through it.')"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C009", "name": "Aryan Sharma", "cantRead": ["Top-right caption (the Jack's compass line, '…YOU WANT MOST') is sliced off by the header bar", "Top of the headline above 'quantitative systems.' is hidden under the header", "End of 'Intellectual honesty' paragraph ('my own ideas that did not survive testing.') fades to near-invisible grey"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 2 } },
+  { "frame": "C010", "name": null, "cantRead": ["'Discipline, in three arenas' row cut off at the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C011", "name": "Aryan", "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C012", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C013", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header (this frame is already a research project)", "seconds": 1 } },
+  { "frame": "C014", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C015", "name": null, "cantRead": [], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } },
+  { "frame": "C016", "name": null, "cantRead": ["Repo link 'Trading_Algos-' looks truncated", "Last line of the pipeline description sliced by the bottom edge"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header; the project rows here are the work itself", "seconds": 1 } },
+  { "frame": "C017", "name": null, "cantRead": ["Blackletter heading above the ship (looks like 'PIRATES OF THE CARIBBEAN') is half hidden under the header bar"], "fastLane": { "found": true, "where": "'SKIP TO THE RESEARCH' pill, top of header", "seconds": 1 } }
+]

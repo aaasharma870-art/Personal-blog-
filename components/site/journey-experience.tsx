@@ -1,11 +1,12 @@
 "use client";
 
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
-import type { ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import {
+  motionOffNow,
+  onMotionOffChange,
   useFinePointer,
   useMediaQuery,
-  useMotionPaused,
   useMotionPausedAtBoot,
   useOsReducedMotion,
   useSaveData,
@@ -23,6 +24,8 @@ import { JourneyStack } from "@/components/site/journey-stack";
  * the no-JS truth); right after mount it becomes
  *   desktop ≥ 1024 + fine pointer + no OS reduced motion + no Save-Data →
  *     the VOYAGE (the sticky sea sequence beside the steps, 0 extra travel);
+ *   desktop ≥ 1024 + fine pointer + OS reduced motion + no Save-Data →
+ *     the STACK stays (P3-11 r3, J9 F1: no reflow after hydration);
  *   otherwise → the CAROUSEL (stills, 0 sequence requests).
  * The variant (lib/variants.ts `journey.voyage`) is the manifest's choice,
  * or the ?variant=… preview after hydration.
@@ -38,7 +41,8 @@ import { JourneyStack } from "@/components/site/journey-stack";
  *   toggle (PHASE3-SPEC §12.2 "layout unchanged", P3-2 #11): Pause mid-
  *   scroll keeps the voyage, static (its sea holds the step's still); a page
  *   view that started paused on the desktop keeps the server's stack (no
- *   reflow after hydration) until motion is resumed. OS reduced motion keeps
+ *   reflow after hydration) until motion is resumed. OS reduced motion on
+ *   the desktop keeps the stack too (P3-11 r3); phones and tablets keep
  *   today's carousel (P3-0).
  * - The section head is passed in (`head`): the voyage's sticky column
  *   starts level with the h2 (spec §2.3 B09: the stage → voyage window
@@ -48,7 +52,16 @@ const subscribeNothing = () => () => {};
 const onClient = () => true;
 const onServer = () => false;
 
-const JourneyVoyage = lazy(() => import("@/components/site/journey-voyage").then((m) => ({ default: m.JourneyVoyage })));
+type VoyageProps = ComponentProps<typeof import("@/components/site/journey-voyage").JourneyVoyage>;
+
+/** Not safeLazy (null): if the voyage's chunk fails to load (deploy skew, a
+ *  flaky network), the stack, which carries every step, shows the content. */
+const JourneyVoyage = lazy(() =>
+  import("@/components/site/journey-voyage").then(
+    (m) => ({ default: m.JourneyVoyage }),
+    () => ({ default: (p: VoyageProps) => <JourneyStack {...p} stills={stillsFor(p.stills, p.variant)} /> }),
+  ),
+);
 
 /** The stills a variant shows on the stills paths. */
 function stillsFor(stills: readonly MediaId[], variant: Variant): MediaId[] {
@@ -83,15 +96,21 @@ export function JourneyExperience({
   const hydrated = useSyncExternalStore(subscribeNothing, onClient, onServer);
   const variant = useVariant(choice, "journey.voyage");
   const osReduce = useOsReducedMotion();
-  const paused = useMotionPaused();
   const pausedAtBoot = useMotionPausedAtBoot();
   const fine = useFinePointer();
   const wide = useMediaQuery("(min-width: 1024px)");
   const saveData = useSaveData();
   // a view that started paused keeps the stack until motion is first
   // resumed; from then on it is the voyage (a later Pause keeps it, static)
+  // (a listener, not useMotionPaused(): the Pause toggle never re-renders
+  // the journey, so the click's other listeners stop at once; spec §12.2)
   const [resumed, setResumed] = useState(false);
-  if (hydrated && pausedAtBoot && !paused && !resumed) setResumed(true);
+  useEffect(() => {
+    if (!hydrated || !pausedAtBoot || resumed) return;
+    return onMotionOffChange(() => {
+      if (!motionOffNow()) setResumed(true);
+    });
+  }, [hydrated, pausedAtBoot, resumed]);
 
   const stack = (
     <JourneyStack
@@ -106,9 +125,12 @@ export function JourneyExperience({
 
   if (!hydrated) return stack;
 
-  if (fine && wide && !osReduce && !saveData) {
-    // started paused: the server layout stays until motion is resumed
-    if (pausedAtBoot && !resumed) return stack;
+  if (fine && wide && !saveData) {
+    // started paused: the server layout stays until motion is resumed; OS
+    // reduced motion keeps it too (P3-11 r3, J9 F1: the carousel swap shrank
+    // #journey by ~2,000 px after hydration; RM and Pause share one static
+    // layout, final from first paint)
+    if (osReduce || (pausedAtBoot && !resumed)) return stack;
     const seq = sequence ? resolveVariant(sequence, variant) : null;
     return (
       <Suspense fallback={stack}>

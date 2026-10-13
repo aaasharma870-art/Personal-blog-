@@ -1,0 +1,40 @@
+CAPTIONED @1440: name "Aryan Sharma" read correctly by 3/3 (j1: Aryan Sharma; j2: Aryan Sharma; j3: Aryan Sharma)
+can't read: 37 finding(s)
+- j1 C001 (D20-about-120): Top of the headline above 'quantitative systems.' is sliced off by the header bar (I can only guess 'A builder of')
+- j1 C001 (D20-about-120): End of the 'Intellectual honesty' paragraph ('did not survive testing.') fades to near-invisible grey
+- j1 C004 (D32-beyond): Bottom row ('Discipline, in three arenas', 'One-on-one accountability, mental toughness,') is cut off by the bottom edge
+- j1 C007 (D21-journey-step-1): Top line is half hidden under the header ('...of it failed me first. Step through it.')
+- j1 C007 (D21-journey-step-1): '02 · EARLY WORK' label cut off at the bottom
+- j1 C008 (D43-films-pirates): Second paragraph under 'On this page it became the course line…' is clipped mid-height; only the tops of the letters show (something like 'My first strategies were a compass that pointed wherever I wanted it to')
+- j1 C011 (D30-kill-list): 'FIG. · TRADING_ALGOS-' caption is crossed by an empty vertical rectangle outline
+- j1 C011 (D30-kill-list): Repo link 'Trading_Algos-' ends in a hyphen and looks truncated
+- j1 C013 (D24-work): Headline 'Led by what…' cut off at the bottom edge
+- j1 C014 (D27-optuna-screener): Chalkboard quote stops mid-word: '“A machine is anything that reduces h' (rest not shown)
+- j1 C014 (D27-optuna-screener): Body text under 'THE PROBLEM' cut off at the bottom edge
+- j1 C015 (D38-principles): Headline word 'PHILOSOPHY' loses its last letter at the panel edge ('PHILOSOPH'')
+- j1 C016 (D26-trading-algos): Sub-labels of the blueprint boxes ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') sliced by the bottom edge
+- j1 C016 (D26-trading-algos): Repo link 'Trading_Algos-' looks truncated
+- j1 C017 (D29-systems): Headline 'What I can actually do' cut off at the bottom edge
+- j2 C001 (D20-about-120): First heading line clipped under the nav bar (reads like 'A builder of', only the bottom half visible)
+- j2 C001 (D20-about-120): Faded tail of 'Intellectual honesty' ('…did not survive testing.') is very low contrast
+- j2 C007 (D21-journey-step-1): Top line half-hidden under the nav bar: '…it failed me first. Step through it.'
+- j2 C008 (D43-films-pirates): Last body line under 'On this page it became the course line…' is sliced off mid-letter (only the tops of the letters show), unreadable
+- j2 C011 (D30-kill-list): 'FIG. · TRADING_ALGOS-' label is crossed by an empty outlined vertical bar, which makes it hard to read and looks like a leftover graphic
+- j2 C012 (D36-writing): Taped note on the right-hand page: only drawn lines, no legible words (looks decorative)
+- j2 C014 (D27-optuna-screener): Chalkboard quote stops mid-word: '“A machine is anything that reduces h' (still being written?)
+- j2 C015 (D38-principles): Heading word cut mid-letter by the quill: 'PHILOSOPH…' (the Y is not drawn yet)
+- j2 C015 (D38-principles): 'I solemnly swear…' under the banner is tiny and faint
+- j3 C001 (D20-about-120): Top heading line ('A builder of'?) is half-hidden under the sticky header; only the bottom halves of the letters show
+- j3 C001 (D20-about-120): End of the 'Intellectual honesty' paragraph ('did not survive testing.') is faded to near-background contrast
+- j3 C004 (D32-beyond): 'Discipline, in three arenas' heading and the activity descriptions at the bottom are cut by the frame edge
+- j3 C007 (D21-journey-step-1): Top line ('...of it failed me first. Step through it.') is half-hidden behind the sticky header
+- j3 C007 (D21-journey-step-1): '02 · EARLY WORK' at the bottom edge is cut off
+- j3 C008 (D43-films-pirates): Second body paragraph under the Jack's-compass sentence ('My first strategies were a compass that pointed wherever I wanted it to...'): only the tops of the letters show, so it is effectively unreadable
+- j3 C011 (D30-kill-list): 'FIG. · TRADING_ALGOS-' label is struck through by an empty tall rectangle outline sitting on top of it
+- j3 C013 (D24-work): Section heading ('Led by what...') is cut by the bottom edge
+- j3 C014 (D27-optuna-screener): Rancho's chalkboard quote stops mid-word: 'A machine is anything that reduces h...'; the rest is not shown
+- j3 C014 (D27-optuna-screener): 'Automated Strategy' heading and its problem paragraph are cut by the bottom edge
+- j3 C015 (D38-principles): The 'Y' of 'PHILOSOPHY' in the headline is clipped at the map fold, so it reads 'PHILOSOPH'
+- j3 C016 (D26-trading-algos): Blueprint box subtitles ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut by the bottom edge
+- j3 C017 (D29-systems): Second line of the 'What I can actually do' heading is cut by the bottom edge
+fast lane found ≤ 10 s: 3/3 (j1: 1 s, 'SKIP TO THE RESEARCH' pill, top right (also 'VIEW THE QUANT PORTFOLIO ↓' under the intro); j2: 1 s, 'SKIP TO THE RESEARCH' pill in the top bar, right side (just left of the 0/12 counter). Also 'VIEW THE QUANT PORTFOLIO ↓' under the name.; j3: 1 s, 'SKIP TO THE RESEARCH' pill, top bar, right of centre (the 'VIEW THE QUANT PORTFOLIO' button under the intro also works))

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { pickCodec } from "@/lib/codec";
+import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { acquireDecoder, releaseDecoder } from "@/lib/decoder-lock";
 import { getMedia, isMediaId, type MediaId } from "@/lib/media";
 
@@ -35,6 +36,9 @@ export type StageVideoProps = {
   focal?: readonly [number, number];
   /** Play now (see the header). */
   play: boolean;
+  /** Bumped when the stage paused the element itself (in its frame loop):
+   *  the effect re-checks, so a play asked in the same render resumes. */
+  nonce?: number;
 };
 
 const UNLOAD_MS = 1500;
@@ -103,7 +107,7 @@ function fadeIn(r: Run): void {
   }
 }
 
-export function StageVideo({ host, loop, focal, play }: StageVideoProps): null {
+export function StageVideo({ host, loop, focal, play, nonce = 0 }: StageVideoProps): null {
   const run = useRef<Run | null>(null);
 
   // one element for the stage's life
@@ -219,7 +223,21 @@ export function StageVideo({ host, loop, focal, play }: StageVideoProps): null {
         r.frameCb = null;
       }
     };
-  }, [host, loop, play, focal]);
+    // `nonce`: a re-check after the stage's own pause (see the prop)
+  }, [host, loop, play, focal, nonce]);
+
+  // Pause / reduced motion: pause in the click's own task (`first`), before
+  // the stage re-renders with `play: false`
+  useEffect(
+    () =>
+      onMotionOffChange(
+        () => {
+          if (motionOffNow()) run.current?.el.pause();
+        },
+        { first: true },
+      ),
+    [],
+  );
 
   // the tab hidden: pause (resume when the stage asks again)
   useEffect(() => {

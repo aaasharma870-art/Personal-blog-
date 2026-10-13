@@ -1,9 +1,10 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useId, useRef, useState } from "react";
+import { Suspense, useEffect, useId, useRef, useState } from "react";
 import { on } from "@/lib/events";
 import { film } from "@/lib/film";
 import { motionOffNow } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 import { copyText, copyVisible } from "@/lib/sections";
 import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
 
@@ -21,9 +22,20 @@ import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hu
      non-modal popover; Esc closes it and focus returns here. The palette's
      "Show egg hints" opens it too (HUNT_PANEL_EVENT).
    - "Turn off easter eggs" hides it (the count is kept).
+   - P3-11 (J2–J4 discovery: "the 0/12 counter is too small to explain
+     itself"): a word before the count names the hunt on first sight
+     ("Egg hunt 0/12"; `egg.hunt.chip.word`, page microcopy, proposed +
+     unsigned). Server markup like the rest: no shift.
    ========================================================================== */
 
-const HuntPanel = lazy(() => import("@/components/eggs/hunt-panel"));
+/** The chip's word (`egg.hunt.chip.word`), gated like every proposed string. */
+function chipWord(): string | null {
+  const c = copyText("egg.hunt.chip.word");
+  return copyVisible(c) ? c.text : null;
+}
+
+// safeLazy: a failed chunk opens nothing, never an application error (W3 review #6)
+const HuntPanel = safeLazy(() => import("@/components/eggs/hunt-panel"));
 const preload = () => void import("@/components/eggs/hunt-panel");
 
 export function HuntChip() {
@@ -51,6 +63,7 @@ export function HuntChip() {
   const label = copyText("egg.hunt.chip", { n });
   const name = copyText("egg.hunt.chip.name", { n });
   if (!copyVisible(label) || !copyVisible(name)) return null;
+  const word = chipWord();
 
   const close = (refocus: boolean) => {
     setOpen(false);
@@ -62,7 +75,7 @@ export function HuntChip() {
       <button
         ref={btn}
         type="button"
-        className="hunt-chip type-meta"
+        className="hunt-chip type-meta gap-2"
         aria-label={name.text}
         // a hover hint for the bare "0/12" (W2 visual LOW 10): the same line
         title={name.text}
@@ -74,6 +87,11 @@ export function HuntChip() {
         onPointerEnter={preload}
         onFocus={preload}
       >
+        {word ? (
+          <span className="hunt-chip-word" aria-hidden="true">
+            {word}
+          </span>
+        ) : null}
         <span key={tick} className="hunt-chip-n" data-tick={tick ? "" : undefined} aria-hidden="true">
           {label.text}
         </span>

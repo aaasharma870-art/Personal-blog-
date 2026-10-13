@@ -18,7 +18,14 @@
      - VIGNETTES: one per journal entry (SPEC SM-11), in 64-unit art drawn
        at page scale: a balance scale · a town plan crossed with one
        graphite X (the Blackwater page; never ember) · a rail line · a
-       contour trail · one brush-like stroke.
+       contour trail · a pencil globe (P3-11 r1: the old filled brush
+       stroke read as a grey smear at page scale, panel J2 #6).
+     - SKY / GROUND (P3-11 r1, strangers: the vignette pages read "??"):
+       the landscape splits at the far shore. The GROUND (lake, pines,
+       trail, grass and the grazing horse) stays on every page, so each
+       entry's study sits in the sky of the same frontier sketch: the page
+       is always Arthur's journal. The SKY (ridge, hachures, hills, birds,
+       the bone) gives way to the entry's vignette.
    Code art only: no generated sketch near the Drawing claim (W25).
    ========================================================================== */
 
@@ -119,10 +126,16 @@ const GRASS = Array.from({ length: 24 }, (_, k) => {
   return `M${f(x)} 474 l${lean} -${h}`;
 }).join(" ");
 
-export const LANDSCAPE: readonly Stroke[] = [
+/** The sky half: it gives way to an entry's vignette (DEFAULT). */
+export const SKY: readonly Stroke[] = [
   { d: FAR_RIDGE, w: 1.3, o: 0.75, t: 0, dur: 1 },
   { d: PEAK_HATCH, w: 0.9, o: 0.6, t: 0.7, dur: 0.5 },
   { d: HILLS, w: 1.5, t: 0.35, dur: 0.9 },
+  { d: "M150 128 q6 -6 12 0 q6 -6 12 0 M186 112 q5 -5 10 0 q5 -5 10 0", w: 1.1, t: 1.9, dur: 0.4 },
+];
+
+/** The ground half (y ≥ 290): on every page, under each vignette. */
+export const GROUND: readonly Stroke[] = [
   { d: LAKE, w: 1.4, t: 0.7, dur: 0.8 },
   { d: RIPPLES, w: 1, o: 0.7, t: 1.1, dur: 0.5 },
   { d: pine(60, 452, 150), w: 1.3, t: 0.9, dur: 0.7 },
@@ -132,7 +145,6 @@ export const LANDSCAPE: readonly Stroke[] = [
   { d: pine(378, 466, 92), w: 1.2, t: 1.2, dur: 0.5 },
   { d: dottedTrail(), w: 1.4, o: 0.8, t: 1.5, dur: 0.6 },
   { d: GRASS, w: 1, o: 0.75, t: 1.6, dur: 0.5 },
-  { d: "M150 128 q6 -6 12 0 q6 -6 12 0 M186 112 q5 -5 10 0 q5 -5 10 0", w: 1.1, t: 1.9, dur: 0.4 },
 ];
 
 /** The riderless, saddled horse grazing on the far shore — local units,
@@ -217,12 +229,19 @@ export const VIGNETTES: readonly Vignette[] = [
       "M4 60 C14 54 20 44 30 40 C38 36 44 30 60 6",
     ],
   },
-  // "Mandarin and global markets" — one brush-like stroke
+  // "Mandarin and global markets" — a pencil globe: rim, meridians, equator, two parallels
   {
-    strokes: ["M10 48 C20 34 32 24 46 18 C52 16 56 17 58 20"],
-    fill: "M8 46 C18 31 31 21 45 16 C51 14 57 15 59 19 C53 19 47 21 41 25 C31 31 21 39 13 49 Z",
+    strokes: [
+      "M32 8 C46 8 57 19 57 33 C57 47 46 58 32 58 C18 58 7 47 7 33 C7 19 18 8 32 8 Z",
+      "M32 8 C21 17 21 49 32 58 M32 8 C43 17 43 49 32 58 M7 33 H57",
+      "M11 21 C22 25 42 25 53 21 M11 45 C22 41 42 41 53 45",
+    ],
   },
 ];
 
-/** Where a 64-unit vignette sits on the 400 × 500 page. */
-export const VIGNETTE_AT = "translate(72 132) scale(4)";
+/** Where a 64-unit vignette sits on the 400 × 500 page: in the sky, above
+ *  the GROUND (art y ≤ 265, the lake starts at 290) and left of the
+ *  pasted clipping (x < 242). */
+export const VIGNETTE_AT = "translate(70 96) scale(2.7)";
+/** Its stroke in vignette units (≈ 1.5 page units at 2.7×). */
+export const VIGNETTE_W = 0.56;

@@ -97,7 +97,11 @@ export function Journey({ entry, number }: SectionProps<"story">) {
   const parley = copyText("egg.hunt.hint.pc-parley");
   const marginal = copyVisible(parley) ? (
     <EggHint egg="parley">
-      <span className="hidden whitespace-nowrap font-world-head text-base leading-none text-(--w-brass) df:block">
+      {/* 20 px (r2 J5: "parley?" read as small at 16 px) */}
+      <span
+        className="hidden whitespace-nowrap font-world-head leading-none text-(--w-brass) df:block"
+        style={{ fontSize: "1.25rem" }}
+      >
         {parley.text}
       </span>
     </EggHint>

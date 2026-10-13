@@ -1,0 +1,406 @@
+{
+ "kind": "captioned",
+ "width": "1440",
+ "name": "Aryan Sharma",
+ "heroIds": [
+  "C004"
+ ],
+ "nameOk": 3,
+ "nameRows": [
+  {
+   "judge": 1,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 2,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 3,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  }
+ ],
+ "cantRead": [
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D41-credits",
+   "text": "Large decorative quote marks clipped at the very bottom edge of the frame (only the tops of the glyphs show)"
+  },
+  {
+   "judge": 1,
+   "frame": "C002",
+   "scene": "D26-trading-algos",
+   "text": "Second lines of the Fig. 1 stage boxes are cut by the bottom edge ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE' only half visible)"
+  },
+  {
+   "judge": 1,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "Top body line is half hidden under the header ('...of it failed me first. Step through it.')"
+  },
+  {
+   "judge": 1,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "'parley?' script label on the map is small"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D01-hero",
+   "text": "'DIRECTOR'S CUT (SOUND ON)' button text is dim grey on near-black"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D01-hero",
+   "text": "'SELF-TAUGHT HIGH-SCHOOL QUANT • LANDON SCHOOL, CLASS OF 2027' line is small and low-contrast"
+  },
+  {
+   "judge": 1,
+   "frame": "C005",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is truncated mid-word: '“A n' and attribution '— RANCI' (cut off, reads like a rendering bug unless it is mid-animation)"
+  },
+  {
+   "judge": 1,
+   "frame": "C005",
+   "scene": "D27-optuna-screener",
+   "text": "'Automated Strategy...' heading and its problem paragraph cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C006",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' heading and the wrestling description clipped by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C007",
+   "scene": "D24-work",
+   "text": "Section heading 'Led by what...' cut off at the bottom; its meaning is incomplete in this frame"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D28-experiment",
+   "text": "Unselected toggle 'Realistic costs · out-of-sample' is dim grey"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D29-systems",
+   "text": "Heading 'What I can actually do' is cut through the second line by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "Grey serif body paragraph under the headline is low-contrast"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "'Lumos' link has no hint of what it does"
+  },
+  {
+   "judge": 1,
+   "frame": "C014",
+   "scene": "D38-principles",
+   "text": "'I solemnly swear...' subtitle under the banner is tiny and faint"
+  },
+  {
+   "judge": 1,
+   "frame": "C014",
+   "scene": "D38-principles",
+   "text": "'AFTER MENGZI' tag is small and light"
+  },
+  {
+   "judge": 1,
+   "frame": "C015",
+   "scene": "D30-kill-list",
+   "text": "Struck-through red 'Killed' at the start of the sub-line is small"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D43-films-pirates",
+   "text": "Right-column body text cut by the bottom edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D20-about-120",
+   "text": "Two-line blackletter caption 'JACK'S COMPASS – IT POINTS TO WHAT YOU WANT MOST' is slow to parse"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D20-about-120",
+   "text": "Faint ship/harbour image sits behind the left body column"
+  },
+  {
+   "judge": 2,
+   "frame": "C001",
+   "scene": "D41-credits",
+   "text": "Giant blackletter text at the very bottom edge is cut off (only an opening quote mark and 'A...' show)"
+  },
+  {
+   "judge": 2,
+   "frame": "C002",
+   "scene": "D26-trading-algos",
+   "text": "Blueprint box sub-labels ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut by the bottom edge"
+  },
+  {
+   "judge": 2,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "Top line '...of it failed me first. Step through it.' is clipped under the header"
+  },
+  {
+   "judge": 2,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "'03 THE BREAK' label spills below the map frame"
+  },
+  {
+   "judge": 2,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "'02 · EARLY WORK' at the bottom edge is cut"
+  },
+  {
+   "judge": 2,
+   "frame": "C004",
+   "scene": "D01-hero",
+   "text": "'▶ DIRECTOR'S CUT (SOUND ON)' is dim grey on dark"
+  },
+  {
+   "judge": 2,
+   "frame": "C005",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is caught mid-write: '\"A n' and '— RANCI' only"
+  },
+  {
+   "judge": 2,
+   "frame": "C006",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' heading and the wrestling detail line are cut at the bottom edge"
+  },
+  {
+   "judge": 2,
+   "frame": "C007",
+   "scene": "D24-work",
+   "text": "Section headline below the image is cut at 'Led by what'"
+  },
+  {
+   "judge": 2,
+   "frame": "C009",
+   "scene": "D28-experiment",
+   "text": "Unselected toggle 'Realistic costs · out-of-sample' is low-contrast"
+  },
+  {
+   "judge": 2,
+   "frame": "C010",
+   "scene": "D36-writing",
+   "text": "Handwritten 'Entry II' is faint pencil"
+  },
+  {
+   "judge": 2,
+   "frame": "C010",
+   "scene": "D36-writing",
+   "text": "The only person's name on the frame is 'ARTHUR MORGAN'S JOURNAL', which a skimmer could take as the author"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D29-systems",
+   "text": "Headline 'What I can actually do.' is cut at the bottom edge"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "'RÉSUMÉ · COMING SOON' small grey"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "The 'A [candle] S' monogram reads only as initials"
+  },
+  {
+   "judge": 2,
+   "frame": "C014",
+   "scene": "D38-principles",
+   "text": "'I SOLEMNLY SWEAR...' under the banner is tiny and faint"
+  },
+  {
+   "judge": 2,
+   "frame": "C015",
+   "scene": "D30-kill-list",
+   "text": "Typo: 'Killed and never retuned' (should read 'returned')"
+  },
+  {
+   "judge": 2,
+   "frame": "C017",
+   "scene": "D20-about-120",
+   "text": "Blackletter caption 'JACK'S COMPASS — IT POINTS TO WHAT YOU WANT MOST' is readable but slow (dense condensed blackletter)"
+  },
+  {
+   "judge": 3,
+   "frame": "C017",
+   "scene": "D20-about-120",
+   "text": "Blackletter heading 'Jack's compass — it points to what you want most' is legible but slow to parse at that weight and size"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D43-films-pirates",
+   "text": "Body paragraph at bottom right is cut off by the viewport ('The real crossing began when I stopped steering by what I hoped and…')"
+  },
+  {
+   "judge": 3,
+   "frame": "C015",
+   "scene": "D30-kill-list",
+   "text": "'Trading_Algos-' repo link ends in a hyphen and reads as truncated"
+  },
+  {
+   "judge": 3,
+   "frame": "C015",
+   "scene": "D30-kill-list",
+   "text": "Grey project descriptions are low-contrast against the dark green grid"
+  },
+  {
+   "judge": 3,
+   "frame": "C014",
+   "scene": "D38-principles",
+   "text": "'I solemnly swear…' tagline under the ribbon is tiny small-caps, faint on parchment"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "'RÉSUMÉ · COMING SOON' is tiny and dim"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D40-contact",
+   "text": "Grey body copy under the headline is low-contrast on black"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D29-systems",
+   "text": "Section heading 'What I can actually do' is cut off at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C010",
+   "scene": "D36-writing",
+   "text": "Handwritten 'Entry II' on the sketch page is faint grey pencil"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D28-experiment",
+   "text": "Inactive toggle 'Realistic costs · out-of-sample' is dim"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D28-experiment",
+   "text": "Small grey caption under the chart is low-contrast"
+  },
+  {
+   "judge": 3,
+   "frame": "C007",
+   "scene": "D24-work",
+   "text": "Section heading 'Led by what…' is cut off at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C006",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three arenas' and the athletics columns are cut off at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C005",
+   "scene": "D27-optuna-screener",
+   "text": "Chalkboard quote is cut mid-word: '“A n' with attribution '— RANCI' (half-typed)"
+  },
+  {
+   "judge": 3,
+   "frame": "C005",
+   "scene": "D27-optuna-screener",
+   "text": "'Automated Strategy…' heading and the problem text are cut off at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C004",
+   "scene": "D01-hero",
+   "text": "'DIRECTOR'S CUT (SOUND ON)' button label is dim grey"
+  },
+  {
+   "judge": 3,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "Top line 'of it failed me first. Step through it.' is sliced in half by the sticky top bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C003",
+   "scene": "D21-journey-step-1",
+   "text": "'02 · EARLY WORK' label cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C002",
+   "scene": "D26-trading-algos",
+   "text": "Blueprint box sub-labels ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are cut at the bottom edge"
+  },
+  {
+   "judge": 3,
+   "frame": "C002",
+   "scene": "D26-trading-algos",
+   "text": "'Trading_Algos-' link ends in a hyphen and looks truncated"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D41-credits",
+   "text": "Large blackletter quote at the very bottom is cut off (only opening and closing quote marks visible)"
+  }
+ ],
+ "fastLane": [
+  {
+   "judge": 1,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill top-right; also 'VIEW THE QUANT PORTFOLIO ↓' button under the intro"
+  },
+  {
+   "judge": 2,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill top right, plus 'VIEW THE QUANT PORTFOLIO ↓' under the intro"
+  },
+  {
+   "judge": 3,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the top bar; 'VIEW THE QUANT PORTFOLIO ↓' button under the intro also works"
+  }
+ ],
+ "fastLaneOk": 3
+}

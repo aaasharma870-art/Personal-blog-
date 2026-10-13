@@ -123,6 +123,10 @@ import { VelocityLayers } from "@/components/sections/hero/velocity-layers";
  */
 
 const WIDE = "(min-width: 40rem)";
+/** F2's contract (P3-11 r1, J8 #3): the Act I card sets this attribute on
+ *  `section[data-hero]` (and its `[data-section]` wrapper) while its pinned
+ *  stage covers the whole viewport, and removes it when it no longer does. */
+const COVERED = "data-stage-covered";
 /** decode wait before the aperture gives up and opens (S1′). */
 const APERTURE_TIMEOUT_MS = 1200;
 /** The film gate (hero.aperture ALT): its first stop is the act cards'
@@ -143,8 +147,10 @@ const EXIT: Record<"scale" | "mediaY" | "textY" | "darken" | "caption", [number[
   mediaY: spanUnit([0.2, 0.7], [0, -24]),
   textY: spanUnit([0.2, 0.7], [0, -16]),
   darken: spanUnit([0.7, 1], [0, 1]),
-  // cap.hero leaves before the Act I card's film title arrives below it
-  caption: spanUnit([0.1, 0.3], [1, 0]),
+  // cap.hero leaves before the Act I card's film title arrives below it,
+  // and fast: over .1–.3 it hung half-faded mid-frame at 1024 (r2 panel J4
+  // 1024 #10), so it is gone in the first ~100 px of the scroll
+  caption: spanUnit([0.02, 0.12], [1, 0]),
 };
 
 export type HeroPlate = {
@@ -205,6 +211,8 @@ type Props = {
   caption?: ReactNode;
   /** The caption's world: its plane (colours = the flight caption's). */
   captionWorld?: string | null;
+  /** A server-rendered mark set under the bracket (desktop only). */
+  mark?: ReactNode;
   children: ReactNode;
 };
 
@@ -233,6 +241,7 @@ export function HeroStage({
   frames,
   caption,
   captionWorld,
+  mark,
   children,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -257,6 +266,42 @@ export function HeroStage({
   const motionOn = !reduced;
   const moving = motionOn && wide; // exit + pointer: the full-bleed layout only
   const noisy = moving && fine && !saveData;
+
+  /* — Off stage (P3-11 r1, J8 #2 / #3): the hero's background loops cost
+       nothing while nobody can see them — covered by the Act I card (F2's
+       `data-stage-covered`) or scrolled out of view (with a quarter-viewport
+       margin, so it is back before its edge shows). Then the decorative
+       plate leaves paint (visibility, written here: no React work; the h1
+       column stays, for the accessibility tree), and the velocity layers
+       unmount: they follow the PAGE's scroll velocity, so they used to
+       restyle the hero's layers on every fast scroll anywhere on the page.
+       The loop gives its decoder back (the poster is its frame 0, so it
+       resumes in place). — */
+  const [live, setLive] = useState(true);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    let seen = true;
+    const sync = () => {
+      const on = seen && !el.hasAttribute(COVERED);
+      lensBoxRef.current?.style.setProperty("visibility", on ? null : "hidden");
+      setLive(on);
+    };
+    const mo = new MutationObserver(sync);
+    mo.observe(el, { attributes: true, attributeFilter: [COVERED] });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        seen = Boolean(e?.isIntersecting);
+        sync();
+      },
+      { rootMargin: "25% 0px" },
+    );
+    io.observe(el);
+    return () => {
+      mo.disconnect();
+      io.disconnect();
+    };
+  }, []);
 
   /* — The aperture (S0 → S1 → S2) ———————————————————————————————————— */
   const [run, setRun] = useState<Run>({ which: null, state: "open" });
@@ -395,6 +440,10 @@ export function HeroStage({
        spyglass zoom), ≥ 16 px right of the h1 (H7). Measured on resize and
        after the fonts land, with the zoom origin and the wake band. — */
   const [geo, setGeo] = useState<HeroGeo>(frames[plateV]);
+  // the mark (Jack's compass) hangs off the MEASURED frame: it renders once
+  // the frame is known, so it never jumps from the SSR reference frame (r2
+  // J8 F10: intro CLS 0.0094 at 1024)
+  const [placed, setPlaced] = useState(false);
   const frame = geo.frame;
   const boxW = useMotionValue(1440);
   const boxH = useMotionValue(900);
@@ -431,6 +480,7 @@ export function HeroStage({
         zoom: g.zoom,
       };
       setGeo((prev) => (sameGeo(prev, next) ? prev : next));
+      setPlaced(true);
     };
     const ro = new ResizeObserver(measure);
     ro.observe(box);
@@ -571,6 +621,31 @@ export function HeroStage({
   const shiftY = useSpring(0, springSoft);
   // performance.now() when the gain ramp starts; Infinity = held
   const gainFrom = useRef(0);
+
+  /* — The camera drift (P3-11 r3; r2 J1 #4: the hero held a still frame
+       for ~6 s after the titles, the sea's own motion too fine to read):
+       hero-drift.ts, a lazy desktop chunk, leans the zoom layer toward the
+       ship and back once the quiet window is over, and makes B02 a live
+       star while it plays (C1). Only while the full desktop plate is live
+       (motion on, fine pointer, on stage); off screen, covered, Pause or RM
+       it is gone (identity, like every hero transform there). — */
+  const zoomRef = useRef<HTMLDivElement>(null);
+  const driftOn = noisy && live;
+  useEffect(() => {
+    const el = zoomRef.current;
+    const host = sectionRef.current;
+    if (!driftOn || !el || !host) return;
+    let stop: (() => void) | undefined;
+    let dead = false;
+    void import("@/components/sections/hero/hero-drift").then((m) => {
+      if (!dead) stop = m.heroDrift(el, host);
+    });
+    return () => {
+      dead = true;
+      stop?.();
+    };
+  }, [driftOn]);
+
   useEffect(() => {
     if (!document.documentElement.classList.contains("intro-armed")) return;
     gainFrom.current = Number.POSITIVE_INFINITY;
@@ -675,6 +750,7 @@ export function HeroStage({
           >
             {/* the spyglass zoom layer (×1 on the DEFAULT side) */}
             <motion.div
+              ref={zoomRef}
               data-hero-zoom=""
               className={cn("absolute inset-0", moving && "will-change-transform")}
               style={{ scale: zoom, transformOrigin: pos(geo.origin) }}
@@ -685,8 +761,9 @@ export function HeroStage({
                 key={`${plate.poster}:${media}`}
                 media={media}
                 poster={plate.poster}
+                live={live}
               />
-              {noisy ? (
+              {noisy && live ? (
                 <VelocityLayers
                   key={plate.poster}
                   hostRef={plateRef}
@@ -711,6 +788,18 @@ export function HeroStage({
             so the feather never dims the caption (M2 critic 3 #5 — it used to
             be painted by the card, over the whole hero stack) */}
         <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[18vh] bg-[linear-gradient(to_bottom,transparent,var(--bg))]" />
+        {/* the hero's mark (hero-section.tsx: Jack's compass), 12 px under
+            the bracket's left arm, 80–128 px wide (r2 blind A01 / D01: made
+            legible, the Act I instrument); ≥ 64rem only */}
+        {mark && placed ? (
+          <div
+            data-hero-mark=""
+            className="pointer-events-none absolute hidden lg:block"
+            style={{ left: `${frame.x0 * 100}%`, top: `calc(${frame.y1 * 100}% + 12px)`, width: "clamp(80px, 8vw, 128px)" }}
+          >
+            {mark}
+          </div>
+        ) : null}
       </div>
 
       {/* — The text column (server-rendered; the h1 never animates) — */}
@@ -799,7 +888,7 @@ export function HeroStage({
  *  last frame and cuts in with no fade (its frame 0 is the poster), so the
  *  reveal uncovers a sea that is already moving. Only this frame re-renders
  *  on the prologue's phase changes. */
-function HeroLoopFrame({ media, poster }: { media: MediaId; poster: MediaId }) {
+function HeroLoopFrame({ media, poster, live }: { media: MediaId; poster: MediaId; live: boolean }) {
   const phase = useIntroPhase();
   return (
     <MediaFrame
@@ -811,7 +900,8 @@ function HeroLoopFrame({ media, poster }: { media: MediaId; poster: MediaId }) {
       // display:none, so its preload resolves to the 16 w rung; the mobile
       // frame does the inverse.
       sizes="(max-width: 639px) 1vw, 100vw"
-      playOn={introSettled(phase) ? "desktop" : "never"}
+      // off stage (covered by the Act I card): the poster, no decoder
+      playOn={introSettled(phase) && live ? "desktop" : "never"}
       fade={phase === "handoff" ? 0 : undefined}
     />
   );

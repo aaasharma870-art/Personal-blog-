@@ -1,0 +1,6 @@
+1024x768 run 1 {"from":{"y":20241,"hash":"#films","focus":"films-title"},"to":{"y":25188,"hash":"#act-3","focus":"act-3-title"},"ok":true,"focusouts":[]}
+1024x768 run 2 {"from":{"y":20241,"hash":"#films","focus":"films-title"},"to":{"y":25188,"hash":"#act-3","focus":"act-3-title"},"ok":true,"focusouts":[]}
+1024x768 run 3 {"from":{"y":20241,"hash":"#films","focus":"films-title"},"to":{"y":25188,"hash":"#act-3","focus":"act-3-title"},"ok":true,"focusouts":[]}
+1024x768 run 4 {"from":{"y":20241,"hash":"#films","focus":"films-title"},"to":{"y":25188,"hash":"#act-3","focus":"act-3-title"},"ok":true,"focusouts":[]}
+1024x768 run 5 {"from":{"y":20241,"hash":"#films","focus":"films-title"},"to":{"y":25188,"hash":"#act-3","focus":"act-3-title"},"ok":true,"focusouts":[]}
+1024x768 #act-3 focus lost in 0 of 5

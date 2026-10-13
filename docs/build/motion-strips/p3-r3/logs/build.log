@@ -1,0 +1,42 @@
+
+> personal-website@0.1.0 build
+> next build
+
+▲ Next.js 16.2.9 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.8s
+  Running TypeScript ...
+  Finished TypeScript in 15.5s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/16) ...
+  Generating static pages using 3 workers (4/16) 
+  Generating static pages using 3 workers (8/16) 
+  Generating static pages using 3 workers (12/16) 
+✓ Generating static pages using 3 workers (16/16) in 1517ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /icon
+├ ○ /lab
+├ ○ /lab/p3/cards
+├ ○ /lab/p3/cinema
+├ ○ /lab/p3/games
+├ ○ /lab/p3/gl
+├ ○ /lab/p3/plates
+├ ○ /lab/p3/sound
+├ ○ /lab/p3/words
+├ ○ /lab/variants
+├ ○ /opengraph-image
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+○  (Static)  prerendered as static content
+
+
+real	0m28.722s
+user	0m58.801s
+sys	0m3.458s

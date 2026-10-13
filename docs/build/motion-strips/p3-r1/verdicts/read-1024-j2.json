@@ -1,0 +1,181 @@
+[
+  {
+    "frame": "C001",
+    "name": "Aryan Sharma",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 2
+    }
+  },
+  {
+    "frame": "C002",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C003",
+    "name": null,
+    "cantRead": [
+      "Taped note on the right-hand page: only drawn lines, no legible words (looks decorative)"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C004",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter) (this frame is already the research section)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C005",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C006",
+    "name": "Aryan Sharma",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter). Also 'VIEW THE QUANT PORTFOLIO ↓' under the name.",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C007",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C008",
+    "name": null,
+    "cantRead": [
+      "Top line half-hidden under the nav bar: '…it failed me first. Step through it.' (first word cut off)"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C009",
+    "name": "Aryan Sharma",
+    "cantRead": [
+      "Top-right line clipped under the nav bar, only '…YOU WHAT MOST' fragments visible, overlapping the 'PIRATES OF THE CARIBBEAN' caption",
+      "Faded end of the 'Intellectual honesty' paragraph ('…my own ideas that did not survive testing.') is very low contrast"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C010",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C011",
+    "name": "Aryan",
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C012",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C013",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C014",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C015",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C016",
+    "name": null,
+    "cantRead": [],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  },
+  {
+    "frame": "C017",
+    "name": null,
+    "cantRead": [
+      "Heading at the very top (blackletter, looks like 'PIRATES OF THE CARIBBEAN') is cut in half by the nav bar"
+    ],
+    "fastLane": {
+      "found": true,
+      "where": "'SKIP TO THE RESEARCH' pill in the top bar, centre-right (between the [AS] label and the 0/12 counter)",
+      "seconds": 1
+    }
+  }
+]

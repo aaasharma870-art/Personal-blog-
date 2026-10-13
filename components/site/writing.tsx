@@ -2,6 +2,7 @@ import { writing } from "@/lib/content";
 import { beatAttrs } from "@/lib/beats";
 import { copyText, copyVisible, slot, variantChoiceOf } from "@/lib/sections";
 import { cn } from "@/lib/utils";
+import { pieceVariant } from "@/lib/variants";
 import { planeAttrs } from "@/lib/worlds";
 import { Meta, WorldSection, recedeInto } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
@@ -9,7 +10,6 @@ import { JournalVignette, NibTitle } from "@/components/site/rdr2-graphite";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { EggHotspot } from "@/components/eggs/egg-hotspot";
 import { FlyThrough } from "@/components/words/fly-through";
-import { HORSE_FRAMES } from "@/components/words/sprites/horse-frames";
 import { JournalSpread } from "@/components/worlds/rdr2/journal-spread";
 import { RdDesktop } from "@/components/worlds/rdr2/kit";
 import type { SectionProps } from "@/components/sections/types";
@@ -46,7 +46,7 @@ import type { SectionProps } from "@/components/sections/types";
  * Phase 3 (PHASE3-PLAN §7.4, §8):
  *   - B44 the NibTitle (a time star through the spotlight);
  *   - B45 the graphite horse fly-through (Muybridge, 1878, public domain;
- *     HORSE_FRAMES) along the journal page's bottom edge, ≤ 1.2 s, once,
+ *     HORSE_FRAMES, loaded lazily by the words binder) along the journal page's bottom edge, ≤ 1.2 s, once,
  *     on scroll-idle (server markup; the words binder plays it);
  *   - rd-bone: the bone's hotspot (EggHotspot) over the landscape's bone;
  *     its pencilled note (copy egg.bone.note) is drawn by the lazy desktop
@@ -59,6 +59,16 @@ import type { SectionProps } from "@/components/sections/types";
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 /** B45: hooves on the page's bottom edge, left → right, ≤ 1.2 s (spec §2.3). */
 const HORSE_PATH = { points: [[-0.12, 0.94], [1.12, 0.94]], ms: 1200 } as const;
+
+/** The dusk's box (shared by the fade and its treeline); the mask is inline. */
+const DUSK_BOX =
+  "pointer-events-none absolute left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]";
+const DUSK_AT = { bottom: "calc(-1 * var(--spacing-section))" };
+const DUSK_MASK = {
+  ...DUSK_AT,
+  maskImage: "linear-gradient(to bottom, transparent, #000 85%)",
+  WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 85%)",
+};
 
 export function Writing({ entry, number }: SectionProps<"index">) {
   const titleId = `${entry.id}-title`;
@@ -87,19 +97,26 @@ export function Writing({ entry, number }: SectionProps<"index">) {
       containerClassName={cn(journal && "journal-gutter")}
     >
       {journal ? null : head(false)}
+      {/* B46's scroll star and the rd-bone note (lazy, DESKTOP_FINE) */}
+      {journal || dusk ? <RdDesktop part="writing" note={journal ? (boneNote ?? undefined) : undefined} /> : null}
 
       {journal ? (
-        <>
-          <RdDesktop part="writing" note={boneNote ?? undefined} />
-          <JournalSpread
-            entries={writing.map(({ title, angle, tag }) => ({ title, angle, tag }))}
-            choice={variantChoiceOf(entry)}
-            caption={<SceneCaption k="cap.writing" place="head" />}
-            head={head(true)}
-            fly={<FlyThrough kind="horse" frames={HORSE_FRAMES} beat="B45" path={HORSE_PATH} />}
-            bone={<EggHotspot hunt="rd-bone" label="egg.hunt.name.rd-bone" />}
-          />
-        </>
+        <JournalSpread
+          entries={writing.map(({ title, angle, tag }) => ({ title, angle, tag }))}
+          choice={variantChoiceOf(entry)}
+          caption={<SceneCaption k="cap.writing" place="head" />}
+          head={head(true)}
+          fly={
+            <FlyThrough
+              kind="horse"
+              lazyFrames="horse"
+              beat="B45"
+              path={HORSE_PATH}
+              variant={pieceVariant(variantChoiceOf(entry), "flythrough")}
+            />
+          }
+          bone={<EggHotspot hunt="rd-bone" label="egg.hunt.name.rd-bone" />}
+        />
       ) : (
         <ol aria-label="Entries" className="mt-tier-block border-t border-rule">
           {writing.map((post, i) => (
@@ -136,7 +153,21 @@ export function Writing({ entry, number }: SectionProps<"index">) {
             data-dusk=""
             {...planeAttrs(dusk.tone, dusk.world)}
             {...beatAttrs("B46", { weight: 1 })}
-            className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent,#000_85%)] boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]"
+            className={cn(DUSK_BOX, "bg-bg")}
+            style={DUSK_MASK}
+          />
+          {/* P3-11 r1 (panel: "a muddy parchment-to-black fade"): the dusk's
+              horizon, ≥ lg — a pine treeline in the camp's deep where the
+              fade turns solid, so the page reads as night falling on the
+              frontier (the camp's own pines answer it). The lazy desktop
+              extras draw it here and raise it as the dusk scrolls in (B46's
+              visible performance; rd-desktop.tsx): 0 first-load bytes. */}
+          <div
+            aria-hidden="true"
+            data-dusk-trees=""
+            {...planeAttrs(dusk.tone, dusk.world)}
+            className={cn(DUSK_BOX, "hidden overflow-hidden lg:block")}
+            style={DUSK_AT}
           />
         </>
       ) : null}

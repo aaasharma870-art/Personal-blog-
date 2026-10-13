@@ -21,6 +21,9 @@ export type ScrollSceneBuild = (api: ScrollSceneApi) => void | (() => void);
 
 type Job = () => void;
 
+/** One turn's budget for scene builds (ms). */
+const SLICE_MS = 8;
+
 /** Builds waiting for ladder step 2. */
 const queue = new Set<Job>();
 let flushed = false;
@@ -32,13 +35,21 @@ function flushWhenReady(): void {
   // the ladder is a desktop chunk (DP-13): imported here, never statically,
   // so a first-load host of a scene does not carry it
   import("./ladder")
-    .then((m) => m.whenLadder(2))
-    .then(() => loadGsap())
-    .then(() => {
+    .then((m) => m.whenLadder(2).then(() => loadGsap()).then(() => m))
+    .then(async (m) => {
+      // the queued builds take turns (lib/ladder nextTurn): each turn builds
+      // scenes for ≤ SLICE_MS, so the step-2 ScrollTrigger work never sits
+      // in one long task (P3-2 #9); builds queued meanwhile join the drain
+      while (queue.size) {
+        await m.nextTurn();
+        const until = performance.now() + SLICE_MS;
+        for (const job of queue) {
+          queue.delete(job);
+          job();
+          if (performance.now() >= until) break;
+        }
+      }
       flushed = true;
-      const jobs = [...queue];
-      queue.clear();
-      for (const job of jobs) job();
       requestScrollRefresh();
     })
     .catch(() => {

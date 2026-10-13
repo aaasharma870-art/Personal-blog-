@@ -1,14 +1,14 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useRef, type RefObject } from "react";
+import { Suspense, useRef, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { beatAttrs, type BeatWeight } from "@/lib/beats";
 import { film, type CaptionKey, type CaptionWorld } from "@/lib/film";
-import { useDesktopFine, useReducedMotion } from "@/lib/flags";
 import { resolveMedia, resolveVariant, type MediaId } from "@/lib/media";
+import { useDesktopFine } from "@/lib/flags";
 import { dur, easeClip } from "@/lib/motion";
 import { captionKeyFor } from "@/lib/sections";
-import { spotlight } from "@/lib/spotlight";
+import { safeLazy } from "@/lib/safe-lazy";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { usePlateEngine, type CameraSpec } from "@/components/primitives/camera";
@@ -16,7 +16,6 @@ import { LivePlate } from "@/components/primitives/live-plate";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
 import { WorldProvider } from "@/components/primitives/world";
-import { useLetterboxScene, type LetterboxSceneOptions } from "@/components/stage/letterbox-bars";
 import { Finale, type FinaleMode } from "@/components/sections/films/finales";
 import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
 
@@ -56,15 +55,21 @@ import { FOCAL_MARK, filmMark } from "@/components/sections/films/plate-marks";
  * - HOUSE LIGHTS DOWN (`lights`, the first screen; B30 / B31-bars, spec
  *   §7.4, P3-6 #8): the global letterbox bars close over 40vh as the
  *   INTERMISSION head rises (the frame's top from 125% to 85% of the
- *   viewport: closed as the first screen arrives) and open over 40vh around
- *   the moment this frame is centred (its centre from 70% to 30%); from
+ *   viewport: closed as the first screen arrives) and open over 40vh as
+ *   this frame rises to the middle (its centre from 92% to 52%); from
  *   there each screen's own 2.39 matte carries the scene. One close, one
- *   open per pass (html[data-letterbox] flips twice, rule 33). B30 is a
+ *   open per pass (the bars' root `.letterbox[data-state]` flips twice; rule 33: never on <html>). B30 is a
  *   weight-3 scroll star: its marker's box sits above the frame so its
- *   spotlight ownership ends as the close does.
+ *   spotlight ownership ends as the close does. The B30 / B31-bars markers
+ *   are the server screen's (`marks`, film-screen.tsx: no client code).
+ * - The beat ids come from the server screen (`beat`, film-beats.ts), so the
+ *   table stays out of the first load; without one (the lab) the finale
+ *   plays on entry, unranked.
  * - THE WARM POINT (`carry`, the last screen; B35 films half): the lazy
- *   ./warm-carry.tsx lifts the HP finale's warm point off the plate and
+ *   ./films-desktop.tsx lifts the HP finale's warm point off the plate and
  *   lays it on the rising tintype card's sun (DESKTOP_FINE, motion on).
+ *   The house lights and the carry are that lazy chunk (DP-13); this file
+ *   renders only their server-side markers.
  */
 export const FILMS_CAPTION: Record<CaptionWorld, CaptionKey> = {
   pirates: "cap.films.pirates",
@@ -73,33 +78,19 @@ export const FILMS_CAPTION: Record<CaptionWorld, CaptionKey> = {
   hp: "cap.films.hp",
 };
 
-/** Each screen's beats (lib/page.ts, the films entry): the title in
- *  character (film-screen.tsx) and the finale (its weight: Pirates' is
- *  demoted to 1, a breath). */
-export const FILM_BEATS: Readonly<Record<CaptionWorld, { title: string; finale: string; weight: BeatWeight }>> = {
-  pirates: { title: "B31", finale: "B31-finale", weight: 1 },
-  idiots: { title: "B32", finale: "B32-finale", weight: 2 },
-  rdr2: { title: "B33", finale: "B33-finale", weight: 2 },
-  hp: { title: "B34", finale: "B34-finale", weight: 2 },
-};
-
 /** Spec §6.1, the films row: a push during the screen's passage. */
 const PUSH: CameraSpec = { kind: "push", scale: [1, 1.05], driver: "flow" };
 
-/** House lights down (spec §7.4; positions on this frame's box). */
-const LIGHTS: LetterboxSceneOptions = {
-  close: ["top 125%", "top 85%"],
-  open: ["center 70%", "center 30%"],
-};
-const NO_REF: RefObject<Element | null> = { current: null };
-
-const WarmCarry = lazy(() => import("@/components/sections/films/warm-carry"));
+/** The desktop half (DP-13): the house lights and the warm-point carry. */
+const FilmsDesktop = safeLazy(() => import("@/components/sections/films/films-desktop"));
 
 export function FilmFrame({
   world,
   choice,
   bearing,
   gates,
+  beat,
+  marks,
   lights = false,
   carry = false,
   className,
@@ -110,6 +101,10 @@ export function FilmFrame({
   bearing: number;
   /** gauntlet.length (the 3 Idiots finale; derived). */
   gates: number;
+  /** The finale's time-star (film-beats.ts FILM_BEATS[world]). */
+  beat?: { finale: string; weight: BeatWeight };
+  /** Server markers inside the frame's box (the first screen's B30 / B31-bars). */
+  marks?: ReactNode;
   /** The first screen: the house lights go down on it (B30, B31-bars). */
   lights?: boolean;
   /** The last screen: its warm point is carried onto the tintype's sun (B35). */
@@ -127,27 +122,21 @@ export function FilmFrame({
         : base;
   const asset = stillId ? resolveMedia(stillId) : null;
   const aspect = asset ? asset.width / asset.height : 21 / 9;
-  const beats = FILM_BEATS[world];
 
   // The observer watches the UNCLIPPED box: IntersectionObserver clips its
   // target by the target's own clip-path in Chromium, so observing the
   // element that carries the closed iris (circle(0%): zero area) could leave
   // the ALT screens armed — shut — forever (ART-DIRECTOR #1).
   const ref = useRef<HTMLDivElement>(null);
-  const phase = useEnterOnce(ref, { amount: 0.5, star: { id: beats.finale, weight: beats.weight } });
-  const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? "play" : "final";
+  const phase = useEnterOnce(ref, { amount: 0.5, star: beat ? { id: beat.finale, weight: beat.weight } : undefined });
+  // desktop: the finale asks the spotlight, so it plays inside the grant
+  // (≤ 1.2 s, its default hold: finales.tsx "quick"; P3-11 r3, J1 #5 / #6:
+  // B32 / B33 granted on rigid scroll, the HP light crossing the viaduct
+  // with no star)
+  const quick = useDesktopFine() && Boolean(beat);
+  const mode: FinaleMode = phase === "armed" ? "hidden" : phase === "entered" ? (quick ? "quick" : "play") : "final";
 
-  // house lights down: the global bars (a no-op off DESKTOP_FINE / motion)
-  useLetterboxScene(lights ? ref : NO_REF, LIGHTS);
-  const fine = useDesktopFine();
-  const reduced = useReducedMotion();
-  const live = fine && !reduced;
-  const lightsRef = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const el = lightsRef.current;
-    if (!lights || !live || !el) return;
-    return spotlight.registerScrollStar("B30", el, 3);
-  }, [lights, live]);
+  // the house lights (first screen) and the warm point (last): desktop, lazy
   const engine = usePlateEngine();
 
   const focal = variant === "alt" && asset ? filmMark(asset.id, FOCAL_MARK[world]) : null;
@@ -163,28 +152,9 @@ export function FilmFrame({
         className="relative aspect-[3/2] sm:aspect-[2.39/1]"
         data-films-frame={world}
         data-finale-mode={mode}
-        {...beatAttrs(beats.finale, { weight: beats.weight })}
+        {...(beat ? beatAttrs(beat.finale, { weight: beat.weight }) : null)}
       >
-        {lights ? (
-          <>
-            {/* B30 (scroll star, w3): the close's spotlight box (above the frame) */}
-            <span
-              ref={lightsRef}
-              aria-hidden="true"
-              data-beat-scroll=""
-              className="pointer-events-none invisible absolute left-0 w-px"
-              style={{ top: "-105vh", height: "max(40vh, 300px)" }}
-              {...beatAttrs("B30", { weight: 3 })}
-            />
-            {/* B31-bars: the open, centred on this frame */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none invisible absolute left-0 w-px"
-              style={{ top: "calc(50% - 20vh)", height: "40vh" }}
-              {...beatAttrs("B31-bars")}
-            />
-          </>
-        ) : null}
+        {marks}
         <motion.div
           className="absolute inset-0 overflow-hidden bg-bg"
           initial={false}
@@ -209,9 +179,9 @@ export function FilmFrame({
         </motion.div>
       </div>
       <SceneCaption k={captionKeyFor(FILMS_CAPTION[world], variant)} place="under" />
-      {carry && engine ? (
+      {(lights || carry) && engine ? (
         <Suspense fallback={null}>
-          <WarmCarry />
+          <FilmsDesktop frame={ref} lights={lights} carry={carry} />
         </Suspense>
       ) : null}
     </div>

@@ -1,0 +1,5 @@
+screencast: director 1440x900 headed (xvfb-run) http://localhost:3161/?skip=intro&debug=spotlight
+  Lenis ON
+  video: docs/build/motion-strips/p3-r3/raw/screencast/director-1440/video.mp4
+  4598 frames; scroll 395.7 s; rAF 12.2 fps p95 150.1 ms >50ms 82%; screencast 11.5 fps; LoAF 4285 (4264 > 50 ms, work > 50: 9); CLS 0.0062; spotlight events 213; errors 0
+  → docs/build/motion-strips/p3-r3/screencast/director-1440/screencast.json

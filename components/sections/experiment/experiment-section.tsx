@@ -35,7 +35,7 @@ export function ExperimentSection({ entry, number }: SectionProps<"experiment">)
         <div className="boot:grid boot:grid-cols-12 boot:items-end boot:gap-x-6">
           <div className="boot:col-span-7">
             <Meta fields={[number, "Experiment"]} />
-            <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
+            <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg motion-off:transition-none">
               See the thesis, not just read it.
             </h2>
           </div>

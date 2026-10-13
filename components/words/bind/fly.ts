@@ -8,6 +8,11 @@
                             a glide) / the graphite horse (the gallop frames
                             at 14 fps)
      ALT     shadow-pass    only a flattened dark shadow of the sprite crosses
+   LAZY FRAMES (W3 gate): a zone marked `data-words-frames="horse"` has an
+   empty sprite in the server markup; loadFlyFrames() imports the Muybridge
+   frames (components/words/sprites/horse-frames.ts, its own chunk) and
+   fills the sprite when the star asks the spotlight. Only this lazy desktop
+   binder imports it, so no device gets the path data in its first load.
    ========================================================================== */
 
 import type { Variant } from "@/lib/variants";
@@ -22,6 +27,37 @@ const GULL_FLAPS: readonly (readonly [number, number])[] = [
 ];
 
 type Pt = readonly [number, number];
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+let horseFrames: Promise<readonly string[]> | null = null;
+
+/** Fills a lazy zone's empty sprite with its frames (the horse). Resolves
+ *  true when the sprite has frames to fly (at once for a zone that is not
+ *  lazy or is already filled), false when the frames could not be loaded. */
+export function loadFlyFrames(el: HTMLElement): Promise<boolean> {
+  const svg = el.querySelector<SVGSVGElement>(":scope > svg[data-words-sprite]");
+  if (!svg) return Promise.resolve(false);
+  if (el.dataset.wordsFrames !== "horse" || svg.querySelector(":scope > path[data-f]")) return Promise.resolve(true);
+  horseFrames ??= import("@/components/words/sprites/horse-frames").then((m) => m.HORSE_FRAMES);
+  return horseFrames.then(
+    (frames) => {
+      if (!svg.querySelector(":scope > path[data-f]")) {
+        frames.forEach((d, i) => {
+          const p = document.createElementNS(SVG_NS, "path");
+          p.setAttribute("d", d);
+          p.setAttribute("data-f", String(i));
+          p.setAttribute("opacity", i === 0 ? "1" : "0");
+          svg.appendChild(p);
+        });
+      }
+      return frames.length > 0;
+    },
+    () => {
+      horseFrames = null;
+      return false;
+    },
+  );
+}
 
 function catmull(p: readonly Pt[], per: number): Pt[] {
   if (p.length < 3) {
@@ -106,7 +142,7 @@ export function playFly(el: HTMLElement, run: Run, variant?: Variant): number | 
   }
   const W = el.clientWidth;
   const H = el.clientHeight;
-  if (!svg || pts.length < 2 || ms <= 0 || W < 8 || H < 8) {
+  if (!svg || !svg.querySelector(":scope > path[data-f]") || pts.length < 2 || ms <= 0 || W < 8 || H < 8) {
     run.end();
     return null;
   }

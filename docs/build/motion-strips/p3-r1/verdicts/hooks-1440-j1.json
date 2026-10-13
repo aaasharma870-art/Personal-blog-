@@ -1,0 +1,10 @@
+[
+  { "frame": "H001", "hook": false, "why": "The big RED DEAD REDEMPTION 2 title lands, but the framed picture is a muddy, grainy brown blur that reads as a failed or still-loading image rather than an old photograph developing. Nothing in the frame says what this section is about. The 'EGG 1 OF 12 · THE KRAKEN' toast also clashes with an RDR2 opener." },
+  { "frame": "H002", "hook": true, "why": "Bold blackletter PIRATES OF THE CARIBBEAN title plus a brass porthole showing the lit stern of a ship. The porthole promises a reveal and I would scroll to open it, though the left two thirds of the frame are empty black." },
+  { "frame": "H003", "hook": false, "why": "Mixed message: the title says 3 IDIOTS / The Workshop, but the big image and its caption are 'The Kraken's Storm · Pirates of the Caribbean'. The glowing sea is pretty, but as a stranger I can't tell which world I'm in, and the frame is mostly dark." },
+  { "frame": "H004", "hook": true, "why": "A pale, chalky wash is tearing across the storm from the left. That visible change of world is the cinematic moment, and it makes me want to see what replaces the sea. The label mismatch is still there, but the motion carries it." },
+  { "frame": "H005", "hook": true, "why": "The porthole ring glows gold and the ghost-ship scene is starting to bleed into the frame behind it. It feels like a door opening, a clear invitation to keep going." },
+  { "frame": "H006", "hook": false, "why": "Gorgeous campfire image, but the heading says HARRY POTTER while the caption says 'The Campfire · Red Dead Redemption 2'. Frozen like this it reads as a mislabel, not a transition." },
+  { "frame": "H007", "hook": false, "why": "Same as H001: a strong title over an almost blank sepia smear. The frame gives no reason to read on." },
+  { "frame": "H008", "hook": true, "why": "A glowing burn-hole is eating through the campfire photo. That clearly signals the RDR2 picture is about to burn away into the Harry Potter act, and it's a striking, curiosity-making moment." }
+]

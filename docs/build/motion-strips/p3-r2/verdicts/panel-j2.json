@@ -1,0 +1,1141 @@
+{
+ "judge": "J2",
+ "round": "p3-r2",
+ "persona": "first-time visitor, steady scroll",
+ "screens": [
+  {
+   "width": 1440,
+   "screen": 1,
+   "clip": 5,
+   "clips": "1-11",
+   "keep": "yes",
+   "why": "Play screen with candles, a broom flight over Hogwarts that drops onto a glowing sea, then the name lands. A real hook; I want to see where it goes."
+  },
+  {
+   "width": 1440,
+   "screen": 2,
+   "clip": 12,
+   "clips": "12-14",
+   "keep": "yes",
+   "why": "A porthole irises open on the Black Pearl. A fresh trick and a big, moody image."
+  },
+  {
+   "width": 1440,
+   "screen": 3,
+   "clip": 16,
+   "clips": "15-16",
+   "keep": "yes",
+   "why": "\"A research journal in four acts\" with a contents list. Now I know how long this is and what is coming."
+  },
+  {
+   "width": 1440,
+   "screen": 4,
+   "clip": 17,
+   "clips": "17-19",
+   "keep": "yes",
+   "why": "The heading wipes in (\"A builder of quantitative systems\"). It is a wall of three columns, but this is the who-is-he part I came for."
+  },
+  {
+   "width": 1440,
+   "screen": 5,
+   "clip": 20,
+   "clips": "20-22",
+   "keep": "yes",
+   "why": "\"How the methodology was earned\": a sticky harbour picture with a little route map. Calm and readable."
+  },
+  {
+   "width": 1440,
+   "screen": 6,
+   "clip": 23,
+   "clips": "23-24",
+   "keep": "yes",
+   "why": "The picture changes from harbour to storm as each step scrolls past. Scrollytelling that pays off."
+  },
+  {
+   "width": 1440,
+   "screen": 7,
+   "clip": 25,
+   "clips": "25-26",
+   "keep": "yes",
+   "why": "Moonlit sea, then glowing waves. The images still change with each step, so it holds me."
+  },
+  {
+   "width": 1440,
+   "screen": 8,
+   "clip": 28,
+   "clips": "27-28",
+   "keep": "no",
+   "why": "Fourth screen of the same sticky layout, and then the page drops to near-black with a thin strip of sea. Felt like the page had stalled."
+  },
+  {
+   "width": 1440,
+   "screen": 9,
+   "clip": 29,
+   "clips": "29-31",
+   "keep": "yes",
+   "why": "A torn-paper edge rips open onto a sunlit lecture hall with chalk drawings. A big palette change that wakes me up."
+  },
+  {
+   "width": 1440,
+   "screen": 10,
+   "clip": 32,
+   "clips": "32-33",
+   "keep": "yes",
+   "why": "The \"The Workshop\" title card is fine, but right after it there is about a second of black before the pen photo creeps in."
+  },
+  {
+   "width": 1440,
+   "screen": 11,
+   "clip": 34,
+   "clips": "34-36",
+   "keep": "yes",
+   "why": "A pen in a velvet case and a typed-on handwritten heading, \"Led by what survived scrutiny.\" Nice texture."
+  },
+  {
+   "width": 1440,
+   "screen": 12,
+   "clip": 38,
+   "clips": "37-38",
+   "keep": "yes",
+   "why": "\"The seven-part validation gauntlet\" next to a chalkboard bar chart in warm window light. Clear and pretty."
+  },
+  {
+   "width": 1440,
+   "screen": 13,
+   "clip": 41,
+   "clips": "39-42",
+   "keep": "yes",
+   "why": "The first project card, with a corridor photo and a blue blueprint flowchart. It looks like real work."
+  },
+  {
+   "width": 1440,
+   "screen": 14,
+   "clip": 43,
+   "clips": "43-43",
+   "keep": "no",
+   "why": "A column of small stats with hand-drawn circles. Feels like reading a report; the circles are too small to register as I scroll."
+  },
+  {
+   "width": 1440,
+   "screen": 15,
+   "clip": 45,
+   "clips": "44-45",
+   "keep": "yes",
+   "why": "\"What is a machine?\" types itself onto the chalkboard next to a drone sketch. A charming beat."
+  },
+  {
+   "width": 1440,
+   "screen": 16,
+   "clip": 47,
+   "clips": "46-48",
+   "keep": "no",
+   "why": "Seen it: the same card again (heading, body, photo, blueprint). I start skimming."
+  },
+  {
+   "width": 1440,
+   "screen": 17,
+   "clip": 49,
+   "clips": "49-50",
+   "keep": "no",
+   "why": "Another blueprint and a stats block. The pattern now repeats for a third time and the text is tiny."
+  },
+  {
+   "width": 1440,
+   "screen": 18,
+   "clip": 52,
+   "clips": "51-53",
+   "keep": "yes",
+   "why": "\"See the thesis, not just read it\": a chart that looks like I could play with it. That promise pulls me on."
+  },
+  {
+   "width": 1440,
+   "screen": 19,
+   "clip": 55,
+   "clips": "54-55",
+   "keep": "yes",
+   "why": "The homemade drone photo is striking, and there is a small button on it."
+  },
+  {
+   "width": 1440,
+   "screen": 20,
+   "clip": 57,
+   "clips": "56-59",
+   "keep": "no",
+   "why": "\"What I can actually do\": a dense skills table plus a third blueprint. Clutter."
+  },
+  {
+   "width": 1440,
+   "screen": 21,
+   "clip": 60,
+   "clips": "60-60",
+   "keep": "no",
+   "why": "More tiny skills rows and a long block of text. My eyes glaze."
+  },
+  {
+   "width": 1440,
+   "screen": 22,
+   "clip": 62,
+   "clips": "61-63",
+   "keep": "yes",
+   "why": "\"The kill-list\" is an intriguing idea (strategies he killed), with the pen photo again."
+  },
+  {
+   "width": 1440,
+   "screen": 23,
+   "clip": 64,
+   "clips": "64-65",
+   "keep": "no",
+   "why": "A long list of tiny strategy rows. Scanning, not reading."
+  },
+  {
+   "width": 1440,
+   "screen": 24,
+   "clip": 67,
+   "clips": "66-68",
+   "keep": "yes",
+   "why": "\"Three films and a game\": a clear turn, with four titles in their own type. I am curious about the game."
+  },
+  {
+   "width": 1440,
+   "screen": 25,
+   "clip": 70,
+   "clips": "69-70",
+   "keep": "yes",
+   "why": "The Pirates postcard: the ship at moonlight with a quote. A big image gives me relief after the lists."
+  },
+  {
+   "width": 1440,
+   "screen": 26,
+   "clip": 72,
+   "clips": "71-72",
+   "keep": "yes",
+   "why": "A yellow scooter rises up at a blue lake. A bright new palette."
+  },
+  {
+   "width": 1440,
+   "screen": 27,
+   "clip": 73,
+   "clips": "73-74",
+   "keep": "yes",
+   "why": "\"Aal izz well\". It is warm and quick, and I want to see the next world."
+  },
+  {
+   "width": 1440,
+   "screen": 28,
+   "clip": 75,
+   "clips": "75-75",
+   "keep": "yes",
+   "why": "The Red Dead red sunset is gorgeous."
+  },
+  {
+   "width": 1440,
+   "screen": 29,
+   "clip": 77,
+   "clips": "76-77",
+   "keep": "yes",
+   "why": "The Hogwarts Express on the viaduct. The fourth world arrives fast."
+  },
+  {
+   "width": 1440,
+   "screen": 30,
+   "clip": 79,
+   "clips": "78-79",
+   "keep": "yes",
+   "why": "A small golden orb drifts across the dark gap. I want to chase it."
+  },
+  {
+   "width": 1440,
+   "screen": 31,
+   "clip": 81,
+   "clips": "80-82",
+   "keep": "yes",
+   "why": "Red Dead again, but the picture blooms from grey to gold as I scroll. A real cinematic moment, though \"didn't I just see Red Dead?\""
+  },
+  {
+   "width": 1440,
+   "screen": 32,
+   "clip": 84,
+   "clips": "83-84",
+   "keep": "no",
+   "why": "The third identical ghosted act card (\"The Frontier\") followed by a near-black gap. The gimmick is wearing thin."
+  },
+  {
+   "width": 1440,
+   "screen": 33,
+   "clip": 85,
+   "clips": "85-87",
+   "keep": "yes",
+   "why": "\"Discipline, service, and a trained eye\" over a full-bleed golden valley with a grazing horse. Beautiful."
+  },
+  {
+   "width": 1440,
+   "screen": 34,
+   "clip": 88,
+   "clips": "88-89",
+   "keep": "yes",
+   "why": "A parchment trail map and a horse silhouette at dusk. New textures."
+  },
+  {
+   "width": 1440,
+   "screen": 35,
+   "clip": 90,
+   "clips": "90-91",
+   "keep": "no",
+   "why": "Two dense columns of small text next to the same horse photo. Slow."
+  },
+  {
+   "width": 1440,
+   "screen": 36,
+   "clip": 93,
+   "clips": "92-93",
+   "keep": "yes",
+   "why": "\"What's in the satchel\" icons, then a WANTED poster with his name on it. Fun; I grin."
+  },
+  {
+   "width": 1440,
+   "screen": 37,
+   "clip": 94,
+   "clips": "94-96",
+   "keep": "yes",
+   "why": "The poster slides away to a parchment journal, a smooth material change."
+  },
+  {
+   "width": 1440,
+   "screen": 38,
+   "clip": 98,
+   "clips": "97-98",
+   "keep": "yes",
+   "why": "The journal entries come with sketches that redraw, and a tiny fox runs along the bottom."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "clip": 99,
+   "clips": "99-99",
+   "keep": "yes",
+   "why": "More entries, each with a fresh sketch. Light and quick."
+  },
+  {
+   "width": 1440,
+   "screen": 40,
+   "clip": 101,
+   "clips": "100-103",
+   "keep": "yes",
+   "why": "A pine-forest silhouette wipes the paper away into a campfire scene, \"In their words.\" Cinematic."
+  },
+  {
+   "width": 1440,
+   "screen": 41,
+   "clip": 104,
+   "clips": "104-104",
+   "keep": "yes",
+   "why": "Real quotes from teachers. Credible and short."
+  },
+  {
+   "width": 1440,
+   "screen": 42,
+   "clip": 106,
+   "clips": "105-106",
+   "keep": "yes",
+   "why": "A dark beat, then a campsite panorama that burns open into the Great Hall. A great transition."
+  },
+  {
+   "width": 1440,
+   "screen": 43,
+   "clip": 108,
+   "clips": "107-110",
+   "keep": "yes",
+   "why": "The Great Hall full of candles is stunning, even though \"The Light\" is the fourth act card of the same kind."
+  },
+  {
+   "width": 1440,
+   "screen": 44,
+   "clip": 112,
+   "clips": "111-114",
+   "keep": "yes",
+   "why": "A Marauder's Map parchment with walking footprints, \"A small philosophy of work.\""
+  },
+  {
+   "width": 1440,
+   "screen": 45,
+   "clip": 116,
+   "clips": "115-116",
+   "keep": "yes",
+   "why": "The principles unfold on the map and the footprints keep walking. Pleasant."
+  },
+  {
+   "width": 1440,
+   "screen": 46,
+   "clip": 118,
+   "clips": "117-118",
+   "keep": "yes",
+   "why": "The map closes into the contact screen. A clean hand-off."
+  },
+  {
+   "width": 1440,
+   "screen": 47,
+   "clip": 120,
+   "clips": "119-121",
+   "keep": "yes",
+   "why": "\"Let's talk research, markets, or building systems…\" with floating candles and a clear email button."
+  },
+  {
+   "width": 1440,
+   "screen": 48,
+   "clip": 123,
+   "clips": "122-124",
+   "keep": "yes",
+   "why": "End credits like a film's. Cute, though the type is tiny."
+  },
+  {
+   "width": 1440,
+   "screen": 49,
+   "clip": 126,
+   "clips": "125-126",
+   "keep": "yes",
+   "why": "\"Mischief managed.\" A satisfying button on the whole thing."
+  },
+  {
+   "width": 1024,
+   "screen": 1,
+   "clip": 5,
+   "clips": "1-10",
+   "keep": "yes",
+   "why": "Same strong opening: broom flight onto the glowing sea, then the name."
+  },
+  {
+   "width": 1024,
+   "screen": 2,
+   "clip": 11,
+   "clips": "11-13",
+   "keep": "yes",
+   "why": "The porthole iris onto the ship."
+  },
+  {
+   "width": 1024,
+   "screen": 3,
+   "clip": 15,
+   "clips": "14-15",
+   "keep": "yes",
+   "why": "The \"The Crossing\" card and the four-act contents."
+  },
+  {
+   "width": 1024,
+   "screen": 4,
+   "clip": 17,
+   "clips": "16-18",
+   "keep": "yes",
+   "why": "The about heading lands. The three columns feel cramped at this width, but I read it."
+  },
+  {
+   "width": 1024,
+   "screen": 5,
+   "clip": 19,
+   "clips": "19-20",
+   "keep": "no",
+   "why": "A whole extra screen of three narrow, dense text columns, with the compass squeezed into the gutter. A wall of text."
+  },
+  {
+   "width": 1024,
+   "screen": 6,
+   "clip": 21,
+   "clips": "21-22",
+   "keep": "yes",
+   "why": "Journey: the sticky harbour picture and route map."
+  },
+  {
+   "width": 1024,
+   "screen": 7,
+   "clip": 24,
+   "clips": "23-24",
+   "keep": "yes",
+   "why": "The images change with each step. It still works."
+  },
+  {
+   "width": 1024,
+   "screen": 8,
+   "clip": 26,
+   "clips": "25-26",
+   "keep": "no",
+   "why": "The same layout again, then a near-black gap with a strip of sea."
+  },
+  {
+   "width": 1024,
+   "screen": 9,
+   "clip": 27,
+   "clips": "27-27",
+   "keep": "yes",
+   "why": "The torn-paper reveal of the lecture hall. A fresh palette."
+  },
+  {
+   "width": 1024,
+   "screen": 10,
+   "clip": 29,
+   "clips": "28-30",
+   "keep": "yes",
+   "why": "Chalk drawings animate. The Workshop card, then black."
+  },
+  {
+   "width": 1024,
+   "screen": 11,
+   "clip": 31,
+   "clips": "31-31",
+   "keep": "yes",
+   "why": "The pen photo slides up out of the dark. Lovely light."
+  },
+  {
+   "width": 1024,
+   "screen": 12,
+   "clip": 32,
+   "clips": "32-34",
+   "keep": "yes",
+   "why": "The typed handwritten heading and the gauntlet list."
+  },
+  {
+   "width": 1024,
+   "screen": 13,
+   "clip": 35,
+   "clips": "35-37",
+   "keep": "yes",
+   "why": "The chalkboard bar chart, then the first project card."
+  },
+  {
+   "width": 1024,
+   "screen": 14,
+   "clip": 38,
+   "clips": "38-39",
+   "keep": "yes",
+   "why": "The corridor photo and the blueprint."
+  },
+  {
+   "width": 1024,
+   "screen": 15,
+   "clip": 40,
+   "clips": "40-40",
+   "keep": "no",
+   "why": "A stats column in tiny type."
+  },
+  {
+   "width": 1024,
+   "screen": 16,
+   "clip": 42,
+   "clips": "41-42",
+   "keep": "yes",
+   "why": "\"What is a machine?\" types onto the chalkboard."
+  },
+  {
+   "width": 1024,
+   "screen": 17,
+   "clip": 44,
+   "clips": "43-45",
+   "keep": "no",
+   "why": "Seen it: the second project card with the same template."
+  },
+  {
+   "width": 1024,
+   "screen": 18,
+   "clip": 46,
+   "clips": "46-46",
+   "keep": "no",
+   "why": "The blueprint slides over the photo, which peeks out above and below. It looks like a collision."
+  },
+  {
+   "width": 1024,
+   "screen": 19,
+   "clip": 47,
+   "clips": "47-48",
+   "keep": "no",
+   "why": "More stats beside the lawn photo. Skimming."
+  },
+  {
+   "width": 1024,
+   "screen": 20,
+   "clip": 50,
+   "clips": "49-51",
+   "keep": "yes",
+   "why": "\"See the thesis, not just read it\": a chart I might touch."
+  },
+  {
+   "width": 1024,
+   "screen": 21,
+   "clip": 52,
+   "clips": "52-52",
+   "keep": "yes",
+   "why": "The chart draws up, then the drone photo arrives."
+  },
+  {
+   "width": 1024,
+   "screen": 22,
+   "clip": 54,
+   "clips": "53-55",
+   "keep": "yes",
+   "why": "The drone photo with its small button."
+  },
+  {
+   "width": 1024,
+   "screen": 23,
+   "clip": 57,
+   "clips": "56-57",
+   "keep": "no",
+   "why": "A dense skills table and a tall blueprint. Clutter."
+  },
+  {
+   "width": 1024,
+   "screen": 24,
+   "clip": 59,
+   "clips": "58-60",
+   "keep": "yes",
+   "why": "\"The kill-list\" heading and photo. Intriguing."
+  },
+  {
+   "width": 1024,
+   "screen": 25,
+   "clip": 61,
+   "clips": "61-61",
+   "keep": "no",
+   "why": "A long run of tiny strategy rows."
+  },
+  {
+   "width": 1024,
+   "screen": 26,
+   "clip": 63,
+   "clips": "62-63",
+   "keep": "no",
+   "why": "Still the list. Too long at this width."
+  },
+  {
+   "width": 1024,
+   "screen": 27,
+   "clip": 65,
+   "clips": "64-66",
+   "keep": "yes",
+   "why": "\"Three films and a game\" makes me curious, though \"Red Dead Redemption 2\" wraps with an orphaned \"2\"."
+  },
+  {
+   "width": 1024,
+   "screen": 28,
+   "clip": 67,
+   "clips": "67-67",
+   "keep": "yes",
+   "why": "The Pirates postcard."
+  },
+  {
+   "width": 1024,
+   "screen": 29,
+   "clip": 69,
+   "clips": "68-69",
+   "keep": "yes",
+   "why": "The scooter at the lake."
+  },
+  {
+   "width": 1024,
+   "screen": 30,
+   "clip": 70,
+   "clips": "70-70",
+   "keep": "yes",
+   "why": "\"Aal izz well\", then the red sunset slides in."
+  },
+  {
+   "width": 1024,
+   "screen": 31,
+   "clip": 71,
+   "clips": "71-72",
+   "keep": "yes",
+   "why": "The Red Dead sunset. Gorgeous."
+  },
+  {
+   "width": 1024,
+   "screen": 32,
+   "clip": 73,
+   "clips": "73-73",
+   "keep": "yes",
+   "why": "The Hogwarts Express."
+  },
+  {
+   "width": 1024,
+   "screen": 33,
+   "clip": 75,
+   "clips": "74-75",
+   "keep": "yes",
+   "why": "The golden orb drifting, then Red Dead in grey."
+  },
+  {
+   "width": 1024,
+   "screen": 34,
+   "clip": 77,
+   "clips": "76-78",
+   "keep": "yes",
+   "why": "The grey-to-gold bloom. \"The Frontier\" card is the third of its kind, but the colour change carries it."
+  },
+  {
+   "width": 1024,
+   "screen": 35,
+   "clip": 80,
+   "clips": "79-81",
+   "keep": "yes",
+   "why": "The \"Discipline, service, and a trained eye\" landscape."
+  },
+  {
+   "width": 1024,
+   "screen": 36,
+   "clip": 82,
+   "clips": "82-82",
+   "keep": "yes",
+   "why": "The trail-map sketch."
+  },
+  {
+   "width": 1024,
+   "screen": 37,
+   "clip": 84,
+   "clips": "83-84",
+   "keep": "yes",
+   "why": "The horse silhouette with text beside it. OK."
+  },
+  {
+   "width": 1024,
+   "screen": 38,
+   "clip": 85,
+   "clips": "85-85",
+   "keep": "no",
+   "why": "Dense text columns with the same horse photo. Slow."
+  },
+  {
+   "width": 1024,
+   "screen": 39,
+   "clip": 87,
+   "clips": "86-87",
+   "keep": "yes",
+   "why": "Satchel icons with ticks; they look collectible."
+  },
+  {
+   "width": 1024,
+   "screen": 40,
+   "clip": 88,
+   "clips": "88-88",
+   "keep": "yes",
+   "why": "The WANTED poster with his name."
+  },
+  {
+   "width": 1024,
+   "screen": 41,
+   "clip": 90,
+   "clips": "89-91",
+   "keep": "yes",
+   "why": "The parchment journal, though the poster caption sits clipped under the top bar."
+  },
+  {
+   "width": 1024,
+   "screen": 42,
+   "clip": 92,
+   "clips": "92-93",
+   "keep": "yes",
+   "why": "Sketches redraw and a fox runs along the bottom."
+  },
+  {
+   "width": 1024,
+   "screen": 43,
+   "clip": 94,
+   "clips": "94-94",
+   "keep": "yes",
+   "why": "More entries, then the forest rises."
+  },
+  {
+   "width": 1024,
+   "screen": 44,
+   "clip": 96,
+   "clips": "95-97",
+   "keep": "yes",
+   "why": "The forest wipe into the campfire, \"In their words.\""
+  },
+  {
+   "width": 1024,
+   "screen": 45,
+   "clip": 98,
+   "clips": "98-99",
+   "keep": "yes",
+   "why": "The teacher quotes."
+  },
+  {
+   "width": 1024,
+   "screen": 46,
+   "clip": 100,
+   "clips": "100-100",
+   "keep": "yes",
+   "why": "The campsite panorama assembles out of the dark."
+  },
+  {
+   "width": 1024,
+   "screen": 47,
+   "clip": 101,
+   "clips": "101-103",
+   "keep": "yes",
+   "why": "A burn-hole into the Great Hall. Superb."
+  },
+  {
+   "width": 1024,
+   "screen": 48,
+   "clip": 106,
+   "clips": "104-107",
+   "keep": "yes",
+   "why": "The Marauder's Map opens, after a short black gap."
+  },
+  {
+   "width": 1024,
+   "screen": 49,
+   "clip": 108,
+   "clips": "108-109",
+   "keep": "yes",
+   "why": "Principles with walking footprints."
+  },
+  {
+   "width": 1024,
+   "screen": 50,
+   "clip": 111,
+   "clips": "110-111",
+   "keep": "yes",
+   "why": "More principles; the footprints keep it alive."
+  },
+  {
+   "width": 1024,
+   "screen": 51,
+   "clip": 113,
+   "clips": "112-113",
+   "keep": "yes",
+   "why": "A clear contact screen with candles."
+  },
+  {
+   "width": 1024,
+   "screen": 52,
+   "clip": 116,
+   "clips": "114-116",
+   "keep": "yes",
+   "why": "Credits roll."
+  },
+  {
+   "width": 1024,
+   "screen": 53,
+   "clip": 118,
+   "clips": "117-118",
+   "keep": "yes",
+   "why": "Credits into \"Mischief managed.\""
+  },
+  {
+   "width": 1024,
+   "screen": 54,
+   "clip": 119,
+   "clips": "119-119",
+   "keep": "yes",
+   "why": "A satisfying end card."
+  }
+ ],
+ "acts": [
+  {
+   "act": "Opening: play screen, broom flight, name",
+   "screens": {
+    "1440": "1-1",
+    "1024": "1-1"
+   },
+   "yesRate": {
+    "1440": "1/1 (100%)",
+    "1024": "1/1 (100%)"
+   },
+   "tempo": "brisk",
+   "feel": "The flight is quick and confident and the name lands on a glowing wave. After that the name screen sits still for a few seconds while the wave moves, which is fine."
+  },
+  {
+   "act": "The Crossing (Pirates: porthole, contents, about, journey)",
+   "screens": {
+    "1440": "2-8",
+    "1024": "2-8"
+   },
+   "yesRate": {
+    "1440": "6/7 (86%)",
+    "1024": "5/7 (71%)"
+   },
+   "tempo": "medium",
+   "feel": "A steady, readable rhythm: iris reveal, contents, about, then the sticky-picture journey. It loses steam on its last screen and drops into black."
+  },
+  {
+   "act": "The Workshop (3 Idiots: lecture hall, scrutiny, project cards, thesis chart, drone, skills, kill-list)",
+   "screens": {
+    "1440": "9-23",
+    "1024": "9-26"
+   },
+   "yesRate": {
+    "1440": "9/15 (60%)",
+    "1024": "11/18 (61%)"
+   },
+   "tempo": "slow",
+   "feel": "It starts strong (torn-paper lecture hall, chalk typing), then three identical project cards, a skills table and a long kill-list drag for well over a minute. This is the part where I would skim or bail."
+  },
+  {
+   "act": "Three films and a game (four film postcards)",
+   "screens": {
+    "1440": "24-30",
+    "1024": "27-33"
+   },
+   "yesRate": {
+    "1440": "7/7 (100%)",
+    "1024": "7/7 (100%)"
+   },
+   "tempo": "brisk",
+   "feel": "Four worlds in about 30 seconds, each with its own palette. The best-paced stretch of the page."
+  },
+  {
+   "act": "The Frontier (Red Dead: grey-to-gold landscape, discipline, satchel, WANTED poster, journal, testimonials)",
+   "screens": {
+    "1440": "31-42",
+    "1024": "34-46"
+   },
+   "yesRate": {
+    "1440": "10/12 (83%)",
+    "1024": "12/13 (92%)"
+   },
+   "tempo": "medium",
+   "feel": "Rich variety in materials (photo, parchment map, poster, paper journal, forest wipe, campfire). Only two text-heavy stops slow it down."
+  },
+  {
+   "act": "The Light (Harry Potter: Great Hall, Marauder's Map principles, contact)",
+   "screens": {
+    "1440": "43-47",
+    "1024": "47-51"
+   },
+   "yesRate": {
+    "1440": "5/5 (100%)",
+    "1024": "5/5 (100%)"
+   },
+   "tempo": "medium",
+   "feel": "It opens with a big hold on the Great Hall, then the map with walking footprints moves at an unhurried, pleasant pace."
+  },
+  {
+   "act": "Credits and \"Mischief managed\"",
+   "screens": {
+    "1440": "48-49",
+    "1024": "52-54"
+   },
+   "yesRate": {
+    "1440": "2/2 (100%)",
+    "1024": "3/3 (100%)"
+   },
+   "tempo": "slow",
+   "feel": "A film-style roll. Slow on purpose, and it reads as a proper ending."
+  }
+ ],
+ "discovery": [
+  {
+   "thing": "Play button on the opening screen (\"I solemnly swear…\")",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "yes: it is the front door. It is small and tucked at the left of a mostly empty screen, though."
+  },
+  {
+   "thing": "\"Director's cut (sound on)\" button under the name",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "yes: sound on a cinematic page is tempting."
+  },
+  {
+   "thing": "Spyglass brackets around the ship on the horizon, plus a compass on the hero wave",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "yes: it looks like a scope I can aim, so I would hover it."
+  },
+  {
+   "thing": "A counter in the top bar that looks like a hunt score (\"… 0/12\")",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "maybe: I only made it out on a still; while scrolling the top-bar type is too small and dim to read, so I would likely never notice it."
+  },
+  {
+   "thing": "\"Skip to the research\" pill and \"View the quant portfolio\" link",
+   "firstScreen": 1,
+   "width": 1440,
+   "wouldTry": "no: navigation, not play. Good that it is there, though."
+  },
+  {
+   "thing": "Contents list \"A research journal in four acts\" (chapter links)",
+   "firstScreen": 3,
+   "width": 1440,
+   "wouldTry": "maybe: I would click a chapter if I got lost."
+  },
+  {
+   "thing": "Route map with nodes beside the journey steps",
+   "firstScreen": 5,
+   "width": 1440,
+   "wouldTry": "maybe: it looks like a progress marker; I might hover the nodes."
+  },
+  {
+   "thing": "\"See the thesis, not just read it\": a chart that looks switchable between a naive and a realistic backtest",
+   "firstScreen": 18,
+   "width": 1440,
+   "wouldTry": "yes: the most clearly interactive thing in the Workshop."
+  },
+  {
+   "thing": "Small pill button on the homemade-drone photo (reads like \"take off\")",
+   "firstScreen": 19,
+   "width": 1440,
+   "wouldTry": "yes: if I spot it. It is tiny in the corner of the photo."
+  },
+  {
+   "thing": "\"Three films and a game\" intro paragraph that seems to mention something to play",
+   "firstScreen": 24,
+   "width": 1440,
+   "wouldTry": "maybe: the heading made me curious, but the body text is too small to catch while scrolling."
+  },
+  {
+   "thing": "Floating golden orb drifting across the dark gap between Harry Potter and Red Dead",
+   "firstScreen": 30,
+   "width": 1440,
+   "wouldTry": "yes: it is the one thing that moved by itself and begged to be clicked."
+  },
+  {
+   "thing": "X marks on the Red Dead sunset picture (\"Dead Eye\" caption)",
+   "firstScreen": 28,
+   "width": 1440,
+   "wouldTry": "maybe: the X targets are clear on the still but barely visible while scrolling; the \"Dead Eye\" caption alone does not say \"shoot me\"."
+  },
+  {
+   "thing": "\"What's in the satchel\" inventory icons with tick marks",
+   "firstScreen": 36,
+   "width": 1440,
+   "wouldTry": "yes: they look collectible."
+  },
+  {
+   "thing": "WANTED poster with his name and a reply link",
+   "firstScreen": 36,
+   "width": 1440,
+   "wouldTry": "yes: the most charming invitation on the page."
+  },
+  {
+   "thing": "A tiny fox or wolf running along the bottom of the journal pages",
+   "firstScreen": 38,
+   "width": 1440,
+   "wouldTry": "yes: I would try to click it."
+  },
+  {
+   "thing": "Walking footprints on the Marauder's Map",
+   "firstScreen": 44,
+   "width": 1440,
+   "wouldTry": "maybe: delightful to watch; unclear whether they react to me."
+  },
+  {
+   "thing": "Contact: email pill, \"Open in your mail app\", GitHub",
+   "firstScreen": 47,
+   "width": 1440,
+   "wouldTry": "yes: a clear call to action."
+  },
+  {
+   "thing": "Credits footer link that reads like \"back to the opening\"",
+   "firstScreen": 48,
+   "width": 1440,
+   "wouldTry": "maybe: I would replay the intro."
+  },
+  {
+   "thing": "Same invitations at 1024; the golden orb shows on screen 33, the WANTED poster on screen 40 and the fox on screen 42",
+   "firstScreen": 33,
+   "width": 1024,
+   "wouldTry": "yes: same answers as at 1440."
+  }
+ ],
+ "findings": [
+  {
+   "screen": "1440 s8/10/32/42/43, 1024 s8/11/35/48",
+   "t": "0:54, 1:04, 2:46, 3:28, 3:38 (1440); 0:50, 1:00, 2:36, 3:26 (1024)",
+   "clip": "1440 #28, #33, #84, #105, #110; 1024 #26, #30-31, #79, #104",
+   "finding": "Transitions pass through about a second of near-black screen with only a sliver of image or a tiny label. Mid-scroll it reads as \"did it stop loading?\" rather than a cut.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440 s13-23 (1024 s13-26)",
+   "t": "1:16-2:10",
+   "clip": "1440 #39-#65",
+   "finding": "The Workshop runs about 75 s of the same project-card template (heading, body, photo, blue blueprint, stats with hand circles) three times, then a skills table and a long kill-list in tiny type. This is where the yes rate falls to about 60%.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440 s2, s10, s32, s43",
+   "t": "0:26, 1:02, 2:44, 3:36",
+   "clip": "1440 #14, #32, #83, #109",
+   "finding": "The act-title overlay (ghosted grey serif over a still: \"The Crossing\", \"The Workshop\", \"The Frontier\", \"The Light\") is used four times the same way and is low-contrast on the image. By the third it feels like a gimmick.",
+   "severity": "low"
+  },
+  {
+   "screen": "all (s1 onward)",
+   "t": "0:12",
+   "clip": "1440 #7",
+   "finding": "Top-bar labels, including what seems to be the hunt counter, are too small and dim to read. The page's main \"there is a game here\" signpost is effectively invisible.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440 s31 (1024 s34)",
+   "t": "2:38",
+   "clip": "1440 #80",
+   "finding": "\"Red Dead Redemption 2\" appears as a film postcard and then again as the next act's opener 10 s later, which makes me think I scrolled back.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024 s18 (1440 s13/s17)",
+   "t": "1:30 (1024)",
+   "clip": "1024 #46; 1440 #42, #49",
+   "finding": "The blueprint panel slides over the sticky photo column, and the photo peeks out above and below it, so it looks like two blocks colliding.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024 s27",
+   "t": "2:08",
+   "clip": "1024 #65",
+   "finding": "In the films index, \"Red Dead Redemption 2\" breaks onto three lines with the \"2\" orphaned.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024 s41",
+   "t": "3:00",
+   "clip": "1024 #90",
+   "finding": "The \"A wanted poster\" caption sits half-clipped under the fixed top bar for the whole 2 s heading stop.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024 s4-5",
+   "t": "0:32-0:38",
+   "clip": "1024 #17-#19",
+   "finding": "The About section keeps three columns at 1024, so they are narrow and dense, with the compass medallion squeezed into the gutter and the right column against the edge rail. It reads as a wall of text.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440 s24 (1024 s27)",
+   "t": "2:12",
+   "clip": "1440 #67-#68",
+   "finding": "The \"Three films and a game\" slide uses a plain sans heading on a big empty dark field. It feels unthemed next to everything else, and the body that seems to explain the game is too small.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440 s4, s11, s29",
+   "t": "0:32, 1:06, 2:30",
+   "clip": "1440 #17, #34, #76",
+   "finding": "Wipe and type-on reveals are caught mid-word with a cursor bar (\"quantitative syst|\", \"Led by / survive\", \"HARRY P_TTER\"). Brief, but \"P_TTER\" briefly looks like a missing letter.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440 s36 (1024 s39)",
+   "t": "3:02",
+   "clip": "1440 #92-#93; 1024 #87",
+   "finding": "Beside the satchel icons, the horse photo is cropped to its black hillside, so it reads as an empty dark box.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440 s1",
+   "t": "0:00",
+   "clip": "1440 #1",
+   "finding": "The first frame is an almost empty dark screen with a small Play button and tiny captions. The invitation to start is understated.",
+   "severity": "low"
+  }
+ ],
+ "scores": {
+  "keepScrolling": 7.5,
+  "tempo": 6.5,
+  "discovery": 5,
+  "yesPct1440": 81.6,
+  "yesPct1024": 81.5
+ },
+ "scale": "0-10 for keepScrolling, tempo, discovery"
+}

@@ -1,10 +1,10 @@
 "use client";
 
-import { lazy, Suspense, useRef } from "react";
+import { useRef } from "react";
 import type { MotionValue } from "motion/react";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
-import { usePlateEngine } from "@/components/primitives/camera";
+import { enginePart } from "@/components/primitives/camera";
 
 /* ============================================================================
    DEPTH PLATE (spec §6.1, P3-5; plan §3.4) — OWNER: W2-PLATES.
@@ -55,22 +55,17 @@ export type DepthPlateProps = {
   sizes?: string;
 };
 
-const Near = lazy(() => import("@/components/stage/stage").then((m) => ({ default: m.DepthNear })));
+const Near = enginePart("DepthNear");
 
 export function DepthPlate({ media, spec, progress, sizes = "100vw" }: DepthPlateProps) {
   const root = useRef<HTMLDivElement>(null);
   const far = useRef<HTMLDivElement>(null);
-  const engine = usePlateEngine();
   return (
     <div ref={root} className="plate-depth" data-depth="">
       <div ref={far} className="plate-depth-far">
         <MediaFrame media={media} layout="fill" playOn="never" loop={false} sizes={sizes} />
       </div>
-      {engine ? (
-        <Suspense fallback={null}>
-          <Near root={root} far={far} media={media} spec={spec} progress={progress} sizes={sizes} />
-        </Suspense>
-      ) : null}
+      <Near root={root} far={far} media={media} spec={spec} progress={progress} sizes={sizes} />
     </div>
   );
 }

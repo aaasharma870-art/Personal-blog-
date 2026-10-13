@@ -1,0 +1,94 @@
+{
+ "kind": "hooks",
+ "width": "1024",
+ "rows": [
+  {
+   "id": "H003",
+   "frame": "css-ignite-p05",
+   "yes": 1,
+   "pass": false,
+   "why": [
+    "A black hole with a glowing ember rim and a tiny candle burns through a sunset camp photo under a large 'HARRY POTTER' title. The burn is a strong 'what is it revealing?' pull. Caveat: the picture beneath is a Western camp, so title and image disagree for a moment.",
+    "The title says HARRY POTTER, but the picture is still a Western camp with horses and tents, with a flat black hole punched in it and a tiny candle. The title and image contradict each other and the hole reads like a glitch.",
+    "Title HARRY POTTER over the Red Dead camp, with a black ragged hole and a tiny flame in the middle. The hole looks like a blot or bug, shows nothing behind it, and the title does not match the picture."
+   ]
+  },
+  {
+   "id": "H001",
+   "frame": "css-opening-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "Blackletter 'PIRATES OF THE CARIBBEAN' title, but the image plate is nearly black, and a thin, dim porthole ring on the far right shows a cropped ship. Roughly two thirds of the picture is empty dark, so there is little to pull the eye past the title.",
+    "A strong blackletter 'PIRATES OF THE CARIBBEAN' title and a gold-ringed porthole showing a lantern-lit ship give the eye a clear focal point and promise a reveal. Weakness: about two thirds of the frame is near-black empty sea.",
+    "Blackletter PIRATES OF THE CARIBBEAN title with a gold-ringed porthole showing the ghost ship's lit windows. Clear focal point and on-theme type, though most of the plate is dark and empty so the pull is moderate."
+   ]
+  },
+  {
+   "id": "H005",
+   "frame": "css-seam-p05",
+   "yes": 1,
+   "pass": false,
+   "why": [
+    "A glowing teal chart line sweeps across the bottom of a storm sea and reveals the classroom desk, under a chalk-style '3 IDIOTS' title. The line gives direction and links the data idea to the imagery. The sea belongs to the previous world, so it is a little muddled.",
+    "'3 IDIOTS' sits over a murky storm sea, with a cyan line and a wooden desk edge smeared into the bottom of the picture. I cannot tell what is happening, and nothing in the image matches the title or 'The Workshop' caption.",
+    "'3 IDIOTS / The Workshop' over a stormy sea, with a teal rising line and a jagged strip of desk and stone wall at the bottom. Reads as a muddy, glitchy collage, and the sea image contradicts the title, so I would not stay for it."
+   ]
+  },
+  {
+   "id": "H006",
+   "frame": "css-tintype-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A desaturated, sepia valley with a glowing sun, a haze band and small arcs at the bottom, under a bold western 'RED DEAD REDEMPTION 2' title. Atmospheric and photographic, and the title face fits.",
+    "The Red Dead title over a sepia tintype with a glowing sun, a light streak and small route arcs. It is rich, coherent and on-theme.",
+    "Grey-toned valley with a glowing sun under the Western slab title. The themed type and atmospheric light make a decent film title card; the horizontal glare bar over the tree and the small stray arcs at the bottom look like artefacts."
+   ]
+  },
+  {
+   "id": "H007",
+   "frame": "gl-ignite-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "A jagged, glowing-rimmed hole in the camp photo now shows blue night with a candle reflection, suggesting another world seeping in. Intriguing. Same mismatch as H003, since 'HARRY POTTER' sits over a Western camp.",
+    "HARRY POTTER title over a cowboy camp with a blue glowing blob in the foreground. The portal is pretty but the picture and title mismatch, so it feels like the wrong section loaded.",
+    "An ember-rimmed hole in the camp image shows a blue moonlit scene inside, under HARRY POTTER. The warm ring against the blue is eye-catching and promises a reveal, although the title still sits over the wrong picture."
+   ]
+  },
+  {
+   "id": "H004",
+   "frame": "gl-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A bright gold porthole ring on a dark plate frames a lantern-lit ghost ship under a blackletter title. The ring is a clear focal point and signals a reveal, though most of the plate is still empty black.",
+    "The same ship porthole, now larger and brighter, ringed in glowing gold against the pirate title. It is the more striking of the two Pirates frames, but still mostly dark void.",
+    "Larger, brighter gold porthole on the Black Pearl-like ship with lantern-lit windows, under the blackletter title. Strongest of the Pirates frames: a bright ring against black draws the eye and invites a scroll."
+   ]
+  },
+  {
+   "id": "H008",
+   "frame": "gl-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A jagged torn-edge wipe: a pale classroom on the left giving way to a stormy teal sea on the right, under the chalk '3 IDIOTS' title. Striking and cinematic. The pale left side is washed out, which makes the mid-wipe frame slightly murky.",
+    "A white lightning-torn edge wipes a washed-out classroom against the storm sea under a chalk-marker '3 IDIOTS' title. It is the most dynamic frame and makes me curious about what is revealed. Moderate: the image is still mostly the previous world, and the washed-out left side is murky.",
+    "A jagged white lightning tear divides a sunlit classroom from a storm sea, under the handwritten '3 IDIOTS' title and 'The Workshop'. Dramatic and easy to read as one world tearing into the next; it makes me want to see the reveal."
+   ]
+  },
+  {
+   "id": "H002",
+   "frame": "gl-tintype-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A cream-bordered sepia tintype of a valley with a drifting haze band under a themed western slab title, 'RED DEAD REDEMPTION 2'. It reads like an old photograph coming to life, the type matches the mood, and it is calm and clear.",
+    "Western-type 'RED DEAD REDEMPTION 2' title over a sepia photograph in a cream tintype frame, with a burn streak crossing the tree. It is coherent, tactile and feels like turning a photograph.",
+    "Sepia valley inside a cream photograph mat under a Western slab-serif RED DEAD REDEMPTION 2 title. Strong, finished idea (an old frontier photograph) and the title face carries the world."
+   ]
+  }
+ ]
+}

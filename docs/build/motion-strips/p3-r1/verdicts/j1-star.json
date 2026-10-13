@@ -1,0 +1,2062 @@
+{
+ "judge": "J1 STAR",
+ "round": "p3-r1",
+ "axis": "one star per screen",
+ "method": "Counted by eye from the contact sheets only: 4 frames per 1-s clip at 1/8, 3/8, 5/8 and 7/8; zoomed crops where unclear. Something that only scrolls with the page is not a star. Scroll-linked or time-based motion that changes on screen is. A hand-off where A finishes before B starts counts as one. Breath = the clip's declared breath row from clips.json. Reader intro clips 1-13 not judged.",
+ "runs": {
+  "reader-1440": {
+   "clipsJudged": 239,
+   "oneStar": 128,
+   "zero": 109,
+   "zeroInBreath": 20,
+   "twoPlus": 2,
+   "oneStarPct": 53.6,
+   "zeroOutsideBreath": 89,
+   "twoPlusClips": [
+    34,
+    96
+   ],
+   "zeroOutsideBreathClips": [
+    38,
+    39,
+    40,
+    43,
+    45,
+    46,
+    53,
+    54,
+    60,
+    61,
+    67,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    84,
+    87,
+    91,
+    92,
+    93,
+    94,
+    99,
+    100,
+    101,
+    102,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    111,
+    113,
+    114,
+    117,
+    118,
+    119,
+    120,
+    122,
+    123,
+    124,
+    132,
+    133,
+    134,
+    143,
+    144,
+    148,
+    149,
+    161,
+    162,
+    163,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    188,
+    189,
+    201,
+    202,
+    203,
+    213,
+    214,
+    215,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250
+   ],
+   "passes": {
+    "oneStarAtLeast90pct": false,
+    "starlessOnlyInBreath": false,
+    "noTwoPlus": false
+   }
+  },
+  "reader-1024": {
+   "clipsJudged": 224,
+   "oneStar": 122,
+   "zero": 102,
+   "zeroInBreath": 17,
+   "twoPlus": 0,
+   "oneStarPct": 54.5,
+   "zeroOutsideBreath": 85,
+   "twoPlusClips": [],
+   "zeroOutsideBreathClips": [
+    37,
+    38,
+    40,
+    42,
+    49,
+    55,
+    56,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    77,
+    78,
+    79,
+    80,
+    85,
+    86,
+    87,
+    88,
+    91,
+    93,
+    94,
+    95,
+    96,
+    97,
+    99,
+    100,
+    101,
+    102,
+    103,
+    105,
+    106,
+    107,
+    111,
+    112,
+    113,
+    115,
+    116,
+    117,
+    126,
+    127,
+    135,
+    136,
+    140,
+    145,
+    150,
+    151,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    177,
+    178,
+    179,
+    189,
+    190,
+    201,
+    202,
+    203,
+    212,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235
+   ],
+   "passes": {
+    "oneStarAtLeast90pct": false,
+    "starlessOnlyInBreath": false,
+    "noTwoPlus": true
+   }
+  },
+  "skimmer-1440": {
+   "clipsJudged": 102,
+   "oneStar": 76,
+   "zero": 24,
+   "zeroInBreath": 6,
+   "twoPlus": 2,
+   "oneStarPct": 74.5,
+   "zeroOutsideBreath": 18,
+   "twoPlusClips": [
+    34,
+    76
+   ],
+   "zeroOutsideBreathClips": [
+    14,
+    22,
+    23,
+    27,
+    28,
+    39,
+    42,
+    43,
+    60,
+    67,
+    68,
+    70,
+    78,
+    83,
+    95,
+    96,
+    97,
+    98
+   ],
+   "passes": {
+    "oneStarAtLeast90pct": false,
+    "starlessOnlyInBreath": false,
+    "noTwoPlus": false
+   }
+  },
+  "skimmer-1024": {
+   "clipsJudged": 79,
+   "oneStar": 65,
+   "zero": 13,
+   "zeroInBreath": 2,
+   "twoPlus": 1,
+   "oneStarPct": 82.3,
+   "zeroOutsideBreath": 11,
+   "twoPlusClips": [
+    57
+   ],
+   "zeroOutsideBreathClips": [
+    12,
+    22,
+    23,
+    24,
+    27,
+    35,
+    38,
+    53,
+    54,
+    73,
+    74
+   ],
+   "passes": {
+    "oneStarAtLeast90pct": false,
+    "starlessOnlyInBreath": false,
+    "noTwoPlus": false
+   }
+  }
+ },
+ "passBars": {
+  "atLeast90pctOneStar": "FAIL on all four runs (53.6 / 54.5 / 74.5 / 82.3 %)",
+  "starlessOnlyInBreath": "FAIL on all four runs (89 / 85 / 18 / 11 star-less clips outside breaths)",
+  "zeroTwoPlus": "FAIL on reader-1440 (2), skimmer-1440 (2), skimmer-1024 (1); PASS on reader-1024"
+ },
+ "disagreementSummary": {
+  "total": 239,
+  "machineStar_seenNone": 116,
+  "machineNoStar_seenOne": 110,
+  "machine2plus_seenOneOrNone": 10,
+  "seen2plus_machineNot": 3
+ },
+ "disagreements": [
+  {
+   "run": "reader-1440",
+   "clip": 14,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video loop (B02 unreg) visibly moves"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 15,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 16,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 17,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave + hero exit"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 18,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave fading as page scrolls"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 32,
+   "machine": "NO STAR | breath B07",
+   "seen": "one",
+   "note": "typewriter headline \"A builder of quantitative systems\" (machine: breath, no star)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 33,
+   "machine": "2+: B08-compass+B08 | breath B07",
+   "seen": "one",
+   "note": "body text fades in; compass only starts at 7/8"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 35,
+   "machine": "2+: B08-compass+B08 | breath B07",
+   "seen": "one",
+   "note": "compass settling"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 36,
+   "machine": "one: B08 | breath B07",
+   "seen": "none",
+   "note": "static (breath B07) machine B08"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 37,
+   "machine": "one: B08 | breath B07",
+   "seen": "none",
+   "note": "scroll only (breath B07) machine B08"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 38,
+   "machine": "one: B08",
+   "seen": "none",
+   "note": "scroll only; machine B08"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 39,
+   "machine": "one: B08 (+B09 unreg.)",
+   "seen": "none",
+   "note": "scroll only; \"The Crossing\" film panel arrives at bottom"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 41,
+   "machine": "NO STAR (+B09 unreg.)",
+   "seen": "one",
+   "note": "film panel arrives/settles (pin)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 42,
+   "machine": "NO STAR (+B09 unreg.)",
+   "seen": "one",
+   "note": "caption PORT ROYAL fades in at 7/8 (small)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 44,
+   "machine": "NO STAR (+B09 unreg.)",
+   "seen": "one",
+   "note": "route diagram icons draw in under film"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 47,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film still crossfades port -> storm (B10 unreg performs)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 48,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film crossfade storm -> moonlit"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 49,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> glowing wave"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 50,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "glowing wave film"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 51,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> dawn"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 52,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> sunrise"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 60,
+   "machine": "one: B14",
+   "seen": "none",
+   "note": "static pinned; machine B14"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 61,
+   "machine": "one: B14",
+   "seen": "none",
+   "note": "static pinned; machine B14"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 67,
+   "machine": "one: B16",
+   "seen": "none",
+   "note": "scroll only; machine B16 time"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 73,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll only; machine B17"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 74,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll only; machine B17 (low confidence)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 76,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll only; machine B19"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 77,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; corridor parallax (weak)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 78,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 79,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "static pinned; machine B19"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 80,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "static pinned; machine B19"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 81,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 84,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "blueprint complete; only corridor parallax (scroll)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 85,
+   "machine": "2+: B19+B21-circle+B21",
+   "seen": "one",
+   "note": "chalk circle starts drawing (machine 2+: B19,B21-circle,B21)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 86,
+   "machine": "2+: B21-circle+B21",
+   "seen": "one",
+   "note": "chalk circle completes (machine 2+)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 87,
+   "machine": "one: B21,B22",
+   "seen": "none",
+   "note": "classroom panel arrives by scroll only; chalk circle already complete"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 91,
+   "machine": "one: B23",
+   "seen": "none",
+   "note": "static pinned; machine B23"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 95,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint boxes draw (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 96,
+   "machine": "NO STAR",
+   "seen": "two+",
+   "note": "blueprint lower box still drawing WHILE sticky backdrop crossfades classroom->corridor (borderline)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 102,
+   "machine": "one: B25",
+   "seen": "none",
+   "note": "scroll; corridor dims at top"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 110,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "typewriter heading \"What I can\" begins at 7/8 (weak)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 113,
+   "machine": "one: B26",
+   "seen": "none",
+   "note": "static pinned; machine B26"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 120,
+   "machine": "one: B28,B29",
+   "seen": "none",
+   "note": "scroll; kill-list image enters by scroll; machine B28+B29"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 125,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "mini-blueprint card appears"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 126,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "sticky mini-blueprint card swaps diagram + active row bold (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 127,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "same (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 128,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "same (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 132,
+   "machine": "one: B30",
+   "seen": "none",
+   "note": "scroll; heading"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 133,
+   "machine": "one: B30",
+   "seen": "none",
+   "note": "static pinned; machine B30"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 134,
+   "machine": "one: B30",
+   "seen": "none",
+   "note": "static pinned; machine B30"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 138,
+   "machine": "NO STAR | breath B31",
+   "seen": "one",
+   "note": "compass needle on ship swings - breath B31 (machine no star)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 139,
+   "machine": "one: B32 | breath B31",
+   "seen": "none",
+   "note": "scroll - breath B31; machine B32"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 144,
+   "machine": "one: B33",
+   "seen": "none",
+   "note": "scroll; machine B33"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 149,
+   "machine": "one: B34",
+   "seen": "none",
+   "note": "scroll; machine B34"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 153,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "snitch dot flies across (tiny) - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 161,
+   "machine": "one: B38",
+   "seen": "none",
+   "note": "static pinned; machine B38"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 162,
+   "machine": "one: B38",
+   "seen": "none",
+   "note": "static pinned; machine B38"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 163,
+   "machine": "one: B38",
+   "seen": "none",
+   "note": "static; machine B38"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 172,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll; map card enters (breath B40) machine B41"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 173,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll (breath B40) machine B41"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 174,
+   "machine": "one: B41",
+   "seen": "none",
+   "note": "scroll; sticky photo arrives; machine B41"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 175,
+   "machine": "one: B41",
+   "seen": "none",
+   "note": "scroll; machine B41"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 178,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; text rows fade (weak); machine B42"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 179,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; machine B42"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 180,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; machine B42"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 184,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "wanted poster sways (machine NO STAR)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 187,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "journal ink sketch draws (mountain, lake) - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 190,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "sketch trees/tent draw in - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 191,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "sketch completes - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 192,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "scales sketch draws - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 193,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "grid sketch draws - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 194,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "grid sketch (weak) - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 195,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "ladder sketch - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 196,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "target sketch draws - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 201,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "static pinned; machine B47"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 202,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "static pinned; machine B47"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 203,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "static pinned; machine B47"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 213,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "caption fades; hall static; machine B50"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 214,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "static; machine B50"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 215,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "static; machine B50"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 226,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "footprints walk margin - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 227,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "footprints - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 228,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "footprints - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 229,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints - machine NO STAR (+B54 unreg)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 230,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints - machine NO STAR (+B54 unreg)"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 231,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints - machine NO STAR"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 242,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; credits"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 243,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "static; machine B57"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 249,
+   "machine": "one: B58",
+   "seen": "none",
+   "note": "scroll; machine B58"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 250,
+   "machine": "one: B58",
+   "seen": "none",
+   "note": "static; machine B58"
+  },
+  {
+   "run": "reader-1440",
+   "clip": 252,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "faint ember stroke moves (weak) - machine NO STAR"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 14,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video (B02 unreg) visibly moves"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 15,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 16,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 17,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave / hero exit"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 30,
+   "machine": "NO STAR | breath B07",
+   "seen": "one",
+   "note": "body text reveals (breath B07; machine none)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 36,
+   "machine": "NO STAR (+B09 unreg.)",
+   "seen": "one",
+   "note": "compass needle still swinging at 1/8-3/8 (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 39,
+   "machine": "NO STAR (+B09 unreg.)",
+   "seen": "one",
+   "note": "caption PORT ROYAL fades in (weak)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 41,
+   "machine": "NO STAR (+B09,B10 unreg.)",
+   "seen": "one",
+   "note": "route diagram icons / caption (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 43,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film crossfade port->storm (machine NO STAR, B10 unreg)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 44,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film crossfade storm->moonlit (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 45,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film -> glowing wave (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 46,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "glowing wave film (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 47,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> dawn (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 49,
+   "machine": "one: B12",
+   "seen": "none",
+   "note": "scroll; sunrise static; machine B12"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 55,
+   "machine": "one: B14",
+   "seen": "none",
+   "note": "static pinned; machine B14"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 56,
+   "machine": "one: B14",
+   "seen": "none",
+   "note": "static pinned; machine B14"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 59,
+   "machine": "one: B14 | breath B16",
+   "seen": "none",
+   "note": "scroll (breath B16)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 66,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll; machine B17"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 67,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll; gauntlet chart enters; machine B17"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 69,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 70,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 71,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 72,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "static; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 73,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "static; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 74,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 77,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "blueprint complete; corridor parallax only; machine B19"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 79,
+   "machine": "one: B21",
+   "seen": "none",
+   "note": "scroll; machine B21"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 80,
+   "machine": "one: B21",
+   "seen": "none",
+   "note": "scroll; machine B21"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 84,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "chalk second line at 1/8 then scroll (weak; machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 88,
+   "machine": "one: B23",
+   "seen": "none",
+   "note": "scroll; blueprint enters; machine B23"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 89,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint boxes draw (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 90,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint finishes + backdrop swaps to corridor (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 93,
+   "machine": "one: B24",
+   "seen": "none",
+   "note": "scroll; circle already drawn; machine B24"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 97,
+   "machine": "one: B25",
+   "seen": "none",
+   "note": "scroll; machine B25"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 104,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "typewriter \"What I can actually do.\" (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 106,
+   "machine": "one: B26",
+   "seen": "none",
+   "note": "static; machine B26"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 107,
+   "machine": "one: B26",
+   "seen": "none",
+   "note": "static; machine B26"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 110,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint vertical flow draws (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 115,
+   "machine": "one: B28",
+   "seen": "none",
+   "note": "static; machine B28"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 118,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "mini-blueprint card appears (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 119,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "mini card swaps diagram + active row (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 120,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "same (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 121,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "same (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 126,
+   "machine": "one: B30",
+   "seen": "none",
+   "note": "static pinned; machine B30"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 127,
+   "machine": "one: B30",
+   "seen": "none",
+   "note": "static (label appears); machine B30"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 131,
+   "machine": "NO STAR | breath B31",
+   "seen": "one",
+   "note": "compass needle on ship swings (breath; machine none)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 136,
+   "machine": "one: B33",
+   "seen": "none",
+   "note": "scroll; RDR band at 7/8; machine B33"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 139,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "Dead-Eye markers paint on image (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 140,
+   "machine": "one: B34",
+   "seen": "none",
+   "note": "scroll; machine B34"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 145,
+   "machine": "one: B35",
+   "seen": "none",
+   "note": "scroll; machine B35"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 150,
+   "machine": "one: B38",
+   "seen": "none",
+   "note": "static; machine B38"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 151,
+   "machine": "one: B38",
+   "seen": "none",
+   "note": "static; machine B38"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 160,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll; map card enters (breath B40; machine B41)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 161,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll (breath B40; machine B41)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 162,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll (breath B40; machine B41)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 163,
+   "machine": "one: B41",
+   "seen": "none",
+   "note": "scroll; machine B41"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 167,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; machine B42"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 168,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; machine B42"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 169,
+   "machine": "one: B42,B43",
+   "seen": "none",
+   "note": "scroll; machine B42+B43"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 176,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "tent sketch completes at 1/8-3/8 (weak; machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 180,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "scales sketch draws (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 181,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "grid sketch draws (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 182,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "ladder sketch begins (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 183,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "ladder sketch draws (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 184,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "target sketch draws (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 189,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "static; machine B47"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 190,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "static; machine B47"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 201,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "static; machine B50"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 202,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "static; machine B50"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 203,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "static; machine B50"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 213,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "card footprint trail walks to seal (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 214,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "margin tracker + card trail (one ink system; machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 215,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "footprints (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 216,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 217,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 218,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "footprints (machine NO STAR)"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 230,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "static; machine B57"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 231,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; machine B57"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 235,
+   "machine": "one: B58",
+   "seen": "none",
+   "note": "scroll; machine B58"
+  },
+  {
+   "run": "reader-1024",
+   "clip": 237,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "faint ember stroke (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 1,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video fades in/loops (B02 unreg performs)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 2,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 3,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 10,
+   "machine": "NO STAR | breath B06",
+   "seen": "one",
+   "note": "chapter list + compass fade in (breath B06)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 15,
+   "machine": "NO STAR (+B09,B10 unreg.)",
+   "seen": "one",
+   "note": "film caption/route icons (weak)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 16,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film crossfade port->storm->moonlit (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 17,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> glowing wave (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 18,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> dawn (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 20,
+   "machine": "2+: B12+B13",
+   "seen": "one",
+   "note": "film exits, 3 IDIOTS sea arrives; sequential hand-off (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 22,
+   "machine": "one: B13,B14",
+   "seen": "none",
+   "note": "classroom pinned, frames identical"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 23,
+   "machine": "one: B14",
+   "seen": "none",
+   "note": "classroom pinned, frames identical"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 24,
+   "machine": "NO STAR | breath B16",
+   "seen": "one",
+   "note": "The Workshop letters scale (breath B16)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 25,
+   "machine": "one: B16 | breath B16",
+   "seen": "none",
+   "note": "chalkboard exit / pen desk by scroll (breath B16)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 27,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll; gauntlet enters"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 28,
+   "machine": "2+: B17+B18+B19",
+   "seen": "none",
+   "note": "scroll only (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 29,
+   "machine": "2+: B18+B19",
+   "seen": "one",
+   "note": "blueprint panel arrives at 5/8 (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 34,
+   "machine": "NO STAR",
+   "seen": "two+",
+   "note": "blueprint boxes drawing WHILE sticky backdrop swaps classroom->corridor (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 35,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint lower box finishes (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 43,
+   "machine": "one: B29",
+   "seen": "none",
+   "note": "scroll; kill-list image"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 44,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "rail line + mini blueprint card appears (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 56,
+   "machine": "2+: B34-finale+B35",
+   "seen": "one",
+   "note": "train image expands (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 60,
+   "machine": "one: B36,B38",
+   "seen": "none",
+   "note": "sepia pinned, frames identical"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 65,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll; map card (breath B40)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 66,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "scroll (breath B40)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 67,
+   "machine": "one: B41",
+   "seen": "none",
+   "note": "scroll; machine B41"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 68,
+   "machine": "one: B42",
+   "seen": "none",
+   "note": "scroll; machine B42"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 70,
+   "machine": "one: B43,B43-wanted",
+   "seen": "none",
+   "note": "empty wanted board, frames identical; machine B43+B43-wanted"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 73,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "journal sketch draws (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 74,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "sketches draw (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 75,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "ladder sketch (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 77,
+   "machine": "2+: B45+B46+B47",
+   "seen": "one",
+   "note": "horse runs then camp reveal; sequential (machine 2+)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 78,
+   "machine": "one: B47",
+   "seen": "none",
+   "note": "camp pinned, frames identical"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 83,
+   "machine": "one: B50",
+   "seen": "none",
+   "note": "hall pinned; caption fades"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 87,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "per-card ink footprint trail (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 88,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "trail (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 89,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "trail (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 90,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "trail (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 96,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; machine B57"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 97,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; machine B57"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 98,
+   "machine": "one: B58",
+   "seen": "none",
+   "note": "scroll; machine B58"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 100,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "comet ember (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 101,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "comet ember (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1440",
+   "clip": 102,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "comet ember (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 1,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave video fades in (B02 unreg performs)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 2,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 3,
+   "machine": "NO STAR (+B02 unreg.)",
+   "seen": "one",
+   "note": "hero wave"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 7,
+   "machine": "NO STAR | breath B06",
+   "seen": "one",
+   "note": "compass emblem + chapter list (breath B06)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 13,
+   "machine": "NO STAR (+B10 unreg.)",
+   "seen": "one",
+   "note": "film crossfade port->storm (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 14,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film crossfade -> wave (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 15,
+   "machine": "NO STAR (+B11 unreg.)",
+   "seen": "one",
+   "note": "film -> sunrise (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 20,
+   "machine": "NO STAR | breath B16",
+   "seen": "one",
+   "note": "Workshop letters exit (breath B16)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 22,
+   "machine": "one: B17",
+   "seen": "none",
+   "note": "scroll; machine B17"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 23,
+   "machine": "2+: B17+B19",
+   "seen": "none",
+   "note": "scroll; gauntlet (machine 2+)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 24,
+   "machine": "one: B19",
+   "seen": "none",
+   "note": "scroll; machine B19"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 27,
+   "machine": "one: B21",
+   "seen": "none",
+   "note": "corridor parallax only; machine B21"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 31,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "blueprint boxes draw (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 35,
+   "machine": "one: B25",
+   "seen": "none",
+   "note": "scroll; curve already drawn; machine B25"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 38,
+   "machine": "one: B29",
+   "seen": "none",
+   "note": "scroll; machine B29"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 51,
+   "machine": "one: B40,B41 | breath B39",
+   "seen": "none",
+   "note": "full-bleed sunset scroll (breath B39)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 52,
+   "machine": "one: B41 | breath B40",
+   "seen": "none",
+   "note": "map card scroll (breath B40)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 54,
+   "machine": "one: B42,B43",
+   "seen": "none",
+   "note": "scroll; machine B42+B43"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 57,
+   "machine": "one: B44",
+   "seen": "two+",
+   "note": "typewriter \"Thinking in public\" WHILE journal ink sketch draws (machine single B44)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 68,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "trails (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 69,
+   "machine": "NO STAR (+B54 unreg.)",
+   "seen": "one",
+   "note": "trails (machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 73,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; machine B57"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 74,
+   "machine": "one: B57",
+   "seen": "none",
+   "note": "scroll; machine B57"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 78,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "comet ember (weak; machine NO STAR)"
+  },
+  {
+   "run": "skimmer-1024",
+   "clip": 79,
+   "machine": "NO STAR",
+   "seen": "one",
+   "note": "comet ember then gone (weak; machine NO STAR)"
+  }
+ ],
+ "findings": [
+  {
+   "screen": "reader runs, S4-S49 (about through credits)",
+   "t": "0:37-4:09 (1440) / 0:36-3:54 (1024)",
+   "clip": "r1440 #38-40, 43, 45-46, 53-54, 60-61, 67, 69-81, 84, 87, 91-94, 99-102, 104-109, 111, 113-114, 117-120, 122-124, 132-134, 143-144, 148-149, 161-163, 174-180, 188-189, 201-203, 213-215, 237-250; r1024 #37-38, 40, 42, 49, 55-56, 62-74, 77-80, 85-88, 91, 93-97, 99-103, 105-107, 111-113, 115-117, 126-127, 135-136, 140, 145, 150-151, 163-169, 177-179, 189-190, 201-203, 212, 223-235",
+   "finding": "Coverage fails. Only 53.6 % (1440) and 54.5 % (1024) of the reader seconds show exactly one visible star, against a 90 % bar. 89 and 85 clips show nothing moving outside a declared breath. Every star is a one-shot entrance of about one second, so at reading speed the text stretches (journey, work, trading-algos, optuna, systems, kill-list, beyond, contact, credits) scroll or sit for up to 13-14 s in a row with no star (r1440 #69-81, #237-250; r1024 #62-74, #223-235).",
+   "severity": "high"
+  },
+  {
+   "screen": "reader runs, pinned or snapped holds",
+   "t": "e.g. 1:08-1:10, 2:11-2:13, 3:20-3:22, 3:32-3:34",
+   "clip": "r1440 #43, 60-61, 69-71, 79-80, 91-93, 104-105, 113-114, 122-123, 133-134, 161-162, 188-189, 201-203, 213-214, 237-238, 243-244 (32 clips); r1024 #40, 55, 63-64, 71-73, 85-86, 99, 106-107, 115-116, 126-127, 150-151, 177, 189-190, 201-202, 223-224, 228-229 (27 clips)",
+   "finding": "Wherever scrollY stays fixed for 2-3 s (a pin or reading pause), the frames are identical. The entrance that brought the reader here has already finished, and nothing takes over: 32 (1440) and 27 (1024) star-less clips sit on these holds. The machine calls about half of them ONE STAR (16 and 15) because it holds the last star (B14, B19, B26, B30, B38, B47, B50, B57), but the eye sees a still frame. Each hold needs either a gentle star that keeps running or a declared breath.",
+   "severity": "high"
+  },
+  {
+   "screen": "all runs, machine credit with nothing visible",
+   "t": "throughout",
+   "clip": "r1440 #36-38 (B08), 60-61 (B14), 73-74 (B17), 76-81 (B19), 132-134 (B30), 139/144/149 (B32/B33/B34 lead-in), 161-163 (B38), 172-175 (B41), 178-180 (B42), 201-203 (B47), 213-215 (B50), 243 (B57), 249-250 (B58); r1024 similar (43 clips); s1440 16 clips; s1024 10 clips",
+   "finding": "In 47 (r1440), 43 (r1024), 16 (s1440) and 10 (s1024) clips the spotlight records a star that does not visibly perform. Scroll stars keep the spotlight until the next star claims it, so a star 'owns' screens long after its animation ended. The machine's 55-57 % happens to be close to the true rate, but it is made of different clips, so the log cannot be trusted as a stand-in for the eye. B17 (validation gauntlet) never showed visible motion in any run.",
+   "severity": "high"
+  },
+  {
+   "screen": "S1 hero; S5-S8 The Crossing; S37-S39 Writing; S44-S46 Principles",
+   "t": "0:13-0:17, 0:43-0:51, 3:06-3:15, 3:45-3:50 (r1440)",
+   "clip": "r1440 #14-18, 44-52, 187, 190-196, 226-231; r1024 #14-17, 41-47, 175-176, 180-184, 213-218; s1440 #1-3, 16-18, 73-75, 87-90; s1024 #1-3, 13-15, 68-69",
+   "finding": "Real performers that the system does not see. The hero wave loop (B02 unreg.), the Crossing film crossfades port, storm, moonlit, glowing wave, dawn (B10/B11 unreg.), the journal ink sketches (mountain, scales, grid, ladder, target), and the principles card ink trails (B54 unreg.) all visibly move while the machine says NO STAR. B02, B10, B11 and B54 do perform. B09 (film-panel caption and route icons) is weak at best. These clips pass visually, but they are outside the spotlight's control, which is exactly where collisions can slip through (see the s1024 #57 finding).",
+   "severity": "medium"
+  },
+  {
+   "screen": "S4 about (compass)",
+   "t": "0:33",
+   "clip": "r1440 #34",
+   "finding": "2 AT ONCE, confirmed. The B08 body-column text stagger is still revealing while the B08-compass needle swings, overlapping for the whole second. The machine agrees. In #33 and #35 the hand-off is close enough to read as sequential (the machine says 2+ in both).",
+   "severity": "medium"
+  },
+  {
+   "screen": "S16 optuna, blueprint over a sticky backdrop",
+   "t": "1:35 (r1440) / 0:33 (s1440)",
+   "clip": "r1440 #96; s1440 #34",
+   "finding": "2 AT ONCE that the machine misses (it says NO STAR). The pipeline blueprint is still drawing its boxes and ensemble bar while the sticky backdrop crossfades from classroom to corridor behind it. At 1024 the swap happens after the draw ends (r1024 #89 then #90), which is the correct order.",
+   "severity": "medium"
+  },
+  {
+   "screen": "S37-S40 Writing journal (skim speed)",
+   "t": "1:15 (s1440) / 0:56 (s1024)",
+   "clip": "s1440 #76; s1024 #57 (borderline s1440 #72)",
+   "finding": "2 AT ONCE at skim speed. In s1440 #76 the target sketch draws while a horse silhouette runs across the page (the machine agrees: B45+B46). In s1024 #57 the 'Thinking in public' typewriter and the journal ink sketch draw together (the machine shows only B44, because the sketch is not registered). At reader speed the same beats arrive in sequence.",
+   "severity": "medium"
+  },
+  {
+   "screen": "declared breaths B07, B31, B52",
+   "t": "0:30-0:35, 2:14-2:17, 3:37-3:39 (r1440)",
+   "clip": "r1440 #31-35, 135-138, 218-220; r1024 #28-33, 130-132, 205-207; s1440 #48-49, 84-85",
+   "finding": "The breaths hold some of the strongest motion on the page: the typewriter headline and compass (B07), the Pirates band expanding with the compass swinging on the ship (B31), and the map unfolding with the quill writing the heading (B52). Meanwhile the long passages that really are still are not declared as breaths. As placed, the breath map does not match where the page actually rests.",
+   "severity": "medium"
+  },
+  {
+   "screen": "time-star grants out of step with the visible beat",
+   "t": "0:31, 1:07, 1:43-1:46 (r1024)",
+   "clip": "r1440 #32, 66-68, 112-113, 139; r1024 #104 vs 106-107, 61 vs 62",
+   "finding": "Some grants land a second or more off the animation they belong to. In r1024 the 'What I can actually do.' typewriter runs in #104 (machine: NO STAR), while B26 is granted in #106-107 on an identical, static screen. In r1440 the 'Led by what survived scrutiny.' typewriter plays in #68 (machine: none), after the B16 grant in #66-67 that covered only scroll.",
+   "severity": "medium"
+  },
+  {
+   "screen": "S14 trading-algos and the skimmer hand-offs",
+   "t": "1:24-1:25 (r1440); s1440 0:19-0:55",
+   "clip": "r1440 #85-86; s1440 #20, 28, 29, 56, 77; s1024 #23",
+   "finding": "False 2+ from the machine. In r1440 #85-86, B21 and B21-circle are one visual (the chalk circle), registered twice. The skimmer 2+ clips are clean sequential hand-offs (#20, #29, #56, #77) or plain scrolling (#28, s1024 #23). They should not count against the axis, but the double registration should be merged.",
+   "severity": "low"
+  },
+  {
+   "screen": "S40-S41 voices campfire; S49 credits comet",
+   "t": "3:23-3:26, 4:08-4:11 (r1440)",
+   "clip": "r1440 #204-207, 251-252; r1024 #191-195, 236-237; s1440 #99-102; s1024 #75-79",
+   "finding": "Some stars are barely perceptible: a campfire flicker under scrolling testimonials, and a faint comet streak under 'Mischief managed'. They count as one star here only because something does move, but neither draws the eye. The comet keeps drifting after the B58 grant ends (machine NO STAR in r1440 #252, s1024 #78-79 and s1440 #100-102).",
+   "severity": "low"
+  },
+  {
+   "screen": "film bands and act transitions (what works)",
+   "t": "0:17-0:27, 2:14-2:32, 2:39-2:43, 3:27-3:31",
+   "clip": "r1440 #19-27, 55-59, 135-160, 164-166, 208-212; r1024 #18-26, 50-54, 128-149, 196-200",
+   "finding": "Positive. The porthole into the ship, the torn-paper wipe into the classroom, the film bands (typewriter title, image widening, Dead-Eye markers), the snitch flight into the sepia frame and its development, the 'Frontier' and 'The Light' letterforms, and the Great Hall burn-through are each a clean single star. Their hand-offs inside one second read as sequential, not competing. The fix is coverage, not choreography.",
+   "severity": "low"
+  }
+ ],
+ "score": 2,
+ "scoreReason": "The motion that exists is mostly well choreographed: there are only 5 real collisions across 644 judged clips. But only about 54 % of reader seconds have a visible star, the star-less gaps sit outside declared breaths, and the spotlight log is wrong about which clips have a star in roughly a third of them."
+}

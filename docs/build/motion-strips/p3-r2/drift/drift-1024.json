@@ -1,0 +1,453 @@
+{
+ "meta": {
+  "tool": "tools/capture/drift.mjs",
+  "base": "http://localhost:3161",
+  "viewport": "1024x768",
+  "tiers": [
+   "css",
+   "gl"
+  ],
+  "date": "2026-10-04T00:55:52.979Z",
+  "bar": {
+   "ssim": 0.95,
+   "figDriftPx": 2
+  }
+ },
+ "registration": [
+  {
+   "tier": "css",
+   "card": "opening",
+   "pushIn": "#1",
+   "ssim": 0.8569,
+   "ssimFull": 0.8569,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -1.12,
+   "contrastRatio": 1.0493,
+   "shiftPx": [
+    -0.85,
+    -0.88
+   ],
+   "scale": 1.00185,
+   "ssimAligned": 0.9586,
+   "ssimToneMatched": 0.9629,
+   "pass": true,
+   "settle": {
+    "p": 0.4964,
+    "gl": null,
+    "tier": "css"
+   },
+   "push": {
+    "p": 0.5036,
+    "gl": null,
+    "tier": "css"
+   }
+  },
+  {
+   "tier": "css",
+   "card": "seam",
+   "pushIn": "#2",
+   "ssim": 0.8723,
+   "ssimFull": 0.8723,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -0.68,
+   "contrastRatio": 1.0134,
+   "shiftPx": [
+    -0.07,
+    0.28
+   ],
+   "scale": 1.00222,
+   "ssimAligned": 0.9534,
+   "ssimToneMatched": 0.9543,
+   "pass": true,
+   "settle": {
+    "p": 0.497,
+    "gl": null,
+    "tier": "css"
+   },
+   "push": {
+    "p": 0.503,
+    "gl": null,
+    "tier": "css"
+   }
+  },
+  {
+   "tier": "css",
+   "card": "tintype",
+   "pushIn": "(sun push, extra)",
+   "ssim": 0.9528,
+   "ssimFull": 0.9528,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -0.03,
+   "contrastRatio": 0.9964,
+   "shiftPx": [
+    -0.52,
+    0.02
+   ],
+   "scale": 1.00128,
+   "ssimAligned": 0.979,
+   "ssimToneMatched": 0.9676,
+   "pass": true,
+   "settle": {
+    "p": 0.4978,
+    "gl": "on",
+    "tier": "gl"
+   },
+   "push": {
+    "p": 0.5036,
+    "gl": "on",
+    "tier": "gl"
+   }
+  },
+  {
+   "tier": "css",
+   "card": "ignite",
+   "pushIn": "#3",
+   "ssim": 0.8989,
+   "ssimFull": 0.8989,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -2.33,
+   "contrastRatio": 0.9866,
+   "shiftPx": [
+    -0.01,
+    0.09
+   ],
+   "scale": 1.00107,
+   "ssimAligned": 0.9227,
+   "ssimToneMatched": 0.9384,
+   "pass": false,
+   "settle": {
+    "p": 0.497,
+    "gl": null,
+    "tier": "css"
+   },
+   "push": {
+    "p": 0.503,
+    "gl": null,
+    "tier": "css"
+   }
+  },
+  {
+   "tier": "gl",
+   "card": "opening",
+   "pushIn": "#1",
+   "ssim": 0.8575,
+   "ssimFull": 0.8575,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -1.05,
+   "contrastRatio": 1.05,
+   "shiftPx": [
+    -1.1,
+    -0.94
+   ],
+   "scale": 1.00365,
+   "ssimAligned": 0.9519,
+   "ssimToneMatched": 0.956,
+   "pass": true,
+   "settle": {
+    "p": 0.4964,
+    "gl": "on",
+    "tier": "gl"
+   },
+   "push": {
+    "p": 0.5036,
+    "gl": "on",
+    "tier": "gl"
+   }
+  },
+  {
+   "tier": "gl",
+   "card": "seam",
+   "pushIn": "#2",
+   "ssim": 0.8723,
+   "ssimFull": 0.8723,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -0.52,
+   "contrastRatio": 1.0157,
+   "shiftPx": [
+    0.05,
+    0.27
+   ],
+   "scale": 1.00192,
+   "ssimAligned": 0.9534,
+   "ssimToneMatched": 0.9541,
+   "pass": true,
+   "settle": {
+    "p": 0.497,
+    "gl": "on",
+    "tier": "gl"
+   },
+   "push": {
+    "p": 0.503,
+    "gl": "on",
+    "tier": "gl"
+   }
+  },
+  {
+   "tier": "gl",
+   "card": "tintype",
+   "pushIn": "(sun push, extra)",
+   "ssim": 0.9528,
+   "ssimFull": 0.9528,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -0.03,
+   "contrastRatio": 0.9964,
+   "shiftPx": [
+    -0.42,
+    0.02
+   ],
+   "scale": 1.0011,
+   "ssimAligned": 0.9782,
+   "ssimToneMatched": 0.9668,
+   "pass": true,
+   "settle": {
+    "p": 0.4978,
+    "gl": "on",
+    "tier": "gl"
+   },
+   "push": {
+    "p": 0.5036,
+    "gl": "on",
+    "tier": "gl"
+   }
+  },
+  {
+   "tier": "gl",
+   "card": "ignite",
+   "pushIn": "#3",
+   "ssim": 0.8999,
+   "ssimFull": 0.8999,
+   "floor": 1,
+   "floorFull": 1,
+   "downsample": 1,
+   "lumaDelta": -2.24,
+   "contrastRatio": 0.9889,
+   "shiftPx": [
+    -0.01,
+    0.08
+   ],
+   "scale": 1.00104,
+   "ssimAligned": 0.923,
+   "ssimToneMatched": 0.9385,
+   "pass": false,
+   "settle": {
+    "p": 0.497,
+    "gl": "on",
+    "tier": "gl"
+   },
+   "push": {
+    "p": 0.503,
+    "gl": "on",
+    "tier": "gl"
+   }
+  }
+ ],
+ "fig": [
+  {
+   "tier": "css",
+   "maxDriftPx": 1.08,
+   "maxDomDriftPx": 0.68,
+   "pass": true,
+   "steps": [
+    {
+     "p": 0.54,
+     "inliers": 2351,
+     "plateScale": 1.02837,
+     "expectedScale": 1.02813,
+     "figPixels": 9447,
+     "residual": [
+      0.64,
+      0.58
+     ],
+     "driftPx": 0.86,
+     "peak": 0.898,
+     "domDriftPx": 0.68
+    },
+    {
+     "p": 0.58,
+     "inliers": 2100,
+     "plateScale": 1.05548,
+     "expectedScale": 1.05549,
+     "figPixels": 9881,
+     "residual": [
+      -0.2,
+      1.06
+     ],
+     "driftPx": 1.08,
+     "peak": 1.026,
+     "domDriftPx": 0.59
+    },
+    {
+     "p": 0.62,
+     "inliers": 1745,
+     "plateScale": 1.08384,
+     "expectedScale": 1.08361,
+     "figPixels": 10350,
+     "residual": [
+      0.43,
+      0.25
+     ],
+     "driftPx": 0.5,
+     "peak": 0.952,
+     "domDriftPx": 0.6
+    },
+    {
+     "p": 0.66,
+     "inliers": 1590,
+     "plateScale": 1.11198,
+     "expectedScale": 1.11181,
+     "figPixels": 10928,
+     "residual": [
+      0.15,
+      0.5
+     ],
+     "driftPx": 0.52,
+     "peak": 0.91,
+     "domDriftPx": 0.21
+    }
+   ],
+   "basePixels": 8946,
+   "error": null
+  },
+  {
+   "tier": "gl",
+   "maxDriftPx": 1.09,
+   "maxDomDriftPx": 0.69,
+   "pass": true,
+   "steps": [
+    {
+     "p": 0.54,
+     "inliers": 2281,
+     "plateScale": 1.02811,
+     "expectedScale": 1.02813,
+     "figPixels": 9480,
+     "residual": [
+      0.63,
+      0.53
+     ],
+     "driftPx": 0.82,
+     "peak": 0.904,
+     "domDriftPx": 0.63
+    },
+    {
+     "p": 0.58,
+     "inliers": 2035,
+     "plateScale": 1.05584,
+     "expectedScale": 1.05549,
+     "figPixels": 9890,
+     "residual": [
+      -0.13,
+      1.09
+     ],
+     "driftPx": 1.09,
+     "peak": 1.02,
+     "domDriftPx": 0.69
+    },
+    {
+     "p": 0.62,
+     "inliers": 1778,
+     "plateScale": 1.08363,
+     "expectedScale": 1.08361,
+     "figPixels": 10344,
+     "residual": [
+      0.59,
+      0.17
+     ],
+     "driftPx": 0.62,
+     "peak": 1.005,
+     "domDriftPx": 0.68
+    },
+    {
+     "p": 0.66,
+     "inliers": 1528,
+     "plateScale": 1.11176,
+     "expectedScale": 1.11181,
+     "figPixels": 10936,
+     "residual": [
+      0.06,
+      0.51
+     ],
+     "driftPx": 0.52,
+     "peak": 0.899,
+     "domDriftPx": 0.27
+    }
+   ],
+   "basePixels": 8924,
+   "error": null
+  }
+ ],
+ "tiers": {
+  "name": "tiers:seam",
+  "kind": "tiers",
+  "pairs": [
+   {
+    "p": 0.5,
+    "ssim": 0.9983,
+    "inliers": 3608,
+    "shiftPx": [
+     0,
+     0
+    ],
+    "scale": 1
+   },
+   {
+    "p": 0.54,
+    "ssim": 0.9985,
+    "inliers": 3496,
+    "shiftPx": [
+     0,
+     0
+    ],
+    "scale": 1
+   },
+   {
+    "p": 0.58,
+    "ssim": 0.9965,
+    "inliers": 3168,
+    "shiftPx": [
+     0,
+     0
+    ],
+    "scale": 1.00001
+   },
+   {
+    "p": 0.62,
+    "ssim": 0.9957,
+    "inliers": 3150,
+    "shiftPx": [
+     0,
+     0
+    ],
+    "scale": 1.00001
+   },
+   {
+    "p": 0.66,
+    "ssim": 0.9975,
+    "inliers": 3408,
+    "shiftPx": [
+     0,
+     0
+    ],
+    "scale": 1.00001
+   }
+  ]
+ },
+ "pass": false,
+ "errors": {
+  "css": [],
+  "gl": []
+ }
+}

@@ -133,7 +133,11 @@ export function TrailMap({ className }: { className?: string }) {
   return (
     <figure className={cn("w-full", className)} data-motif="trail-map" {...beatAttrs("B41", { weight: 2 })}>
       <div className="relative">
-        <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-hidden rounded-[4px]">
+        {/* overflow CLIP, not hidden (P3-11 r3): a hidden box is a scroll
+            container, so the fog's view() timeline (app/globals.css) took
+            this box as its scroller and never lifted with the page (r2 J1 #5:
+            B41 "rigid scroll only") */}
+        <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-clip rounded-[4px]">
           <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" focusable="false" preserveAspectRatio="xMidYMid slice">
             <g fill="none" strokeLinecap="round" strokeLinejoin="round">
               {/* the neatline: a double rule, like a printed sheet */}
@@ -173,7 +177,7 @@ export function TrailMap({ className }: { className?: string }) {
             <svg viewBox="-12 -12 24 24" width={22} height={22} aria-hidden="true" focusable="false" fill="none" className="stroke-(--handbill-graphite)">
               <circle r={10} strokeWidth={1.4} />
               <path d="M-6.8 0Q0 -5.6 6.8 0Q0 5.6-6.8 0Z" strokeWidth={1.2} strokeLinejoin="round" />
-              <circle r={1.9} stroke="none" className="fill-(--handbill-graphite)" />
+              <circle r={1.9} stroke="none" style={{ fill: "var(--handbill-graphite)" }} />
             </svg>
           </EggHotspot>
         </div>

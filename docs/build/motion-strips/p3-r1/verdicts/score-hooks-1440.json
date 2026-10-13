@@ -1,0 +1,94 @@
+{
+ "kind": "hooks",
+ "width": "1440",
+ "rows": [
+  {
+   "id": "H006",
+   "frame": "css-ignite-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Gorgeous campfire image, but the heading says HARRY POTTER while the caption says 'The Campfire · Red Dead Redemption 2'. Frozen like this it reads as a mislabel, not a transition.",
+    "Act title says HARRY POTTER but the picture is the Red Dead campfire with its RDR2 caption, and only a faint thin arc is drawn over it. Lovely image, but the mismatch feels like a bug and gives no Potter promise.",
+    "The campfire image is beautiful, but the act title says 'HARRY POTTER' while the caption says 'The Campfire · Red Dead Redemption 2'. Nothing hints that a transition is coming, so it looks like a labelling error."
+   ]
+  },
+  {
+   "id": "H002",
+   "frame": "css-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "Bold blackletter PIRATES OF THE CARIBBEAN title plus a brass porthole showing the lit stern of a ship. The porthole promises a reveal and I would scroll to open it, though the left two thirds of the frame are empty black.",
+    "Same spyglass ring on the ghost ship's lit stern under the blackletter title. The background is pure black, so about 70% of the frame is empty, but the porthole still works as a tease.",
+    "A spyglass circle peeking at a lantern-lit ghost ship under a bold blackletter 'PIRATES OF THE CARIBBEAN' makes me want to see the rest of the ship. On the other hand, almost the whole frame is flat black, so the tease depends on that one circle."
+   ]
+  },
+  {
+   "id": "H003",
+   "frame": "css-seam-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Mixed message: the title says 3 IDIOTS / The Workshop, but the big image and its caption are 'The Kraken's Storm · Pirates of the Caribbean'. The glowing sea is pretty, but as a stranger I can't tell which world I'm in, and the frame is mostly dark.",
+    "The title says 3 IDIOTS / The Workshop, but the picture and caption are still the Pirates storm, and the photo is dark and murky. Nothing new for this act is on screen yet, so it reads like the wrong image loaded rather than a reveal.",
+    "The title says '3 IDIOTS · The Workshop', but the image is a stormy sea captioned 'The Kraken's Storm · Pirates of the Caribbean'. With no visible transition it reads as a mislabelled slide, and the image is mostly dark. I'm confused, not pulled in."
+   ]
+  },
+  {
+   "id": "H001",
+   "frame": "css-tintype-p05",
+   "yes": 2,
+   "pass": false,
+   "why": [
+    "The big RED DEAD REDEMPTION 2 title lands, but the framed picture is a muddy, grainy brown blur that reads as a failed or still-loading image rather than an old photograph developing. Nothing in the frame says what this section is about. The 'EGG 1 OF 12 · THE KRAKEN' toast also clashes with an RDR2 opener.",
+    "The photo is still a murky sepia blur, but the 'EGG 1 OF 12 · THE KRAKEN' toast (and the counter going to 1/12) says there are hidden things to collect. That alone makes me want to keep scrolling. It is a weak pass, carried by the toast and not the image.",
+    "The big woodtype 'RED DEAD REDEMPTION 2' title lands hard, and the 'EGG 1 OF 12 · THE KRAKEN' toast makes me want to keep hunting. The photo itself is almost blank sepia noise, though: it looks like an image that failed to load, not one developing. The egg counter does the hooking here, not the section art."
+   ]
+  },
+  {
+   "id": "H008",
+   "frame": "gl-ignite-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A glowing burn-hole is eating through the campfire photo. That clearly signals the RDR2 picture is about to burn away into the Harry Potter act, and it's a striking, curiosity-making moment.",
+    "Glowing burn-hole eating through the western campfire photo under a HARRY POTTER act title. The burn makes the world change feel intentional and magical, and I want to see what burns through.",
+    "A glowing burn-hole is eating through the RDR2 campfire photo under the 'HARRY POTTER' title. You can see the page burning from one world into the next, and I'd scroll to watch it finish."
+   ]
+  },
+  {
+   "id": "H005",
+   "frame": "gl-opening-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "The porthole ring glows gold and the ghost-ship scene is starting to bleed into the frame behind it. It feels like a door opening, a clear invitation to keep going.",
+    "Blackletter PIRATES OF THE CARIBBEAN title and a gold spyglass/porthole ring framing the lit stern of a ghost ship, with the rest of the scene faint in the dark. It's a peephole that makes you want to see the whole ship.",
+    "A gold-rimmed spyglass reveals the Black Pearl's lit stern against a faintly visible dark sea, under 'IN FOUR ACTS / PIRATES OF THE CARIBBEAN'. It's a cinematic opening that promises a story."
+   ]
+  },
+  {
+   "id": "H004",
+   "frame": "gl-seam-p05",
+   "yes": 3,
+   "pass": true,
+   "why": [
+    "A pale, chalky wash is tearing across the storm from the left. That visible change of world is the cinematic moment, and it makes me want to see what replaces the sea. The label mismatch is still there, but the motion carries it.",
+    "Big '3 IDIOTS / The Workshop' act card while a torn, foaming edge eats the pirate storm and shows a pale new layer underneath. It reads as a deliberate scene change and I want to see what comes through. The 'HERE BE MONSTERS' link adds intrigue. Small snag: the caption still says Pirates.",
+    "Same mismatch as H003, but the pale torn edge eating into the storm shows the old world being wiped away for the new one. That moment of change makes me want to see what is underneath. 'HERE BE MONSTERS' is a nice tease too."
+   ]
+  },
+  {
+   "id": "H007",
+   "frame": "gl-tintype-p05",
+   "yes": 0,
+   "pass": false,
+   "why": [
+    "Same as H001: a strong title over an almost blank sepia smear. The frame gives no reason to read on.",
+    "Strong western title, but the framed photo is a near-uniform muddy sepia blur. As a still it looks like an image that failed to load, not a reveal, so nothing pulls me down.",
+    "The bold RDR2 title is good, but the framed photo is a murky, grainy sepia smear with almost nothing legible. As a still it reads as a broken or loading image, not a scene."
+   ]
+  }
+ ]
+}

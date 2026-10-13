@@ -9,7 +9,8 @@
 //  - anchors: every in-page href="#id" / "/#id" resolves to an element; external links have rel/target sanity
 //  - overflow at 320 / 390 / 1024 / 1440 after scrolling the whole page (lazy content mounted)
 //  - no-JS: the page renders its content (h1, every section present with visible text, no invisible
-//    armed-reveal content), screenshots per section
+//    armed-reveal content), every streamed div[hidden][id^="S:"] shown by the noscript rule and the
+//    sections in it listed (they sit outside <main>), one in-viewport JPEG per section (inView recorded)
 //  - media-blocked: images/video aborted -> no page errors, sections still render, captions present
 //  - reduced motion + Pause toggle: running animations / playing videos after settle
 //  - LCP (mobile lab: 390, 4x CPU, ~1.6 Mbps / 150 ms RTT) and desktop
@@ -103,7 +104,12 @@ async function scrollAll(page, step = 600) {
       const { ctx, page } = await ctxPage(browser, { js: false }, 'nojs');
       await page.goto(BASE + '/', { waitUntil: 'load' });
       R.noJs = await page.evaluate(() => {
-        const secs = [...document.querySelectorAll('main section[id], footer#credits')];
+        // every section, wherever it sits: the streamed ones arrive in div[hidden][id^="S:"] OUTSIDE <main>
+        // and a <noscript><style> rule un-hides them (P3-11 r3, J9 F4: `main section[id]` saw only top + credits)
+        const secs = [...new Set([...document.querySelectorAll('[data-section], main section[id], footer#credits')])].filter(s => s.id);
+        const streamedDivs = [...document.querySelectorAll('div[hidden][id^="S:"]')];
+        const streamed = streamedDivs.map(d => ({ id: d.id, shown: getComputedStyle(d).display !== 'none', sections: [...d.querySelectorAll('[data-section]')].map(x => x.id) }));
+        const perSection = secs.map(s => ({ id: s.id, streamed: Boolean(s.closest('div[hidden][id^="S:"]')), inMain: Boolean(s.closest('main')), h: Math.round(s.getBoundingClientRect().height), text: [...s.querySelectorAll('h2,h3,p,li')].filter(e => e.textContent.trim()).length }));
         const hiddenText = [];
         for (const s of secs) {
           const els = [...s.querySelectorAll('h2,h3,p,li')].filter(e => e.textContent.trim());
@@ -111,11 +117,28 @@ async function scrollAll(page, step = 600) {
           if (invisible.length) hiddenText.push({ id: s.id, invisible: invisible.length, of: els.length, sample: invisible.slice(0, 2).map(e => e.textContent.trim().slice(0, 50)) });
         }
         const ov = document.querySelector('#intro-caps, .intro-overlay, [data-intro-overlay]');
-        return { sections: secs.map(s => s.id), h1: document.querySelectorAll('h1').length, hiddenText,
+        return { sections: secs.map(s => s.id), perSection, streamed, collapsed: perSection.filter(x => x.h === 0).map(x => x.id), h1: document.querySelectorAll('h1').length, hiddenText,
           introVisible: ov ? getComputedStyle(ov).display !== 'none' && getComputedStyle(ov).visibility !== 'hidden' && ov.getBoundingClientRect().height > 0 : false };
       });
       await page.screenshot({ path: path.join(OUT, 'nojs-top.png') });
-      for (const id of ['work', 'films', 'beyond', 'contact']) { await page.evaluate(i => document.getElementById(i)?.scrollIntoView(), id); await sleep(200); await page.screenshot({ path: path.join(OUT, `nojs-${id}.png`) }); }
+      // one in-viewport shot per section: scrolled so its top sits 80 px under the viewport top, and the
+      // shot records where it actually landed (inView = its top within the viewport)
+      R.noJs.shots = [];
+      for (const id of R.noJs.sections) {
+        const at = await page.evaluate(i => {
+          const el = document.getElementById(i);
+          if (!el || !el.getClientRects().length) return null;
+          window.scrollTo(0, Math.max(0, el.getBoundingClientRect().top + scrollY - 80));
+          return true;
+        }, id);
+        if (!at) { R.noJs.shots.push({ id, file: null, inView: false }); continue; }
+        await sleep(150);
+        const top = await page.evaluate(i => Math.round(document.getElementById(i).getBoundingClientRect().top), id);
+        const file = `nojs-${id}.jpg`;
+        await page.screenshot({ path: path.join(OUT, file), type: 'jpeg', quality: 60 });
+        R.noJs.shots.push({ id, file, top, inView: top >= -2 && top < DEF.height - 40 });
+      }
+      R.noJs.allInView = R.noJs.shots.every(x => x.inView);
       await ctx.close();
     }
     // 4. media blocked
@@ -135,7 +158,13 @@ async function scrollAll(page, step = 600) {
       // smooth scroll: none under OS reduced motion; under Pause it is destroyed (spec §3.1)
       R.lenis[mode + 'Before'] = await page.evaluate(() => !!window.__lenis);
       if (mode === 'pause') {
-        const btn = await page.$('header button[aria-pressed], header [data-motion-toggle], header button[aria-label*="otion" i]');
+        // the Pause control by its own hook first: a selector LIST returns the first match in document order,
+        // and the header's sound toggle (aria-pressed, Phase 3) sits before Pause (P3-11.0 fix)
+        let btn = null;
+        for (const sel of ['header [data-motion-toggle]', '[data-motion-toggle]', 'header button[aria-label*="otion" i]']) {
+          btn = await page.$(sel);
+          if (btn) break;
+        }
         R.motion.pauseButton = btn ? await btn.evaluate(b => b.outerHTML.slice(0, 160)) : null;
         if (btn) { await btn.click(); await sleep(500); }
         R.lenis.pauseAfter = await page.evaluate(() => !!window.__lenis);

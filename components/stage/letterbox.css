@@ -1,0 +1,78 @@
+/* ============================================================================
+   components/stage/letterbox.css: the global letterbox bars (spec §7.4).
+   OWNER: F2 (cards + stage). Imported by ./letterbox-bars-impl.tsx, so it
+   loads with the bars' lazy chunk (DESKTOP_FINE, motion on), never with
+   the page: the bars and the ALT iris are made by that chunk. Moved out of
+   app/p3/stage.css in P3-11 r1 (first-load CSS budget). --lb-h stays in
+   app/p3/stage.css (a token).
+
+   P3-11 r3 (C3, rule 33): the closed / open flag lives on the bars' own
+   root (`.letterbox[data-state="closed"]`), never on <html>, and no rule
+   here re-pads the root scroller at runtime. WCAG 2.4.11 is kept by the
+   bars themselves: a focus under a closed bar opens them until focus moves
+   on (letterbox-bars-impl.tsx); the only anchor in the closed stretch,
+   #films, already lands below the top bar (its scroll-margin-top 6rem +
+   the root's header padding ≥ --lb-h at 1440 and 1024).
+   ========================================================================== */
+
+/* — letterbox bars (components/stage/letterbox-bars.tsx) ——————————————— */
+.letterbox {
+  display: contents;
+}
+.letterbox-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: var(--lb-h);
+  z-index: var(--z-bars);
+  pointer-events: none;
+  /* P3-11 r3 (J1 #5: B30, the house lights going down, was granted on
+     "rigid scroll only": bars of the page's own deep closed unseen over a
+     dark head): the bars are the cinema's black, darker than the world's
+     deep, with a faint screen edge on their inner side, so the close reads
+     as it happens (static paint; the bar moves by transform only) */
+  background-color: color-mix(in oklab, var(--lb-bg, #050708) 45%, #000);
+  transform: scaleY(0);
+  will-change: transform;
+}
+.letterbox-bar[data-bar="top"] {
+  top: 0;
+  transform-origin: 50% 0;
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.14);
+}
+.letterbox-bar[data-bar="bottom"] {
+  bottom: 0;
+  transform-origin: 50% 100%;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
+}
+/* ALT "iris-bars": an elliptical iris (static gradient, scaled) closes
+   toward the 2.39 band, then the flat bars square it off */
+.letterbox[data-variant="iris-bars"] .letterbox-bar {
+  transform: none;
+  opacity: 0;
+  will-change: opacity;
+}
+.letterbox-iris {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bars);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(2.6);
+  will-change: transform, opacity;
+  background-image: radial-gradient(
+    ellipse 72vw calc(50svh - var(--lb-h)) at 50% 50%,
+    transparent 99%,
+    var(--lb-bg, #050708) 100%
+  );
+}
+/* bars never show under reduced motion or Pause (the component unmounts
+   them too; this covers the frame in between) */
+@media (prefers-reduced-motion: reduce) {
+  .letterbox {
+    display: none;
+  }
+}
+html[data-motion="paused"] .letterbox {
+  display: none;
+}

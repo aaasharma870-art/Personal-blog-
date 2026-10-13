@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useCallback, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useMemo, useRef, useState } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { CSSProperties, ReactNode } from "react";
 import { motion } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
@@ -71,10 +72,16 @@ import {
      Phones, reduced motion, Pause: the still, identity transform.
    - THE BRACKET CLOSE is the B56 time star (weight 2): on DESKTOP_FINE it
      asks the spotlight first; "skip" = resolved at once.
+   - THE TRAIL ON (P3-11 r1; J1: contact's reading seconds had no star):
+     the last light's trail to the credits is the B56-trail scroll star —
+     on DESKTOP_FINE with motion on the lazy toys chunk lays its points
+     down one by one as it scrolls through (a ViewTimeline per point);
+     everywhere else it lies static, as before.
    - THE CANDLE TOY + THE WAND (spec §9.2 #4): the hall's ceiling field is a
      toy field (CandleField `toy`, every candle lit by default). The two
      desktop modules (worlds/hp/wand-cursor.tsx, worlds/hp/candle-toy.tsx)
-     are lazy chunks mounted here on DESKTOP_FINE with motion on, after the
+     are ONE lazy chunk (worlds/hp/contact-toys.tsx: one loader stub in the
+     first load, not two) mounted here on DESKTOP_FINE with motion on, after the
      intro's quiet window (`usePlateEngine`, the plate facades' gate; DP-13):
      server, phones, touch, reduced motion and Pause never load or keep them.
      All lit → the toy calls `flare` → the same single flare as a copy.
@@ -88,8 +95,8 @@ import {
 const B56 = { id: "B56", weight: 2 } as const;
 
 /** Act IV's desktop toys (lazy chunks; see the header). */
-const WandCursor = lazy(() => import("@/components/worlds/hp/wand-cursor"));
-const CandleToy = lazy(() => import("@/components/worlds/hp/candle-toy"));
+/** The wand + the candle toy: ONE lazy chunk (worlds/hp/contact-toys.tsx). */
+const ContactToys = safeLazy(() => import("@/components/worlds/hp/contact-toys"));
 
 /** The flame's centre on each plate (0–1), measured on the accepted file
  *  (sharp, 2026-09-29: the > 200 luminance centroid of the flame; x .860–
@@ -180,36 +187,55 @@ const TRAIL = Array.from({ length: TRAIL_N }, (_, i) => {
   // heading in px for a ≈ 800 × 270 box: dx/dt, dy/dt
   const dx = -0.71 * 2.2 * Math.pow(t, 1.2) * 800;
   const dy = 270;
-  return { x, y: t * 100, o: 0.62 - 0.4 * t, deg: (Math.atan2(dy, dx) * 180) / Math.PI + 90 };
+  // P3-11 r3 (r2 J1 #5: B56-trail granted over "rigid scroll only"): the
+  // points read at scroll speed: 7 px, the nearest in full ink
+  return { x, y: t * 100, o: 0.9 - 0.5 * t, deg: (Math.atan2(dy, dx) * 180) / Math.PI + 90 };
 });
 
 function LastLightTrail({ variant }: { variant: Variant }) {
   return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute top-full hidden lg:block"
-      style={{ left: "-60%", right: 0, height: "calc(50svh - 50%)" }}
-      data-motif="last-light-trail"
-      data-variant={variant}
-    >
-      {TRAIL.map((p, i) =>
-        variant === "alt" ? (
-          <span
-            key={i}
-            className="absolute"
-            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o, transform: `translate(-50%, -50%) rotate(${p.deg.toFixed(1)}deg)` }}
-          >
-            <Footprint side={i % 2 ? "right" : "left"} size={12} fill="var(--w-ink-contour)" />
-          </span>
-        ) : (
-          <span
-            key={i}
-            className="absolute size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
-            style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o }}
-          />
-        ),
-      )}
-    </div>
+    <>
+      {/* B56-trail's spotlight box (P3-11 r1 integration): a sibling marker
+          (the toys animate the trail's CHILDREN) as tall as the trail plus
+          the 30vh of its window, so "top 85%, bottom 85%" here owns exactly
+          the trail's "top 85%, bottom 55%" and the beat probe measures the
+          whole performance (spec §3.4 #11: ≥ 300 px; the trail alone is
+          ≈ 190 px) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute left-0 top-full hidden w-px lg:block"
+        style={{ height: "calc(50svh - 50% + 30vh)" }}
+        {...beatAttrs("B56-trail", { weight: 1, scroll: "top 85%, bottom 85%" })}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-full hidden lg:block"
+        style={{ left: "-60%", right: 0, height: "calc(50svh - 50%)" }}
+        data-motif="last-light-trail"
+        data-variant={variant}
+        // P3-11 r1: a scroll star (B56-trail, its marker above) — the lazy
+        // toys lay the trail down point by point as it scrolls through
+        // (worlds/hp/contact-toys.tsx)
+      >
+        {TRAIL.map((p, i) =>
+          variant === "alt" ? (
+            <span
+              key={i}
+              className="absolute"
+              style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o, transform: `translate(-50%, -50%) rotate(${p.deg.toFixed(1)}deg)` }}
+            >
+              <Footprint side={i % 2 ? "right" : "left"} size={12} fill="var(--w-ink-contour)" />
+            </span>
+          ) : (
+            <span
+              key={i}
+              className="absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+              style={{ left: `${p.x.toFixed(2)}%`, top: `${p.y.toFixed(2)}%`, opacity: p.o }}
+            />
+          ),
+        )}
+      </div>
+    </>
   );
 }
 
@@ -221,6 +247,7 @@ export function ContactScene({
   github,
   initials,
   text,
+  hint,
 }: {
   choice: VariantChoice;
   plate: MediaId;
@@ -230,6 +257,8 @@ export function ContactScene({
   initials: string;
   /** The server-rendered head: Meta, the desktop caption, the h2, the lede. */
   text: ReactNode;
+  /** What "Lumos" does (server-rendered; ContactFinale sets it beside it). */
+  hint?: ReactNode;
 }) {
   const variant = useVariant(choice, "contact.lastlight");
   const loopAsset = resolveVariant(loop, variant);
@@ -257,7 +286,7 @@ export function ContactScene({
     >
       <div className="lg:col-span-8">
         {text}
-        <ContactFinale email={email} github={github} onCopied={onCopied} />
+        <ContactFinale email={email} github={github} onCopied={onCopied} hint={hint} />
       </div>
       <div className="relative lg:col-span-4 lg:col-start-9 lg:mr-[calc(-1*var(--spacing-gutter))]">
         <HallField />
@@ -274,9 +303,8 @@ export function ContactScene({
       </div>
       {toys ? (
         <Suspense fallback={null}>
-          <WandCursor choice={choice} />
-          {/* every candle lit → the same single flare as a copy */}
-          <CandleToy choice={choice} flare={onCopied} />
+          {/* the wand; every candle lit → the same single flare as a copy */}
+          <ContactToys choice={choice} flare={onCopied} />
         </Suspense>
       ) : null}
     </div>
@@ -326,6 +354,14 @@ function LastLightPlate({
       style={{ aspectRatio: boxAspect.toFixed(4), ...FEATHER }}
       data-plate={plateId}
       data-motif="last-light"
+      // B56-flame (C1, P3-11 r3; r2 J1: contact's reading stop had no
+      // star): the flame's loop and the drift about it move while the page
+      // is still; the lazy toys (contact-toys.tsx) register it LIVE exactly
+      // while they play (DESKTOP_FINE, motion on), so the spotlight lends it
+      // the still screen once the bracket has closed. Quiet markup (like
+      // B54-hall / B10-sea): a lent star has no scroll window, so there is no
+      // span to measure (the plate box is 250 px tall at 1024)
+      {...beatAttrs("B56-flame")}
     >
       <div style={inner}>
         {variant === "alt" ? (

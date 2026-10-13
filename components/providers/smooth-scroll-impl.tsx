@@ -20,8 +20,9 @@
    - while Lenis lives: the keydown-capture and intro re-arm glide halts;
    - registers the desktop chunks (Lenis, GSAP, the enhancer) and starts the
      warm-up prefetch (before warm, or at page idle) on DESKTOP_FINE;
-   - refresh triggers: a ResizeObserver on <main>, `fonts.loadingdone`,
-     ladder step 2 (once, after the quiet window);
+   - refresh triggers: <main>'s height changing (a ResizeObserver), `fonts.loadingdone`
+     (not for a world face that has only loaded: <WorldFonts/> refreshes
+     when it swaps), ladder step 2 (once, after the quiet window);
    - loads the desktop enhancer (ladder step 2; with motion off, after the
      quiet window at idle) on DESKTOP_FINE, home page only.
    Phones and touch never get any of it: native scroll, byte-for-byte.
@@ -48,6 +49,7 @@ import { isQuiet, prefetchChunks, registerChunk, useLadder, useQuiet, whenLadder
 import {
   getLenis,
   haltGlide,
+  loadJumps,
   requestScrollRefresh,
   scrollToTarget,
   setLenis,
@@ -148,9 +150,13 @@ function useLenisInstance(enabled: boolean): void {
       teardown = null;
     };
     // reduced motion / Pause: destroy in the same task, before React renders
-    const offWatch = onMotionOffChange(() => {
-      if (motionOffNow()) kill();
-    });
+    // and before every other Pause listener (`first`)
+    const offWatch = onMotionOffChange(
+      () => {
+        if (motionOffNow()) kill();
+      },
+      { first: true },
+    );
     Promise.all([loadLenis(), loadGsap()])
       .then(([mod, kit]) => {
         if (dead || motionOffNow() || !fineNow() || isQuiet() || getLenis()) return;
@@ -185,6 +191,8 @@ function useDesktopPrefetch(on: boolean): void {
     registerChunk(loadLenis);
     registerChunk(prefetchGsap);
     registerChunk(loadEnhancer);
+    // scrollToTarget's lazy body (anchors, the fast lane, the cut)
+    registerChunk(loadJumps);
     if (!on) return;
     let cancel = () => {};
     const go = () => {
@@ -206,10 +214,31 @@ function useRefreshTriggers(on: boolean): void {
     if (!on) return;
     trackScrollInput();
     const main = document.getElementById("main");
-    const ro = main && typeof ResizeObserver === "function" ? new ResizeObserver(() => requestScrollRefresh()) : null;
+    // P3-11 r3 (J8 F3, C6): only a real change of <main>'s HEIGHT moves a
+    // trigger. The first callback (on observe) and width-only changes (a
+    // viewport resize: ScrollTrigger and Lenis re-measure on their own) do
+    // not refresh. (The 100–320 ms "re-measure" J8 traced at
+    // `…js:18755` is the GL engage's canvas resize, lib/gl; one refresh
+    // here measures ≤ 11 ms.)
+    let lastH = -1;
+    const ro =
+      main && typeof ResizeObserver === "function"
+        ? new ResizeObserver(([e]) => {
+            const h = Math.round(e?.contentRect.height ?? 0);
+            const was = lastH;
+            lastH = h;
+            if (was >= 0 && h !== was) requestScrollRefresh();
+          })
+        : null;
     if (main) ro?.observe(main);
     const fonts = document.fonts;
-    const onFonts = () => requestScrollRefresh();
+    // a world face that has only loaded moves nothing (its token is not on
+    // the page yet): <WorldFonts/> refreshes when it swaps
+    const onFonts = (e: Event) => {
+      const faces = (e as Event & { fontfaces?: readonly FontFace[] }).fontfaces;
+      if (faces?.length && faces.every((f) => f.family.replace(/["']/g, "").startsWith("fontWorld"))) return;
+      requestScrollRefresh();
+    };
     fonts?.addEventListener?.("loadingdone", onFonts);
     let dead = false;
     void whenLadder(2).then(() => {

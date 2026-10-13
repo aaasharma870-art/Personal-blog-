@@ -4,9 +4,14 @@
 //
 // Four runs (each in its own context):
 //   paused-reload  1440×900, sessionStorage "motion" = "paused" before load (a paused view):
-//                  the layout read at DOMContentLoaded equals the layout 3 s after load (no
-//                  reflow after hydration); no split grid, no stage root, no bars;
-//   pause-mid      1440×900, unpaused: scroll into the first split section, record every
+//                  the server layout (read once every [data-section] has streamed in: no
+//                  pending Suspense boundary, template[id^="B:"] / div[hidden][id^="S:"]; act-3
+//                  and act-4 can stream in after DOMContentLoaded) equals the layout 3 s after
+//                  load (no reflow after hydration); no split grid, no stage root, no bars;
+//   pause-mid      1440×900, unpaused: scroll into the first split section, let the page settle
+//                  (the world faces of every world loaded first — their late swap reflows the act
+//                  cards, P3-2 #7, measured on its own: reported as settle.drift — then two equal
+//                  layouts 600 ms apart), record every
 //                  section's box, press the header's Pause control, wait 400 ms: every box
 //                  identical, scroll position kept, and the layout-shift entries after the
 //                  press sum to 0 (hadRecentInput included); the stage's layers hidden and the
@@ -14,7 +19,12 @@
 //   no-js          1440×900, JavaScript disabled: no split grid, no window, no stage root, no
 //                  html.js (so no pinned travel or tail can key on the gate);
 //   phone / rm     390×844 touch, and 1440×900 with reduced motion: no split grid, no window,
-//                  no stage root, no html[data-stage], no letterbox bars after 4 s.
+//                  no stage root, no html[data-stage], no letterbox bars after 4 s;
+//   rm-hash        (P3-11 r3, J9 F1; F1 / R01) the run's viewport (--vw) with reduced motion, and paused-hash
+//                  with a paused reload: three loads each of /#work, /#kill-list and /#act-2 (no `skip`;
+//                  --hash=<id> tests one) land on the section and stay: its page top and the height of
+//                  every section above it are the same once streamed and 3 s after load, and it is in
+//                  view (top within −2…240 px) at the end.
 // z-scale (#12): in the default run, every fixed Phase-3 layer is outside <main> and
 // <main> / the credits footer sit at --z-main.
 // pass = every run's checks hold.
@@ -24,7 +34,27 @@ function layoutSnapshot() {
     const r = el.getBoundingClientRect();
     return [el.id || el.getAttribute("data-world-section") || el.tagName, Math.round(r.top + scrollY), Math.round(r.height)];
   });
-  return { height: document.documentElement.scrollHeight, boxes };
+  return { height: document.documentElement.scrollHeight, sections: document.querySelectorAll("[data-section]").length, boxes };
+}
+
+/** How much of the page has streamed in (pending Suspense boundaries, hidden sections). */
+function streamState() {
+  return {
+    pending: document.querySelectorAll("template[id^='B:']").length,
+    hiddenSections: [...document.querySelectorAll("[data-section]")].filter((s) => s.closest("div[hidden][id^='S:']")).length,
+  };
+}
+
+/** Loads every world's faces (the tokens world-fonts-impl adds as each world approaches) and
+ *  resolves when the font set is idle: the late swap is P3-2 #7's, not a Pause reflow. */
+async function settleWorldFonts() {
+  const root = document.documentElement;
+  const tokens = new Set((root.dataset.fonts ?? "").split(/\s+/).filter(Boolean));
+  for (const w of ["pirates", "idiots", "rdr2", "hp"]) tokens.add(w);
+  root.dataset.fonts = [...tokens].join(" ");
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 5000))]);
+  return document.fonts.status;
 }
 
 function gateState() {
@@ -67,6 +97,17 @@ export default async function probe(page, ctx) {
       } catch {}
     });
     await p.goto(ctx.url("/?skip=intro"), { waitUntil: "domcontentloaded" });
+    // the server layout = every streamed Suspense boundary revealed (React reveals the $RC
+    // boundaries in batches, sometimes after DOMContentLoaded): not a reflow after hydration
+    const streamedAtDcl = await p.evaluate(streamState);
+    const streamed = await p
+      .waitForFunction(() => {
+        const pending = document.querySelector("template[id^='B:'], div[hidden][id^='S:']");
+        const secs = [...document.querySelectorAll("[data-section]")];
+        return !pending && secs.length > 0 && secs.every((s) => !s.closest("div[hidden][id^='S:']"));
+      }, null, { timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
     const early = await p.evaluate(layoutSnapshot);
     await p.waitForLoadState("load");
     await p.waitForTimeout(3000);
@@ -77,7 +118,10 @@ export default async function probe(page, ctx) {
       gate,
       diff,
       heights: [early.height, late.height],
-      ok: diff.length === 0 && gate.splitGrid === 0 && !gate.stageRoot && !gate.bars && gate.motionBoot === "paused",
+      streamed,
+      streamedAtDcl,
+      sections: [early.sections, late.sections],
+      ok: streamed && diff.length === 0 && gate.splitGrid === 0 && !gate.stageRoot && !gate.bars && gate.motionBoot === "paused",
     };
   }
 
@@ -94,10 +138,40 @@ export default async function probe(page, ctx) {
     });
     await p.evaluate((y) => window.scrollTo(0, y), target);
     await p.waitForTimeout(2500);
+    // settle: the world faces first, then two equal layouts 600 ms apart (≤ 8 s)
+    const settle = { drift: [] };
+    const first = await p.evaluate(layoutSnapshot);
+    settle.fonts = await p.evaluate(settleWorldFonts);
+    let prev = first;
+    const t0 = Date.now();
+    for (;;) {
+      await p.waitForTimeout(600);
+      const cur = await p.evaluate(layoutSnapshot);
+      const moved = cur.boxes.filter((b, i) => !same(b, prev.boxes[i]));
+      if (!moved.length) break;
+      settle.drift.push(...moved.slice(0, 3).map((b) => ({ box: b[0], to: [b[1], b[2]], from: prev.boxes.find((x) => x[0] === b[0])?.slice(1) ?? null })));
+      prev = cur;
+      if (Date.now() - t0 > 8000) {
+        settle.timedOut = true;
+        break;
+      }
+    }
+    settle.ms = Date.now() - t0;
     await p.evaluate(() => {
       window.__shift = 0;
+      // The header's Pause tip (header.tsx PauseWithTooltip: an aria-hidden, absolutely positioned label under the
+      // control) flips between two label lengths when the control is pressed, and the pressed control keeps focus so
+      // the tip is shown: that is a 0.00008 move of a floating label, not page layout. Entries whose every source is
+      // that label are left out; any other shift still counts.
+      const isTip = (n) => {
+        const el = n && (n.nodeType === 1 ? n : n.parentElement);
+        return !!el && !!el.closest("header") && !!el.closest('[aria-hidden="true"].pointer-events-none');
+      };
       new PerformanceObserver((l) => {
-        for (const e of l.getEntries()) window.__shift += e.value;
+        for (const e of l.getEntries()) {
+          if (e.sources?.length && e.sources.every((s) => isTip(s.node))) continue;
+          window.__shift += e.value;
+        }
       }).observe({ type: "layout-shift", buffered: false });
     });
     const before = await p.evaluate(layoutSnapshot);
@@ -124,6 +198,7 @@ export default async function probe(page, ctx) {
       scroll: [y0, y1],
       shift,
       diff,
+      settle,
       ok: found && diff.length === 0 && y0 === y1 && shift === 0 && gateAfter.on === 0 && layersHidden,
     };
     results.zScale = { ...(await p.evaluate(zAudit)) };
@@ -149,6 +224,90 @@ export default async function probe(page, ctx) {
     await p.waitForTimeout(4000);
     const gate = await p.evaluate(gateState);
     results[name] = { gate, ok: gate.splitGrid === 0 && gate.windowShown === 0 && !gate.stageRoot && !gate.stage && !gate.bars };
+  }
+
+  // rm-hash / paused-hash (P3-11 r3, J9 F1; R01 / F1): a DEEP LINK under reduced motion, and the same on a paused
+  // reload, lands on its section and stays there. Three fresh loads each of /#work, /#kill-list and /#act-2
+  // (no `skip`: the intro never plays with a hash; --hash=<id> tests one), at the run's viewport (--vw):
+  //   landed   the target's top is within −2…240 px of the viewport at the end (3 s after `load`);
+  //   stable   the boxes above it are final at first paint (read once the page has streamed in, and again 3 s
+  //            after load), so the target's page top does not move (r2: #journey 3,209 → 1,204 px after
+  //            hydration moved an RM reader ≈ 2,000 px) and no section above it changed height.
+  // lib/smooth-scroll.ts holds the hash at DESKTOP_FINE in every motion state (r3: reduced motion landed 3 of
+  // 12 loads, Pause 0 of 4: the browser's own jump runs before the stream is placed and never retries). The
+  // three loads of one link run side by side (a slower page for each: a harder race, and the probe stays in
+  // the runner's default timeout); every page is closed as soon as it is read.
+  const HASHES = ctx.args["hash"] ? [String(ctx.args["hash"])] : ["work", "kill-list", "act-2"];
+  const LOADS = 3;
+  const readHash = (page, id) =>
+    page.evaluate((id) => {
+      const t = document.getElementById(id);
+      const r = t?.getBoundingClientRect();
+      // every section wrapper above the target (keyed by data-section: the wrappers carry no id; never the
+      // target's own wrapper, which contains it)
+      const above = [...document.querySelectorAll("[data-section]")]
+        .filter((x) => t && !x.contains(t) && x.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)
+        .map((x) => [x.getAttribute("data-section") || x.id, Math.round(x.getBoundingClientRect().height)]);
+      return { y: Math.round(scrollY), top: r ? Math.round(r.top) : null, pageTop: r ? Math.round(r.top + scrollY) : null, height: document.documentElement.scrollHeight, above };
+    }, id);
+  async function deepLink(opts, paused, id) {
+    const p = await ctx.newPage(opts);
+    try {
+      if (paused) {
+        await p.addInitScript(() => {
+          try {
+            sessionStorage.setItem("motion", "paused");
+          } catch {}
+        });
+      }
+      await p.goto(ctx.url(`/#${id}`), { waitUntil: "domcontentloaded" });
+      const streamed = await p
+        .waitForFunction(() => {
+          const pending = document.querySelector("template[id^='B:'], div[hidden][id^='S:']");
+          const secs = [...document.querySelectorAll("[data-section]")];
+          return !pending && secs.length > 0 && secs.every((x) => !x.closest("div[hidden][id^='S:']"));
+        }, null, { timeout: 12000 })
+        .then(() => true)
+        .catch(() => false);
+      const early = await readHash(p, id);
+      await p.waitForLoadState("load");
+      await p.waitForTimeout(3000);
+      const late = await readHash(p, id);
+      const resized = late.above.filter(([k, h]) => early.above.find(([e]) => e === k)?.[1] !== h).slice(0, 6);
+      const landed = late.top != null && late.top >= -2 && late.top <= 240;
+      const stable = late.pageTop != null && early.pageTop != null && Math.abs(late.pageTop - early.pageTop) <= 2 && resized.length === 0;
+      return {
+        streamed,
+        landed,
+        stable,
+        y: [early.y, late.y],
+        top: [early.top, late.top],
+        pageTop: [early.pageTop, late.pageTop],
+        height: [early.height, late.height],
+        resized,
+        ok: streamed && landed && stable,
+      };
+    } finally {
+      await p.context().close().catch(() => {});
+    }
+  }
+  for (const [name, opts, paused] of [
+    ["rmHash", { viewport: ctx.vw, reducedMotion: "reduce" }, false],
+    ["pausedHash", { viewport: ctx.vw }, true],
+  ]) {
+    const byHash = {};
+    for (const id of HASHES) {
+      const loads = await Promise.all(Array.from({ length: LOADS }, () => deepLink(opts, paused, id)));
+      byHash[id] = { landed: `${loads.filter((l) => l.landed).length}/${LOADS}`, loads };
+    }
+    const all = Object.values(byHash).flatMap((h) => h.loads);
+    results[name] = {
+      viewport: [ctx.vw.width, ctx.vw.height],
+      landed: `${all.filter((l) => l.landed).length}/${all.length}`,
+      stable: `${all.filter((l) => l.stable).length}/${all.length}`,
+      hashes: byHash,
+      ok: all.length > 0 && all.every((l) => l.ok),
+    };
   }
 
   return { pass: Object.values(results).every((r) => r.ok), ...results };

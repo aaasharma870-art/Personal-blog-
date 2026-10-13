@@ -1,0 +1,10 @@
+pass    aa-scrim (37061 ms)
+pass    cinema (40414 ms)
+pass    decoder (97171 ms)
+FAIL    games (60279 ms)
+pass    layout-gates (19168 ms)
+FAIL    loaf (14914 ms)
+pass    plates-live (154787 ms)
+pass    sound (49189 ms)
+p3-probes: 8 probe(s), 2 failed → docs/build/motion-strips/p3-w3/gate/rerun-1440/p3-probes.json
+exit 1

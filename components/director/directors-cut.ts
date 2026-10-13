@@ -44,12 +44,12 @@ import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { getLenis, haltGlide, scrollToTarget, type LenisLike, type LenisScrollOptions } from "@/lib/smooth-scroll";
 import { copyText } from "@/lib/sections";
 import { setDirectorsCutState } from "./api";
+import { DWELL, SPEED } from "./timing";
 
-/** px/s per tempo (spec §11.1); `c` = act cards. */
-export const SPEED = { c: 140, s: 90, m: 110, b: 150 } as const;
+export { DWELL, SPEED };
+
+/** A tempo code (spec §11.1; speeds in ./timing); `c` = act cards. */
 type TempoCode = keyof typeof SPEED;
-/** Dwell (ms) by star weight. */
-export const DWELL: Readonly<Record<number, number>> = { 3: 1200, 2: 600 };
 /** Restore the borrowed sound this long after the stop (the run-out). */
 const RESTORE_MS = 1600;
 /** A segment never runs longer than this share of the viewport. */
@@ -149,19 +149,21 @@ function nextStop(items: Item[], done: Set<Element>, y: number): { y: number; dw
 const linear = (t: number) => t;
 
 /** One linear glide to `y` over `s` seconds (Lenis, else a rAF glide).
- *  Resolves on arrival, on stop, or after a safety cap. */
-function glide(r: Run, y: number, s: number): Promise<void> {
-  return new Promise<void>((resolve) => {
+ *  Resolves `true` on arrival (or the safety cap), `false` when woken early
+ *  (a stop, or the 2× toggle re-timing the segment from where it is). */
+function glide(r: Run, y: number, s: number): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
     let settled = false;
-    const finish = () => {
+    const end = (arrived: boolean) => {
       if (settled) return;
       settled = true;
       clearTimeout(cap);
       cancelAnimationFrame(raf);
       r.wake = null;
-      resolve();
+      resolve(arrived);
     };
-    r.wake = finish;
+    const finish = () => end(true);
+    r.wake = () => end(false);
     const cap = window.setTimeout(finish, s * 1000 + 800);
     let raf = 0;
     const l: LenisLike | null = getLenis();
@@ -179,7 +181,7 @@ function glide(r: Run, y: number, s: number): Promise<void> {
     const y0 = window.scrollY;
     const t0 = performance.now();
     const step = (now: number) => {
-      if (r.stopped) return finish();
+      if (r.stopped) return end(false);
       const k = Math.min(1, (now - t0) / (s * 1000));
       window.scrollTo({ top: y0 + (y - y0) * k, behavior: "instant" });
       if (k >= 1) finish();
@@ -213,10 +215,11 @@ function buildPill(r: Run): HTMLElement {
   box.dataset.dcPill = "";
   box.dataset.world = "house";
   box.dataset.tone = "deep";
+  box.dataset.houseType = "";
   box.className =
-    "pointer-events-auto absolute inline-flex items-center gap-1 rounded-pill bg-bg px-2 type-meta text-fg shadow-[inset_0_0_0_1px_var(--rule)]";
+    "pointer-events-auto inline-flex items-center gap-1 rounded-pill bg-bg px-2 type-meta text-fg shadow-[inset_0_0_0_1px_var(--rule)]";
   // bottom-centre, clear of the egg toasts' bottom-left column (≤ 27 rem)
-  box.style.cssText = "bottom:1rem;left:max(50%,37rem);transform:translateX(-50%)";
+  box.style.cssText = "position:absolute;pointer-events:auto;bottom:1rem;left:max(50%,37rem);transform:translateX(-50%);white-space:nowrap";
 
   const button = (text: string) => {
     const b = document.createElement("button");
@@ -245,6 +248,8 @@ function buildPill(r: Run): HTMLElement {
   speedBtn.addEventListener("click", () => {
     r.rate = r.rate === 2 ? 1 : 2;
     speedBtn.setAttribute("aria-pressed", String(r.rate === 2));
+    // re-time the running segment (or dwell) from here at the new speed
+    r.wake?.();
   });
 
   const act = document.createElement("span");
@@ -300,11 +305,13 @@ async function loop(r: Run): Promise<void> {
     if (y >= max - 2) return stop("end");
     const next = nextStop(items, r.done, y);
     const dist = next.y - y;
+    let arrived = true;
     if (dist > 1) {
       const speed = speedAt(items, y) * r.rate;
-      await glide(r, next.y, Math.max(0.05, dist / speed));
+      arrived = await glide(r, next.y, Math.max(0.05, dist / speed));
     }
     if (r.stopped) return;
+    if (!arrived) continue; // re-timed (2×): carry on from here
     if (next.star) {
       r.done.add(next.star);
       if (next.dwell) await wait(r, next.dwell / r.rate);

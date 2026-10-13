@@ -1,18 +1,20 @@
 "use client";
 
-import { lazy, Suspense, useSyncExternalStore, type ReactNode } from "react";
+import { Suspense, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useDesktopFine } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 
 /* the cut is DESKTOP_FINE only (lib/smooth-scroll.ts runs it there alone):
    its code loads there, after mount (DP-13) */
-const CutOverlay = lazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
+const CutOverlay = safeLazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
 
 /* ============================================================================
    STAGE LAYERS (spec §3.2) — OWNER: B1-STAGE.
    <StageLayers/> is mounted by app/page.tsx before <main>: the fixed
    containers for everything that must sit above the page and under the
    header (the z tokens in app/globals.css):
+     carry --z-carry 22 (W3: the films' B35 warm point, above the bars) ·
      game-hud --z-game-hud 25 · stop --z-stop 30 · toast --z-toast 32 ·
      cut --z-cut 35 (below the header's 40, so the fast lane never hides).
    Nothing fixed renders inside <main> (main is `relative z-[var(--z-main)]`,
@@ -31,9 +33,10 @@ const CutOverlay = lazy(() => import("@/components/director/cut-overlay").then((
    B1-SCROLL) renders in the "cut" layer on DESKTOP_FINE, lazily (DP-13).
    ========================================================================== */
 
-export type StageLayer = "cut" | "stop" | "game-hud" | "toast";
+export type StageLayer = "cut" | "stop" | "game-hud" | "toast" | "carry";
 
 const LAYERS: readonly { layer: StageLayer; z: string }[] = [
+  { layer: "carry", z: "var(--z-carry)" },
   { layer: "game-hud", z: "var(--z-game-hud)" },
   { layer: "stop", z: "var(--z-stop)" },
   { layer: "toast", z: "var(--z-toast)" },

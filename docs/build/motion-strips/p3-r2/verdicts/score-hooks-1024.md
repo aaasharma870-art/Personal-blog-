@@ -1,0 +1,9 @@
+| css-ignite-p05 | 3/3 | PASS | Burn-hole in the RDR2 camp with a candle flame glowing inside: a clear, magical hand-off to Harry Potter. The HP title over an RDR2 caption is briefly confusing. / A burning hole opening in the middle |
+| css-opening-p05 | 0/3 | FAIL | Porthole on a pure-black field with no sea behind it, so most of the frame is empty. It reads as not yet loaded rather than as an invitation. / About 70% of the frame is flat black with a title top-le |
+| css-seam-p05 | 3/3 | PASS | Teal market-chart line as the seam between storm sea and classroom is clever and on-theme. The mismatch remains: '3 IDIOTS' title over a 'KRAKEN'S STORM · PIRATES OF THE CARIBBEAN' caption. / The stor |
+| css-tintype-p05 | 2/3 | FAIL | Clear Western title and a sepia tintype plate. Calm, but an unmistakable new-chapter card with strong period mood. / Strong western wood-type title over a sepia tintype in a cream mount feels like an  |
+| gl-ignite-p05 | 2/3 | FAIL | Empty black burn-hole under a 'HARRY POTTER' title on a cowboy camp: it looks like a glitch at this instant. The candle that sells the idea in H002 is not there yet. / The burn hole is wider and the e |
+| gl-opening-p05 | 3/3 | PASS | Glowing brass porthole on the Black Pearl with the faint night sea visible behind it. A spyglass-peek tease that pulls me forward, though there is a lot of dark space. / Better than H003: the gold rin |
+| gl-seam-p05 | 3/3 | PASS | The lightning tear revealing the classroom window is dramatic and cinematic. Strongest arrival frame at this width. / A jagged white tear, lightning-like, splits a misty classroom from a teal storm se |
+| gl-tintype-p05 | 2/3 | FAIL | Same as H005 (only the egg counter differs). Holds up well at 1024. / Same as H005 (only the egg counter moved to 1/12). Handsome; the egg counter changing quietly makes me want to know what I found.  |
+HOOKS @1024: 4/8 judged a hook 3/3

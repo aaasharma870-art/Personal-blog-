@@ -1,0 +1,25 @@
+run intro
+  intro: 215 screencast frames, 520 rAF samples, 66 LoAF, 2 shifts
+run desktop
+  desktop: smooth scroll (Lenis) ON
+  idle probe
+  desktop: 1037 screencast frames, 2206 rAF samples, 361 LoAF, 11 shifts
+run native
+  native: smooth scroll (Lenis) off
+  native: 1012 screencast frames, 1531 rAF samples, 303 LoAF, 10 shifts
+run alt
+  alt: smooth scroll (Lenis) ON
+  alt: 1437 screencast frames, 2470 rAF samples, 358 LoAF, 10 shifts
+run rm
+  rm: smooth scroll (Lenis) off
+  rm: 441 screencast frames, 3241 rAF samples, 15 LoAF, 1 shifts
+run gl
+  gl: smooth scroll (Lenis) ON
+  gl: 1126 screencast frames, 2402 rAF samples, 375 LoAF, 10 shifts
+analyse intro
+analyse desktop
+analyse native
+analyse alt
+analyse rm
+analyse gl
+DONE /home/user/Personal-blog-/docs/build/motion-strips/p3-r1/raw/motion-1024 intro: p50 16.7 p95 66.7 pops 4 CLS 0.0071 | desktop: p50 16.7 p95 133.3 pops 12 CLS 0.0435 | native: p50 33.2 p95 250 pops 35 CLS 0.0321 | alt: p50 16.7 p95 183.3 pops 13 CLS 0.0425 | rm: p50 16.7 p95 16.8 pops 0 CLS 0.1164 | gl: p50 16.7 p95 116.5 pops 5 CLS 0.0438

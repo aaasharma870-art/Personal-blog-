@@ -2,11 +2,13 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { beatAttrs } from "@/lib/beats";
 import { journey } from "@/lib/content";
-import { useReducedMotion } from "@/lib/flags";
+import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
 import type { MediaId } from "@/lib/media";
 import { scrollToTarget } from "@/lib/smooth-scroll";
+import { spotlight } from "@/lib/spotlight";
 import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
 import type { CameraSpec } from "@/components/primitives/camera";
@@ -15,6 +17,7 @@ import { Loader } from "@/components/primitives/loader";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { JourneyChart, Waypoint, WaypointLabel } from "@/components/site/journey-chart";
 import { useFrameSequence } from "@/components/worlds/pirates/use-frame-sequence";
+import { hideWhenFar } from "@/components/stage/far";
 import {
   BREAK_INDEX,
   NOW_INDEX,
@@ -76,7 +79,8 @@ import {
      still: these hosts have no camera (§6.1 "none").
    - B12: Act I's gull fly-through crosses the window's SKY (above the
      horizon row; never a text column) once, on scroll-idle, at the
-     journey's end (the zone mounts on step 4; words binder + spotlight).
+     journey's end (the zone mounts once step 4 is reached and stays; words
+     binder + spotlight).
    - Reduced motion / Pause mid-scroll: the layout stays (§12.2); the sea
      shows the active step's still (no canvas, no loop, no sail), the
      captions show, the compass simply points.
@@ -111,6 +115,21 @@ const easeInOut = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2,
 
 /** The voyage scrub's two beats (spec §2.3 B10 steps 1–2, B11 steps 3–4). */
 const STEP_BEATS: Readonly<Record<number, string>> = { 0: "B10", 2: "B11" };
+/** P3-11 r1 (J1: journey's tail was 14 star-less reader seconds): past the
+ *  last step's centre the camera pushes into first light, scrubbed by the
+ *  scroll — B12-push, a scroll star on step 4 from its centre on the
+ *  reading line until its bottom reaches that line (the push's own range;
+ *  its window is written literally on step 4, so the validator reads it).
+ *  P3-11 r3 (r2 J1 #7, panel J3 1024 #26): it used to run until step 4 left
+ *  the top and overlapped the gull (B12); it now ends first, so the gull
+ *  flies over a held sea: from step 4's centre on the reading line until
+ *  its bottom is 10vh above it (half a 62vh step + 10vh: ≥ 300 px of scroll
+ *  at 1440 and 1024, spec §3.4 #11). */
+const PUSH = { to: 1.08 } as const;
+
+/** At rest the sea's camera leans in and back (P3-11 r3): a push to ×`to`
+ *  each way over `ms`, the live star `id` (C1) while it is lent the screen. */
+const DRIFT = { id: "B10-sea", to: 1.04, ms: 6000 } as const;
 
 /** The steps whose plate swaps in its living loop at rest (spec §6.1: MV-05b
  *  L19, MV-05d L20). The others hold the frame. */
@@ -164,6 +183,21 @@ export function JourneyVoyage({
   const index = useRef(0);
 
   const seq = useFrameSequence(urls, near && !reduced, { window: WINDOW, index });
+
+  /* — the sticky sea out of paint while far (P3-11 r1 integration, J8 #2:
+       sticky columns outside their sections kept repainting): the picture
+       layer is aria-hidden art, so `visibility` costs no meaning (desktop) — */
+  const pictureRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = pictureRef.current;
+    if (!el || !window.matchMedia(DESKTOP_FINE).matches) return;
+    return hideWhenFar(el, 1);
+  }, []);
+
+  /* — B12-push: the sea's camera over the tail (see PUSH) — */
+  const lastStepRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: tail } = useScroll({ target: lastStepRef, offset: ["center center", "end 40%"] });
+  const push = useTransform(tail, [0, 1], [1, PUSH.to]);
   const live = seq.ready && near && !reduced;
   const beats = beatFrames(seq.total || 1, n);
   const beat = beats[active] ?? 0;
@@ -369,6 +403,46 @@ export function JourneyVoyage({
     return () => window.clearTimeout(t);
   }, [restLoop]);
   const loopShown = restLoop >= 0 && loopStep === restLoop;
+
+  /* — At rest the camera drifts (P3-11 r3; r2 J1 #3 / #10: every reading
+       stop in the journey was a still screen, and steps 1 and 3 have no
+       living loop). The picture leans toward the horizon and back on its
+       own `scale` (composited; it multiplies B12-push). It is a GATED live
+       star (C1, lib/spotlight.ts): registered only while the sea rests,
+       and it moves only while the spotlight lends it the still screen, so
+       it never plays under a time star (the gull). The scroll pauses it
+       where it is (no snap); far, Pause or RM cancels it. — */
+  const drift = useRef<Animation | null>(null);
+  useEffect(() => {
+    const el = pictureRef.current;
+    if (!live || !el?.animate) return;
+    const a = el.animate([{ scale: "1" }, { scale: String(DRIFT.to) }], {
+      duration: DRIFT.ms,
+      iterations: Number.POSITIVE_INFINITY,
+      direction: "alternate",
+      easing: "ease-in-out",
+    });
+    a.pause();
+    drift.current = a;
+    return () => {
+      a.cancel();
+      drift.current = null;
+    };
+  }, [live]);
+  const resting = live && rest !== null;
+  useEffect(() => {
+    const a = drift.current;
+    const el = pictureRef.current;
+    if (!resting || !a || !el) return;
+    const off = spotlight.registerScrollStar(DRIFT.id, el, 1, {
+      live: true,
+      onOwn: (owned) => (owned ? a.play() : a.pause()),
+    });
+    return () => {
+      off();
+      a.pause();
+    };
+  }, [resting]);
   const loopStill = loopStep >= 0 ? stills[loopStep] : undefined;
 
   const onWaypoint = (e: MouseEvent<HTMLAnchorElement>, j: number) => {
@@ -398,7 +472,12 @@ export function JourneyVoyage({
             <article
               key={s.marker}
               id={`journey-step-${i + 1}`}
-              {...(STEP_BEATS[i] ? beatAttrs(STEP_BEATS[i], { weight: 2 }) : {})}
+              {...(STEP_BEATS[i]
+                ? beatAttrs(STEP_BEATS[i], { weight: 2 })
+                : i === n - 1
+                  ? beatAttrs("B12-push", { weight: 1, scroll: "center 50%, bottom 40%" })
+                  : {})}
+              ref={i === n - 1 ? lastStepRef : undefined}
               data-step={i}
               aria-labelledby={`journey-step-${i + 1}-title`}
               className="flex min-h-[62vh] scroll-mt-[30vh] flex-col justify-center border-t border-rule py-tier-block first:border-t-0"
@@ -434,50 +513,66 @@ export function JourneyVoyage({
             data-voyage-window=""
             {...beatAttrs("B09-window")}
           >
-            {/* the stills: the active step's, crossfading (steps reached so far) */}
-            {stills.map((id, i) =>
-              i <= Math.max(reached, active) ? (
+            {/* B12-push: the picture (stills, sequence, loop, gull) rides one
+                compositor scale toward the horizon (its own layer while
+                motion is on: the scale never re-rasters the stills); the
+                caption veil stays */}
+            <motion.div
+              ref={pictureRef}
+              aria-hidden="true"
+              // the at-rest drift's live star (registered in an effect)
+              data-beat={DRIFT.id}
+              className={cn("absolute inset-0", !reduced && "will-change-transform")}
+              style={{ scale: reduced ? 1 : push, transformOrigin: "50% 45%" }}
+            >
+              {/* the stills: the active step's, crossfading (steps reached so far) */}
+              {stills.map((id, i) =>
+                i <= Math.max(reached, active) ? (
+                  <div
+                    key={id}
+                    className={cn(
+                      "absolute inset-0 transition-opacity duration-(--dur-preview) motion-off:transition-none",
+                      i === active ? "opacity-100" : "opacity-0",
+                    )}
+                  >
+                    <MediaFrame media={id} layout="fill" sizes={SIZES} loader={false} />
+                  </div>
+                ) : null,
+              )}
+
+              {/* the sequence (motion on, within one viewport), on its own
+                  layer: a scrubbed frame never repaints the column */}
+              {live ? (
+                <canvas
+                  ref={canvasRef}
+                  aria-hidden="true"
+                  className="absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-change-transform data-drawn:opacity-100 motion-off:transition-none"
+                />
+              ) : null}
+
+              {/* at rest on step 2 / 4: the plate's living loop over the frame */}
+              {loopStill ? (
                 <div
-                  key={id}
                   className={cn(
-                    "absolute inset-0 transition-opacity duration-(--dur-preview) motion-off:transition-none",
-                    i === active ? "opacity-100" : "opacity-0",
+                    "absolute inset-0 transition-opacity duration-300 motion-off:transition-none",
+                    loopShown ? "opacity-100" : "opacity-0",
                   )}
+                  data-rest-loop={loopStep + 1}
                 >
-                  <MediaFrame media={id} layout="fill" sizes={SIZES} loader={false} />
+                  <LivePlate media={loopStill} camera={HOLD} depth={false} sizes={SIZES} className="size-full" />
                 </div>
-              ) : null,
-            )}
+              ) : null}
 
-            {/* the sequence (motion on, within one viewport), on its own
-                layer: a scrubbed frame never repaints the column */}
-            {live ? (
-              <canvas
-                ref={canvasRef}
-                aria-hidden="true"
-                className="absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-change-transform data-drawn:opacity-100 motion-off:transition-none"
-              />
-            ) : null}
-
-            {/* at rest on step 2 / 4: the plate's living loop over the frame */}
-            {loopStill ? (
-              <div
-                className={cn(
-                  "absolute inset-0 transition-opacity duration-300 motion-off:transition-none",
-                  loopShown ? "opacity-100" : "opacity-0",
-                )}
-                data-rest-loop={loopStep + 1}
-              >
-                <LivePlate media={loopStill} camera={HOLD} depth={false} sizes={SIZES} className="size-full" />
-              </div>
-            ) : null}
-
-            {/* B12: the gull, in the sky above the horizon row only */}
-            {gull && active === NOW_INDEX ? (
-              <div className="pointer-events-none absolute inset-x-0 top-0" style={{ height: "42%" }}>
-                {gull}
-              </div>
-            ) : null}
+              {/* B12: the gull, in the sky above the horizon row only. The zone
+                  mounts when step 4 is first reached and STAYS (a fast scroll
+                  past Now must not unmount it before the words binder asks the
+                  spotlight; it flies once per page view either way). */}
+              {gull && reached >= NOW_INDEX ? (
+                <div className="pointer-events-none absolute inset-x-0 top-0" style={{ height: "42%" }}>
+                  {gull}
+                </div>
+              ) : null}
+            </motion.div>
 
             {/* the caption veil, ONE layer that fades when the sea moves (at
                 rest only): the calm bottom and the step captions */}
@@ -528,14 +623,18 @@ export function JourneyVoyage({
             cursed={reached >= BREAK_INDEX}
             xInked={!alt || reached >= NOW_INDEX}
             hunt
-            compassClassName="w-[72px]"
+            // ≥ xl Jack's compass at 96 px (r2 blind D22 / D23: the chart
+            // carries the Pirates read; its instrument made legible)
+            compassClassName="w-[72px] xl:w-24"
             medallionClassName="w-14"
             coin={coin}
             marginal={marginal}
           >
             <ol aria-label="Voyage waypoints" className="absolute inset-0">
               {journey.map((s, i) => (
-                <Waypoint key={s.marker} index={i}>
+                // the break hangs ABOVE its dot here: below, its two-line
+                // label ran out of the chart's frame (r2 J6, both widths)
+                <Waypoint key={s.marker} index={i} side={i === BREAK_INDEX ? "above" : undefined}>
                   <a
                     href={`#journey-step-${i + 1}`}
                     onClick={(e) => onWaypoint(e, i)}

@@ -13,6 +13,7 @@ import {
 import type { WorldId } from "@/lib/worlds";
 import { SectionHead, WorldSection } from "@/components/site/world-kit";
 import { FilmScreen } from "@/components/sections/films/film-screen";
+import { FilmsBill, FilmsPlay } from "@/components/sections/films/films-bill";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -35,7 +36,10 @@ import type { SectionProps } from "@/components/sections/types";
    each film title arrives in character (film-screen.tsx, B31–B34), every
    plate moves (LivePlate push 1 → 1.05, loops through loopFor), and the
    last screen's warm point is carried onto the tintype's sun (B35: the
-   marker below, warm-carry.tsx).
+   marker below, films-desktop.tsx).
+   P3-11 r1 (F2): under the lead, the plain invitation to play (F6's words,
+   `films.play`), then the BILL (films-bill.tsx): the four films in their
+   own faces and inks under their act numerals; desktop only.
    ========================================================================== */
 
 function capitalize(s: string): string {
@@ -62,12 +66,24 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
   const bearing = nextActBearing(entry.id);
   return (
     <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip scroll-mt-24">
-      <SectionHead
-        id={titleId}
-        label="Intermission"
-        title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
-        intro={copyVisible(lead) ? lead.text : undefined}
-      />
+      {/* P3-11 r3 (panel J3 high, J2 / J4 low: "~90 % empty dark with a
+          plain sans heading"): on desktop the head is an INTERMISSION CARD —
+          a silent-film intertitle's double rule round the house-serif title,
+          the lead, the invitation and the bill, centred, the projector's
+          light behind it (app/p3/cinema.css `.films-card`). Phones keep
+          today's head (the wrapper has no rule below 64rem). */}
+      <div className="films-card">
+        <SectionHead
+          id={titleId}
+          label="Intermission"
+          title={copyVisible(h2) ? h2.text : capitalize(worksWords)}
+          intro={copyVisible(lead) ? lead.text : undefined}
+        />
+        {/* P3-11 r1 (films-bill.tsx; desktop only): the invitation to play,
+            right under the lead, then the Intermission's programme */}
+        <FilmsPlay />
+        <FilmsBill works={screens} />
+      </div>
       <div className="mt-tier-block">
         {screens.map((w, i) => (
           <FilmScreen
@@ -84,7 +100,7 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
       </div>
       {/* B35 (the films half of the warm point → the tintype's sun; a
           weight-1 scroll star): its spotlight box at the section's bottom
-          edge (warm-carry.tsx registers it and runs the carry) */}
+          edge (films-desktop.tsx registers it and runs the carry) */}
       <span
         aria-hidden="true"
         data-beat-scroll=""

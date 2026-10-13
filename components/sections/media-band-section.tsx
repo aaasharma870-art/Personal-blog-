@@ -1,21 +1,10 @@
-import { MediaBand } from "@/components/site/media-band";
-import { mediaSrc, resolveMedia } from "@/lib/media";
+import type { ReactNode } from "react";
 import type { SectionProps } from "@/components/sections/types";
 
-/** Manifest adapter: resolves the band's MediaIds to paths, then renders the
- *  existing MediaBand unchanged. A planned video may resolve to a still via
- *  its fallback chain; the band then gets no `video` (never <video src=.webp>). */
-export function MediaBandSection({ entry }: SectionProps<"mediaBand">) {
-  const { image, video, kicker, statement, attribution, converge } = entry.props;
-  const clip = video ? resolveMedia(video) : null;
-  return (
-    <MediaBand
-      image={mediaSrc(image)}
-      video={clip?.kind === "video" ? clip.src : undefined}
-      kicker={kicker}
-      statement={statement}
-      attribution={attribution}
-      converge={converge}
-    />
-  );
-}
+/** RETIRED D-3 layer (P3-11 r3, F4: "cut to make room before adding"). Both
+ *  `mediaBand` entries in lib/page.ts are `enabled: false`, yet the adapter's
+ *  import shipped the whole client MediaBand (≈ 3.4 KB gz) in the first load
+ *  of "/". The slot stays typed for the registry and renders nothing; to bring
+ *  a band back, restore this adapter from git (it rendered
+ *  components/site/media-band.tsx with the entry's resolved media). */
+export const MediaBandSection: (props: SectionProps<"mediaBand">) => ReactNode = () => null;

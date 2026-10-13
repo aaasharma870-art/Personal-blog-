@@ -155,6 +155,8 @@ export default function run({ ROOT, err, warn, film, quotes, css, readFile }) {
     ["app/p3/type.css", exists("app/p3/type.css") ? readFile("app/p3/type.css") : ""],
   ];
   const faceVars = FACES.filter((f) => f.role !== "display").map((f) => f.css);
+  // P3-11 r3: a preloaded `optional` face (the Pirates body) is live from first paint, like the name
+  const optionalVars = FACES.filter((f) => f.preload === "optional").map((f) => f.css);
   const decls = [];
   for (const [file, text] of sheets) for (const d of declarationsOf(text)) decls.push({ ...d, file });
   const inDesktop = (d) => d.stack.some((p) => DESKTOP_MEDIA.test(p));
@@ -168,11 +170,11 @@ export default function run({ ROOT, err, warn, film, quotes, css, readFile }) {
     const live = /^--font-world-(pirates|idiots|rdr2|hp)-(head|body|lead|hand)-live$/.exec(d.prop);
     if (live) {
       const sel = d.stack.filter((p) => !p.startsWith("@")).join(" ");
-      const display = d.value.includes("var(--font-name-pirates)");
+      const display = d.value.includes("var(--font-name-pirates)") || optionalVars.some((v) => d.value.includes(`var(${v})`));
       const token = sel.includes(`data-fonts~="${live[1]}"`) || sel.includes(`data-fonts~='${live[1]}'`);
       const prologue = live[1] === "hp" && live[2] === "head" && /intro-armed/.test(sel);
       if (!inDesktop(d)) err(`fonts: ${d.file} sets ${d.prop} outside @media (min-width: 64rem)`);
-      if (!display && !token && !prologue) err(`fonts: ${d.file} sets ${d.prop} under "${sel}" — only html[data-fonts~="${live[1]}"] may (lazy per world; before the first scroll only the name's face and the house faces load)`);
+      if (!display && !token && !prologue) err(`fonts: ${d.file} sets ${d.prop} under "${sel}" — only html[data-fonts~="${live[1]}"] may (lazy per world; before the first scroll only the name's face, a preloaded optional face and the house faces load)`);
     }
   }
   // the name's @font-face: ≥ 64rem, swap, the public file
@@ -197,11 +199,42 @@ export default function run({ ROOT, err, warn, film, quotes, css, readFile }) {
     }
   }
   if (m.preload > BUDGET.preload) err(`fonts: the preloaded name face is over ${BUDGET.preload} B`);
+  // a preloaded `optional` face (P3-11 r3): public file, @font-face ≥ 64rem with font-display
+  // optional, preloaded with the name's options from app/layout.tsx (a lib/fonts.ts *_FONT_HREF const)
+  for (const f of FACES.filter((x) => x.preload === "optional")) {
+    const fhref = "/" + f.path.replace(/^public\//, "");
+    if (!f.path.startsWith("public/")) err(`fonts: ${f.family} is preloaded (optional) but ${f.path} is not under public/`);
+    const src = decls.find((d) => d.prop === "src" && d.value.includes(fhref));
+    if (!src) err(`fonts: app/globals.css declares no @font-face for ${fhref}`);
+    else {
+      if (!inDesktop(src)) err(`fonts: the ${f.family} @font-face is not under @media (min-width: 64rem)`);
+      // the same @font-face block: from its font-family (just before src) to the next one
+      const at = decls.indexOf(src);
+      let a = at;
+      while (a > 0 && decls[a - 1].stack.join("|") === src.stack.join("|") && decls[a].prop !== "font-family") a--;
+      let b = at;
+      while (b + 1 < decls.length && decls[b + 1].stack.join("|") === src.stack.join("|") && decls[b + 1].prop !== "font-family") b++;
+      const disp = decls.slice(a, b + 1).find((d) => d.prop === "font-display");
+      if (disp?.value !== "optional") err(`fonts: the ${f.family} @font-face needs font-display: optional (preloaded, never swapped late)`);
+    }
+    const k = /export const (\w+_FONT_HREF)\s*=\s*"([^"]+)"/g;
+    const konst = [...fontsTs.matchAll(k)].find((m) => m[2] === fhref)?.[1];
+    if (!konst) err(`fonts: lib/fonts.ts exports no *_FONT_HREF for ${fhref}`);
+    else {
+      const p = new RegExp(`preload\\(\\s*${konst}\\s*,\\s*\\{([\\s\\S]*?)\\}\\s*\\)`).exec(layout)?.[1] ?? "";
+      if (!p) err(`fonts: app/layout.tsx does not preload ${konst}`);
+      else {
+        for (const [kk, v] of [["as", "font"], ["type", "font/woff2"], ["crossOrigin", "anonymous"], ["media", "(min-width: 64rem)"]]) {
+          if (!new RegExp(`${kk}:\\s*"${v.replace(/[()/]/g, "\\$&")}"`).test(p)) err(`fonts: the ${konst} preload in app/layout.tsx needs ${kk}: "${v}"`);
+        }
+      }
+    }
+  }
   // next/font: every face preload false (nothing on the LCP path)
   for (const call of fontsTs.match(/localFont\(\{[\s\S]*?\}\)/g) ?? []) {
     if (!/preload:\s*false/.test(call)) err(`fonts: lib/fonts.ts has a localFont() without preload: false`);
   }
-  for (const f of FACES.filter((x) => x.role !== "display")) {
+  for (const f of FACES.filter((x) => x.role !== "display" && x.preload !== "optional")) {
     const rel = "../" + f.path;
     if (!fontsTs.includes(`"${rel}"`)) err(`fonts: lib/fonts.ts does not load ${f.path} (${f.family})`);
     if (!fontsTs.includes(`variable: "${f.css}"`)) err(`fonts: lib/fonts.ts has no variable "${f.css}" (${f.family})`);

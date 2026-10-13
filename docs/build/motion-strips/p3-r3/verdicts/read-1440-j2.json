@@ -1,0 +1,19 @@
+[
+  {"frame": "C001", "name": "Aryan Sharma", "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar, or 'VIEW THE QUANT PORTFOLIO' under the hero line", "seconds": 1}},
+  {"frame": "C002", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C003", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C004", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C005", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C006", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "Already at the work: 'The kill-list' with Quantitative Trading Research listed; the top-bar 'SKIP TO THE RESEARCH' pill also works", "seconds": 1}},
+  {"frame": "C007", "name": null, "cantRead": ["The quill nib sits on the end of the 'PHILOSOPHY' headline and fades the letters 'HY' (still guessable)"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C008", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C009", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C010", "name": "Aryan Sharma", "cantRead": ["The small 'CREDITS' eyebrow label is half hidden under the sticky header"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C011", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C012", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "Already at the research: the 'Quantitative Trading Research' flagship heading with a Trading_Algos- repo link; the top-bar 'SKIP TO THE RESEARCH' pill also works", "seconds": 1}},
+  {"frame": "C013", "name": "Aryan Sharma", "cantRead": ["The first line of the heading ('A builder of') is cut off under the sticky header"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C014", "name": "Aryan", "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C015", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar; the 'Led by what survived scrutiny.' section is the work itself", "seconds": 1}},
+  {"frame": "C016", "name": null, "cantRead": ["A faded line of body text at the very top under the header ('...it failed me first. Step through it.') is semi-transparent"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C017", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}}
+]

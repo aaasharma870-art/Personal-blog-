@@ -1,0 +1,209 @@
+{
+  "judge": "J9 HONEST",
+  "round": 2,
+  "build": "dedd0f1 (.next BUILD_ID 8TgM2gqGAwJt5j9Q22vFG)",
+  "date": "2026-10-04",
+  "score": 4,
+  "scoreNote": "Honesty and accessibility hold on every listed rule. The evidence is strong for sound, Pause and reduced motion, the research font, AA, one h1, hydration and the fast lane. Points off: a paused or reduced-motion reload reflows after hydration (a regression from round 1), the kill-list eyebrow overclaims, community-sourced quotes are not gated by RELEASE, and the report and the qa no-JS evidence each have a weak spot.",
+  "release": {
+    "failsOnlyOnOwnerItems": true,
+    "evidence": "R/honest/release.txt: exit 1, 46 errors = 40 'Check L2 awaits Aryan's countersignature' (L01–L23 + posters, SEQ-HALL, SEQ-HALL-end) + 5 TTS rows in SOUNDS.md ('to confirm' / 'to approve': lumos, mischief, nox, parley, solemn) + 1 unsigned-copy error listing 104 strings (counted: 104), all wired into the page, each to be signed by Aryan in lib/film.ts. No other error line. R/honest/check.txt: exit 0, 66 warnings (40 of them are the same L2 items as release-gate warnings). Not in J9's inputs: `npx eslint .` and `npm run build`, which the merge gate also needs."
+  },
+  "rules": [
+    {
+      "rule": "Never invent facts; new copy is proposed and unsigned (listed for Aryan)",
+      "status": "green",
+      "evidence": "The two new round-2 strings are in the release list as unsigned: copy.films.play 'Something to play, too: 12 easter eggs hide on this page (your count is at the top right), the homemade drone flies in Systems, and Dead Eye marks the kill-list.' and copy.egg.hunt.chip.word 'Egg hunt'. Every claim in films.play matches the captures: 12 eggs (check: hunt 12 eggs; keyboard count 12), chip at top right (every frame), drone in #systems (Tab stop 34, button#drone-takeoff), Dead Eye in #kill-list (stop 35), and the two links resolve (stops 45/46). Other P3 microcopy seen in frames (fast lane, chip, sound, director's cut, chapters, drone/Dead Eye HUD, act loglines, intro titles) is in the 104-string list. A few visible lines are not in the list ('Skip intro', '↑ Back to the opening', 'To be continued.', 'Catch the snitch', 'Next step', the RM Lumos toast); their provenance should be confirmed (finding F8). No banned words seen."
+    },
+    {
+      "rule": "Sharpe, PSR and PF figures are never animated or counted up",
+      "status": "green",
+      "evidence": "Every capture shows the figures as static text: rm-14-kill-list-611 and the reader frames f01410–f01423 (kill-list clips #128–129) show 'Blind-test Sharpe +1.19 (one-shot; in-sample +1.42)', 'profit factor 2.0–2.5 OOS · PSR 0.92' and 'OOS Sharpe 1.13' with the same values in every frame. The B29 lens only changes the emphasis of the whole row (brighter title and text); the digits do not tween. The numbers that do move are not research ratios ('3,000+' Monte-Carlo shuffles; the synthetic 'INDEX 330.0', which is labelled). No probe measures count-up directly, so this rests on frames only."
+    },
+    {
+      "rule": "Research data is set in Geist",
+      "status": "green",
+      "evidence": "research-font passes at 1440, 1024 and RM: 246 / 246 / 244 figures checked across 16 islands; Geist Mono 186/186/184 and Geist 60; 0 offenders."
+    },
+    {
+      "rule": "Caveats sit next to their claims; synthetic visuals are labelled",
+      "status": "green",
+      "evidence": "Volatility Breakout's figure line is followed directly by 'deflated Sharpe sits below my own threshold — its case rests on surviving the blind test, not on clearing every gate' and an EXCEPTION tag. The Work standing rule (Sharpe 2.0 = curve-fit until proven) sits beside the figures. The Experiment carries 'SYNTHETIC · ILLUSTRATIVE' and 'clearly labelled as illustrative / simulated, never real performance'. 'Run 12 illustrative hypotheses' is labelled. The Option Alpha appendix summary reads 'a paper portfolio on a no-code platform; not a proven edge'. Two watch items: the eyebrow '3 SURVIVED THE FULL PROCESS' contradicts the Volatility Breakout caveat (F2), and the survivor rows 04 and 05 show no limitation of their own (F6)."
+    },
+    {
+      "rule": "Writing drafts carry a visible DRAFT label and are not links",
+      "status": "green",
+      "evidence": "rm-20 and rm-21 show 'ENTRY I · METHODOLOGY · DRAFT', 'ENTRY II · RESEARCH · DRAFT', 'ENTRY III · ORIGINS · DRAFT' and 'ENTRY IV · DISCIPLINE · DRAFT'. The keyboard walk holds no link in #writing; its only stop is the egg button#egg-rd-bone."
+    },
+    {
+      "rule": "Reduced motion stops all motion and sound",
+      "status": "green",
+      "evidence": "qa (both widths): 0 running animations and 0 playing videos in 11 sections. Decoder under RM: maxPlaying 0 on the intro and the scroll. Sound under RM: disabled, 0 sounds made, note 'Sound follows motion: resume motion to hear it'. GL tier off with 0 canvases; spotlight not loaded; cards: 0 phases, 0 impacts, no sticky; Lenis off. motion.js rm: 59.7 / 59.8 fps, 0 pops, CLS 0. RM frames rm-01–03 are static and complete; the drone shows its flight plan; the candles are all lit with no toy. Gap: qa samples 11 of the 20 sections."
+    },
+    {
+      "rule": "Pause stops all motion and sound",
+      "status": "green",
+      "evidence": "qa Pause: 0 animations and 0 videos in 11 sections; Lenis gone after Pause. Probes: lenis.pause gone in 3/5 ms; sound.pause off in 4 ms, toggle disabled while paused; layout-gates.pauseMid shift 0, boxes identical, scroll kept (both widths); words.pause armedAt100ms 0; drone.pause 9/5 ms; hunt.pause shows no toast, veil or bloom; toys.pause shows no bloom; dc.pause passes. Keyboard op.pause passes (no egg counted, no toast). The typed spell 'lumos' resumes motion, which is the user's own command."
+    },
+    {
+      "rule": "Exactly one h1",
+      "status": "green",
+      "evidence": "qa h1 = 1 (JS, no-JS and media blocked, both widths); scenes checks h1 = 1 for default, alt and rm at 1440 and 1024; font-network oneH1 true. In the served HTML the h1 is in the visible #top."
+    },
+    {
+      "rule": "AA contrast",
+      "status": "green",
+      "evidence": "aa-scrim passes with 0 failures over 520/514 live boxes. Its worst live sample is 3.78 for the About caption 'PIRATES OF THE CARIBBEAN' (large display text, so the 3:1 threshold applies; 5.11 under RM). The static check covers 348 cells and its tightest text cell is 4.65 (color-muted on idi-overlay). Frames show readable text throughout, including the kill-list lens-dimmed rows and the parchment Writing and Principles pages. Notes: an uncounted non-live RM 1024 sample of 1.67 (F7), and the probe does not sample the kill-list lens state."
+    },
+    {
+      "rule": "No hydration errors",
+      "status": "green",
+      "evidence": "qa hydration [] and 0 console errors at both widths (the 69/68 lines all come from the deliberate media-blocked context); scenes checks hydration [] and consoleErrors [] at 1440, 1024 and 390. The only probe console line is the expected 404 from lenis off.404. The chip's server '–/12' becomes '0/12' after mount without an error."
+    },
+    {
+      "rule": "The intro never gates content; 'Skip to the research' is always visible",
+      "status": "green",
+      "evidence": "The fast lane is visible in every frame: the intro play screen and flight (top right, next to 'Skip intro'), the hero, every section, RM and no-JS. lenis.fastlane: overlaySeen true, pillCovered false, lands on #work at 92 px. Keyboard reach.fastlane is stop 3, and jump.fastlane focuses h2#work-title (also under RM). dc.fastlane passes, and the header (z 40) sits above the cut (z 35). no-JS introVisible false. Nit: during the intro at 1024 the pill is the 7th Tab stop, against the 2nd at 1440 (F9)."
+    },
+    {
+      "rule": "No-JS shows every section",
+      "status": "green",
+      "evidence": "Spot check of the served HTML from the same .next build (browser user agent): 19 of the 20 sections (act-1 to credits) are streamed into `<div hidden id=\"S:n\">` with empty Suspense fallbacks. The head carries `<noscript><style>@layer theme{body>div[hidden][id^=\"S:\"]{display:block!important}}</style></noscript>`, which un-hides them in order when JS is off. The Gauntlet has its own noscript list of the 7 gates. qa no-JS: h1 1, hiddenText [], introVisible false, and the raw no-JS shots show section content. Caveat (F4): qa's own no-JS evidence is weak. Its 'sections' field lists only [top, credits], and its shots have a dark unpainted band with the header drawn mid-frame (clip artifacts). The streamed sections also sit outside <main> without JS."
+    },
+    {
+      "rule": "Sound is muted by default",
+      "status": "green",
+      "evidence": "sound.muted.default at both widths: pressed false, 0 sounds made, 0 audio requests. Audio files load only after unmute (beforeUnmute 0, 5 requests / 46,946 B after). Under RM the toggle is disabled with 0 made. The tab-hidden check stops sound in 46/54 ms."
+    },
+    {
+      "rule": "Keyboard: every control is operable by keyboard alone",
+      "status": "green",
+      "evidence": "The walk has 73 stops (70 under RM), 0 off-view, 0 covered, and wraps. Chip, sound, Pause, menu, coin, kraken, Run, chalk heart, drone, Dead Eye, pen, eagle, bone, fire, Lumos and Snitch all pass, and all 12 eggs count by keyboard at both widths and under RM. Map and palette open with focus inside, Esc closes them in 11–26 ms, and focus returns to a link. op.compass fails because the probe now picks the hero's static aria-hidden compass (probe drift). The diag read shows About's toy rotating 275.0 → 45.3 (click) → 225.0 (ArrowRight), so Enter on the real toy is not re-proven by keyboard this round (F5)."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "area": "a11y / reduced motion",
+      "title": "A paused or reduced-motion reload reflows after hydration, a regression from round 1",
+      "evidence": "layout-gates.pausedReload fails at both widths: streamed layout 39,852 px, 3 s later 39,759 px. The first boxes that move are #about, #journey, #act-2, #work, #trading-algos and #optuna-screener. Under --rm the gap is 39,852 → 37,754 px (journey 3,209 → 1,204 px), so the server always streams the motion layout. Round 1 had identical heights (39,779 both), per the MANIFEST. motion.js rm reports CLS 0 only because the change is below the fold on a top-of-page load. The manifest's 'the reduced-motion layout shift (about/journey) is gone' holds for CLS, not for the reflow.",
+      "impact": "A reduced-motion or paused user who arrives on a deep link (e.g. /#work) or restores a scroll position can be displaced by up to about 2,000 px once hydration collapses Journey. That is a large unrequested jump for exactly the users who asked for stillness. A hash load under RM is not tested.",
+      "recommendation": "Give the RM/paused Journey its final height in CSS (prefers-reduced-motion, or a data attribute set by an inline pre-paint script from sessionStorage) so the server layout already matches. Then add a hash-load check under --rm to layout-gates or lenis.",
+      "owner": "fixer"
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "area": "honesty / caveats",
+      "title": "The kill-list eyebrow '3 SURVIVED THE FULL PROCESS' contradicts the Volatility Breakout caveat",
+      "evidence": "D30-kill-list and rm-13 show the eyebrow 'THE RECKONING · 3 SURVIVED THE FULL PROCESS'. On rm-14 the same section's row 03 is tagged 'SURVIVED · EXCEPTION' and says its case rests 'on surviving the blind test, not on clearing every gate'. FIG. 1 also says 'SURVIVORS · 3 STRATEGIES'.",
+      "impact": "The headline overstates one survivor. The caveat is adjacent, which mitigates it, but the eyebrow is what skimmers read.",
+      "recommendation": "Ask Aryan to reword it (his words and facts), e.g. '3 survived · 1 by exception'. Do not invent the wording; propose it as unsigned copy.",
+      "owner": "Aryan"
+    },
+    {
+      "id": "F3",
+      "severity": "low-medium",
+      "area": "honesty / attribution",
+      "title": "Community-sourced film quotes are shown with full attribution, and RELEASE does not gate them",
+      "evidence": "check.txt and release.txt carry warnings only: 'quote Q-PC-1 / Q-PC-3 / Q-3I-3 / Q-RD-1 / Q-RD-2 is COMMUNITY-sourced: verify it in the work before \"confirmed\"'. The page attributes quotes in large type, e.g. '\"Be loyal to what matters.\" ARTHUR MORGAN · RED DEAD REDEMPTION 2 (2018)' (D45) and '\"Not all treasure is silver and gold, mate.\" JACK SPARROW' (D43). The captures cannot show which IDs are rendered.",
+      "impact": "A misattributed line would be an unverifiable claim on a site whose ethos is 'guilty until proven innocent'.",
+      "recommendation": "Make a rendered COMMUNITY-sourced quote a RELEASE error (an owner item like the others), or verify each one against the work before launch.",
+      "owner": "fixer (gate) + Aryan (verify)"
+    },
+    {
+      "id": "F4",
+      "severity": "low",
+      "area": "a11y / evidence quality",
+      "title": "qa's no-JS check does not show what the manifest claims; the page passes on a direct read",
+      "evidence": "qa noJs.sections is ['top','credits'] at both widths, against mediaBlocked's 19 sections. The raw no-JS shots (raw/qa-1440/nojs-*.png, raw/qa-1024/nojs-*.png) show a dark unpainted band covering 25–100 % of the frame, the header drawn mid-frame, and positions that do not match the label ('nojs-contact' shows the kill-list; 1024 'nojs-beyond' is fully dark). My spot check of the served HTML shows that all 19 streamed sections exist and that a noscript style un-hides them. The rule holds; the qa evidence for it does not.",
+      "impact": "A future regression of the noscript un-hide (e.g. the S: id prefix changes in a Next upgrade, or a Tailwind layer reorder) would pass qa unnoticed and hide 19 of 20 sections without JS. Without JS, sections act-1 to credits also render outside <main> (no landmark), and the chip, sound, Pause and menu controls are inert.",
+      "recommendation": "Make qa count visible sections without JS (all 20 expected, each with non-zero height) and take viewport screenshots after scrollIntoView instead of clipping off-viewport regions. Consider a noscript note or hiding the JS-only controls.",
+      "owner": "fixer (tool)"
+    },
+    {
+      "id": "F5",
+      "severity": "low",
+      "area": "report accuracy / keyboard",
+      "title": "The manifest overstates two probe results",
+      "evidence": "(a) MANIFEST §1 hunt says '`complete` gold, 12 credit rows, SEEKER aside', but results.hunt.checks.complete is {done:true, gold:true, rows:12, seeker:false} at 1440 and 1024. (b) MANIFEST says About's compass reaches 45.3° 'after a press', but probes-diag/diag-1440.json records toy.afterClick 45.3 and afterRight 225.0. The keyboard Enter path on the real toy was not exercised this round, because op.compass read the hero's static compass.",
+      "impact": "Small. The triage should not count SEEKER or the compass on Enter as verified.",
+      "recommendation": "Correct the manifest lines. Fix the probe drift (hunt chip text, compass selector scoped to #about) so the next round re-proves these by keyboard.",
+      "owner": "assembler / fixer (probes)"
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "area": "honesty / caveats (Phase 2 info)",
+      "title": "Survivor rows 04 and 05 show results with no limitation beside them",
+      "evidence": "rm-14 and the reader frames: 'VIX-Backwardation Mean-Reversion … Pre-registered holdout PASS · profit factor 2.0–2.5 OOS · PSR 0.92' and 'Regime-Gated Intraday Momentum … OOS Sharpe 1.13 · profitable 9 of 9 years · 100% positive CV paths'. The only qualifier is the status tag 'CANDIDATE → PAPER'. Row 03 has an explicit limitation; these two do not.",
+      "impact": "This is within the letter of the rules (the status tag is a limitation) but weaker than the site's own standard, 'limitations sit next to their claims'.",
+      "recommendation": "Phase 2 (info): ask Aryan for one true limitation line per survivor (sample size, regime, costs). Do not invent one.",
+      "owner": "Aryan (Phase 2)"
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "area": "a11y / contrast measurement",
+      "title": "aa-scrim records a 1.67:1 sample on About body text at 1024 under RM and does not count it",
+      "evidence": "probes-1440-rm aa-scrim widths['1024x768'] about.worst = {ratio:1.67, text:'I judge my work by the parts I control — prepara…', live:false}. failCount is 0 because only live (stage) boxes fail. raw/scenes-1024/rm-02-about.png and D20-about-120 show the paragraph readable, with Jack's compass close below it.",
+      "impact": "Probably a sampling artifact (compass art or a background image behind the sample point), but an uncounted 1.67 is not evidence of AA either way.",
+      "recommendation": "Have aa-scrim report non-live samples under 4.5 as warnings with their coordinates, then confirm or dismiss this one. Also sample the kill-list lens-dimmed rows, which carry the research figures.",
+      "owner": "fixer (tool)"
+    },
+    {
+      "id": "F8",
+      "severity": "low",
+      "area": "honesty / copy provenance",
+      "title": "Some visible microcopy is absent from the 104-string unsigned list; confirm it is signed or pre-Phase-3",
+      "evidence": "Seen in frames or in Tab-walk names but not in the release list: 'Skip intro' (intro), '↑ Back to the opening', 'To be continued.' (credits), 'Catch the snitch' / 'Snitch caught' (button names), 'Next step' (RM Journey), the RM toast 'Lumos: your system asks for reduced motion, so the page stays still.', and the films bill head 'Three films and a game' / 'Intermission' / 'This page borrows its light from three films and a game…'. The check reports '0 drafts + 0 proposed + 0 quotes unsigned' for the copy layer, so these may already be signed.",
+      "impact": "If any is new Phase-3 copy, it would ship without Aryan's signature.",
+      "recommendation": "Run a one-line grep of these strings against the signed registry; add any new ones as proposed and unsigned.",
+      "owner": "assembler"
+    },
+    {
+      "id": "F9",
+      "severity": "low",
+      "area": "a11y / keyboard",
+      "title": "During the intro at 1024, 'Skip to the research' is the 7th Tab stop (2nd at 1440)",
+      "evidence": "lenis.fastlane focusedAt: 2 at 1440 and 7 at 1024 (overlaySeen true in both).",
+      "impact": "A keyboard user on a smaller laptop needs five extra Tabs to leave the intro.",
+      "recommendation": "Keep the fast lane first (after 'Skip to content') in the intro's focus order at every width.",
+      "owner": "fixer"
+    },
+    {
+      "id": "F10",
+      "severity": "info",
+      "area": "a11y / names",
+      "title": "Tab-walk names run text together ('Director's cutMotion is paused', 'The CrossingAct I • …', '01Origin')",
+      "evidence": "The keyboard walk in R/probes-1440-rm-keyboard and R/probes-1440. These may be textContent rather than the computed accessible name.",
+      "impact": "If screen readers get the same names, they would hear 'cutMotion'.",
+      "recommendation": "Check the accessibility tree once. Where it matches, add separators or aria-labels.",
+      "owner": "fixer"
+    },
+    {
+      "id": "F11",
+      "severity": "info",
+      "area": "honesty / wording",
+      "title": "'the homemade drone flies in Systems' (new, unsigned) can be read as Aryan's own drone",
+      "evidence": "copy.films.play and copy.toy.drone.cmd 'Fly the homemade drone'. The Systems plate caption 'THE HOMEMADE DRONE · 3 IDIOTS' makes the film reference clear in context; the films invitation stands alone.",
+      "impact": "Minor ambiguity, not a false claim.",
+      "recommendation": "Aryan may prefer 'the 3 Idiots drone' when he signs. It is his call.",
+      "owner": "Aryan"
+    }
+  ],
+  "spotChecks": [
+    "To settle the no-JS question I served the existing .next build (same BUILD_ID as the capture) on a spare port, 3199, fetched '/' once with a desktop Chrome user agent, parsed it, and stopped the server. I changed no files and did not commit. I read no source code; only the served HTML."
+  ],
+  "inputsRead": [
+    "R/MANIFEST.md (header, §1 keyboard and probe runs, §2 J9, §3)",
+    "R/honest/check.txt, R/honest/release.txt",
+    "R/probes-1440, probes-1024, probes-1440-rm, probes-1440-rm-keyboard p3-probes.json",
+    "R/probes-diag/diag-1440.json",
+    "R/qa/qa-1440.json, qa-1024.json, and raw/qa-*/nojs-*.png",
+    "R/scenes/{1440,1024}/rm-01..03.jpg, sheet-01.jpg, checks.json, rms.json, and raw/scenes-* full-size frames",
+    "R/motion/{1440,1024}/summary.md rm rows, motion/1440/strips/rm-first-60s.jpg",
+    "R/screencast/reader-1440/sheets/sheet-13.jpg and raw frames f01410–f01423"
+  ]
+}

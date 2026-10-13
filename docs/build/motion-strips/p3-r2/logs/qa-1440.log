@@ -1,0 +1,53 @@
+{
+ "console": 69,
+ "hydration": 0,
+ "broken": [],
+ "overflow": {
+  "320": 0,
+  "390": 0,
+  "1024": 0,
+  "1440": 0
+ },
+ "lcp": {
+  "mobile": [
+   {
+    "t": 1332,
+    "el": "IMG.object-cover",
+    "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+    "size": 89604
+   },
+   {
+    "t": 1392,
+    "el": "IMG.object-cover",
+    "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+    "size": 89604
+   },
+   {
+    "t": 1384,
+    "el": "IMG.object-cover",
+    "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+    "size": 89604
+   }
+  ],
+  "desktop": [
+   {
+    "t": 772,
+    "el": "VIDEO.",
+    "url": "http://localhost:3161/media/films/intro-play-loop.webm",
+    "size": 1295973
+   },
+   {
+    "t": 624,
+    "el": "VIDEO.",
+    "url": "http://localhost:3161/media/films/intro-play-loop.webm",
+    "size": 1295973
+   },
+   {
+    "t": 280,
+    "el": "SPAN.block",
+    "url": "",
+    "size": 107550
+   }
+  ]
+ }
+}

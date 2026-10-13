@@ -1,0 +1,1336 @@
+{
+ "judge": "J3",
+ "persona": "busy recruiter or engineer, first visit, quick to lose interest",
+ "round": 3,
+ "scoreScale": "0-10 (10 = would happily keep scrolling / perfect pacing / games impossible to miss)",
+ "screens": [
+  {
+   "width": 1440,
+   "screen": 1,
+   "clip": 1,
+   "clips": "1-11",
+   "t": "0:00",
+   "keep": "yes",
+   "why": "Hero lands: name, one-line pitch, glowing wave. But ~9 s of Hogwarts flight before the name, then ~8 s of static hero."
+  },
+  {
+   "width": 1440,
+   "screen": 2,
+   "clip": 12,
+   "clips": "12-15",
+   "t": "0:22",
+   "keep": "yes",
+   "why": "Porthole opens on the ghost ship: quick and striking. Then an 8 s hold on one picture with a one-line caption."
+  },
+  {
+   "width": 1440,
+   "screen": 3,
+   "clip": 16,
+   "clips": "16-17",
+   "t": "0:30",
+   "keep": "yes",
+   "why": "'A research journal in four acts' plus a five-item contents list: orients me and hints there is play. Small grey type."
+  },
+  {
+   "width": 1440,
+   "screen": 4,
+   "clip": 18,
+   "clips": "18-21",
+   "t": "0:34",
+   "keep": "yes",
+   "why": "'A builder of quantitative systems.' plus short bio and four traits: finally says who and what. Dense small text, but fits one screen."
+  },
+  {
+   "width": 1440,
+   "screen": 5,
+   "clip": 22,
+   "clips": "22-24",
+   "t": "0:42",
+   "keep": "yes",
+   "why": "'How the methodology was earned': harbour picture plus a route mini-map. A story with a visual device."
+  },
+  {
+   "width": 1440,
+   "screen": 6,
+   "clip": 25,
+   "clips": "25-26",
+   "t": "0:48",
+   "keep": "yes",
+   "why": "Step 2 (Pine Script) while the picture dissolves to a storm: the image keeps changing."
+  },
+  {
+   "width": 1440,
+   "screen": 7,
+   "clip": 27,
+   "clips": "27-28",
+   "t": "0:52",
+   "keep": "yes",
+   "why": "'They failed out-of-sample': an honest failure story over a teal wave. A real hook for a quant reader."
+  },
+  {
+   "width": 1440,
+   "screen": 8,
+   "clip": 29,
+   "clips": "29-30",
+   "t": "0:56",
+   "keep": "yes",
+   "why": "Step 4, 'a validation methodology of my own', on a sunset sea. Tail is ~2 s of near-empty sea (Kraken's Storm)."
+  },
+  {
+   "width": 1440,
+   "screen": 9,
+   "clip": 31,
+   "clips": "31-33",
+   "t": "1:00",
+   "keep": "yes",
+   "why": "Wave tears open onto the 3 Idiots chalkboard; 'Treat every backtest as guilty until proven innocent' is a great line."
+  },
+  {
+   "width": 1440,
+   "screen": 10,
+   "clip": 34,
+   "clips": "34-35",
+   "t": "1:06",
+   "keep": "no",
+   "why": "Mid-transition: dim pen photo and a tiny drone glyph; no heading in the 2 s stop, nothing to read."
+  },
+  {
+   "width": 1440,
+   "screen": 11,
+   "clip": 36,
+   "clips": "36-39",
+   "t": "1:10",
+   "keep": "yes",
+   "why": "'Led by what survived scrutiny.' is a clear rigor promise. But six identical dwell frames and a lot of empty dark."
+  },
+  {
+   "width": 1440,
+   "screen": 12,
+   "clip": 40,
+   "clips": "40-41",
+   "t": "1:18",
+   "keep": "yes",
+   "why": "Seven-part validation gauntlet beside a chalkboard bar chart: real substance with a visual."
+  },
+  {
+   "width": 1440,
+   "screen": 13,
+   "clip": 42,
+   "clips": "42-44",
+   "t": "1:22",
+   "keep": "yes",
+   "why": "Flagship 'Quantitative Trading Research': what I came for. Very small text, lower-left half of the screen empty dark."
+  },
+  {
+   "width": 1440,
+   "screen": 14,
+   "clip": 45,
+   "clips": "45-46",
+   "t": "1:28",
+   "keep": "yes",
+   "why": "Blue blueprint board plus hand-circled results (3 survivors, +1.19, 470): concrete numbers."
+  },
+  {
+   "width": 1440,
+   "screen": 15,
+   "clip": 47,
+   "clips": "47-48",
+   "t": "1:32",
+   "keep": "no",
+   "why": "'What is a machine?' classroom interlude breaks the project read; another film plate, seen it."
+  },
+  {
+   "width": 1440,
+   "screen": 16,
+   "clip": 49,
+   "clips": "49-51",
+   "t": "1:36",
+   "keep": "yes",
+   "why": "Second flagship, 'Automated Strategy Research Pipeline': blueprint, heading, new photo."
+  },
+  {
+   "width": 1440,
+   "screen": 17,
+   "clip": 52,
+   "clips": "52-53",
+   "t": "1:42",
+   "keep": "yes",
+   "why": "Stats row (3,000+ / 25% / 10-15) and drone-on-lawn photo. Bullets are dense but the numbers scan."
+  },
+  {
+   "width": 1440,
+   "screen": 18,
+   "clip": 54,
+   "clips": "54-56",
+   "t": "1:46",
+   "keep": "yes",
+   "why": "'See the thesis, not just read it.': a chart with a scenario toggle invites a click."
+  },
+  {
+   "width": 1440,
+   "screen": 19,
+   "clip": 57,
+   "clips": "57-58",
+   "t": "1:52",
+   "keep": "yes",
+   "why": "Equity curve draws itself as I scroll, then the drone photo rises in."
+  },
+  {
+   "width": 1440,
+   "screen": 20,
+   "clip": 59,
+   "clips": "59-61",
+   "t": "1:56",
+   "keep": "yes",
+   "why": "'What I can actually do.' under the drone photo with a Take off chip: the skills part, human and concrete."
+  },
+  {
+   "width": 1440,
+   "screen": 21,
+   "clip": 62,
+   "clips": "62-63",
+   "t": "2:02",
+   "keep": "no",
+   "why": "Systems map: near-empty dark screen, faint small text and a blue board. Dead area."
+  },
+  {
+   "width": 1440,
+   "screen": 22,
+   "clip": 64,
+   "clips": "64-66",
+   "t": "2:06",
+   "keep": "yes",
+   "why": "'The kill-list' with a Dead Eye pill: ideas that failed, credible and unusual. Reuses the pen picture from a minute ago."
+  },
+  {
+   "width": 1440,
+   "screen": 23,
+   "clip": 67,
+   "clips": "67-68",
+   "t": "2:12",
+   "keep": "no",
+   "why": "A list of strategy names in tiny type, row after row; the bracket glyph hopping between rows is unexplained."
+  },
+  {
+   "width": 1440,
+   "screen": 24,
+   "clip": 69,
+   "clips": "69-70",
+   "t": "2:16",
+   "keep": "no",
+   "why": "More list rows, then a dark tail before the next card; nothing new."
+  },
+  {
+   "width": 1440,
+   "screen": 25,
+   "clip": 71,
+   "clips": "71-73",
+   "t": "2:20",
+   "keep": "yes",
+   "why": "'Three films and a game' card explains the concept and the egg hunt; four act buttons. Four seconds on a mostly dark card."
+  },
+  {
+   "width": 1440,
+   "screen": 26,
+   "clip": 74,
+   "clips": "74-75",
+   "t": "2:26",
+   "keep": "no",
+   "why": "Black Pearl again (third sighting after the hero horizon and the Act I porthole): seen it."
+  },
+  {
+   "width": 1440,
+   "screen": 27,
+   "clip": 76,
+   "clips": "76-77",
+   "t": "2:30",
+   "keep": "yes",
+   "why": "Yellow scooter at Pangong Lake, 'Aal izz well.': fresh bright image, one quote, quick."
+  },
+  {
+   "width": 1440,
+   "screen": 28,
+   "clip": 78,
+   "clips": "78",
+   "t": "2:34",
+   "keep": "yes",
+   "why": "Red tree and 'Be loyal to what matters.': strong colour shift, short."
+  },
+  {
+   "width": 1440,
+   "screen": 29,
+   "clip": 79,
+   "clips": "79-80",
+   "t": "2:36",
+   "keep": "yes",
+   "why": "Hogwarts Express viaduct and a Dumbledore line: new picture, quick."
+  },
+  {
+   "width": 1440,
+   "screen": 30,
+   "clip": 81,
+   "clips": "81-82",
+   "t": "2:40",
+   "keep": "yes",
+   "why": "Dark tail, then the next act heading and a light streak arrive; something is coming."
+  },
+  {
+   "width": 1440,
+   "screen": 31,
+   "clip": 83,
+   "clips": "83-85",
+   "t": "2:44",
+   "keep": "yes",
+   "why": "Golden-hour grade comes up on the landscape: the most cinematic moment of the page."
+  },
+  {
+   "width": 1440,
+   "screen": 32,
+   "clip": 86,
+   "clips": "86-89",
+   "t": "2:50",
+   "keep": "no",
+   "why": "Same sunset held ~8 s for a two-line 'Discipline, service, and a trained eye.' Slow, nothing new."
+  },
+  {
+   "width": 1440,
+   "screen": 33,
+   "clip": 90,
+   "clips": "90",
+   "t": "2:58",
+   "keep": "yes",
+   "why": "'Discipline, in three arenas' with a hand-drawn route map on tan paper: charming and human."
+  },
+  {
+   "width": 1440,
+   "screen": 34,
+   "clip": 91,
+   "clips": "91-92",
+   "t": "3:00",
+   "keep": "no",
+   "why": "Horse silhouette plus two small text columns (family legacy, showing up): dense personal detail, off-topic for hiring."
+  },
+  {
+   "width": 1440,
+   "screen": 35,
+   "clip": 93,
+   "clips": "93-94",
+   "t": "3:04",
+   "keep": "yes",
+   "why": "'What's in the satchel': camera, sketchbook, drone, running shoes drawn as an inventory; looks hoverable."
+  },
+  {
+   "width": 1440,
+   "screen": 36,
+   "clip": 95,
+   "clips": "95-96",
+   "t": "3:08",
+   "keep": "yes",
+   "why": "WANTED poster for Aryan Sharma: witty, memorable, then the paper lifts in."
+  },
+  {
+   "width": 1440,
+   "screen": 37,
+   "clip": 97,
+   "clips": "97-99",
+   "t": "3:12",
+   "keep": "no",
+   "why": "Cream journal 'Thinking in public, soon.': lovely palette flip but nothing to read yet."
+  },
+  {
+   "width": 1440,
+   "screen": 38,
+   "clip": 100,
+   "clips": "100-101",
+   "t": "3:18",
+   "keep": "no",
+   "why": "Draft entry titles and doodles, again no content; placeholder."
+  },
+  {
+   "width": 1440,
+   "screen": 39,
+   "clip": 102,
+   "clips": "102",
+   "t": "3:22",
+   "keep": "yes",
+   "why": "Paper dissolves into a pine skyline at night: a great transition."
+  },
+  {
+   "width": 1440,
+   "screen": 40,
+   "clip": 103,
+   "clips": "103-106",
+   "t": "3:24",
+   "keep": "yes",
+   "why": "'In their words.' teacher quotes over a campfire: social proof, readable."
+  },
+  {
+   "width": 1440,
+   "screen": 41,
+   "clip": 107,
+   "clips": "107-108",
+   "t": "3:32",
+   "keep": "no",
+   "why": "More quote text, then a campfire image wipe: transitional and repetitive."
+  },
+  {
+   "width": 1440,
+   "screen": 42,
+   "clip": 109,
+   "clips": "109-111",
+   "t": "3:36",
+   "keep": "yes",
+   "why": "Great Hall full-bleed with a candle iris and 'The Light': stunning, readable caption."
+  },
+  {
+   "width": 1440,
+   "screen": 43,
+   "clip": 112,
+   "clips": "112-113",
+   "t": "3:42",
+   "keep": "yes",
+   "why": "The 'Map of the Principles' parchment rises from the bottom: cinematic."
+  },
+  {
+   "width": 1440,
+   "screen": 44,
+   "clip": 114,
+   "clips": "114-117",
+   "t": "3:46",
+   "keep": "yes",
+   "why": "'A small philosophy of work.' on the Marauder's Map with a footprint trail: clear heading, cute."
+  },
+  {
+   "width": 1440,
+   "screen": 45,
+   "clip": 118,
+   "clips": "118-119",
+   "t": "3:54",
+   "keep": "no",
+   "why": "Principles 2-4 in the same parchment card layout: repeated, seen it."
+  },
+  {
+   "width": 1440,
+   "screen": 46,
+   "clip": 120,
+   "clips": "120-122",
+   "t": "3:58",
+   "keep": "yes",
+   "why": "Parchment ends and contact lands: 'Let's talk research, markets, or building systems that are honest about their limits' plus an email button. The payoff I would act on."
+  },
+  {
+   "width": 1440,
+   "screen": 47,
+   "clip": 123,
+   "clips": "123-125",
+   "t": "4:04",
+   "keep": "no",
+   "why": "Contact scrolls away; credits start in tiny type: end of useful content."
+  },
+  {
+   "width": 1440,
+   "screen": 48,
+   "clip": 126,
+   "clips": "126-127",
+   "t": "4:10",
+   "keep": "no",
+   "why": "Credits and fan-tribute fine print, small and static: I would stop."
+  },
+  {
+   "width": 1440,
+   "screen": 49,
+   "clip": 128,
+   "clips": "128",
+   "t": "4:14",
+   "keep": "no",
+   "why": "Final near-black frame with 'Mischief managed.': a fine ending, nothing left to scroll."
+  },
+  {
+   "width": 1024,
+   "screen": 1,
+   "clip": 1,
+   "clips": "1-10",
+   "t": "0:00",
+   "keep": "yes",
+   "why": "Hero lands: name, pitch, glowing wave. ~9 s of flight before the name, ~8 s static hero after."
+  },
+  {
+   "width": 1024,
+   "screen": 2,
+   "clip": 11,
+   "clips": "11-14",
+   "t": "0:20",
+   "keep": "yes",
+   "why": "Porthole opens on the ghost ship, 'The Crossing' flashes; striking, then an 8 s hold on one picture."
+  },
+  {
+   "width": 1024,
+   "screen": 3,
+   "clip": 15,
+   "clips": "15",
+   "t": "0:28",
+   "keep": "yes",
+   "why": "'A research journal in four acts' plus contents list: orients me."
+  },
+  {
+   "width": 1024,
+   "screen": 4,
+   "clip": 16,
+   "clips": "16-19",
+   "t": "0:30",
+   "keep": "yes",
+   "why": "'A builder of quantitative systems.' with bio: clear, but a 6 s dwell on a text block."
+  },
+  {
+   "width": 1024,
+   "screen": 5,
+   "clip": 20,
+   "clips": "20-21",
+   "t": "0:38",
+   "keep": "no",
+   "why": "Second text block: four small grey traits on a dim image, compass medallion sits over the columns. Text wall."
+  },
+  {
+   "width": 1024,
+   "screen": 6,
+   "clip": 22,
+   "clips": "22-23",
+   "t": "0:42",
+   "keep": "yes",
+   "why": "'How the methodology was earned': harbour picture plus route mini-map."
+  },
+  {
+   "width": 1024,
+   "screen": 7,
+   "clip": 24,
+   "clips": "24-25",
+   "t": "0:46",
+   "keep": "yes",
+   "why": "Pine Script step while the picture dissolves to a storm."
+  },
+  {
+   "width": 1024,
+   "screen": 8,
+   "clip": 26,
+   "clips": "26-27",
+   "t": "0:50",
+   "keep": "yes",
+   "why": "'They failed out-of-sample' on a teal wave, then the sunset step: good story beats."
+  },
+  {
+   "width": 1024,
+   "screen": 9,
+   "clip": 28,
+   "clips": "28",
+   "t": "0:54",
+   "keep": "no",
+   "why": "Kraken's Storm sea transition: mostly empty teal with a caption. Dead area."
+  },
+  {
+   "width": 1024,
+   "screen": 10,
+   "clip": 29,
+   "clips": "29-31",
+   "t": "0:56",
+   "keep": "yes",
+   "why": "3 Idiots chalkboard with the drone doodle and 'Aal izz well': strong picture, witty caption."
+  },
+  {
+   "width": 1024,
+   "screen": 11,
+   "clip": 32,
+   "clips": "32-33",
+   "t": "1:02",
+   "keep": "no",
+   "why": "'The Workshop' title flashes as the picture slides away; dim in-between frames, nothing to read."
+  },
+  {
+   "width": 1024,
+   "screen": 12,
+   "clip": 34,
+   "clips": "34-37",
+   "t": "1:06",
+   "keep": "yes",
+   "why": "'Led by what survived scrutiny.' over the pen photo; four 2 s windows of static layout."
+  },
+  {
+   "width": 1024,
+   "screen": 13,
+   "clip": 38,
+   "clips": "38",
+   "t": "1:14",
+   "keep": "yes",
+   "why": "Seven-part validation gauntlet list beside a chalkboard bar chart."
+  },
+  {
+   "width": 1024,
+   "screen": 14,
+   "clip": 39,
+   "clips": "39-41",
+   "t": "1:16",
+   "keep": "yes",
+   "why": "Flagship 'Quantitative Trading Research' with the corridor image."
+  },
+  {
+   "width": 1024,
+   "screen": 15,
+   "clip": 42,
+   "clips": "42-43",
+   "t": "1:22",
+   "keep": "yes",
+   "why": "Blueprint board and bullets."
+  },
+  {
+   "width": 1024,
+   "screen": 16,
+   "clip": 44,
+   "clips": "44",
+   "t": "1:26",
+   "keep": "yes",
+   "why": "Results (3 survivors, +1.19, 470) with a hand-circled sentence: numbers I can scan."
+  },
+  {
+   "width": 1024,
+   "screen": 17,
+   "clip": 45,
+   "clips": "45-46",
+   "t": "1:28",
+   "keep": "no",
+   "why": "'What is a machine?' interlude breaks the project flow; seen-it plate."
+  },
+  {
+   "width": 1024,
+   "screen": 18,
+   "clip": 47,
+   "clips": "47-49",
+   "t": "1:32",
+   "keep": "yes",
+   "why": "Second flagship heading with new bench and campus pictures."
+  },
+  {
+   "width": 1024,
+   "screen": 19,
+   "clip": 50,
+   "clips": "50",
+   "t": "1:38",
+   "keep": "yes",
+   "why": "Stats column (3,000+ / 25% / 10-15) beside the drone photo."
+  },
+  {
+   "width": 1024,
+   "screen": 20,
+   "clip": 51,
+   "clips": "51-52",
+   "t": "1:40",
+   "keep": "no",
+   "why": "More mono micro-text beside the same photo: clutter."
+  },
+  {
+   "width": 1024,
+   "screen": 21,
+   "clip": 53,
+   "clips": "53-55",
+   "t": "1:44",
+   "keep": "yes",
+   "why": "'See the thesis' plus equity curve and toggle: interactive hook."
+  },
+  {
+   "width": 1024,
+   "screen": 22,
+   "clip": 56,
+   "clips": "56",
+   "t": "1:50",
+   "keep": "yes",
+   "why": "'What I can actually do.' with the drone photo and a Take off chip."
+  },
+  {
+   "width": 1024,
+   "screen": 23,
+   "clip": 57,
+   "clips": "57-59",
+   "t": "1:52",
+   "keep": "yes",
+   "why": "Capability list (Research, Markets, Engineering, Evaluation) beside the FIG.3 board: skills, small but scannable."
+  },
+  {
+   "width": 1024,
+   "screen": 24,
+   "clip": 60,
+   "clips": "60-61",
+   "t": "1:58",
+   "keep": "no",
+   "why": "Systems tail: sparse small text and a board, then the kill-list starts; nothing new."
+  },
+  {
+   "width": 1024,
+   "screen": 25,
+   "clip": 62,
+   "clips": "62-64",
+   "t": "2:02",
+   "keep": "yes",
+   "why": "'The kill-list' heading with pen photo and first rows."
+  },
+  {
+   "width": 1024,
+   "screen": 26,
+   "clip": 65,
+   "clips": "65",
+   "t": "2:08",
+   "keep": "no",
+   "why": "List rows: dense and repetitive."
+  },
+  {
+   "width": 1024,
+   "screen": 27,
+   "clip": 66,
+   "clips": "66-67",
+   "t": "2:10",
+   "keep": "no",
+   "why": "More rows, then a dark gap before the intermission."
+  },
+  {
+   "width": 1024,
+   "screen": 28,
+   "clip": 68,
+   "clips": "68-70",
+   "t": "2:14",
+   "keep": "yes",
+   "why": "'Three films and a game' card plus four act buttons."
+  },
+  {
+   "width": 1024,
+   "screen": 29,
+   "clip": 71,
+   "clips": "71",
+   "t": "2:20",
+   "keep": "no",
+   "why": "Black Pearl image again: seen it."
+  },
+  {
+   "width": 1024,
+   "screen": 30,
+   "clip": 72,
+   "clips": "72-73",
+   "t": "2:22",
+   "keep": "yes",
+   "why": "Scooter at Pangong Lake, 'Aal izz well.'"
+  },
+  {
+   "width": 1024,
+   "screen": 31,
+   "clip": 74,
+   "clips": "74",
+   "t": "2:26",
+   "keep": "yes",
+   "why": "Red tree, 'Be loyal to what matters.'"
+  },
+  {
+   "width": 1024,
+   "screen": 32,
+   "clip": 75,
+   "clips": "75-76",
+   "t": "2:28",
+   "keep": "yes",
+   "why": "Hogwarts Express viaduct and quote."
+  },
+  {
+   "width": 1024,
+   "screen": 33,
+   "clip": 77,
+   "clips": "77",
+   "t": "2:32",
+   "keep": "no",
+   "why": "Dark tail with tiny text and a sun dot before Act III: empty."
+  },
+  {
+   "width": 1024,
+   "screen": 34,
+   "clip": 78,
+   "clips": "78-80",
+   "t": "2:34",
+   "keep": "yes",
+   "why": "Golden-hour act card: the sun comes up."
+  },
+  {
+   "width": 1024,
+   "screen": 35,
+   "clip": 81,
+   "clips": "81-83",
+   "t": "2:40",
+   "keep": "no",
+   "why": "Same sunset held ~6 s for 'Discipline, service, and a trained eye.'"
+  },
+  {
+   "width": 1024,
+   "screen": 36,
+   "clip": 84,
+   "clips": "84-85",
+   "t": "2:46",
+   "keep": "yes",
+   "why": "'Discipline, in three arenas' plus a hand-drawn map card."
+  },
+  {
+   "width": 1024,
+   "screen": 37,
+   "clip": 86,
+   "clips": "86",
+   "t": "2:50",
+   "keep": "no",
+   "why": "Horse silhouette and 'Showing up unprompted': dense, off-topic."
+  },
+  {
+   "width": 1024,
+   "screen": 38,
+   "clip": 87,
+   "clips": "87-88",
+   "t": "2:52",
+   "keep": "no",
+   "why": "'Continuing a family legacy / Training the eye': small text columns again."
+  },
+  {
+   "width": 1024,
+   "screen": 39,
+   "clip": 89,
+   "clips": "89-90",
+   "t": "2:56",
+   "keep": "yes",
+   "why": "Satchel icons, then the WANTED poster rises."
+  },
+  {
+   "width": 1024,
+   "screen": 40,
+   "clip": 91,
+   "clips": "91",
+   "t": "3:00",
+   "keep": "yes",
+   "why": "WANTED poster and the paper-lift."
+  },
+  {
+   "width": 1024,
+   "screen": 41,
+   "clip": 92,
+   "clips": "92-94",
+   "t": "3:02",
+   "keep": "no",
+   "why": "'Thinking in public, soon.' placeholder; the cream flip is lovely though."
+  },
+  {
+   "width": 1024,
+   "screen": 42,
+   "clip": 95,
+   "clips": "95-96",
+   "t": "3:08",
+   "keep": "no",
+   "why": "Draft entries and doodles, no content; a tiny horse gallops at the bottom right."
+  },
+  {
+   "width": 1024,
+   "screen": 43,
+   "clip": 97,
+   "clips": "97",
+   "t": "3:12",
+   "keep": "yes",
+   "why": "Journal dissolves into a pine skyline at night."
+  },
+  {
+   "width": 1024,
+   "screen": 44,
+   "clip": 98,
+   "clips": "98-100",
+   "t": "3:14",
+   "keep": "yes",
+   "why": "'In their words' over the campfire."
+  },
+  {
+   "width": 1024,
+   "screen": 45,
+   "clip": 101,
+   "clips": "101-102",
+   "t": "3:20",
+   "keep": "no",
+   "why": "More quote text, then campfire wipe: transitional."
+  },
+  {
+   "width": 1024,
+   "screen": 46,
+   "clip": 103,
+   "clips": "103-104",
+   "t": "3:24",
+   "keep": "yes",
+   "why": "Great Hall with candle iris and 'The Light'."
+  },
+  {
+   "width": 1024,
+   "screen": 47,
+   "clip": 105,
+   "clips": "105-106",
+   "t": "3:28",
+   "keep": "yes",
+   "why": "Hall held, then the Map of the Principles parchment rises."
+  },
+  {
+   "width": 1024,
+   "screen": 48,
+   "clip": 107,
+   "clips": "107-110",
+   "t": "3:32",
+   "keep": "yes",
+   "why": "'A small philosophy of work.' on the parchment (4 s static)."
+  },
+  {
+   "width": 1024,
+   "screen": 49,
+   "clip": 111,
+   "clips": "111-112",
+   "t": "3:40",
+   "keep": "no",
+   "why": "Principles 1-3 stacked: repeated card layout, tiny footprint icons."
+  },
+  {
+   "width": 1024,
+   "screen": 50,
+   "clip": 113,
+   "clips": "113",
+   "t": "3:44",
+   "keep": "no",
+   "why": "Principles 3-5: more of the same."
+  },
+  {
+   "width": 1024,
+   "screen": 51,
+   "clip": 114,
+   "clips": "114-116",
+   "t": "3:46",
+   "keep": "yes",
+   "why": "Parchment closes and the contact heading arrives."
+  },
+  {
+   "width": 1024,
+   "screen": 52,
+   "clip": 117,
+   "clips": "117-119",
+   "t": "3:52",
+   "keep": "yes",
+   "why": "Contact: heading, email button, GitHub: the payoff. 'Resume coming soon' is the catch."
+  },
+  {
+   "width": 1024,
+   "screen": 53,
+   "clip": 120,
+   "clips": "120-121",
+   "t": "3:58",
+   "keep": "no",
+   "why": "Credits in tiny type and the fan-tribute disclaimer."
+  },
+  {
+   "width": 1024,
+   "screen": 54,
+   "clip": 122,
+   "clips": "122",
+   "t": "4:02",
+   "keep": "no",
+   "why": "'Mischief managed.' and black: the end."
+  }
+ ],
+ "acts": [
+  {
+   "act": "Opening and hero (Hogwarts flight, sea, name)",
+   "screens": "1440: 1-1; 1024: 1-1",
+   "yesRate": {
+    "1440": 1.0,
+    "1024": 1.0
+   },
+   "yesRateText": "1440 1/1; 1024 1/1",
+   "tempo": "slow",
+   "feel": "Ceremonial and gorgeous, but ~9 s before the name and ~8 s of static hero: about 20 s before any information."
+  },
+  {
+   "act": "Act I card and contents (ghost ship, 'A research journal in four acts')",
+   "screens": "1440: 2-3; 1024: 2-3",
+   "yesRate": {
+    "1440": 1.0,
+    "1024": 1.0
+   },
+   "yesRateText": "1440 2/2; 1024 2/2",
+   "tempo": "slow",
+   "feel": "Porthole reveal is brisk for a second, then the ship sits for ~8 s on a one-line caption."
+  },
+  {
+   "act": "About ('A builder of quantitative systems')",
+   "screens": "1440: 4-4; 1024: 4-5",
+   "yesRate": {
+    "1440": 1.0,
+    "1024": 0.5
+   },
+   "yesRateText": "1440 1/1; 1024 1/2",
+   "tempo": "slow",
+   "feel": "The least cinematic part: a text block held 6-8 s; at 1024 it spills into a second text wall."
+  },
+  {
+   "act": "Journey ('How the methodology was earned')",
+   "screens": "1440: 5-8; 1024: 6-9",
+   "yesRate": {
+    "1440": 1.0,
+    "1024": 0.75
+   },
+   "yesRateText": "1440 4/4; 1024 3/4",
+   "tempo": "medium",
+   "feel": "Best rhythm on the page: a step and a new picture every 2-4 s, with a story that has stakes."
+  },
+  {
+   "act": "Act II card, work intro and gauntlet (3 Idiots chalkboard)",
+   "screens": "1440: 9-12; 1024: 10-13",
+   "yesRate": {
+    "1440": 0.75,
+    "1024": 0.75
+   },
+   "yesRateText": "1440 3/4; 1024 3/4",
+   "tempo": "medium",
+   "feel": "Chalkboard reveal is brisk; then a text-only hold of up to 6 s."
+  },
+  {
+   "act": "Projects (flagship research, pipeline, 'See the thesis')",
+   "screens": "1440: 13-19; 1024: 14-21",
+   "yesRate": {
+    "1440": 0.86,
+    "1024": 0.75
+   },
+   "yesRateText": "1440 6/7; 1024 6/8",
+   "tempo": "slow",
+   "feel": "Dense small text and big empty dark; the chart screens liven it up. The part I came for is the heaviest."
+  },
+  {
+   "act": "Systems ('What I can actually do')",
+   "screens": "1440: 20-21; 1024: 22-24",
+   "yesRate": {
+    "1440": 0.5,
+    "1024": 0.67
+   },
+   "yesRateText": "1440 1/2; 1024 2/3",
+   "tempo": "medium",
+   "feel": "Drone photo and heading are lively; the map beneath is sparse."
+  },
+  {
+   "act": "Kill-list",
+   "screens": "1440: 22-24; 1024: 25-27",
+   "yesRate": {
+    "1440": 0.33,
+    "1024": 0.33
+   },
+   "yesRateText": "1440 1/3; 1024 1/3",
+   "tempo": "slow",
+   "feel": "Strong hook, then a table of rows that repeats."
+  },
+  {
+   "act": "Intermission and film plates ('Three films and a game')",
+   "screens": "1440: 25-30; 1024: 28-32",
+   "yesRate": {
+    "1440": 0.83,
+    "1024": 0.8
+   },
+   "yesRateText": "1440 5/6; 1024 4/5",
+   "tempo": "brisk",
+   "feel": "A new picture every ~3 s; the quickest, most watchable run, though it recaps films already shown twice."
+  },
+  {
+   "act": "Act III card and Beyond (golden hour, three arenas, satchel, WANTED)",
+   "screens": "1440: 31-36; 1024: 33-40",
+   "yesRate": {
+    "1440": 0.67,
+    "1024": 0.5
+   },
+   "yesRateText": "1440 4/6; 1024 4/8",
+   "tempo": "medium",
+   "feel": "Sunrise grade is cinematic; then 6-8 s holds on one image and dense side columns, then a quick poster."
+  },
+  {
+   "act": "Writing (cream journal)",
+   "screens": "1440: 37-39; 1024: 41-43",
+   "yesRate": {
+    "1440": 0.33,
+    "1024": 0.33
+   },
+   "yesRateText": "1440 1/3; 1024 1/3",
+   "tempo": "slow",
+   "feel": "Palette flip is great; the pages are 'soon' placeholders, so the 5-6 s feel empty. The skyline dissolve is brisk."
+  },
+  {
+   "act": "Voices ('In their words')",
+   "screens": "1440: 40-41; 1024: 44-45",
+   "yesRate": {
+    "1440": 0.5,
+    "1024": 0.5
+   },
+   "yesRateText": "1440 1/2; 1024 1/2",
+   "tempo": "medium",
+   "feel": "Readable proof, then a transitional wipe."
+  },
+  {
+   "act": "Act IV card and Principles (Great Hall, Marauder's Map)",
+   "screens": "1440: 42-45; 1024: 46-50",
+   "yesRate": {
+    "1440": 0.75,
+    "1024": 0.6
+   },
+   "yesRateText": "1440 3/4; 1024 3/5",
+   "tempo": "slow",
+   "feel": "Great Hall is stunning; the parchment then repeats one card layout for 12-14 s with 4 s static holds."
+  },
+  {
+   "act": "Contact and credits",
+   "screens": "1440: 46-49; 1024: 51-54",
+   "yesRate": {
+    "1440": 0.25,
+    "1024": 0.5
+   },
+   "yesRateText": "1440 1/4; 1024 2/4",
+   "tempo": "slow",
+   "feel": "Contact lands well; credits fade to fine print and black. Natural end."
+  }
+ ],
+ "discovery": [
+  {
+   "thing": "'Play' on the opening screen (the film starts on its own anyway, so it is unclear what Play does)",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "yes"
+  },
+  {
+   "thing": "'Skip to the research / Skip intro' micro-links, top right of the opening",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "yes: I would skip, if I noticed them (tiny)"
+  },
+  {
+   "thing": "Hero buttons 'View the quant portfolio' and 'Director's cut (sound on)'",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "portfolio: yes; Director's cut: no (sound on at a desk)"
+  },
+  {
+   "thing": "'Egg hunt 0/12' pill in the nav (counter stays 0/12 the whole run; nothing says where to look)",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "maybe, only if bored"
+  },
+  {
+   "thing": "Teal bracket on the horizon plus the compass medallion in the hero: look like targets",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "yes"
+  },
+  {
+   "thing": "Compass labelled 'Jack's compass, it points to what you want most' and the route mini-map with 'parley?' and a skull marker",
+   "firstScreen": "4 (1440) / 4 (1024)",
+   "width": "both",
+   "wouldTry": "yes: the mini-map advances as I scroll and 'parley?' begs a click"
+  },
+  {
+   "thing": "Contents list 'A research journal in four acts' (looks like a jump menu); the paragraph there says 12 easter eggs hide on the page and two buttons start games, in tiny type",
+   "firstScreen": 3,
+   "width": "both",
+   "wouldTry": "list: yes; I would not read the paragraph"
+  },
+  {
+   "thing": "Small drone glyph drifting across the pen photo (and sitting on chalkboards)",
+   "firstScreen": "10 (1440) / 11 (1024)",
+   "width": "both",
+   "wouldTry": "yes: moving, unexplained"
+  },
+  {
+   "thing": "Scenario toggle on the chart ('Naive, zero-cost, in-sample' vs 'Realistic costs, out-of-sample') and a self-drawing equity curve",
+   "firstScreen": "18 (1440) / 21 (1024)",
+   "width": "both",
+   "wouldTry": "yes: clearest affordance on the page"
+  },
+  {
+   "thing": "'Take off' chip on the homemade drone photo (a game)",
+   "firstScreen": "20 (1440) / 22 (1024)",
+   "width": "both",
+   "wouldTry": "yes, if I notice it: it is very small and does not pulse"
+  },
+  {
+   "thing": "'Dead Eye' pill beside the kill-list heading",
+   "firstScreen": "22 (1440) / 25 (1024)",
+   "width": "both",
+   "wouldTry": "yes: the name is a hook, but it is unexplained"
+  },
+  {
+   "thing": "'Three films and a game' card: four act buttons and 'Still hunting? Your egg count is at the top right'",
+   "firstScreen": "25 (1440) / 28 (1024)",
+   "width": "both",
+   "wouldTry": "buttons: yes; egg nudge: maybe"
+  },
+  {
+   "thing": "Satchel inventory icons with check marks (camera, sketchbook, drone, running shoes)",
+   "firstScreen": "35 (1440) / 39 (1024)",
+   "width": "both",
+   "wouldTry": "maybe: I would hover once"
+  },
+  {
+   "thing": "WANTED poster with a reply-by-email line",
+   "firstScreen": "36 (1440) / 39-40 (1024)",
+   "width": "both",
+   "wouldTry": "yes"
+  },
+  {
+   "thing": "Tiny black horse galloping across the cream journal page",
+   "firstScreen": "38 (1440) / 42 (1024)",
+   "width": "both",
+   "wouldTry": "yes: I would try to catch it (looks like an egg)"
+  },
+  {
+   "thing": "Candle-glyph 'A S' bracket and the 'Lumos, relights the hall's candles' line on the contact screen",
+   "firstScreen": "46 (1440) / 51-52 (1024)",
+   "width": "both",
+   "wouldTry": "yes, but I only meet it at ~4:00, if I get that far"
+  },
+  {
+   "thing": "Sound and motion icons next to the Egg hunt pill, and Menu",
+   "firstScreen": 1,
+   "width": "both",
+   "wouldTry": "maybe: Menu yes, sound no"
+  }
+ ],
+ "findings": [
+  {
+   "screen": "1440: 1; 1024: 1",
+   "t": "0:00-0:20",
+   "clip": "1440 #1-#10; 1024 #1-#10",
+   "finding": "About 9 s of Hogwarts flight and sea before the name lands (name appears in #5, ~0:09), then the hero sits ~8-10 s with only waves moving. First real information (About) arrives ~0:34 (1440) / ~0:30 (1024). A quick-to-bounce recruiter is gone before the site says what it is.",
+   "severity": "high"
+  },
+  {
+   "screen": "1440: 13, 17; 1024: 14-20",
+   "t": "1:22-1:46 (1440); 1:16-1:44 (1024)",
+   "clip": "1440 #42-#53; 1024 #39-#52",
+   "finding": "The most hiring-relevant part (flagship projects) is the least legible and least visual: small grey body and mono text, big empty dark areas (1440 #43: lower-left half blank), bullet walls (1440 #52-53, 1024 #50-52), while pure mood plates elsewhere get big pictures.",
+   "severity": "high"
+  },
+  {
+   "screen": "1440: 46; 1024: 52",
+   "t": "4:00 (1440); 3:50 (1024)",
+   "clip": "1440 #121-#122; 1024 #116-#117; static scenes/1024 A40-contact",
+   "finding": "Contact shows 'Resume, coming soon' under the email button. A recruiter's most likely action has a placeholder. Also contact is reached only after ~4 minutes.",
+   "severity": "high"
+  },
+  {
+   "screen": "1440: 1; 1024: 1",
+   "t": "0:00-0:06",
+   "clip": "1440 #1-#2; 1024 #1-#2",
+   "finding": "'Play' stays on screen while the flight is already running, so it is unclear whether I started it or should click; the skip links in the top-right corner are tiny grey mono.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 1; 1024: 1",
+   "t": "0:12-0:20",
+   "clip": "1440 #7-#10; 1024 #7-#9",
+   "finding": "Hero identity line ('Self-taught high-school quant, Landon School, class of 2027') and both buttons are tiny mono text; the one line that says who he is is the least visible thing on the screen.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 21, 8 (tail); 1024: 9",
+   "t": "2:02-2:04 and 0:58 (1440); 0:54-0:58 (1024)",
+   "clip": "1440 #62-#63, #30; 1024 #28-#29",
+   "finding": "Dead areas: 1440 #63 is a near-black screen with faint small text and a blue board; the Kraken's Storm transition is 2-3 s of mostly empty teal sea with a caption.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 10; 1024: 11",
+   "t": "1:06-1:10 (1440); 1:02-1:06 (1024)",
+   "clip": "1440 #34-#35; 1024 #32-#33",
+   "finding": "The 2 s stop lands on an in-between frame: dim pen photo, a tiny drone glyph, no heading. 'The Workshop' title card flashes over the chalkboard as it leaves (1440 #33-#34, 1024 #32), so the best caption appears when the picture is already going.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 11, 22, 25; 1024: 12, 49",
+   "t": "1:12-1:18; 2:06-2:10; 2:20-2:24 (1440)",
+   "clip": "1440 #37-#39, #64-#66, #71-#72; 1024 #35-#36, #108-#109",
+   "finding": "Static dwells: several stops show 4-6 s of identical frames (1440 #37-#39 are six seconds of the same text screen). Nothing living moves while I stop, whereas the hero waves still move.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 37-38; 1024: 41-42",
+   "t": "3:12-3:20 (1440); 3:02-3:10 (1024)",
+   "clip": "1440 #97-#101; 1024 #92-#96",
+   "finding": "'Thinking in public, soon.' plus draft entry titles with no content: beautiful cream page, nothing to read, 5-6 s of it.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 26, 15; 1024: 29, 17",
+   "t": "various",
+   "clip": "1440 #74, #47-#48; 1024 #71, #45-#46",
+   "finding": "Repetition: the Black Pearl turns up three times (hero horizon, Act I porthole, film plate); the pen picture twice (1440 #34-#39 and #64-#66); the four films three times (act cards, intermission card, film plates). 'What is a machine?' interrupts the projects.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 44-45; 1024: 48-50",
+   "t": "3:46-3:56 (1440); 3:32-3:44 (1024)",
+   "clip": "1440 #114-#119; 1024 #107-#113",
+   "finding": "Marauder's Map principles: one card layout repeated 4-5 times with 4 s static holds (1024 #108-#109 identical frames). Charming once, 'seen it' by the third.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 3; 1024: 3",
+   "t": "0:30-0:34 (1440); 0:28-0:30 (1024)",
+   "clip": "1440 #16-#17; 1024 #15",
+   "finding": "The only sentence that tells me there is a game ('12 easter eggs hide on this page... two buttons start games') is a few lines of tiny body copy; the nav counter stays 0/12 all 4 minutes and nothing pulses or hints.",
+   "severity": "medium"
+  },
+  {
+   "screen": "whole page",
+   "t": "0:00-4:16 (1440); 0:00-4:04 (1024)",
+   "clip": "all",
+   "finding": "About 4 minutes at 250 px/s; roughly 40% of the runtime is hiring-relevant (About, Journey, Work, Contact). The middle (films, Beyond, Writing, Voices, Principles) is another ~40% and is personality, not evidence.",
+   "severity": "medium"
+  },
+  {
+   "screen": "1440: 2; 1024: 2",
+   "t": "0:28 (1440); 0:26 (1024)",
+   "clip": "1440 #15; 1024 #14",
+   "finding": "'The Crossing' appears as a large grey title over the ship for under a second and vanishes; reads as a flicker or ghost text rather than a title card.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440: 39-40; 1024: 43-44",
+   "t": "3:26 (1440); 3:14 (1024)",
+   "clip": "1440 #104; 1024 #98",
+   "finding": "At the cream-to-night dissolve the pine skyline shows as a noisy barcode-like strip at the top of the frame, which reads as a glitch before it resolves.",
+   "severity": "low"
+  },
+  {
+   "screen": "1440: 23-24; 1024: 25-27",
+   "t": "2:12-2:16 (1440); 2:04-2:10 (1024)",
+   "clip": "1440 #67-#69; 1024 #63-#66",
+   "finding": "A small blue bracket glyph (three circles) hops between kill-list rows; it sits on the edge of row text at 1440 (#68) and its meaning is unexplained.",
+   "severity": "low"
+  },
+  {
+   "screen": "1024: 5",
+   "t": "0:40",
+   "clip": "1024 #21",
+   "finding": "The compass medallion appears to sit on top of the text columns in the About traits block (around the gap between 'Process over outcome' and 'Intellectual honesty').",
+   "severity": "low"
+  },
+  {
+   "screen": "1440: 48; 1024: 53",
+   "t": "4:10-4:12 (1440); 3:56-4:00 (1024)",
+   "clip": "1440 #126-#127; 1024 #119-#121",
+   "finding": "Credits and fan-tribute disclaimer are ~9-10 px grey on black: unreadable at scroll speed (fine as fine print).",
+   "severity": "low"
+  }
+ ],
+ "scores": {
+  "keepScrolling": 6,
+  "tempo": 6,
+  "discovery": 5.5
+ },
+ "yesPct": {
+  "1440": 69.4,
+  "1024": 63.0
+ },
+ "totals": {
+  "1440": "34/49",
+  "1024": "34/54"
+ }
+}

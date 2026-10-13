@@ -6,27 +6,87 @@
 // DESKTOP_FINE 1440x900 by default):
 //   ssr        no-JS: every [data-words] element is there with its text; no armed state
 //   identical  after a slow full scroll (every effect ended), each [data-words] element's outerHTML
-//              equals the no-JS server markup (the binder leaves nothing behind)
+//              equals the no-JS server markup (the binder leaves nothing behind); matched by KEY
+//              (kind:beat#n), never by index: the home page's fly zones (B12 gull, B45 horse) are
+//              CLIENT-mounted (journey step 4 / the journal's first entry), so they are not in the
+//              server markup and would shift every index. A client-only zone must carry no binder
+//              residue (no data-words-state, its fx layer hidden).
 //   titles     no title is left armed; titles played through the spotlight, one star at a time
 //   scrub      the first sentence: dim (~.28) with its top at 95% of the viewport, every word at 1
-//              with its bottom at 50%, dim again when scrolled back (reversible)
-//   fly        a fly-through plays once its zone is half in view and the reader is idle
+//              with its bottom at 50%, and it STAYS lit when scrolled back (r1 F1: complete once its
+//              window is passed, never re-dims); the second sentence, parked dim at 95%, completes
+//              once the page has been still for 400 ms (never unreadable when the reader stops)
+//   fly        a fly-through plays once its zone is half in view and the reader is idle: the slow
+//              walk below lingers (≤ 5 s, no scrolling) the first time each zone is mounted and
+//              half in view. Expected zones: --fly=B12,B45, else the lib/page.ts "fly-through"
+//              beats on the home page, else the server's fly zones (the lab). Every expected zone
+//              must mount and log "play" (its words + spotlight log lines are reported).
 //   pause      Pause (mid-play in the lab, via a replay button): within 100 ms no armed / playing
 //              state, no open fx layer, every scrub word at opacity 1, the markup = the server's
+//              (by key, as identical)
 //   rm         reduced motion: nothing armed, every word at 1, the spotlight never loads
 //   phone      390x844 touch: no binder, every word at 1, the collapse expanded (summary hidden)
 
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 const SETTLE = 1800;
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+
+/** The home page's fly-through beats (lib/page.ts `kind: "fly-through"`). */
+function flyBeatsFromSource() {
+  try {
+    const src = fs.readFileSync(path.join(ROOT, "lib/page.ts"), "utf8");
+    return [...src.matchAll(/\{\s*id:\s*"(B[\w-]+)"[^}]*kind:\s*"fly-through"/g)].map((m) => m[1]);
+  } catch {
+    return [];
+  }
+}
 
 async function snapshot(page) {
-  return page.evaluate(() =>
+  const list = await page.evaluate(() =>
     [...document.querySelectorAll("[data-words]")].map((el) => ({
       kind: el.getAttribute("data-words"),
       beat: el.getAttribute("data-beat"),
       text: el.textContent,
       html: el.outerHTML,
+      state: el.getAttribute("data-words-state"),
+      fxOpen: [...el.querySelectorAll(":scope > [data-words-fx]")].some((f) => getComputedStyle(f).display !== "none"),
     })),
   );
+  // a stable key per element: kind:beat#n (n = the occurrence of that kind+beat)
+  const seen = new Map();
+  for (const e of list) {
+    const base = `${e.kind}:${e.beat ?? "-"}`;
+    const n = seen.get(base) ?? 0;
+    seen.set(base, n + 1);
+    e.key = `${base}#${n}`;
+  }
+  return list;
+}
+
+/** Server markup vs now, matched by key. Keys only in `now` are client-mounted (fly zones). */
+function compareByKey(ssr, now) {
+  const S = new Map(ssr.map((e) => [e.key, e]));
+  const N = new Map(now.map((e) => [e.key, e]));
+  const diff = [];
+  const missing = [];
+  for (const [k, e] of S) {
+    const a = N.get(k);
+    if (!a) {
+      missing.push(k);
+      continue;
+    }
+    if (a.html !== e.html) {
+      let at = 0;
+      while (at < e.html.length && e.html[at] === a.html[at]) at++;
+      diff.push({ key: k, ssr: e.html.slice(Math.max(0, at - 30), at + 60), now: a.html.slice(Math.max(0, at - 30), at + 60) });
+    }
+  }
+  const clientOnly = [...N.values()].filter((e) => !S.has(e.key)).map((e) => ({ key: e.key, state: e.state, fxOpen: e.fxOpen }));
+  const residue = clientOnly.filter((e) => e.state || e.fxOpen);
+  return { pass: diff.length === 0 && missing.length === 0 && residue.length === 0, diff: diff.slice(0, 10), missing, clientOnly, residue };
 }
 
 async function scrubOpacities(page) {
@@ -37,6 +97,8 @@ async function scrubOpacities(page) {
 
 export default async function probe(page, ctx) {
   const target = ctx.args["words-path"] ?? "/lab/p3/words?debug=words,spotlight";
+  // the reduced-motion check is its own context below (res.rm): a --rm run has no motion-on page to bind
+  if (ctx.rm) return { skipped: true, note: "words runs its reduced-motion check (rm) in its own context in the normal run" };
   const res = {};
 
   /* — no-JS: the server markup ——————————————————————————————————————— */
@@ -126,31 +188,41 @@ export default async function probe(page, ctx) {
     await raf();
     await new Promise((r) => setTimeout(r, 150));
     const back = op();
-    const pass = dim[0] < 0.35 && lit.every((o) => o > 0.99) && back[0] < 0.35;
-    return { pass, dimFirst: dim[0], litMin: Math.min(...lit), backFirst: back[0], words: words.length };
-  });
-
-  // fly: the first gull zone, half in view, idle
-  res.fly = await page.evaluate(async () => {
-    const z = document.querySelector('[data-words="fly"]');
-    if (!z) return { pass: false, error: "no fly-through" };
-    const id = z.getAttribute("data-beat");
-    const from = window.__words.log.length;
-    z.scrollIntoView({ block: "center" });
-    const t0 = performance.now();
-    while (performance.now() - t0 < 6000) {
-      await new Promise((r) => setTimeout(r, 200));
-      if (window.__words.log.slice(from).some((e) => e.ev === "play" && e.id.endsWith(id))) {
-        return { pass: true, beat: id, ms: Math.round(performance.now() - t0) };
-      }
+    // the reader stops on a dim sentence: it completes within 400 ms + its ≤ 400 ms fade
+    let still = null;
+    const s2 = document.querySelectorAll('[data-words="scrub"]')[1];
+    if (s2) {
+      const w2 = [...s2.querySelectorAll("[data-w]")];
+      const op2 = () => w2.map((w) => Number(getComputedStyle(w).opacity));
+      window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 400));
+      window.scrollTo(0, s2.getBoundingClientRect().top + scrollY - innerHeight * 0.95);
+      await raf();
+      await new Promise((r) => setTimeout(r, 120));
+      const parked = op2();
+      await new Promise((r) => setTimeout(r, 1100));
+      const after = op2();
+      still = { parkedFirst: parked[0], afterMin: Math.min(...after), pass: parked[0] < 0.35 && after.every((o) => o > 0.99) };
     }
-    return { pass: false, beat: id, log: window.__words.log.slice(from) };
+    const pass = dim[0] < 0.35 && lit.every((o) => o > 0.99) && back.every((o) => o > 0.99) && (still?.pass ?? true);
+    return { pass, dimFirst: dim[0], litMin: Math.min(...lit), backMin: Math.min(...back), still, words: words.length };
   });
-  await ctx.sleep(5000); // let the flight end
 
-  // a slow full scroll with idles: titles arm and play, one star at a time
+  // the fly zones to expect (client-mounted on the home page: not in the server markup)
+  const isHome = /^\/(?:\?|$)/.test(target);
+  const expectedFly = ctx.args.fly
+    ? ctx.args.fly.split(",").map((b) => b.trim()).filter(Boolean)
+    : isHome
+      ? flyBeatsFromSource()
+      : [...new Set(ssr.filter((e) => e.kind === "fly" && e.beat).map((e) => e.beat))];
+
+  // a slow full scroll with idles: titles arm and play, one star at a time; the first time a
+  // fly zone is mounted and half in view, linger there (no scrolling, ≤ 5 s) for its flight
   const scroll = await page.evaluate(async () => {
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const fly = {};
+    const settledFly = (beat) =>
+      window.__words.log.find((e) => e.id === `fly:${beat}` && (e.ev === "play" || e.ev === "static"));
     window.scrollTo(0, 0);
     await sleep(300);
     const step = Math.round(innerHeight * 0.3);
@@ -158,15 +230,51 @@ export default async function probe(page, ctx) {
     for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
       window.scrollTo(0, y);
       await sleep(++n % 3 === 0 ? 1000 : 160);
+      for (const z of document.querySelectorAll('[data-words="fly"]')) {
+        const beat = z.getAttribute("data-beat") ?? "?";
+        const f = (fly[beat] ??= { mountedAtY: Math.round(scrollY), lingered: false });
+        if (f.lingered || settledFly(beat)) continue;
+        const r = z.getBoundingClientRect();
+        const shown = Math.max(0, Math.min(r.bottom, innerHeight) - Math.max(r.top, 0)) / Math.max(1, r.height);
+        if (shown < 0.5) continue;
+        f.lingered = true;
+        f.lingerY = Math.round(scrollY);
+        const t0 = performance.now();
+        while (performance.now() - t0 < 5000 && !settledFly(beat) && z.isConnected) await sleep(100);
+        f.waitedMs = Math.round(performance.now() - t0);
+        f.connected = z.isConnected;
+        if (settledFly(beat)) await sleep(1500); // let the flight end before walking on
+      }
     }
     await sleep(2500);
     return {
+      fly,
       log: window.__words.log,
       spot: window.__spotlight ? window.__spotlight.log : [],
       left: document.querySelectorAll("[data-words-state]").length,
     };
   });
   await ctx.sleep(SETTLE);
+
+  // fly: every expected zone mounted and played
+  {
+    const zones = {};
+    for (const beat of new Set([...expectedFly, ...Object.keys(scroll.fly)])) {
+      const f = scroll.fly[beat] ?? null;
+      const words = scroll.log.filter((e) => e.id === `fly:${beat}`).map((e) => `${e.ev}${e.why ? `(${e.why})` : ""}`);
+      const spot = scroll.spot.filter((e) => e.id === beat).map((e) => `${e.ev}${e.why ? `(${e.why})` : ""}`);
+      zones[beat] = { expected: expectedFly.includes(beat), mounted: Boolean(f), ...(f ?? {}), played: words.includes("play"), words, spot };
+    }
+    const bad = Object.entries(zones).filter(([, z]) => z.expected && !(z.mounted && z.played)).map(([b]) => b);
+    res.fly = {
+      pass: expectedFly.length > 0 && bad.length === 0,
+      expected: expectedFly,
+      failed: bad,
+      zones,
+      ...(expectedFly.length ? {} : { error: "no fly-through expected (none in lib/page.ts / the server markup; pass --fly=…)" }),
+    };
+  }
+
   const plays = scroll.log.filter((e) => e.ev === "play");
   let holding = null;
   const overlaps = [];
@@ -184,13 +292,9 @@ export default async function probe(page, ctx) {
     overlaps,
   };
 
-  // identical: the markup after the effects equals the server's
+  // identical: the markup after the effects equals the server's (by key)
   const after = await snapshot(page);
-  const diff = [];
-  for (let k = 0; k < Math.max(ssr.length, after.length); k++) {
-    if (ssr[k]?.html !== after[k]?.html) diff.push({ k, kind: ssr[k]?.kind ?? after[k]?.kind, beat: ssr[k]?.beat ?? after[k]?.beat });
-  }
-  res.identical = { pass: diff.length === 0 && ssr.length === after.length, diff: diff.slice(0, 10) };
+  res.identical = { ...compareByKey(ssr, after), counts: { ssr: ssr.length, after: after.length } };
 
   // pause: everything final within 100 ms
   res.pause = await page.evaluate(async () => {
@@ -219,9 +323,12 @@ export default async function probe(page, ctx) {
     return { pass: armed === 0 && fx === 0 && ops.every((o) => o > 0.99), armedBefore, armedInTheClick: sync, armedAt100ms: armed, openFx: fx, minOpacity: Math.min(1, ...ops) };
   });
 
-  const afterPause = await snapshot(page);
-  res.pause.identical = afterPause.length === ssr.length && afterPause.every((e, k) => e.html === ssr[k].html);
-  if (!res.pause.identical) res.pause.pass = false;
+  const afterPause = compareByKey(ssr, await snapshot(page));
+  res.pause.identical = afterPause.pass;
+  if (!afterPause.pass) {
+    res.pause.pass = false;
+    res.pause.markup = { diff: afterPause.diff, missing: afterPause.missing, residue: afterPause.residue };
+  }
 
   const pass = Object.values(res).every((r) => r.pass !== false);
   return { pass, target, ...res };

@@ -450,6 +450,16 @@ const copy = {
     text: "This page borrows its light from {works}. Here is what it took from each.",
     status: "proposed",
   },
+  /* P3-11 r1 (F6 discovery → F2 places it under the films lead, desktop
+     only; "Systems" and "kill-list" link to their sections). P3-11 r3 (C4):
+     the full invitation moved to the act-1 contents page (`opening.play`,
+     before the drone and Dead Eye); here a short reminder (F6's words). */
+  "films.play": p3("Still hunting? Your egg count is at the top right."),
+  /* P3-11 r3 (C4; F6's words, F2 places it on the act-1 contents page,
+     desktop only; "Systems" and "kill-list" link to their sections) */
+  "opening.play": p3(
+    "Something to play, too: 12 easter eggs hide on this page (the Egg hunt counter, top right, keeps score), and two buttons start games: ▲ Take off flies the 3 Idiots drone in Systems, DEAD EYE marks the kill-list.",
+  ),
   "beyond.handbill.sub": { text: "for questions about quantitative research", status: "proposed" },
   "beyond.handbill.reward": {
     text: "An honest answer, including “I don't know yet.”",
@@ -564,6 +574,8 @@ const copy = {
      egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
      the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */
   "egg.hunt.chip": p3("{n}/12"),
+  /* P3-11 r1 (F6): the word before the count, so the chip names the hunt */
+  "egg.hunt.chip.word": p3("Egg hunt"),
   "egg.hunt.chip.name": p3("Easter-egg hunt: {n} of 12 found. Show hints"),
   "egg.hunt.toast": p3("Egg {n} of 12 · {name}"),
   "egg.hunt.panel.title": p3("The egg hunt"),
@@ -634,7 +646,12 @@ const copy = {
   "toy.deadeye.score": p3("{n}/5 marked · {s} s of Dead Eye left"),
   "toy.deadeye.fire": p3("Fire"),
   "toy.deadeye.release": p3("Release"),
+  /* W3-GAMES best-score lines (optional; shown only once these keys exist) */
+  "toy.drone.best": p3("Best {s} s"),
+  "toy.deadeye.best": p3("Best {n}/5 · {s} s"),
   "toy.candles.lumos": p3("Lumos"),
+  /* P3-11 r3 (F5): beside the contact Lumos button, what it does */
+  "toy.candles.lumos.hint": p3("relights the hall's candles"),
   "toy.candles.done": p3("The hall is lit."),
   /* sound (PHASE3-SPEC §10.4) */
   "sound.name": p3("Sound"),
@@ -764,7 +781,8 @@ const captions = {
   "cap.beyond": { world: "rdr2", moment: moment("THE HEARTLANDS"), variant: "both", place: "bl", where: "beyond band (MV-10 / MV-10m)" },
   "cap.beyond.satchel": { world: "rdr2", moment: moment("WHAT’S IN THE SATCHEL"), variant: "both", place: "head", where: "Creative block head" },
   "cap.beyond.handbill": { world: "rdr2", moment: moment("A WANTED POSTER"), variant: "both", place: "under", where: "under the notice board (iconic-wanted)" },
-  "cap.writing": { world: "rdr2", moment: moment("ARTHUR MORGAN’S JOURNAL"), variant: "both", place: "head", where: "writing, left page head (paper plane)" },
+  // P3-11 r3 (F5; strangers: "Arthur Morgan's Journal" read as the author): proposed, unsigned
+  "cap.writing": { world: "rdr2", moment: { text: "A JOURNAL LIKE ARTHUR MORGAN’S", status: "proposed", unsigned: true }, variant: "both", place: "head", where: "writing, left page head (paper plane)" },
   "cap.voices": { world: "rdr2", moment: moment("THE GANG’S CAMP AT DUSK"), variant: "default", place: "head", where: "voices head, under the h2 (iconic-camp behind; ART-DIRECTOR #14)" },
   "cap.voices.alt": { world: "rdr2", moment: moment("THE CAMPFIRE"), variant: "alt", place: "under", where: "under the MV-11L loop (it moves)" },
   /* Card III→IV + Act IV · hp */
@@ -895,9 +913,14 @@ export const film = {
         { id: "B03-impact", at: 40.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
         { id: "B04", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
         { id: "B04-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        // C1 (P3-11 r3): the plate loop holds a reader stopped in star (b) as
+        // a weight-1 LIVE star (card-p3.tsx PlateLoop registers it only while
+        // it plays); the spray is quiet there (WeatherCue gate "off": the loop
+        // is the one performer, never two at once)
         { id: "B04-spray", at: 45, span: 45, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        { id: "B04-loop", at: 45, span: 45, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
         // the program block (a backdrop sibling of the pin): the breath
-        { id: "B06", at: 90, span: 76, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+        { id: "B06", at: 90, span: 74.8, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       ],
     },
     {
@@ -916,7 +939,11 @@ export const film = {
         { id: "B13-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
         { id: "B14", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
         { id: "B14-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        // C1 (P3-11 r3): the plate loop holds a reader stopped in star (b) as
+        // a weight-1 LIVE star (card-p3.tsx PlateLoop, only while it plays);
+        // the chalk is quiet there (WeatherCue gate "off")
         { id: "B14-chalk", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        { id: "B14-loop", at: 55, span: 55, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       ],
     },
     {
@@ -938,6 +965,13 @@ export const film = {
         { id: "B36-impact", at: 2.7, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
         { id: "B38", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "sun", feature: "P3-5" },
         { id: "B38-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        // C1 (P3-11 r3, F2): the tintype has no plate loop; a reader stopped in
+        // star (b) is held by the weather, a GATED weight-1 LIVE star
+        // (card-p3.tsx WeatherCue gate "own": its sprites run only while the
+        // spotlight lends it the still screen). RDR2's one weather kind is
+        // fireflies (PHASE3-SPEC §7.7, check #3), so F2's "B38-motes" ships
+        // as fireflies.
+        { id: "B38-fireflies", at: 45, span: 45, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-6" },
       ],
     },
     {
@@ -953,12 +987,18 @@ export const film = {
       estVh: { d: 2.1, t: 2.1 },
       beats: [
         { id: "B48", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
-        // the RDR2 side of the burn (p < .1) keeps the camp's fireflies
+        // the RDR2 side of the burn (p < .1) keeps the camp's fireflies (quiet:
+        // 11vh is too short for a scroll star, #11; never registered live)
         { id: "B48-fireflies", at: 0, span: 11, kind: "stage-cue", timing: "scroll", world: "rdr2", feature: "P3-6" },
         { id: "B48-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
         { id: "B50", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
         { id: "B50-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
-        { id: "B50-motes", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        // C1 (P3-11 r3): a reader stopped in star (b) is held by one weight-1
+        // LIVE star: the motes in the DEFAULT (WeatherCue gate "own", GATED)
+        // or the plate loop in the push ALT (PlateLoop; the motes are off),
+        // each registered only while it plays: never two at once
+        { id: "B50-motes", at: 55, span: 55, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-6" },
+        { id: "B50-loop", at: 55, span: 55, kind: "stage-cue", timing: "scroll", star: true, weight: 1, live: true, feature: "P3-11" },
       ],
     },
   ] as const satisfies readonly ActSpec[],

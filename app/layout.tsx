@@ -26,7 +26,7 @@ import { SectionRail } from "@/components/site/section-rail";
 import { CommandPalette } from "@/components/site/command-palette";
 import { ChromeGate } from "@/components/site/chrome-gate";
 import { site } from "@/lib/content";
-import { NAME_FONT_HREF, NOSCRIPT_WORLD_FONTS_CSS, worldFontVariables } from "@/lib/fonts";
+import { NAME_FONT_HREF, NOSCRIPT_WORLD_FONTS_CSS, PIRATES_BODY_FONT_HREF, worldFontVariables } from "@/lib/fonts";
 import { introModel } from "@/components/intro/intro-model";
 import { IntroHeadScript } from "@/components/intro/intro-head-script";
 import { IntroOverlay } from "@/components/intro/intro-overlay";
@@ -55,7 +55,9 @@ const geistMono = Geist_Mono({
 // name — is set in Pirata One (`type-name`), so the name's 5.3 KB file IS
 // preloaded, desktop only (`media`, below), from public/ (next/font preloads
 // take no media). Phones keep the Geist h1 and fetch no new font. The world
-// faces (lib/fonts.ts) are never preloaded: they load per world, lazily.
+// faces (lib/fonts.ts) are never preloaded: they load per world, lazily;
+// the Pirates body (P3-11 r3) is the one exception, preloaded beside the
+// name with `font-display: optional` so it never swaps in late.
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
@@ -63,6 +65,12 @@ const newsreader = Newsreader({
   display: "swap",
   preload: false,
 });
+
+/** No JS: React's streamed segments (hidden until its inline script moves
+ *  them; see the <noscript> below) are shown where they are. In Tailwind's
+ *  first layer: an important declaration in an earlier cascade layer beats
+ *  preflight's `[hidden]{display:none!important}` (@layer base). */
+const NOSCRIPT_SEGMENTS_CSS = '@layer theme{body>div[hidden][id^="S:"]{display:block!important}}';
 
 const description =
   "Self-taught high-school quant building and validating systematic trading systems on ES/NQ futures — research, data pipelines, and a kill-list that treats every backtest as guilty until proven innocent.";
@@ -145,6 +153,16 @@ export default function RootLayout({
     crossOrigin: "anonymous",
     media: "(min-width: 64rem)",
   });
+  // The Pirates body face, desktop only (P3-11 r3, J9 F1): #about and the
+  // journey's prose. Its @font-face is `font-display: optional` under the
+  // same query: used from first paint when it is here in time, else the
+  // fallback serif for the whole visit; it never swaps (no reflow).
+  preload(PIRATES_BODY_FONT_HREF, {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+    media: "(min-width: 64rem)",
+  });
 
   return (
     <html
@@ -158,8 +176,15 @@ export default function RootLayout({
         {/* every request (Phase 3 boot gate: html.js); B1-SCROLL */}
         <BootHeadScript />
         {/* no JS: every world face is live at ≥ 64rem (no <WorldFonts/> to
-            add the html[data-fonts] tokens; app/globals.css "world type") */}
-        <noscript dangerouslySetInnerHTML={{ __html: `<style>${NOSCRIPT_WORLD_FONTS_CSS}</style>` }} />
+            add the html[data-fonts] tokens; app/globals.css "world type").
+            And the page itself: app/page.tsx hydrates each section in its
+            own Suspense boundary, and React streams a boundary bigger than
+            its chunk size as a hidden segment (`<div hidden id="S:n">`
+            after </main>) that an inline script moves into place. Without
+            JS nothing moves it, so this shows the segments where they sit
+            (after the hero, in page order) — P3-11 J9 M4: no-JS showed
+            the hero and nothing else. */}
+        <noscript dangerouslySetInnerHTML={{ __html: `<style>${NOSCRIPT_WORLD_FONTS_CSS}${NOSCRIPT_SEGMENTS_CSS}</style>` }} />
       </head>
       <body className="flex min-h-full flex-col">
         {intro ? <IntroOverlay model={intro} /> : null}

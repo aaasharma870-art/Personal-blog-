@@ -1,12 +1,11 @@
 "use client";
 
 import { motion, useTransform } from "motion/react";
-import { cn } from "@/lib/utils";
 import type { MediaId } from "@/lib/media";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { remap } from "@/components/primitives/loaders/line";
 import { useCard } from "@/components/sections/act-card/card-context";
-import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf } from "@/components/sections/act-card/plate";
+import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf, type Box } from "@/components/sections/act-card/plate";
 
 /**
  * Opening card, the FRAME (SM-3 + RECOGNIZABILITY S03/S04, T2): the Black
@@ -40,10 +39,24 @@ import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf } from "@/comp
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
 const OPEN = { from: 0.15, to: 0.5 };
 
-export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId | null; alt?: boolean }) {
+export function OpeningPlateFrame({
+  plate: id,
+  sea: seaId = null,
+  seaReg = null,
+  alt = false,
+}: {
+  plate: MediaId | null;
+  /** Pin mode: the outgoing hero sea, dimmed round the disc (P3-11 r3). */
+  sea?: MediaId | null;
+  /** Its registered crop (pin-build.ts). */
+  seaReg?: Box | null;
+  alt?: boolean;
+}) {
   const { p, live, pin } = useCard();
   const plate = plateOf(id);
+  const sea = plateOf(seaId);
   const PlateLayers = pin?.ui?.PlateLayers;
+  const IrisSea = pin?.ui?.IrisSea;
 
   // the aperture opens from the plate's horizon, as seen in the 2.39 frame
   const horizon = plate ? (anchor(plate, "horizon")?.[1] ?? 0.8) : 0.8;
@@ -56,6 +69,9 @@ export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId |
     return `inset(${t}% ${s}% ${b}% ${s}%)`;
   });
   const scale = useTransform(p, (v) => 1.04 - 0.04 * easeOut(remap(v, OPEN.from, 0.7)));
+  // its own layer only while the settle moves (P3-11 r3, J8: the opening
+  // card held 18 will-change layers at rest)
+  const settling = useTransform(p, (v) => (v > 0 && v < 0.7 ? "transform" : "auto"));
 
   if (!plate) return <div aria-hidden="true" className="absolute inset-0 bg-bg" />;
 
@@ -68,12 +84,15 @@ export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId |
       className="absolute inset-0 overflow-hidden sm:[mask-image:linear-gradient(to_bottom,transparent,#000_min(14vh,24%))]"
       style={live && !pin ? { clipPath: clip } : undefined}
     >
+      {/* pin mode, css tier: the sea under the porthole (pin-extras.tsx; P3-11
+          r3 hooks); GL draws its own */}
+      {IrisSea && live && sea ? <IrisSea plate={sea} reg={seaReg} /> : null}
       {/* the iris (pin mode; plain boxes otherwise): the disc's mask box and
           the plate counter-scaled inside it */}
       <div className="absolute inset-0" data-iris="">
         <div className="absolute inset-0" data-iris-inner="">
           {/* its own layer: the aperture's clip changes never re-draw the plate */}
-          <motion.div className={cn("absolute inset-0", live && "will-change-transform")} style={live ? { scale } : undefined}>
+          <motion.div className="absolute inset-0" style={live ? { scale, willChange: settling } : undefined}>
             <PlateBox plate={plate}>
               <MediaFrame media={plate.asset.id} layout="fill" playOn="never" sizes="100vw" />
               {PlateLayers ? <PlateLayers plate={plate.asset.id} /> : null}

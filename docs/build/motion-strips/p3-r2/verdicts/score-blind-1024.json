@@ -1,0 +1,661 @@
+{
+ "kind": "blind",
+ "width": "1024",
+ "rows": [
+  {
+   "jid": "J003",
+   "frame": "A01-hero",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-2 hero: name at sea, the Black Pearl",
+   "want": "pirates",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "pirates 0.50",
+    "pirates 0.50",
+    "pirates 0.60"
+   ],
+   "why": "Lone galleon on a dark sea plus the hinged octagonal compass; the bioluminescent wave is not a canonical image."
+  },
+  {
+   "jid": "J008",
+   "frame": "A10-act-2-settled",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-5 card I→II Pirates→3 Idiots — settled",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.55",
+    "idiots 0.50",
+    "idiots 0.60"
+   ],
+   "why": "IIM-Bangalore-style stone and concrete hall plus a drone diagram suggests Rancho's drone at ICE."
+  },
+  {
+   "jid": "J001",
+   "frame": "A10-act-3-settled",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-14 card II→III → RDR2 tintype — settled",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.80",
+    "rdr2 0.60",
+    "rdr2 0.80"
+   ],
+   "why": "Red tint with X markers placed on targets is the Dead Eye mechanic."
+  },
+  {
+   "jid": "J002",
+   "frame": "A10-act-4-settled",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-10 card III→IV RDR2→HP ignite — settled",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.95",
+    "hp 0.90",
+    "hp 0.95"
+   ],
+   "why": "Long tables, high table under Gothic window, floating candles."
+  },
+  {
+   "jid": "J015",
+   "frame": "A24-work",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-6 work head band (top)",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.55",
+    "idiots 0.50",
+    "idiots 0.70"
+   ],
+   "why": "Ceremonial pen in a box in a chalkboard classroom maps to Virus's space pen; stopwatch to Virus's timekeeping."
+  },
+  {
+   "jid": "J035",
+   "frame": "A29-systems",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "Systems FIG + drone band",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.50",
+    "idiots 0.45",
+    "idiots 0.65"
+   ],
+   "why": "DIY quadcopter in a stone/concrete campus with pergolas, like the drone scene."
+  },
+  {
+   "jid": "J031",
+   "frame": "A31-voices",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-16 by the fire (camp)",
+   "want": "rdr2",
+   "ok": 0,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "rdr2 0.45",
+    "rdr2 0.40",
+    "rdr2 0.45"
+   ],
+   "why": "Fits RDR2 night camp but is a generic campsite alone."
+  },
+  {
+   "jid": "J012",
+   "frame": "A38-principles",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "Principles (HP)",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.60",
+    "hp 0.85",
+    "hp 0.80"
+   ],
+   "why": "Candles hovering in a starry sky; abstract alone."
+  },
+  {
+   "jid": "J020",
+   "frame": "A39-principles-1000",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "Principles lower",
+   "want": "hp",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.60",
+    "hp 0.55",
+    "hp 0.70"
+   ],
+   "why": "Floating candles on a starfield plus quill flourishes."
+  },
+  {
+   "jid": "J011",
+   "frame": "A43-films-pirates",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: pirates",
+   "want": "pirates",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "pirates 0.80",
+    "pirates 0.80",
+    "pirates 0.80"
+   ],
+   "why": "Black galleon, shredded sails, lantern-lit stern in fog."
+  },
+  {
+   "jid": "J037",
+   "frame": "A44-films-idiots",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: idiots",
+   "want": "idiots",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "idiots 0.85",
+    "idiots 0.75",
+    "idiots 0.80"
+   ],
+   "why": "Iconic final-scene image."
+  },
+  {
+   "jid": "J032",
+   "frame": "A45-films-rdr2",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: rdr2",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.75",
+    "rdr2 0.75",
+    "rdr2 0.80"
+   ],
+   "why": "Exact RDR2 camp composition and grade."
+  },
+  {
+   "jid": "J025",
+   "frame": "A46-films-hp",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: hp",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.70",
+    "hp 0.80",
+    "hp 0.70"
+   ],
+   "why": "Footprint trail on parchment, floating candles, Gothic castle outside."
+  },
+  {
+   "jid": "J005",
+   "frame": "D00-intro-play",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-1 play screen: Hogwarts, candles, broom",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.95",
+    "hp 0.95",
+    "hp 0.95"
+   ],
+   "why": "Castle silhouette, broom and candles are core HP icons."
+  },
+  {
+   "jid": "J009",
+   "frame": "D01-hero",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-2 hero: name at sea, the Black Pearl",
+   "want": "pirates",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "pirates 0.50",
+    "pirates 0.50",
+    "pirates 0.60"
+   ],
+   "why": "Same as J003."
+  },
+  {
+   "jid": "J017",
+   "frame": "D10-act-1-settled",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-3 opening card (Act I, Pirates) — settled",
+   "want": "pirates",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "pirates 0.60",
+    "pirates 0.70",
+    "pirates 0.60"
+   ],
+   "why": "Hinged compass with a dotted course over a ragged-sailed galleon."
+  },
+  {
+   "jid": "J027",
+   "frame": "D10-act-2-settled",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-5 card I→II Pirates→3 Idiots — settled",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.55",
+    "idiots 0.50",
+    "idiots 0.60"
+   ],
+   "why": "Same as J008."
+  },
+  {
+   "jid": "J026",
+   "frame": "D10-act-3-settled",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-14 card II→III → RDR2 tintype — settled",
+   "want": "rdr2",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.60",
+    "rdr2 0.45",
+    "rdr2 0.60"
+   ],
+   "why": "RDR2 landscape grade; could be generic Western."
+  },
+  {
+   "jid": "J014",
+   "frame": "D10-act-4-settled",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-10 card III→IV RDR2→HP ignite — settled",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.95",
+    "hp 0.90",
+    "hp 0.95"
+   ],
+   "why": "Same as J002."
+  },
+  {
+   "jid": "J021",
+   "frame": "D21-journey-step-1",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-4 voyage step 1: harbour",
+   "want": "pirates",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "pirates 0.40",
+    "pirates 0.65",
+    "pirates 0.60"
+   ],
+   "why": "Moonlit harbour plus compass, dotted route and X; the end-badge here looks like a sun-face in a gear rather than a skull."
+  },
+  {
+   "jid": "J030",
+   "frame": "D22-journey-step-3",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-4 voyage step 3: the break",
+   "want": "pirates",
+   "ok": 0,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "pirates 0.40",
+    "pirates 0.55",
+    "pirates 0.55"
+   ],
+   "why": "Storm alone is generic; map card carries the pirate read."
+  },
+  {
+   "jid": "J010",
+   "frame": "D23-journey-step-4",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-4 voyage step 4: X marks the spot",
+   "want": "pirates",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "pirates 0.45",
+    "pirates 0.60",
+    "pirates 0.55"
+   ],
+   "why": "Map card carries the pirate read; ocean plate is generic."
+  },
+  {
+   "jid": "J023",
+   "frame": "D24-work",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-6 work head band (top)",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.55",
+    "idiots 0.50",
+    "idiots 0.70"
+   ],
+   "why": "Same as J015."
+  },
+  {
+   "jid": "J006",
+   "frame": "D25-work-board",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-6 gauntlet on the ICE dawn board (board, gates)",
+   "want": "idiots",
+   "ok": 0,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.30",
+    "idiots 0.35",
+    "idiots 0.40"
+   ],
+   "why": "Drone sketch ties to the 3 Idiots set, but the Gothic arched window reads Hogwarts; mixed."
+  },
+  {
+   "jid": "J036",
+   "frame": "D29-systems",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "Systems FIG + drone band",
+   "want": "idiots",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "idiots 0.50",
+    "idiots 0.45",
+    "idiots 0.65"
+   ],
+   "why": "Same as J035."
+  },
+  {
+   "jid": "J018",
+   "frame": "D31-voices",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-16 by the fire (camp)",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.75",
+    "rdr2 0.65",
+    "rdr2 0.75"
+   ],
+   "why": "Same RDR2 camp vocabulary."
+  },
+  {
+   "jid": "J028",
+   "frame": "D32-beyond",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-15 frontier golden-hour band",
+   "want": "rdr2",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.60",
+    "rdr2 0.45",
+    "rdr2 0.60"
+   ],
+   "why": "Same plate as J026."
+  },
+  {
+   "jid": "J033",
+   "frame": "D34-beyond-wanted",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-15 beyond: the WANTED handbill",
+   "want": "rdr2",
+   "ok": 1,
+   "wrong": 0,
+   "pass": false,
+   "v": [
+    "rdr2 0.50",
+    "rdr2 0.60",
+    "rdr2 0.55"
+   ],
+   "why": "Weathered board with nailed papers; Western-generic without text."
+  },
+  {
+   "jid": "J024",
+   "frame": "D36-writing",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-11 Arthur's journal (writing)",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.70",
+    "rdr2 0.70",
+    "rdr2 0.65"
+   ],
+   "why": "RDR2 journal sketch treatment with a red pencil rule."
+  },
+  {
+   "jid": "J016",
+   "frame": "D37-writing-1000",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-11 journal pages",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.65",
+    "rdr2 0.70",
+    "rdr2 0.70"
+   ],
+   "why": "Graphite journal sketch style on cream paper with a taped note."
+  },
+  {
+   "jid": "J022",
+   "frame": "D38-principles",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "Principles (HP)",
+   "want": "hp",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.65",
+    "hp 0.50",
+    "hp 0.80"
+   ],
+   "why": "Folded parchment, ribbon banner and hand-drawn corridors; no footprints visible in this frame so slightly weaker."
+  },
+  {
+   "jid": "J029",
+   "frame": "D39-principles-1000",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "Principles lower",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.75",
+    "hp 0.85",
+    "hp 0.85"
+   ],
+   "why": "Footprints moving along drawn corridors on folded parchment."
+  },
+  {
+   "jid": "J034",
+   "frame": "D40-contact",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-12 last light (contact)",
+   "want": "hp",
+   "ok": 2,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.65",
+    "hp 0.55",
+    "hp 0.65"
+   ],
+   "why": "Candles in a starry void; the cyan bracket is UI."
+  },
+  {
+   "jid": "J013",
+   "frame": "D43-films-pirates",
+   "world": "pirates",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: pirates",
+   "want": "pirates",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "pirates 0.80",
+    "pirates 0.80",
+    "pirates 0.85"
+   ],
+   "why": "Same ship as J011 plus the compass."
+  },
+  {
+   "jid": "J004",
+   "frame": "D44-films-idiots",
+   "world": "idiots",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: idiots",
+   "want": "idiots",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "idiots 0.85",
+    "idiots 0.65",
+    "idiots 0.80"
+   ],
+   "why": "Yellow scooter on a pebbled shore of a glassy Ladakh lake."
+  },
+  {
+   "jid": "J019",
+   "frame": "D45-films-rdr2",
+   "world": "rdr2",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: rdr2",
+   "want": "rdr2",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "rdr2 0.85",
+    "rdr2 0.75",
+    "rdr2 0.80"
+   ],
+   "why": "Red wash plus X marks painted onto birds."
+  },
+  {
+   "jid": "J007",
+   "frame": "D46-films-hp",
+   "world": "hp",
+   "mode": "BLIND",
+   "moment": "SM-9 films chapter screen: hp",
+   "want": "hp",
+   "ok": 3,
+   "wrong": 0,
+   "pass": true,
+   "v": [
+    "hp 0.95",
+    "hp 0.90",
+    "hp 0.95"
+   ],
+   "why": "Red steam train on the curved stone viaduct over a Highland loch."
+  }
+ ],
+ "worlds": {
+  "pirates": {
+   "pass": 4,
+   "of": 8,
+   "baseline": "10/10",
+   "atLeastBaseline": false
+  },
+  "idiots": {
+   "pass": 2,
+   "of": 9,
+   "baseline": "9/10",
+   "atLeastBaseline": false
+  },
+  "rdr2": {
+   "pass": 8,
+   "of": 10,
+   "baseline": "9/13",
+   "atLeastBaseline": true
+  },
+  "hp": {
+   "pass": 10,
+   "of": 10,
+   "baseline": "10/12",
+   "atLeastBaseline": true
+  }
+ }
+}

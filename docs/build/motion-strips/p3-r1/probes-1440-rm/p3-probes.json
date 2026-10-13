@@ -1,0 +1,1899 @@
+{
+  "meta": {
+    "base": "http://localhost:3161",
+    "vw": {
+      "width": 1440,
+      "height": 900
+    },
+    "rm": true,
+    "path": "/?skip=intro",
+    "date": "2026-10-03T14:34:13.042Z",
+    "chromium": "141.0.7390.37",
+    "probes": [
+      "aa-scrim",
+      "bundle",
+      "cards",
+      "cinema",
+      "decoder",
+      "font-network",
+      "games",
+      "gl",
+      "hunt",
+      "keyboard",
+      "layout-gates",
+      "lenis",
+      "loaf",
+      "nav",
+      "plates-live",
+      "research-font",
+      "sound",
+      "split",
+      "spotlight",
+      "toys",
+      "words"
+    ]
+  },
+  "results": {
+    "aa-scrim": {
+      "pass": true,
+      "liveBoxes": 0,
+      "note": "the stage never went live over a backdrop (not mounted, or no backdrop StageSpec): nothing to judge",
+      "widths": {
+        "1440x900": [
+          {
+            "item": "act-1",
+            "samples": 2,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 8.65,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 1808,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 4,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 5.11,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 2031,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 4,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 8.96,
+              "text": "A personal research journal by",
+              "y": 36005,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ],
+        "1024x768": [
+          {
+            "item": "act-1",
+            "samples": 3,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 8.64,
+              "text": "Act IV • AFTER HARRY POTTER",
+              "y": 1474,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "about",
+            "samples": 5,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 5.11,
+              "text": "PIRATES OF THE CARIBBEAN",
+              "y": 1709,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          },
+          {
+            "item": "credits",
+            "samples": 4,
+            "liveBoxes": 0,
+            "worst": {
+              "ratio": 8.96,
+              "text": "A personal research journal by",
+              "y": 32808,
+              "live": false
+            },
+            "failures": [],
+            "failCount": 0
+          }
+        ]
+      },
+      "ms": 80952,
+      "console": []
+    },
+    "bundle": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "firstLoad.markers": {
+          "pass": true,
+          "html": {
+            "js": 20,
+            "css": 4,
+            "jsGz": 443376,
+            "cssGz": 35537,
+            "marked": []
+          },
+          "phone": {
+            "fetched": 24,
+            "marked": []
+          }
+        },
+        "desktop.lazy": {
+          "pass": null,
+          "skipped": "not a DESKTOP_FINE run"
+        },
+        "compare": {
+          "pass": null,
+          "skipped": "pass --compare=<baseUrl> (the pre-Phase-3 build)"
+        },
+        "static.ric": {
+          "pass": true,
+          "hits": []
+        }
+      },
+      "ms": 4623,
+      "console": []
+    },
+    "cards": {
+      "pass": true,
+      "checks": {
+        "rm": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 908,
+              "stageH": 908,
+              "sticky": false
+            },
+            {
+              "kind": "seam",
+              "h": 930,
+              "stageH": 930,
+              "sticky": false
+            },
+            {
+              "kind": "tintype",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            },
+            {
+              "kind": "ignite",
+              "h": 900,
+              "stageH": 900,
+              "sticky": false
+            }
+          ],
+          "phases": 0,
+          "impacts": 0
+        },
+        "phone": {
+          "pass": true,
+          "pins": [
+            {
+              "kind": "opening",
+              "h": 559,
+              "stageH": 559
+            },
+            {
+              "kind": "seam",
+              "h": 723,
+              "stageH": 723
+            },
+            {
+              "kind": "tintype",
+              "h": 795,
+              "stageH": 795
+            },
+            {
+              "kind": "ignite",
+              "h": 721,
+              "stageH": 721
+            }
+          ],
+          "subtitles": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "handle": 0
+        }
+      },
+      "ms": 6065,
+      "console": []
+    },
+    "cinema": {
+      "pass": true,
+      "checks": {
+        "off.390": {
+          "pass": true,
+          "button": "none",
+          "summary": "none",
+          "rowsShown": true
+        },
+        "off.1024touch": {
+          "pass": true,
+          "button": "none",
+          "summary": "list-item",
+          "rowsShown": true
+        },
+        "rm.button": {
+          "pass": true,
+          "text": "▶ Director's cut(sound on)Motion is paused",
+          "display": "flex"
+        },
+        "analytics": {
+          "pass": true,
+          "requests": []
+        }
+      },
+      "ms": 5449,
+      "console": []
+    },
+    "decoder": {
+      "pass": true,
+      "codecs": {
+        "mp4": "",
+        "webm": "probably"
+      },
+      "intro": {
+        "samples": 84,
+        "maxPlaying": 0,
+        "everPlayed": [],
+        "holders": [],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "scroll": {
+        "samples": 215,
+        "maxPlaying": 0,
+        "everPlayed": [],
+        "holders": [],
+        "crossfadeSamples": 0,
+        "overOne": [],
+        "stageDuringCrossfade": [],
+        "ok": true
+      },
+      "ms": 34385,
+      "console": []
+    },
+    "font-network": {
+      "pass": false,
+      "checks": {
+        "preload": true,
+        "oneH1": true,
+        "h1Pirata": true,
+        "nameFaceLoaded": true,
+        "beforeStep5": false,
+        "noLegacyOnDesktop": true,
+        "desktopLcp": true,
+        "desktopCls": true,
+        "phoneNoNewFont": true,
+        "phoneLegacyBytes": true,
+        "phoneLcp": true
+      },
+      "desktop": {
+        "preload": {
+          "href": "/fonts/film/pirata-one/pirata-one-ascii.woff2",
+          "media": "(min-width: 64rem)",
+          "type": "font/woff2",
+          "crossorigin": ""
+        },
+        "preloadOk": true,
+        "h1s": 1,
+        "h1": {
+          "family": "\"Film Name Pirates\", Geist, \"Geist Fallback\", ui-sans-serif, sans-serif",
+          "lineHeight": "165.888px",
+          "fontSize": "172.8px",
+          "transform": "none",
+          "text": "Aryan Sharma"
+        },
+        "nameFaceLoaded": true,
+        "step5": null,
+        "beforeStep5": [
+          "17 ms house /_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "19 ms house /_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "19 ms name public/fonts/film/pirata-one/pirata-one-ascii.woff2 5312 B",
+          "93 ms house /_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "613 ms house /_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B",
+          "9006 ms world assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2 23312 B"
+        ],
+        "beforeStep5Bad": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "legacyRequested": [],
+        "worldsAtRest": [
+          "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2"
+        ],
+        "worldOrder": [
+          "9006 ms assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+          "17497 ms assets/fonts/film/kalam-700/kalam-700-ascii.woff2",
+          "17497 ms assets/fonts/film/patrick-hand/patrick-hand-latin.woff2",
+          "20674 ms assets/fonts/film/rye-ascii/rye-ascii.woff2",
+          "20674 ms assets/fonts/film/courier-prime/courier-prime-latin.woff2",
+          "20993 ms assets/fonts/film/crimson-pro/crimson-pro-latin.woff2",
+          "20993 ms assets/fonts/film/im-fell-english-sc/im-fell-english-sc-ascii.woff2"
+        ],
+        "worldMissingAfterScroll": [],
+        "filmBytes": 174960,
+        "lcp": {
+          "t": 164,
+          "el": "SPAN",
+          "size": 107550
+        },
+        "clsBeforeScroll": 0,
+        "shifts": []
+      },
+      "phone": {
+        "newFonts": [],
+        "legacy": [
+          "assets/fonts/film/pirata-one/pirata-one-subset.woff2 3036 B",
+          "assets/fonts/film/kalam/kalam-subset.woff2 7932 B",
+          "assets/fonts/film/im-fell-english/im-fell-english-subset.woff2 29852 B",
+          "assets/fonts/film/rye/rye-subset.woff2 13516 B"
+        ],
+        "legacyBytes": 54336,
+        "house": [
+          "/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2 23108 B",
+          "/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2 29288 B",
+          "/_next/static/media/5f402bd2d8eef81a-s.40bho2kviej2o.woff2 58152 B",
+          "/_next/static/media/9433d1a810498265-s.1hij5ex6k3v9q.woff2 64500 B"
+        ],
+        "lcp": {
+          "t": 160,
+          "el": "IMG",
+          "size": 89604
+        },
+        "lcpWithin5pct": null,
+        "cls": 0
+      },
+      "notes": [
+        "ladder step 5 never fired within 15 s (ladder stub or stalled): 'before step 5' covers the whole wait"
+      ],
+      "ms": 39418,
+      "console": []
+    },
+    "games": {
+      "pass": true,
+      "checks": {
+        "beats": {
+          "pass": true,
+          "found": [
+            "B26",
+            "B28",
+            "B29"
+          ]
+        },
+        "pills": {
+          "pass": true,
+          "pills": [
+            {
+              "display": "flex",
+              "text": "▲ Take off"
+            },
+            {
+              "display": "flex",
+              "text": "DEAD EYE"
+            }
+          ]
+        },
+        "drone.plan": {
+          "pass": true,
+          "items": [
+            "Pre-registration",
+            "A blind holdout, spent once",
+            "Deflated Sharpe Ratio",
+            "Combinatorial Purged CV",
+            "A mandatory cost model",
+            "Leak / look-ahead audits",
+            "Kill what fails — keep the post-mortem"
+          ],
+          "game": null,
+          "phase": "plan"
+        },
+        "de.untimed": {
+          "pass": true,
+          "line0": "0/5 marked",
+          "ts": "",
+          "still": "paint"
+        }
+      },
+      "ms": 9054,
+      "console": []
+    },
+    "gl": {
+      "pass": true,
+      "checks": {
+        "rm": {
+          "pass": true,
+          "tier": "off",
+          "canvas": 0,
+          "contexts": 0,
+          "on": 0
+        },
+        "phone": {
+          "pass": true,
+          "hosts": 0,
+          "canvas": 0,
+          "chunk": false,
+          "tier": null
+        }
+      },
+      "ms": 11483,
+      "console": []
+    },
+    "hunt": {
+      "pass": true,
+      "checks": {
+        "ssr": {
+          "pass": true,
+          "text": "–/12"
+        },
+        "rm": {
+          "pass": true,
+          "chip": "flex",
+          "tail": 0,
+          "toast": "Lumos: your system asks for reduced motion, so the page stays still.Egg 1 of 12 · Lumos and Nox",
+          "bloom": false,
+          "veil": false,
+          "found": [
+            "hp-lumos"
+          ]
+        }
+      },
+      "ms": 2273,
+      "console": []
+    },
+    "keyboard": {
+      "pass": false,
+      "checks": {
+        "walk": {
+          "pass": true,
+          "stops": 68,
+          "wrapped": true,
+          "notInView": 0,
+          "notInViewList": [],
+          "covered": 0,
+          "coveredList": []
+        },
+        "walk.covered": {
+          "pass": true,
+          "n": 0
+        },
+        "op.pause": {
+          "pass": true,
+          "stop": 6,
+          "paused": true,
+          "resumed": true,
+          "toast": false,
+          "counted": 0
+        },
+        "op.sound": {
+          "pass": false,
+          "stop": 5,
+          "states": [
+            "false",
+            "false",
+            "false"
+          ]
+        },
+        "op.chip": {
+          "pass": true,
+          "stop": 4,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button[Easter-egg hunt: 0 of 12 found. Show hin]"
+        },
+        "op.menu": {
+          "pass": true,
+          "stop": 7,
+          "open": true,
+          "closed": true,
+          "focusBack": true,
+          "focus": "button"
+        },
+        "op.compass": {
+          "pass": true,
+          "stop": 16,
+          "rest": 0,
+          "enter": 45,
+          "arrow": 225
+        },
+        "op.coin": {
+          "pass": true,
+          "stop": 18,
+          "egg": "pc-coin",
+          "counted": true,
+          "focus": "button#egg-pc-coin[Hold the coin to the moonlight]"
+        },
+        "op.kraken": {
+          "pass": true,
+          "stop": 20,
+          "egg": "pc-kraken",
+          "counted": true,
+          "focus": "button"
+        },
+        "op.run": {
+          "pass": true,
+          "stop": 23,
+          "counted": true
+        },
+        "op.aal": {
+          "pass": true,
+          "stop": 26,
+          "egg": "3i-aal",
+          "counted": true,
+          "focus": "button#egg-3i-aal[A chalk heart on the board's ledge]"
+        },
+        "op.drone": {
+          "pass": false,
+          "stop": 32,
+          "flying": false,
+          "focusInField": false,
+          "moved": 0,
+          "landed": true,
+          "focusBack": true,
+          "game": null
+        },
+        "op.pen": {
+          "pass": true,
+          "stop": 34,
+          "afterDeadEyeWin": true,
+          "counted": true,
+          "toast": "Worthy.Egg 5 of 12 · The astronaut pen",
+          "note": "pressed after the Dead Eye win: counts"
+        },
+        "op.deadeye": {
+          "pass": true,
+          "stop": 33,
+          "started": true,
+          "focusOnFirstRow": true,
+          "killedRows": 5,
+          "struck": 5,
+          "hud": "5/5 markedBest 5/5 · 0.0 sRelease5/5 marked",
+          "released": true,
+          "focusBack": true,
+          "focus": "button#deadeye-call"
+        },
+        "op.eagle": {
+          "pass": true,
+          "stop": 57,
+          "egg": "rd-eagle",
+          "counted": true,
+          "focus": "button#egg-rd-eagle[The eagle eye]"
+        },
+        "op.bone": {
+          "pass": true,
+          "stop": 59,
+          "egg": "rd-bone",
+          "counted": true,
+          "focus": "button#egg-rd-bone[The fossil bone]"
+        },
+        "op.fire": {
+          "pass": true,
+          "stop": 60,
+          "egg": "rd-fire",
+          "counted": true,
+          "focus": "button#egg-rd-fire[Warm your hands by the fire]"
+        },
+        "op.lumos": {
+          "pass": false,
+          "stop": null,
+          "why": "not reached by Tab"
+        },
+        "op.snitch": {
+          "pass": true,
+          "stop": 66,
+          "egg": "hp-snitch",
+          "counted": true,
+          "focus": "button[Snitch caught]"
+        },
+        "reach.fastlane": {
+          "pass": true,
+          "stop": 3
+        },
+        "reach.dc": {
+          "pass": true,
+          "stop": 9
+        },
+        "op.pen.afterDeadEye": {
+          "pass": true,
+          "note": "already counted"
+        },
+        "typed.parley": {
+          "pass": true
+        },
+        "typed.aal": {
+          "pass": true,
+          "note": "3i-aal may already count from the heart (counts once)"
+        },
+        "typed.nox-lumos": {
+          "pass": true,
+          "paused": true,
+          "resumed": true
+        },
+        "typed.map": {
+          "pass": true,
+          "open": true,
+          "label": "ARYAN SHARMA • A RESEARCH JOURNAL IN FOUR ACTSAfter Pirates ",
+          "focusInDialog": true,
+          "closedMs": 13,
+          "focusAfter": "a"
+        },
+        "palette.map": {
+          "pass": true,
+          "open": true,
+          "listed": [
+            "Open the Marauder's Map"
+          ],
+          "dialog": true,
+          "closedMs": 16,
+          "focusAfter": "body"
+        },
+        "palette.drone": {
+          "pass": true,
+          "focusOnPill": true,
+          "phase": "idle",
+          "focus": "button#drone-takeoff"
+        },
+        "jump.fastlane": {
+          "pass": true,
+          "focus": "h2#work-title"
+        },
+        "jump.dc": {
+          "pass": false,
+          "started": false,
+          "focusOnStop": false,
+          "stopped": false,
+          "focus": "button"
+        },
+        "jump.chapter": {
+          "pass": true,
+          "focus": "h2#act-2-title",
+          "hash": "#act-2"
+        },
+        "count": {
+          "pass": true,
+          "counted": 12,
+          "missing": [],
+          "lenis": false
+        }
+      },
+      "walk": [
+        "1 a \"Skip to content\" #-",
+        "2 a \"Aryan Sharma — back to the top\" #header",
+        "3 a \"WorkSkip to the research\" #header",
+        "4 button \"Easter-egg hunt: 0 of 12 found. Show hints\" #header",
+        "5 button \"Sound\" #header",
+        "6 button \"Pause motion\" #header",
+        "7 button \"Menu\" #header",
+        "8 a \"View the quant portfolio↓\" #top",
+        "9 button \"▶ Director's cut(sound on)Motion is paused\" #top",
+        "10 a \"The CrossingAct I • AFTER PIRATES OF THE CARIBBEAN\" #act-1",
+        "11 a \"The WorkshopAct II • AFTER 3 IDIOTS\" #act-1",
+        "12 a \"Three films and a gameIntermission\" #act-1",
+        "13 a \"The FrontierAct III • AFTER RED DEAD REDEMPTION 2\" #act-1",
+        "14 a \"The LightAct IV • AFTER HARRY POTTER\" #act-1",
+        "15 summary \"The philosophy note\" #about",
+        "16 button \"Spin Jack's compass\" #about",
+        "17 button#journey-tab-1 \"01Origin\" #journey",
+        "18 button#egg-pc-coin \"Hold the coin to the moonlight\" #journey",
+        "19 button \"Next step\" #journey",
+        "20 button \"HERE BE MONSTERS\" #act-2",
+        "21 button#gauntlet-tab-_r_7_-0 \"01Pre-registration\" #work",
+        "22 div#gauntlet-panel-_r_7_ \"GATE 01 / 07Pre-registrationHypothesis, parameters\" #work",
+        "23 button \"Run 12 illustrative hypotheses\" #work",
+        "24 a \"Trading_Algos-\" #trading-algos",
+        "25 a \"Optuna-Screener\" #optuna-screener",
+        "26 button#egg-3i-aal \"A chalk heart on the board's ledge\" #optuna-screener",
+        "27 summary \"Where the discipline started · Automated 0DTE Opti\" #optuna-screener",
+        "28 summary \"Tools, pipelines, automation.\" #optuna-screener",
+        "29 summary \"Also on GitHub\" #optuna-screener",
+        "30 button \"Naïve · zero-cost · in-sample\" #experiment",
+        "31 button \"Realistic costs · out-of-sample\" #experiment",
+        "32 button#drone-takeoff \"▲ Take off\" #systems",
+        "33 button#deadeye-call \"DEAD EYE\" #kill-list",
+        "34 button#egg-3i-pen \"The astronaut pen\" #kill-list",
+        "35 button \"Quantitative Trading Research\" #kill-list",
+        "36 a \"Quantitative Trading Research: the Trading_Algos- \" #kill-list",
+        "37 a \"Automated Strategy Research Pipeline: the Optuna-S\" #kill-list",
+        "38 a \"Post-mortem for Dealer-gamma (GEX) router: the Tra\" #kill-list",
+        "39 a \"Post-mortem for Intraday momentum-continuation: th\" #kill-list",
+        "40 a \"Post-mortem for VIX-basis deviation alpha: the Tra\" #kill-list",
+        "41 a \"Post-mortem for VIX3M directional: the Trading_Alg\" #kill-list",
+        "42 a \"Post-mortem for Smart-Money patterns (FVG, order b\" #kill-list",
+        "43 a \"Act I\" #films",
+        "44 a \"About\" #films",
+        "45 a \"Journey\" #films",
+        "46 a \"Act II\" #films",
+        "47 a \"Work\" #films",
+        "48 a \"Trading_Algos\" #films",
+        "49 a \"Optuna\" #films",
+        "50 a \"Act III\" #films",
+        "51 a \"Beyond\" #films",
+        "52 a \"Writing\" #films",
+        "53 a \"Voices\" #films",
+        "54 a \"Act IV\" #films",
+        "55 a \"Principles\" #films",
+        "56 a \"Contact\" #films",
+        "57 button#egg-rd-eagle \"The eagle eye\" #beyond",
+        "58 a \"Reply by email →\" #beyond",
+        "59 button#egg-rd-bone \"The fossil bone\" #writing",
+        "60 button#egg-rd-fire \"Warm your hands by the fire\" #voices",
+        "61 button \"Copy email address aaasharma870@gmail.com\" #contact",
+        "62 a \"Open in your mail app\" #contact",
+        "63 a \"GitHub\" #contact",
+        "64 summary \"More credits: media, fonts and quotes\" #credits",
+        "65 a \"↑ Back to the opening\" #credits",
+        "66 button \"Catch the snitch\" #credits",
+        "67 a \"GitHub profile\" #credits",
+        "68 a \"Email Aryan Sharma\" #credits",
+        "70 → wraps to 1"
+      ],
+      "ms": 153270,
+      "console": []
+    },
+    "layout-gates": {
+      "pass": true,
+      "pausedReload": {
+        "gate": {
+          "js": true,
+          "motionBoot": "paused",
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "diff": [],
+        "heights": [
+          37774,
+          37774
+        ],
+        "streamed": true,
+        "streamedAtDcl": {
+          "pending": 13,
+          "hiddenSections": 13
+        },
+        "sections": [
+          20,
+          20
+        ],
+        "ok": true
+      },
+      "pauseMid": {
+        "pauseControl": true,
+        "stageWasLive": false,
+        "onBefore": 0,
+        "onAfter": 0,
+        "layersHidden": true,
+        "scroll": [
+          0,
+          0
+        ],
+        "shift": 0,
+        "diff": [],
+        "settle": {
+          "drift": [
+            {
+              "box": "about",
+              "to": [
+                2481,
+                1090
+              ],
+              "from": [
+                2481,
+                1183
+              ]
+            },
+            {
+              "box": "journey",
+              "to": [
+                3571,
+                1204
+              ],
+              "from": [
+                3664,
+                1204
+              ]
+            },
+            {
+              "box": "act-2",
+              "to": [
+                4775,
+                930
+              ],
+              "from": [
+                4868,
+                930
+              ]
+            }
+          ],
+          "fonts": "loaded",
+          "ms": 1211
+        },
+        "ok": true
+      },
+      "zScale": {
+        "mainZ": "1",
+        "creditsZ": "1",
+        "fixedInMain": [],
+        "layers": [
+          [
+            "carry",
+            "22"
+          ],
+          [
+            "game-hud",
+            "25"
+          ],
+          [
+            "stop",
+            "30"
+          ],
+          [
+            "toast",
+            "32"
+          ],
+          [
+            "cut",
+            "35"
+          ]
+        ],
+        "ok": true
+      },
+      "noJs": {
+        "gate": {
+          "js": false,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "phone": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "rm": {
+        "gate": {
+          "js": true,
+          "motionBoot": null,
+          "stage": null,
+          "splitGrid": 0,
+          "windowShown": 0,
+          "stageRoot": false,
+          "bars": false,
+          "on": 0
+        },
+        "ok": true
+      },
+      "ms": 19236,
+      "console": []
+    },
+    "lenis": {
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "desktop": {
+          "pass": null,
+          "skipped": "viewport 1440x900 rm: smooth scroll expected off"
+        },
+        "off.390touch": {
+          "pass": true,
+          "lenis": false,
+          "label": "WORK"
+        },
+        "off.1024x1366touch": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.rm": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.skipsmooth": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.lab": {
+          "pass": true,
+          "lenis": false
+        },
+        "off.404": {
+          "pass": true,
+          "lenis": false
+        }
+      },
+      "ms": 37759,
+      "console": [
+        "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    "loaf": {
+      "pass": false,
+      "mode": "no-intro",
+      "metric": "duration",
+      "max": 50,
+      "count": 2,
+      "over": 2,
+      "worstDur": 174,
+      "worstWork": 162,
+      "loafs": [
+        {
+          "dur": 174,
+          "block": 113,
+          "work": 162,
+          "top": null,
+          "t": 2893
+        },
+        {
+          "dur": 126,
+          "block": 68,
+          "work": 118,
+          "top": null,
+          "t": 713
+        }
+      ],
+      "ladderMs": {},
+      "lenis": false,
+      "ms": 11919,
+      "console": []
+    },
+    "nav": {
+      "skipped": true,
+      "note": "reduced motion: the browser's own anchor jumps (P3-2 #2 is the motion-on path)",
+      "ms": 8,
+      "console": []
+    },
+    "plates-live": {
+      "pass": false,
+      "live": {
+        "samples": 169,
+        "maxPlaying": 0,
+        "plates": 14,
+        "byHow": {
+          "dead": 14
+        },
+        "byHost": {
+          "hero": 1,
+          "card": 4,
+          "section:journey": 1,
+          "section:work": 1,
+          "section:optuna-screener": 1,
+          "section:systems": 1,
+          "section:films": 1,
+          "section:beyond": 2,
+          "section:voices": 1,
+          "section:contact": 1
+        },
+        "dead": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 2039,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 1016,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 1289,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "deadOther": [
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 1024,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1023,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1018,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1017,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1275,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 1019,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1017,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 1536,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 1019,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "sample": [
+          {
+            "media": "MV-03",
+            "host": "hero",
+            "ms": 2039,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl",
+            "host": "card",
+            "ms": 1016,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "host": "section:journey",
+            "ms": 1024,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice",
+            "host": "card",
+            "ms": 1289,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pen-alt",
+            "host": "section:work",
+            "ms": 1023,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-ice-alt",
+            "host": "section:optuna-screener",
+            "ms": 1018,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "host": "section:systems",
+            "ms": 1017,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-pearl-alt",
+            "host": "section:films",
+            "ms": 1275,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "host": "section:beyond",
+            "ms": 1019,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-wanted",
+            "host": "section:beyond",
+            "ms": 1017,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "host": "section:voices",
+            "ms": 1536,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "iconic-hall",
+            "host": "card",
+            "ms": 1021,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          },
+          {
+            "media": "MV-08",
+            "host": "section:contact",
+            "ms": 1019,
+            "how": "dead",
+            "states": [
+              "poster"
+            ]
+          }
+        ],
+        "seq": {
+          "peakMB": 0,
+          "sampled": false
+        },
+        "requests": {
+          "count": 0,
+          "webm": 0,
+          "mp4": 0,
+          "urls": []
+        },
+        "codecPicks": null
+      },
+      "failures": [
+        "live: 5 W2 plate(s) on screen ≥ 1 s with no loop, camera or canvas",
+        "lab: the progress camera did not reach scale(1.35) at p 1",
+        "lab: the depth far band did not move",
+        "lab: a weather layer is missing or not running"
+      ],
+      "rm": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "pause": {
+        "before": {
+          "playing": 0,
+          "videos": 0,
+          "weather": 0,
+          "stageRoot": false,
+          "moved": 0
+        },
+        "button": true,
+        "at100": {
+          "playing": 0,
+          "weather": 0
+        },
+        "at300": {
+          "playing": 0,
+          "weather": 0,
+          "moved": 0
+        },
+        "requestsAfter": 0
+      },
+      "phone": {
+        "playing": 0,
+        "videos": 0,
+        "weather": 0,
+        "stageRoot": false,
+        "moved": 0,
+        "requests": 0
+      },
+      "lab": {
+        "cameraAtP1": "",
+        "depthFarAt0": "",
+        "weather": [],
+        "seqReady": true,
+        "seqMem": {
+          "resident": "/media/films/seq-hall/000.webp#72",
+          "frames": 25,
+          "bytes": 92160000,
+          "peak": 92160000
+        },
+        "plates": [
+          {
+            "media": "iconic-ice",
+            "mode": null,
+            "states": [
+              "iconic-ice:poster"
+            ]
+          },
+          {
+            "media": "MV-05a",
+            "mode": null,
+            "states": [
+              "MV-05a:poster"
+            ]
+          },
+          {
+            "media": "iconic-corridor",
+            "mode": null,
+            "states": [
+              "iconic-corridor:poster"
+            ]
+          },
+          {
+            "media": "iconic-camp",
+            "mode": null,
+            "states": [
+              "iconic-camp:poster"
+            ]
+          },
+          {
+            "media": "MV-10",
+            "mode": null,
+            "states": [
+              "MV-10:poster"
+            ]
+          },
+          {
+            "media": "iconic-drone",
+            "mode": null,
+            "states": [
+              "iconic-drone:poster"
+            ]
+          },
+          {
+            "media": "iconic-express",
+            "mode": null,
+            "states": [
+              "iconic-express:poster"
+            ]
+          },
+          {
+            "media": "iconic-deadeye",
+            "mode": null,
+            "states": [
+              "iconic-deadeye:poster"
+            ]
+          }
+        ]
+      },
+      "ms": 77508,
+      "console": []
+    },
+    "research-font": {
+      "pass": true,
+      "vw": {
+        "width": 1440,
+        "height": 900
+      },
+      "wide": true,
+      "house": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ],
+      "checked": 234,
+      "islands": 16,
+      "families": {
+        "Geist Mono": 174,
+        "Geist": 60
+      },
+      "offenders": 0,
+      "bad": [],
+      "otherFigures": [
+        "Newsreader",
+        "fontWorldPiratesBody",
+        "fontWorldIdiotsHead",
+        "fontWorldRdr2Head",
+        "fontWorldRdr2Body"
+      ],
+      "ms": 1637,
+      "console": []
+    },
+    "sound": {
+      "pass": true,
+      "checks": {
+        "phone": {
+          "pass": true,
+          "exists": true,
+          "visible": false,
+          "pressed": "false",
+          "disabled": "true",
+          "described": "_r_1_",
+          "note": "Sound follows motion: resume motion to hear it",
+          "made": 0
+        },
+        "rm.boot": {
+          "pass": true,
+          "before": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          },
+          "after": {
+            "exists": true,
+            "visible": true,
+            "pressed": "false",
+            "disabled": "true",
+            "described": "_r_1_",
+            "note": "Sound follows motion: resume motion to hear it",
+            "made": 0
+          }
+        }
+      },
+      "ms": 33433,
+      "console": []
+    },
+    "split": {
+      "pass": false,
+      "widths": {
+        "1440x900": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              12,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              12,
+              12,
+              12
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 900,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ],
+        "1024x768": [
+          {
+            "id": "trading-algos",
+            "side": "right",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": "B19",
+            "rack": "B20-rack",
+            "stacks": [
+              12,
+              12,
+              2
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "optuna-screener",
+            "side": "right",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B23-rack",
+            "stacks": [
+              12,
+              12,
+              2,
+              12
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          },
+          {
+            "id": "beyond",
+            "side": "left",
+            "display": "contents",
+            "columns": "none",
+            "top": 0,
+            "bottom": 0,
+            "windowLeft": 0,
+            "textLeft": 0,
+            "beat": null,
+            "rack": "B42-rack",
+            "stacks": [
+              12,
+              12,
+              12
+            ],
+            "checks": {
+              "grid": false,
+              "side": false,
+              "measured": false,
+              "sticky": false,
+              "neverEmpty": false,
+              "noOverflow": true
+            },
+            "samples": [
+              {
+                "at": "start",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "middle",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              },
+              {
+                "at": "end",
+                "top": 0,
+                "height": 0,
+                "header": 68,
+                "vh": 768,
+                "on": false,
+                "posterShown": false,
+                "layerShown": false,
+                "overflow": 0,
+                "docOverflow": 0
+              }
+            ],
+            "ok": false
+          }
+        ]
+      },
+      "ms": 90332,
+      "console": []
+    },
+    "spotlight": {
+      "pass": true,
+      "note": "not loaded under reduced motion (correct)",
+      "ms": 10282,
+      "console": []
+    },
+    "toys": {
+      "pass": true,
+      "checks": {
+        "rm.candles": {
+          "pass": true,
+          "total": 29,
+          "shown": 29,
+          "litShown": 29,
+          "litAll": 29,
+          "toy": false,
+          "bloom": false
+        },
+        "rm.compass": {
+          "pass": true,
+          "button": true,
+          "needle": 45
+        }
+      },
+      "ms": 10304,
+      "console": []
+    },
+    "words": {
+      "skipped": true,
+      "note": "words runs its reduced-motion check (rm) in its own context in the normal run",
+      "ms": 5,
+      "console": []
+    }
+  }
+}

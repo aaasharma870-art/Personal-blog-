@@ -1,0 +1,1950 @@
+{
+ "meta": {
+  "base": "http://localhost:3161",
+  "mode": "normal",
+  "vw": "1440x900",
+  "date": "2026-10-13T09:54:19.391Z",
+  "chromium": "141.0.7390.37"
+ },
+ "loads": [
+  {
+   "i": 1,
+   "lcpArmed": {
+    "lcp": [
+     {
+      "t": 440,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     }
+    ],
+    "cls": 0.00077,
+    "shifts": [
+     {
+      "t": 300,
+      "v": 0.00077,
+      "sy": 0,
+      "src": [
+       {
+        "chain": [],
+        "prev": [
+         146,
+         464,
+         111,
+         64
+        ],
+        "cur": [
+         146,
+         467,
+         115,
+         64
+        ]
+       },
+       {
+        "chain": [
+         "span.intro-lens.intro-lens-r",
+         "button#intro-play.intro-play.type-title",
+         "div.intro-block",
+         "div#intro."
+        ],
+        "prev": [
+         270,
+         460,
+         10,
+         80
+        ],
+        "cur": [
+         275,
+         460,
+         10,
+         80
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "lcpArmedErrors": [],
+   "lcpSkip": {
+    "lcp": [
+     {
+      "t": 212,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     }
+    ],
+    "cls": 0,
+    "shifts": []
+   },
+   "hydratedAt": 1185,
+   "baseline": {
+    "running": 12,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::hero-cap relative z-10 hidden sm:block",
+     "Animation::pointer-events-none absolute inset-0 bg-bg will-change-[opacity]",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videosTotal": 1,
+    "videosPlaying": 1,
+    "videosWithSrc": 1,
+    "audioEls": 0,
+    "audioCtxCreated": 0,
+    "audioCtxRunning": 0,
+    "audioPlays": 1,
+    "gl": 1,
+    "htmlAttrs": {
+     "motion": null,
+     "boot": null,
+     "stage": null
+    },
+    "lenis": false
+   },
+   "raf1s": 35,
+   "clsAtRest": {
+    "cls": 0,
+    "shifts": []
+   },
+   "wheel": {
+    "notches": 470,
+    "secs": 161,
+    "samples": [
+     {
+      "n": 60,
+      "y": 5944,
+      "running": 60,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 4,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 120,
+      "y": 11894,
+      "running": 73,
+      "sample": [
+       "CSSAnimation:stage-window-wide:stage-window-host",
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 0,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 7,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 180,
+      "y": 17914,
+      "running": 53,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 9,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 240,
+      "y": 23864,
+      "running": 50,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 1,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 12,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 300,
+      "y": 29889,
+      "running": 53,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 13,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 360,
+      "y": 35910,
+      "running": 39,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 14,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 420,
+      "y": 41872,
+      "running": 16,
+      "sample": [
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+      ],
+      "videosTotal": 2,
+      "videosPlaying": 1,
+      "videosWithSrc": 2,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 15,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     }
+    ]
+   },
+   "afterWheel": {
+    "cls": 0,
+    "shifts": [],
+    "docH": 44250,
+    "h1": 1,
+    "overflow": 0
+   },
+   "walk": [
+    {
+     "id": "top",
+     "running": 38,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-1",
+     "running": 38,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "journey",
+     "running": 39,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end",
+      "CSSTransition:opacity:absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-ch"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 0,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-2",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "work",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "films",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-3",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "voices",
+     "running": 23,
+     "sample": [
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-4",
+     "running": 22,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "contact",
+     "running": 13,
+     "sample": [
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "credits",
+     "running": 12,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 0,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    }
+   ],
+   "final": {
+    "cls": 0,
+    "shifts": []
+   },
+   "shiftsAfterHydration": [],
+   "net": {
+    "media": 16,
+    "videoBytes": 6285870,
+    "audioRequests": [],
+    "mediaList": [
+     {
+      "u": "/media/films/hero-sea-loop.webm",
+      "status": 206,
+      "n": 1284744,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-loop.webm",
+      "status": 206,
+      "n": 1202049,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-loop.webm",
+      "status": 206,
+      "n": 237935,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-alt-loop.webm",
+      "status": 206,
+      "n": 93799,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/board-dawn-loop.webm",
+      "status": 206,
+      "n": 172768,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-corridor-loop.webm",
+      "status": 206,
+      "n": 456571,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-alt-loop.webm",
+      "status": 206,
+      "n": 133994,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-loop.webm",
+      "status": 206,
+      "n": 105347,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-alt-loop.webm",
+      "status": 206,
+      "n": 387363,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/films-idiots-loop.webm",
+      "status": 206,
+      "n": 360298,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-deadeye-loop.webm",
+      "status": 206,
+      "n": 155644,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-wanted-loop.webm",
+      "status": 206,
+      "n": 162365,
+      "type": "media"
+     }
+    ],
+    "errors": [],
+    "failed": [],
+    "http": []
+   },
+   "ms": 184365
+  },
+  {
+   "i": 2,
+   "lcpArmed": {
+    "lcp": [
+     {
+      "t": 256,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     },
+     {
+      "t": 956,
+      "el": "VIDEO.",
+      "url": "://localhost:3161/media/films/intro-play-loop.webm",
+      "size": 1295973
+     }
+    ],
+    "cls": 0.00077,
+    "shifts": [
+     {
+      "t": 276,
+      "v": 0.00077,
+      "sy": 0,
+      "src": [
+       {
+        "chain": [],
+        "prev": [
+         146,
+         464,
+         111,
+         64
+        ],
+        "cur": [
+         146,
+         467,
+         115,
+         64
+        ]
+       },
+       {
+        "chain": [
+         "span.intro-lens.intro-lens-r",
+         "button#intro-play.intro-play.type-title",
+         "div.intro-block",
+         "div#intro."
+        ],
+        "prev": [
+         270,
+         460,
+         10,
+         80
+        ],
+        "cur": [
+         275,
+         460,
+         10,
+         80
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "lcpArmedErrors": [],
+   "lcpSkip": {
+    "lcp": [
+     {
+      "t": 216,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     }
+    ],
+    "cls": 0,
+    "shifts": []
+   },
+   "hydratedAt": 1199,
+   "baseline": {
+    "running": 12,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::hero-cap relative z-10 hidden sm:block",
+     "Animation::pointer-events-none absolute inset-0 bg-bg will-change-[opacity]",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videosTotal": 1,
+    "videosPlaying": 1,
+    "videosWithSrc": 1,
+    "audioEls": 0,
+    "audioCtxCreated": 0,
+    "audioCtxRunning": 0,
+    "audioPlays": 1,
+    "gl": 1,
+    "htmlAttrs": {
+     "motion": null,
+     "boot": null,
+     "stage": null
+    },
+    "lenis": false
+   },
+   "raf1s": 27,
+   "clsAtRest": {
+    "cls": 0,
+    "shifts": []
+   },
+   "wheel": {
+    "notches": 470,
+    "secs": 150,
+    "samples": [
+     {
+      "n": 60,
+      "y": 5919,
+      "running": 60,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 4,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 120,
+      "y": 11859,
+      "running": 73,
+      "sample": [
+       "CSSAnimation:stage-window-wide:stage-window-host",
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 0,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 7,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 180,
+      "y": 17821,
+      "running": 53,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 9,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 240,
+      "y": 23813,
+      "running": 52,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 1,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 12,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 300,
+      "y": 29859,
+      "running": 52,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 13,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 360,
+      "y": 35868,
+      "running": 39,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 14,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 420,
+      "y": 41815,
+      "running": 18,
+      "sample": [
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+      ],
+      "videosTotal": 2,
+      "videosPlaying": 1,
+      "videosWithSrc": 2,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 15,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     }
+    ]
+   },
+   "afterWheel": {
+    "cls": 0,
+    "shifts": [],
+    "docH": 44250,
+    "h1": 1,
+    "overflow": 0
+   },
+   "walk": [
+    {
+     "id": "top",
+     "running": 44,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-1",
+     "running": 44,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "journey",
+     "running": 44,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-2",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "work",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "films",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-3",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "voices",
+     "running": 23,
+     "sample": [
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-4",
+     "running": 22,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "contact",
+     "running": 13,
+     "sample": [
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "credits",
+     "running": 12,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 0,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    }
+   ],
+   "final": {
+    "cls": 0,
+    "shifts": []
+   },
+   "shiftsAfterHydration": [],
+   "net": {
+    "media": 15,
+    "videoBytes": 6208645,
+    "audioRequests": [],
+    "mediaList": [
+     {
+      "u": "/media/films/hero-sea-loop.webm",
+      "status": 206,
+      "n": 1284744,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-loop.webm",
+      "status": 206,
+      "n": 1202049,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-loop.webm",
+      "status": 206,
+      "n": 237935,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-alt-loop.webm",
+      "status": 206,
+      "n": 93799,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/board-dawn-loop.webm",
+      "status": 206,
+      "n": 172768,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-corridor-loop.webm",
+      "status": 206,
+      "n": 456571,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-alt-loop.webm",
+      "status": 206,
+      "n": 133994,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-loop.webm",
+      "status": 206,
+      "n": 105347,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-alt-loop.webm",
+      "status": 206,
+      "n": 387363,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/films-idiots-loop.webm",
+      "status": 206,
+      "n": 360298,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-deadeye-loop.webm",
+      "status": 206,
+      "n": 155644,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-wanted-loop.webm",
+      "status": 206,
+      "n": 162365,
+      "type": "media"
+     }
+    ],
+    "errors": [],
+    "failed": [],
+    "http": []
+   },
+   "ms": 173532
+  },
+  {
+   "i": 3,
+   "lcpArmed": {
+    "lcp": [
+     {
+      "t": 288,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     },
+     {
+      "t": 1024,
+      "el": "VIDEO.",
+      "url": "://localhost:3161/media/films/intro-play-loop.webm",
+      "size": 1295973
+     }
+    ],
+    "cls": 0.00077,
+    "shifts": [
+     {
+      "t": 307,
+      "v": 0.00077,
+      "sy": 0,
+      "src": [
+       {
+        "chain": [],
+        "prev": [
+         146,
+         464,
+         111,
+         64
+        ],
+        "cur": [
+         146,
+         467,
+         115,
+         64
+        ]
+       },
+       {
+        "chain": [
+         "span.intro-lens.intro-lens-r",
+         "button#intro-play.intro-play.type-title",
+         "div.intro-block",
+         "div#intro."
+        ],
+        "prev": [
+         270,
+         460,
+         10,
+         80
+        ],
+        "cur": [
+         275,
+         460,
+         10,
+         80
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "lcpArmedErrors": [],
+   "lcpSkip": {
+    "lcp": [
+     {
+      "t": 288,
+      "el": "SPAN.block",
+      "url": "",
+      "size": 107550
+     }
+    ],
+    "cls": 0,
+    "shifts": []
+   },
+   "hydratedAt": 1205,
+   "baseline": {
+    "running": 12,
+    "sample": [
+     "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+     "Animation::hero-cap relative z-10 hidden sm:block",
+     "Animation::pointer-events-none absolute inset-0 bg-bg will-change-[opacity]",
+     "Animation::rdr2-module__R8wI0W__duskVeil"
+    ],
+    "videosTotal": 1,
+    "videosPlaying": 1,
+    "videosWithSrc": 1,
+    "audioEls": 0,
+    "audioCtxCreated": 0,
+    "audioCtxRunning": 0,
+    "audioPlays": 1,
+    "gl": 1,
+    "htmlAttrs": {
+     "motion": null,
+     "boot": null,
+     "stage": null
+    },
+    "lenis": false
+   },
+   "raf1s": 32,
+   "clsAtRest": {
+    "cls": 0,
+    "shifts": []
+   },
+   "wheel": {
+    "notches": 470,
+    "secs": 146,
+    "samples": [
+     {
+      "n": 60,
+      "y": 5970,
+      "running": 60,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 4,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 120,
+      "y": 11921,
+      "running": 73,
+      "sample": [
+       "CSSAnimation:stage-window-wide:stage-window-host",
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 0,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 7,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 180,
+      "y": 17862,
+      "running": 53,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 9,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 240,
+      "y": 23799,
+      "running": 52,
+      "sample": [
+       "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 1,
+      "videosPlaying": 1,
+      "videosWithSrc": 1,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 12,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 300,
+      "y": 29788,
+      "running": 52,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 13,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 360,
+      "y": 35853,
+      "running": 38,
+      "sample": [
+       "Animation::rdr2-module__R8wI0W__duskVeil",
+       "Animation::",
+       "Animation::",
+       "Animation::"
+      ],
+      "videosTotal": 0,
+      "videosPlaying": 0,
+      "videosWithSrc": 0,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 14,
+      "gl": 2,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     },
+     {
+      "n": 420,
+      "y": 41812,
+      "running": 18,
+      "sample": [
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+       "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+      ],
+      "videosTotal": 2,
+      "videosPlaying": 1,
+      "videosWithSrc": 2,
+      "audioEls": 0,
+      "audioCtxCreated": 0,
+      "audioCtxRunning": 0,
+      "audioPlays": 15,
+      "gl": 1,
+      "htmlAttrs": {
+       "motion": null,
+       "boot": null,
+       "stage": "live"
+      },
+      "lenis": true
+     }
+    ]
+   },
+   "afterWheel": {
+    "cls": 0,
+    "shifts": [],
+    "docH": 44250,
+    "h1": 1,
+    "overflow": 0
+   },
+   "walk": [
+    {
+     "id": "top",
+     "running": 38,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-1",
+     "running": 38,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:absolute inset-0 size-full transition-opacity duration-(--dur-preview) object-cover opac",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 1,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "journey",
+     "running": 41,
+     "sample": [
+      "CSSTransition:background-color:fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--dur-base) bg",
+      "CSSTransition:opacity:header-band",
+      "CSSTransition:opacity:act-card-under relative order-4 min-w-0 sm:order-none sm:row-start-3 sm:justify-self-end",
+      "CSSTransition:opacity:absolute inset-0 size-full opacity-0 transition-opacity duration-(--dur-preview) will-ch"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 0,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-2",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 16,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "work",
+     "running": 23,
+     "sample": [
+      "CSSTransition:opacity:pointer-events-none absolute inset-0 z-[1] overflow-hidden opacity-0",
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "films",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-3",
+     "running": 22,
+     "sample": [
+      "CSSAnimation:trail-fog-lift:trail-fog absolute inset-0",
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "voices",
+     "running": 23,
+     "sample": [
+      "Animation::rdr2-module__R8wI0W__duskVeil",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "act-4",
+     "running": 22,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 0,
+     "videosPlaying": 0,
+     "videosWithSrc": 0,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 17,
+     "gl": 3,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "contact",
+     "running": 13,
+     "sample": [
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)",
+      "Animation::absolute size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--w-ink-contour)"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 1,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    },
+    {
+     "id": "credits",
+     "running": 12,
+     "sample": [
+      "Animation::",
+      "Animation::",
+      "Animation::",
+      "Animation::"
+     ],
+     "videosTotal": 1,
+     "videosPlaying": 0,
+     "videosWithSrc": 1,
+     "audioEls": 0,
+     "audioCtxCreated": 0,
+     "audioCtxRunning": 0,
+     "audioPlays": 18,
+     "gl": 2,
+     "htmlAttrs": {
+      "motion": null,
+      "boot": null,
+      "stage": "live"
+     },
+     "lenis": true
+    }
+   ],
+   "final": {
+    "cls": 0,
+    "shifts": []
+   },
+   "shiftsAfterHydration": [],
+   "net": {
+    "media": 15,
+    "videoBytes": 6208645,
+    "audioRequests": [],
+    "mediaList": [
+     {
+      "u": "/media/films/hero-sea-loop.webm",
+      "status": 206,
+      "n": 1284744,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-loop.webm",
+      "status": 206,
+      "n": 1202049,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-loop.webm",
+      "status": 206,
+      "n": 237935,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-alt-loop.webm",
+      "status": 206,
+      "n": 93799,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/board-dawn-loop.webm",
+      "status": 206,
+      "n": 172768,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-corridor-loop.webm",
+      "status": 206,
+      "n": 456571,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-ice-alt-loop.webm",
+      "status": 206,
+      "n": 133994,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pen-loop.webm",
+      "status": 206,
+      "n": 105347,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-pearl-alt-loop.webm",
+      "status": 206,
+      "n": 387363,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/films-idiots-loop.webm",
+      "status": 206,
+      "n": 360298,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-deadeye-loop.webm",
+      "status": 206,
+      "n": 155644,
+      "type": "media"
+     },
+     {
+      "u": "/media/films/iconic-wanted-loop.webm",
+      "status": 206,
+      "n": 162365,
+      "type": "media"
+     }
+    ],
+    "errors": [],
+    "failed": [],
+    "http": []
+   },
+   "ms": 170261
+  }
+ ],
+ "deeplinks": []
+}

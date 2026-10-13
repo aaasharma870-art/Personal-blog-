@@ -148,7 +148,15 @@ export function Snitch({ className }: { className?: string }) {
         // the dart's first 1.2 s; released when it lands)
         if (!window.matchMedia(DESKTOP_FINE).matches) return dart();
         asking = true;
-        void spotlight.request(STAR, { weight: 2, durationMs: DART_S * 1000 }).then((a) => {
+        // onCut (P3-11 r3, F1): the arbiter cut the hold → the end state,
+        // the Snitch back at its rest spot, wings still
+        const onCut = () => {
+          stop?.();
+          x.jump(0);
+          y.jump(0);
+          setDarting(false);
+        };
+        void spotlight.request(STAR, { weight: 2, durationMs: DART_S * 1000, onCut }).then((a) => {
           asking = false;
           if (a === "play") dart();
         });

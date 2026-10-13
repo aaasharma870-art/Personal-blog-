@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+import { Suspense, useLayoutEffect, useRef, useState } from "react";
+import { safeLazy } from "@/lib/safe-lazy";
 import type { ReactNode, RefObject } from "react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import type { BeatWeight } from "@/lib/beats";
@@ -170,18 +171,18 @@ function usePlateEntrance(
       return;
     }
     if (phase === "armed") {
-      captionOpacity.jump(0);
+      captionOpacity.jump(0.001);
       if (kind === "slow-settle") {
         // on the line trigger never armed at opacity 0 (spec §2.4 D3: no
         // empty first Work screen): the plate rises into view at 1.07× and
         // settles as it enters
-        frameOpacity.jump(line === null ? 0 : 1);
+        frameOpacity.jump(line === null ? 0.001 : 1);
         imageScale.jump(1.07);
       } else if (kind === "light-sweep") {
         shade.jump(1);
         sweepX.jump("-75%");
       } else if (kind === "pats") {
-        frameOpacity.jump(0);
+        frameOpacity.jump(0.001);
         frameY.jump(8);
         frameScale.jump(0.96);
       } else {
@@ -271,6 +272,7 @@ export function PlateBand({
   amount = 0.3,
   camera,
   star,
+  liveStar,
   enterAt,
 }: {
   /** The resolved plate to show (see headPlateOf / platePick). */
@@ -299,6 +301,8 @@ export function PlateBand({
   camera?: CameraSpec;
   /** The entrance is this time star (spotlight; useEnterOnce `star`). */
   star?: { id: string; weight: BeatWeight };
+  /** The plate's loop is this declared LIVE star (LivePlate `liveStar`). */
+  liveStar?: string;
   /** DESKTOP_FINE: enter as the top crosses ≈ this fraction of the viewport
    *  (and slow-settle is never armed at opacity 0). */
   enterAt?: number;
@@ -332,7 +336,7 @@ export function PlateBand({
       <div className={cn("relative overflow-hidden bg-(--world-deep)", s.box)}>
         <motion.div className={cn("absolute inset-0", imageMoves && "will-change-transform")} style={imageStyle}>
           {plate ? (
-            <LivePlate media={plate} camera={camera} sizes={sizes} className="size-full">
+            <LivePlate media={plate} camera={camera} sizes={sizes} liveStar={liveStar} className="size-full">
               {renderSlot(registered, e.phase)}
             </LivePlate>
           ) : (
@@ -430,6 +434,8 @@ export function HeadBand({
   pieceKey,
   captionKey,
   className,
+  registered,
+  liveStar,
 }: {
   spec: HeadPlate;
   choice: VariantChoice;
@@ -437,6 +443,10 @@ export function HeadBand({
   pieceKey: string;
   captionKey: CaptionKey;
   className?: string;
+  /** Chalk registered to the plate (PlateBand `registered`). */
+  registered?: ReactNode;
+  /** The plate's loop is this declared LIVE star (PlateBand `liveStar`). */
+  liveStar?: string;
 }) {
   const variant = useVariant(choice, pieceKey);
   const id = headPlateOf(spec, variant);
@@ -449,6 +459,8 @@ export function HeadBand({
       sizes="100vw"
       enterAt={0.9}
       className={className}
+      registered={registered}
+      liveStar={liveStar}
       caption={<SceneCaption k={captionKey} place="bl" />}
       captionClassName="px-gutter sm:absolute sm:inset-y-0 sm:left-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:right-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:px-0"
     />
@@ -457,8 +469,8 @@ export function HeadBand({
 
 /* — the pen (the `3i-pen` egg, spec §9.1 #9): desktop only, lazy ———————— */
 
-const PenHotspot = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenHotspot })));
-const PenWin = lazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenWin })));
+const PenHotspot = safeLazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenHotspot })));
+const PenWin = safeLazy(() => import("@/components/worlds/idiots/pen-egg").then((m) => ({ default: m.PenWin })));
 
 /**
  * PenInset — the kill-list's header plate: Virus's astronaut pen in its open
@@ -480,12 +492,15 @@ export function PenInset({
   pieceKey,
   captionKey,
   className,
+  liveStar,
 }: {
   spec: HeadPlate;
   choice: VariantChoice;
   pieceKey: string;
   captionKey: CaptionKey;
   className?: string;
+  /** The plate's loop is this declared LIVE star (PlateBand `liveStar`). */
+  liveStar?: string;
 }) {
   const variant = useVariant(choice, pieceKey);
   const plate = platePick(spec.media, variant);
@@ -504,6 +519,7 @@ export function PenInset({
       sizes="(min-width: 64rem) 50vw, 100vw"
       className={className}
       camera={camera}
+      liveStar={liveStar}
       registered={
         egg ? (
           <Suspense fallback={null}>

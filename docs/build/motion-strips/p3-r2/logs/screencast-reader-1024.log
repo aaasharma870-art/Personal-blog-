@@ -1,0 +1,5 @@
+screencast: reader 1024x768 headed (xvfb-run) http://localhost:3161/?intro=1&debug=spotlight
+  Lenis ON; intro marks arm,ready,play,flight,warm,hold,reveal,landing,titles,end,titles-end
+  video: docs/build/motion-strips/p3-r2/raw/screencast/reader-1024/video.mp4
+  3889 frames; scroll 223.9 s; rAF 21.9 fps p95 100.1 ms >50ms 23.1%; screencast 16.4 fps; LoAF 1136 (1107 > 50 ms, work > 50: 6); CLS 0.0271; spotlight events 184; errors 0
+  → docs/build/motion-strips/p3-r2/screencast/reader-1024/screencast.json

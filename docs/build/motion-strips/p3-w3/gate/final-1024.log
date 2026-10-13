@@ -1,0 +1,4 @@
+pass    cards (74007 ms)
+pass    split (10581 ms)
+pass    words (101671 ms)
+p3-probes: 3 probe(s), 0 failed → docs/build/motion-strips/p3-w3/gate/final-1024/p3-probes.json

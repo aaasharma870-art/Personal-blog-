@@ -818,7 +818,7 @@ export const mediaAssets = {
   },
   "F-RD": {
     kind: "image", status: "accepted", src: "/media/films/films-rdr2.webp",
-    width: 2520, height: 1080, alt: null, marks: { horse: [0.766, 0.42] },
+    width: 2520, height: 1080, alt: null, marks: { horse: [0.766, 0.42] }, focal: [0.77, 0.42],
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only, regen 1)", 4.5, "7a6da513-4572-4785-b826-77b068747f54",
       "the Heartlands at dusk: a ridge in afterglow, riderless horses (4 legs, 1 head); regenerated WITHOUT the MV-10 ref (it copied MV-10's composition); FLAG: left 45% SD 23.7 (dusk sky) -> captions under the frame"),
     accept: cleanM2(["IC-RD-05", "IC-RD-06"]),

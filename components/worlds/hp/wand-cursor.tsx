@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import type { Variant } from "@/lib/variants";
+import { useVariant } from "@/lib/use-variant";
+import type { VariantChoice } from "@/lib/variants";
 import "@/assets/p3/hp/hp-toys.css";
 
 /* ============================================================================
    WAND CURSOR — the page's one light cursor, Harry Potter acts only
    (PHASE3-SPEC §9.2 #4, IDEAS §0 "Light cursor (K6): the HP wand"; P3-8 #6).
-   OWNER: W3-HP. LAZY (DP-13): loaded by hp-desktop.tsx only on DESKTOP_FINE
-   with motion on, after ladder step 2; Pause or reduced motion unmounts it
-   at once (cursor restored, bloom removed, no listener left).
+   OWNER: W3-HP. LAZY (DP-13): mounted by contact-scene.tsx only on
+   DESKTOP_FINE with motion on, after ladder step 2; Pause or reduced motion
+   unmounts it at once (cursor restored, bloom and its layers removed, no
+   listener left). Variant piece `contact.wand` (the contact's choice).
 
    ZONES: #principles and #contact (the whole sections), and inside #act-4
    only the hall's media layer (`[data-wand-zone]`, the ignite frames) while
@@ -21,12 +23,14 @@ import "@/assets/p3/hp/hp-toys.css";
      bone outline so it reads on the dark hall and on the parchment.
    - THE BLOOM: one 96 px Lumos bloom (a pre-rendered radial image: Law 1,
      never DOM glow) follows the tip by transform. It lives BELOW the text,
-     inside each zone's media / art layer (`[data-wand-art]` in the Map's
-     parchment, the ALT's night sky and the contact's hall ceiling; the hall
-     plate layer itself in #act-4), so it only ever lights media and art,
-     never across text (IC-HP-09); a layer that text sits on asks for a
-     softer light (`data-wand-art="<opacity>"`). rAF only while the pointer
-     moves; it fades after 1 s still.
+     inside each zone's media / art layer, so it only ever lights media and
+     art, never across text (IC-HP-09): in #act-4 the hall plate's own layer;
+     elsewhere a clipped layer this module adds (ART below, created on the
+     first move into the zone, removed on unmount; no first-load markup) at
+     z-index −10 in the art's own stacking context, under every word: on the
+     Map's parchment, in the ALT's night sky (softer: light text sits on
+     it), and in the contact's hall ceiling (around and under the plate).
+     rAF only while the pointer moves; it fades after 1 s still.
        DEFAULT "tip-bloom"      the bloom sits on the tip.
        ALT     "trailing-light" the bloom trails the tip on a soft follow
                                 (it catches up in ≈ ¼ s: the rAF runs on
@@ -84,7 +88,21 @@ const BLOOM_SRC = uri(
     `<circle cx="48" cy="48" r="48" fill="url(#b)"/></svg>`,
 );
 
-export default function WandCursor({ variant }: { variant: Variant }) {
+/** Where each zone's bloom layer goes (the first match), its box and its
+ *  light. The Map and the hall ceiling are boxes already; the ALT's sky is
+ *  full-bleed around the page column (as its CeilingGround). */
+const ART: readonly { at: string; css: string; level: number }[] = [
+  { at: '[data-motif="marauders-map"]', css: "inset:0;z-index:-10", level: 1 },
+  {
+    at: '[data-motif="enchanted-ceiling"]',
+    css: "z-index:-10;left:50%;width:100vw;transform:translateX(-50%);top:calc(-1 * var(--section-pad));bottom:calc(-0.5 * var(--section-pad))",
+    level: 0.45,
+  },
+  { at: '[data-motif="great-hall-ceiling"]', css: "inset:0", level: 1 },
+];
+
+export default function WandCursor({ choice }: { choice: VariantChoice }) {
+  const variant = useVariant(choice, "contact.wand");
   useEffect(() => {
     const principles = document.querySelector<HTMLElement>('[data-world-section="principles"]');
     const contact = document.querySelector<HTMLElement>('[data-world-section="contact"]');
@@ -116,10 +134,30 @@ export default function WandCursor({ variant }: { variant: Variant }) {
     let idle = 0;
     let still = false;
 
+    /** The bloom layers this module added (removed on unmount). */
+    const layers = new Set<HTMLElement>();
+    /** The zone's bloom layer: found, or added into its art (null: none). */
+    const artOf = (z: HTMLElement): HTMLElement | null => {
+      const have = z.querySelector<HTMLElement>("[data-wand-art]");
+      if (have) return have;
+      for (const a of ART) {
+        const box = z.querySelector<HTMLElement>(a.at);
+        if (!box) continue;
+        const el = document.createElement("div");
+        el.setAttribute("aria-hidden", "true");
+        el.setAttribute("data-wand-art", String(a.level));
+        el.style.cssText = `position:absolute;overflow:hidden;pointer-events:none;${a.css}`;
+        box.appendChild(el);
+        layers.add(el);
+        return el;
+      }
+      return null;
+    };
+
     /** The art layer the bloom belongs to under the pointer, or null. */
     const hostFor = (z: HTMLElement | null): HTMLElement | null => {
       if (!z) return null;
-      if (z !== act4) return z.querySelector<HTMLElement>("[data-wand-art]");
+      if (z !== act4) return artOf(z);
       // #act-4: the hall's media layer, only where it is under the pointer and showing
       for (const el of z.querySelectorAll<HTMLElement>("[data-wand-zone]")) {
         const r = el.getBoundingClientRect();
@@ -214,6 +252,7 @@ export default function WandCursor({ variant }: { variant: Variant }) {
       }
       setIn(false);
       bloom.remove();
+      for (const el of layers) el.remove();
     };
   }, [variant]);
   return null;

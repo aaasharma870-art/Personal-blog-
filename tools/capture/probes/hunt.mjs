@@ -17,11 +17,14 @@
 //   obliviate    Obliviate keeps the count
 //   eggsoff      "Turn off easter eggs" hides the chip and keeps the count; on again shows it
 //   panel        the chip opens the panel (12 slots), Esc closes it and focus returns to the chip
-//   hotspot      an injected <EggHotspot> markup counts on click once the enhancer binds it; a hold
+//   hotspot      an injected <EggHotspot> markup (body > button, apart from the hosted ones; leftovers of an earlier
+//                injection removed first) counts on click once the enhancer binds it; a hold
 //                hotspot ignores a short click and counts on a 700 ms press
 //   reset        the palette's "Reset the egg hunt" (confirm accepted) clears the count
-//   complete     at 11 found, the 12th (palette "aal") turns the chip gold, toasts 12 / 12 and
-//                adds the 12 THE HUNT credit rows (SEEKER steps aside)
+//   complete     at 11 found (the Snitch among them: the SEEKER row is in the roll), the 12th (palette
+//                "aal") turns the chip gold, toasts 12 / 12, adds the 12 THE HUNT credit rows and the
+//                SEEKER row steps aside (seekerBefore true, seeker false; P3-11 r3, J9 F5)
+// The chip's count is read from its count span (C7: exactly "N/12"), never its whole text.
 //   tail         the 60vh tail; ≥ 50 % in view for 1 s plays the scene once (extended at 12/12)
 //                and not again this session
 //   phone        390×844 touch: no chip, no tail
@@ -35,7 +38,15 @@ export default async function probe(page, ctx) {
   const set = (name, pass, detail = {}) => (checks[name] = { pass: Boolean(pass), ...detail });
   const sleep = ctx.sleep;
   const found = () => page.evaluate((k) => Object.keys(JSON.parse(localStorage.getItem(k) ?? "null")?.found ?? {}), KEY);
-  const chipText = () => page.evaluate(() => document.querySelector("[data-hunt-chip]")?.textContent?.trim() ?? null);
+  // the chip's COUNT span (C7, P3-11 r3): it holds exactly "N/12"; the chip itself also carries a word
+  // ("Egg hunt 0/12", r1 F6), so its whole text is not the count. null = no chip.
+  const chipText = () =>
+    page.evaluate(() => {
+      const chip = document.querySelector("[data-hunt-chip]");
+      if (!chip) return null;
+      const n = chip.querySelector("[data-hunt-count], .hunt-chip-n");
+      return (n ?? chip).textContent?.trim() ?? null;
+    });
   const seed = (ids) =>
     page.evaluate(
       ([k, ids]) => localStorage.setItem(k, JSON.stringify({ v: 1, found: Object.fromEntries(ids.map((i) => [i, Date.now()])), rows: [] })),
@@ -60,8 +71,10 @@ export default async function probe(page, ctx) {
   await run("ssr", async () => {
     const res = await page.request.get(ctx.url("/?skip=intro"));
     const html = await res.text();
-    const m = /data-hunt-chip[^>]*>(?:<[^>]+>)*([^<]*)</.exec(html);
-    set("ssr", m && m[1].includes("–/12"), { text: m?.[1] ?? null });
+    // the count span inside the chip's server markup (the word span comes first since r1 F6)
+    const chip = /data-hunt-chip[^>]*>([\s\S]*?)<\/button>/.exec(html)?.[1] ?? "";
+    const m = /(?:data-hunt-count|class="hunt-chip-n)[^>]*>([^<]*)</.exec(chip);
+    set("ssr", Boolean(m) && m[1].trim() === "–/12", { text: m?.[1] ?? null, chip: chip.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() });
   });
 
   if (ctx.rm) {
@@ -256,6 +269,8 @@ export default async function probe(page, ctx) {
 
   await run("hotspot", async () => {
     await page.evaluate(() => {
+      // a leftover injection (an earlier attempt on this page) would make the locators below match twice
+      document.querySelectorAll("body > button[data-egg-hotspot]").forEach((b) => b.remove());
       const mk = (hunt, egg, hold) => {
         const b = document.createElement("button");
         b.type = "button";
@@ -273,11 +288,11 @@ export default async function probe(page, ctx) {
     // the enhancer binds at ladder step 2: click until the find lands (≤ 10 s)
     let bound = false;
     for (let i = 0; i < 20 && !bound; i++) {
-      await page.locator("button[data-egg-hotspot='rd-eagle']").click();
+      await page.locator("body > button[data-egg-hotspot='rd-eagle']").click();
       await sleep(500);
       bound = (await found()).includes("rd-eagle");
     }
-    const hold = page.locator("button[data-egg-hotspot='3i-aal']");
+    const hold = page.locator("body > button[data-egg-hotspot='3i-aal']");
     await hold.click();
     await sleep(300);
     const short = (await found()).includes("3i-aal");
@@ -305,9 +320,14 @@ export default async function probe(page, ctx) {
   });
 
   await run("complete", async () => {
+    // 11 found, the Snitch among them: SEEKER — you is in the roll (re-proved, J9 F5) …
     await seed(ALL.filter((i) => i !== "3i-aal"));
     await ctx.goto();
     await sleep(1500);
+    const seekerBefore = await page
+      .waitForFunction(() => Boolean(document.querySelector("[data-credits-row='seeker']")), null, { timeout: 4000 })
+      .then(() => true, () => false);
+    // … and steps aside at 12/12 (THE HUNT block carries it instead)
     await page.keyboard.press("Control+k");
     await page.fill("input[role=combobox]", "aal");
     await page.waitForSelector("#cmd-egg-aal", { timeout: 3000 });
@@ -321,7 +341,7 @@ export default async function probe(page, ctx) {
       rows: document.querySelectorAll("[data-credits-row^='hunt-']").length,
       seeker: Boolean(document.querySelector("[data-credits-row='seeker']")),
     }));
-    set("complete", done && r.gold && r.rows === 12 && !r.seeker && (await chipText()) === "12/12", { done, ...r });
+    set("complete", done && r.gold && r.rows === 12 && seekerBefore && !r.seeker && (await chipText()) === "12/12", { done, seekerBefore, ...r });
   });
 
   await run("tail", async () => {

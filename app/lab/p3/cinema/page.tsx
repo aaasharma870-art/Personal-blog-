@@ -5,7 +5,7 @@ import { anchorId, pageItems } from "@/lib/sections";
 import { VARIANTS } from "@/lib/variants";
 import { planeAttrs } from "@/lib/worlds";
 import { Meta } from "@/components/site/world-kit";
-import { DWELL, SPEED } from "@/components/director/directors-cut";
+import { DWELL, SPEED } from "@/components/director/timing";
 import { FilmFrame } from "@/components/sections/films/film-frame";
 import { ChapterSelectLab } from "./cinema-lab";
 

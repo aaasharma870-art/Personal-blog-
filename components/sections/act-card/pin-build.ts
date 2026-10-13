@@ -1,5 +1,6 @@
 import { film, type ActSpec } from "@/lib/film";
 import { coverOf } from "@/lib/gl/cover";
+import { TITLE_ZOOM } from "@/lib/gl/plan";
 import type { GlFlavour } from "@/lib/gl/types";
 import { markOf, rectOf, sequenceFrames, type MediaId } from "@/lib/media";
 import type { ActCardItem } from "@/lib/sections";
@@ -148,6 +149,21 @@ const GRADE: Partial<Record<CardPinSpec["kind"], { from: SkyKey; to: SkyKey }>> 
   ignite: { from: "dusk", to: "candle" },
 };
 
+/** P3-11 r3 (panel J3 medium, J2 / J4 low: "the same ghosted text-mask,
+ *  four times"): the tintype's act title is revealed by the bars (the
+ *  title.mask ALT: two deep bands close in, the lower bar's lettered h2
+ *  rises again) — a still RDR2 title card, not a fourth mask. Card 1 and
+ *  the protected set pieces keep theirs. */
+const BARS: Partial<Record<CardPinSpec["kind"], true>> = { tintype: true };
+
+/** C1 (P3-11 r3): the live-star id of a card's plate loop in star (b): its
+ *  push-title beat's id + "-loop" (declared by F1 in lib/beats.ts and
+ *  lib/spotlight-windows.ts LIVE_STARS). The tintype has no loop. */
+function loopBeatOf(act: ActSpec | undefined): string | null {
+  const b = act?.beats?.find((x) => x.kind === "push-title");
+  return b ? `${b.id}-loop` : null;
+}
+
 const isPinKind = (k: string): k is CardPinSpec["kind"] => k === "opening" || k === "seam" || k === "tintype" || k === "ignite";
 
 /**
@@ -196,6 +212,10 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       // the hero plate (outgoing) with its horizon on the disc's row
       const hero = plateOf(plates.from[v]);
       cFrom = hero ? (reg(hero, ["horizon"], 1.2, A, c[1]) ?? plainBox(hero)) : null;
+      // P3-11 r3 (hooks: the css tier's porthole sat on flat black, "still
+      // loading"): the css tier draws the same dimmed sea round the disc as
+      // the GL iris does, in the same crop (frames/opening-plate.tsx `sea`)
+      rFrom = cFrom;
       const far = Math.max(...[0, 1].flatMap((x) => [0, 1].map((y) => Math.hypot((c[0] - x) * A, c[1] - y))));
       iris[v] = { center: c, r0, r1: far };
       // the push still dives at the stern itself
@@ -220,7 +240,10 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       cFrom = cTo;
       const sun = (markOf(toP_.asset.id, "sun") as Pos | null) ?? [0.8125, 0.2185];
       const focus = frac(cTo, sun);
-      pv.default = { origin: focus, scale: [1, 1.04] };
+      // P3-11 r3 (F1: B38 granted while nothing visibly moved): the push
+      // toward the sun reads while the reader scrolls (1.04 → 1.1); a still
+      // screen in star (b) is held by the live B38-fireflies (lib/film.ts)
+      pv.default = { origin: focus, scale: [1, 1.1] };
       pv.alt = pv.default;
     } else if (kind === "ignite") {
       rFrom = reg(fromP, ["lake"]);
@@ -263,7 +286,14 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
             card: kind,
             variant: v,
             a: { flavour: FLAVOUR[kind][v], from, to, range: a },
-            b: { flavour: "title", text: title, world: item.to, maskOrigin: act?.maskOrigin ?? [0.5, 0.5], range: [0.5, 1] },
+            b: {
+              flavour: "title",
+              text: title,
+              world: item.to,
+              maskOrigin: act?.maskOrigin ?? [0.5, 0.5],
+              range: [0.5, 1],
+              ...(BARS[kind] ? { bars: true } : {}),
+            },
             row: MATCH_ROW,
             cover: { from: coverOf(cFrom), to: coverOf(cTo) },
             // the tintype's inset plate (develop / deadeye settle on it, on
@@ -292,6 +322,10 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
     const to = toP(bt.at + bt.span, travel);
     if (bt.kind === "transition" || bt.kind === "push-title" || bt.kind === "impact") {
       beats.push({ id: bt.id, from, to, ...(bt.star ? { weight: bt.weight ?? 1 } : {}) });
+    } else if (bt.id === loopBeatOf(act)) {
+      // the plate loop's live star (C1): a QUIET marker for the beat map only
+      // (no weight: useStars never registers it; PlateLoop does, while it plays)
+      beats.push({ id: bt.id, from, to });
     } else if (bt.kind === "stage-cue") {
       const k = WEATHER[bt.id.split("-").pop() ?? ""];
       if (k) weather.push({ kind: k, beat: bt.id, range: [from, to] });
@@ -309,10 +343,11 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       gl,
       toPlate: { default: plates.to.default, alt: plates.to.alt },
       push,
-      title: { text: title, origin: act?.maskOrigin ?? [0.5, 0.5] },
+      title: { text: title, origin: act?.maskOrigin ?? [0.5, 0.5], zoom: TITLE_ZOOM[kind], ...(BARS[kind] ? { bars: true } : {}) },
       shape,
       weather,
       beats,
+      loopBeat: loopBeatOf(act),
       iris: kind === "opening" ? iris : null,
       kraken: kind === "seam" ? { at: [0.62, MATCH_ROW + 0.16] } : null,
     },

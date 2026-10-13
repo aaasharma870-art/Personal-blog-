@@ -177,23 +177,10 @@
   }
 }
 
-/* — 3–4. The lower bar's phases and the frame's Phase-3 layers live in
-     cards-pin.css (imported by the lazy card-p3.tsx: first-load budget).
-     Only the iris rim's resting state stays here (opening-plate.tsx
-     renders the span on the server). — */
-/* the opening's iris rim (css tier; card-p3.tsx sizes and scales it with
-   the disc: drawn at the full radius, so the brass is ≈ 5 px at the 12 %
-   hook and leaves the frame as the disc opens) */
-.act-card-iris-rim {
-  display: none;
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  box-shadow:
-    inset 0 0 0 36px color-mix(in oklab, var(--w-brass) 88%, #000),
-    inset 0 0 0 46px rgb(0 0 0 / 0.45);
-}
-
+/* — 3–4. The lower bar's phases and the frame's Phase-3 layers, the
+     opening's iris rim included, live in cards-pin.css (imported by the
+     lazy card-p3.tsx: first-load budget). The rim's span is empty server
+     markup: unstyled it has no box, so it needs no rule here. — */
 /* — 5. The kraken (pc-kraken, spec §9.1 #6): the upper-bar button (DESKTOP_
      FINE only, with JS), the css tier's dark mass under the foam, and the
      tentacle tip above the canvas (it wraps nothing, IC-PC-05). — */

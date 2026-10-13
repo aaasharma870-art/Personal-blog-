@@ -75,12 +75,18 @@ export function About({ entry, number }: SectionProps<"story">) {
           className="hidden lg:col-span-5 lg:block lg:justify-self-end lg:pb-3 lg:text-right lg:before:left-auto lg:before:right-0"
         />
       </div>
-      <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
-        <div className="lg:col-span-5">
+      {/* ≥ xl the bio and the pillars side by side; 1024–1279 the pillars
+          sit under the bio, full width, so the compass keeps its own space
+          in their centre cross (r2 panel J2–J4: three narrow columns with
+          the compass wedged in the gutter at 1024) */}
+      <div className="mt-tier-block grid grid-cols-1 gap-tier-block xl:grid-cols-12 xl:gap-x-6">
+        {/* B07-bio (quiet, lib/page.ts): the bio block; at 1024–1279 it stands alone
+            (full width) between the h2 and the pillars (P3-11 r3) */}
+        <div className="xl:col-span-5" {...beatAttrs("B07-bio")}>
           <AboutBio />
         </div>
         {/* #about-pillars: the stage's cue 2 anchor (PHASE3-SPEC §3.2 cue plan) */}
-        <div id="about-pillars" className="lg:col-span-7">
+        <div id="about-pillars" className="xl:col-span-7">
           <AboutPillars
             choice={choice}
             bodies={bodies}

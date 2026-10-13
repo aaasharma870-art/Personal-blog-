@@ -17,7 +17,9 @@ import { DESKTOP_WIDE } from "./flags";
 import type { WorldId } from "./worlds";
 
 /** A world's faces as `[css var on <html>, weight]` (lib/fonts.ts, app/
- *  globals.css). The rdr2 hand (≤ 4 words a page) is left to load on use. */
+ *  globals.css). The rdr2 hand (≤ 4 words a page) is left to load on use.
+ *  The Pirates faces are never gated (the name's file; the body, preloaded
+ *  and optional since P3-11 r3): awaiting them only confirms the load. */
 const FACES: Readonly<Record<WorldId, readonly (readonly [string, number])[]>> = {
   house: [],
   pirates: [

@@ -2,10 +2,13 @@ import { about } from "@/lib/content";
 import { copyText, copyVisible } from "@/lib/sections";
 import { Collapse } from "@/components/primitives/collapse";
 import { Meta } from "@/components/site/world-kit";
-import { Rise } from "@/components/site/world-motion";
+import { AboutRise as Rise } from "@/components/site/about-pillars";
 
 /** The bio (verbatim content.ts) and the method note. Server-rendered and
- *  final in the HTML; paragraphs rise once when they enter (R1).
+ *  final in the HTML; paragraphs rise once when they enter (R1) — below
+ *  DESKTOP_FINE only: on the desktop About's prose is simply there and the
+ *  compass's entry spin is the screen's one star (about-pillars.tsx
+ *  AboutRise; P3-11 r1, J1 #5).
  *  Phase 3 (PHASE3-SPEC §11.5 #2, D3-9): the philosophy note sits in a
  *  native <details> closed at ≥ 64rem, summary "The philosophy note"
  *  (`about.philosophy.summary`); phones keep it open in flow (words.css),

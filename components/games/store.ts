@@ -5,7 +5,8 @@
        {"v":1,"drone":{"best":18400},"deadeye":{"n":5,"left":2300}}
    drone   the fastest clean course (all 7 gates), in ms;
    deadeye the best round: most killed rows marked, then the most Dead Eye
-           time left (ms; 0 when untimed under reduced motion).
+           time left (ms). Only timed rounds: an untimed round (reduced
+           motion) measures no time, so it stores nothing.
    Lazy only (the game chunks import it; never the first load). Every access
    is in try/catch: a blocked store keeps the view's own copy in memory, so a
    best still reads right for the rest of the visit.

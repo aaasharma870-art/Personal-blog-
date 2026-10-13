@@ -154,9 +154,11 @@ export function RanchoCircle({
  * (the caption names the moment; the drone names no character and is never
  * tied to Aryan's own drone work: RECOGNIZABILITY S10).
  */
-export function ChalkDrone({ className }: { className?: string }) {
+export function ChalkDrone({ className, still = false }: { className?: string; still?: boolean }) {
   const ref = useRef<SVGSVGElement>(null);
-  const phase = useDrawPhase(ref, 0.5);
+  // `still`: already drawn (a cue on a plate that performs its own entrance)
+  const drawPhase = useDrawPhase(ref, 0.5);
+  const phase = still ? "static" : drawPhase;
   const fid = useId().replace(/:/g, "");
   return (
     <svg

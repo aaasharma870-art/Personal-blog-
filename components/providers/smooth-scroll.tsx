@@ -9,10 +9,12 @@
    narrow window never fetch it: native scroll, byte-for-byte.
    ========================================================================== */
 
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { useDesktopFine } from "@/lib/flags";
+import { safeLazy } from "@/lib/safe-lazy";
 
-const Impl = lazy(() => import("./smooth-scroll-impl"));
+// renders nothing: a failed chunk only means native scroll, as on phones
+const Impl = safeLazy(() => import("./smooth-scroll-impl"));
 
 export function SmoothScroll() {
   const fine = useDesktopFine();

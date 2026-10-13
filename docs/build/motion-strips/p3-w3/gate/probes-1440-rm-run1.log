@@ -1,0 +1,12 @@
+pass    bundle (4913 ms)
+pass    cards (5829 ms)
+pass    cinema (5509 ms)
+pass    games (8947 ms)
+pass    gl (11490 ms)
+pass    hunt (2119 ms)
+FAIL    lenis (37788 ms)
+pass    sound (33467 ms)
+pass    spotlight (10379 ms)
+pass    toys (10536 ms)
+p3-probes: 10 probe(s), 1 failed → docs/build/motion-strips/p3-w3/probes-1440-rm/p3-probes.json
+exit 1

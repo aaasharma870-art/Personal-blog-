@@ -6,3 +6,63 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* — the Intermission's bill (components/sections/films/films-bill.tsx;
+     P3-11 r1): the programme of the films in their own faces and inks, a
+     hairline above it and the projector's light behind it. Desktop only:
+     phones keep today's head. — */
+.films-bill {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  /* P3-11 r3: the Intermission card (films-section.tsx): a silent-film
+     intertitle — double rule, centred house serif, the projector's light */
+  .films-card {
+    max-width: 66rem;
+    margin-inline: auto;
+    padding: clamp(2rem, 6vh, 4rem) clamp(2rem, 5vw, 4.5rem);
+    text-align: center;
+    border: 1px solid color-mix(in oklab, var(--fg) 32%, transparent);
+    outline: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+    outline-offset: 7px;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--fg) 8%, transparent), transparent);
+  }
+  .films-card header,
+  .films-card p {
+    margin-inline: auto;
+  }
+  .films-card h2 {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: clamp(3rem, 5.6vw, 5.5rem);
+    letter-spacing: -0.02em;
+  }
+  .films-card > p {
+    font-size: 1.0625rem;
+  }
+  .films-bill {
+    display: block;
+    margin-top: var(--spacing-tier-block);
+  }
+  .films-bill-acts {
+    display: grid;
+    grid-auto-flow: column;
+    /* sized by their names (P3-11 r3: "Red Dead Redemption 2" broke to
+       three lines with an orphaned "2" at 1024 in a quarter column) */
+    grid-auto-columns: auto;
+    justify-content: space-evenly;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .films-bill-acts > li {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+  .films-bill-title {
+    font-size: clamp(1.6rem, 2.4vw, 2.6rem);
+    line-height: 1.04;
+    color: var(--world-emphasis);
+    text-wrap: balance;
+  }
+}

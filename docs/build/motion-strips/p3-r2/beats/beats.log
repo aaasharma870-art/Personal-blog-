@@ -1,0 +1,16 @@
+(node:17681) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/user/Personal-blog-/lib/page.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/user/Personal-blog-/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+beats @1440: page 4959.8vh; 89 beat element(s), 89 declared
+  estVh: top 1 · act-1 2.648 · about 1.211 · journey 3.264 · act-2 2.1 · work 2.442 · trading-algos 2.087 · optuna-screener 3.23 · experiment 1.14 · systems 2.576 · kill-list 2.358 · films 6.37 · act-3 1.9 · beyond 4.805 · writing 2.91 · voices 1.602 · act-4 2.1 · principles 2.989 · contact 1.06 · credits 1.806
+  competing stars (28): B06 × B07 9.4vh; B07 × B08 10.9vh; B07 × B08-invite 55.2vh; B08-invite × B09 2.4vh; B08-invite × B12 16.4vh; B09 × B12 40vh; B12 × B10 7.5vh; B16 × B17 26.2vh; B17 × B18 38vh; B18 × B19 19.5vh; B18 × B20 17vh; B19 × B20 89.9vh; B21-circle × B22 55.6vh; B21 × B22 5.5vh; B22 × B23 10.7vh; B23-fig × B24 4.5vh; B25 × B26 10.8vh; B28 × B29 80vh; B42 × B43 7.2vh; B44-sketch × B45 28.4vh; B44 × B45 30.5vh; B44-page1 × B45 77.8vh; B45 × B44-page2 84.3vh; B45 × B44-page3 52.1vh; B45 × B44-page4 14.3vh; B44-page5 × B46 6.8vh; B52 × B53 77vh; B57 × B58 72.2vh
+  spotlight: {"own":23,"free":13,"request":38,"wait":22,"skip":36,"grant":2,"end":2}
+
+beats @1024: page 5383.7vh; 89 beat element(s), 89 declared
+  estVh: top 1 · act-1 2.705 · about 1.633 · journey 3.22 · act-2 2.1 · work 2.536 · trading-algos 2.849 · optuna-screener 3.934 · experiment 1.201 · systems 2.673 · kill-list 2.784 · films 6.194 · act-3 1.9 · beyond 5.611 · writing 3.236 · voices 2.01 · act-4 2.1 · principles 3.183 · contact 1.025 · credits 1.943
+  competing stars (24): B06 × B07 4.7vh; B07 × B08 2.7vh; B07 × B08-invite 35.8vh; B09 × B12 40vh; B12 × B10 7.1vh; B16 × B17 25.6vh; B17 × B18 16.7vh; B18 × B19 22.9vh; B18 × B20 1.9vh; B19 × B20 70.1vh; B21 × B22 2.7vh; B21-circle × B22 60.2vh; B25 × B26 4.1vh; B28 × B29 79.8vh; B28 × B29-lens 8vh; B42 × B43 5.3vh; B44-sketch × B45 44.8vh; B44 × B45 47.2vh; B45 × B44-page1 98.6vh; B45 × B44-page2 54.4vh; B45 × B44-page3 18.5vh; B44-page5 × B46 3.2vh; B52 × B53 73.4vh; B57 × B58 70.2vh
+  spotlight: {"own":21,"free":10,"request":39,"wait":25,"skip":37,"grant":2,"end":2}
+
+beats: wrote docs/build/motion-strips/p3-r2/beats/beats.json

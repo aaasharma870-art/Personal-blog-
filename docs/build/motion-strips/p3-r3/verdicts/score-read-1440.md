@@ -1,0 +1,47 @@
+CAPTIONED @1440: name "Aryan Sharma" read correctly by 3/3 (j1: Aryan Sharma; j2: Aryan Sharma; j3: Aryan Sharma)
+can't read: 44 finding(s)
+- j1 C001 (D01-hero): Icon-only controls in the nav (speaker-mute, wave) have no text, so I cannot tell what they do
+- j1 C001 (D01-hero): 'EGG HUNT 0/12' is legible but unexplained here
+- j1 C003 (D27-optuna-screener): Table header row in the blue 'FIG. 2' board is cut off by the bottom of the frame (STRATEGY FILE / INDICATORS / STRESS TESTS / 25% HOLDOUT)
+- j1 C005 (D29-systems): Heading 'What I can actually do' is cut by the bottom of the frame, only the top of 'actually do' shows
+- j1 C006 (D30-kill-list): Repo label 'Trading_Algos-' ends in a hyphen and looks truncated
+- j1 C007 (D38-principles): Last letters of 'PHILOSOPHY' are still fading in and pale against the parchment
+- j1 C007 (D38-principles): Corner compass medallion labels are decorative and unreadable
+- j1 C008 (D32-beyond): Bottom row 'Discipline, in three arenas' is cut off at the frame edge
+- j1 C009 (D43-films-pirates): Body text in the lower right is cut at the bottom of the frame
+- j1 C010 (D41-credits): 'CREDITS' header is tucked under the nav and very dim
+- j1 C010 (D41-credits): '© 2026 Aryan Sharma' is cut off at the bottom edge
+- j1 C010 (D41-credits): Small icon-only links (GitHub, mail) have no text labels
+- j1 C011 (D40-contact): Page shows only the '[A S]' monogram; the email 'aaasharma870@gmail.com' hints at a surname but no full name appears in this frame
+- j1 C012 (D26-trading-algos): Labels in the lower flow diagram ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE') are clipped by the bottom of the frame
+- j1 C013 (D20-about-120): Top of the heading ('A builder of') is clipped under the nav bar
+- j1 C014 (D31-voices): Only the first name appears, inside a quote ('Aryan brings a thoughtful and generous spirit...')
+- j1 C015 (D24-work): Heading 'Led by what' is cut off at the bottom of the frame
+- j1 C016 (D21-journey-step-1): Timeline labels (01 ORIGIN, 02 EARLY WORK, 03 THE BREAK, 04 NOW) are tiny and collide with the dotted route; 'THE BREAK' sits on the line
+- j1 C016 (D21-journey-step-1): Line above the 'Trading alongside my father' item is clipped under the nav
+- j1 C017 (D10-act-1-settled): Only the '[AS]' monogram, no full name in this frame
+- j2 C007 (D38-principles): The quill nib sits on the end of the 'PHILOSOPHY' headline and fades the letters 'HY' (still guessable)
+- j2 C010 (D41-credits): The small 'CREDITS' eyebrow label is half hidden under the sticky header
+- j2 C013 (D20-about-120): The first line of the heading ('A builder of') is cut off under the sticky header
+- j2 C016 (D21-journey-step-1): A faded line of body text at the very top under the header ('...it failed me first. Step through it.') is semi-transparent
+- j3 C001 (D01-hero): icon-only nav controls right of EGG HUNT (speaker with a cross, a wavy line) have no text, meaning is a guess
+- j3 C001 (D01-hero): nav micro-labels are about 9px mono: legible but small
+- j3 C002 (D28-experiment): only the '[AS]' initials mark; no name is written on this frame
+- j3 C003 (D27-optuna-screener): '- RANCHO' attribution on the chalkboard is tiny
+- j3 C003 (D27-optuna-screener): FIG. 2 table text at the bottom is cut off by the frame
+- j3 C004 (D36-writing): the taped note on the right journal page shows grey placeholder lines, not readable text
+- j3 C005 (D29-systems): 'What I can actually do' heading is cut off at the bottom edge
+- j3 C007 (D38-principles): last letters of 'PHILOSOPHY' are washed to a faint tan while the heading is still revealing
+- j3 C008 (D32-beyond): subtitle 'The same temperament, away from the terminal.' is low-contrast grey mono on near-black
+- j3 C009 (D43-films-pirates): body paragraph is cut off at the bottom edge
+- j3 C010 (D41-credits): 'CREDITS' label is clipped under the nav bar
+- j3 C010 (D41-credits): two emblem icons at the bottom (hourglass, winged ball) have no labels
+- j3 C011 (D40-contact): 'RESUME - COMING SOON' and the 'Lumos' hint line are tiny and low contrast
+- j3 C011 (D40-contact): only the initials 'A S' in the reticle; no full name written here (email is aaasharma870@gmail.com)
+- j3 C012 (D26-trading-algos): pipeline diagram text at the bottom is cut off ('COMMITTED BEFORE ANY RUN', 'BLIND HOLDOUT SPENT ONCE')
+- j3 C013 (D20-about-120): heading 'A builder of quantitative systems.' is half hidden under the nav bar
+- j3 C014 (D31-voices): name appears only as the first name 'Aryan' inside the advisor quotes, no surname
+- j3 C014 (D31-voices): adviser caption 'DR. PETER GALLO - COLLEGE ADVISOR, LANDON SCHOOL' is tiny mono
+- j3 C015 (D24-work): 'Led by what' heading is cut off at the bottom
+- j3 C016 (D21-journey-step-1): map waypoint labels (01 ORIGIN, 02 EARLY WORK, 03 THE BREAK, 04 NOW, 'parley?') are about 8px and the dashed route crosses 'THE BREAK'
+fast lane found ≤ 10 s: 3/3 (j1: 1 s, 'SKIP TO THE RESEARCH' pill at top right of the nav (also the 'VIEW THE QUANT PORTFOLIO' button under the intro); j2: 1 s, 'SKIP TO THE RESEARCH' pill in the top bar, or 'VIEW THE QUANT PORTFOLIO' under the hero line; j3: 1 s, 'SKIP TO THE RESEARCH' outlined pill, top bar right; also the 'VIEW THE QUANT PORTFOLIO' button under the intro text)
