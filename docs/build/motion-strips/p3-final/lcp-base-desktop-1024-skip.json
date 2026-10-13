@@ -1,0 +1,110 @@
+{
+ "meta": {
+  "base": "http://localhost:3162",
+  "kind": "desktop",
+  "vw": "1024x768",
+  "path": "/?skip",
+  "label": "base",
+  "date": "2026-10-13T10:29:50.461Z",
+  "chromium": "141.0.7390.37"
+ },
+ "runs": [
+  {
+   "lcp": 248,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.11926,
+   "shifts": [
+    {
+     "t": 252,
+     "v": 0.11864
+    },
+    {
+     "t": 602,
+     "v": 0.00062
+    }
+   ],
+   "nav": {
+    "ttfb": 14,
+    "dcl": 331,
+    "load": 332
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 248,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 55480
+    }
+   ]
+  },
+  {
+   "lcp": 296,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.11926,
+   "shifts": [
+    {
+     "t": 302,
+     "v": 0.11864
+    },
+    {
+     "t": 649,
+     "v": 0.00062
+    }
+   ],
+   "nav": {
+    "ttfb": 14,
+    "dcl": 383,
+    "load": 383
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 296,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 55480
+    }
+   ]
+  },
+  {
+   "lcp": 228,
+   "el": "SPAN.block",
+   "url": "",
+   "cls": 0.11926,
+   "shifts": [
+    {
+     "t": 233,
+     "v": 0.11864
+    },
+    {
+     "t": 624,
+     "v": 0.00062
+    }
+   ],
+   "nav": {
+    "ttfb": 23,
+    "dcl": 334,
+    "load": 335
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 228,
+     "el": "SPAN.block",
+     "url": "",
+     "size": 55480
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "n": 3,
+  "min": 228,
+  "median": 248,
+  "max": 296,
+  "mean": 257
+ }
+}

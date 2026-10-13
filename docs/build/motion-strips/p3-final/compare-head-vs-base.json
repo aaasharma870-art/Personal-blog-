@@ -1,0 +1,3736 @@
+{
+ "1024x1366": {
+  "docHeight": {
+   "head": [
+    37762,
+    37425,
+    37762
+   ],
+   "base": [
+    39043,
+    39043,
+    39043
+   ]
+  },
+  "innerTextHash": {
+   "head": [
+    "5db1ca29f983373c",
+    "dfb94eef30b946c9",
+    "dfb94eef30b946c9"
+   ],
+   "base": [
+    "217fbb03e38ef945",
+    "c20cdea2f9208dbc",
+    "217fbb03e38ef945"
+   ]
+  },
+  "textContentHash": {
+   "head": [
+    "b8febfba74d36110",
+    "de1010ae12384ab0",
+    "de1010ae12384ab0"
+   ],
+   "base": [
+    "e5ca5c1ae2c281e0",
+    "de800ca6729688a6",
+    "e5ca5c1ae2c281e0"
+   ]
+  },
+  "textContentChars": {
+   "head": [
+    28160,
+    28172,
+    28172
+   ],
+   "base": [
+    25722,
+    25691,
+    25722
+   ]
+  },
+  "innerTextChars": {
+   "head": [
+    21704,
+    21717,
+    21717
+   ],
+   "base": [
+    25055,
+    25023,
+    25055
+   ]
+  },
+  "overflowPx": {
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0,
+    0
+   ]
+  },
+  "h1": {
+   "head": [
+    1,
+    1,
+    1
+   ],
+   "base": [
+    1,
+    1,
+    1
+   ]
+  },
+  "closedDetails": {
+   "head": [
+    "about",
+    "credits",
+    "optuna-screener",
+    "optuna-screener",
+    "optuna-screener",
+    "systems",
+    "systems",
+    "systems",
+    "systems"
+   ],
+   "base": []
+  },
+  "sectionHeights": [
+   {
+    "id": "top",
+    "head": [
+     1366
+    ],
+    "base": [
+     1366
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-1",
+    "head": [
+     1325
+    ],
+    "base": [
+     1325
+    ],
+    "delta": 0
+   },
+   {
+    "id": "about",
+    "head": [
+     1564
+    ],
+    "base": [
+     1377
+    ],
+    "delta": 187
+   },
+   {
+    "id": "journey",
+    "head": [
+     1051
+    ],
+    "base": [
+     1010
+    ],
+    "delta": 41
+   },
+   {
+    "id": "act-2",
+    "head": [
+     1366
+    ],
+    "base": [
+     1366
+    ],
+    "delta": 0
+   },
+   {
+    "id": "work",
+    "head": [
+     1948
+    ],
+    "base": [
+     1986
+    ],
+    "delta": -38
+   },
+   {
+    "id": "trading-algos",
+    "head": [
+     1534
+    ],
+    "base": [
+     1578
+    ],
+    "delta": -44
+   },
+   {
+    "id": "optuna-screener",
+    "head": [
+     2405
+    ],
+    "base": [
+     3521
+    ],
+    "delta": -1116
+   },
+   {
+    "id": "experiment",
+    "head": [
+     1047
+    ],
+    "base": [
+     978
+    ],
+    "delta": 69
+   },
+   {
+    "id": "systems",
+    "head": [
+     1926
+    ],
+    "base": [
+     1756
+    ],
+    "delta": 170
+   },
+   {
+    "id": "kill-list",
+    "head": [
+     2273
+    ],
+    "base": [
+     2169
+    ],
+    "delta": 104
+   },
+   {
+    "id": "films",
+    "head": [
+     4344,
+     4347
+    ],
+    "base": [
+     4761
+    ],
+    "delta": null
+   },
+   {
+    "id": "act-3",
+    "head": [
+     1366
+    ],
+    "base": [
+     1366
+    ],
+    "delta": 0
+   },
+   {
+    "id": "beyond",
+    "head": [
+     3750,
+     3958
+    ],
+    "base": [
+     3643
+    ],
+    "delta": null
+   },
+   {
+    "id": "writing",
+    "head": [
+     2446,
+     2501
+    ],
+    "base": [
+     2576
+    ],
+    "delta": null
+   },
+   {
+    "id": "voices",
+    "head": [
+     1465,
+     1543
+    ],
+    "base": [
+     1461
+    ],
+    "delta": null
+   },
+   {
+    "id": "act-4",
+    "head": [
+     1366
+    ],
+    "base": [
+     1366
+    ],
+    "delta": 0
+   },
+   {
+    "id": "principles",
+    "head": [
+     2364
+    ],
+    "base": [
+     2230
+    ],
+    "delta": 134
+   },
+   {
+    "id": "contact",
+    "head": [
+     1366
+    ],
+    "base": [
+     1366
+    ],
+    "delta": 0
+   },
+   {
+    "id": "credits",
+    "head": [
+     1150,
+     1152
+    ],
+    "base": [
+     1842
+    ],
+    "delta": null
+   }
+  ],
+  "tokensAddedTextContent": {
+   "off": 1,
+   "numbersevaluationmethodsrealistic": 1,
+   "director's": 1,
+   "platform": 1,
+   "pirata": 1,
+   "16": 1,
+   "buttons": 1,
+   "survive.the": 1,
+   "cpcvstrategy": 1,
+   "caribbeanwhere": 1,
+   "on": 7,
+   "processdead": 1,
+   "patrick": 1,
+   "principlesi": 1,
+   "skip": 1,
+   "idiotsfig.": 1,
+   "since.a": 1,
+   "top": 2,
+   "honestly": 1,
+   "keeps": 1,
+   "caribbean": 2,
+   "motion": 2,
+   "a": 4,
+   "testsmonte": 2,
+   "optimized": 2,
+   "four": 2,
+   "12soundsound": 1,
+   "standard": 1,
+   "noise25": 2,
+   "noteon": 1,
+   "scene": 1,
+   ";": 2,
+   "one": 2,
+   "numberslanguageswork": 1,
+   "offthe": 1,
+   "automation.supporting": 1,
+   "solemnly": 1,
+   "fell": 2,
+   "built": 1,
+   "right": 1,
+   "been": 1,
+   "researchskip": 1,
+   "6": 1,
+   "file": 2,
+   "3": 3,
+   "▶": 1,
+   "riskmarketsmethodsoptions": 1,
+   "who": 1,
+   "try": 1,
+   "webgl": 1,
+   "with": 2,
+   "sections.tsderives": 1,
+   "only": 2,
+   "work": 1,
+   "theses": 1,
+   "lenis": 2,
+   "idiotsact": 1,
+   "not": 1,
+   "edges": 1,
+   "stated": 1,
+   "minimax_h3": 1,
+   "your": 1,
+   "idiotshere": 1,
+   "be": 1,
+   "hall's": 1,
+   "produce.researchvalidated": 1,
+   "ivharry": 1,
+   "camera": 1,
+   "infrastructureengineeringmethodsadapter-pattern": 1,
+   "started": 2,
+   "cpcv05": 1,
+   "scenes": 1,
+   "at": 1,
+   "garamond": 1,
+   "start": 1,
+   "find": 1,
+   "kill-list.the": 1,
+   "port": 1,
+   "proven": 1,
+   "tpewalk-forwardstress": 2,
+   "portfolio": 3,
+   "do": 1,
+   "myself.a": 1,
+   "rye": 1,
+   "i've": 1,
+   "×": 1,
+   "bots": 1,
+   "two": 1,
+   "english": 2,
+   "it": 1,
+   "hunt0": 1,
+   "potter01cultivate": 1,
+   "researchegg": 1,
+   "first": 1,
+   "·": 3,
+   "options": 1,
+   "break04nowparley": 1,
+   "drone": 1,
+   "of": 3,
+   "iiired": 1,
+   "dead": 3,
+   "and": 8,
+   "cardsregistry.tstype": 1,
+   "sc": 1,
+   "→": 1,
+   "edgewhere": 1,
+   "acts": 1,
+   "?": 2,
+   "like": 1,
+   "didn't": 1,
+   "2life": 1,
+   "layer": 1,
+   "hide": 1,
+   "post-mortems": 1,
+   "exit_fnindicatorscomputed": 2,
+   "branchstrategy": 1,
+   "hunt": 1,
+   "holdoutnever": 2,
+   "quoteslines": 1,
+   "htmlv3.0": 2,
+   "automated": 1,
+   "pro": 1,
+   "play": 1,
+   "ipirates": 1,
+   "me.the": 1,
+   "caribbeanact": 1,
+   "how": 1,
+   "eye": 1,
+   "marks": 1,
+   "potteract": 3,
+   "could": 1,
+   "eyethe": 1,
+   "read": 1,
+   "fonts": 1,
+   "futureswhat": 1,
+   "font": 1,
+   "phones": 1,
+   "redemption": 2,
+   "games": 1,
+   "where": 2,
+   "each.still": 1,
+   "1": 1,
+   "idiots": 3,
+   "harry": 2,
+   "correcting": 1,
+   "optuna-screener": 1,
+   "page.tsmanifest": 1,
+   "score": 1,
+   "media": 1,
+   "ii3": 1,
+   "10": 1,
+   "1.1": 1,
+   "work.07": 1,
+   "eggs": 1,
+   "supported": 1,
+   "hand": 1,
+   "strategyoptuna": 2,
+   "carlo": 2,
+   "act": 1,
+   "to": 5,
+   "2act": 1,
+   "acts.something": 1,
+   "riskengineeringreproducible": 1,
+   "%": 2,
+   "egg": 2,
+   ":": 5,
+   "count": 1,
+   "data-tonelib": 1,
+   "believe": 1,
+   "prime": 1,
+   "idiotswhat": 1,
+   "kill-listresearchmethodswalk-forward": 1,
+   "licence": 1,
+   "holdout-based": 1,
+   "no-charge": 1,
+   "↓": 2,
+   "onreportplotly": 2,
+   ")": 6,
+   "githubalso": 1,
+   "desktop": 3,
+   "counter": 1,
+   "2": 3,
+   "can": 1,
+   "build": 1,
+   "sectionslib": 1,
+   "too": 1,
+   "sil": 1,
+   "me": 1,
+   "open": 1,
+   "dhammapadayoucontactlet’s": 1,
+   "cormorant": 1,
+   "i": 6,
+   "gsap": 1,
+   "kill-listmarketsstrategy": 1,
+   "build.the": 1,
+   "change.footnote": 1,
+   "courier": 1,
+   "red": 1,
+   "research": 3,
+   "sound": 1,
+   "the": 19,
+   "mit": 1,
+   "candlesasa": 1,
+   "have": 1,
+   ",": 29,
+   "people": 1,
+   "stages": 1,
+   "crossing": 2,
+   "break": 1,
+   "librarieson": 1,
+   "pausedthe": 1,
+   "…": 1,
+   "expose.": 1,
+   "cut": 1,
+   "mit-licensedwhere": 1,
+   "monstersii": 1,
+   "flies": 1,
+   "course": 1,
+   "license": 1,
+   "no-code": 1,
+   "/": 4,
+   "this": 2,
+   "per-strategy": 2,
+   "soonlumosrelights": 1,
+   "trustlanguagesmethodsself-directed": 1,
+   "+": 2,
+   "swear": 1,
+   "watched": 1,
+   "easter": 1,
+   "journal": 2,
+   "workslib": 1,
+   "paper": 1,
+   "infrastructureevaluationhonest": 1,
+   "mat": 1,
+   "weighting": 2,
+   "sharmamore": 1,
+   "discoveryentry_fn": 2,
+   "take": 2,
+   "componentsectionframedata-world": 1,
+   "arthur": 1,
+   "you": 1,
+   "about": 1,
+   "credits": 1,
+   "in": 3,
+   "philosophy": 1,
+   "actsafter": 2,
+   "ever": 1,
+   "doing": 1,
+   "im": 2,
+   "page": 1,
+   "nothing": 1,
+   "ensemblerisk-parity": 2,
+   "0dte": 1,
+   "data-tonesmooth": 1,
+   "pipelines": 1,
+   "stranger": 1,
+   "kalam": 1,
+   "pirates": 2,
+   "above.tools": 1,
+   "screenshotstypegeist": 1,
+   "reduced": 1,
+   "systems": 1,
+   "miles": 1,
+   "per": 2,
+   "(": 6,
+   "for": 1,
+   "hunting": 1,
+   "•": 20,
+   "is": 2,
+   "discipline": 1,
+   "beyond": 1,
+   "potterwhat": 1,
+   "right.act": 1,
+   "small": 1,
+   "screen": 1,
+   "changeswhy": 1,
+   "12": 1,
+   "crimson": 1,
+   "4": 2,
+   "film.ts4": 1,
+   "▲": 2,
+   "offpause": 1
+  },
+  "tokensRemovedTextContent": {
+   "]": 2,
+   "—": 2,
+   "futures": 1,
+   "expose.the": 1,
+   "slot": 2,
+   "acts.the": 1,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "above.supporting": 1,
+   "principles10": 1,
+   "potterthe": 1,
+   "caribbeanskip": 1,
+   "exported": 2,
+   "lines": 1,
+   "report": 2,
+   "207": 1,
+   "idiotsii": 1,
+   "first.footnote": 1,
+   "webglwhy": 1,
+   "myself.arthur": 1,
+   "infrastructureevaluationmethodsrealistic": 1,
+   "idiotsthe": 1,
+   "sharmatypegeist": 1,
+   "each.act": 1,
+   "produce.areamethodstoolsoutputsresearchmethodswalk-forward": 1,
+   "curve": 2,
+   "potteryou01cultivate": 1,
+   "chart": 2,
+   "dhammapadacontactlet’s": 1,
+   "build.on": 1,
+   "screenshotsbuilt": 1,
+   "riskengineeringmethodsadapter-pattern": 1,
+   "kill-listmarketsmethodsoptions": 1,
+   "idiots05": 1,
+   "processthe": 1,
+   "no": 2,
+   "data-tonenative": 1,
+   "just": 1,
+   "numberslanguagesmethodsself-directed": 1,
+   "soonasa": 1,
+   "equity": 2,
+   "mit-licensed": 1,
+   "break04nowport": 1
+  },
+  "linesAddedTextContent": [],
+  "linesRemovedTextContent": [],
+  "tokensAddedInnerText": {
+   "skip": 1,
+   "honestly": 1,
+   "motion": 1,
+   "engineeringreproducible": 1,
+   "evaluationhonest": 1,
+   "edge": 1,
+   "scene": 1,
+   "been": 1,
+   "languageswork": 1,
+   "changes": 1,
+   "who": 1,
+   "try": 1,
+   "lenis": 1,
+   "camera": 1,
+   "started": 1,
+   "work.": 1,
+   "scenes": 1,
+   "find": 1,
+   "portfolio": 1,
+   "i've": 1,
+   "first": 1,
+   "quotes": 1,
+   "like": 1,
+   "didn't": 1,
+   "marketsstrategy": 1,
+   "layer": 1,
+   "survive.": 1,
+   "fonts": 1,
+   "phones": 1,
+   "where": 3,
+   "correcting": 1,
+   "media": 1,
+   "what": 2,
+   "supported": 1,
+   "believe": 1,
+   "desktop": 2,
+   "have": 1,
+   "people": 1,
+   "break": 1,
+   "course": 1,
+   "since.": 1,
+   "more": 1,
+   "note": 1,
+   "watched": 1,
+   "smooth": 1,
+   "life": 1,
+   "mat": 1,
+   "change.": 1,
+   "credits": 1,
+   "ever": 1,
+   "doing": 1,
+   "reduced": 1,
+   "miles": 1,
+   "beyond": 1,
+   "screen": 1,
+   "researchvalidated": 1,
+   "me.": 1
+  },
+  "tokensRemovedInnerText": {
+   "far": 1,
+   "filters": 1,
+   "were": 1,
+   "]": 2,
+   "reproducible": 1,
+   "—": 7,
+   "max": 1,
+   "pirata": 1,
+   "16": 1,
+   "computer-use": 1,
+   "es": 1,
+   "short-volatility": 1,
+   "task": 1,
+   "signature": 1,
+   "agentic": 1,
+   "script": 1,
+   "fig.": 1,
+   "on": 6,
+   "apify": 1,
+   "tiered": 1,
+   "futures": 1,
+   "inputs": 1,
+   "our": 1,
+   "keeps": 1,
+   "caribbean": 1,
+   "robustness": 1,
+   "a": 14,
+   "methods": 5,
+   "vix": 2,
+   "custom": 1,
+   "slot": 2,
+   "alpha": 1,
+   "greeks": 1,
+   "consequences": 1,
+   "none": 1,
+   "fill": 1,
+   "dhammapada": 1,
+   "real": 3,
+   "drop": 2,
+   "plotly": 1,
+   "[": 2,
+   "aal": 1,
+   "playwright": 2,
+   "here": 2,
+   "early": 2,
+   "native": 1,
+   "straightforward": 1,
+   "does": 1,
+   ";": 1,
+   "one": 1,
+   "validated": 1,
+   "pattern": 1,
+   "mengzi": 1,
+   "nq": 1,
+   "solemnly": 1,
+   "point": 1,
+   "fell": 1,
+   "built": 2,
+   "limits.": 1,
+   "right": 1,
+   "framing": 1,
+   "feb": 1,
+   "anything": 1,
+   "browser": 1,
+   "mandatory": 1,
+   "languages": 1,
+   "markets": 1,
+   "6": 1,
+   "file": 1,
+   "3": 2,
+   "frames": 2,
+   "hedge-fund": 1,
+   "success": 1,
+   "csv": 1,
+   "with": 5,
+   "“": 10,
+   "area": 1,
+   "azkaban": 1,
+   "volatility": 1,
+   "these": 1,
+   "only": 1,
+   "work": 2,
+   "innate.": 1,
+   "across": 1,
+   "live.": 1,
+   "then": 2,
+   "sample": 1,
+   "being": 1,
+   "own": 1,
+   "film": 1,
+   "not": 4,
+   "forget": 1,
+   "data-engineering": 1,
+   "12.8": 1,
+   "looks": 1,
+   "belongs": 1,
+   "entry": 1,
+   "are": 2,
+   "am": 1,
+   "tools": 5,
+   "kind": 1,
+   "be": 2,
+   "honest": 3,
+   "workflows": 2,
+   "edge.": 1,
+   "micros": 1,
+   "black-scholes": 1,
+   "drawdown.": 1,
+   "follow.": 1,
+   "experiment": 1,
+   "until": 1,
+   "premium": 1,
+   "curse": 1,
+   "82-file": 1,
+   "open-source": 1,
+   "excellence": 1,
+   "three": 1,
+   "architecture": 1,
+   "algorithmic-options-trading-system": 1,
+   "2026": 1,
+   "behind": 1,
+   "transaction-cost": 1,
+   "gpt": 1,
+   "data-scraper": 1,
+   "portfolio.": 1,
+   "webhooks": 1,
+   "wrong": 1,
+   "weekly": 1,
+   "do": 1,
+   "hedge": 1,
+   "rye": 1,
+   "bots": 1,
+   "english": 2,
+   "it": 7,
+   "hegel": 1,
+   "adapter": 1,
+   "exported": 2,
+   "·": 9,
+   "treasure": 1,
+   "database": 1,
+   "options": 3,
+   "let": 1,
+   "event": 1,
+   "regime": 1,
+   "mischief": 1,
+   "yrs": 1,
+   "correlation": 1,
+   "shape": 1,
+   "managed.": 1,
+   "supporting": 1,
+   "of": 8,
+   "2018": 1,
+   "automation": 3,
+   "email": 1,
+   "$": 2,
+   "evaluation": 1,
+   "numpy": 1,
+   "perfect": 1,
+   "everything": 1,
+   "dead": 1,
+   "and": 7,
+   "lines": 1,
+   "2004": 1,
+   "report": 2,
+   "human": 1,
+   "izz": 1,
+   "2003": 1,
+   "image": 2,
+   "or": 1,
+   "closed": 1,
+   "well-directed": 1,
+   "option": 1,
+   "their": 1,
+   "numbers": 1,
+   "content-automation-engine": 1,
+   "pandas": 1,
+   "builds": 1,
+   "original": 1,
+   "reported": 1,
+   "framework": 1,
+   "now": 1,
+   "method": 1,
+   "clean": 1,
+   "models": 1,
+   "strategy": 1,
+   "stone": 1,
+   "screenshots": 1,
+   "include": 1,
+   "118": 1,
+   "python": 4,
+   "reduces": 1,
+   "scheduled": 1,
+   "automated": 2,
+   "horizon.": 1,
+   "qqq": 1,
+   "workflow.": 1,
+   "realistic": 1,
+   "quoted": 1,
+   "social-media": 1,
+   "write-up.": 1,
+   "as": 4,
+   "all": 1,
+   "learning": 1,
+   "read": 1,
+   "dealer": 1,
+   "options-claw": 1,
+   "font": 1,
+   "spy": 1,
+   "silver": 1,
+   "curve": 2,
+   "options-plan-": 1,
+   "redemption": 1,
+   "that": 6,
+   "chart": 2,
+   "dreams": 1,
+   "content-automation": 1,
+   "potter": 2,
+   "result.": 1,
+   "staying": 1,
+   "idiots": 1,
+   "harry": 3,
+   "”": 10,
+   "generated": 1,
+   "will": 1,
+   "philosopher's": 1,
+   "black": 1,
+   "gita": 1,
+   "reporting": 1,
+   "tested": 1,
+   "tail": 2,
+   "strategies": 1,
+   "1.1": 1,
+   "methodology": 1,
+   "above.": 1,
+   "requires.": 1,
+   "moral": 1,
+   "judgment": 1,
+   "prompts": 1,
+   "loyal": 1,
+   "bring": 1,
+   "result": 1,
+   "light.": 1,
+   "prisoner": 1,
+   "125k": 1,
+   "framed": 1,
+   "audits": 1,
+   "gold": 1,
+   "under": 1,
+   "honestly.": 1,
+   "exploring": 1,
+   "from": 1,
+   "act": 1,
+   "to": 4,
+   "%": 2,
+   "whether": 1,
+   "modeling": 2,
+   ":": 6,
+   "git": 1,
+   "position": 1,
+   "mate.": 1,
+   "engineer.": 1,
+   "adapter-pattern": 1,
+   "turn": 1,
+   "profile": 1,
+   "exactly": 1,
+   "type": 1,
+   "constraints": 1,
+   "project": 1,
+   "structure": 1,
+   "≈": 1,
+   "caps": 1,
+   "purpose": 1,
+   "reconciliation": 1,
+   "filtering": 1,
+   "erases": 1,
+   "data": 1,
+   "dockerized": 1,
+   "pearl": 1,
+   "docker": 1,
+   ")": 13,
+   "gamma": 1,
+   "2": 1,
+   "can": 1,
+   "why": 2,
+   "look-ahead": 1,
+   "infrastructure": 1,
+   "3.0": 1,
+   "sil": 1,
+   "even": 1,
+   "example.": 1,
+   "self-directed": 1,
+   "me": 4,
+   "pursue": 1,
+   "open": 2,
+   "matters.": 1,
+   "grafana": 1,
+   "i": 4,
+   "if": 1,
+   "good.": 1,
+   "weighing": 1,
+   "trades": 1,
+   "fund'": 1,
+   "000": 1,
+   "darkest": 1,
+   "mill": 1,
+   "small-sample": 1,
+   "tool": 1,
+   "injection": 1,
+   "red": 1,
+   "term": 1,
+   "the": 15,
+   "detach": 1,
+   "pipeline": 1,
+   "multi-agent": 1,
+   "no": 4,
+   "windows": 1,
+   "an": 3,
+   "-ai-vids": 1,
+   "2009": 1,
+   "overfitting": 1,
+   ",": 40,
+   "count.": 1,
+   "2001": 1,
+   "system": 1,
+   "found": 1,
+   "decoration": 1,
+   "…": 1,
+   "stress": 1,
+   "dwell": 1,
+   "higgsfield": 1,
+   "variance": 1,
+   "kling": 1,
+   "license": 1,
+   "/": 9,
+   "made": 1,
+   "just": 1,
+   "this": 1,
+   "imagery": 1,
+   "spx": 1,
+   "mandarin": 1,
+   "outputs": 6,
+   "+": 3,
+   "swear": 1,
+   "newsreader": 1,
+   "'ai": 1,
+   "engineering": 2,
+   "asset.": 1,
+   "advanced": 1,
+   "time-exit.": 1,
+   "first.": 1,
+   "taught": 3,
+   "documentation": 1,
+   "equity": 2,
+   "paper": 4,
+   "account": 1,
+   "&": 3,
+   "attribution": 1,
+   "treats": 1,
+   "idea-stage": 2,
+   "well.": 1,
+   "up": 2,
+   "about": 2,
+   "in": 2,
+   "digest": 1,
+   "im": 1,
+   "mind": 1,
+   "page": 1,
+   "effort.": 1,
+   "happiness": 1,
+   "results": 1,
+   "0dte": 1,
+   "pipelines": 1,
+   "kalam": 1,
+   "pirates": 1,
+   "competing": 1,
+   "systems": 1,
+   "mono": 1,
+   "run": 1,
+   "migrations.": 1,
+   "it.": 1,
+   "geist": 2,
+   "nano_banana_pro": 1,
+   "care": 1,
+   "(": 13,
+   "for": 1,
+   "•": 2,
+   "is": 9,
+   "discipline": 2,
+   "technical": 1,
+   "game": 1,
+   "escalating": 1,
+   "machine": 1,
+   "times": 1,
+   "risk": 2,
+   "cultivated": 1,
+   "stills": 1,
+   "runs": 1,
+   "guilty-until-proven-innocent": 1,
+   "remembers": 1,
+   "2.5": 1,
+   "pine": 1,
+   "trading_algos-": 1
+  },
+  "linesAddedInnerText": [
+   "A JOURNAL LIKE ARTHUR MORGAN’S• ",
+   "ALSO ON GITHUB",
+   "EngineeringReproducible research infrastructure",
+   "EvaluationHonest, holdout-based numbers",
+   "LanguagesWork a stranger can read and trust",
+   "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
+   "MORE CREDITS: MEDIA, FONTS AND QUOTES",
+   "MarketsStrategy theses with stated risk",
+   "ResearchValidated edges, post-mortems, a kill-list",
+   "SKIP TO THE RESEARCH",
+   "SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH REDUCED MOTION • CSS + SVG FIRST • WEBGL, WHERE SUPPORTED, ONLY FOR SCENE CHANGES",
+   "THE PHILOSOPHY NOTE",
+   "TOOLS, PIPELINES, AUTOMATION.",
+   "WHERE THE DISCIPLINE STARTED · AUTOMATED 0DTE OPTIONS BOTS · A PAPER PORTFOLIO ON A NO-CODE PLATFORM; NOT A PROVEN EDGE",
+   "What I believe about doing this work honestly, and where to find me.",
+   "What I build, how I try to break it, and what didn't survive.",
+   "Where I started, and the course I've been correcting ever since.",
+   "Why not just use a pencil? The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change."
+  ],
+  "linesRemovedInnerText": [
+   "3 Idiots (2009): “Aal izz well.” · “Pursue excellence, and success will follow.” · “A machine is anything that reduces human effort.”",
+   "A Dockerized, tested Python project exploring an automated, multi-agent 'AI hedge fund' workflow. Where it builds on an open-source framework, attribution belongs in the write-up.",
+   "A social-media content-automation system with real infrastructure — Grafana, a database, migrations. The architecture is the point, not the file count.",
+   "A tiered automation tool for options workflows: webhooks, then Playwright browser automation, then computer-use — escalating only as far as a task requires.",
+   "ALSO ON GITHUB Options-plan- (early / idea-stage) • -ai-vids (early / idea-stage)",
+   "AREA",
+   "ARTHUR MORGAN’S JOURNAL• ",
+   "Adapter-pattern pipelines, agentic / automation workflows, look-ahead audits",
+   "An 82-file Python data pipeline on a clean adapter pattern (Apify, CSV) with scheduled runs and a weekly email digest — a straightforward data-engineering example.",
+   "Automated 0DTE Options Bots",
+   "Automated 0DTE options strategies on SPY / QQQ / SPX, built on the Option Alpha no-code platform and run on a $125K paper portfolio. Three bots, with VIX filters, entry windows, position caps, and a mandatory time-exit.",
+   "Black-Scholes & the Greeks, futures (ES / NQ + micros)",
+   "Content-automation-engine",
+   "Custom fill models, Plotly reporting",
+   "Data-Scraper",
+   "Engineering",
+   "Evaluation",
+   "FIG. • TRADING_ALGOS-",
+   "Geist · Geist Mono · Newsreader · Pirata One, Kalam, Rye, IM Fell English (SIL Open Font License 1.1)",
+   "HONEST FRAMING",
+   "Harry Potter and the Philosopher's Stone (2001): “It does not do to dwell on dreams, Harry, and forget to live.”",
+   "Harry Potter and the Prisoner of Azkaban (2004): “I solemnly swear that I am up to no good.” · “Mischief managed.” · “Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.”",
+   "Hedge-fund",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "Honest, holdout-based numbers",
+   "I include this on purpose, framed honestly. These are paper, small-sample numbers with the signature of a short-volatility profile — the kind of result that looks perfect right up until a tail event erases it. It is not a proven edge. It is the experiment that taught me about tail risk and overfitting, and it is exactly why I built the guilty-until-proven-innocent methodology behind everything above.",
+   "I read moral philosophy and let it shape how I engineer. Mengzi taught me that judgment is cultivated, not innate. The Gita taught me to act with discipline and detach from the result. Mill keeps me weighing consequences and staying open to being wrong; Hegel frames engineering as the reconciliation of competing constraints; the Dhammapada treats a well-directed mind as a technical asset. None of it is decoration — it is why I care whether the systems I build are honest about their limits.",
+   "LINES QUOTED",
+   "Languages",
+   "Markets",
+   "NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL",
+   "ON METHOD",
+   "ORIGINAL GENERATED IMAGERY",
+   "OUTPUTS",
+   "Options & volatility, VIX term structure, variance risk premium, dealer gamma, regime modeling",
+   "Options-claw",
+   "PAPER • SMALL SAMPLE",
+   "Pirates of the Caribbean: The Curse of the Black Pearl (2003): “Now… bring me that horizon.” · “Not all treasure is silver and gold, mate.”",
+   "Python, Pandas / NumPy, Git, Docker, Playwright",
+   "Python, Pine Script · English, Mandarin (6 yrs, advanced)",
+   "Realistic transaction-cost modeling, robustness & stress injection, correlation filtering",
+   "Red Dead Redemption 2 (2018): “Be loyal to what matters.”",
+   "Reported paper results (Feb 2026): about +$16,000 (≈ +12.8% on the paper account) across 118 closed trades, with under 3% max drawdown.",
+   "Reproducible research infrastructure",
+   "Research",
+   "SUPPORTING WORK",
+   "Self-directed learning, documentation discipline",
+   "Strategy theses with stated risk",
+   "TYPE",
+   "Tools, pipelines, automation.",
+   "Validated edges, post-mortems, a kill-list",
+   "WHERE THE DISCIPLINE STARTED",
+   "Why not just use a pencil? The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+   "Work a stranger can read and trust",
+   "[ CHART SLOT — DROP A REAL EXPORTED EQUITY CURVE / REPORT HERE ]",
+   "algorithmic-options-trading-system"
+  ],
+  "sections": [
+   {
+    "id": "top",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-1",
+    "sameTextContent": false
+   },
+   {
+    "id": "about",
+    "sameTextContent": false
+   },
+   {
+    "id": "journey",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-2",
+    "sameTextContent": false
+   },
+   {
+    "id": "work",
+    "sameTextContent": true
+   },
+   {
+    "id": "trading-algos",
+    "sameTextContent": false
+   },
+   {
+    "id": "optuna-screener",
+    "sameTextContent": false
+   },
+   {
+    "id": "experiment",
+    "sameTextContent": true
+   },
+   {
+    "id": "systems",
+    "sameTextContent": false
+   },
+   {
+    "id": "kill-list",
+    "sameTextContent": false
+   },
+   {
+    "id": "films",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-3",
+    "sameTextContent": false
+   },
+   {
+    "id": "beyond",
+    "sameTextContent": true
+   },
+   {
+    "id": "writing",
+    "sameTextContent": false
+   },
+   {
+    "id": "voices",
+    "sameTextContent": true
+   },
+   {
+    "id": "act-4",
+    "sameTextContent": false
+   },
+   {
+    "id": "principles",
+    "sameTextContent": false
+   },
+   {
+    "id": "contact",
+    "sameTextContent": false
+   },
+   {
+    "id": "credits",
+    "sameTextContent": false
+   }
+  ]
+ },
+ "844x390": {
+  "docHeight": {
+   "head": [
+    39525,
+    39525,
+    39525
+   ],
+   "base": [
+    39564,
+    39564,
+    39564
+   ]
+  },
+  "innerTextHash": {
+   "head": [
+    "2a1c6287eb70ac1f",
+    "ab2b5592b35ddbe0",
+    "dc8c6226d421b76d"
+   ],
+   "base": [
+    "da34ed7669245b6a",
+    "799ced5e385eeeab",
+    "2f0269fc858fc54f"
+   ]
+  },
+  "textContentHash": {
+   "head": [
+    "b8febfba74d36110",
+    "87b04073a9f9e618",
+    "9a438543c66986fa"
+   ],
+   "base": [
+    "18e675e02cc96046",
+    "ae387e4dde395e40",
+    "a4b3847d214d6e86"
+   ]
+  },
+  "textContentChars": {
+   "head": [
+    28160,
+    28191,
+    28192
+   ],
+   "base": [
+    25720,
+    25703,
+    25735
+   ]
+  },
+  "innerTextChars": {
+   "head": [
+    25280,
+    25312,
+    25313
+   ],
+   "base": [
+    24975,
+    24957,
+    24990
+   ]
+  },
+  "overflowPx": {
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0,
+    0
+   ]
+  },
+  "h1": {
+   "head": [
+    1,
+    1,
+    1
+   ],
+   "base": [
+    1,
+    1,
+    1
+   ]
+  },
+  "closedDetails": {
+   "head": [
+    "about",
+    "credits",
+    "optuna-screener",
+    "optuna-screener",
+    "optuna-screener",
+    "systems",
+    "systems",
+    "systems",
+    "systems"
+   ],
+   "base": []
+  },
+  "sectionHeights": [
+   {
+    "id": "top",
+    "head": [
+     598
+    ],
+    "base": [
+     598
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-1",
+    "head": [
+     1328
+    ],
+    "base": [
+     1328
+    ],
+    "delta": 0
+   },
+   {
+    "id": "about",
+    "head": [
+     1780
+    ],
+    "base": [
+     1780
+    ],
+    "delta": 0
+   },
+   {
+    "id": "journey",
+    "head": [
+     1440
+    ],
+    "base": [
+     1440
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-2",
+    "head": [
+     640
+    ],
+    "base": [
+     640
+    ],
+    "delta": 0
+   },
+   {
+    "id": "work",
+    "head": [
+     2260
+    ],
+    "base": [
+     2260
+    ],
+    "delta": 0
+   },
+   {
+    "id": "trading-algos",
+    "head": [
+     1889
+    ],
+    "base": [
+     1931
+    ],
+    "delta": -42
+   },
+   {
+    "id": "optuna-screener",
+    "head": [
+     4233
+    ],
+    "base": [
+     4276
+    ],
+    "delta": -43
+   },
+   {
+    "id": "experiment",
+    "head": [
+     942
+    ],
+    "base": [
+     942
+    ],
+    "delta": 0
+   },
+   {
+    "id": "systems",
+    "head": [
+     3023
+    ],
+    "base": [
+     3005
+    ],
+    "delta": 18
+   },
+   {
+    "id": "kill-list",
+    "head": [
+     2882
+    ],
+    "base": [
+     2882
+    ],
+    "delta": 0
+   },
+   {
+    "id": "films",
+    "head": [
+     4229
+    ],
+    "base": [
+     4229
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-3",
+    "head": [
+     611
+    ],
+    "base": [
+     611
+    ],
+    "delta": 0
+   },
+   {
+    "id": "beyond",
+    "head": [
+     3920
+    ],
+    "base": [
+     3920
+    ],
+    "delta": 0
+   },
+   {
+    "id": "writing",
+    "head": [
+     1897
+    ],
+    "base": [
+     1897
+    ],
+    "delta": 0
+   },
+   {
+    "id": "voices",
+    "head": [
+     1527
+    ],
+    "base": [
+     1527
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-4",
+    "head": [
+     626
+    ],
+    "base": [
+     626
+    ],
+    "delta": 0
+   },
+   {
+    "id": "principles",
+    "head": [
+     2252
+    ],
+    "base": [
+     2252
+    ],
+    "delta": 0
+   },
+   {
+    "id": "contact",
+    "head": [
+     1496
+    ],
+    "base": [
+     1496
+    ],
+    "delta": 0
+   },
+   {
+    "id": "credits",
+    "head": [
+     1953
+    ],
+    "base": [
+     1926
+    ],
+    "delta": 27
+   }
+  ],
+  "tokensAddedTextContent": {
+   "off": 1,
+   "numbersevaluationmethodsrealistic": 1,
+   "director's": 1,
+   "platform": 1,
+   "pirata": 1,
+   "16": 1,
+   "buttons": 1,
+   "survive.the": 1,
+   "cpcvstrategy": 1,
+   "caribbeanwhere": 1,
+   "on": 7,
+   "processdead": 1,
+   "patrick": 1,
+   "principlesi": 1,
+   "skip": 1,
+   "idiotsfig.": 1,
+   "since.a": 1,
+   "top": 2,
+   "honestly": 1,
+   "keeps": 1,
+   "caribbean": 2,
+   "motion": 2,
+   "a": 4,
+   "testsmonte": 2,
+   "optimized": 2,
+   "four": 2,
+   "12soundsound": 1,
+   "standard": 1,
+   "noise25": 2,
+   "noteon": 1,
+   "scene": 1,
+   ";": 2,
+   "one": 2,
+   "numberslanguageswork": 1,
+   "offthe": 1,
+   "automation.supporting": 1,
+   "solemnly": 1,
+   "fell": 2,
+   "built": 1,
+   "right": 1,
+   "been": 1,
+   "researchskip": 1,
+   "6": 1,
+   "file": 2,
+   "3": 2,
+   "▶": 1,
+   "riskmarketsmethodsoptions": 1,
+   "who": 1,
+   "try": 1,
+   "webgl": 1,
+   "with": 2,
+   "sections.tsderives": 1,
+   "only": 2,
+   "work": 1,
+   "theses": 1,
+   "lenis": 2,
+   "idiotsact": 1,
+   "not": 1,
+   "edges": 1,
+   "stated": 1,
+   "minimax_h3": 1,
+   "your": 1,
+   "idiotshere": 1,
+   "be": 1,
+   "hall's": 1,
+   "produce.researchvalidated": 1,
+   "ivharry": 1,
+   "camera": 1,
+   "infrastructureengineeringmethodsadapter-pattern": 1,
+   "started": 2,
+   "cpcv05": 1,
+   "scenes": 1,
+   "at": 1,
+   "garamond": 1,
+   "start": 1,
+   "find": 1,
+   "kill-list.the": 1,
+   "port": 1,
+   "proven": 1,
+   "tpewalk-forwardstress": 2,
+   "portfolio": 3,
+   "do": 1,
+   "myself.a": 1,
+   "rye": 1,
+   "i've": 1,
+   "×": 1,
+   "bots": 1,
+   "two": 1,
+   "english": 2,
+   "it": 1,
+   "hunt0": 1,
+   "potter01cultivate": 1,
+   "researchegg": 1,
+   "first": 1,
+   "·": 3,
+   "options": 1,
+   "break04nowparley": 1,
+   "drone": 1,
+   "of": 2,
+   "iiired": 1,
+   "dead": 4,
+   "and": 8,
+   "cardsregistry.tstype": 1,
+   "sc": 1,
+   "edgewhere": 1,
+   "acts": 1,
+   "?": 2,
+   "like": 1,
+   "didn't": 1,
+   "2life": 1,
+   "layer": 1,
+   "hide": 1,
+   "post-mortems": 1,
+   "exit_fnindicatorscomputed": 2,
+   "branchstrategy": 1,
+   "hunt": 1,
+   "holdoutnever": 2,
+   "quoteslines": 1,
+   "htmlv3.0": 2,
+   "automated": 1,
+   "pro": 1,
+   "play": 1,
+   "ipirates": 1,
+   "me.the": 1,
+   "caribbeanact": 1,
+   "how": 1,
+   "eye": 1,
+   "marks": 1,
+   "potteract": 3,
+   "could": 1,
+   "trading_algos-tuning": 1,
+   "eyethe": 1,
+   "read": 1,
+   "fonts": 1,
+   "futureswhat": 1,
+   "font": 1,
+   "phones": 1,
+   "redemption": 3,
+   "games": 1,
+   "where": 2,
+   "each.still": 1,
+   "1": 1,
+   "idiots": 3,
+   "harry": 2,
+   "correcting": 1,
+   "optuna-screener": 1,
+   "page.tsmanifest": 1,
+   "score": 1,
+   "media": 1,
+   "ii3": 1,
+   "10": 1,
+   "1.1": 1,
+   "work.07": 1,
+   "eggs": 1,
+   "supported": 1,
+   "hand": 1,
+   "strategyoptuna": 2,
+   "carlo": 2,
+   "act": 1,
+   "to": 5,
+   "2act": 1,
+   "acts.something": 1,
+   "riskengineeringreproducible": 1,
+   "%": 2,
+   "egg": 2,
+   ":": 5,
+   "count": 1,
+   "data-tonelib": 1,
+   "believe": 1,
+   "prime": 1,
+   "idiotswhat": 1,
+   "kill-listresearchmethodswalk-forward": 1,
+   "licence": 1,
+   "holdout-based": 1,
+   "no-charge": 1,
+   "↓": 2,
+   "onreportplotly": 2,
+   ")": 6,
+   "githubalso": 1,
+   "desktop": 3,
+   "counter": 1,
+   "2": 3,
+   "can": 1,
+   "build": 1,
+   "sectionslib": 1,
+   "too": 1,
+   "sil": 1,
+   "me": 1,
+   "open": 1,
+   "dhammapadayoucontactlet’s": 1,
+   "cormorant": 1,
+   "i": 5,
+   "gsap": 1,
+   "kill-listmarketsstrategy": 1,
+   "build.the": 1,
+   "change.footnote": 1,
+   "courier": 1,
+   "red": 2,
+   "research": 3,
+   "sound": 1,
+   "the": 18,
+   "mit": 1,
+   "candlesasa": 1,
+   "have": 1,
+   ",": 29,
+   "people": 1,
+   "stages": 1,
+   "crossing": 2,
+   "break": 1,
+   "librarieson": 1,
+   "pausedthe": 1,
+   "…": 1,
+   "expose.": 1,
+   "cut": 1,
+   "mit-licensedwhere": 1,
+   "monstersii": 1,
+   "flies": 1,
+   "course": 1,
+   "license": 1,
+   "no-code": 1,
+   "/": 4,
+   "this": 2,
+   "per-strategy": 2,
+   "soonlumosrelights": 1,
+   "trustlanguagesmethodsself-directed": 1,
+   "+": 2,
+   "swear": 1,
+   "watched": 1,
+   "easter": 1,
+   "journal": 2,
+   "workslib": 1,
+   "paper": 1,
+   "infrastructureevaluationhonest": 1,
+   "mat": 1,
+   "weighting": 2,
+   "sharmamore": 1,
+   "discoveryentry_fn": 2,
+   "take": 2,
+   "componentsectionframedata-world": 1,
+   "arthur": 1,
+   "you": 1,
+   "about": 1,
+   "credits": 1,
+   "in": 3,
+   "philosophy": 1,
+   "actsafter": 2,
+   "ever": 1,
+   "doing": 1,
+   "im": 2,
+   "page": 1,
+   "nothing": 1,
+   "ensemblerisk-parity": 2,
+   "0dte": 1,
+   "data-tonesmooth": 1,
+   "pipelines": 1,
+   "stranger": 1,
+   "kalam": 1,
+   "pirates": 1,
+   "above.tools": 1,
+   "screenshotstypegeist": 1,
+   "reduced": 1,
+   "systems": 1,
+   "miles": 1,
+   "per": 2,
+   "(": 6,
+   "for": 1,
+   "hunting": 1,
+   "•": 20,
+   "is": 2,
+   "discipline": 1,
+   "beyond": 1,
+   "potterwhat": 1,
+   "right.act": 1,
+   "small": 1,
+   "screen": 1,
+   "changeswhy": 1,
+   "12": 1,
+   "crimson": 1,
+   "4": 2,
+   "film.ts4": 1,
+   "▲": 2,
+   "offpause": 1
+  },
+  "tokensRemovedTextContent": {
+   "]": 2,
+   "—": 2,
+   "futures": 1,
+   "expose.the": 1,
+   "slot": 2,
+   "acts.the": 1,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "above.supporting": 1,
+   "principles10": 1,
+   "potterthe": 1,
+   "caribbeanskip": 1,
+   "exported": 2,
+   "lines": 1,
+   "report": 2,
+   "207": 1,
+   "idiotsii": 1,
+   "first.footnote": 1,
+   "webglwhy": 1,
+   "myself.arthur": 1,
+   "infrastructureevaluationmethodsrealistic": 1,
+   "idiotsthe": 1,
+   "sharmatypegeist": 1,
+   "each.act": 1,
+   "produce.areamethodstoolsoutputsresearchmethodswalk-forward": 1,
+   "curve": 2,
+   "potteryou01cultivate": 1,
+   "chart": 2,
+   "dhammapadacontactlet’s": 1,
+   "build.on": 1,
+   "screenshotsbuilt": 1,
+   "riskengineeringmethodsadapter-pattern": 1,
+   "kill-listmarketsmethodsoptions": 1,
+   "idiots05": 1,
+   "processthe": 1,
+   "no": 2,
+   "data-tonenative": 1,
+   "just": 1,
+   "numberslanguagesmethodsself-directed": 1,
+   "soonasa": 1,
+   "equity": 2,
+   "mit-licensed": 1,
+   "break04nowport": 1,
+   "trading_algos-": 1
+  },
+  "linesAddedTextContent": [],
+  "linesRemovedTextContent": [],
+  "tokensAddedInnerText": {
+   "on": 3,
+   "honestly": 1,
+   "motion": 1,
+   "scene": 1,
+   ";": 1,
+   "one": 1,
+   "been": 1,
+   "changes": 1,
+   "who": 1,
+   "try": 1,
+   "with": 1,
+   "only": 2,
+   "work": 1,
+   "lenis": 1,
+   "minimax_h3": 1,
+   "camera": 1,
+   "started": 1,
+   "work.": 1,
+   "scenes": 1,
+   "find": 1,
+   "i've": 1,
+   "it": 1,
+   "first": 1,
+   "and": 5,
+   "like": 1,
+   "didn't": 1,
+   "layer": 1,
+   "survive.": 1,
+   "how": 1,
+   "phones": 1,
+   "where": 4,
+   "correcting": 1,
+   "what": 3,
+   "supported": 1,
+   "to": 2,
+   ":": 1,
+   "believe": 1,
+   ")": 1,
+   "desktop": 2,
+   "build": 1,
+   "me": 1,
+   "i": 3,
+   "the": 6,
+   "have": 1,
+   ",": 9,
+   "people": 1,
+   "break": 1,
+   "course": 1,
+   "since.": 1,
+   "this": 1,
+   "watched": 1,
+   "smooth": 1,
+   "life": 1,
+   "mat": 1,
+   "change.": 1,
+   "about": 1,
+   "ever": 1,
+   "doing": 1,
+   "reduced": 1,
+   "miles": 1,
+   "(": 1,
+   "for": 1,
+   "•": 1,
+   "beyond": 1,
+   "small": 1,
+   "screen": 1,
+   "me.": 1
+  },
+  "tokensRemovedInnerText": {
+   "]": 2,
+   "—": 2,
+   "a": 1,
+   "slot": 2,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "native": 1,
+   "exported": 2,
+   "report": 2,
+   "curve": 2,
+   "chart": 2,
+   "no": 2,
+   "/": 2,
+   "just": 1,
+   "first.": 1,
+   "equity": 2
+  },
+  "linesAddedInnerText": [
+   "A JOURNAL LIKE ARTHUR MORGAN’S• ",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro, minimax_h3) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
+   "SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH REDUCED MOTION • CSS + SVG FIRST • WEBGL, WHERE SUPPORTED, ONLY FOR SCENE CHANGES",
+   "What I believe about doing this work honestly, and where to find me.",
+   "What I build, how I try to break it, and what didn't survive.",
+   "Where I started, and the course I've been correcting ever since.",
+   "Why not just use a pencil? The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change."
+  ],
+  "linesRemovedInnerText": [
+   "ARTHUR MORGAN’S JOURNAL• ",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL",
+   "Why not just use a pencil? The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+   "[ CHART SLOT — DROP A REAL EXPORTED EQUITY CURVE / REPORT HERE ]"
+  ],
+  "sections": [
+   {
+    "id": "top",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-1",
+    "sameTextContent": false
+   },
+   {
+    "id": "about",
+    "sameTextContent": false
+   },
+   {
+    "id": "journey",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-2",
+    "sameTextContent": false
+   },
+   {
+    "id": "work",
+    "sameTextContent": true
+   },
+   {
+    "id": "trading-algos",
+    "sameTextContent": false
+   },
+   {
+    "id": "optuna-screener",
+    "sameTextContent": false
+   },
+   {
+    "id": "experiment",
+    "sameTextContent": true
+   },
+   {
+    "id": "systems",
+    "sameTextContent": false
+   },
+   {
+    "id": "kill-list",
+    "sameTextContent": null
+   },
+   {
+    "id": "films",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-3",
+    "sameTextContent": false
+   },
+   {
+    "id": "beyond",
+    "sameTextContent": true
+   },
+   {
+    "id": "writing",
+    "sameTextContent": false
+   },
+   {
+    "id": "voices",
+    "sameTextContent": true
+   },
+   {
+    "id": "act-4",
+    "sameTextContent": false
+   },
+   {
+    "id": "principles",
+    "sameTextContent": false
+   },
+   {
+    "id": "contact",
+    "sameTextContent": false
+   },
+   {
+    "id": "credits",
+    "sameTextContent": false
+   }
+  ]
+ },
+ "390x844": {
+  "docHeight": {
+   "head": [
+    46356,
+    46356,
+    46356
+   ],
+   "base": [
+    46391,
+    46391,
+    46391
+   ]
+  },
+  "innerTextHash": {
+   "head": [
+    "773eb4fcbbea7b4f",
+    "773eb4fcbbea7b4f",
+    "773eb4fcbbea7b4f"
+   ],
+   "base": [
+    "3cffbbcf8be6ceee",
+    "3cffbbcf8be6ceee",
+    "3cffbbcf8be6ceee"
+   ]
+  },
+  "textContentHash": {
+   "head": [
+    "922dc10f21f410b6",
+    "d2acfc46af103597",
+    "d2acfc46af103597"
+   ],
+   "base": [
+    "de800ca6729688a6",
+    "ae387e4dde395e40",
+    "0d118f50fa03d5f7"
+   ]
+  },
+  "textContentChars": {
+   "head": [
+    28172,
+    28161,
+    28161
+   ],
+   "base": [
+    25691,
+    25703,
+    25735
+   ]
+  },
+  "innerTextChars": {
+   "head": [
+    25182,
+    25182,
+    25182
+   ],
+   "base": [
+    24859,
+    24859,
+    24859
+   ]
+  },
+  "overflowPx": {
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0,
+    0
+   ]
+  },
+  "h1": {
+   "head": [
+    1,
+    1,
+    1
+   ],
+   "base": [
+    1,
+    1,
+    1
+   ]
+  },
+  "closedDetails": {
+   "head": [
+    "about",
+    "credits",
+    "optuna-screener",
+    "optuna-screener",
+    "optuna-screener",
+    "systems",
+    "systems",
+    "systems",
+    "systems"
+   ],
+   "base": []
+  },
+  "sectionHeights": [
+   {
+    "id": "top",
+    "head": [
+     1159
+    ],
+    "base": [
+     1159
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-1",
+    "head": [
+     1109
+    ],
+    "base": [
+     1109
+    ],
+    "delta": 0
+   },
+   {
+    "id": "about",
+    "head": [
+     2870
+    ],
+    "base": [
+     2870
+    ],
+    "delta": 0
+   },
+   {
+    "id": "journey",
+    "head": [
+     1363
+    ],
+    "base": [
+     1363
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-2",
+    "head": [
+     723
+    ],
+    "base": [
+     723
+    ],
+    "delta": 0
+   },
+   {
+    "id": "work",
+    "head": [
+     2434
+    ],
+    "base": [
+     2434
+    ],
+    "delta": 0
+   },
+   {
+    "id": "trading-algos",
+    "head": [
+     2380
+    ],
+    "base": [
+     2441
+    ],
+    "delta": -61
+   },
+   {
+    "id": "optuna-screener",
+    "head": [
+     5380
+    ],
+    "base": [
+     5440
+    ],
+    "delta": -60
+   },
+   {
+    "id": "experiment",
+    "head": [
+     1173
+    ],
+    "base": [
+     1173
+    ],
+    "delta": 0
+   },
+   {
+    "id": "systems",
+    "head": [
+     3207
+    ],
+    "base": [
+     3148
+    ],
+    "delta": 59
+   },
+   {
+    "id": "kill-list",
+    "head": [
+     3289
+    ],
+    "base": [
+     3289
+    ],
+    "delta": 0
+   },
+   {
+    "id": "films",
+    "head": [
+     4978
+    ],
+    "base": [
+     4978
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-3",
+    "head": [
+     795
+    ],
+    "base": [
+     795
+    ],
+    "delta": 0
+   },
+   {
+    "id": "beyond",
+    "head": [
+     4493
+    ],
+    "base": [
+     4493
+    ],
+    "delta": 0
+   },
+   {
+    "id": "writing",
+    "head": [
+     2518
+    ],
+    "base": [
+     2518
+    ],
+    "delta": 0
+   },
+   {
+    "id": "voices",
+    "head": [
+     1508
+    ],
+    "base": [
+     1508
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-4",
+    "head": [
+     721
+    ],
+    "base": [
+     721
+    ],
+    "delta": 0
+   },
+   {
+    "id": "principles",
+    "head": [
+     2622
+    ],
+    "base": [
+     2622
+    ],
+    "delta": 0
+   },
+   {
+    "id": "contact",
+    "head": [
+     1264
+    ],
+    "base": [
+     1264
+    ],
+    "delta": 0
+   },
+   {
+    "id": "credits",
+    "head": [
+     2369
+    ],
+    "base": [
+     2341
+    ],
+    "delta": 28
+   }
+  ],
+  "tokensAddedTextContent": {
+   "off": 1,
+   "numbersevaluationmethodsrealistic": 1,
+   "director's": 1,
+   "platform": 1,
+   "pirata": 1,
+   "16": 1,
+   "buttons": 1,
+   "survive.the": 1,
+   "cpcvstrategy": 1,
+   "caribbeanwhere": 1,
+   "on": 7,
+   "processdead": 1,
+   "patrick": 1,
+   "principlesi": 1,
+   "skip": 1,
+   "idiotsfig.": 1,
+   "since.a": 1,
+   "top": 2,
+   "honestly": 1,
+   "keeps": 1,
+   "caribbean": 2,
+   "motion": 2,
+   "a": 4,
+   "testsmonte": 2,
+   "optimized": 2,
+   "four": 2,
+   "12soundsound": 1,
+   "standard": 1,
+   "noise25": 2,
+   "noteon": 1,
+   "scene": 1,
+   ";": 2,
+   "one": 2,
+   "numberslanguageswork": 1,
+   "offthe": 1,
+   "automation.supporting": 1,
+   "solemnly": 1,
+   "fell": 2,
+   "built": 1,
+   "right": 1,
+   "been": 1,
+   "researchskip": 1,
+   "6": 1,
+   "file": 2,
+   "3": 3,
+   "▶": 1,
+   "riskmarketsmethodsoptions": 1,
+   "who": 1,
+   "try": 1,
+   "webgl": 1,
+   "with": 2,
+   "sections.tsderives": 1,
+   "only": 2,
+   "work": 1,
+   "theses": 1,
+   "lenis": 2,
+   "idiotsact": 1,
+   "not": 1,
+   "edges": 1,
+   "stated": 1,
+   "minimax_h3": 1,
+   "your": 1,
+   "idiotshere": 1,
+   "be": 1,
+   "hall's": 1,
+   "produce.researchvalidated": 1,
+   "ivharry": 1,
+   "camera": 1,
+   "infrastructureengineeringmethodsadapter-pattern": 1,
+   "started": 2,
+   "cpcv05": 1,
+   "scenes": 1,
+   "at": 1,
+   "garamond": 1,
+   "start": 1,
+   "find": 1,
+   "kill-list.the": 1,
+   "port": 1,
+   "proven": 1,
+   "tpewalk-forwardstress": 2,
+   "portfolio": 3,
+   "do": 1,
+   "myself.a": 1,
+   "rye": 1,
+   "i've": 1,
+   "×": 1,
+   "bots": 1,
+   "two": 1,
+   "english": 2,
+   "it": 1,
+   "hunt0": 1,
+   "potter01cultivate": 1,
+   "researchegg": 1,
+   "first": 1,
+   "·": 3,
+   "options": 1,
+   "break04nowparley": 1,
+   "drone": 1,
+   "of": 2,
+   "iiired": 1,
+   "dead": 4,
+   "and": 8,
+   "cardsregistry.tstype": 1,
+   "sc": 1,
+   "edgewhere": 1,
+   "acts": 1,
+   "?": 2,
+   "like": 1,
+   "didn't": 1,
+   "2life": 1,
+   "layer": 1,
+   "hide": 1,
+   "post-mortems": 1,
+   "exit_fnindicatorscomputed": 2,
+   "branchstrategy": 1,
+   "hunt": 1,
+   "holdoutnever": 2,
+   "quoteslines": 1,
+   "htmlv3.0": 2,
+   "automated": 1,
+   "pro": 1,
+   "play": 1,
+   "ipirates": 1,
+   "me.the": 1,
+   "caribbeanact": 1,
+   "how": 1,
+   "eye": 1,
+   "marks": 1,
+   "potteract": 3,
+   "could": 1,
+   "eyethe": 1,
+   "read": 1,
+   "fonts": 1,
+   "futureswhat": 1,
+   "font": 1,
+   "phones": 1,
+   "redemption": 3,
+   "games": 1,
+   "where": 2,
+   "each.still": 1,
+   "1": 1,
+   "idiots": 3,
+   "harry": 2,
+   "correcting": 1,
+   "optuna-screener": 1,
+   "page.tsmanifest": 1,
+   "score": 1,
+   "media": 1,
+   "ii3": 1,
+   "10": 1,
+   "1.1": 1,
+   "work.07": 1,
+   "eggs": 1,
+   "supported": 1,
+   "hand": 1,
+   "strategyoptuna": 2,
+   "carlo": 2,
+   "act": 1,
+   "to": 5,
+   "2act": 1,
+   "acts.something": 1,
+   "riskengineeringreproducible": 1,
+   "%": 2,
+   "egg": 2,
+   ":": 5,
+   "count": 1,
+   "data-tonelib": 1,
+   "believe": 1,
+   "prime": 1,
+   "idiotswhat": 1,
+   "kill-listresearchmethodswalk-forward": 1,
+   "licence": 1,
+   "holdout-based": 1,
+   "no-charge": 1,
+   "↓": 2,
+   "onreportplotly": 2,
+   ")": 6,
+   "githubalso": 1,
+   "desktop": 3,
+   "counter": 1,
+   "2": 3,
+   "can": 1,
+   "build": 1,
+   "sectionslib": 1,
+   "too": 1,
+   "sil": 1,
+   "me": 1,
+   "open": 1,
+   "dhammapadayoucontactlet’s": 1,
+   "cormorant": 1,
+   "i": 5,
+   "gsap": 1,
+   "kill-listmarketsstrategy": 1,
+   "build.the": 1,
+   "change.footnote": 1,
+   "courier": 1,
+   "red": 2,
+   "research": 3,
+   "sound": 1,
+   "the": 18,
+   "mit": 1,
+   "candlesasa": 1,
+   "have": 1,
+   ",": 29,
+   "people": 1,
+   "stages": 1,
+   "crossing": 2,
+   "break": 1,
+   "librarieson": 1,
+   "pausedthe": 1,
+   "…": 1,
+   "expose.": 1,
+   "cut": 1,
+   "mit-licensedwhere": 1,
+   "monstersii": 1,
+   "flies": 1,
+   "course": 1,
+   "license": 1,
+   "no-code": 1,
+   "/": 4,
+   "this": 2,
+   "per-strategy": 2,
+   "soonlumosrelights": 1,
+   "trustlanguagesmethodsself-directed": 1,
+   "+": 2,
+   "swear": 1,
+   "watched": 1,
+   "easter": 1,
+   "journal": 2,
+   "workslib": 1,
+   "paper": 1,
+   "infrastructureevaluationhonest": 1,
+   "mat": 1,
+   "weighting": 2,
+   "sharmamore": 1,
+   "discoveryentry_fn": 2,
+   "take": 2,
+   "componentsectionframedata-world": 1,
+   "arthur": 1,
+   "you": 1,
+   "about": 1,
+   "credits": 1,
+   "in": 3,
+   "philosophy": 1,
+   "actsafter": 2,
+   "ever": 1,
+   "doing": 1,
+   "im": 2,
+   "page": 1,
+   "nothing": 1,
+   "ensemblerisk-parity": 2,
+   "0dte": 1,
+   "data-tonesmooth": 1,
+   "pipelines": 1,
+   "stranger": 1,
+   "kalam": 1,
+   "pirates": 1,
+   "above.tools": 1,
+   "screenshotstypegeist": 1,
+   "reduced": 1,
+   "systems": 1,
+   "miles": 1,
+   "per": 2,
+   "(": 6,
+   "for": 1,
+   "hunting": 1,
+   "•": 20,
+   "is": 2,
+   "discipline": 1,
+   "beyond": 1,
+   "potterwhat": 1,
+   "right.act": 1,
+   "small": 1,
+   "screen": 1,
+   "changeswhy": 1,
+   "12": 1,
+   "contentasworkskip": 1,
+   "crimson": 1,
+   "4": 2,
+   "film.ts4": 1,
+   "▲": 2,
+   "offpause": 1
+  },
+  "tokensRemovedTextContent": {
+   "]": 2,
+   "—": 2,
+   "futures": 1,
+   "expose.the": 1,
+   "slot": 2,
+   "acts.the": 1,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "above.supporting": 1,
+   "principles10": 1,
+   "potterthe": 1,
+   "caribbeanskip": 1,
+   "exported": 2,
+   "lines": 1,
+   "report": 2,
+   "207": 1,
+   "idiotsii": 1,
+   "first.footnote": 1,
+   "webglwhy": 1,
+   "myself.arthur": 1,
+   "infrastructureevaluationmethodsrealistic": 1,
+   "idiotsthe": 1,
+   "sharmatypegeist": 1,
+   "each.act": 1,
+   "produce.areamethodstoolsoutputsresearchmethodswalk-forward": 1,
+   "curve": 2,
+   "potteryou01cultivate": 1,
+   "chart": 2,
+   "dhammapadacontactlet’s": 1,
+   "build.on": 1,
+   "screenshotsbuilt": 1,
+   "riskengineeringmethodsadapter-pattern": 1,
+   "kill-listmarketsmethodsoptions": 1,
+   "idiots05": 1,
+   "processthe": 1,
+   "no": 2,
+   "data-tonenative": 1,
+   "just": 1,
+   "numberslanguagesmethodsself-directed": 1,
+   "soonasa": 1,
+   "equity": 2,
+   "mit-licensed": 1,
+   "break04nowport": 1
+  },
+  "linesAddedTextContent": [],
+  "linesRemovedTextContent": [],
+  "tokensAddedInnerText": {
+   "on": 3,
+   "honestly": 1,
+   "motion": 1,
+   "scene": 1,
+   ";": 1,
+   "one": 1,
+   "been": 1,
+   "changes": 1,
+   "who": 1,
+   "try": 1,
+   "with": 1,
+   "only": 2,
+   "work": 1,
+   "lenis": 1,
+   "minimax_h3": 1,
+   "camera": 1,
+   "started": 1,
+   "work.": 1,
+   "scenes": 1,
+   "find": 1,
+   "i've": 1,
+   "it": 1,
+   "first": 1,
+   "and": 5,
+   "like": 1,
+   "didn't": 1,
+   "layer": 1,
+   "survive.": 1,
+   "how": 1,
+   "phones": 1,
+   "where": 4,
+   "correcting": 1,
+   "what": 3,
+   "supported": 1,
+   "to": 2,
+   ":": 1,
+   "believe": 1,
+   ")": 1,
+   "desktop": 2,
+   "build": 1,
+   "me": 1,
+   "i": 4,
+   "the": 7,
+   "have": 1,
+   ",": 9,
+   "people": 1,
+   "break": 1,
+   "course": 1,
+   "since.": 1,
+   "this": 1,
+   "watched": 1,
+   "smooth": 1,
+   "life": 1,
+   "mat": 1,
+   "change.": 1,
+   "about": 1,
+   "ever": 1,
+   "doing": 1,
+   "reduced": 1,
+   "miles": 1,
+   "(": 1,
+   "for": 1,
+   "•": 1,
+   "beyond": 1,
+   "small": 1,
+   "screen": 1,
+   "me.": 1
+  },
+  "tokensRemovedInnerText": {
+   "]": 2,
+   "—": 2,
+   "a": 1,
+   "slot": 2,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "native": 1,
+   "exported": 2,
+   "report": 2,
+   "curve": 2,
+   "chart": 2,
+   "no": 2,
+   "/": 2,
+   "just": 1,
+   "first.": 1,
+   "equity": 2
+  },
+  "linesAddedInnerText": [
+   "A JOURNAL LIKE ARTHUR MORGAN’S",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro, minimax_h3) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
+   "SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH REDUCED MOTION • CSS + SVG FIRST • WEBGL, WHERE SUPPORTED, ONLY FOR SCENE CHANGES",
+   "What I believe about doing this work honestly, and where to find me.",
+   "What I build, how I try to break it, and what didn't survive.",
+   "Where I started, and the course I've been correcting ever since.",
+   "Why not just use a pencil? The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change."
+  ],
+  "linesRemovedInnerText": [
+   "ARTHUR MORGAN’S JOURNAL",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL",
+   "Why not just use a pencil? The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+   "[ CHART SLOT — DROP A REAL EXPORTED EQUITY CURVE / REPORT HERE ]"
+  ],
+  "sections": [
+   {
+    "id": "top",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-1",
+    "sameTextContent": false
+   },
+   {
+    "id": "about",
+    "sameTextContent": false
+   },
+   {
+    "id": "journey",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-2",
+    "sameTextContent": false
+   },
+   {
+    "id": "work",
+    "sameTextContent": true
+   },
+   {
+    "id": "trading-algos",
+    "sameTextContent": false
+   },
+   {
+    "id": "optuna-screener",
+    "sameTextContent": false
+   },
+   {
+    "id": "experiment",
+    "sameTextContent": true
+   },
+   {
+    "id": "systems",
+    "sameTextContent": false
+   },
+   {
+    "id": "kill-list",
+    "sameTextContent": null
+   },
+   {
+    "id": "films",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-3",
+    "sameTextContent": false
+   },
+   {
+    "id": "beyond",
+    "sameTextContent": true
+   },
+   {
+    "id": "writing",
+    "sameTextContent": false
+   },
+   {
+    "id": "voices",
+    "sameTextContent": true
+   },
+   {
+    "id": "act-4",
+    "sameTextContent": false
+   },
+   {
+    "id": "principles",
+    "sameTextContent": false
+   },
+   {
+    "id": "contact",
+    "sameTextContent": false
+   },
+   {
+    "id": "credits",
+    "sameTextContent": false
+   }
+  ]
+ },
+ "320x640": {
+  "docHeight": {
+   "head": [
+    49915,
+    49915,
+    49915
+   ],
+   "base": [
+    49968,
+    49968,
+    49968
+   ]
+  },
+  "innerTextHash": {
+   "head": [
+    "773eb4fcbbea7b4f",
+    "773eb4fcbbea7b4f",
+    "773eb4fcbbea7b4f"
+   ],
+   "base": [
+    "3cffbbcf8be6ceee",
+    "3cffbbcf8be6ceee",
+    "3cffbbcf8be6ceee"
+   ]
+  },
+  "textContentHash": {
+   "head": [
+    "e06f88e35e5b08ea",
+    "922dc10f21f410b6",
+    "e06f88e35e5b08ea"
+   ],
+   "base": [
+    "ae387e4dde395e40",
+    "2ab45185d45702e0",
+    "18e675e02cc96046"
+   ]
+  },
+  "textContentChars": {
+   "head": [
+    28172,
+    28172,
+    28172
+   ],
+   "base": [
+    25703,
+    25703,
+    25720
+   ]
+  },
+  "innerTextChars": {
+   "head": [
+    25182,
+    25182,
+    25182
+   ],
+   "base": [
+    24859,
+    24859,
+    24859
+   ]
+  },
+  "overflowPx": {
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0,
+    0
+   ]
+  },
+  "h1": {
+   "head": [
+    1,
+    1,
+    1
+   ],
+   "base": [
+    1,
+    1,
+    1
+   ]
+  },
+  "closedDetails": {
+   "head": [
+    "about",
+    "credits",
+    "optuna-screener",
+    "optuna-screener",
+    "optuna-screener",
+    "systems",
+    "systems",
+    "systems",
+    "systems"
+   ],
+   "base": []
+  },
+  "sectionHeights": [
+   {
+    "id": "top",
+    "head": [
+     1078
+    ],
+    "base": [
+     1078
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-1",
+    "head": [
+     1134
+    ],
+    "base": [
+     1134
+    ],
+    "delta": 0
+   },
+   {
+    "id": "about",
+    "head": [
+     3229
+    ],
+    "base": [
+     3229
+    ],
+    "delta": 0
+   },
+   {
+    "id": "journey",
+    "head": [
+     1335
+    ],
+    "base": [
+     1335
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-2",
+    "head": [
+     726
+    ],
+    "base": [
+     726
+    ],
+    "delta": 0
+   },
+   {
+    "id": "work",
+    "head": [
+     2478
+    ],
+    "base": [
+     2478
+    ],
+    "delta": 0
+   },
+   {
+    "id": "trading-algos",
+    "head": [
+     2600
+    ],
+    "base": [
+     2678
+    ],
+    "delta": -78
+   },
+   {
+    "id": "optuna-screener",
+    "head": [
+     5739
+    ],
+    "base": [
+     5818
+    ],
+    "delta": -79
+   },
+   {
+    "id": "experiment",
+    "head": [
+     1278
+    ],
+    "base": [
+     1278
+    ],
+    "delta": 0
+   },
+   {
+    "id": "systems",
+    "head": [
+     3317
+    ],
+    "base": [
+     3240
+    ],
+    "delta": 77
+   },
+   {
+    "id": "kill-list",
+    "head": [
+     3821
+    ],
+    "base": [
+     3821
+    ],
+    "delta": 0
+   },
+   {
+    "id": "films",
+    "head": [
+     5169
+    ],
+    "base": [
+     5169
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-3",
+    "head": [
+     834
+    ],
+    "base": [
+     834
+    ],
+    "delta": 0
+   },
+   {
+    "id": "beyond",
+    "head": [
+     4868
+    ],
+    "base": [
+     4868
+    ],
+    "delta": 0
+   },
+   {
+    "id": "writing",
+    "head": [
+     2931
+    ],
+    "base": [
+     2931
+    ],
+    "delta": 0
+   },
+   {
+    "id": "voices",
+    "head": [
+     1617
+    ],
+    "base": [
+     1617
+    ],
+    "delta": 0
+   },
+   {
+    "id": "act-4",
+    "head": [
+     735
+    ],
+    "base": [
+     735
+    ],
+    "delta": 0
+   },
+   {
+    "id": "principles",
+    "head": [
+     3111
+    ],
+    "base": [
+     3111
+    ],
+    "delta": 0
+   },
+   {
+    "id": "contact",
+    "head": [
+     1338
+    ],
+    "base": [
+     1338
+    ],
+    "delta": 0
+   },
+   {
+    "id": "credits",
+    "head": [
+     2577
+    ],
+    "base": [
+     2550
+    ],
+    "delta": 27
+   }
+  ],
+  "tokensAddedTextContent": {
+   "off": 1,
+   "numbersevaluationmethodsrealistic": 1,
+   "director's": 1,
+   "platform": 1,
+   "pirata": 1,
+   "16": 1,
+   "buttons": 1,
+   "survive.the": 1,
+   "cpcvstrategy": 1,
+   "caribbeanwhere": 1,
+   "on": 7,
+   "processdead": 1,
+   "patrick": 1,
+   "principlesi": 1,
+   "skip": 1,
+   "idiotsfig.": 1,
+   "since.a": 1,
+   "top": 2,
+   "honestly": 1,
+   "keeps": 1,
+   "caribbean": 2,
+   "motion": 2,
+   "a": 4,
+   "testsmonte": 2,
+   "optimized": 2,
+   "four": 2,
+   "12soundsound": 1,
+   "standard": 1,
+   "noise25": 2,
+   "noteon": 1,
+   "scene": 1,
+   ";": 2,
+   "one": 2,
+   "numberslanguageswork": 1,
+   "offthe": 1,
+   "automation.supporting": 1,
+   "solemnly": 1,
+   "fell": 2,
+   "built": 1,
+   "right": 1,
+   "been": 1,
+   "researchskip": 1,
+   "6": 1,
+   "file": 2,
+   "3": 2,
+   "▶": 1,
+   "riskmarketsmethodsoptions": 1,
+   "who": 1,
+   "try": 1,
+   "webgl": 1,
+   "with": 2,
+   "sections.tsderives": 1,
+   "only": 2,
+   "work": 1,
+   "theses": 1,
+   "lenis": 2,
+   "idiotsact": 1,
+   "not": 1,
+   "edges": 1,
+   "stated": 1,
+   "minimax_h3": 1,
+   "your": 1,
+   "idiotshere": 1,
+   "be": 1,
+   "hall's": 1,
+   "produce.researchvalidated": 1,
+   "ivharry": 1,
+   "camera": 1,
+   "infrastructureengineeringmethodsadapter-pattern": 1,
+   "started": 2,
+   "cpcv05": 1,
+   "scenes": 1,
+   "at": 1,
+   "garamond": 1,
+   "start": 1,
+   "find": 1,
+   "kill-list.the": 1,
+   "port": 1,
+   "proven": 1,
+   "tpewalk-forwardstress": 2,
+   "portfolio": 3,
+   "do": 1,
+   "myself.a": 1,
+   "rye": 1,
+   "i've": 1,
+   "×": 1,
+   "bots": 1,
+   "two": 1,
+   "english": 2,
+   "it": 1,
+   "hunt0": 1,
+   "potter01cultivate": 1,
+   "researchegg": 1,
+   "first": 1,
+   "·": 3,
+   "options": 1,
+   "break04nowparley": 1,
+   "drone": 1,
+   "of": 3,
+   "iiired": 1,
+   "dead": 4,
+   "and": 8,
+   "cardsregistry.tstype": 1,
+   "sc": 1,
+   "→": 1,
+   "edgewhere": 1,
+   "acts": 1,
+   "?": 2,
+   "like": 1,
+   "didn't": 1,
+   "2life": 1,
+   "layer": 1,
+   "hide": 1,
+   "post-mortems": 1,
+   "exit_fnindicatorscomputed": 2,
+   "branchstrategy": 1,
+   "hunt": 1,
+   "holdoutnever": 2,
+   "quoteslines": 1,
+   "htmlv3.0": 2,
+   "automated": 1,
+   "pro": 1,
+   "play": 1,
+   "ipirates": 1,
+   "me.the": 1,
+   "caribbeanact": 1,
+   "how": 1,
+   "eye": 1,
+   "marks": 1,
+   "potteract": 3,
+   "could": 1,
+   "eyethe": 1,
+   "read": 1,
+   "fonts": 1,
+   "futureswhat": 1,
+   "font": 1,
+   "phones": 1,
+   "redemption": 3,
+   "games": 1,
+   "where": 2,
+   "each.still": 1,
+   "1": 1,
+   "idiots": 3,
+   "harry": 2,
+   "correcting": 1,
+   "optuna-screener": 1,
+   "page.tsmanifest": 1,
+   "score": 1,
+   "media": 1,
+   "ii3": 1,
+   "10": 1,
+   "1.1": 1,
+   "work.07": 1,
+   "eggs": 1,
+   "supported": 1,
+   "hand": 1,
+   "strategyoptuna": 2,
+   "carlo": 2,
+   "act": 1,
+   "to": 5,
+   "2act": 1,
+   "acts.something": 1,
+   "riskengineeringreproducible": 1,
+   "%": 2,
+   "egg": 2,
+   ":": 5,
+   "count": 1,
+   "data-tonelib": 1,
+   "believe": 1,
+   "prime": 1,
+   "idiotswhat": 1,
+   "kill-listresearchmethodswalk-forward": 1,
+   "licence": 1,
+   "holdout-based": 1,
+   "no-charge": 1,
+   "↓": 2,
+   "onreportplotly": 2,
+   ")": 6,
+   "githubalso": 1,
+   "desktop": 3,
+   "counter": 1,
+   "2": 3,
+   "can": 1,
+   "build": 1,
+   "sectionslib": 1,
+   "too": 1,
+   "sil": 1,
+   "me": 1,
+   "open": 1,
+   "dhammapadayoucontactlet’s": 1,
+   "cormorant": 1,
+   "i": 6,
+   "gsap": 1,
+   "kill-listmarketsstrategy": 1,
+   "build.the": 1,
+   "change.footnote": 1,
+   "courier": 1,
+   "red": 2,
+   "research": 3,
+   "sound": 1,
+   "the": 19,
+   "mit": 1,
+   "candlesasa": 1,
+   "have": 1,
+   ",": 29,
+   "people": 1,
+   "stages": 1,
+   "crossing": 2,
+   "break": 1,
+   "librarieson": 1,
+   "pausedthe": 1,
+   "…": 1,
+   "expose.": 1,
+   "cut": 1,
+   "mit-licensedwhere": 1,
+   "monstersii": 1,
+   "flies": 1,
+   "course": 1,
+   "license": 1,
+   "no-code": 1,
+   "/": 4,
+   "this": 2,
+   "per-strategy": 2,
+   "soonlumosrelights": 1,
+   "trustlanguagesmethodsself-directed": 1,
+   "+": 2,
+   "swear": 1,
+   "watched": 1,
+   "easter": 1,
+   "journal": 2,
+   "workslib": 1,
+   "paper": 1,
+   "infrastructureevaluationhonest": 1,
+   "mat": 1,
+   "weighting": 2,
+   "sharmamore": 1,
+   "discoveryentry_fn": 2,
+   "take": 2,
+   "componentsectionframedata-world": 1,
+   "arthur": 1,
+   "you": 1,
+   "about": 1,
+   "credits": 1,
+   "in": 3,
+   "philosophy": 1,
+   "actsafter": 2,
+   "ever": 1,
+   "doing": 1,
+   "im": 2,
+   "page": 1,
+   "nothing": 1,
+   "ensemblerisk-parity": 2,
+   "0dte": 1,
+   "data-tonesmooth": 1,
+   "pipelines": 1,
+   "stranger": 1,
+   "kalam": 1,
+   "pirates": 2,
+   "above.tools": 1,
+   "screenshotstypegeist": 1,
+   "reduced": 1,
+   "systems": 1,
+   "miles": 1,
+   "per": 2,
+   "(": 6,
+   "for": 1,
+   "hunting": 1,
+   "•": 20,
+   "is": 2,
+   "discipline": 1,
+   "beyond": 1,
+   "potterwhat": 1,
+   "right.act": 1,
+   "small": 1,
+   "screen": 1,
+   "changeswhy": 1,
+   "12": 1,
+   "contentasworkskip": 1,
+   "crimson": 1,
+   "4": 2,
+   "film.ts4": 1,
+   "▲": 2,
+   "offpause": 1
+  },
+  "tokensRemovedTextContent": {
+   "]": 2,
+   "—": 2,
+   "futures": 1,
+   "expose.the": 1,
+   "slot": 2,
+   "acts.the": 1,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "above.supporting": 1,
+   "principles10": 1,
+   "potterthe": 1,
+   "caribbeanskip": 1,
+   "exported": 2,
+   "lines": 1,
+   "report": 2,
+   "207": 1,
+   "idiotsii": 1,
+   "first.footnote": 1,
+   "webglwhy": 1,
+   "myself.arthur": 1,
+   "infrastructureevaluationmethodsrealistic": 1,
+   "idiotsthe": 1,
+   "sharmatypegeist": 1,
+   "each.act": 1,
+   "produce.areamethodstoolsoutputsresearchmethodswalk-forward": 1,
+   "curve": 2,
+   "potteryou01cultivate": 1,
+   "chart": 2,
+   "dhammapadacontactlet’s": 1,
+   "build.on": 1,
+   "screenshotsbuilt": 1,
+   "riskengineeringmethodsadapter-pattern": 1,
+   "kill-listmarketsmethodsoptions": 1,
+   "idiots05": 1,
+   "processthe": 1,
+   "no": 2,
+   "data-tonenative": 1,
+   "just": 1,
+   "numberslanguagesmethodsself-directed": 1,
+   "soonasa": 1,
+   "equity": 2,
+   "mit-licensed": 1,
+   "break04nowport": 1
+  },
+  "linesAddedTextContent": [],
+  "linesRemovedTextContent": [],
+  "tokensAddedInnerText": {
+   "on": 3,
+   "honestly": 1,
+   "motion": 1,
+   "scene": 1,
+   ";": 1,
+   "one": 1,
+   "been": 1,
+   "changes": 1,
+   "who": 1,
+   "try": 1,
+   "with": 1,
+   "only": 2,
+   "work": 1,
+   "lenis": 1,
+   "minimax_h3": 1,
+   "camera": 1,
+   "started": 1,
+   "work.": 1,
+   "scenes": 1,
+   "find": 1,
+   "i've": 1,
+   "it": 1,
+   "first": 1,
+   "and": 5,
+   "like": 1,
+   "didn't": 1,
+   "layer": 1,
+   "survive.": 1,
+   "how": 1,
+   "phones": 1,
+   "where": 4,
+   "correcting": 1,
+   "what": 3,
+   "supported": 1,
+   "to": 2,
+   ":": 1,
+   "believe": 1,
+   ")": 1,
+   "desktop": 2,
+   "build": 1,
+   "me": 1,
+   "i": 4,
+   "the": 7,
+   "have": 1,
+   ",": 9,
+   "people": 1,
+   "break": 1,
+   "course": 1,
+   "since.": 1,
+   "this": 1,
+   "watched": 1,
+   "smooth": 1,
+   "life": 1,
+   "mat": 1,
+   "change.": 1,
+   "about": 1,
+   "ever": 1,
+   "doing": 1,
+   "reduced": 1,
+   "miles": 1,
+   "(": 1,
+   "for": 1,
+   "•": 1,
+   "beyond": 1,
+   "small": 1,
+   "screen": 1,
+   "me.": 1
+  },
+  "tokensRemovedInnerText": {
+   "]": 2,
+   "—": 2,
+   "a": 1,
+   "slot": 2,
+   "real": 2,
+   "drop": 2,
+   "[": 2,
+   "here": 2,
+   "native": 1,
+   "exported": 2,
+   "report": 2,
+   "curve": 2,
+   "chart": 2,
+   "no": 2,
+   "/": 2,
+   "just": 1,
+   "first.": 1,
+   "equity": 2
+  },
+  "linesAddedInnerText": [
+   "A JOURNAL LIKE ARTHUR MORGAN’S",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro, minimax_h3) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "Life beyond the screen: the miles, the mat, the camera, and the people who have watched me work.",
+   "SMOOTH SCROLL ON DESKTOP (LENIS) • NATIVE SCROLL ON PHONES AND WITH REDUCED MOTION • CSS + SVG FIRST • WEBGL, WHERE SUPPORTED, ONLY FOR SCENE CHANGES",
+   "What I believe about doing this work honestly, and where to find me.",
+   "What I build, how I try to break it, and what didn't survive.",
+   "Where I started, and the course I've been correcting ever since.",
+   "Why not just use a pencil? The same question, asked of this page: CSS and SVG first; on desktop, one small WebGL layer only where the scenes change."
+  ],
+  "linesRemovedInnerText": [
+   "ARTHUR MORGAN’S JOURNAL",
+   "Higgsfield (GPT Image 2.5, Kling 3.0, nano_banana_pro) · our own prompts; the only image inputs were frames made for this page · no film stills or game screenshots",
+   "NATIVE SCROLL • CSS + SVG FIRST • NO WEBGL",
+   "Why not just use a pencil? The same question, asked of this page: no WebGL, just native scroll, CSS and SVG first.",
+   "[ CHART SLOT — DROP A REAL EXPORTED EQUITY CURVE / REPORT HERE ]"
+  ],
+  "sections": [
+   {
+    "id": "top",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-1",
+    "sameTextContent": false
+   },
+   {
+    "id": "about",
+    "sameTextContent": false
+   },
+   {
+    "id": "journey",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-2",
+    "sameTextContent": false
+   },
+   {
+    "id": "work",
+    "sameTextContent": true
+   },
+   {
+    "id": "trading-algos",
+    "sameTextContent": false
+   },
+   {
+    "id": "optuna-screener",
+    "sameTextContent": false
+   },
+   {
+    "id": "experiment",
+    "sameTextContent": true
+   },
+   {
+    "id": "systems",
+    "sameTextContent": false
+   },
+   {
+    "id": "kill-list",
+    "sameTextContent": null
+   },
+   {
+    "id": "films",
+    "sameTextContent": false
+   },
+   {
+    "id": "act-3",
+    "sameTextContent": false
+   },
+   {
+    "id": "beyond",
+    "sameTextContent": true
+   },
+   {
+    "id": "writing",
+    "sameTextContent": false
+   },
+   {
+    "id": "voices",
+    "sameTextContent": true
+   },
+   {
+    "id": "act-4",
+    "sameTextContent": false
+   },
+   {
+    "id": "principles",
+    "sameTextContent": false
+   },
+   {
+    "id": "contact",
+    "sameTextContent": false
+   },
+   {
+    "id": "credits",
+    "sameTextContent": false
+   }
+  ]
+ }
+}

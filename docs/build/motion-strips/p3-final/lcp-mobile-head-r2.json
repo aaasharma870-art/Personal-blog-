@@ -1,0 +1,118 @@
+{
+ "meta": {
+  "base": "http://localhost:3161",
+  "kind": "mobile",
+  "vw": "390x844",
+  "path": "/",
+  "label": "head-r2",
+  "date": "2026-10-13T10:42:12.836Z",
+  "chromium": "141.0.7390.37"
+ },
+ "runs": [
+  {
+   "lcp": 2432,
+   "el": "IMG.object-cover",
+   "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+   "cls": 0.0143,
+   "shifts": [
+    {
+     "t": 3608,
+     "v": 0.00536
+    },
+    {
+     "t": 4156,
+     "v": 0.00894
+    }
+   ],
+   "nav": {
+    "ttfb": 61,
+    "dcl": 4402,
+    "load": 5155
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 2432,
+     "el": "IMG.object-cover",
+     "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+     "size": 89604
+    }
+   ]
+  },
+  {
+   "lcp": 1772,
+   "el": "IMG.object-cover",
+   "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+   "cls": 0.0142,
+   "shifts": [
+    {
+     "t": 3090,
+     "v": 0.00526
+    },
+    {
+     "t": 3379,
+     "v": 0.00001
+    },
+    {
+     "t": 3708,
+     "v": 0.00894
+    }
+   ],
+   "nav": {
+    "ttfb": 18,
+    "dcl": 4375,
+    "load": 5156
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 1772,
+     "el": "IMG.object-cover",
+     "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+     "size": 89604
+    }
+   ]
+  },
+  {
+   "lcp": 1660,
+   "el": "IMG.object-cover",
+   "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+   "cls": 0.0142,
+   "shifts": [
+    {
+     "t": 3143,
+     "v": 0.00526
+    },
+    {
+     "t": 3455,
+     "v": 0.00001
+    },
+    {
+     "t": 3805,
+     "v": 0.00894
+    }
+   ],
+   "nav": {
+    "ttfb": 24,
+    "dcl": 4587,
+    "load": 5153
+   },
+   "errors": [],
+   "all": [
+    {
+     "t": 1660,
+     "el": "IMG.object-cover",
+     "url": "image?url=%2Fmedia%2Ffilms%2Fhero-sea-mobile.webp&w=750&q=75",
+     "size": 89604
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "n": 3,
+  "min": 1660,
+  "median": 1772,
+  "max": 2432,
+  "mean": 1955
+ }
+}
