@@ -1,0 +1,50 @@
+CAPTIONED @1024: name "Aryan Sharma" read correctly by 3/3 (j1: Aryan Sharma; j2: Aryan Sharma; j3: Aryan Sharma)
+can't read: 47 finding(s)
+- j1 C001 (D40-contact): Only the '[AS]' monogram, no full name in this frame; the email 'aaasharma870@gmail.com' hints at a surname
+- j1 C001 (D40-contact): Icon-only nav controls (speaker-mute, wave) have no text
+- j1 C002 (D32-beyond): Bottom row 'Discipline, in three arenas' is cut off at the frame edge
+- j1 C003 (D29-systems): Intro line under 'What I can actually do.' is cut at the bottom
+- j1 C004 (D28-experiment): Paragraph under the chart is cut off at the bottom of the frame
+- j1 C005 (D31-voices): Only the first name appears, inside the advisor's quote
+- j1 C006 (D10-act-1-settled): Small decorative dashes and the compass details are not text; nothing unreadable
+- j1 C007 (D41-credits): 'CREDITS' header is tucked under the nav and very dim
+- j1 C007 (D41-credits): Blackletter and western display titles in the 'Worlds borrowed from' list render slightly muddy at this size
+- j1 C008 (D26-trading-algos): Repo label 'Trading_Algos-' ends in a hyphen and looks truncated
+- j1 C009 (D38-principles): Second line of the next heading ('Cultivate judgment') is cut off at the bottom
+- j1 C010 (D21-journey-step-1): Timeline labels (01 ORIGIN, 02 EARLY WORK, 03 THE BREAK, 04 NOW) are tiny and 'THE BREAK' sits on the route line
+- j1 C010 (D21-journey-step-1): Last line of the previous paragraph is clipped under the nav and faded
+- j1 C011 (D20-about-120): Heading ('A builder of quantitative systems.') is clipped under the nav, only the lower line is visible
+- j1 C011 (D20-about-120): The gold caption in the upper right is cut off by the nav, only 'PIRATES OF THE CARIBBEAN' is legible
+- j1 C012 (D43-films-pirates): A ghosted gold heading (appears to be 'PIRATES OF THE CARIBBEAN') is half-hidden behind the nav at the top and unreadable
+- j1 C012 (D43-films-pirates): Lower body text is cut at the bottom
+- j1 C014 (D30-kill-list): Second project title is cut at the bottom of the frame
+- j1 C015 (D27-optuna-screener): Pipeline node text overflows its boxes: 'STRATEGY FILE / DISCOVERY' touches the top edge of its box and 'EXIT_FN' spills out of the bottom
+- j1 C015 (D27-optuna-screener): Small node labels (INDICATORS, STRESS TESTS, 25% HOLDOUT) are cramped
+- j1 C016 (D36-writing): Paragraph under 'How I try not to fool myself' is cut at the bottom
+- j1 C017 (D24-work): Text after 'STANDING RULE' is cut at the bottom of the frame
+- j2 C007 (D41-credits): The small 'CREDITS' eyebrow label is half hidden under the sticky header
+- j2 C008 (D26-trading-algos): The right half of the frame is a faint dark panel with no legible content (looks mid-fade or an unfinished layer)
+- j2 C010 (D21-journey-step-1): A faded line of body text at the very top under the nav ('...it failed me first. Step through it.') is semi-transparent
+- j2 C011 (D20-about-120): A clipped heading fragment ('quantitative systems.') and a faded caption ('...PIRATES OF THE CARIBBEAN') at the top, partly under the nav
+- j2 C011 (D20-about-120): The right half of the frame is an empty dark column
+- j2 C012 (D43-films-pirates): A ghosted caption fragment at the very top under the nav
+- j2 C015 (D27-optuna-screener): Fig. 2 pipeline diagram: box labels are cramped; 'STRATEGY FILE / DISCOVERY / ENTRY_FN . EXIT_FN' and '25% HOLDOUT NEVER OPTIMIZED ON' crowd or overflow their boxes
+- j3 C001 (D40-contact): the reticle shows only the initials 'A S'; the full name is not written on this frame (email aaasharma870@gmail.com is the nearest clue)
+- j3 C002 (D32-beyond): 'Discipline, in three' heading is cut off at the bottom
+- j3 C003 (D29-systems): intro line under 'What I can actually do.' is cut off at the bottom
+- j3 C004 (D28-experiment): explanatory paragraph under the chart is cut off at the bottom
+- j3 C006 (D10-act-1-settled): the act list (The Crossing, The Workshop, ...) does not look clickable, so I cannot tell if it navigates
+- j3 C007 (D41-credits): 'CREDITS' header is clipped just under the nav bar
+- j3 C008 (D26-trading-algos): FIG. 1 blueprint is cut off at the bottom of the frame
+- j3 C009 (D38-principles): 'Cultivate judgment' heading is cut off at the bottom
+- j3 C010 (D21-journey-step-1): a faded sentence ending 'it failed me first. Step through it.' is half-hidden behind the nav
+- j3 C010 (D21-journey-step-1): route-map labels are small and 'THE BREAK' is crossed by the dashed line
+- j3 C011 (D20-about-120): the heading 'A builder of quantitative systems.' is mostly hidden under the nav bar
+- j3 C011 (D20-about-120): a right-column caption at the top is half hidden under the nav
+- j3 C012 (D43-films-pirates): ghost line above the image (a washed-out 'PIRATES OF THE CARIBBEAN' fragment under the nav) is unreadable
+- j3 C013 (D01-hero): icon-only controls (speaker with a cross, wavy line) next to EGG HUNT have no text label
+- j3 C015 (D27-optuna-screener): FIG. 2 pipeline: the 'STRATEGY FILE / DISCOVERY' box text overflows its box top and bottom and is cramped
+- j3 C016 (D36-writing): the taped note on the journal page shows grey placeholder lines, not text
+- j3 C016 (D36-writing): entry text at the bottom is cut off
+- j3 C017 (D24-work): 'STANDING RULE' paragraph is cut off at the bottom
+fast lane found ≤ 10 s: 3/3 (j1: 1 s, 'SKIP TO THE RESEARCH' pill at top of the nav, plus the 'VIEW THE QUANT PORTFOLIO' button under the intro; j2: 1 s, 'SKIP TO THE RESEARCH' pill in the top bar, or 'VIEW THE QUANT PORTFOLIO' under the hero line; j3: 1 s, 'SKIP TO THE RESEARCH' pill top right, and 'VIEW THE QUANT PORTFOLIO' under the intro)

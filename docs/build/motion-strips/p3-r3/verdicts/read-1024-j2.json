@@ -1,0 +1,19 @@
+[
+  {"frame": "C001", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "The outlined 'SKIP TO THE RESEARCH' pill in the top bar (always in view); on this contact screen the email button is also right there", "seconds": 1}},
+  {"frame": "C002", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C003", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar; the 'What I can actually do.' section is also the work", "seconds": 1}},
+  {"frame": "C004", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C005", "name": "Aryan", "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C006", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar (this intro section also lists the acts)", "seconds": 1}},
+  {"frame": "C007", "name": "Aryan Sharma", "cantRead": ["The small 'CREDITS' eyebrow label is half hidden under the sticky header"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C008", "name": null, "cantRead": ["The right half of the frame is a faint dark panel with no legible content (looks mid-fade or an unfinished layer)"], "fastLane": {"found": true, "where": "Already in the research: the 'Quantitative Trading Research' flagship heading with a Trading_Algos- repo link; otherwise the top-bar 'SKIP TO THE RESEARCH' pill", "seconds": 1}},
+  {"frame": "C009", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C010", "name": null, "cantRead": ["A faded line of body text at the very top under the nav ('...it failed me first. Step through it.') is semi-transparent"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C011", "name": "Aryan Sharma", "cantRead": ["A clipped heading fragment ('quantitative systems.') and a faded caption ('...PIRATES OF THE CARIBBEAN') at the top, partly under the nav", "The right half of the frame is an empty dark column"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C012", "name": null, "cantRead": ["A ghosted caption fragment at the very top under the nav"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C013", "name": "Aryan Sharma", "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar, or 'VIEW THE QUANT PORTFOLIO' under the hero line", "seconds": 1}},
+  {"frame": "C014", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "Already at the work: 'The kill-list' with Quantitative Trading Research and Automated Strategy Research Pipeline listed; the top-bar 'SKIP TO THE RESEARCH' pill also works", "seconds": 1}},
+  {"frame": "C015", "name": null, "cantRead": ["Fig. 2 pipeline diagram: box labels are cramped; 'STRATEGY FILE / DISCOVERY / ENTRY_FN . EXIT_FN' and '25% HOLDOUT NEVER OPTIMIZED ON' crowd or overflow their boxes"], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C016", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar", "seconds": 1}},
+  {"frame": "C017", "name": null, "cantRead": [], "fastLane": {"found": true, "where": "'SKIP TO THE RESEARCH' pill in the top bar; 'Led by what survived scrutiny.' is the Work section itself", "seconds": 1}}
+]

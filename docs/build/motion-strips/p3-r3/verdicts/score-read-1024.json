@@ -1,0 +1,334 @@
+{
+ "kind": "captioned",
+ "width": "1024",
+ "name": "Aryan Sharma",
+ "heroIds": [
+  "C013"
+ ],
+ "nameOk": 3,
+ "nameRows": [
+  {
+   "judge": 1,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 2,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  },
+  {
+   "judge": 3,
+   "reads": [
+    "Aryan Sharma"
+   ]
+  }
+ ],
+ "cantRead": [
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D40-contact",
+   "text": "Only the '[AS]' monogram, no full name in this frame; the email 'aaasharma870@gmail.com' hints at a surname"
+  },
+  {
+   "judge": 1,
+   "frame": "C001",
+   "scene": "D40-contact",
+   "text": "Icon-only nav controls (speaker-mute, wave) have no text"
+  },
+  {
+   "judge": 1,
+   "frame": "C002",
+   "scene": "D32-beyond",
+   "text": "Bottom row 'Discipline, in three arenas' is cut off at the frame edge"
+  },
+  {
+   "judge": 1,
+   "frame": "C003",
+   "scene": "D29-systems",
+   "text": "Intro line under 'What I can actually do.' is cut at the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C004",
+   "scene": "D28-experiment",
+   "text": "Paragraph under the chart is cut off at the bottom of the frame"
+  },
+  {
+   "judge": 1,
+   "frame": "C005",
+   "scene": "D31-voices",
+   "text": "Only the first name appears, inside the advisor's quote"
+  },
+  {
+   "judge": 1,
+   "frame": "C006",
+   "scene": "D10-act-1-settled",
+   "text": "Small decorative dashes and the compass details are not text; nothing unreadable"
+  },
+  {
+   "judge": 1,
+   "frame": "C007",
+   "scene": "D41-credits",
+   "text": "'CREDITS' header is tucked under the nav and very dim"
+  },
+  {
+   "judge": 1,
+   "frame": "C007",
+   "scene": "D41-credits",
+   "text": "Blackletter and western display titles in the 'Worlds borrowed from' list render slightly muddy at this size"
+  },
+  {
+   "judge": 1,
+   "frame": "C008",
+   "scene": "D26-trading-algos",
+   "text": "Repo label 'Trading_Algos-' ends in a hyphen and looks truncated"
+  },
+  {
+   "judge": 1,
+   "frame": "C009",
+   "scene": "D38-principles",
+   "text": "Second line of the next heading ('Cultivate judgment') is cut off at the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C010",
+   "scene": "D21-journey-step-1",
+   "text": "Timeline labels (01 ORIGIN, 02 EARLY WORK, 03 THE BREAK, 04 NOW) are tiny and 'THE BREAK' sits on the route line"
+  },
+  {
+   "judge": 1,
+   "frame": "C010",
+   "scene": "D21-journey-step-1",
+   "text": "Last line of the previous paragraph is clipped under the nav and faded"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "Heading ('A builder of quantitative systems.') is clipped under the nav, only the lower line is visible"
+  },
+  {
+   "judge": 1,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "The gold caption in the upper right is cut off by the nav, only 'PIRATES OF THE CARIBBEAN' is legible"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D43-films-pirates",
+   "text": "A ghosted gold heading (appears to be 'PIRATES OF THE CARIBBEAN') is half-hidden behind the nav at the top and unreadable"
+  },
+  {
+   "judge": 1,
+   "frame": "C012",
+   "scene": "D43-films-pirates",
+   "text": "Lower body text is cut at the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C014",
+   "scene": "D30-kill-list",
+   "text": "Second project title is cut at the bottom of the frame"
+  },
+  {
+   "judge": 1,
+   "frame": "C015",
+   "scene": "D27-optuna-screener",
+   "text": "Pipeline node text overflows its boxes: 'STRATEGY FILE / DISCOVERY' touches the top edge of its box and 'EXIT_FN' spills out of the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C015",
+   "scene": "D27-optuna-screener",
+   "text": "Small node labels (INDICATORS, STRESS TESTS, 25% HOLDOUT) are cramped"
+  },
+  {
+   "judge": 1,
+   "frame": "C016",
+   "scene": "D36-writing",
+   "text": "Paragraph under 'How I try not to fool myself' is cut at the bottom"
+  },
+  {
+   "judge": 1,
+   "frame": "C017",
+   "scene": "D24-work",
+   "text": "Text after 'STANDING RULE' is cut at the bottom of the frame"
+  },
+  {
+   "judge": 2,
+   "frame": "C007",
+   "scene": "D41-credits",
+   "text": "The small 'CREDITS' eyebrow label is half hidden under the sticky header"
+  },
+  {
+   "judge": 2,
+   "frame": "C008",
+   "scene": "D26-trading-algos",
+   "text": "The right half of the frame is a faint dark panel with no legible content (looks mid-fade or an unfinished layer)"
+  },
+  {
+   "judge": 2,
+   "frame": "C010",
+   "scene": "D21-journey-step-1",
+   "text": "A faded line of body text at the very top under the nav ('...it failed me first. Step through it.') is semi-transparent"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "A clipped heading fragment ('quantitative systems.') and a faded caption ('...PIRATES OF THE CARIBBEAN') at the top, partly under the nav"
+  },
+  {
+   "judge": 2,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "The right half of the frame is an empty dark column"
+  },
+  {
+   "judge": 2,
+   "frame": "C012",
+   "scene": "D43-films-pirates",
+   "text": "A ghosted caption fragment at the very top under the nav"
+  },
+  {
+   "judge": 2,
+   "frame": "C015",
+   "scene": "D27-optuna-screener",
+   "text": "Fig. 2 pipeline diagram: box labels are cramped; 'STRATEGY FILE / DISCOVERY / ENTRY_FN . EXIT_FN' and '25% HOLDOUT NEVER OPTIMIZED ON' crowd or overflow their boxes"
+  },
+  {
+   "judge": 3,
+   "frame": "C001",
+   "scene": "D40-contact",
+   "text": "the reticle shows only the initials 'A S'; the full name is not written on this frame (email aaasharma870@gmail.com is the nearest clue)"
+  },
+  {
+   "judge": 3,
+   "frame": "C002",
+   "scene": "D32-beyond",
+   "text": "'Discipline, in three' heading is cut off at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C003",
+   "scene": "D29-systems",
+   "text": "intro line under 'What I can actually do.' is cut off at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C004",
+   "scene": "D28-experiment",
+   "text": "explanatory paragraph under the chart is cut off at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C006",
+   "scene": "D10-act-1-settled",
+   "text": "the act list (The Crossing, The Workshop, ...) does not look clickable, so I cannot tell if it navigates"
+  },
+  {
+   "judge": 3,
+   "frame": "C007",
+   "scene": "D41-credits",
+   "text": "'CREDITS' header is clipped just under the nav bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C008",
+   "scene": "D26-trading-algos",
+   "text": "FIG. 1 blueprint is cut off at the bottom of the frame"
+  },
+  {
+   "judge": 3,
+   "frame": "C009",
+   "scene": "D38-principles",
+   "text": "'Cultivate judgment' heading is cut off at the bottom"
+  },
+  {
+   "judge": 3,
+   "frame": "C010",
+   "scene": "D21-journey-step-1",
+   "text": "a faded sentence ending 'it failed me first. Step through it.' is half-hidden behind the nav"
+  },
+  {
+   "judge": 3,
+   "frame": "C010",
+   "scene": "D21-journey-step-1",
+   "text": "route-map labels are small and 'THE BREAK' is crossed by the dashed line"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "the heading 'A builder of quantitative systems.' is mostly hidden under the nav bar"
+  },
+  {
+   "judge": 3,
+   "frame": "C011",
+   "scene": "D20-about-120",
+   "text": "a right-column caption at the top is half hidden under the nav"
+  },
+  {
+   "judge": 3,
+   "frame": "C012",
+   "scene": "D43-films-pirates",
+   "text": "ghost line above the image (a washed-out 'PIRATES OF THE CARIBBEAN' fragment under the nav) is unreadable"
+  },
+  {
+   "judge": 3,
+   "frame": "C013",
+   "scene": "D01-hero",
+   "text": "icon-only controls (speaker with a cross, wavy line) next to EGG HUNT have no text label"
+  },
+  {
+   "judge": 3,
+   "frame": "C015",
+   "scene": "D27-optuna-screener",
+   "text": "FIG. 2 pipeline: the 'STRATEGY FILE / DISCOVERY' box text overflows its box top and bottom and is cramped"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D36-writing",
+   "text": "the taped note on the journal page shows grey placeholder lines, not text"
+  },
+  {
+   "judge": 3,
+   "frame": "C016",
+   "scene": "D36-writing",
+   "text": "entry text at the bottom is cut off"
+  },
+  {
+   "judge": 3,
+   "frame": "C017",
+   "scene": "D24-work",
+   "text": "'STANDING RULE' paragraph is cut off at the bottom"
+  }
+ ],
+ "fastLane": [
+  {
+   "judge": 1,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill at top of the nav, plus the 'VIEW THE QUANT PORTFOLIO' button under the intro"
+  },
+  {
+   "judge": 2,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill in the top bar, or 'VIEW THE QUANT PORTFOLIO' under the hero line"
+  },
+  {
+   "judge": 3,
+   "found": true,
+   "seconds": 1,
+   "where": "'SKIP TO THE RESEARCH' pill top right, and 'VIEW THE QUANT PORTFOLIO' under the intro"
+  }
+ ],
+ "fastLaneOk": 3
+}

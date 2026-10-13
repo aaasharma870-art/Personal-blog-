@@ -1,0 +1,10 @@
+[
+  {"frame": "H001", "hook": false, "why": "The title says HARRY POTTER, but the picture is still a Western camp with a flat black hole and a tiny candle punched into it. The hole is an intriguing shape but the title and image contradict each other. The title is also plain serif, with no wizard flavour."},
+  {"frame": "H002", "hook": true, "why": "A cream tintype frame holds a sepia valley with a grazing horse and a burn streak through the oak. It is tactile, coherent and cinematic. The title 'RED DEAD REDEMPTION 2' is in a plain light serif with none of the Western flavour, which weakens it a little."},
+  {"frame": "H003", "hook": true, "why": "A white lightning-torn edge splits a washed-out classroom from a teal-lit storm sea, with a '3 IDIOTS' title and 'The Workshop' caption. It is dramatic and makes me wait for the reveal. Moderate: the title is plain serif and the sea is still the previous world."},
+  {"frame": "H004", "hook": true, "why": "The blackletter 'PIRATES OF THE CARIBBEAN' title and a bright gold porthole showing the ghost ship's lit stern make a clear, strong focal point on a dark page, though most of the frame is black."},
+  {"frame": "H005", "hook": true, "why": "The same Pirates porthole, slightly smaller and with a duller ring. It is still a clear title plus a glowing image, but slightly less striking than the brighter frame."},
+  {"frame": "H006", "hook": false, "why": "'3 IDIOTS' over a stormy sea fused with a cyan chart line and a wooden desk edge at the bottom. The picture is murky and confusing and does not match the title, so I would not feel pulled in."},
+  {"frame": "H007", "hook": false, "why": "HARRY POTTER title over a cowboy camp with a blue glowing blob in the foreground. The portal is attractive but the mismatch makes it feel like the wrong section loaded."},
+  {"frame": "H008", "hook": true, "why": "A sepia tintype with a glowing sun, a light streak and small route arcs under the Red Dead title is coherent and rich. The plain serif title again undersells the world."}
+]
