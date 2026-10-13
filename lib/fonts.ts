@@ -34,17 +34,6 @@
    media), and its @font-face sits in app/globals.css under the same media
    query. The Pirates head reads the same file (one request, 5.3 KB).
 
-   THE PIRATES BODY (P3-11 r3, F3 / F6; J9 F1): Cormorant Garamond 500 is
-   the face of #about and the journey, the first prose the reader meets.
-   Gated on its token it swapped in after hydration and re-flowed both
-   (#about −93 px at 1440: a deep link or a reload below them moved). It is
-   now, like the name, a public file (public/fonts/film/cormorant-garamond-
-   500/) preloaded ≥ 64rem by app/layout.tsx, with its @font-face in
-   app/globals.css under the same query and `font-display: optional`: the
-   face is used from first paint when it is there in time (the preload),
-   otherwise the fallback serif holds for the whole visit. Either way it
-   never swaps under the reader, with motion on, reduced or paused.
-
    HOW TO USE: read the plane's slot, never a face —
      type-chapter / type-title / h3.type-heading  → the world head (CSS)
      type-body / type-small / type-lead           → the world body (CSS)
@@ -121,9 +110,18 @@ export const fontEggRye = localFont({
 });
 
 /* — 2. WORLD TYPE (≥ 64rem only; PHASE3-SPEC §5.2) ——————————————————————
-   (The Pirates head is the name's file: --font-name-pirates, globals.css.
-   The Pirates body is a public, preloaded file: --font-world-pirates-body,
-   globals.css; see THE PIRATES BODY above.) */
+   (The Pirates head is the name's file: --font-name-pirates, globals.css.) */
+
+/** pirates body — Cormorant Garamond 500 (OFL 1.1), latin: 20 px / 1.55, ink only. */
+export const fontWorldPiratesBody = localFont({
+  weight: "500",
+  style: "normal",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  src: "../assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2",
+  variable: "--font-world-pirates-body",
+});
 
 /** idiots head — Kalam 700 (OFL 1.1), ASCII+: replaces the 400 subset ≥ 64rem. */
 export const fontWorldIdiotsHead = localFont({
@@ -210,6 +208,7 @@ export const worldFontVariables = [
   fontWorldHp.variable,
   fontWorldRdr2.variable,
   fontEggRye.variable,
+  fontWorldPiratesBody.variable,
   fontWorldIdiotsHead.variable,
   fontWorldIdiotsLead.variable,
   fontWorldRdr2Head.variable,
@@ -232,16 +231,11 @@ export const worldFontVar = {
  *  its @font-face is in app/globals.css). */
 export const NAME_FONT_HREF = "/fonts/film/pirata-one/pirata-one-ascii.woff2";
 
-/** The self-hosted Pirates body face (public/, preloaded ≥ 64rem by
- *  app/layout.tsx; its @font-face, `font-display: optional`, is in
- *  app/globals.css). */
-export const PIRATES_BODY_FONT_HREF = "/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2";
-
 /** The lazy world faces: html[data-fonts~="<world>"] maps
  *  `--font-world-<world>-<role>-live` to the face (app/globals.css). The
- *  Pirates head (the name's file) and body (preloaded, optional) are never
- *  gated. */
+ *  Pirates head is the name's file and is never gated. */
 const LIVE_ROLES = [
+  ["pirates", "body"],
   ["idiots", "head"],
   ["idiots", "lead"],
   ["rdr2", "head"],

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
-import { spotlight } from "@/lib/spotlight";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { useEnterOnce } from "@/components/primitives/use-enter-once";
@@ -27,17 +26,6 @@ import { useEnterOnce } from "@/components/primitives/use-enter-once";
    (`experiment.curve`: registered in lib/variants.ts by the assembler.)
    Pause / reduced motion unmount this chunk (the facade), so the plot shows
    at once; a resize re-measures.
-   THE THESIS, PLAYED (P3-11 r2, J1 #2: the experiment read as a dead stretch,
-   its h2 stop a still screen; C1): once the plot has drawn, the demo is a
-   GATED LIVE star, "B25-demo" (lent a still screen by the spotlight, never
-   self-started). While it holds the screen it shows its own point: it presses
-   the other toggle (the curve morphs naive ↔ realistic, the scan line runs,
-   the index readout follows), then again every FLIP_MS. It stops the moment
-   the spotlight takes the screen back (any scroll), and for good once the
-   reader presses the toggle, presses a key or moves keyboard focus into the
-   demo, so the reader's own choice is never overridden. A pointer over the
-   demo holds it still (the hover readout). Synthetic and labelled as before:
-   nothing here is a result.
    ========================================================================== */
 
 type Line = { x1: string; y1: string; x2: string; y2: string; cls: string; sw: string; dash: string | null };
@@ -45,53 +33,6 @@ type Box = { x: number; y: number; w: number; h: number; viewBox: string; lines:
 
 /** The soft edge of the DEFAULT wipe (px). */
 const EDGE = 28;
-/** The played thesis: one toggle press per FLIP_MS while the demo holds a
- *  still screen (the morph itself takes 0.9 s). */
-const FLIP_MS = 2200;
-
-/** B25-demo: the demo plays its own toggle while the spotlight lends it a
- *  still screen (see the header). `ready`: the plot is drawn. This chunk is
- *  mounted only on DESKTOP_FINE with motion on (the facade unmounts it on
- *  reduced motion and Pause), so it registers directly (lib/spotlight.ts),
- *  gated (`onOwn`) and live, with no window: it is only ever LENT a screen. */
-function useThesisPlay(host: RefObject<HTMLDivElement | null>, ready: boolean) {
-  const [touched, setTouched] = useState(false);
-  useEffect(() => {
-    const h = host.current;
-    const plot = h?.querySelector('svg[role="img"]');
-    if (!h || !plot || !ready || touched) return;
-    let timer = 0;
-    // never under the reader's hand: a pointer over the demo, or keyboard focus
-    // inside it (a focused toggle must not change by itself)
-    const flip = () => {
-      if (h.matches(":hover") || h.contains(document.activeElement)) return;
-      h.querySelector<HTMLButtonElement>('button[aria-pressed="false"]')?.click();
-    };
-    // (the beat map's marker, data-beat="B25-demo", is the plot's server markup)
-    const off = spotlight.registerScrollStar("B25-demo", plot, 1, {
-      live: true,
-      onOwn: (owned) => {
-        window.clearInterval(timer);
-        if (!owned) return;
-        flip();
-        timer = window.setInterval(flip, FLIP_MS);
-      },
-    });
-    // the reader's own press, a key in the demo, or focus arriving in it (a
-    // Tab onto a toggle) ends the play for good
-    const stop = () => setTouched(true);
-    h.addEventListener("pointerdown", stop);
-    h.addEventListener("keydown", stop);
-    h.addEventListener("focusin", stop);
-    return () => {
-      window.clearInterval(timer);
-      off();
-      h.removeEventListener("pointerdown", stop);
-      h.removeEventListener("keydown", stop);
-      h.removeEventListener("focusin", stop);
-    };
-  }, [host, ready, touched]);
-}
 
 function measure(host: HTMLElement): Box | null {
   const svg = host.querySelector<SVGSVGElement>('svg[role="img"]');
@@ -133,8 +74,6 @@ export default function CurveDrawImpl({ host, choice }: { host: RefObject<HTMLDi
   const inner = useRef<HTMLDivElement>(null);
   const covering = !done && (phase === "armed" || phase === "entered");
   const measured = box !== null;
-  // drawn (or never hidden: already in view at mount, or skipped)
-  useThesisPlay(host, done || phase === "static");
 
   // measure the plot while the cover is needed (and on every resize)
   useLayoutEffect(() => {

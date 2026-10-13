@@ -14,13 +14,6 @@
      of the card's pinned travel. Jumps longer than 3 viewports never glide
      (≥ 64rem): they are immediate, wrapped in the cut (<CutOverlay/>), and
      the target world's fonts are made ready during the cut's fade-in.
-   - the load-time hash hold (`hashHold`, `reapplyHash()`): a deep link at
-     DESKTOP_FINE is landed instantly and kept at its target through the
-     stream and the late layout, in every motion state, until the visitor
-     scrolls (any scroll that moves the target in the viewport: find-in-page
-     and a scrollbar drag included), clicks or jumps, or until the hold has
-     not had to move the page for HOLD_QUIET_MS. A plain timer and a
-     ResizeObserver: no Lenis, GSAP or <SmoothScroll/> needed.
    - lockScroll()/unlockScroll(): the modal lock (body overflow + lenis.stop).
    - requestScrollRefresh(): 200 ms debounced `lenis.resize()` +
      `ScrollTrigger.sort()/refresh()`, deferred while Lenis glides.
@@ -32,7 +25,7 @@
 import { useSyncExternalStore } from "react";
 import { emit } from "./events";
 import { film, type ActSpec } from "./film";
-import { DESKTOP_FINE } from "./flags";
+import { DESKTOP_FINE, motionOffNow } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import { actCards } from "./sections";
 
@@ -56,8 +49,6 @@ export type LenisLike = {
   readonly isScrolling: boolean | "smooth" | "native";
   readonly velocity: number;
   readonly actualScroll: number;
-  /** The position Lenis last scrolled to (a stored number: no layout read). */
-  readonly animatedScroll: number;
 };
 
 export type ScrollTarget = string | Element | number;
@@ -304,82 +295,26 @@ let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 let deferredSince = 0;
 let userScrolled = false;
 let inputTracked = false;
-/** A hash on load (`/#act-2`, `/#work`) at DESKTOP_FINE is held at its target
- *  in EVERY motion state (motion on, reduced motion, Pause) — first at `load`,
- *  through the rest of the stream, then on every change of <main>'s height and
- *  every refresh — until the visitor scrolls, clicks or jumps themself (W2
- *  gate: late layout, the Lenis start and the pins used to leave it at the
- *  browser's native jump, or at 0; P3-11 r3 R01: reduced motion and Pause kept
- *  that jump, which runs before the streamed sections are placed and never
- *  retries — 3 of 12 loads landed). The hold needs no Lenis, GSAP or
- *  <SmoothScroll/>: a plain timer and a ResizeObserver. Phones and touch
- *  tablets (below DESKTOP_FINE) keep the browser's own jump (Phase 4).
- *
- *  It ends three ways: an input (wheel, touch, pointerdown, a listed key), a
- *  scroll that moved the target in the viewport (`holdAt`: find-in-page, a
- *  scrollbar drag and a screen reader's cursor announce none of those
- *  inputs), and HOLD_QUIET_MS without the hold having to move the page once
- *  the stream is complete and React hydrated (P3-11 final pass: the observer
- *  used to live for the whole page view). */
+/** A hash on load (`/#act-2`, `/#work`) on the desktop motion path is held
+ *  at its target — first at `load`, then through every refresh — until the
+ *  visitor scrolls, clicks or jumps themself (W2 gate: late layout, the
+ *  Lenis start and the pins used to leave it at the browser's native jump,
+ *  or at 0). Phones and reduced motion keep the browser's own jump. */
 let hashHold = false;
-/** The page as the hold last left it: the scroll y, and the target's top in
- *  the viewport. Null until the hold has landed. */
-let holdAt: { y: number; top: number } | null = null;
-/** How far (px) a scroll may end from `holdAt` and still be the hold's own:
- *  device-pixel rounding, a Lenis limit shorter than the page's. */
-const HOLD_SLOP = 4;
-/** The hold ends this long after it last moved the page, once the stream is
- *  complete and the page hydrated. */
-const HOLD_QUIET_MS = 5000;
-/** The hold never outlives this (ms since navigation start), whatever the
- *  stream and hydration are doing. */
-const HOLD_MAX_MS = 30000;
-let holdTimer: ReturnType<typeof setTimeout> | undefined;
-/** A streamed section the page has not placed yet (it has no box). */
-const HIDDEN_STREAM = "div[hidden][id^='S:']";
-/** Watches <main>'s height while the hash is held (reduced motion and Pause
- *  mount none of the refresh triggers below). */
-let hashWatch: ResizeObserver | null = null;
-/** The hold is over: the visitor took over, or an explicit jump superseded it
- *  (./smooth-scroll-jump). */
+/** An explicit jump supersedes the load-time hash (./smooth-scroll-jump). */
 export function dropHashHold(): void {
   hashHold = false;
-  hashWatch?.disconnect();
-  hashWatch = null;
-  holdAt = null;
-  clearTimeout(holdTimer);
-  holdTimer = undefined;
-  window.removeEventListener("scroll", onHoldScroll);
-}
-/** A scroll that moved the target in the viewport is the visitor's. One that
- *  left the target where it was is the browser's scroll anchoring following
- *  a layout shift above it (its scroll event can come before the observer's
- *  callback), and the hold keeps its place. */
-function onHoldScroll(): void {
-  const at = holdAt;
-  const el = at && resolveTarget(window.location.hash);
-  if (el && at && Math.abs(window.scrollY - at.y) > HOLD_SLOP && Math.abs(el.getBoundingClientRect().top - at.top) > HOLD_SLOP) dropHashHold();
-}
-/** (Re)start the quiet period: the hold has just moved the page, so the
- *  layout is still settling. */
-function armHoldExpiry(): void {
-  clearTimeout(holdTimer);
-  holdTimer = setTimeout(() => {
-    const settled = window.__pageHydrated && !document.querySelector(`template[id^='B:'], ${HIDDEN_STREAM}`);
-    if (settled || performance.now() > HOLD_MAX_MS) dropHashHold();
-    else armHoldExpiry();
-  }, HOLD_QUIET_MS);
 }
 if (typeof window !== "undefined" && window.location.hash.length > 1) {
   try {
-    hashHold = window.matchMedia(DESKTOP_FINE).matches;
+    hashHold = window.matchMedia(DESKTOP_FINE).matches && !motionOffNow();
   } catch {
     hashHold = false;
   }
   if (hashHold) {
     const opts = { capture: true, passive: true } as const;
     const drop = () => {
-      dropHashHold();
+      hashHold = false;
       for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.removeEventListener(ev, drop, opts);
       window.removeEventListener("keydown", onKey, opts);
     };
@@ -388,25 +323,15 @@ if (typeof window !== "undefined" && window.location.hash.length > 1) {
     };
     for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.addEventListener(ev, drop, opts);
     window.addEventListener("keydown", onKey, opts);
-    window.addEventListener("scroll", onHoldScroll, { passive: true });
-    // a target the stream has not placed yet (still in its hidden Suspense
-    // div; an act card without its pin wrapper, ≤ 3 s) is retried every
-    // 150 ms; while the stream is still arriving the target is re-landed on
-    // every tick (≤ 15 s)
+    // a target the stream has not placed yet (its pin wrapper) is retried
+    // for up to 3 s; every later refresh re-lands it while it is held
     const land = () => {
       let n = 0;
       const tryLand = () => {
         if (!hashHold) return;
         const el = resolveTarget(window.location.hash);
-        if (el && !el.closest(HIDDEN_STREAM) && (n >= 20 || !el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) {
-          reapplyHash();
-          if (hashHold && !hashWatch && typeof ResizeObserver === "function") {
-            // late layout (hydration, fonts, media, the pins): re-land on every change
-            hashWatch = new ResizeObserver(reapplyHash);
-            hashWatch.observe(document.getElementById("main") ?? document.body);
-          }
-        }
-        if ((!hashWatch || document.querySelector(`template[id^='B:'], ${HIDDEN_STREAM}`)) && ++n < 100) window.setTimeout(tryLand, 150);
+        if (el && (!el.hasAttribute("data-act-card") || el.querySelector(":scope > [data-act-card-pin]"))) reapplyHash();
+        else if (++n < 20) window.setTimeout(tryLand, 150);
       };
       requestAnimationFrame(tryLand);
     };
@@ -423,7 +348,7 @@ export function trackScrollInput(): void {
   inputTracked = true;
   const mark = () => {
     userScrolled = true;
-    dropHashHold();
+    hashHold = false;
     window.removeEventListener("wheel", mark, true);
     window.removeEventListener("touchmove", mark, true);
     window.removeEventListener("pointerdown", mark, true);
@@ -441,30 +366,22 @@ export function trackScrollInput(): void {
   if (hashHold) requestScrollRefresh();
 }
 
-/** While the load-time hash is held (at `load`, on every tick of the stream
- *  wait, on every height change of <main>, at every refresh and when React is
- *  fully hydrated): put its target where scrollToTarget would (an act card at
- *  its `landAt`), instantly, with no cut and no focus move (the browser's own
- *  hash jump moves neither). Works with no Lenis and no GSAP: a plain
- *  `window.scrollTo`. The cards snap their damped p (`scroll:jump`). */
-export function reapplyHash(): void {
+/** At every refresh while the load-time hash is held: put its target where
+ *  scrollToTarget would (an act card at its `landAt`), instantly, with no
+ *  cut and no focus move (the browser's own hash jump moves neither). The
+ *  cards snap their damped p (`scroll:jump`). */
+function reapplyHash(): void {
   if (!hashHold || userScrolled) {
-    dropHashHold();
+    hashHold = false;
     return;
   }
   const el = resolveTarget(window.location.hash);
-  if (!el || el.closest(HIDDEN_STREAM)) return;
+  if (!el) return;
   const y = clampY(targetY(el, "start"));
-  if (Math.abs(y - window.scrollY) < 2) {
-    holdAt = { y: window.scrollY, top: el.getBoundingClientRect().top };
-    if (holdTimer === undefined) armHoldExpiry();
-    return;
-  }
+  if (Math.abs(y - window.scrollY) < 2) return;
   const l = lenis;
   if (l) l.scrollTo(y, { immediate: true, force: true });
   else window.scrollTo({ top: y, behavior: "instant" });
-  holdAt = { y: window.scrollY, top: el.getBoundingClientRect().top }; // where it ended (Lenis clamps to its own limit)
-  armHoldExpiry();
   gsapIfLoaded()?.ScrollTrigger.update();
   emit("scroll:jump", { y, immediate: true });
 }
@@ -503,38 +420,32 @@ export function requestScrollRefresh(): void {
 
 /* — velocity + idle ————————————————————————————————————————————————— */
 
-const sample = { y: 0, t: 0, v: 0, on: false, ev: -1e9 };
+const sample = { y: 0, t: 0, v: 0, on: false };
 
 function ensureSampler(): void {
   if (sample.on || typeof window === "undefined") return;
   sample.on = true;
-  // the handler only stamps the time: reading scrollY here forced a layout
-  // per scroll event whenever a task had dirtied it (J8 #1: 175–226 ms in
-  // the native run); the position is read when someone asks
+  sample.y = window.scrollY;
+  sample.t = performance.now();
   window.addEventListener(
     "scroll",
     () => {
-      sample.ev = performance.now();
+      const now = performance.now();
+      const dt = now - sample.t;
+      if (dt > 0) sample.v = ((window.scrollY - sample.y) / dt) * 1000;
+      sample.y = window.scrollY;
+      sample.t = now;
     },
     { passive: true },
   );
 }
 
-/** Current scroll speed in px/s (0 at rest). Measured between calls (the
- *  spotlight asks once a frame while it waits), from Lenis's own position
- *  when it drives the scroll; a first call after a pause, with a scroll
- *  event in the last 120 ms, reads as moving (Infinity) until the next. */
+/** Current scroll speed in px/s (0 at rest; measured from scroll events,
+ *  so it is the same with or without Lenis). */
 export function scrollVelocity(): number {
   if (typeof window === "undefined") return 0;
   ensureSampler();
-  const now = performance.now();
-  if (now - sample.ev > 120) return 0;
-  const y = lenis ? lenis.animatedScroll : window.scrollY;
-  const dt = now - sample.t;
-  sample.v = dt > 0 && dt < 250 ? (Math.abs(y - sample.y) / dt) * 1000 : dt <= 0 ? sample.v : Infinity;
-  sample.y = y;
-  sample.t = now;
-  return sample.v;
+  return performance.now() - sample.t > 120 ? 0 : Math.abs(sample.v);
 }
 
 /** Call `fn` ONCE, when the page has not scrolled (or wheeled) for `ms`

@@ -24,8 +24,6 @@ import { JourneyStack } from "@/components/site/journey-stack";
  * the no-JS truth); right after mount it becomes
  *   desktop ≥ 1024 + fine pointer + no OS reduced motion + no Save-Data →
  *     the VOYAGE (the sticky sea sequence beside the steps, 0 extra travel);
- *   desktop ≥ 1024 + fine pointer + OS reduced motion + no Save-Data →
- *     the STACK stays (P3-11 r3, J9 F1: no reflow after hydration);
  *   otherwise → the CAROUSEL (stills, 0 sequence requests).
  * The variant (lib/variants.ts `journey.voyage`) is the manifest's choice,
  * or the ?variant=… preview after hydration.
@@ -41,8 +39,7 @@ import { JourneyStack } from "@/components/site/journey-stack";
  *   toggle (PHASE3-SPEC §12.2 "layout unchanged", P3-2 #11): Pause mid-
  *   scroll keeps the voyage, static (its sea holds the step's still); a page
  *   view that started paused on the desktop keeps the server's stack (no
- *   reflow after hydration) until motion is resumed. OS reduced motion on
- *   the desktop keeps the stack too (P3-11 r3); phones and tablets keep
+ *   reflow after hydration) until motion is resumed. OS reduced motion keeps
  *   today's carousel (P3-0).
  * - The section head is passed in (`head`): the voyage's sticky column
  *   starts level with the h2 (spec §2.3 B09: the stage → voyage window
@@ -125,12 +122,9 @@ export function JourneyExperience({
 
   if (!hydrated) return stack;
 
-  if (fine && wide && !saveData) {
-    // started paused: the server layout stays until motion is resumed; OS
-    // reduced motion keeps it too (P3-11 r3, J9 F1: the carousel swap shrank
-    // #journey by ~2,000 px after hydration; RM and Pause share one static
-    // layout, final from first paint)
-    if (osReduce || (pausedAtBoot && !resumed)) return stack;
+  if (fine && wide && !osReduce && !saveData) {
+    // started paused: the server layout stays until motion is resumed
+    if (pausedAtBoot && !resumed) return stack;
     const seq = sequence ? resolveVariant(sequence, variant) : null;
     return (
       <Suspense fallback={stack}>

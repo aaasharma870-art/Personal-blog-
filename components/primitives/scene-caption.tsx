@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { BeatWeight } from "@/lib/beats";
 import type { CaptionKey, CaptionPlace, CaptionWorld } from "@/lib/film";
 import { captionOf, filmTitleOf, letteredIn } from "@/lib/sections";
@@ -70,9 +70,7 @@ export function Lettered({
   as: T = "span",
   className,
   id,
-  style,
   glue = false,
-  lines,
   inCharacter = false,
   beat,
   weight,
@@ -83,23 +81,14 @@ export function Lettered({
   as?: Tag;
   className?: string;
   id?: string;
-  style?: CSSProperties;
   /** Keep the last two words on one line (credits: "REDEMPTION 2"). */
   glue?: boolean;
-  /** Explicit lines (P3-11 r4 F2, CLS 0): the text, broken after a space
-   *  with a <br>, so the line count never depends on the face's glyph
-   *  widths (the fallback → world-face swap re-wrapped the Intermission
-   *  bill: +36 px under everything below it). `lines.join(" ") === text`;
-   *  the text content, and so the registered lettering string, is
-   *  unchanged. */
-  lines?: readonly string[];
 } & InCharacterOpts) {
   const face = letteredIn(world, text);
-  const body = lines && lines.length > 1 ? <Lines lines={lines} /> : glue ? <GluedTail text={text} /> : text;
+  const body = glue ? <GluedTail text={text} /> : text;
   return (
     <T
       id={id}
-      style={style}
       className={cn(face.lettered && worldFaceClass(world), face.upper && "uppercase", className)}
       data-lettered={face.lettered ? world : undefined}
       {...(inCharacter ? inCharacterAttrs({ world, beat, weight, variant }) : {})}
@@ -120,24 +109,16 @@ export function FilmTitle({
   as = "p",
   className,
   id,
-  style,
-  lines,
   ...inChar
 }: {
   world: CaptionWorld;
   as?: Tag;
   className?: string;
   id?: string;
-  style?: CSSProperties;
-  /** Explicit lines of the title (see Lettered `lines`); a function gets
-   *  the title text, so a host need not repeat it. */
-  lines?: (title: string) => readonly string[];
 } & InCharacterOpts) {
   const title = filmTitleOf(world);
   if (!title) return null;
-  return (
-    <Lettered world={world} text={title} as={as} className={className} id={id} style={style} lines={lines?.(title)} {...inChar} />
-  );
+  return <Lettered world={world} text={title} as={as} className={className} id={id} {...inChar} />;
 }
 
 /**
@@ -210,21 +191,6 @@ export function SceneCaption({
     >
       {inCharacter ? <InCharacterInner>{body}</InCharacterInner> : body}
     </p>
-  );
-}
-
-/** `lines` as one run of text with a <br> after each line's trailing space:
- *  the same text content as the unbroken string, the break explicit. */
-function Lines({ lines }: { lines: readonly string[] }) {
-  return (
-    <>
-      {lines.map((line, i) => (
-        <Fragment key={i}>
-          {i > 0 ? <br /> : null}
-          {i < lines.length - 1 ? `${line} ` : line}
-        </Fragment>
-      ))}
-    </>
   );
 }
 

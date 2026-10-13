@@ -60,13 +60,6 @@ function sampler() {
     [...el.querySelectorAll(".plate-cam, .plate-depth-far, .plate-far, .stage-cam")]
       .map((n) => getComputedStyle(n).transform)
       .join("|");
-  // P3-11 r3: the opening card's backdrop sea (MV-01) is a still behind the css tier's growing porthole;
-  // the iris (`[data-iris-inner]`, scale by scroll) is the card's mover, so a plate in that card is not dead
-  // while the iris moves
-  const iris = (el) => {
-    const i = el.closest("[data-act-card]")?.querySelector("[data-iris-inner]");
-    return i ? getComputedStyle(i).transform : "";
-  };
   const decoding = (v) => !v.paused && !v.ended && v.readyState >= 2;
   const hostOf = (el) => {
     if (el.closest(".stage-root, [data-stage-window-host]")) return "stage";
@@ -95,7 +88,7 @@ function sampler() {
       id: idOf(el),
       media: el.getAttribute("data-live-plate") ?? el.getAttribute("data-media") ?? (stage ? `stage-${el.getAttribute("data-stage-layer")}` : "?"),
       host: hostOf(el),
-      sig: `${chain(el)}#${inner(el)}#${iris(el)}`,
+      sig: `${chain(el)}#${inner(el)}`,
       play: [...el.querySelectorAll("video")].some(decoding),
       canvas: Boolean(box?.querySelector("canvas")),
       state:

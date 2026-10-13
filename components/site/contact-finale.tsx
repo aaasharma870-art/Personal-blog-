@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { PointerEvent, ReactNode } from "react";
+import type { PointerEvent } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { emit } from "@/lib/events";
@@ -44,13 +44,10 @@ export function ContactFinale({
   email,
   github,
   onCopied,
-  hint,
 }: {
   email: string;
   github: string;
   onCopied?: () => void;
-  /** What "Lumos" does, beside it (server-rendered: contact.tsx). */
-  hint?: ReactNode;
 }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,20 +88,19 @@ export function ContactFinale({
           <ArrowUpRight className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
         </a>
       </div>
-      {/* readable at its size (r2 J6 / J7); showing or hiding it until it is
-          real is Aryan's call (CONTINUE #11) */}
-      <p className="mt-tier-group type-meta text-fg-muted lg:type-small lg:text-fg">
-        Résumé<span aria-hidden="true" className="text-fg-ghost lg:text-fg-muted">{" • "}</span>
+      <p className="mt-tier-group type-meta text-fg-muted">
+        Résumé<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
         <span className="sr-only">, </span>coming soon
       </p>
-      <CandleLumos hint={hint} />
+      <CandleLumos />
     </div>
   );
 }
 
 const LUMOS = copyText("toy.candles.lumos");
 const HALL_LIT = copyText("toy.candles.done");
-function CandleLumos({ hint }: { hint?: ReactNode }) {
+
+function CandleLumos() {
   const status = useRef<HTMLSpanElement>(null);
   if (!copyVisible(LUMOS)) return null;
   const onLumos = () => {
@@ -124,7 +120,6 @@ function CandleLumos({ hint }: { hint?: ReactNode }) {
       >
         {LUMOS.text}
       </button>
-      {hint}
       {/* the live region: written by the toy (or the line above), never by React */}
       <span ref={status} aria-live="polite" className="type-meta text-fg-muted" data-candle-status="" />
     </p>

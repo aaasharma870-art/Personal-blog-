@@ -66,7 +66,7 @@ import { gsapIfLoaded } from "@/lib/gsap";
 import { resolveMedia } from "@/lib/media";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import type { Variant } from "@/lib/variants";
-import { deadEyeBest, recordDeadEyeRound, type DeadEyeBest } from "@/components/games/store";
+import { recordDeadEyeRound, type DeadEyeBest } from "@/components/games/store";
 
 export type Target = { row: HTMLElement; reason: HTMLElement; name: HTMLElement };
 
@@ -86,10 +86,7 @@ export function killedRows(section: HTMLElement): Target[] {
 
 export type RoundPhase = "aim" | "paint" | "read";
 
-/** `best` is null after an untimed round with no timed best stored: an
- *  untimed round (reduced motion) records nothing (P3-11 J9 L4: it stored
- *  "0.0 s", a time never measured). */
-export type RoundResult = { n: number; left: number | null; best: DeadEyeBest | null; fresh: boolean };
+export type RoundResult = { n: number; left: number | null; best: DeadEyeBest; fresh: boolean };
 
 /** What the HUD shows (pushed on every change, the clock at ≤ 10 Hz). */
 export type RoundView = {
@@ -387,7 +384,7 @@ export function startRound(o: { variant: Variant; survivor: string; hooks: Round
     }
     if (k !== 1) speedUp(RETURN_MS);
     const n = hit.length;
-    const rec = left === null ? { best: deadEyeBest(), fresh: false } : recordDeadEyeRound(n, left);
+    const rec = recordDeadEyeRound(n, left ?? 0);
     result = { n, left, best: rec.best, fresh: rec.fresh };
     if (n === targets.length) void import("@/lib/hunt").then((m) => m.recordDeadEyeWin(), () => {});
     emit("game:finish", { game: "deadeye", score: n });

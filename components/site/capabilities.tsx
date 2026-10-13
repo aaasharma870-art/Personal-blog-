@@ -26,9 +26,7 @@ const SPRITES = {
  *   1. The head band: Rancho's homemade drone in the college courtyard
  *      (iconic-drone), captioned THE HOMEMADE DRONE • 3 IDIOTS; the h2
  *      comes after it.
- *   2. A real matrix of rows (area · methods · tools · outputs); ≥ 1024 each
- *      area is a disclosure (P3-11 r2: the area and what it produces, open
- *      on its methods and tools; the first one open). Phones: today's rows.
+ *   2. A real matrix of rows (area · methods · tools · outputs).
  *   3. FIG "How this page is built": a TRUE schematic of the pipeline that
  *      renders this very page, on the ICE board in the jugaad register;
  *      every count is computed from the live manifest at build time (beat
@@ -77,7 +75,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridVeil="transparent 22%, color-mix(in srgb, var(--bg) 50%, transparent) 100%"
+      gridMask="linear-gradient(to bottom, black 0%, black 22%, color-mix(in srgb, black 50%, transparent) 100%)"
     >
       {entry.props.media ? (
         <DroneBand
@@ -96,39 +94,37 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
         label={entry.nav?.label ?? "Systems"}
         title="What I can actually do."
         intro="A working map, not a skills cloud: the methods I rely on, the tools behind them, and what they are meant to produce."
-        titleClassName="motion-off:transition-none"
       />
 
       <div className="mt-tier-block grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-8">
-          {/* P3-11 r2 (panel J2, J3, J4: "a skills table of tiny text in 3–5
-              columns held 8–10 s"): ≥ 1024 the matrix folds (D3-9). Each area
-              is a native disclosure (server markup, the words.css collapse:
-              the height animates on desktop, instant under reduced motion
-              and Pause) whose summary is the area and what it produces; it
-              opens on its methods and tools. The first area is open, so the
-              depth shows. Nothing here is a metric, a limitation or a
-              verdict. Phones (< 64rem) keep today's rows: the summary is
-              hidden there and every row shows its area, methods, tools and
-              outputs. */}
-          <ol aria-label="Capabilities matrix" className="border-t border-rule">
+          {/* column heads (desktop); every cell also carries its own label */}
+          <div
+            aria-hidden="true"
+            className="hidden border-b border-rule pb-tier-pair lg:grid lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
+          >
+            <span className="type-meta text-fg-muted">Area</span>
+            {COLS.map(([label]) => (
+              <span key={label} className="type-meta text-fg-muted">
+                {label}
+              </span>
+            ))}
+          </div>
+          <ol aria-label="Capabilities matrix" className="border-t border-rule lg:border-t-0">
             {capabilities.map((c, i) => (
-              <Rise as="li" key={c.area} delay={i * 0.04} className="border-b border-rule">
-                <details data-collapse="" open={i === 0}>
-                  <summary className="cursor-pointer py-tier-group text-pretty marker:text-fg-ghost">
-                    <h3 className="inline type-heading text-fg lg:text-[length:var(--text-lead)] lg:leading-[1.45]">{c.area}</h3>
-                    <span className="ml-3 type-body text-fg-muted">{c.outputs}</span>
-                  </summary>
-                  <div className="grid grid-cols-1 gap-3 py-tier-group lg:grid-cols-2 lg:gap-x-6 lg:pt-0">
-                    <h3 className="type-heading text-fg lg:hidden">{c.area}</h3>
-                    {COLS.map(([label, key]) => (
-                      <dl key={key} className={key === "outputs" ? "lg:hidden" : undefined}>
-                        <dt className="type-meta text-fg-muted">{label}</dt>
-                        <dd className="mt-1 type-small text-fg-muted lg:type-body">{c[key]}</dd>
-                      </dl>
-                    ))}
-                  </div>
-                </details>
+              <Rise
+                as="li"
+                key={c.area}
+                delay={i * 0.04}
+                className="grid grid-cols-1 gap-3 border-b border-rule py-tier-group lg:grid-cols-[9rem_1fr_1fr_1fr] lg:gap-6"
+              >
+                <h3 className="type-heading text-fg lg:text-[length:var(--text-lead)] lg:leading-[1.45]">{c.area}</h3>
+                {COLS.map(([label, key]) => (
+                  <dl key={key}>
+                    <dt className="type-meta text-fg-muted lg:sr-only">{label}</dt>
+                    <dd className="mt-1 type-small text-fg-muted lg:mt-0">{c[key]}</dd>
+                  </dl>
+                ))}
               </Rise>
             ))}
           </ol>

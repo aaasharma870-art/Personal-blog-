@@ -1,8 +1,0 @@
-C start 2026-10-12T23:36:53Z
-probes 1440 exit 1 23:59:58
-probes 1024 exit 1 00:20:58
-probes 1440 rm exit 1 00:31:52
-probes rm keyboard exit 0 00:34:18
-qa 1440 exit 0 00:37:44
-qa 1024 exit 0 00:41:05
-C done 2026-10-13T00:41:05Z

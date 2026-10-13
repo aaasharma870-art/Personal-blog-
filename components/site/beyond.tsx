@@ -205,11 +205,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
             {b.items.map((it, k) => (
               <div key={it.head}>
                 <dt className="type-body text-fg">{it.head}</dt>
-                {/* on the frontier's brown in the ink colour (P3-11 r3, r2 J2 / J4:
-                    "low-contrast mono text on brown") */}
-                <dd className={cn("mt-1 type-small text-fg-muted", frontier && "lg:text-fg")}>
-                  {b.kicker === "Creative" && k === 0 ? scrubbed(it.body) : it.body}
-                </dd>
+                <dd className="mt-1 type-small text-fg-muted">{b.kicker === "Creative" && k === 0 ? scrubbed(it.body) : it.body}</dd>
               </div>
             ))}
           </dl>
@@ -257,11 +253,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
 
       {handbill && board ? (
         <div className="mt-tier-block grid grid-cols-1 lg:grid-cols-12 lg:gap-x-6">
-          {/* below 80rem the caption ends further from the writing's head
-              (P3-11 r3, C5; r2 panel 1024 #90: at the writing h2's stop
-              "A WANTED POSTER" sat half under the header): with this room it
-              has passed fully under the header band by then */}
-          <div className="lg:col-span-8 lg:col-start-5 lg:max-xl:pb-12">
+          <div className="lg:col-span-8 lg:col-start-5">
             <WantedBoard
               board={board}
               choice={choice}

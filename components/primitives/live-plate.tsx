@@ -2,7 +2,6 @@
 
 import { useRef, type ReactNode } from "react";
 import type { MotionValue } from "motion/react";
-import { beatAttrs } from "@/lib/beats";
 import type { MediaId } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { MediaFrame } from "@/components/primitives/media-frame";
@@ -60,28 +59,17 @@ export type LivePlateProps = {
   className?: string;
   /** Labels the plate (role="img"); omitted = decorative. */
   alt?: string;
-  /** C1 (P3-11 r3; r2 J1 #6: the plate loops played with no star): the id of
-   *  the declared LIVE star (lib/page.ts, `live: true`) this plate's loop is.
-   *  The box carries the quiet marker; the engine half (LiveImpl)
-   *  registers it with the spotlight only while the loop is really playing. */
-  liveStar?: string;
   children?: ReactNode;
 };
 
 const Live = enginePart("LiveImpl");
 
 export function LivePlate({ children, ...props }: LivePlateProps) {
-  const { media, sizes, className, alt, liveStar } = props;
+  const { media, sizes, className, alt } = props;
   const cam = useRef<HTMLDivElement>(null);
   const far = useRef<HTMLDivElement>(null);
   return (
-    <div
-      className={cn("relative overflow-hidden", className)}
-      data-live-plate={media}
-      role={alt ? "img" : undefined}
-      aria-label={alt || undefined}
-      {...(liveStar ? beatAttrs(liveStar) : {})}
-    >
+    <div className={cn("relative overflow-hidden", className)} data-live-plate={media} role={alt ? "img" : undefined} aria-label={alt || undefined}>
       <div ref={cam} className="plate-cam absolute inset-0">
         <div ref={far} className="plate-depth-far">
           <MediaFrame media={media} layout="fill" playOn="never" loop={false} sizes={sizes} />

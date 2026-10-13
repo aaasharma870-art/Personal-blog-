@@ -42,11 +42,7 @@ import type { DepthSpec } from "@/components/primitives/depth-plate";
 import type { LivePlateProps } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import type { WeatherKind, WeatherLayerProps } from "./weather-layer";
-import { hideWhenFar } from "./far";
 import { StageVideo } from "./stage-video";
-// the stage's and the plates engine's own layers: loaded with this chunk,
-// not with the page (first-load CSS budget, P3-11 r1)
-import "./stage-lazy.css";
 
 /* ============================================================================
    THE PERSISTENT STAGE (spec §3.2, P3-2) — OWNER: B1-STAGE (W1), W2-PLATES (W2).
@@ -466,7 +462,6 @@ export function LiveImpl({
   playOn = "desktop",
   progress,
   sizes = "100vw",
-  liveStar,
   cam,
   far,
 }: Omit<LivePlateProps, "children"> & {
@@ -491,29 +486,6 @@ export function LiveImpl({
     root.setAttribute("data-plate", mode);
     return () => root.removeAttribute("data-plate");
   }, [cam, mode]);
-
-  // C1 (P3-11 r3; r2 J1 #6): a plate's loop is a LIVE weight-1 star
-  // (`liveStar`, declared in lib/page.ts) for as long as its <video> really
-  // plays: the playing / pause / ended events (capture phase: media events do
-  // not bubble) say so, so a loop the decoder lock paused, or one not yet
-  // started, is never lent a still screen. Pause unmounts this half.
-  const [playing, setPlaying] = useState(false);
-  useEffect(() => {
-    const root = cam.current;
-    if (!liveStar || !live || !root) return;
-    const read = () => setPlaying([...root.querySelectorAll("video")].some((v) => !v.paused && !v.ended && v.readyState > 1));
-    const evs = ["playing", "pause", "ended", "emptied", "waiting"] as const;
-    for (const e of evs) root.addEventListener(e, read, true);
-    return () => {
-      for (const e of evs) root.removeEventListener(e, read, true);
-      setPlaying(false);
-    };
-  }, [cam, liveStar, live]);
-  useEffect(() => {
-    const box = cam.current?.parentElement;
-    if (!playing || !liveStar || !box) return;
-    return spotlight.registerScrollStar(liveStar, box, 1, { live: true });
-  }, [cam, playing, liveStar]);
 
   // Pause: the loop holds in the click's own task (the facade's re-render
   // then unmounts this half and its video)
@@ -645,15 +617,10 @@ export function WeatherImpl({
   const docOn = useDocumentVisible();
   const go = run && seen && docOn;
   const goRef = useRef(go);
-  // P3-11 r3 (J8: the opening card carried 14 idle infinite animations and
-  // their layers): the sprites are built the first time the layer runs,
-  // not at mount, and are their own layers only while they run (data-run)
-  const [built, setBuilt] = useState(go);
-  if (go && !built) setBuilt(true);
 
   useEffect(() => {
     const box = ref.current;
-    if (!built || !box || typeof box.animate !== "function") return;
+    if (!box || typeof box.animate !== "function") return;
     const d = WEATHER[kind];
     const n = clamp(Math.round(count ?? d.n), 0, 16);
     const w = box.offsetWidth || 800;
@@ -685,7 +652,7 @@ export function WeatherImpl({
       anims.current = [];
       box.replaceChildren();
     };
-  }, [kind, count, seed, built]);
+  }, [kind, count, seed]);
 
   useEffect(() => {
     goRef.current = go;
@@ -703,16 +670,7 @@ export function WeatherImpl({
     return () => io.disconnect();
   }, []);
 
-  return (
-    <div
-      ref={ref}
-      className={cn("plate-weather", className)}
-      data-weather={kind}
-      data-zone={zone}
-      data-run={go ? "" : undefined}
-      aria-hidden="true"
-    />
-  );
+  return <div ref={ref} className={cn("plate-weather", className)} data-weather={kind} data-zone={zone} aria-hidden="true" />;
 }
 
 /* — Sequence window (spec §6.2; use-frame-sequence.ts `{ window }`) ———— */
@@ -950,23 +908,6 @@ type LayerEls = {
  *  each, so a pause and a play inside one render never leave it paused). */
 type VideoState = { k: number; host: HTMLElement | null; play: boolean; n: number };
 const NO_VIDEO: VideoState = { k: -1, host: null, play: false, n: 0 };
-
-/** C1 (P3-11 r3; r2 J1 #6 "the window plates play with no star"): the stage's
- *  one playing loop is a LIVE weight-1 star while it plays, by the item whose
- *  shot it is: a split window's quiet marker (stage-window.tsx `live`, over
- *  the window's box). Declared in lib/page.ts (`live: true`); lent a still
- *  screen only. Only the corridor loop of trading-algos plays in a window:
- *  optuna's ICE shot is a sliver since the pipeline's relayout (its drone
- *  shot has no loop) and the credits loop never clears the own `contact`
- *  section (OWN_CLEAR_VH), so neither has a star to register. */
-const LIVE_LOOP: Readonly<Record<string, string>> = {
-  "trading-algos": "B20-window",
-};
-
-/** The dusk grade's ceiling (P3-11 r3, F5 → F2; panel J2 / J4: the Beyond
- *  window beside the satchel read as an empty box of black hillside): the
- *  multiply layer reaches this share of its full ratio at the shot's end. */
-const GRADE_MAX = 0.55;
 
 const FADE_VH = 0.4;
 const MOUNT_MARGIN_VH = 0.5;
@@ -1321,7 +1262,7 @@ export function Stage() {
         }
         if (e.grade && Math.abs(l - e.g) > 0.002) {
           e.g = l;
-          e.grade.style.opacity = (l * GRADE_MAX).toFixed(3);
+          e.grade.style.opacity = l.toFixed(3);
         }
       }
       setRoot(rootWanted);
@@ -1413,13 +1354,10 @@ export function Stage() {
           // the text blocks (rack focus): marked ones, else the column's children
           let blocks = split.querySelectorAll<HTMLElement>("[data-stage-block]");
           if (!blocks.length) blocks = split.querySelectorAll<HTMLElement>(".stage-split-text > *");
-          // (a block with no layout box, e.g. the phone copy of a FIG that is
-          // display:none here, has no edge: its zero rect would read as scrollY)
-          const laid = [...blocks].filter((blk) => blk.getClientRects().length > 0);
-          laid.forEach((blk, i) => {
+          blocks.forEach((blk, i, all) => {
             const br = blk.getBoundingClientRect();
             edges.push(br.top + sy);
-            if (i === laid.length - 1) edges.push(br.bottom + sy);
+            if (i === all.length - 1) edges.push(br.bottom + sy);
           });
           edges.sort((p, q) => p - q);
           nextHosts.set(k, host);
@@ -1488,10 +1426,6 @@ export function Stage() {
       const w = Number(el.dataset.beatWeight ?? 1);
       if (id) stars.push(spotlight.registerScrollStar(id, el, w === 3 ? 3 : w === 2 ? 2 : 1));
     });
-    // a split window outside its section costs nothing (J8 #2, P3-11 r1):
-    // the sticky window (aria-hidden art) is out of paint while it is more
-    // than a viewport away (./far.ts); its layer mounts within half a one
-    const fars = [...document.querySelectorAll<HTMLElement>("[data-stage-window]")].map((el) => hideWhenFar(el, 1));
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
@@ -1501,7 +1435,6 @@ export function Stage() {
       window.removeEventListener("pointermove", onPointer);
       offScroll();
       stars.forEach((off) => off());
-      fars.forEach((off) => off());
       mark(new Set());
     };
   }, [scrollY]);
@@ -1645,12 +1578,6 @@ export function Stage() {
   const vk = video.k;
   const vLoop = vk >= 0 ? loops[vk] : null;
   const vFocal = vk >= 0 ? PLATES[vk]?.focal : undefined;
-  const liveStar = vLoop && video.play && on ? SHOTS[vk]?.items.map((i) => LIVE_LOOP[i]).find(Boolean) : undefined;
-  useEffect(() => {
-    if (!liveStar) return;
-    const el = document.querySelector(`[data-beat="${liveStar}"]`);
-    return el ? spotlight.registerScrollStar(liveStar, el, 1, { live: true }) : undefined;
-  }, [liveStar]);
 
   return (
     <>

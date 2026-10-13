@@ -244,15 +244,12 @@ export function JourneyChart({
 export function Waypoint({
   index,
   as: Tag = "li",
-  side = LABEL_SIDE[index],
   children,
 }: {
   index: number;
   /** "li" inside a list of links; "div" inside a tablist (tabs must be
    *  owned by the tablist without a listitem in between). */
   as?: "li" | "div";
-  /** Above or below the course (default LABEL_SIDE). */
-  side?: "above" | "below";
   children: ReactNode;
 }) {
   const p = WAYPOINTS[index];
@@ -263,7 +260,7 @@ export function Waypoint({
       <span
         className={cn(
           "absolute left-0 flex -translate-x-1/2 justify-center",
-          side === "above" ? "bottom-2" : "top-2",
+          LABEL_SIDE[index] === "above" ? "bottom-2" : "top-2",
         )}
       >
         {children}

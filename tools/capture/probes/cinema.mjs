@@ -10,13 +10,9 @@
 //                finales (B3x-finale on [data-films-frame]), B35 (scroll star), B57 (the Snitch)
 //   button       [data-dc="hero"] is shown (DESKTOP_FINE), records early clicks (data-enhance-queue), carries a
 //                shot list (data-dc-shots ≥ 10 items, act cards as "c"), not aria-disabled
-//   letterbox    house lights down: walking the films head, the bars' closed flag is set and the top bar is closed
-//                (scaleY ≥ .98) once the first frame's top is at 80 % of the viewport (close ends at 85 %); open again
-//                once the frame has passed centre; the flag flips ≤ 2 times per pass. P3-11 r3 (C3, rule 33): the flag
-//                is read where the bars put it, `.letterbox[data-state="closed"]` (r1–r2: html[data-letterbox]); with the
-//                flag on the bars' root, <html> never carries data-letterbox. The walk approaches in small steps and
-//                waits (≤ 6 s) at the hold for the films scene, a lazy chunk mounted near the films, to take the bars
-//                (r2: flips 0 inside the probe's fast jumps; the bars worked in a fresh view)
+//   letterbox    house lights down: walking the films head, html[data-letterbox] is set and the top bar is closed
+//                (scaleY ≥ .98) once the first frame's top is at 80 % of the viewport (close ends at 85 %); open again (attribute gone)
+//                once the frame has passed centre; the attribute flips ≤ 2 times per pass (rule 33)
 //   plates       each films screen's LivePlate is engaged (data-plate loop | depth | still) and its camera moves
 //                (the .plate-cam transform is not identity mid-passage); ≤ 1 playing <video> at every sample (P3-2 #5)
 //   carry        the warm point (B35): visible while the act-3 card rises (its top at 50% of the viewport), hidden
@@ -148,62 +144,28 @@ export default async function probe(page, ctx) {
         return { top: r.top + scrollY, h: r.height, vh: innerHeight };
       });
       if (!geo) return set("letterbox", false, { why: "no films frame" });
-      // the flag: on the bars' root (C3, r3) or, before, on <html>; flips counted on either, as changes only
       await page.evaluate(() => {
         window.__lbFlips = 0;
-        window.__lbHtml = 0;
-        new MutationObserver((list) => {
-          for (const m of list) {
-            const el = m.target;
-            if (el === document.documentElement && m.attributeName === "data-letterbox") {
-              window.__lbHtml++;
-              if ((m.oldValue !== null) !== el.hasAttribute("data-letterbox")) window.__lbFlips++;
-            } else if (el.classList?.contains("letterbox") && m.attributeName === "data-state") {
-              if ((m.oldValue === "closed") !== (el.getAttribute("data-state") === "closed")) window.__lbFlips++;
-            }
-          }
-        }).observe(document.documentElement, { attributes: true, attributeOldValue: true, subtree: true, attributeFilter: ["data-letterbox", "data-state"] });
+        new MutationObserver(() => window.__lbFlips++).observe(document.documentElement, { attributes: true, attributeFilter: ["data-letterbox"] });
       });
       const read = () =>
         page.evaluate(() => {
-          const root = document.querySelector(".letterbox");
           const bar = document.querySelector('.letterbox-bar[data-bar="top"]');
           const m = bar ? /scaleY\(([\d.]+)\)/.exec(bar.style.transform) : null;
-          const state = root?.getAttribute("data-state") ?? null;
-          const html = document.documentElement.hasAttribute("data-letterbox");
-          return {
-            closed: state !== null ? state === "closed" : html,
-            flagAt: state !== null ? ".letterbox[data-state]" : "html[data-letterbox]",
-            html,
-            bars: Boolean(root),
-            scale: m ? Number(m[1]) : bar ? Number(getComputedStyle(bar).opacity) : null,
-          };
+          return { attr: document.documentElement.hasAttribute("data-letterbox"), scale: m ? Number(m[1]) : bar ? Number(getComputedStyle(bar).opacity) : null };
         });
-      // the approach, in small steps (the films scene mounts near the films; its ScrollTrigger needs frames)
-      for (let k = 2.2; k >= 0.9; k -= 0.1) await jump(page, geo.top - k * geo.vh);
+      // before the close, the hold (the frame's top at the viewport bottom), after the open
+      const ys = [geo.top - 1.6 * geo.vh, geo.top - 1.4 * geo.vh, geo.top - 1.2 * geo.vh, geo.top - 1.0 * geo.vh, geo.top - 0.9 * geo.vh];
+      for (const y of ys) await jump(page, y);
       // the hold: past the close's end (LIGHTS close "top 125%" → "top 85%"), read on the LIVE frame top
       // (the page above moves after the first read: lazy content), so the frame's top sits at 80% of the viewport
       const liveTop = await page.evaluate(() => document.querySelector("[data-films-frame]").getBoundingClientRect().top + scrollY);
       await jump(page, liveTop - 0.8 * geo.vh);
-      let hold = await read();
-      for (let t = 0; t < 30 && !(hold.closed && (hold.scale ?? 0) >= 0.98); t++) {
-        await sleep(200);
-        hold = await read();
-      }
-      const mid = await page.evaluate(() => {
-        const r = document.querySelector("[data-films-frame]").getBoundingClientRect();
-        return r.top + scrollY + r.height / 2;
-      });
-      for (const k of [0.6, 0.4, 0.2, 0]) await jump(page, mid - k * geo.vh);
-      let after = await read();
-      for (let t = 0; t < 10 && after.closed; t++) {
-        await sleep(200);
-        after = await read();
-      }
-      const { flips, htmlMutations } = await page.evaluate(() => ({ flips: window.__lbFlips, htmlMutations: window.__lbHtml }));
-      // rule 33: with the flag on the bars' root, <html> never carries it
-      const rule33 = hold.flagAt === "html[data-letterbox]" || htmlMutations === 0;
-      set("letterbox", hold.closed && (hold.scale ?? 0) >= 0.98 && !after.closed && flips >= 1 && flips <= 2 && rule33, { hold, after, flips, htmlMutations, rule33 });
+      const hold = await read();
+      for (const k of [0.6, 0.4, 0.2, 0]) await jump(page, geo.top + geo.h / 2 - k * geo.vh);
+      const after = await read();
+      const flips = await page.evaluate(() => window.__lbFlips);
+      set("letterbox", hold.attr && (hold.scale ?? 0) >= 0.98 && !after.attr && flips >= 1 && flips <= 2, { hold, after, flips });
     });
 
     await run("plates", async () => {

@@ -235,9 +235,7 @@ export function Satchel({
               onAnimationComplete={i === KIT.length - 1 && entered && !alt ? () => setSpilled(true) : undefined}
             >
               <KitIcon kit={k} phase={phase} delay={itemStart(i)} fid={fid} i={i} />
-              {/* the kit's names in ink at the small size (P3-11 r3, r2 J2 / J4:
-                  low-contrast mono on brown) */}
-              <span className="flex items-center gap-1.5 type-meta text-fg-muted lg:type-small lg:text-fg">
+              <span className="flex items-center gap-1.5 type-meta text-fg-muted">
                 {k.label}
                 {alt ? (
                   <svg viewBox="0 0 20 20" width={14} height={14} aria-hidden="true" focusable="false" className="shrink-0">

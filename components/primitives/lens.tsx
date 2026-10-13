@@ -85,11 +85,7 @@ export function Lens({
   // The halves are ZERO-WIDTH anchors moved by px transforms, so they never
   // widen the page's scrollable area (a full-width wrapper translated by a
   // percentage did). Before the box is measured (server HTML, first paint)
-  // the same transform places them in container units (`cqw`: the halves'
-  // wrapper is a size container, so 1cqw = 1 % of the box width). P3-11 r3
-  // (F3: the intro's CLS .0070 / .0051): they used to sit on a percentage
-  // `left` until measured, and dropping it for the px transform was a
-  // layout shift; a transform change never is.
+  // the anchors sit at the same spot via a static percentage `left`.
   const halvesRef = useRef<HTMLDivElement>(null);
   const [boxW, setBoxW] = useState<number | null>(null);
   useEffect(() => {
@@ -104,7 +100,9 @@ export function Lens({
 
   const leftF = closed ? o : frame.x0;
   const rightF = closed ? o : frame.x1;
-  const cq = (f: number) => `${(f * 100).toFixed(3)}cqw`;
+  const measured = boxW !== null;
+  const anchor = (f: number): CSSProperties | undefined =>
+    measured || tracking ? undefined : { left: pct(f) };
   const slit = `inset(0% ${pct(1 - o)} 0% ${pct(o)})`;
 
   // Everything is driven imperatively through motion values (no re-render
@@ -114,8 +112,8 @@ export function Lens({
   // rests there while the plate keeps opening beyond it (hero-lens.BAR H10:
   // the halves never lag the clip). While it moves, the clip is a feathered
   // mask, so its edge is soft wherever it passes behind the h1.
-  const xL = useMotionValue<number | string>(tracking ? 0 : cq(leftF));
-  const xR = useMotionValue<number | string>(tracking ? 0 : cq(rightF));
+  const xL = useMotionValue(0);
+  const xR = useMotionValue(0);
   const yT = useMotionValue(0);
   const clipPath = useMotionValue(clip && closed ? slit : "inset(0% 0% 0% 0%)");
   const mask = useMotionValue("none");
@@ -138,9 +136,7 @@ export function Lens({
     if (state === "track") {
       if (!tracking) return;
       rest(true);
-      // a half still in container units (not measured yet) cannot spring
-      // from there to px: it lands at once
-      if (reduced || typeof xL.get() === "string" || typeof xR.get() === "string") {
+      if (reduced) {
         xL.jump(tx);
         xR.jump(tx + tw);
         yT.jump(ty);
@@ -159,9 +155,9 @@ export function Lens({
     }
     yT.jump(0);
     if (boxW === null) {
-      // not measured yet: container units place the halves; the clip is final
-      xL.jump(cq(state === "closed" ? o : x0));
-      xR.jump(cq(state === "closed" ? o : x1));
+      // not measured yet: the % anchors place the halves; the clip is final
+      xL.jump(0);
+      xR.jump(0);
       rest(state !== "closed");
       if (state === "aperture") done("open");
       return;
@@ -247,10 +243,10 @@ export function Lens({
           focus ? "text-accent" : "text-fg-ghost",
         )}
       >
-        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ x: xL, y: yT }}>
+        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ ...anchor(leftF), x: xL, y: yT }}>
           <Half side="left" style={halfStyle} />
         </motion.div>
-        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ x: xR, y: yT }}>
+        <motion.div className="absolute inset-y-0 left-0 w-0" style={{ ...anchor(rightF), x: xR, y: yT }}>
           <Half side="right" style={halfStyle} />
         </motion.div>
       </div>

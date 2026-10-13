@@ -1,5 +1,0 @@
-(node:5229) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/user/Personal-blog-/lib/page.ts is not specified and it doesn't parse as CommonJS.
-Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
-To eliminate this warning, add "type": "module" to /home/user/Personal-blog-/package.json.
-(Use `node --trace-warnings ...` to show where the warning was created)
-clips: 128 clips (6 intro) → 13 sheet(s); page clips: exactly one star 101 (82.8 %), 2+ at once 1, none 20 (outside a declared breath 18); by motion (J1's method): one star 80 (65.6 %), dead outside a breath 35, granted static 26, motion with no star 5; docs/build/motion-strips/p3-r3/screencast/reader-1440/clips-panel.json

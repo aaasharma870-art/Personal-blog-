@@ -85,39 +85,18 @@ function useMounted(): boolean {
    after the last scroll event), the header re-reads the truth from the DOM:
    the anchored section (or act card) spanning the observer's own reading
    band (45–50 % of the viewport). A gap between sections keeps the
-   observer's value. P3-11 (J8 #1): the probe is a one-shot
-   IntersectionObserver on a 1 px line at 47.5 %, answered after the next
-   layout: no getBoundingClientRect sweep in a timer (with native scroll
-   it forced a 100–125 ms layout mid-scroll). */
+   observer's value. */
 const PROBE_IDS: readonly string[] = [...anchors, ...cardAnchors, ...(sectionById("credits") ? [] : ["credits"])];
 const PROBE_SETTLE_MS = 150;
 
-function probeActive(): Promise<string | null> {
-  return new Promise((resolve) => {
-    const vh = window.innerHeight;
-    const y = Math.round(vh * 0.475);
-    const io = new IntersectionObserver(
-      (entries) => {
-        io.disconnect();
-        const on = new Set(entries.filter((e) => e.isIntersecting).map((e) => e.target.id));
-        let hit: string | null = null;
-        for (const id of PROBE_IDS) if (on.has(id)) hit = id;
-        resolve(hit);
-      },
-      { rootMargin: `-${y}px 0px -${Math.max(0, vh - y - 1)}px 0px` },
-    );
-    let n = 0;
-    for (const id of PROBE_IDS) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      io.observe(el);
-      n++;
-    }
-    if (!n) {
-      io.disconnect();
-      resolve(null);
-    }
-  });
+function probeActive(): string | null {
+  const y = window.innerHeight * 0.475;
+  let hit: string | null = null;
+  for (const id of PROBE_IDS) {
+    const r = document.getElementById(id)?.getBoundingClientRect();
+    if (r && r.height > 0 && r.top <= y && r.bottom > y) hit = id;
+  }
+  return hit;
 }
 
 /** The active id for the header: the observer's live value while it moves,
@@ -136,16 +115,13 @@ function useHeaderActive(): string {
   }, [observed]);
   useEffect(() => {
     let t = 0;
-    let dead = false;
     const schedule = () => {
       window.clearTimeout(t);
       t = window.setTimeout(() => {
-        void probeActive().then((id) => {
-          if (dead) return;
-          const base = observedRef.current;
-          // an unchanged probe keeps its object: no re-render of the header
-          setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
-        });
+        const id = probeActive();
+        const base = observedRef.current;
+        // an unchanged probe keeps its object: no re-render of the header
+        setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
       }, PROBE_SETTLE_MS);
     };
     reprobe.current = schedule;
@@ -153,7 +129,6 @@ function useHeaderActive(): string {
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     return () => {
-      dead = true;
       reprobe.current = () => {};
       window.clearTimeout(t);
       window.removeEventListener("scroll", schedule);
@@ -361,20 +336,11 @@ export function Header() {
 
   const workHref = hrefOfType("gauntlet");
 
-  // "scrolled" = the page is more than 12 px down: a 13 px sentinel at the
-  // document's top leaves the viewport (P3-11 J8 #1: reading scrollY in a
-  // scroll handler forced a layout per event, 61 ms in the kill-list)
   useEffect(() => {
-    const s = document.createElement("div");
-    s.setAttribute("aria-hidden", "true");
-    s.style.cssText = "position:absolute;top:0;left:0;width:1px;height:13px;opacity:0;pointer-events:none";
-    document.body.appendChild(s);
-    const io = new IntersectionObserver(([e]) => setScrolled(!e?.isIntersecting));
-    io.observe(s);
-    return () => {
-      io.disconnect();
-      s.remove();
-    };
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const openMenu = () => {
@@ -432,11 +398,6 @@ export function Header() {
         scrolled ? "bg-bg" : "bg-transparent",
       )}
     >
-      {/* P3-11 r3 (C5; read stills: "…of it failed me first" sliced under
-          the bar): once scrolled, a 24 px fade in the header's own ground
-          (desktop only, app/globals.css), so text passing under the bar
-          fades out instead of being cut in half */}
-      <div aria-hidden="true" className="header-band" data-on={scrolled ? "" : undefined} />
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
         <div className="flex min-w-0 items-center gap-4">
           <Logo base={base} />

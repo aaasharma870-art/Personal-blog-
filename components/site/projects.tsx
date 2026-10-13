@@ -1,6 +1,6 @@
 import { GauntletTabs } from "@/components/site/gauntlet-tabs";
 import { FilmQuote } from "@/components/site/film-quote";
-import { ChalkDrone, ChalkUnderline } from "@/components/site/idiots-chalk";
+import { ChalkUnderline } from "@/components/site/idiots-chalk";
 import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { SceneCaption } from "@/components/primitives/scene-caption";
@@ -71,7 +71,7 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
       entry={entry}
       labelledBy={titleId}
       grid
-      gridVeil="transparent 18%, var(--bg) 72%"
+      gridMask="linear-gradient(to bottom, black 0%, black 18%, transparent 72%)"
       fadeIn
       lead={
         head ? (
@@ -81,52 +81,34 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
             pieceKey="work.head"
             captionKey="cap.work.head"
             className="mb-tier-block"
-            liveStar="B16-pen"
-            registered={
-              // ≥ 1024: Rancho's homemade drone, chalked on the ICE board behind
-              // the pen (both pen plates keep their board in the top band of
-              // the 21:9 crop): the pen alone read "an heirloom pen" to the
-              // blind judges (P3-11 r2 A24 / D24 .50–.70). Already drawn: the
-              // band's own settle is the entrance (one performer).
-              <div aria-hidden="true" className="pointer-events-none absolute hidden lg:block" style={{ left: "38%", top: "1.5%", width: "8.5%" }}>
-                <ChalkDrone still className="w-full" />
-              </div>
-            }
           />
         ) : null
       }
     >
-      {/* ≥ 1024 the standing rule stands BESIDE the head, bottom-aligned
-          (P3-11 r1 J4 #8: the title held ~4 s with the right third empty);
-          below, today's stack */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-6">
-        <SectionHead
-          id={titleId}
-          number={number}
-          label={entry.nav?.label ?? "Work"}
-          title="Led by what survived scrutiny."
-          intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
-          inCharacter
-          world="idiots"
-          beat="B16"
-          variant={titleVariant}
-          className="lg:col-span-7"
-          titleClassName="motion-off:transition-none"
-        />
+      <SectionHead
+        id={titleId}
+        number={number}
+        label={entry.nav?.label ?? "Work"}
+        title="Led by what survived scrutiny."
+        intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
+        inCharacter
+        world="idiots"
+        beat="B16"
+        variant={titleVariant}
+      />
 
-        <Rise className="mt-tier-group max-w-body lg:col-span-5 lg:self-end">
-          <Meta fields={["Standing rule"]} />
-          <p className="mt-tier-pair type-body text-fg-muted">
-            Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
-            figures below are the ones that earned their place under that rule.
-          </p>
-        </Rise>
-      </div>
+      <Rise className="mt-tier-group max-w-body">
+        <Meta fields={["Standing rule"]} />
+        <p className="mt-tier-pair type-body text-fg-muted">
+          Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
+          figures below are the ones that earned their place under that rule.
+        </p>
+      </Rise>
 
       {/* ── the dawn board: the seven gates ─────────────────────────── */}
       <div className="mt-tier-block border-t border-rule pt-tier-block">
         <Meta fields={["Inside the flagship"]} />
-        <h3 className="mt-tier-pair max-w-title type-title text-fg motion-off:transition-none">The seven-part validation gauntlet.</h3>
+        <h3 className="mt-tier-pair max-w-title type-title text-fg">The seven-part validation gauntlet.</h3>
         <div className="mt-tier-block">
           <GauntletTabs
             steps={gauntlet}

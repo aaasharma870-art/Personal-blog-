@@ -63,37 +63,26 @@ import { DEAD_EYE_TARGETS, filmMark } from "@/components/sections/films/plate-ma
    with the still.
    ========================================================================== */
 
-/** "quick" (P3-11 r3, J1 #5 / #6): the finale plays INSIDE its spotlight
- *  grant on desktop (≤ 1.2 s, lib/spotlight-impl.ts MAX_HOLD) — its dead
- *  lead-in cut (LEAD) and its timeline at ×K — so the grant never covers a
- *  still plate and no dot or stroke moves after it (the HP light crossing
- *  the viaduct, #155). "play" (phones, tablets: no spotlight) keeps the
- *  full-length timing. */
-export type FinaleMode = "hidden" | "play" | "quick" | "final";
-const K = 0.5;
-const LEAD = 0.4;
-const playing = (m: FinaleMode) => m === "play" || m === "quick";
-/** A delay / a duration on the mode's clock. */
-const T = (m: FinaleMode, s: number) => (m === "quick" ? Math.max(0, s - LEAD) * K : s);
-const D = (m: FinaleMode, s: number) => (m === "quick" ? s * K : s);
+export type FinaleMode = "hidden" | "play" | "final";
 
 /** pathLength draw-on (plus opacity, so a zero-length round cap never dots). */
 function draw(mode: FinaleMode, delay: number, duration: number) {
   return {
     initial: false as const,
     animate: { pathLength: mode === "hidden" ? 0 : 1, opacity: mode === "hidden" ? 0 : 1 },
-    transition: playing(mode)
-      ? { pathLength: { duration: D(mode, duration), ease: easeDraw, delay: T(mode, delay) }, opacity: { duration: 0.01, delay: T(mode, delay) } }
-      : { duration: 0 },
+    transition:
+      mode === "play"
+        ? { pathLength: { duration, ease: easeDraw, delay }, opacity: { duration: 0.01, delay } }
+        : { duration: 0 },
   };
 }
 
-/** A one-shot fade to `to` (from `from` while hidden). */
-function appear(mode: FinaleMode, delay: number, to = 1, duration: number = dur.base, from = 0) {
+/** A one-shot fade to `to`. */
+function appear(mode: FinaleMode, delay: number, to = 1, duration: number = dur.base) {
   return {
     initial: false as const,
-    animate: { opacity: mode === "hidden" ? from : to },
-    transition: playing(mode) ? { duration: D(mode, duration), ease, delay: T(mode, delay) } : { duration: 0 },
+    animate: { opacity: mode === "hidden" ? 0 : to },
+    transition: mode === "play" ? { duration, ease, delay } : { duration: 0 },
   };
 }
 
@@ -158,10 +147,10 @@ function PiratesCompass({ mode, W, bearing }: { mode: FinaleMode; W: number; bea
   const cy = 330;
   const heading = useMotionValue(mode === "hidden" ? 0 : bearing);
   useEffect(() => {
-    if (playing(mode)) {
+    if (mode === "play") {
       heading.jump(0);
       // hunt, then settle — spinning the long way (target = bearing + 360)
-      const c = animate(heading, bearing + 360, { type: "spring", ...springNeedle, delay: T(mode, 0.5) });
+      const c = animate(heading, bearing + 360, { type: "spring", ...springNeedle, delay: 0.5 });
       return () => c.stop();
     }
     heading.jump(mode === "final" ? bearing : 0);
@@ -327,9 +316,6 @@ function IdiotsScooter({ mode, W, stillId }: { mode: FinaleMode; W: number; stil
 /** DEFAULT: Dead Eye on the frozen frontier — the marks lock on, one bird
  *  at a time, then fire once. Plate space (1000 = the still's height);
  *  pixel strokes (non-scaling) so the X keeps its weight at 3:2 on a phone. */
-/** The targets' X while the finale is armed (visible, not yet locked). */
-const FAINT = 0.42;
-
 function RdrDeadEye({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId: MediaId }) {
   const targets = DEAD_EYE_TARGETS[stillId] ?? [];
   const f = (v: number) => v.toFixed(1);
@@ -349,13 +335,10 @@ function RdrDeadEye({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId
         return (
           <g key={k}>
             {/* a dark keyline under the ember, so the X reads on the red sky */}
-            {/* P3-11 r3 (panel J3 / J2: "no targets visible while scrolling"):
-                armed, every target already shows its X faintly; the lock
-                brings each to full ember, then all fire at once */}
-            <motion.path d={d1} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite, FAINT)} />
-            <motion.path d={d2} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite, FAINT)} />
-            <motion.path d={d1} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite, FAINT)} />
-            <motion.path d={d2} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite, FAINT)} />
+            <motion.path d={d1} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite)} />
+            <motion.path d={d2} stroke="#140806" strokeWidth={5.5} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite)} />
+            <motion.path d={d1} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at, 1, bite)} />
+            <motion.path d={d2} stroke="var(--color-ember)" strokeWidth={2.6} vectorEffect="non-scaling-stroke" {...appear(mode, at + bite, 1, bite)} />
           </g>
         );
       })}
@@ -427,9 +410,9 @@ function HpInkLight({ mode, W }: { mode: FinaleMode; W: number }) {
   const start = fitPoint(LINE.at(0), box);
   const p = useMotionValue(mode === "hidden" ? 0 : 1);
   useEffect(() => {
-    if (playing(mode)) {
+    if (mode === "play") {
       p.jump(0);
-      const c = animate(p, 1, { duration: D(mode, 1.4), ease: easeDraw, delay: T(mode, 0.55) });
+      const c = animate(p, 1, { duration: 1.4, ease: easeDraw, delay: 0.55 });
       return () => c.stop();
     }
     p.jump(mode === "final" ? 1 : 0);
@@ -439,8 +422,6 @@ function HpInkLight({ mode, W }: { mode: FinaleMode; W: number }) {
   const ly = useTransform(p, (v) => fitPoint(LINE.at(v), box).y - L / 2);
   const lightOpacity = useTransform(p, [0, 0.03, 0.88, 1], [0, 1, 1, 0]);
   const warmAt = 0.55 + 1.4;
-  // the ink sinks back once the warm point is lit (its own clock)
-  const sink = mode === "quick" ? T(mode, warmAt) + 0.45 : warmAt + 0.9;
   return (
     <g data-finale="hp-ink-light" strokeLinecap="round">
       {/* the ink Line is drawn by the light and then SINKS back into the
@@ -448,8 +429,8 @@ function HpInkLight({ mode, W }: { mode: FinaleMode; W: number }) {
           the forest read as a stray squiggle, M2 critic 3 #6) */}
       <motion.g
         initial={false}
-        animate={{ opacity: playing(mode) ? [1, 1, 0] : 0 }}
-        transition={playing(mode) ? { duration: sink, times: [0, 0.75, 1] } : { duration: 0 }}
+        animate={{ opacity: mode === "play" ? [1, 1, 0] : 0 }}
+        transition={mode === "play" ? { duration: warmAt + 0.9, times: [0, 0.75, 1] } : { duration: 0 }}
       >
         <motion.path d={d} stroke="var(--w-ink-contour)" strokeOpacity={0.35} strokeWidth={1.2} vectorEffect="non-scaling-stroke" />
         <motion.path d={d} stroke="var(--w-ink-contour)" strokeWidth={1.6} vectorEffect="non-scaling-stroke" style={{ pathLength: p }} />
@@ -482,10 +463,10 @@ function HpMapWalk({ mode, W, stillId }: { mode: FinaleMode; W: number; stillId:
           <motion.g
             key={k}
             initial={false}
-            animate={{ opacity: mode === "hidden" ? 0 : lead ? 1 : playing(mode) ? [0, 1, 0.4] : 0.4 }}
+            animate={{ opacity: mode === "hidden" ? 0 : lead ? 1 : mode === "play" ? [0, 1, 0.4] : 0.4 }}
             transition={
-              playing(mode)
-                ? { duration: D(mode, lead ? dur.base : 0.9), delay: T(mode, 0.6 + k * 0.18), times: lead ? undefined : [0, 0.2, 1] }
+              mode === "play"
+                ? { duration: lead ? dur.base : 0.9, delay: 0.6 + k * 0.18, times: lead ? undefined : [0, 0.2, 1] }
                 : { duration: 0 }
             }
           >

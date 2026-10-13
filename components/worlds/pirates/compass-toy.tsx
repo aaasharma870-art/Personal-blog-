@@ -81,16 +81,9 @@ export default function CompassToy({ api, label, bearings, point, alt, setPoint,
         asked = true;
         io.disconnect();
         if (spinRef.current.used()) return;
-        // the grant covers the whole twitch: the needle spring (springNeedle,
-        // underdamped) is still swinging ~1.1 s after it starts, and past a
-        // 600 ms grant it moved with no star (P3-11 r2, J1 #6 1440 #37)
-        // onCut: a scroll star took the screen mid-twitch (lib/spotlight.ts
-        // THE CUT): the needle is back on its bearing at once
-        void spotlight
-          .request(INVITE, { weight: 1, needsIdle: true, durationMs: 1200, onCut: () => spinRef.current.settle() })
-          .then((a) => {
-            if (live && a === "play") spinRef.current.twitch();
-          });
+        void spotlight.request(INVITE, { weight: 1, needsIdle: true, durationMs: 600 }).then((a) => {
+          if (live && a === "play") spinRef.current.twitch();
+        });
       },
       { threshold: [0, 0.5, 1] },
     );

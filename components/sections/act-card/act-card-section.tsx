@@ -42,7 +42,6 @@ import { OpeningPlateFrame } from "@/components/sections/act-card/frames/opening
 import { ReelFrame } from "@/components/sections/act-card/frames/reel";
 import { SeamFrame } from "@/components/sections/act-card/frames/seam";
 import { TintypeFrame } from "@/components/sections/act-card/frames/tintype";
-import { FilmsPlay, OPENING_PLAY_KEY, playCopy } from "@/components/sections/films/films-bill";
 
 /**
  * ActCardSection — renders one DERIVED act card (lib/derive.ts
@@ -111,14 +110,6 @@ const FILM_AT: Record<ActCardItem["transition"], number> = {
   title: 0.05,
   flight: 0.05,
 };
-
-/** Pin mode (P3-11 r1, hooks + panel J2 #1 / J4 #5): where the card opens
- *  on the OLD world's picture (the seam's storm, the ignite's camp), the new
- *  film's title lands as the transition visibly starts (star (a) progress
- *  .045 ≈ the card's p .02, just inside the hook frame), never while the
- *  card approaches over the old world's image and caption. The opening and
- *  the tintype open on their own world: their title is up from arrival. */
-const FILM_PIN: Partial<Record<ActCardItem["transition"], number>> = { seam: 0.045, ignite: 0.045 };
 
 const visible = (c: Copy | { text: string; status: string } | null | undefined) =>
   Boolean(c && copyVisible(c));
@@ -297,7 +288,7 @@ export function ActCardSection({
   const filmTitle =
     item.to !== "house" && spec.work ? (
       <p className="card-film text-[length:var(--text-title)] leading-[1.02] tracking-[0.03em] text-balance text-fg">
-        <CardReveal at={FILM_AT[kind]} pinned={FILM_PIN[kind] ?? "static"}>
+        <CardReveal at={FILM_AT[kind]} pinned="static">
           <FilmTitle world={item.to} as="span" />
         </CardReveal>
       </p>
@@ -373,27 +364,14 @@ export function ActCardSection({
       plates.to = { default: variantMedia(pearl, "default"), alt: variantMedia(pearl, "alt") };
       plates.from = { default: variantMedia(spec.media.plate, "default"), alt: variantMedia(spec.media.plate, "alt") };
       pinned = buildPin(item, plates, title);
-      // pin mode: the hero's sea, dimmed, round the porthole (the GL iris'
-      // outside; P3-11 r3 hooks), in its registered crop
-      frame = <OpeningPlateFrame plate={plates.to.default} sea={plates.from.default} seaReg={regOf("default", "from")} />;
-      altFrame = <OpeningPlateFrame plate={plates.to.alt} sea={plates.from.alt} seaReg={regOf("alt", "from")} alt />;
+      frame = <OpeningPlateFrame plate={plates.to.default} />;
+      altFrame = <OpeningPlateFrame plate={plates.to.alt} alt />;
       const h2Copy = copyText("opening.h2");
       // ONE heading node for both choreographies (same id, same text)
-      const h2 = (
+      const openingHeading = (
         <h2 id={titleId} className="type-title max-w-title text-fg">
           <CardReveal at={at.title}>{visible(h2Copy) ? h2Copy.text : title}</CardReveal>
         </h2>
-      );
-      // C4 (P3-11 r3): the invitation to play under the contents' h2, before
-      // the drone and Dead Eye — desktop only, static, once its copy key
-      // exists (F6's words, F1's key: proposed + unsigned)
-      const openingHeading = playCopy(OPENING_PLAY_KEY) ? (
-        <div className="min-w-0">
-          {h2}
-          <FilmsPlay copyKey={OPENING_PLAY_KEY} className="mt-tier-group hidden max-w-lead type-body text-fg df:block" />
-        </div>
-      ) : (
-        h2
       );
       const rows = openingRows();
       after = <OpeningFrame heading={openingHeading} rows={rows} />;

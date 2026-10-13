@@ -44,14 +44,12 @@ const HAND_BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678
 
 /**
  * The desktop film faces (≥ 64rem only). `css` is the next/font variable
- * (lib/fonts.ts) or, for the display face and a `preload: "optional"` face
- * (a public file app/layout.tsx preloads, its @font-face `font-display:
- * optional` in app/globals.css; P3-11 r3: the Pirates body), the CSS var
- * app/globals.css sets. `designer` feeds the credits TYPE row (FONTS.md §4).
+ * (lib/fonts.ts) or, for the display face, the CSS var app/globals.css sets.
+ * `designer` feeds the credits TYPE row (FONTS.md §4).
  */
 export const FACES = [
   { family: "Pirata One", weight: 400, dir: "pirataone", slug: "pirata-one", world: "pirates", role: "display", cut: "ascii+", license: "ofl", rfn: "Pirata", path: "public/fonts/film/pirata-one/pirata-one-ascii.woff2", css: "--font-name-pirates", designer: "Rodrigo Fuenzalida & Nicolás Massi", note: "the hero h1 (preloaded ≥ 64rem) and the Pirates head" },
-  { family: "Cormorant Garamond", weight: 500, dir: "cormorantgaramond", slug: "cormorant-garamond-500", world: "pirates", role: "body", cut: "latin", license: "ofl", path: "public/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2", css: "--font-world-pirates-body", preload: "optional", designer: "Christian Thalmann", note: "Pirates body, 20 px / 1.55, ink only; preloaded ≥ 64rem, font-display optional (P3-11 r3)" },
+  { family: "Cormorant Garamond", weight: 500, dir: "cormorantgaramond", slug: "cormorant-garamond-500", world: "pirates", role: "body", cut: "latin", license: "ofl", path: "assets/fonts/film/cormorant-garamond-500/cormorant-garamond-500-latin.woff2", css: "--font-world-pirates-body", designer: "Christian Thalmann", note: "Pirates body, 20 px / 1.55, ink only" },
   { family: "Kalam", weight: 700, dir: "kalam", slug: "kalam-700", world: "idiots", role: "head", cut: "ascii+", license: "ofl", path: "assets/fonts/film/kalam-700/kalam-700-ascii.woff2", css: "--font-world-idiots-head", designer: "Indian Type Foundry", note: "3 Idiots head (replaces the 400 subset at ≥ 64rem)" },
   { family: "Patrick Hand", weight: 400, dir: "patrickhand", slug: "patrick-hand", world: "idiots", role: "body", cut: "latin", license: "ofl", path: "assets/fonts/film/patrick-hand/patrick-hand-latin.woff2", css: "--font-world-idiots-lead", designer: "Patrick Wagesreiter", note: "3 Idiots lead only (type-lead intros, board notes), 22 px / 1.45" },
   { family: "Rye", weight: 400, dir: "rye", slug: "rye-ascii", world: "rdr2", role: "head", cut: "ascii+", license: "ofl", rfn: "Rye", path: "assets/fonts/film/rye-ascii/rye-ascii.woff2", css: "--font-world-rdr2-head", designer: "Nicole Fally (Sorkin Type)", note: "RDR2 head, scale .8, heads ≤ 6 words" },
@@ -77,13 +75,9 @@ export const LETTERING_DESKTOP = {
   "IM Fell English": "im-fell-english-sc",
 };
 
-/** PHASE3-SPEC §5.5 budgets (bytes). `preloadOptional` (P3-11 r3): the
- *  preloaded `font-display: optional` faces (the Pirates body), which never
- *  swap and block first paint ≤ 100 ms; counted apart from the name's
- *  render-path preload (`preload`). */
+/** PHASE3-SPEC §5.5 budgets (bytes). */
 export const BUDGET = {
   preload: 6 * 1024,
-  preloadOptional: 24 * 1024,
   perWorld: 64 * 1024,
   desktop: 192 * 1024,
   legacy: 54336,
@@ -168,16 +162,14 @@ export function measure(root = ROOT) {
   for (const r of rows) perWorld[r.world] = (perWorld[r.world] ?? 0) + r.bytes;
   const desktop = rows.reduce((a, r) => a + r.bytes, 0);
   const preload = rows.filter((r) => r.role === "display").reduce((a, r) => a + r.bytes, 0);
-  const preloadOptional = rows.filter((r) => r.preload === "optional").reduce((a, r) => a + r.bytes, 0);
   const legacy = LEGACY.reduce((a, l) => a + size(l.path), 0);
-  return { rows, perWorld, desktop, preload, preloadOptional, legacy };
+  return { rows, perWorld, desktop, preload, legacy };
 }
 
 /** Budget failures (strings), [] when every §5.5 budget holds. */
 export function budgetFailures(m) {
   const out = [];
   if (m.preload > BUDGET.preload) out.push(`preloaded world bytes ${m.preload} > ${BUDGET.preload}`);
-  if (m.preloadOptional > BUDGET.preloadOptional) out.push(`preloaded optional world bytes ${m.preloadOptional} > ${BUDGET.preloadOptional}`);
   for (const [w, b] of Object.entries(m.perWorld)) if (b > BUDGET.perWorld) out.push(`world ${w}: ${b} B > ${BUDGET.perWorld}`);
   if (m.desktop > BUDGET.desktop) out.push(`all desktop film faces ${m.desktop} B > ${BUDGET.desktop}`);
   if (m.legacy !== BUDGET.legacy) out.push(`below 64rem: the legacy subsets are ${m.legacy} B, not today's ${BUDGET.legacy}`);

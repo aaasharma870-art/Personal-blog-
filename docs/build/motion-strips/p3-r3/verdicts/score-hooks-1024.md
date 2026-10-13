@@ -1,9 +1,0 @@
-| css-ignite-p05 | 1/3 | FAIL | A black hole with a glowing ember rim and a tiny candle burns through a sunset camp photo under a large 'HARRY POTTER' title. The burn is a strong 'what is it revealing?' pull. Caveat: the picture ben |
-| css-opening-p05 | 2/3 | FAIL | Blackletter 'PIRATES OF THE CARIBBEAN' title, but the image plate is nearly black, and a thin, dim porthole ring on the far right shows a cropped ship. Roughly two thirds of the picture is empty dark, |
-| css-seam-p05 | 1/3 | FAIL | A glowing teal chart line sweeps across the bottom of a storm sea and reveals the classroom desk, under a chalk-style '3 IDIOTS' title. The line gives direction and links the data idea to the imagery. |
-| css-tintype-p05 | 3/3 | PASS | A desaturated, sepia valley with a glowing sun, a haze band and small arcs at the bottom, under a bold western 'RED DEAD REDEMPTION 2' title. Atmospheric and photographic, and the title face fits. / T |
-| gl-ignite-p05 | 2/3 | FAIL | A jagged, glowing-rimmed hole in the camp photo now shows blue night with a candle reflection, suggesting another world seeping in. Intriguing. Same mismatch as H003, since 'HARRY POTTER' sits over a  |
-| gl-opening-p05 | 3/3 | PASS | A bright gold porthole ring on a dark plate frames a lantern-lit ghost ship under a blackletter title. The ring is a clear focal point and signals a reveal, though most of the plate is still empty bla |
-| gl-seam-p05 | 3/3 | PASS | A jagged torn-edge wipe: a pale classroom on the left giving way to a stormy teal sea on the right, under the chalk '3 IDIOTS' title. Striking and cinematic. The pale left side is washed out, which ma |
-| gl-tintype-p05 | 3/3 | PASS | A cream-bordered sepia tintype of a valley with a drifting haze band under a themed western slab title, 'RED DEAD REDEMPTION 2'. It reads like an old photograph coming to life, the type matches the mo |
-HOOKS @1024: 4/8 judged a hook 3/3

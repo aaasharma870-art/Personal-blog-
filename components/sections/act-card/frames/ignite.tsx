@@ -8,7 +8,7 @@ import { MediaFrame } from "@/components/primitives/media-frame";
 import { LINE, LINE_D, LINE_VIEWBOX, remap, smooth01 } from "@/components/primitives/loaders/line";
 import { CANDLE_SPRITE, LUMOS_SPRITE } from "@/components/primitives/loaders/sprites-hp";
 import { EMBER_SPRITE, FIRE0_SPRITE, FIRE1_SPRITE, FIRE2_SPRITE } from "@/components/primitives/loaders/sprites-rd";
-import { useCard, type BurnUi } from "@/components/sections/act-card/card-context";
+import { useCard } from "@/components/sections/act-card/card-context";
 import {
   FRAME_ASPECT,
   PlateBox,
@@ -176,7 +176,7 @@ export function IgniteFrame({
       {!plated && (!live || !near) ? <StaticIgnition /> : null}
       {showCanvas ? (
         <motion.div className="absolute inset-0 will-change-[opacity]" style={{ opacity: canvasOpacity }}>
-          <IgniteCanvas p={p} fire={fireAt} burn={pin?.ui?.burn ?? null} />
+          <IgniteCanvas p={p} fire={fireAt} />
         </motion.div>
       ) : null}
     </div>
@@ -281,17 +281,7 @@ function StaticIgnition() {
   );
 }
 
-function IgniteCanvas({
-  p,
-  fire: fireAt,
-  burn = null,
-}: {
-  p: MotionValue<number>;
-  fire: readonly [number, number] | null;
-  /** Pin mode, css tier (P3-11 r1 hooks): the film burn eating the camp
-   *  from its fire, drawn by the lazy pin chunk (card-p3.tsx `burn`). */
-  burn?: BurnUi | null;
-}) {
+function IgniteCanvas({ p, fire: fireAt }: { p: MotionValue<number>; fire: readonly [number, number] | null }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const drawRef = useRef<((v: number) => void) | null>(null);
   const frame = useRef(0);
@@ -302,9 +292,6 @@ function IgniteCanvas({
     if (!canvas || !ctx) return;
     const sprites = loadSprites();
     const css = getComputedStyle(canvas);
-    // the burn's hole is the card's own deep (the stage's painted ground)
-    const ground = canvas.closest("[data-card-stage]")?.parentElement?.closest("section");
-    const hole = burn ? burn((ground && getComputedStyle(ground).backgroundColor) || "#0a0a10") : null;
     const pencil = css.getPropertyValue("--w-pencil").trim() || "gray";
     const ink = css.getPropertyValue("--w-ink-contour").trim() || "tan";
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -357,12 +344,6 @@ function IgniteCanvas({
       ctx.strokeStyle = ink;
       ctx.globalAlpha = 1 - 0.7 * remap(v, 0.6, 0.85);
       strokeTo(lit / N);
-
-      // the film burn (pin mode, css tier): over the camp, under the embers
-      if (hole) {
-        const f = fireAt ? { x: fireAt[0] * W, y: fireAt[1] * H } : at(LINE.at(0));
-        hole(ctx, v, f.x, f.y, H);
-      }
 
       // warm points: additive sprites only
       ctx.globalCompositeOperation = "lighter";
@@ -435,7 +416,7 @@ function IgniteCanvas({
       if (frame.current) window.cancelAnimationFrame(frame.current);
       frame.current = 0;
     };
-  }, [p, fireAt, burn]);
+  }, [p, fireAt]);
 
   useMotionValueEvent(p, "change", (v) => drawRef.current?.(v));
 

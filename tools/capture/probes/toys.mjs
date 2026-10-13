@@ -14,8 +14,7 @@
 //   offscreen    leaving #contact fully: every candle lit again, no transition
 //   lumos        re-armed dark, the "Lumos" button by KEYBOARD (focus + Enter): all lit within 1.7 s, "done"
 //   pause        Pause: every candle lit, no [data-candle-toy], no bloom, #contact cursor "auto"
-//   compass      the About compass button (scoped to #about, C8: the hero and the journey chart draw static
-//                compasses too): a click and Enter each settle the needle on a pillar bearing
+//   compass      the About compass button: a click and Enter each settle the needle on a pillar bearing
 //                (315 · 45 · 225 · 135 ± 2°), ← / → step it; a drag on the case settles on a bearing too
 //                (the resting heading before any press is reported, not judged; "settled" = the same
 //                reading over 8 drawn frames and ≥ 400 ms)
@@ -109,17 +108,17 @@ export default async function probe(page, ctx) {
     const bloom = await page.evaluate(() => Boolean(document.querySelector("[data-wand-bloom-sprite]")));
     set("rm.candles", !c.toy && !bloom && c.litAll === c.total && c.total > 0, { ...c, flames: undefined, dark: undefined, bloom });
     await run("rm.compass", async () => {
-      const btn = page.locator('#about button[data-toy="compass"]');
+      const btn = page.locator('button[data-toy="compass"]');
       const has = await btn.count();
       if (!has) {
-        const static_ = await page.evaluate(() => document.querySelector('#about [data-instrument="jack-compass"]')?.getAttribute("data-needle") ?? null);
+        const static_ = await page.evaluate(() => document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle") ?? null);
         set("rm.compass", true, { button: false, note: "no toy button under RM (static compass)", needle: static_ });
         return;
       }
       await btn.scrollIntoViewIfNeeded();
       await btn.click();
       await sleep(400);
-      const v = await page.evaluate(() => Number(document.querySelector('#about [data-instrument="jack-compass"]')?.getAttribute("data-needle")));
+      const v = await page.evaluate(() => Number(document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle")));
       set("rm.compass", onBearing(v), { button: true, needle: v });
     });
     return { pass: Object.values(checks).every((c) => c.pass), checks };
@@ -301,7 +300,7 @@ export default async function probe(page, ctx) {
 
   await run("compass", async () => {
     await toTop();
-    const btn = page.locator('#about button[data-toy="compass"]');
+    const btn = page.locator('button[data-toy="compass"]');
     await btn.waitFor({ state: "attached", timeout: 15000 });
     await btn.scrollIntoViewIfNeeded();
     await sleep(800);
@@ -310,7 +309,7 @@ export default async function probe(page, ctx) {
     const settle = () =>
       page.evaluate(async () => {
         const read = () => {
-          const v = document.querySelector('#about [data-instrument="jack-compass"]')?.getAttribute("data-needle");
+          const v = document.querySelector('[data-instrument="jack-compass"]')?.getAttribute("data-needle");
           return v == null ? null : Number(v);
         };
         const frame = () => new Promise((r) => requestAnimationFrame(() => r()));

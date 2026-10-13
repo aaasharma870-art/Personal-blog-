@@ -160,13 +160,8 @@ export default async function probe(page, ctx) {
           if (b) await page.screenshot({ path: ctx.file(`${g.kind}-p${v}.png`), clip: b }).catch(() => {});
           const settled = s.t !== null && Math.abs(s.t - s.raw) <= 0.005;
           const phaseOk = !s.live || s.phase === phaseOf(s.t ?? v);
-          // P3-11 r3: a card that plays the ALT title reveal (the bars: the tintype always does, card-p3.tsx
-          // `spec.title.bars`) carries its act title in the lower bar through (m): the logline is out then
-          // (app/p3/cards-pin.css `[data-title-mask="alt"][data-card-phase="m"] .act-card-subtitle`)
-          const bars = (await page.locator(`[data-act-card="${g.kind}"]`).first().getAttribute("data-title-mask").catch(() => null)) === "alt";
-          const subOk =
-            !s.live || s.subtitle === null || (s.phase === "b" || (s.phase === "m" && !bars) ? s.subtitle > 0.9 : s.subtitle < 0.1);
-          rows.push({ card: g.kind, p: v, ...s, bars, settled, phaseOk, subOk });
+          const subOk = !s.live || s.subtitle === null || (s.phase === "b" || s.phase === "m" ? s.subtitle > 0.9 : s.subtitle < 0.1);
+          rows.push({ card: g.kind, p: v, ...s, settled, phaseOk, subOk });
         }
       }
       set("scrub", rows.every((r) => r.live && r.settled && r.phaseOk && r.subOk), { rows });

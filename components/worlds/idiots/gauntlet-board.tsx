@@ -51,9 +51,8 @@ import { ChalkFilter, ChalkLoop, ChalkQuadcopter, SettleFrame, useSvgId } from "
    <LivePlate>: the L09 living beam plays on DESKTOP_FINE with motion on
    (loopFor; RM / Pause / phones: the still). NO camera and no depth: the
    chalk overlay is registered to the board, so the board never moves under
-   it (the `plates.loops` ALT is the plain still). The board's entrance is
-   the B17 time star (SettleFrame `star`, through the spotlight): the
-   duster's wipe on DESKTOP_FINE (P3-11 r1), the settle on phones.
+   it (the `plates.loops` ALT is the plain still). The board's settle is the
+   B17 time star (SettleFrame `star`, through the spotlight).
    ========================================================================== */
 
 /** MV-06 never moves (spec §6.1: the gauntlet overlay is registered). */
@@ -456,22 +455,14 @@ export function GauntletBoard({
           darkens the board, its wooden frame or the chalk ledge */}
       <SettleFrame
         entrance={alt ? "wipe" : "settle"}
-        // P3-11 r1 (J1: B17 never visibly performed): the duster wipes the
-        // board on at desktop widths; phones keep the settle
-        desktopWipe
         className="relative sm:overflow-hidden sm:rounded-frame"
         star={{ id: "B17", weight: 2 }}
       >
         {/* the plate: 1:1 below 640 (the board's dark left side stays in
             frame), 16:9 above; the L09 living beam on desktop */}
         <div className="relative aspect-square overflow-hidden rounded-frame sm:aspect-video sm:rounded-none">
-          {/* ≥ 1024 the plate is cropped 1.2× from its lower left: the board
-              fills the frame and the carved arched window at its right edge
-              leaves it (P3-11 r2 blind D25 .30–.40: "the Gothic arched window
-              reads Hogwarts"); the ledge, the beam and the board's dark left
-              keep their places under the chalk. Phones keep today's crop. */}
-          <div className="absolute inset-0 lg:origin-bottom-left lg:scale-120">
-            <LivePlate media={plate} camera={BOARD_HOLD} depth={false} liveStar="B17-beam" sizes="(min-width: 64rem) 60vw, 100vw" className="size-full" />
+          <div className="absolute inset-0">
+            <LivePlate media={plate} camera={BOARD_HOLD} depth={false} sizes="(min-width: 64rem) 60vw, 100vw" className="size-full" />
           </div>
           {/* the board reads as the ICE chalkboard at a glance (D25): its
               near-black interior (mean rgb 12/22/18) is lifted to slate green

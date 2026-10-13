@@ -54,14 +54,10 @@ export function DirectorsCutButton() {
       data-dc-shots={shotList()}
       data-enhance-queue='[data-dc="hero"]'
       data-house-type=""
-      className="type-meta hidden min-h-11 items-center gap-2 rounded-full border border-fg-muted bg-surface-1 px-5 text-fg transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
+      className="type-meta hidden min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg-muted transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
     >
       <Glyphed text={label.text} />
-      {/* P3-11 r3 (F6): the note is muted ink, not ghost (three judges:
-          "dim grey"). J9 F10: Chrome's accessibility tree already names it
-          "Director's cut Motion is paused" (flex items are separated); the
-          run-together text was the keyboard probe's textContent. */}
-      {copyVisible(sound) ? <span className="text-fg-muted motion-off:hidden">{sound.text}</span> : null}
+      {copyVisible(sound) ? <span className="text-fg-ghost motion-off:hidden">{sound.text}</span> : null}
       {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
     </button>
   );

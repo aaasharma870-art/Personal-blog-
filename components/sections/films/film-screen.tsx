@@ -6,7 +6,6 @@ import { actCards, acts, copyVisible, numeralOf, seenHereIn } from "@/lib/sectio
 import type { VariantChoice } from "@/lib/variants";
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { FilmTitle } from "@/components/primitives/scene-caption";
-import { cn } from "@/lib/utils";
 import { FilmQuote } from "@/components/site/film-quote";
 import { Meta, Sep } from "@/components/site/world-kit";
 import { FILM_BEATS } from "@/components/sections/films/film-beats";
@@ -49,8 +48,8 @@ const DEEP: Record<WorldId, string> = {
 
 /** The house lights' markers, inside the first frame's box (server markup:
  *  no client code). B30, a weight-3 scroll star: the close's spotlight box,
- *  above the frame (films-desktop.tsx registers it). B31-bars: the open
- *  (the reading line while the frame rises to the middle). */
+ *  above the frame (films-desktop.tsx registers it). B31-bars: the open,
+ *  centred on the frame. */
 function LightsMarks() {
   return (
     <>
@@ -64,43 +63,12 @@ function LightsMarks() {
       <span
         aria-hidden="true"
         className="pointer-events-none invisible absolute left-0 w-px"
-        // the reading line's span while the bars open (films-desktop.tsx
-        // LIGHTS: the frame's centre 92% → 52% of the viewport)
-        style={{ top: "calc(50% - 42vh)", height: "40vh" }}
+        style={{ top: "calc(50% - 20vh)", height: "40vh" }}
         {...beatAttrs("B31-bars")}
       />
     </>
   );
 }
-
-/** P3-11 r3 (panel J3 medium, J2 / J4 low: "the four screens share one
- *  template"): from 64rem two screens break it — the picture beside the
- *  title and the line instead of under them, on alternate sides (3 Idiots:
- *  text left, picture right; Harry Potter: picture left, text right), so
- *  the run reads wide · side · wide · side. Grid placement only: the DOM
- *  order (Meta, title, picture, line, notes) and every phone stay as they
- *  were. */
-type Layout = "wide" | "text-left" | "text-right";
-const LAYOUT: Readonly<Record<CaptionWorld, Layout>> = {
-  pirates: "wide",
-  idiots: "text-left",
-  rdr2: "wide",
-  hp: "text-right",
-};
-/** Grid placement per layout (lg: 12 columns; rows: Meta, title, line,
- *  notes; the picture spans the first three). */
-const PLACE: Readonly<Record<Exclude<Layout, "wide">, { text: string; frame: string; notes: string }>> = {
-  "text-left": {
-    text: "lg:col-start-1 lg:col-span-5",
-    frame: "lg:col-start-6 lg:col-span-7",
-    notes: "lg:col-start-6 lg:col-span-7",
-  },
-  "text-right": {
-    text: "lg:col-start-8 lg:col-span-5",
-    frame: "lg:col-start-1 lg:col-span-7",
-    notes: "lg:col-start-1 lg:col-span-7",
-  },
-};
 
 function groundOf(prev: WorldId, last: boolean): CSSProperties {
   const layers = [`linear-gradient(to bottom, ${DEEP[prev]} 0, transparent 24vh)`];
@@ -134,19 +102,13 @@ export function FilmScreen({
   const links = seenHereIn(world).slice(0, 3);
   const reason = spec.reason && copyVisible(spec.reason) ? spec.reason : null;
   const borrowed = spec.borrowed && copyVisible(spec.borrowed) ? spec.borrowed : null;
-  const layout = LAYOUT[world];
-  const side = layout === "wide" ? null : PLACE[layout];
 
   return (
     <article
       aria-labelledby={titleId}
       data-films-world={world}
       {...planeAttrs("deep", world)}
-      className={cn(
-        "relative py-[clamp(4rem,11vh,7.5rem)] text-fg",
-        side && "lg:grid lg:grid-cols-12 lg:grid-rows-[auto_auto_1fr_auto] lg:gap-x-6",
-      )}
-      data-films-layout={layout}
+      className="relative py-[clamp(4rem,11vh,7.5rem)] text-fg"
     >
       <div
         aria-hidden="true"
@@ -154,14 +116,14 @@ export function FilmScreen({
         style={groundOf(prev, last)}
       />
 
-      <Meta fields={[numeral ? `Act ${numeral}` : null, spec.verb, years]} className={cn(side && `${side.text} lg:row-start-1`)} />
+      <Meta fields={[numeral ? `Act ${numeral}` : null, spec.verb, years]} />
       {/* the film title arrives in character (spec §8.2; B31–B34, a time
           star through the spotlight on desktop; static elsewhere) */}
       <FilmTitle
         world={world}
         as="h3"
         id={titleId}
-        className={cn("mt-tier-pair type-title text-fg", side && `${side.text} lg:row-start-2`)}
+        className="mt-tier-pair type-title text-fg"
         inCharacter
         beat={FILM_BEATS[world].title}
       />
@@ -175,7 +137,7 @@ export function FilmScreen({
         marks={first ? <LightsMarks /> : null}
         lights={first}
         carry={last}
-        className={cn("mt-tier-group", side && `${side.frame} lg:row-span-3 lg:row-start-1 lg:mt-0 lg:self-start`)}
+        className="mt-tier-group"
       />
 
       {world === "idiots" ? (
@@ -187,8 +149,8 @@ export function FilmScreen({
         </ol>
       ) : null}
 
-      <div className={cn("mt-tier-block grid grid-cols-1 gap-tier-group", side ? "lg:contents" : "lg:grid-cols-12 lg:gap-x-6")}>
-        <div className={side ? `${side.text} lg:row-start-3 lg:mt-tier-group` : "lg:col-span-5"}>
+      <div className="mt-tier-block grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+        <div className="lg:col-span-5">
           {spec.line ? (
             // the film's most famous line, LETTERED in its world face (ART-DIRECTOR #11:
             // it was 10 px mono); the speaker and work stay beside it in Meta
@@ -197,7 +159,7 @@ export function FilmScreen({
             </p>
           ) : null}
         </div>
-        <div className={side ? `${side.notes} lg:row-start-4 lg:mt-tier-block` : "lg:col-span-7"}>
+        <div className="lg:col-span-7">
           {borrowed ? <p className="max-w-body type-body text-fg">{borrowed.text}</p> : null}
           {reason ? (
             <p className="mt-tier-group max-w-body type-body text-fg-muted" data-copy-status={reason.status}>

@@ -17,15 +17,7 @@ type Prog = {
   shaders: WebGLShader[];
   /** null while linking; then the active uniforms, or false (failed) */
   u: Map<string, { loc: WebGLUniformLocation; type: number }> | null | false;
-  /** when the link was asked for (performance.now()) */
-  t0: number;
 };
-
-/** Without KHR_parallel_shader_compile, LINK_STATUS blocks until the link is
- *  done: ask it no sooner than this after the link (P3-11 r3, F6 / J8: the
- *  shader compile polls were long tasks), so the driver's own compile thread
- *  has (almost always) finished and the query returns at once. */
-const NO_KHR_WAIT_MS = 160;
 
 export type RawTex = { w: number; h: number; data: Uint8Array; r8?: boolean; repeat?: boolean };
 
@@ -65,33 +57,6 @@ export function createTransitionGL(canvas: HTMLCanvasElement, force: boolean): T
   const progs = new Map<string, Prog>();
   let vao: WebGLVertexArrayObject | null = null;
   let blank: WebGLTexture | null = null;
-  /** A 1 × 1 off-screen target for the warm-up draw (never the canvas). */
-  let warmFb: WebGLFramebuffer | null = null;
-
-  /** P3-11 r3 (J8: a 934 ms frame as the ignite's GL first drew): drivers
-   *  finish a program (and settle the texture units) at its FIRST DRAW, so
-   *  a freshly linked program draws once into a 1 × 1 framebuffer here, in
-   *  its own idle slice (gl-lock.ts compileJob), never on the canvas — the
-   *  card's first real frame is then an ordinary one. */
-  const warm = (prog: WebGLProgram) => {
-    if (!warmFb) {
-      const t = gl.createTexture();
-      warmFb = gl.createFramebuffer();
-      if (!t || !warmFb) return;
-      gl.bindTexture(gl.TEXTURE_2D, t);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, warmFb);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
-    } else gl.bindFramebuffer(gl.FRAMEBUFFER, warmFb);
-    gl.viewport(0, 0, 1, 1);
-    gl.useProgram(prog);
-    for (const unit of Object.values(UNITS)) {
-      gl.activeTexture(gl.TEXTURE0 + unit);
-      gl.bindTexture(gl.TEXTURE_2D, blank);
-    }
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  };
 
   const init = () => {
     vao = gl.createVertexArray();
@@ -123,16 +88,14 @@ export function createTransitionGL(canvas: HTMLCanvasElement, force: boolean): T
       gl.attachShader(prog, vs);
       gl.attachShader(prog, fs);
       gl.linkProgram(prog);
-      progs.set(name, { prog, shaders: [vs, fs], u: null, t0: performance.now() });
+      progs.set(name, { prog, shaders: [vs, fs], u: null });
     },
 
     poll(name) {
       const p = progs.get(name);
       if (!p) return false;
       if (p.u !== null) return p.u !== false;
-      // KHR_parallel_shader_compile: a non-blocking completion query; else
-      // wait out the link before the (blocking) LINK_STATUS read
-      if (khr ? !gl.getProgramParameter(p.prog, khr.COMPLETION_STATUS_KHR) : performance.now() - p.t0 < NO_KHR_WAIT_MS) return null;
+      if (khr && !gl.getProgramParameter(p.prog, khr.COMPLETION_STATUS_KHR)) return null;
       if (!gl.getProgramParameter(p.prog, gl.LINK_STATUS)) {
         if (process.env.NODE_ENV !== "production") {
           console.warn(`[gl] ${name}:`, gl.getProgramInfoLog(p.prog), p.shaders.map((s) => gl.getShaderInfoLog(s)).join(" "));
@@ -152,7 +115,6 @@ export function createTransitionGL(canvas: HTMLCanvasElement, force: boolean): T
       }
       p.shaders.forEach((s) => gl.deleteShader(s));
       p.u = u;
-      warm(p.prog);
       return true;
     },
 
@@ -221,7 +183,6 @@ export function createTransitionGL(canvas: HTMLCanvasElement, force: boolean): T
 
     reset() {
       progs.clear();
-      warmFb = null;
       init();
     },
   };

@@ -135,7 +135,7 @@ export function BacktestDemo() {
                 ? m === "naive"
                   ? "bg-surface-2 text-fg"
                   : "bg-surface-2 text-kill"
-                : "text-fg-muted hover:text-fg lg:text-fg",
+                : "text-fg-muted hover:text-fg",
             )}
           >
             {label}
@@ -150,9 +150,6 @@ export function BacktestDemo() {
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="none"
           className="h-60 w-full touch-pan-y"
-          // B25-demo (P3-11 r3, lib/page.ts): the quiet beat-map marker of the thesis play (the lazy
-          // chunk registers this plot live; server markup so the marker never depends on timing)
-          data-beat="B25-demo"
           role="img"
           aria-label="Conceptual, synthetic equity curve illustrating how realistic costs and out-of-sample testing erode a naïve backtest."
           onPointerMove={onMove}
@@ -253,7 +250,7 @@ export function BacktestDemo() {
         </div>
       </div>
 
-      <p className="mt-tier-group max-w-body type-small text-fg-muted lg:type-body">
+      <p className="mt-tier-group max-w-body type-small text-fg-muted">
         Synthetic illustration, not my results. Same idea every strategy meets:
         a curve that looks unbeatable with{" "}
         <span className="text-fg">no costs and in-sample tuning</span>{" "}

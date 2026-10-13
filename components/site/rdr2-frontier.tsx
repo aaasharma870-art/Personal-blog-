@@ -133,11 +133,7 @@ export function TrailMap({ className }: { className?: string }) {
   return (
     <figure className={cn("w-full", className)} data-motif="trail-map" {...beatAttrs("B41", { weight: 2 })}>
       <div className="relative">
-        {/* overflow CLIP, not hidden (P3-11 r3): a hidden box is a scroll
-            container, so the fog's view() timeline (app/globals.css) took
-            this box as its scroller and never lifted with the page (r2 J1 #5:
-            B41 "rigid scroll only") */}
-        <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-clip rounded-[4px]">
+        <div aria-hidden="true" className="trail-map relative aspect-[800/260] overflow-hidden rounded-[4px]">
           <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" focusable="false" preserveAspectRatio="xMidYMid slice">
             <g fill="none" strokeLinecap="round" strokeLinejoin="round">
               {/* the neatline: a double rule, like a printed sheet */}

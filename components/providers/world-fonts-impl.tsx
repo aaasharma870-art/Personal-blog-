@@ -7,255 +7,87 @@
    (phones never start it, so they fetch no world face):
    1. waits for the warm-up — ladder step 5 on DESKTOP_FINE (after the
       prologue's quiet window, one idle slice per step); on a wide touch
-      screen the quiet end, then an idle slice (`onIdle`). PIRATES gates
-      nothing (P3-11 r3, J9 F1): its head is the name's file and its body
-      is preloaded with `font-display: optional` (app/layout.tsx, app/
-      globals.css), live from first paint and never swapped, so #about and
-      the journey never re-flow; its token is still added at once (no face
-      to load, no restyle);
-   2. LOADS a world's faces (network only, nothing changes on screen) when
-      any of its planes comes within 150% of a viewport (above or below);
-   3. SWAPS (lib/world-fonts.ts markWorldFontsReady: the token) once the
-      faces have loaded AND none of the world's text is on screen (P3-11,
-      J8 #4: CLS 0). A swap re-flows the world's text; off screen below,
-      nothing visible moves; off screen above, the browser's scroll
-      anchoring keeps the view still. A reader already inside the world
-      (a deep link, a fast scroll, reduced motion) keeps the fallback face
-      until the world leaves the screen: a face that never jumps under the
-      reader beats one that arrives mid-sentence. Never during the
-      prologue's flight or its quiet window (the titles); in the 3 s grace
-      after the titles only while the scroll is still; each swap waits for
-      an idle slice (≈ 11–39 ms of style at 1440: app/globals.css scopes
-      the token to the world's own planes);
-   4. re-measures scroll (requestScrollRefresh: Lenis + ScrollTrigger) after
-      each swap (the faces' own `loadingdone` changes no layout: the token
-      is not there yet).
-   The text a world's token changes: its [data-world] planes (head, act
-   lettering, prose), minus the house-typed hero, header and prologue, plus
-   every .world-face-<world> caption on another world's plane.
+      screen the quiet end, then an idle slice (`onIdle`);
+   2. then adds a world's token (lib/world-fonts.ts markWorldFontsReady)
+      when any of its planes comes within 150% of a viewport (above or
+      below), so the faces swap while the world is still off screen. At the
+      top of the page that is Pirates (the hero) at once; a deep link marks
+      the world it lands in, not the ones it skipped;
+   3. re-measures scroll (requestScrollRefresh: Lenis + ScrollTrigger) each
+      time fonts finish loading (`loadingdone`): a face swap re-flows text.
    Nothing here renders, so hydration is untouched (the tokens are added in
    an effect, after mount).
    ========================================================================== */
 
 import { useEffect } from "react";
-import { DESKTOP_FINE, DESKTOP_WIDE, motionOffNow } from "@/lib/flags";
+import { DESKTOP_FINE, DESKTOP_WIDE } from "@/lib/flags";
 import { onIdle } from "@/lib/idle";
-import { inQuietGrace, isQuiet, sinceScroll, whenLadder, whenQuietEnd } from "@/lib/ladder";
+import { whenLadder, whenQuietEnd } from "@/lib/ladder";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
 import { markWorldFontsReady, worldFontsMarked } from "@/lib/world-fonts";
 import { WORLD_IDS, type WorldId } from "@/lib/worlds";
 
-type FilmWorld = Exclude<WorldId, "house">;
-
 /** PHASE3-SPEC §5.5: a world loads when one of its planes is this close. */
 const APPROACH_MARGIN = "150% 0px";
-/** "On screen" for a swap: the viewport plus a small band (a glide's last
- *  frames, the sticky header). */
-const VIEW_MARGIN = "12% 0px";
-/** VIEW_MARGIN as a share of the viewport (the swap's own re-check). */
-const VIEW_PAD = 0.12;
-/** In the grace after the titles, a swap waits for the scroll to be still
- *  this long. */
-const GRACE_STILL_MS = 250;
 /** If the ladder never reaches step 5 (a stalled step), start anyway this
  *  long after the quiet end. */
 const LADDER_FALLBACK_MS = 8000;
 
-const FILM_WORLDS = WORLD_IDS.filter((w): w is FilmWorld => w !== "house");
-const isFilmWorld = (w: string | undefined): w is FilmWorld => FILM_WORLDS.some((f) => f === w);
+const FILM_WORLDS = WORLD_IDS.filter((w): w is Exclude<WorldId, "house"> => w !== "house");
+const isFilmWorld = (w: string | undefined): w is Exclude<WorldId, "house"> =>
+  FILM_WORLDS.some((f) => f === w);
 
-/** Each world's gated faces as [the next/font var on <html>, weight]
- *  (lib/world-fonts.ts loads the same). Pirates has none: its head is the
- *  name's file and its body is preloaded and optional (never gated). */
-const FACES: Readonly<Record<FilmWorld, readonly (readonly [string, number])[]>> = {
-  pirates: [],
-  idiots: [
-    ["--font-world-idiots-head", 700],
-    ["--font-world-idiots-lead", 400],
-  ],
-  rdr2: [
-    ["--font-world-rdr2-head", 400],
-    ["--font-world-rdr2-body", 400],
-  ],
-  hp: [
-    ["--font-world-hp-head", 400],
-    ["--font-world-hp-body", 400],
-  ],
-};
-
-/** House-typed planes: no world face in them (app/p3/type.css). */
-const HOUSE = "header, #intro, #intro-caps, [data-hero]";
-
-/** The boxes whose text a world's token changes: every `[data-world]`
- *  plane but the house-typed ones (a `display: contents` frame stands in
- *  by its element children), plus the `.world-face-<world>` captions that
- *  sit on another world's plane. Pirates gates only its BODY face (its head
- *  is the name's file): only its prose sections, never the act-1 card. */
-function targets(): [Element, FilmWorld][] {
-  const out: [Element, FilmWorld][] = [];
-  const add = (el: Element, w: FilmWorld) => {
-    if (!el.closest(HOUSE)) out.push([el, w]);
-  };
+/** The boxes to watch for each world: every `[data-world]` plane but the
+ *  header and the prologue; a `display: contents` frame (SectionFrame)
+ *  stands in by its element children. */
+function targets(): [Element, Exclude<WorldId, "house">][] {
+  const out: [Element, Exclude<WorldId, "house">][] = [];
   for (const el of document.querySelectorAll<HTMLElement>("[data-world]")) {
     const w = el.dataset.world;
-    if (!isFilmWorld(w)) continue;
-    if (w === "pirates" && (!el.hasAttribute("data-section") || el.hasAttribute("data-act-card"))) continue;
-    if (el.getClientRects().length > 0) add(el, w);
-    else for (const child of el.children) add(child, w);
-  }
-  for (const w of FILM_WORLDS) {
-    for (const el of document.querySelectorAll(`.world-face-${w}`)) {
-      if (!el.closest(`[data-world="${w}"]`) && !el.closest(HOUSE)) out.push([el, w]);
-    }
+    if (!isFilmWorld(w) || el.closest("header, #intro, #intro-caps")) continue;
+    if (el.getClientRects().length > 0) out.push([el, w]);
+    else for (const child of el.children) out.push([child, w]);
   }
   return out;
 }
 
-/** Watch every film world; `eager` worlds load without waiting to be
- *  approached. Returns the cleanup. */
-function watchWorlds(ready: Promise<void>, eager: ReadonlySet<FilmWorld>): () => void {
-  const marked = new Set<string>(worldFontsMarked());
-  const loading = new Map<FilmWorld, Promise<void>>();
-  const loaded = new Set<FilmWorld>();
-  const onScreen = new Map<FilmWorld, Set<Element>>(FILM_WORLDS.map((w) => [w, new Set()]));
-  const byTarget = new Map<Element, FilmWorld>();
-  let dead = false;
-  let warmed = false;
-  const pendingSwap = new Set<FilmWorld>();
-  let cancelIdle: (() => void) | null = null;
-
-  // the next/font family names, read once, before any token restyles <html>
-  const style = window.getComputedStyle(document.documentElement);
-  const families = Object.fromEntries(
-    FILM_WORLDS.map((w) => [w, FACES[w].map(([v, weight]) => [style.getPropertyValue(v).trim(), weight] as const)]),
-  ) as Record<FilmWorld, (readonly [string, number])[]>;
-
-  const load = (w: FilmWorld): void => {
-    if (marked.has(w) || loading.has(w)) return;
-    const fonts = document.fonts;
-    const p = Promise.all(
-      families[w].map(([family, weight]) =>
-        family && fonts?.load ? fonts.load(`${weight} 1em ${family}`).then(noop, noop) : undefined,
-      ),
-    ).then(() => {
-      loaded.add(w);
-      trySwap(w);
-    });
-    loading.set(w, p);
-  };
-
-  const swapNow = (): void => {
-    cancelIdle = null;
-    if (dead) return;
-    // the prologue's flight or titles: after its quiet window. In the 3 s
-    // grace after the titles, only while the reader is not scrolling (the
-    // first wheel after the titles never meets a restyle)
-    const root = document.documentElement.classList;
-    if (isQuiet() || (root.contains("intro-armed") && root.contains("intro-launched"))) {
-      void whenQuietEnd().then(() => pendingSwap.forEach(trySwap));
-      return;
-    }
-    if (inQuietGrace() && sinceScroll() < GRACE_STILL_MS) {
-      window.setTimeout(() => pendingSwap.forEach(trySwap), GRACE_STILL_MS);
-      return;
-    }
-    let any = false;
-    for (const w of [...pendingSwap]) {
-      pendingSwap.delete(w);
-      if (marked.has(w) || (onScreen.get(w)?.size ?? 0) > 0) continue;
-      // P3-11 r3 (J8 F10: a caption's film name re-flowed ON screen in
-      // trading-algos, work, beyond, act-4): the watched boxes are the ones
-      // present at start; a box React mounted (or re-mounted) since is not
-      // watched. Re-read this world's boxes now: one on screen is watched
-      // from here on and holds the swap until it leaves.
-      if (onScreenNow(w)) continue;
-      marked.add(w);
-      any = true;
-      // loaded: the token lands in this task, while the world is off screen
-      void markWorldFontsReady(w, 0);
-    }
-    if (any) requestScrollRefresh();
-  };
-
-  /** Any of `w`'s CURRENT boxes on screen (the viewport ± VIEW_PAD)? New
-   *  boxes join the watch. Runs in the swap's idle slice (layout is clean). */
-  function onScreenNow(w: FilmWorld): boolean {
-    const vh = window.innerHeight;
-    let seen = false;
-    for (const [el, tw] of targets()) {
-      if (tw !== w) continue;
-      if (!byTarget.has(el)) {
-        byTarget.set(el, w);
-        near.observe(el);
-        view.observe(el);
-      }
-      const r = el.getBoundingClientRect();
-      if (r.height > 0 && r.bottom > -vh * VIEW_PAD && r.top < vh * (1 + VIEW_PAD)) seen = true;
-    }
-    return seen;
-  }
-
-  function trySwap(w: FilmWorld): void {
-    if (dead || marked.has(w) || !loaded.has(w)) return;
-    if ((onScreen.get(w)?.size ?? 0) > 0) return; // when it leaves the screen
-    pendingSwap.add(w);
-    cancelIdle ??= onIdle(swapNow, { timeout: 300 });
-  }
-
-  // 2. approach → load (eager worlds load at once; the rest after warm-up)
-  const near = new IntersectionObserver(
+/** Watch every film world's planes; returns the cleanup. */
+function watchWorlds(): () => void {
+  const done = new Set<string>(worldFontsMarked());
+  const byTarget = new Map<Element, Exclude<WorldId, "house">>();
+  const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
+        if (!e.isIntersecting) continue;
         const w = byTarget.get(e.target);
-        if (!w || !e.isIntersecting) continue;
-        if (warmed || eager.has(w)) load(w);
+        if (!w || done.has(w)) continue;
+        done.add(w);
+        // the faces load first and the token follows (≤ 4 s): the swap lands
+        // once, while the world is still ≥ 150% of a viewport away
+        void markWorldFontsReady(w, 4000);
+        for (const [t, tw] of byTarget) if (tw === w) io.unobserve(t);
       }
+      if (FILM_WORLDS.every((w) => done.has(w))) io.disconnect();
     },
     { rootMargin: APPROACH_MARGIN },
   );
-  // 3. on screen → hold the swap; off screen → swap if loaded
-  const view = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        const w = byTarget.get(e.target);
-        if (!w) continue;
-        const set = onScreen.get(w)!;
-        if (e.isIntersecting) set.add(e.target);
-        else set.delete(e.target);
-        if (!set.size) trySwap(w);
-      }
-    },
-    { rootMargin: VIEW_MARGIN },
-  );
   for (const [el, w] of targets()) {
-    if (marked.has(w)) continue;
+    if (done.has(w)) continue;
     byTarget.set(el, w);
-    near.observe(el);
-    view.observe(el);
+    io.observe(el);
   }
-  eager.forEach(load);
-  void ready.then(() => {
-    if (dead) return;
-    warmed = true;
-    // re-observe: the first callback reports the worlds already within reach
-    near.disconnect();
-    for (const [el] of byTarget) near.observe(el);
-  });
+  const fonts = document.fonts;
+  const onLoaded = () => requestScrollRefresh();
+  fonts?.addEventListener?.("loadingdone", onLoaded);
   return () => {
-    dead = true;
-    cancelIdle?.();
-    near.disconnect();
-    view.disconnect();
+    io.disconnect();
+    fonts?.removeEventListener?.("loadingdone", onLoaded);
   };
 }
 
-const noop = () => undefined;
-
-/** Resolves when world fonts may start (PHASE3-SPEC §3.1 ladder step 5).
- *  With motion off the ladder halts, and nothing animates that a load could
- *  jank: after the quiet end and an idle slice, as on a touch screen. */
+/** Resolves when world fonts may start (PHASE3-SPEC §3.1 ladder step 5). */
 function warmedUp(): Promise<void> {
-  if (window.matchMedia(DESKTOP_FINE).matches && !motionOffNow()) {
+  if (window.matchMedia(DESKTOP_FINE).matches) {
     const fallback = whenQuietEnd().then(
       () => new Promise<void>((r) => window.setTimeout(r, LADDER_FALLBACK_MS)),
     );
@@ -275,13 +107,9 @@ export default function WorldFontsImpl(): null {
       if (armed || !wide.matches) return;
       armed = true;
       wide.removeEventListener("change", arm);
-      // one idle slice after hydration, so the page's own first work goes first
-      onIdle(
-        () => {
-          if (!cancelled) stop = watchWorlds(warmedUp(), new Set<FilmWorld>(["pirates"]));
-        },
-        { timeout: 2000 },
-      );
+      void warmedUp().then(() => {
+        if (!cancelled) stop = watchWorlds();
+      });
     };
     arm();
     // a window widened past 64rem later (phones never get here)
