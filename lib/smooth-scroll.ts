@@ -17,8 +17,10 @@
    - the load-time hash hold (`hashHold`, `reapplyHash()`): a deep link at
      DESKTOP_FINE is landed instantly and kept at its target through the
      stream and the late layout, in every motion state, until the visitor
-     scrolls, clicks or jumps. A plain timer and a ResizeObserver: no Lenis,
-     GSAP or <SmoothScroll/> needed.
+     scrolls (any scroll that moves the target in the viewport: find-in-page
+     and a scrollbar drag included), clicks or jumps, or until the hold has
+     not had to move the page for HOLD_QUIET_MS. A plain timer and a
+     ResizeObserver: no Lenis, GSAP or <SmoothScroll/> needed.
    - lockScroll()/unlockScroll(): the modal lock (body overflow + lenis.stop).
    - requestScrollRefresh(): 200 ms debounced `lenis.resize()` +
      `ScrollTrigger.sort()/refresh()`, deferred while Lenis glides.
@@ -311,8 +313,28 @@ let inputTracked = false;
  *  that jump, which runs before the streamed sections are placed and never
  *  retries — 3 of 12 loads landed). The hold needs no Lenis, GSAP or
  *  <SmoothScroll/>: a plain timer and a ResizeObserver. Phones and touch
- *  tablets (below DESKTOP_FINE) keep the browser's own jump (Phase 4). */
+ *  tablets (below DESKTOP_FINE) keep the browser's own jump (Phase 4).
+ *
+ *  It ends three ways: an input (wheel, touch, pointerdown, a listed key), a
+ *  scroll that moved the target in the viewport (`holdAt`: find-in-page, a
+ *  scrollbar drag and a screen reader's cursor announce none of those
+ *  inputs), and HOLD_QUIET_MS without the hold having to move the page once
+ *  the stream is complete and React hydrated (P3-11 final pass: the observer
+ *  used to live for the whole page view). */
 let hashHold = false;
+/** The page as the hold last left it: the scroll y, and the target's top in
+ *  the viewport. Null until the hold has landed. */
+let holdAt: { y: number; top: number } | null = null;
+/** How far (px) a scroll may end from `holdAt` and still be the hold's own:
+ *  device-pixel rounding, a Lenis limit shorter than the page's. */
+const HOLD_SLOP = 4;
+/** The hold ends this long after it last moved the page, once the stream is
+ *  complete and the page hydrated. */
+const HOLD_QUIET_MS = 5000;
+/** The hold never outlives this (ms since navigation start), whatever the
+ *  stream and hydration are doing. */
+const HOLD_MAX_MS = 30000;
+let holdTimer: ReturnType<typeof setTimeout> | undefined;
 /** A streamed section the page has not placed yet (it has no box). */
 const HIDDEN_STREAM = "div[hidden][id^='S:']";
 /** Watches <main>'s height while the hash is held (reduced motion and Pause
@@ -324,6 +346,29 @@ export function dropHashHold(): void {
   hashHold = false;
   hashWatch?.disconnect();
   hashWatch = null;
+  holdAt = null;
+  clearTimeout(holdTimer);
+  holdTimer = undefined;
+  window.removeEventListener("scroll", onHoldScroll);
+}
+/** A scroll that moved the target in the viewport is the visitor's. One that
+ *  left the target where it was is the browser's scroll anchoring following
+ *  a layout shift above it (its scroll event can come before the observer's
+ *  callback), and the hold keeps its place. */
+function onHoldScroll(): void {
+  const at = holdAt;
+  const el = at && resolveTarget(window.location.hash);
+  if (el && at && Math.abs(window.scrollY - at.y) > HOLD_SLOP && Math.abs(el.getBoundingClientRect().top - at.top) > HOLD_SLOP) dropHashHold();
+}
+/** (Re)start the quiet period: the hold has just moved the page, so the
+ *  layout is still settling. */
+function armHoldExpiry(): void {
+  clearTimeout(holdTimer);
+  holdTimer = setTimeout(() => {
+    const settled = window.__pageHydrated && !document.querySelector(`template[id^='B:'], ${HIDDEN_STREAM}`);
+    if (settled || performance.now() > HOLD_MAX_MS) dropHashHold();
+    else armHoldExpiry();
+  }, HOLD_QUIET_MS);
 }
 if (typeof window !== "undefined" && window.location.hash.length > 1) {
   try {
@@ -343,6 +388,7 @@ if (typeof window !== "undefined" && window.location.hash.length > 1) {
     };
     for (const ev of ["wheel", "touchmove", "pointerdown"] as const) window.addEventListener(ev, drop, opts);
     window.addEventListener("keydown", onKey, opts);
+    window.addEventListener("scroll", onHoldScroll, { passive: true });
     // a target the stream has not placed yet (still in its hidden Suspense
     // div; an act card without its pin wrapper, ≤ 3 s) is retried every
     // 150 ms; while the stream is still arriving the target is re-landed on
@@ -409,10 +455,16 @@ export function reapplyHash(): void {
   const el = resolveTarget(window.location.hash);
   if (!el || el.closest(HIDDEN_STREAM)) return;
   const y = clampY(targetY(el, "start"));
-  if (Math.abs(y - window.scrollY) < 2) return;
+  if (Math.abs(y - window.scrollY) < 2) {
+    holdAt = { y: window.scrollY, top: el.getBoundingClientRect().top };
+    if (holdTimer === undefined) armHoldExpiry();
+    return;
+  }
   const l = lenis;
   if (l) l.scrollTo(y, { immediate: true, force: true });
   else window.scrollTo({ top: y, behavior: "instant" });
+  holdAt = { y: window.scrollY, top: el.getBoundingClientRect().top }; // where it ended (Lenis clamps to its own limit)
+  armHoldExpiry();
   gsapIfLoaded()?.ScrollTrigger.update();
   emit("scroll:jump", { y, immediate: true });
 }
