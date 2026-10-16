@@ -22,3 +22,19 @@
     display: none;
   }
 }
+
+/* LENGTH-1 (Oct 16): "View the quant portfolio" and "Skip to the research"
+   both jump to #work, whose first screen used to be the head picture (800 px
+   of pen on a desk) with the heading below the fold. targetY reads the
+   target's scroll-margin-top, so a negative one lands the jump on the
+   heading and the first rule/gauntlet instead: the section's padding, the
+   3:1 head plate (a third of the width) and the gap under it are skipped,
+   and the heading sits just under the header (the root scroll-padding). Desktop only (the plate is
+   4:3 below 640 px and phones keep the native anchor). */
+@media (min-width: 64rem) {
+  section#work {
+    /* + the root's scroll-padding-top (header + 24 px) keeps the heading
+       just under the header */
+    scroll-margin-top: calc(0px - var(--section-pad) - 100vw / 3 - var(--spacing-tier-block));
+  }
+}

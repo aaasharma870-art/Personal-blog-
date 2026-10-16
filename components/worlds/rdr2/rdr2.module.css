@@ -21,7 +21,7 @@
 @media (min-width: 64rem) {
   .band {
     /* the developed plate of card II→III, continued (T8: 0 cut) */
-    min-height: min(80vh, 56.25vw);
+    min-height: min(62vh, 43vw); /* was 80vh / 56.25vw: LENGTH-1 */
     padding-top: calc(var(--header-h) + 3rem);
     padding-bottom: 1.5rem;
   }
@@ -146,7 +146,7 @@
   --hb-w: min(24rem, 86cqw);
   --img-w: calc(var(--hb-w) / var(--pw));
   --img-h: calc(var(--img-w) * var(--ar));
-  --board-top: clamp(3.25rem, 6vw, 5.5rem);
+  --board-top: clamp(1.75rem, 3vw, 3rem); /* was clamp(3.25rem, 6vw, 5.5rem): LENGTH-1 */
   container-type: inline-size;
   position: relative;
   isolation: isolate;
@@ -158,7 +158,7 @@
    transform (a transform makes it the containing block) */
 .boardCam {
   position: relative;
-  padding-block: var(--board-top) clamp(3rem, 5vw, 4.5rem);
+  padding-block: var(--board-top) clamp(1.75rem, 3vw, 2.75rem);
 }
 .boardPlate {
   position: absolute;
@@ -401,7 +401,7 @@
   .campCopy {
     max-width: 46%;
     padding-top: 2rem;
-    padding-bottom: 12rem; /* the camp's lit foot shows under the last voice */
+    padding-bottom: 6rem; /* the camp's lit foot shows under the last voice (was 12rem: LENGTH-1) */
   }
 }
 /* cap.voices in the head (desktop; < 1024 the mobile still carries it) */

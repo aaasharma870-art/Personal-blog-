@@ -348,7 +348,7 @@ export function JournalSpread({
             <Rise as="li" key={post.title} delay={Math.min(i, 3) * 0.06} className="border-b border-rule">
               <div
                 data-entry={i}
-                className="grid grid-cols-[1fr_auto] items-start gap-x-6 py-tier-block lg:block"
+                className="grid grid-cols-[1fr_auto] items-start gap-x-6 py-tier-group lg:block"
                 onPointerEnter={leafing ? undefined : () => setHovered(i)}
               >
                 <div className="min-w-0">
