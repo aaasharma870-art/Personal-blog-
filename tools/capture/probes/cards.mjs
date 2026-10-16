@@ -23,7 +23,7 @@
 
 const TRAVEL = { opening: 90, seam: 110, tintype: 90, ignite: 110 };
 const PS = [0.05, 0.22, 0.45, 0.5, 0.75, 0.9, 1];
-const phaseOf = (v) => (v >= 0.92 ? "e" : v >= 0.68 ? "m" : v >= 0.5 ? "b" : "a");
+const phaseOf = (v) => (v >= 0.88 ? "e" : v >= 0.58 ? "m" : v >= 0.5 ? "b" : "a");
 
 export default async function probe(page, ctx) {
   const SKIP = new Set(String(ctx.args["cards-skip"] ?? "").split(",").filter(Boolean));

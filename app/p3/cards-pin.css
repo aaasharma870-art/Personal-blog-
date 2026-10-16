@@ -11,11 +11,11 @@
    ========================================================================== */
 
 /* — 3. The lower bar's states (card-p3.tsx `data-card-phase` on the live
-     pinned card: a < .50 ≤ b < .68 ≤ m < .92 ≤ e). The h2 + line and the
+     pinned card: a < .50 ≤ b < .58 ≤ m < .88 ≤ e). The h2 + line and the
      MOMENT caption carry star (a) and the settle; the logline subtitle
-     carries star (b), fading out (200 ms) as the mask opens the bars. The
+     carries star (b), fading out (200 ms) as the title leaves. The
      static card (no phase: Pause, RM, not yet live) shows the settled bar.
-     title.mask ALT: the rising title returns at .68. Opacity / transform
+     title.mask ALT: the rising title returns at .58. Opacity / transform
      only, by state, never scrubbed. — */
 [data-card-phase] .act-card-lower,
 [data-card-phase] .act-card-under {
@@ -34,6 +34,10 @@
 [data-card-phase="b"] .act-card-subtitle,
 [data-card-phase="m"] .act-card-subtitle {
   opacity: 1;
+  /* a dissolve, not a swap: the lower bar's lines leave in 200 ms, then the
+     logline comes up over 320 ms (the two are never both at full) */
+  transition-duration: 320ms;
+  transition-delay: 140ms;
 }
 [data-title-mask="alt"][data-card-phase="b"] .act-card-lower {
   transform: translateY(0.75rem);
@@ -53,32 +57,46 @@
 [data-gl="on"] [data-gl-replaced] {
   visibility: hidden;
 }
-/* the act title as a mask (css tier, §8.1): a deep rect with the title cut
-   out, zoomed by transform (no will-change: re-rastered crisp) */
-/* the exit: a 300 ms fade by state (card-p3.tsx TITLE_DONE), never a
-   scrubbed half-letter held at rest */
-.act-card-title-mask-wrap {
+/* the act title (card-p3.tsx TitleCard, BOTH tiers: it sits above the GL
+   canvas, which draws nothing from p .50): solid world lettering over a
+   gently dimmed plate. Opacity / a 3 % scale only, scrubbed by scroll
+   (cardPin.title); nothing is a mask, a zoom or a timer. The face and the
+   case come from the lettering registry (lettered-title font-world-act /
+   uppercase, set in the markup); the size is fitted to the frame in JS
+   (--title-fs), 30 % of the frame's height at most. */
+.act-card-title {
   position: absolute;
   inset: 0;
   z-index: 2;
+  display: grid;
+  place-items: center;
   pointer-events: none;
-  transition: opacity 300ms ease-out;
 }
-.act-card-title-mask-wrap[data-out] {
+/* the plate's dim: the world's deep over everything, scrubbed 0 → .52 */
+.act-card-title-dim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg);
   opacity: 0;
 }
-.act-card-title-mask {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-  overflow: visible;
-}
-.act-card-title-mask-text {
-  font-family: var(--world-font-head, var(--world-font-act, serif));
-  font-weight: var(--world-head-weight, 400);
+.act-card-title-text {
+  position: relative;
+  margin: 0;
+  width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: var(--title-fs, 4rem);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.04;
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: var(--fg);
+  opacity: 0;
+  /* a soft halo of the deep behind the strokes (never a hard edge) */
+  text-shadow:
+    0 0.03em 0.35em color-mix(in oklab, var(--bg) 85%, transparent),
+    0 0 0.9em color-mix(in oklab, var(--bg) 60%, transparent);
 }
 /* title.mask ALT: plain bars opening (scaleY from the frame's edges) */
 .act-card-bars {

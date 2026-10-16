@@ -288,7 +288,8 @@ export function spanUnit<T>(at: readonly number[], to: readonly T[]): [number[],
    boot gate only): the hook frame at p ≤ .05, star (a) the world transition
    p 0–.45 (the tintype's develop starts at its flash, .03), the settle
    .45–.50 (the new world breathes; quiet), star (b) the push through the
-   act title p .50–1 (the letters open from .68). The card draws a DAMPED p
+   act title p .50–1 (the title fades in over .58–.66, HOLDS solid and still
+   over .66–.88, leaves over .88–.97: crossings pass). The card draws a DAMPED p
    inside the pin only: p += (p_raw − p)·(1 − e^(−λ·dt)), one rAF owner per
    card while |p_raw − p| > eps, snapping exactly to 0 and 1; an immediate
    jump (the cut, the chapter select, a hash) sets p = p_raw. In-flow
@@ -303,12 +304,17 @@ export const cardPin = {
   b: [0.5, 1],
   /** The hook frame is every p ≤ hook. */
   hook: 0.05,
-  /** The act title's letters start opening (css + GL). */
-  titleIn: 0.68,
-  /** The subtitle fades out as the mask opens the bars. */
-  titleOut: 0.92,
-  /** Damping rate λ (1/s) and the snap epsilon. */
-  lambda: 8,
+  /** The act title starts to appear (the lower bar's phase "m"). */
+  titleIn: 0.58,
+  /** The subtitle fades out as the title leaves (phase "e"). */
+  titleOut: 0.88,
+  /** The act title (card-p3.tsx TitleCard): solid lettering over a dimmed
+   *  plate, scroll-scrubbed and reversible. Fully visible and still over
+   *  [in[1], out[0]] (.22 of the card); `dim` is the plate's peak dim. */
+  title: { in: [0.58, 0.66], out: [0.88, 0.97], dim: 0.52 },
+  /** Damping rate λ (1/s) and the snap epsilon. Lenis already smooths the
+   *  scroll (lerp .1): at 8 the card trailed the page by ≈ 90 px. */
+  lambda: 12,
   eps: 0.002,
   /** The longest frame the damping integrates (s): the lag is in real time
    *  on a slow frame, not in frames (W2 gate: at a 64 ms cap a 3 fps frame

@@ -28,7 +28,9 @@ export default function GlFrame({ spec, p, onTier }: Props) {
   // the card's manifest choice (the one CARDS resolves its css side with):
   // spec.choice, else the act of this world in the film manifest
   const choice = spec.choice ?? film.acts.find((a) => a.world === spec.b.world)?.variant ?? null;
-  const title = useVariant(choice, "title.mask") === "default";
+  // the act title is a DOM layer on both tiers now (card-p3.tsx TitleCard):
+  // the GL draws no SDF knockout, so that chunk never loads
+  const title = false;
   const roll = useVariant(choice, "match.shape") === "alt";
   const latest = useRef({ spec, title, roll });
 

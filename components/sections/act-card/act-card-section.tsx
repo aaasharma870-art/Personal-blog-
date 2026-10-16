@@ -385,7 +385,9 @@ export function ActCardSection({
           caption={captionOf(chartKey) ? <SceneCaption k={chartKey} place="under" /> : null}
         />
       );
-      captions = cues(cue(settledKey("cap.act-1", "default"), { in: [0.55, 0.8] }));
+      // up early (a .15–.40 = p .07–.18): the caption is a full line well before
+      // the logline takes its place at p .50 (no ghost at 25 % opacity)
+      captions = cues(cue(settledKey("cap.act-1", "default"), { in: [0.15, 0.4] }));
       altCaptions = [];
       break;
     }

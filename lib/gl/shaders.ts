@@ -87,13 +87,14 @@ vec4 c=fl();c.rgb=mix(shape(c.rgb)*exp2(uFlash.y),vec3(1.),uFlash.x);o=vec4(clam
 
 /** Each flavour: `vec4 fl()` (≤ ~25 lines). t = uP. */
 const FL: Record<GlFlavour, string> = {
-  // Pirates spyglass: a brass-rimmed disc on the stern opens to the frame
-  iris: `vec4 fl(){float t=uP,e=t*t*(3.-2.*t),r=uRadius.x*pow(uRadius.y/uRadius.x,e),d=D(uv,uCenter),px=1./uRes.y;
-float k=d/r;vec3 c=T(uCenter+(uv-uCenter)*(1.-.07*k*k*k*k))*(1.-.45*S(.55,1.,k));
-vec3 o2=mix(F(uv)*.4,uDeep,.6);c=mix(c,o2,S(r-px,r+px,d));
-float w=.018,m=S(r-px,r,d)*(1.-S(r+w,r+w+px,d)),b=sin(clamp((d-r)/w,0.,1.)*PI);
-vec3 brass=vec3(.55,.4,.18)+vec3(.45,.38,.25)*b*(.7+.5*N(vec2(atan(uv.y-uCenter.y,(uv.x-uCenter.x)*A)*40.,d*600.)));
-return vec4(mix(c,brass,m),1.);}`,
+  // Pirates opening: a SOFT aperture on the ship (crossings pass). The disc is
+  // a solid core (uRadius's first half) and a feather out to its edge r, so
+  // the plate is visible, already wide open, at the hook; it grows until the
+  // core clears the frame. No brass rim, no hard edge.
+  iris: `vec4 fl(){float t=uP,e=t*t*(3.-2.*t),r=uRadius.x*pow(uRadius.y/uRadius.x,e),d=D(uv,uCenter);
+float k=d/r;vec3 c=T(uCenter+(uv-uCenter)*(1.-.05*k*k*k*k))*(1.-.4*S(.45,1.,k));
+vec3 o2=mix(F(uv)*.4,uDeep,.6);
+return vec4(mix(o2,c,1.-S(.5*r,r,d)),1.);}`,
 
   // Pirates breaker OUT: a wave front from the left, foam behind it; the
   // kraken swells under the sea at the hook
