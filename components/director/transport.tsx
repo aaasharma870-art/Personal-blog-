@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCcw, SkipBack, SkipForward, X } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { copyText } from "@/lib/sections";
@@ -38,12 +38,17 @@ import { clock } from "./plan";
    ========================================================================== */
 
 const W = "min(34rem, calc(100vw - 30rem))";
+/** The controls tuck away (the progress line stays) after this long without the pointer or a key,
+ *  so a held frame (an act's world, its title and logline) is never covered. */
+const IDLE_MS = 2600;
+/** What stays visible of the tucked transport (px): the progress line with its ticks. */
+const PEEK = 24;
 const t = (key: Parameters<typeof copyText>[0], extra?: Record<string, string | number>) => copyText(key, extra).text;
 
 const iconBtn =
-  "inline-flex size-10 items-center justify-center rounded-pill text-fg transition-colors duration-(--dur-micro) hover:bg-[color-mix(in_srgb,var(--fg)_12%,transparent)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent";
+  "inline-flex size-9 items-center justify-center rounded-pill text-fg transition-colors duration-(--dur-micro) hover:bg-[color-mix(in_srgb,var(--fg)_12%,transparent)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent";
 const textBtn =
-  "type-meta inline-flex min-h-10 items-center gap-2 rounded-pill px-4 text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright hover:shadow-[inset_0_0_0_1px_var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent";
+  "type-meta inline-flex min-h-9 items-center gap-2 rounded-pill px-4 text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright hover:shadow-[inset_0_0_0_1px_var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent";
 
 function runFastLane(): void {
   track("fast_lane");
@@ -59,6 +64,26 @@ export function Transport() {
   const clockEl = useRef<HTMLSpanElement>(null);
   const live = s.running;
   const frozen = s.paused || s.ended;
+  const [awake, setAwake] = useState(true);
+  const [near, setNear] = useState(false);
+  const open = awake || near || frozen;
+
+  // tuck away when the pointer and the keys have been quiet for a moment
+  useEffect(() => {
+    let timer = 0;
+    const wake = () => {
+      setAwake(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setAwake(false), IDLE_MS);
+    };
+    wake();
+    const ev = ["pointermove", "pointerdown", "keydown"] as const;
+    for (const e of ev) window.addEventListener(e, wake, { passive: true });
+    return () => {
+      window.clearTimeout(timer);
+      for (const e of ev) window.removeEventListener(e, wake);
+    };
+  }, []);
 
   // the entrance (opacity + rise on the inner box; the outer box owns the centring)
   useEffect(() => {
@@ -113,15 +138,21 @@ export function Transport() {
       data-house-type=""
       role="group"
       aria-label={t("dc.group")}
-      className="pointer-events-auto absolute bottom-4"
+      className="pointer-events-none absolute bottom-3"
       style={{ width: W, left: `max(50%, calc(${W} / 2 + 28rem))`, transform: "translateX(-50%)" }}
+      data-dc-open={open ? "" : undefined}
     >
       <div
         ref={root}
-        className="flex flex-col gap-1 rounded-[1.25rem] bg-bg px-3 pb-1 pt-2 text-fg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)]"
+        onPointerEnter={() => setNear(true)}
+        onPointerLeave={() => setNear(false)}
+        onFocusCapture={() => setNear(true)}
+        onBlurCapture={() => setNear(false)}
+        className="pointer-events-auto flex flex-col rounded-[1.1rem] bg-bg px-3 pb-0.5 pt-1.5 text-fg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)] transition-transform duration-300 ease-out"
+        style={{ transform: open ? "translateY(0)" : `translateY(calc(100% - ${PEEK}px))` }}
       >
         {s.ended ? (
-          <div className="flex flex-wrap items-center gap-2 pb-1">
+          <div className="flex flex-wrap items-center gap-2 pb-1.5">
             <button type="button" className={textBtn} onClick={() => restartDirectorsCut()} autoFocus>
               <RotateCcw aria-hidden="true" className="size-4" />
               {t("dc.replay")}
@@ -172,7 +203,7 @@ export function Transport() {
             </button>
           </div>
         )}
-        <div className="relative mx-2 h-7">
+        <div className="relative mx-2 h-5">
           <div
             ref={bar}
             role="progressbar"
@@ -180,7 +211,7 @@ export function Transport() {
             aria-valuemin={0}
             aria-valuemax={Math.max(1, Math.round(total))}
             aria-valuenow={0}
-            className="absolute inset-x-0 top-3 h-1.5 overflow-hidden rounded-pill bg-[color-mix(in_srgb,var(--fg)_16%,transparent)]"
+            className="absolute inset-x-0 top-2 h-1 overflow-hidden rounded-pill bg-[color-mix(in_srgb,var(--fg)_16%,transparent)]"
           >
             <div ref={fill} className="h-full origin-left bg-accent-bright" style={{ transform: "scaleX(0)" }} />
           </div>
@@ -195,13 +226,13 @@ export function Transport() {
                   title={label}
                   data-dc-tick={i}
                   onClick={() => seekDirectorsCut(i)}
-                  className="group absolute top-0 flex h-7 w-6 -translate-x-1/2 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
+                  className="group absolute top-0 flex h-5 w-6 -translate-x-1/2 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
                   style={{ left: `${Math.min(100, (s.starts[i] / total) * 100)}%` }}
                 >
                   <span
                     aria-hidden="true"
                     className={`block w-0.5 rounded-pill transition-[height,background-color] duration-(--dur-micro) ${
-                      i === s.chapter ? "h-4 bg-fg" : "h-3 bg-fg-muted group-hover:h-4 group-hover:bg-fg"
+                      i === s.chapter ? "h-3.5 bg-fg" : "h-2.5 bg-fg-muted group-hover:h-3.5 group-hover:bg-fg"
                     }`}
                   />
                 </button>

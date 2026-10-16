@@ -87,8 +87,6 @@ export type Plan = {
 
 /** Shortest ramp (s). */
 export const RMIN = 0.3;
-/** A leg is split into sub-legs no longer than this many viewports. */
-export const SPLIT_VH = 1.6;
 /** Keys closer than this many viewports merge (card keys never do). */
 const MERGE_VH = 0.45;
 
@@ -149,6 +147,39 @@ export function easeOf(e: Env): (x: number) => number {
   };
 }
 
+/** One easing for several legs run back to back (a span between two rests):
+ *  the normalised integral of their speed envelopes joined end to end. */
+export function easeOfMany(envs: Env[]): { T: number; ease: (x: number) => number } {
+  const T = envs.reduce((t, e) => t + e.T, 0);
+  const N = Math.min(4096, Math.max(512, Math.ceil(T * 120)));
+  const cum = new Float64Array(N + 1);
+  let acc = 0;
+  for (let i = 1; i <= N; i++) {
+    let t = ((i - 0.5) / N) * T;
+    let sp = 0;
+    for (const e of envs) {
+      if (t <= e.T || e === envs[envs.length - 1]) {
+        sp = envSpeed(e, Math.min(t, e.T));
+        break;
+      }
+      t -= e.T;
+    }
+    acc += sp;
+    cum[i] = acc;
+  }
+  const tot = acc || 1;
+  return {
+    T,
+    ease: (x: number) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      const f = x * N;
+      const i = Math.min(N - 1, Math.floor(f));
+      return (cum[i] + (cum[i + 1] - cum[i]) * (f - i)) / tot;
+    },
+  };
+}
+
 /** Sort by y and merge keys closer than MERGE_VH (card and dip-edge keys stay). */
 export function normalizeKeys(keys: Key[], vh: number): Key[] {
   const sorted = keys.map((k, i) => ({ k, i })).sort((p, q) => p.k.y - q.k.y || p.i - q.i).map((p) => p.k);
@@ -204,7 +235,7 @@ export function keySpeeds(keys: Key[], P: TourParams, vBase: number): number[] {
   });
 }
 
-export function buildEls(keys: Key[], P: TourParams, vBase: number, holdScale: number, vh: number): { els: El[]; total: number } {
+export function buildEls(keys: Key[], P: TourParams, vBase: number, holdScale: number): { els: El[]; total: number } {
   const els: El[] = [];
   const kv = keySpeeds(keys, P, vBase);
   let t = 0;
@@ -224,21 +255,17 @@ export function buildEls(keys: Key[], P: TourParams, vBase: number, holdScale: n
     }
     const d = next.y - k.y;
     if (d <= 0.5) continue;
-    const c = cruiseAfter(keys, i, P, vBase);
-    const n = Math.max(1, Math.ceil(d / (SPLIT_VH * vh)));
-    for (let j = 0; j < n; j++) {
-      const v0 = j === 0 ? kv[i] : c;
-      const v1 = j === n - 1 ? kv[i + 1] : c;
-      const env = solveLeg(d / n, v0, v1, c, P.a);
-      els.push({ k: "leg", a: i, b: i + 1, f0: j / n, f1: (j + 1) / n, env, d: d / n, t0: t, chapter: k.chapter });
-      t += env.T;
-    }
+    // one leg per key pair (the player chains the legs between two rests into ONE
+    // Lenis glide, so a seam at a pass key never costs a frame)
+    const env = solveLeg(d, kv[i], kv[i + 1], cruiseAfter(keys, i, P, vBase), P.a);
+    els.push({ k: "leg", a: i, b: i + 1, f0: 0, f1: 1, env, d, t0: t, chapter: k.chapter });
+    t += env.T;
   }
   return { els, total: t };
 }
 
-function summarise(tour: Tour, keys: Key[], P: TourParams, vBase: number, holdScale: number, vh: number): Plan {
-  const { els, total } = buildEls(keys, P, vBase, holdScale, vh);
+function summarise(tour: Tour, keys: Key[], P: TourParams, vBase: number, holdScale: number): Plan {
+  const { els, total } = buildEls(keys, P, vBase, holdScale);
   let holds = 0;
   let peak = 0;
   let accel = 0;
@@ -266,8 +293,8 @@ function summarise(tour: Tour, keys: Key[], P: TourParams, vBase: number, holdSc
 /** Solve the plan for the tour's target length: the base cruise by bisection
  *  (clamped to vMin..vMax); when the clamp binds, the holds scale instead.
  *  The returned total is what is achieved, whether or not it hits the target. */
-export function solvePlan(tour: Tour, keys: Key[], P: TourParams, vh: number): Plan {
-  const totalOf = (v: number, hs: number) => buildEls(keys, P, v, hs, vh).total;
+export function solvePlan(tour: Tour, keys: Key[], P: TourParams): Plan {
+  const totalOf = (v: number, hs: number) => buildEls(keys, P, v, hs).total;
   let v = P.vMax;
   let hs = 1;
   if (totalOf(P.vMax, 1) > P.target) {
@@ -300,7 +327,7 @@ export function solvePlan(tour: Tour, keys: Key[], P: TourParams, vh: number): P
     }
     v = hi;
   }
-  return summarise(tour, keys, P, v, hs, vh);
+  return summarise(tour, keys, P, v, hs);
 }
 
 /** TEMPO factor of a manifest tempo code. */

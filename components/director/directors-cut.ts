@@ -36,7 +36,7 @@ import { getLenis, haltGlide, scrollToTarget, setCameraOwnsScroll, whenUnlocked 
 import { markWorldFontsReady } from "@/lib/world-fonts";
 import type { WorldId } from "@/lib/worlds";
 import { inKeep, setDirectorsCutEnded, setDirectorsCutState, setPlayhead, type Tour } from "./api";
-import { easeOf, solveLeg, type El, type ElDip, type ElHold, type ElLeg, type Env, type Key, type Plan } from "./plan";
+import { easeOf, easeOfMany, solveLeg, type El, type ElDip, type ElHold, type ElLeg, type Env, type Key, type Plan } from "./plan";
 import { maxScroll, planTour, type Cut } from "./storyboard";
 import { TOURS } from "./timing";
 
@@ -109,12 +109,23 @@ function enterChapter(r: Run, el: El): void {
   }
 }
 
+/** The chapter on screen follows the playhead (a span can cross chapters). */
+function followChapter(r: Run): void {
+  const plan = r.plan;
+  if (!plan || !r.cut) return;
+  const t = playheadOf(r);
+  let i = Math.min(r.idx, plan.els.length - 1);
+  while (i > 0 && plan.els[i].t0 > t) i--;
+  while (i < plan.els.length - 1 && plan.els[i + 1].t0 <= t) i++;
+  enterChapter(r, plan.els[i]);
+}
+
 /* — glides ——————————————————————————————————————————————————————————— */
 
 /** One glide to `y1` shaped by `env`. Resolves true on arrival, false when
  *  cancelled (a pause / seek / stop) or when something else stopped it
  *  (a modal's scroll lock, the visitor's own scroll). */
-function glide(r: Run, y1: number, env: Env): Promise<boolean> {
+function glide(r: Run, y1: number, env: Env, easing?: (x: number) => number): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
     let settled = false;
     let raf = 0;
@@ -131,7 +142,7 @@ function glide(r: Run, y1: number, env: Env): Promise<boolean> {
     const dur = Math.max(0.05, env.T);
     // a glide that never reports (stopped by a lock, overridden): near its end = arrived
     const cap = window.setTimeout(() => end(Math.abs(window.scrollY - y1) < 12), dur * 1000 + 1500);
-    const ease = easeOf(env);
+    const ease = easing ?? easeOf(env);
     const l = getLenis();
     if (l) {
       l.scrollTo(y1, { duration: dur, easing: ease, force: true, onComplete: () => end(true) });
@@ -207,50 +218,70 @@ async function doHold(r: Run, g: number, el: ElHold, entry: Entry | null): Promi
   return g === r.gen && !r.stopped;
 }
 
-async function doLeg(r: Run, g: number, el: ElLeg, entry: Entry | null): Promise<boolean> {
+/** The legs between two rests, as ONE Lenis glide (the envelopes joined end
+ *  to end): a seam at a pass key would otherwise cost a frame (Lenis drops
+ *  the leftover time of a glide's last frame). Every leg is re-solved from
+ *  the live geometry NOW (a font swap or a streamed section only moves this
+ *  span's end, never breaks the run). `entry` resumes the first leg from a
+ *  page position at rest. Returns how many elements it ran (0 = stopped). */
+async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Promise<number> {
   const plan = r.plan!;
-  const a = plan.keys[el.a];
-  const b = plan.keys[el.b];
-  enterChapter(r, el);
-  // the live geometry NOW: this leg ends where its key is today
-  const yA = liveY(a);
-  const yB = liveY(b);
-  const yStart = yA + el.f0 * (yB - yA);
-  const y1 = clampY(yA + el.f1 * (yB - yA));
+  const A = TOURS[r.tour].a;
+  let last = first;
+  while (plan.els[last + 1]?.k === "leg") last++;
+  const legs = plan.els.slice(first, last + 1) as ElLeg[];
+  enterChapter(r, legs[0]);
   const y0 = entry?.y ?? window.scrollY;
-  const d = y1 - y0;
-  if (b.dip) warmWorld(plan.keys[el.b + 1]);
-  if (d > 1) {
-    const v0 = entry?.rest ? 0 : el.env.v0;
-    const env = solveLeg(d, v0, el.env.v1, el.env.c, TOURS[r.tour].a);
-    const planned = Math.max(1, y1 - yStart);
-    const done = Math.min(1, Math.max(0, (y0 - yStart) / planned));
-    setSeg(r, el.t0 + el.env.T * done, el.t0 + el.env.T, env.T);
-    const ok = await glide(r, y1, env);
-    if (g !== r.gen || r.stopped) return false;
-    if (!ok) {
-      // stopped by something else (a scroll lock, the visitor's scroll): pause
-      pause();
-      return false;
+  const envs: Env[] = [];
+  let at = y0;
+  let planned = 0;
+  let drawn = 0;
+  legs.forEach((el, i) => {
+    const b = plan.keys[el.b];
+    const yb = liveY(b);
+    if (b.dip) warmWorld(plan.keys[el.b + 1]);
+    const d = yb - at;
+    if (d > 1) {
+      envs.push(solveLeg(d, i === 0 && entry?.rest ? 0 : el.env.v0, el.env.v1, el.env.c, A));
+      at = yb;
     }
-    // layout moved under the leg and the key is a rest: one short corrective glide
-    if (el.f1 === 1 && el.env.v1 === 0) {
-      const yNow = liveY(b);
-      const off = yNow - window.scrollY;
-      if (Math.abs(off) > 8) {
-        const fix = solveLeg(Math.abs(off), 0, 0, 300, TOURS[r.tour].a);
-        const ok2 = await glide(r, yNow, fix);
-        if (g !== r.gen || r.stopped) return false;
-        if (!ok2) {
-          pause();
-          return false;
-        }
+    planned += el.env.T;
+    if (i === 0) {
+      const yA = liveY(plan.keys[el.a]);
+      drawn = Math.min(1, Math.max(0, (y0 - yA) / Math.max(1, yb - yA)));
+    }
+  });
+  const tFrom = legs[0].t0 + legs[0].env.T * drawn;
+  const tTo = legs[0].t0 + planned;
+  if (!envs.length) {
+    setSeg(r, tTo, tTo, 0);
+    return last - first + 1;
+  }
+  const { T, ease } = easeOfMany(envs);
+  setSeg(r, tFrom, tTo, T);
+  const ok = await glide(r, at, { v0: envs[0].v0, v1: envs[envs.length - 1].v1, c: 0, r1: 0, r2: 0, T }, ease);
+  if (g !== r.gen || r.stopped) return 0;
+  if (!ok) {
+    // stopped by something else (a scroll lock, the visitor's scroll): pause
+    pause();
+    return 0;
+  }
+  // layout moved under the glide and it ends on a rest: one short corrective glide
+  const lastLeg = legs[legs.length - 1];
+  if (lastLeg.env.v1 === 0) {
+    const yNow = liveY(plan.keys[lastLeg.b]);
+    const off = yNow - window.scrollY;
+    if (Math.abs(off) > 8) {
+      const fix = solveLeg(Math.abs(off), 0, 0, 300, A);
+      const ok2 = await glide(r, yNow, fix);
+      if (g !== r.gen || r.stopped) return 0;
+      if (!ok2) {
+        pause();
+        return 0;
       }
     }
-  } else {
-    setSeg(r, el.t0 + el.env.T, el.t0 + el.env.T, 0);
   }
-  return true;
+  return last - first + 1;
 }
 
 /** A dip to dark: the existing cut (fade in, jump, fade out) to `y`. */
@@ -265,6 +296,12 @@ async function doDip(r: Run, g: number, el: ElDip): Promise<boolean> {
   enterChapter(r, el);
   const inKey = plan.keys[el.b];
   setSeg(r, el.t0, el.t0 + el.dur, el.dur);
+  // the page keeps moving at the speed it left the last leg while the screen fades
+  // to dark (the cut's 140 ms fade-in), so there is no stop before the dip: the
+  // jump itself cancels this run-out
+  const prev = plan.els[r.idx - 1];
+  const v = prev?.k === "leg" ? prev.env.v1 : 0;
+  if (v > 40) void glide(r, clampY(window.scrollY + v * 0.4), { v0: v, v1: v, c: v, r1: 0, r2: 0, T: 0.4 });
   await dipTo(liveY(inKey), inKey);
   return g === r.gen && !r.stopped;
 }
@@ -282,9 +319,12 @@ async function conduct(r: Run, g: number): Promise<void> {
       const el = plan.els[r.idx];
       const entry = r.entry;
       r.entry = null;
-      const ok = el.k === "hold" ? await doHold(r, g, el, entry) : el.k === "leg" ? await doLeg(r, g, el, entry) : await doDip(r, g, el);
-      if (!ok || g !== r.gen || r.stopped) return;
-      r.idx++;
+      let ran = 0;
+      if (el.k === "hold") ran = (await doHold(r, g, el, entry)) ? 1 : 0;
+      else if (el.k === "leg") ran = await doSpan(r, g, r.idx, entry);
+      else ran = (await doDip(r, g, el)) ? 1 : 0;
+      if (!ran || g !== r.gen || r.stopped) return;
+      r.idx += ran;
     }
   } catch {
     if (g === r.gen) stop("error");
@@ -484,6 +524,7 @@ export function play(tour: Tour, fromTop = false): void {
     r.samples.push({ t: now, y: window.scrollY });
     if (r.samples.length > 40) r.samples.shift();
     if (!r.paused && r.plan && document.body.style.overflow === "hidden") freeze(r, "lock");
+    if (!r.paused && r.plan) followChapter(r);
     r.raf = requestAnimationFrame(sample);
   };
   r.raf = requestAnimationFrame(sample);

@@ -672,8 +672,6 @@ const copy = {
   "dc.group": p3("Director's cut"),
   "dc.progress": p3("Director's cut progress"),
   "dc.goto": p3("Go to {name}"),
-  "dc.tour.quick": p3("Quick tour"),
-  "dc.tour.full": p3("Full tour"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 

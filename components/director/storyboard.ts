@@ -235,6 +235,8 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
   if (tour === "full") {
     for (const s of el.querySelectorAll<HTMLElement>("[data-beat-star][data-beat-weight]")) {
       if (!shown(s) || s.getBoundingClientRect().height < 4) continue;
+      // a hidden egg or a toy's button is for the visitor to find: the camera never frames it
+      if (s.matches("button, [data-egg], [data-toy]")) continue;
       const w = Number(s.dataset.beatWeight);
       const fin = (s.dataset.beat ?? "").endsWith("-finale");
       if (!fin && (w < P.minW || s.matches(SCROLL_STAR))) continue;
@@ -375,7 +377,7 @@ export function planTour(tour: Tour): Cut | null {
     const k = keysFor(tour, level);
     if (!k) return null;
     const keys = normalizeKeys(k.keys, vh).map((key) => ({ ...key, y: clampY(key.y) }));
-    return { plan: solvePlan(tour, keys, P, vh), scenes: k.scenes };
+    return { plan: solvePlan(tour, keys, P), scenes: k.scenes };
   };
   if (tour === "quick") {
     const maxRank = Math.max(...Object.values(QUICK).map((q) => q.rank));
