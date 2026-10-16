@@ -312,8 +312,8 @@ html.js .game-pill > svg {
   font-weight: 700;
 }
 
-/* — The end: the last line IS the button ("Mischief managed." lettered, with
-     "Play it again" under it; components/site/play-again.tsx). One large,
+/* — The end: the credits' last line IS the button (the lettered line as its
+     face, "Play it again" under it; components/site/play-again.tsx). One large,
      solid, aqua-ringed button; the lettered face keeps its world lettering. — */
 .try-btn.try-end {
   display: inline-flex;
