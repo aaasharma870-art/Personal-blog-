@@ -40,10 +40,22 @@ const text = (k: CopyKey): string | null => {
 
 export type PopoverKind = "cut" | "games";
 
-export default function DockPopover({ kind, onDone }: { kind: PopoverKind; onDone: (refocus: boolean) => void }) {
+export default function DockPopover({
+  kind,
+  onDone,
+  onReady,
+}: {
+  kind: PopoverKind;
+  onDone: (refocus: boolean) => void;
+  /** the popover mounted (the trigger's aria-expanded follows this) */
+  onReady?: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current?.querySelector<HTMLElement>("button")?.focus({ preventScroll: true });
+    onReady?.();
+    // once, on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return kind === "cut" ? <CutChooser box={ref} onDone={onDone} /> : <GamesMenu box={ref} onDone={onDone} />;
 }
@@ -157,7 +169,7 @@ function GamesMenu({ box, onDone }: BoxProps) {
       n: `${count ?? "–"}/${HUNT_TOTAL}`,
       button: open,
       run: () => {
-        onDone(false);
+        onDone(true);
         window.setTimeout(() => window.dispatchEvent(new Event(HUNT_PANEL_EVENT)), 0);
       },
     });
@@ -168,7 +180,9 @@ function GamesMenu({ box, onDone }: BoxProps) {
     kbd: page.mac ? "⌘ K" : "Ctrl K",
     button: open,
     run: () => {
-      onDone(false);
+      // focus returns to the Games button first: the palette remembers it and
+      // gives it back on close (never <body>)
+      onDone(true);
       window.setTimeout(() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT)), 0);
     },
   });

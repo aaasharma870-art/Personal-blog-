@@ -1,6 +1,6 @@
 import type { Tempo } from "@/lib/beats";
 import { anchorId, copyText, copyVisible, pageItems } from "@/lib/sections";
-import { Glyphed } from "@/components/director/glyphed";
+import { Play } from "lucide-react";
 
 /* ============================================================================
    "▶ Director's cut" BUTTON (spec §11.1; plan DP-17) — OWNER: W3-CINEMA.
@@ -58,7 +58,9 @@ export function DirectorsCutButton() {
       data-house-type=""
       className="try-btn hidden df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
     >
-      <Glyphed text={label.text} />
+      <Play aria-hidden="true" strokeWidth={2} />
+      {/* the copy's leading play glyph is the icon above */}
+      <span>{label.text.replace(/^▶\s*/u, "")}</span>
       {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
     </button>
   );

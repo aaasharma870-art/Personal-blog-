@@ -187,6 +187,9 @@ export default function PaletteDialog({
   const [active, setActive] = useState(0);
   // what the page holds right now (the shell mounts a fresh dialog per open)
   const [page] = useState<PageSnapshot>(snapshotPage);
+  // who had focus when it opened (a header button, the Games menu's Search
+  // row): given back on close, so Esc never drops focus to <body>
+  const [opener] = useState<Element | null>(() => document.activeElement);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -363,8 +366,11 @@ export default function PaletteDialog({
     return () => {
       clearTimeout(t);
       unlockScroll("palette");
+      // a command that moves focus itself (a jump, the hunt panel) runs after
+      // this and wins; with none, focus is back where it was
+      if (opener instanceof HTMLElement && opener !== document.body && opener.isConnected) opener.focus({ preventScroll: true });
     };
-  }, [open]);
+  }, [open, opener]);
 
   const runAt = (i: number) => {
     const cmd = filtered[i];

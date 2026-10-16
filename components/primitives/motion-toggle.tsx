@@ -37,6 +37,8 @@ type MotionToggleProps = {
    *  "Pause"; app/p3/dock.css `.dock-word`). Hidden from assistive tech: the
    *  accessible name stays `label`. */
   word?: string;
+  /** A second, quieter line under `word` (the header's "Motion paused"). */
+  sub?: string;
   className?: string;
 };
 
@@ -49,6 +51,7 @@ export function MotionToggle({
   label = "Pause motion",
   showLabel = false,
   word,
+  sub,
   className,
 }: MotionToggleProps) {
   const { paused, reduced, setPaused } = useMotionPreference();
@@ -86,7 +89,14 @@ export function MotionToggle({
       <span className={showLabel ? "type-meta" : "sr-only"}>{label}</span>
       {word && !showLabel ? (
         <span aria-hidden="true" className="dock-word type-meta">
-          {word}
+          {sub ? (
+            <span className="dock-stack">
+              <span>{word}</span>
+              <span className="dock-sub">{sub}</span>
+            </span>
+          ) : (
+            word
+          )}
         </span>
       ) : null}
     </button>

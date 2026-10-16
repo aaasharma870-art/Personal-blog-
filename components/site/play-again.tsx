@@ -1,34 +1,57 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { RotateCcw } from "lucide-react";
-import { goTop, replayIntro } from "@/components/site/dock-actions";
 
 /* ============================================================================
-   PLAY IT AGAIN (Oct 16 fix, complaint 7): the clear button under the page's
-   last line (the lettered Q-HP-2 in the credits). It restarts the loop: with motion on it
-   scrolls to the top and replays the intro from its Play card
-   (window.__intro.replay(), components/site/dock-actions.ts); with motion
-   off (Pause or OS reduced motion) it only goes to the top, through the cut.
-   The quiet "↑ Back to the opening" link above stays the scroll-only way.
-   A real <button> in the solid "try" look (app/p3/dock.css `.try-end`).
-   The label is `mischief.again` (lib/film.ts, proposed, unsigned), resolved
-   by the footer on the server.
+   MISCHIEF MANAGED, AS THE BUTTON (Oct 16 fix, complaint 7: "mischief managed
+   should be a clear button at the end that restarts the loop"): the page's
+   last line IS the button. One large, solid, aqua-ringed button whose face is
+   the lettered line (`children`: the FilmQuote and the Hallows mark, rendered
+   by the footer, so the quoted line is never written here) with a small
+   "↻ Play it again" sub-line inside it (`label`); the ink fold-line (`fold`)
+   sits between the two. It restarts the loop: with motion on it scrolls to
+   the top and replays the intro from its Play card
+   (window.__intro.replay(), components/site/dock-actions.ts); with motion off
+   (Pause or OS reduced motion) it only goes to the top, focus on the hero
+   title. The quiet "↑ Back to the opening" link above stays the scroll-only
+   way back. `name` is the accessible name ("<line> <label>", built by the
+   footer). A real <button> in the solid "try" look (app/p3/dock.css
+   `.try-end`), 44 px+ tall, hover / focus / active states.
+   The label is `mischief.again` (lib/film.ts, proposed, unsigned).
    ========================================================================== */
 
-export function PlayAgain({ label }: { label: string }) {
+export function PlayAgain({
+  label,
+  name,
+  fold,
+  children,
+}: {
+  label: string;
+  name: string;
+  fold?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
       className="try-btn try-end inline-flex"
       data-play-again=""
-      data-house-type=""
+      aria-label={name}
       onClick={() => {
+        // dock-actions loads on the press (it is not in the first load);
         // "off": refused (motion is off): just go to the top
-        if (replayIntro() === "off") goTop();
+        void import("@/components/site/dock-actions").then((m) => {
+          if (m.replayIntro() === "off") m.goTop();
+        });
       }}
     >
-      <RotateCcw aria-hidden="true" strokeWidth={2} />
-      {label}
+      <span className="try-end-line">{children}</span>
+      {fold ? <span className="try-end-fold">{fold}</span> : null}
+      <span className="try-end-sub" aria-hidden="true">
+        <RotateCcw aria-hidden="true" strokeWidth={2} />
+        {label}
+      </span>
     </button>
   );
 }

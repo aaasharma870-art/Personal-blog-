@@ -39,6 +39,13 @@ import { HuntChip } from "@/components/eggs/hunt-chip";
 import { SoundToggle } from "@/components/audio/sound-toggle";
 import { ControlDock } from "@/components/site/control-dock";
 
+/** The dock's controls inside the Menu sheet (below 64rem): fetched only when
+ *  the menu opens, like the chapter select. */
+const MenuControls = dynamic(
+  () => import("@/components/site/menu-controls").then((m) => m.MenuControls, () => () => null),
+  { ssr: false },
+);
+
 /** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
  *  menu opens on DESKTOP_FINE (plan DP-17). */
 const ChapterSelect = dynamic(
@@ -213,6 +220,8 @@ function ActLabel() {
    labels are server markup; CSS (`dw:`) picks one, so SSR is identical for
    every visitor. Off the home page (the 404) it is a plain /#work link. — */
 const PAUSE_WORD = copyText("dock.pause");
+const RESUME_WORD = copyText("dock.resume");
+const PAUSED_SUB = copyText("dock.paused.sub");
 const FAST_LANE = copyText("fastlane.label");
 const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
 
@@ -246,7 +255,7 @@ function WorkPill({ base, href }: { base: string; href: string }) {
       onPointerEnter={warm}
       onFocus={warm}
       aria-current={active === href.slice(1) ? "location" : undefined}
-      className="inline-flex min-h-11 items-center rounded-pill px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:text-accent-bright"
+      className="inline-flex min-h-11 items-center whitespace-nowrap rounded-pill bg-(--dock-fill) px-4 type-meta text-fg shadow-[inset_0_0_0_1px_var(--fg-ghost)] transition-colors duration-(--dur-micro) hover:bg-(--dock-fill-hover) hover:text-accent-bright"
     >
       {FAST_LANE_SHOWN ? (
         <>
@@ -307,7 +316,12 @@ function PauseWithTooltip() {
   const tip = copyText(paused ? "pause.tooltip.resume" : "pause.tooltip.pause");
   return (
     <span className="group/tip relative inline-flex">
-      <MotionToggle word={copyVisible(PAUSE_WORD) ? PAUSE_WORD.text : undefined} />
+      {/* the visible word follows the state: "Pause", or "Resume" with the
+          persistent reason "Motion paused" (the accessible name stays) */}
+      <MotionToggle
+        word={copyVisible(paused ? RESUME_WORD : PAUSE_WORD) ? (paused ? RESUME_WORD : PAUSE_WORD).text : undefined}
+        sub={paused && copyVisible(PAUSED_SUB) ? PAUSED_SUB.text : undefined}
+      />
       {/* the Lumos / Nox alias is the lumos egg's hint (W2-HUNT): gone
           when the visitor turns the eggs off for the session */}
       {mounted && copyVisible(tip) ? (
@@ -414,7 +428,7 @@ export function Header() {
           <ActLabel />
         </div>
 
-        <div className="flex flex-none items-center gap-1 whitespace-nowrap sm:gap-2">
+        <div className="flex flex-none items-center gap-1 sm:gap-2">
           {/* Replay intro · Director's cut · Games: home page, desktop fine pointer */}
           {base ? null : <ControlDock />}
           {workHref ? <WorkPill base={base} href={workHref} /> : null}
@@ -473,6 +487,8 @@ export function Header() {
             </div>
 
             <nav aria-label="Sections" className="mx-auto w-full max-w-page px-gutter pb-tier-block">
+              {/* the dock's three controls, for the widths without the header dock */}
+              {!base ? <MenuControls onPick={() => closeMenu(false)} /> : null}
               {fine && !base ? <ChapterSelect onPick={() => closeMenu(false)} /> : null}
               <ol className="grid grid-cols-1 gap-x-6 gap-y-tier-block pt-tier-group md:grid-cols-2">
                 {navGroups.map((g) => {

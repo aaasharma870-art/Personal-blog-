@@ -138,7 +138,7 @@ export default function DeadEyeHud({
             <p className="tnum type-meta text-fg-muted">{best}</p>
           ) : copy.help && !result ? (
             // how to play, for a first-time visitor; the clock is not touched
-            <p className="type-small text-fg-muted" data-de-help="" aria-hidden="true">
+            <p className="type-small text-fg-muted" data-de-help="">
               {copy.help}
             </p>
           ) : null}
