@@ -183,6 +183,13 @@ function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: nu
   releaseHold = stop;
 }
 
+/** The browser's own jump to a `#hash` target (a link clicked before the
+ *  desktop chunk takes links over, a hash typed into the address bar) is held
+ *  the same way (lib/smooth-scroll.ts `hashchange`). */
+export function holdNativeJump(el: Element): void {
+  holdLanding(el, "start", jumpSeq);
+}
+
 /* — jumps ——————————————————————————————————————————————————————————— */
 
 let jumpSeq = 0;
