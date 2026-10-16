@@ -4,10 +4,27 @@ import { Suspense, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useDesktopFine } from "@/lib/flags";
 import { safeLazy } from "@/lib/safe-lazy";
+import { useDirectorsCut } from "@/components/director/api";
 
 /* the cut is DESKTOP_FINE only (lib/smooth-scroll.ts runs it there alone):
    its code loads there, after mount (DP-13) */
 const CutOverlay = safeLazy(() => import("@/components/director/cut-overlay").then((m) => ({ default: m.CutOverlay })));
+/* the director's cut's transport (progress, chapter ticks, pause / prev / next,
+   Exit; the end state): its chunk loads when a run starts */
+const Transport = safeLazy(() => import("@/components/director/transport").then((m) => ({ default: m.Transport })));
+
+/** The transport, in the "stop" layer, only while a cut runs or its end state shows. */
+function TransportHost() {
+  const dc = useDirectorsCut();
+  if (!dc.running && !dc.ended) return null;
+  return (
+    <StageLayerPortal layer="stop">
+      <Suspense fallback={null}>
+        <Transport />
+      </Suspense>
+    </StageLayerPortal>
+  );
+}
 
 /* ============================================================================
    STAGE LAYERS (spec §3.2) — OWNER: B1-STAGE.
@@ -93,6 +110,7 @@ export function StageLayers() {
           </Suspense>
         </StageLayerPortal>
       ) : null}
+      {fine ? <TransportHost /> : null}
     </>
   );
 }

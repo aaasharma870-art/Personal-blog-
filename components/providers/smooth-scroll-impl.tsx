@@ -46,6 +46,7 @@ import { loadGsap, prefetchGsap, sleepTickerIfIdle, type GsapKit } from "@/lib/g
 import { onIdle } from "@/lib/idle";
 import { isQuiet, prefetchChunks, registerChunk, useLadder, useQuiet, whenLadder, whenQuietEnd } from "@/lib/ladder";
 import {
+  cameraOwnsScroll,
   getLenis,
   haltGlide,
   loadJumps,
@@ -114,7 +115,10 @@ function startLenis(LenisCtor: typeof Lenis, { gsap, ScrollTrigger }: GsapKit): 
   const bootPaused = root.dataset.motionBoot === "paused";
   if (bootPaused) root.dataset.smooth = "";
   // keyboard / focus / find-in-page scrolls are native: never overridden
-  const onKey = () => haltGlide();
+  // (the director's cut's own glides are not halted by a key: its keys pause it)
+  const onKey = () => {
+    if (!cameraOwnsScroll()) haltGlide();
+  };
   // an intro replay's scrollTo(0) wins over a glide
   const mo = new MutationObserver(() => {
     if (root.classList.contains("intro-armed")) haltGlide();

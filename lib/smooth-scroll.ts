@@ -35,6 +35,9 @@ export type LenisScrollOptions = {
   immediate?: boolean;
   lock?: boolean;
   duration?: number;
+  /** Lenis 1.3 takes it with `duration` (the director's cut shapes its
+   *  speed envelopes with it); `lerp` is then unused. */
+  easing?: (t: number) => number;
   force?: boolean;
   onComplete?: () => void;
 };
@@ -75,6 +78,21 @@ const noop = () => {};
 const UNLOCK_WAIT_MS = 400;
 /** A refresh waits for a glide to end, at most this long. */
 const REFRESH_DEFER_MAX_MS = 3000;
+/** … and while the director's cut owns the scroll (its glides run back to
+ *  back, only its holds are quiet), this long. */
+const REFRESH_DEFER_CAMERA_MS = 15000;
+
+/** The director's cut (components/director/directors-cut.ts) sets this while
+ *  its camera drives Lenis: a key press must not halt its glide
+ *  (components/providers/smooth-scroll-impl.tsx) and a refresh waits longer
+ *  for a quiet moment (a hold). */
+let cameraOwns = false;
+export function setCameraOwnsScroll(on: boolean): void {
+  cameraOwns = on;
+}
+export function cameraOwnsScroll(): boolean {
+  return cameraOwns;
+}
 
 /* — the instance ———————————————————————————————————————————————————— */
 
@@ -391,7 +409,7 @@ function runRefresh(): void {
   if (l && l.isScrolling === "smooth") {
     const now = performance.now();
     if (!deferredSince) deferredSince = now;
-    if (now - deferredSince < REFRESH_DEFER_MAX_MS) {
+    if (now - deferredSince < (cameraOwns ? REFRESH_DEFER_CAMERA_MS : REFRESH_DEFER_MAX_MS)) {
       refreshTimer = setTimeout(runRefresh, 200);
       return;
     }

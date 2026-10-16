@@ -1,5 +1,4 @@
-/* ============================================================================
-   FILM — everything about the works, acts, slots, copy, lettering and eggs
+/* =====================================================================   FILM — everything about the works, acts, slots, copy, lettering and eggs
    (SPEC v2 §12.1). DATA ONLY: no React, no JSX, type-only imports, so Node
    imports it directly (scripts/check-manifest.mjs).
 
@@ -695,6 +694,20 @@ const copy = {
   "dc.cmd.quick": p3("Director's cut: quick tour"),
   "dc.cmd.full": p3("Director's cut: full tour"),
   "toy.deadeye.help": p3("Click the killed ideas to mark them, then Fire."),
+=======
+  /* the director's cut transport (components/director/transport.tsx): the
+     two tours' bar with chapter ticks, pause / prev / next, Exit, and the
+     end state. UI labels only: no facts. */
+  "dc.pause": p3("Pause"),
+  "dc.resume": p3("Resume"),
+  "dc.paused.now": p3("Paused"),
+  "dc.prev": p3("Previous chapter"),
+  "dc.next": p3("Next chapter"),
+  "dc.exit": p3("Exit"),
+  "dc.replay": p3("Play again"),
+  "dc.group": p3("Director's cut"),
+  "dc.progress": p3("Director's cut progress"),
+  "dc.goto": p3("Go to {name}"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 

@@ -642,8 +642,12 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     play("postcredits-whoosh");
     play("postcredits-chime", {}, 0.95);
   });
-  on("dc:start", () => play("projector-start"));
-  on("dc:stop", () => play("reel-runout"));
+  // The director's cut: no cue at its start (the films chapter's entry cue is
+  // the projector starting, where the page becomes one); the reel runs out
+  // ONCE, at a natural end, and not when the credits' entry cue just played it.
+  on("dc:stop", (d) => {
+    if (d.reason === "end" && performance.now() - (last.get("reel-runout") ?? -1e9) > 15000) play("reel-runout");
+  });
   // Obliviate fires the same event to reset the Snitch: only a catch tings.
   window.addEventListener(SNITCH_EVENT, () => {
     if (snitchCaught()) play("snitch-ting");
