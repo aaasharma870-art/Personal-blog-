@@ -304,8 +304,11 @@ function usePhase(t: MotionValue<number>, section: RefObject<HTMLElement | null>
     const set = (v: number) => {
       const ph = phaseOf(v);
       if (ph === cur) return;
+      const prev = cur;
       cur = ph;
       el.setAttribute("data-card-phase", ph);
+      // sound: the act title pushes in (a -> b), the bed follows the phase
+      if (prev) emit("card:phase", { card: el.id, phase: ph, prev });
     };
     set(t.get());
     const off = t.on("change", set);
@@ -408,12 +411,24 @@ function useCrossings(
     if (!pinned) return;
     let prev = t.get();
     let snapUntil = 0;
+    // sound: one meet per crossing. A wiggle across the line stays silent
+    // until the reader has gone back 0.08 of p and a second has passed.
+    let armed = true;
+    let firedAt = -1e9;
     const offJump = onEvent("scroll:jump", (d) => {
       if (d.immediate) snapUntil = performance.now() + 400;
     });
+    const offReset = onEvent("p3:view-reset", () => {
+      armed = true;
+    });
     const off = t.on("change", (v) => {
       const go = liveRef.current && performance.now() >= snapUntil && !motionOffNow();
-      if (go && prev < spec.meet && v >= spec.meet) emit("transition:meet", { card: spec.kind });
+      if (!armed && v < spec.meet - 0.08 && performance.now() - firedAt > 1000) armed = true;
+      if (go && armed && prev < spec.meet && v >= spec.meet) {
+        armed = false;
+        firedAt = performance.now();
+        emit("transition:meet", { card: spec.kind });
+      }
       if (go && prev < spec.impact.at && v >= spec.impact.at) {
         const el = frameRef.current ?? undefined;
         // the GL tier pulses its own flash / bloom (uFlash, on `impact`)
@@ -432,6 +447,7 @@ function useCrossings(
     return () => {
       off();
       offJump();
+      offReset();
     };
   }, [t, spec, pinned, liveRef, tierRef, frameRef]);
 }

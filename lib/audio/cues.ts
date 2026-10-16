@@ -23,7 +23,6 @@ export const CUE_IDS = [
   "wave-recede",
   "duster-swipe",
   "shutter",
-  "flash-whumpf",
   "match-strike",
   "shimmer-rise",
   "letterbox-whum",
@@ -118,21 +117,25 @@ export const IMPACT_CUES: Partial<Record<WorldId, CueId>> = {
   hp: "impact-lumos",
 };
 
-/** `transition:meet`: the two halves of a card meet (spec §10.3). */
+/** Seconds an `impact` cue waits after the event: the RDR2 "poof" follows
+ *  the tintype's shutter click by 90 ms instead of landing on it. */
+export const IMPACT_DELAY: Partial<Record<WorldId, number>> = { rdr2: 0.09 };
+
+/** `intro:flight` / `intro:land` (the intro controller; sound on only):
+ *  the broom takes off, then lands on the Pirates hero. */
+export const INTRO_CUES = { flight: "broom-whoosh", land: "broom-land" } as const satisfies Record<string, CueId>;
+
+/** `transition:meet`: the two halves of a card meet (spec §10.3). The
+ *  intro's flight is not a card: it has its own events (INTRO_CUES). */
 export const MEET_CUES: Partial<Record<TransitionKind, readonly Shot[]>> = {
-  flight: [
-    ["broom-whoosh", 0],
-    ["broom-land", 1.15],
-  ],
   opening: [["wave-wash", 0]],
   seam: [
     ["wave-recede", 0],
     ["duster-swipe", 0.3],
   ],
-  tintype: [
-    ["shutter", 0],
-    ["flash-whumpf", 0.09],
-  ],
+  // The shutter click only: the flash "poof" (impact-flash, +90 ms) is the
+  // whumpf, so the three no longer stack.
+  tintype: [["shutter", 0]],
   ignite: [
     ["match-strike", 0],
     ["shimmer-rise", 0.35],
