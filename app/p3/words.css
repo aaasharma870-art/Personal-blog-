@@ -59,6 +59,14 @@
 
 /* the chip fold's chevron (components/primitives/collapse.tsx `chip`): it
    points down when closed and turns over when the fold is open */
+/* the chip's border colour is set here, not with a utility: the unlayered
+   `* { border-color: var(--color-line) }` in globals.css beats utilities */
+.collapse-chip {
+  border-color: var(--fg-muted);
+}
+.collapse-chip:hover {
+  border-color: var(--fg);
+}
 .collapse-chev {
   width: 1rem;
   height: 1rem;
