@@ -5,18 +5,18 @@ import { anchorId, pageItems } from "@/lib/sections";
 import { VARIANTS } from "@/lib/variants";
 import { planeAttrs } from "@/lib/worlds";
 import { Meta } from "@/components/site/world-kit";
-import { DWELL, SPEED } from "@/components/director/timing";
+import { DWELL, SPEED, TOURS } from "@/components/director/timing";
 import { FilmFrame } from "@/components/sections/films/film-frame";
 import { ChapterSelectLab } from "./cinema-lab";
 
 /* /lab/p3/cinema — W3-CINEMA's workbench (PHASE3-SPEC §11.1, §11.2, §6.1,
    §8.2). Not linked, noindex. Three benches:
-   1. THE SHOT LIST the director's cut plays, computed here from the
-      manifest (lib/page.ts, lib/film.ts: tempo, estVh, beats) exactly as
-      the hero button writes it: per item the tempo speed, the estimated
-      height at 1440×900, the dwells of its weight-2/3 stars and the
-      estimated running time at 1× and 2×. (The player measures the live
-      layout; this is the estimate.)
+   1. THE SHOT LIST, computed here from the manifest (lib/page.ts, lib/film.ts:
+      tempo, estVh, beats) exactly as the hero button writes it: per item the
+      tempo speed, the estimated height at 1440×900, the dwells of its weight-2/3
+      stars and an old per-section running-time estimate. The two tours (quick
+      ~1:30, full ~3:00: components/director/timing.ts TOURS) are planned from
+      the live layout on the home page; this is only the estimate by section.
    2. THE CHAPTER SELECT, inline (picks are logged here, not jumped: the
       anchors live on the home page).
    3. THE FOUR FILMS SCREENS, DEFAULT and ALT: the LivePlate push (1 →
@@ -78,8 +78,12 @@ export default function CinemaLabPage() {
       <section className="flex flex-col gap-tier-group border-t border-rule pt-tier-block" data-lab="shots">
         <h2 className="type-heading">Shot list</h2>
         <p className="type-small max-w-body text-fg-muted">
-          Speeds: act cards {SPEED.c} px/s · slow {SPEED.s} · medium {SPEED.m} · brisk {SPEED.b}. Dwell 1.2 s on weight 3,
-          0.6 s on weight 2. Estimated at 1440×900: {fmt(total)} at 1×, {fmt(total / 2)} at 2×.
+          The two tours aim for {fmt(TOURS.quick.target)} (quick) and {fmt(TOURS.full.target)} (full): the planner
+          solves its cruise speed from the live page, so a tour&apos;s real length is read on the home page (the dock&apos;s
+          chooser; <code>/?debug=dc</code> then <code>__dcApi.lengths()</code>). The table is the old per-section tempo
+          estimate, only a way to see which sections are long (not what plays): act cards {SPEED.c} px/s · slow {SPEED.s}
+          · medium {SPEED.m} · brisk {SPEED.b}; dwell 1.2 s on weight 3, 0.6 s on weight 2; {fmt(total)} in all at
+          1440×900.
         </p>
         <table className="w-full type-small tnum">
           <thead className="text-left text-fg-muted">
