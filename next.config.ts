@@ -23,9 +23,12 @@ const nextConfig: NextConfig = {
     // AmbientBackground, quality 45). Every value used by a <Image quality>
     // must be listed here or Next 16 throws at request time.
     qualities: [45, 55, 75],
-    // Cap the ladder so a `sizes="116vw"` full-bleed still can't request a
-    // 4K variant of a 1600–1920px source. No ultra-high-DPI rungs above 2048.
-    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2048],
+    // The ladder stops at 2560, the width of the shipped stills (Next never
+    // enlarges a source): a retina laptop (DPR 2) shows a full-bleed plate
+    // at ≈ 2900 device px and used to get the 2048 rung stretched 1.4×.
+    // Only a `sizes` that really is that wide (window plates, 130vw
+    // backdrops) ever asks for the top rung.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2048, 2560],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 };
