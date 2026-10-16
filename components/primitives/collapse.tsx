@@ -49,7 +49,7 @@ export type CollapseProps = {
 };
 
 const CHIP =
-  "inline-flex min-h-8 w-fit cursor-pointer select-none items-center gap-2 rounded-full border border-(--fg-ghost) py-1 pl-3.5 pr-3 text-fg transition-colors duration-(--dur-micro) hover:border-(--fg)";
+  "inline-flex min-h-8 w-fit cursor-pointer select-none items-center gap-2 rounded-full border border-(--fg-muted) py-1 pl-3.5 pr-3 text-fg transition-colors duration-(--dur-micro) hover:border-(--fg)";
 
 export function Collapse({ summary, id, className, summaryClassName, chip = false, children }: CollapseProps) {
   const ownType = /(^|\s)type-/.test(summaryClassName ?? "");

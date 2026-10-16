@@ -204,7 +204,8 @@ function ActLabel() {
   // and is clipped away (never half drawn) when it does not: at 1440 and up
   // "ACT II · 3 IDIOTS" fits, the longer names show "ACT I" / "ACT III" /
   // "ACT IV" alone. The full text stays in the DOM either way.
-  const tier = film ? "@min-[8rem]:block" : num.length <= 8 ? "@min-[9rem]:block" : "@min-[12rem]:block";
+  // (from 640 px up, as before: a phone's header keeps no act label)
+  const tier = film ? "sm:@min-[8rem]:block" : num.length <= 8 ? "sm:@min-[9rem]:block" : "sm:@min-[12rem]:block";
   return (
     <p className={cn("hidden min-w-0 overflow-hidden type-meta text-fg-muted", tier)} data-act-label="">
       <motion.span
