@@ -1,7 +1,6 @@
 "use client";
 
 import { RotateCcw } from "lucide-react";
-import { goTop, replayIntro } from "@/components/site/dock-actions";
 
 /* ============================================================================
    PLAY IT AGAIN (Oct 16 fix, complaint 7): the clear button under the page's
@@ -23,8 +22,11 @@ export function PlayAgain({ label }: { label: string }) {
       data-play-again=""
       data-house-type=""
       onClick={() => {
+        // dock-actions loads on the press (it is not in the first load);
         // "off": refused (motion is off): just go to the top
-        if (replayIntro() === "off") goTop();
+        void import("@/components/site/dock-actions").then((m) => {
+          if (m.replayIntro() === "off") m.goTop();
+        });
       }}
     >
       <RotateCcw aria-hidden="true" strokeWidth={2} />
