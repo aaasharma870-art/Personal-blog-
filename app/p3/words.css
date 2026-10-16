@@ -17,10 +17,19 @@
      expanded where ::details-content is supported; elsewhere a working
      disclosure. Desktop animates the height (interpolate-size), reduced
      motion and Pause toggle instantly. — */
+/* a fold whose question is its summary repeats it as `data-collapse-q`
+   (components/site/capabilities.tsx), shown only where the summary is hidden:
+   phones keep the question visible above the answer */
+[data-collapse-q] {
+  display: none;
+}
 @media (max-width: 63.99rem) {
   @supports selector(::details-content) {
     [data-collapse] > summary {
       display: none;
+    }
+    [data-collapse-q] {
+      display: block;
     }
     [data-collapse]::details-content {
       display: contents;
@@ -46,6 +55,18 @@
   :root[data-motion="paused"] [data-collapse]::details-content {
     transition: none;
   }
+}
+
+/* the chip fold's chevron (components/primitives/collapse.tsx `chip`): it
+   points down when closed and turns over when the fold is open */
+.collapse-chev {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-collapse][open] > summary > .collapse-chev {
+  transform: rotate(180deg);
 }
 
 /* — The strike that stays (components/words/physical-word.tsx; spec §8.5):

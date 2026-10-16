@@ -56,7 +56,7 @@ type VoyageProps = ComponentProps<typeof import("@/components/site/journey-voyag
 const JourneyVoyage = lazy(() =>
   import("@/components/site/journey-voyage").then(
     (m) => ({ default: m.JourneyVoyage }),
-    () => ({ default: (p: VoyageProps) => <JourneyStack {...p} stills={stillsFor(p.stills, p.variant)} /> }),
+    () => ({ default: (p: VoyageProps) => <JourneyStack {...p} stills={stillsFor(p.stills, p.variant)} final /> }),
   ),
 );
 

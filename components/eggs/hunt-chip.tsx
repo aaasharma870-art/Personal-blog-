@@ -50,8 +50,29 @@ export function HuntChip() {
     return () => window.removeEventListener(HUNT_PANEL_EVENT, show);
   }, []);
 
-  if (!film.enabled || !film.eggs.enabled || !enabled) return null;
+  if (!film.enabled || !film.eggs.enabled) return null;
   const n = count === null ? "–" : String(count);
+  if (!enabled) {
+    // eggs turned off for the session: the chip is gone, but its width is not
+    // (an invisible, inert twin of its box holds the place), so the dock and
+    // the rest of the header do not slide right when it disappears. It is no
+    // button and carries no data-hunt-chip: nothing can find or press it.
+    const ghostLabel = copyText("egg.hunt.chip", { n: "0" });
+    if (!copyVisible(ghostLabel)) return null;
+    return (
+      <span className="hunt-chip-wrap invisible" data-house-type="" aria-hidden="true" inert>
+        <span className="hunt-chip type-meta">
+          {copyVisible(EGGS_WORD) ? (
+            <span className="dock-word">
+              {EGGS_WORD.text}
+              {"\u00a0"}
+            </span>
+          ) : null}
+          <span className="hunt-chip-n">{ghostLabel.text}</span>
+        </span>
+      </span>
+    );
+  }
   const label = copyText("egg.hunt.chip", { n });
   const name = copyText("dock.eggs.name", { n });
   if (!copyVisible(label) || !copyVisible(name)) return null;

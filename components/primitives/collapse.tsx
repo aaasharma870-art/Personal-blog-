@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ============================================================================
@@ -27,6 +28,13 @@ import { cn } from "@/lib/utils";
    (or pass the spacing the replaced block had in `className`).
    Summaries come from copy keys (`optuna.appendix.summary`,
    `about.philosophy.summary`, `credits.more.summary`).
+
+   `chip` (Oct 16, fix2b: a skimmer must SEE that a fold opens): the summary
+   is a bordered pill, at least 32 px tall, in the full text colour (AA on
+   every plane), with a chevron that turns when it opens (app/p3/words.css
+   `.collapse-chev`). Its type is `type-meta` unless the caller passes its
+   own `type-*` class in `summaryClassName`. Without `chip` the summary is
+   the quiet Meta line it always was (the appendix, the credits).
    ========================================================================== */
 
 export type CollapseProps = {
@@ -35,14 +43,27 @@ export type CollapseProps = {
   className?: string;
   /** Classes for the <summary> (default: a Meta-sized muted line). */
   summaryClassName?: string;
+  /** The visible, clearly clickable summary (a pill with a chevron). */
+  chip?: boolean;
   children?: ReactNode;
 };
 
-export function Collapse({ summary, id, className, summaryClassName, children }: CollapseProps) {
+const CHIP =
+  "inline-flex min-h-8 w-fit cursor-pointer select-none items-center gap-2 rounded-full border border-(--fg-ghost) py-1 pl-3.5 pr-3 text-fg transition-colors duration-(--dur-micro) hover:border-(--fg)";
+
+export function Collapse({ summary, id, className, summaryClassName, chip = false, children }: CollapseProps) {
+  const ownType = /(^|\s)type-/.test(summaryClassName ?? "");
   return (
     <details id={id} className={className} data-collapse="">
-      <summary className={cn("w-fit cursor-pointer type-meta text-fg-muted transition-colors hover:text-fg", summaryClassName)}>
+      <summary
+        className={
+          chip
+            ? cn(CHIP, !ownType && "type-meta", summaryClassName)
+            : cn("w-fit cursor-pointer type-meta text-fg-muted transition-colors hover:text-fg", summaryClassName)
+        }
+      >
         {summary}
+        {chip ? <ChevronDown aria-hidden="true" strokeWidth={2} className="collapse-chev" /> : null}
       </summary>
       {children}
     </details>

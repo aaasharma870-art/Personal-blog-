@@ -27,7 +27,6 @@ import {
 } from "@/lib/content";
 import type { ChapterAppendix } from "@/lib/page";
 import { beatAttrs } from "@/lib/beats";
-import { cn } from "@/lib/utils";
 import { copyText, copyVisible, variantChoiceOf } from "@/lib/sections";
 import type { SectionProps } from "@/components/sections/types";
 
@@ -140,6 +139,9 @@ function ChapterBody({
   const isOptuna = p.id === "optuna-screener";
   const approachMore = copyText("optuna.approach.more");
   const foldApproach = isOptuna && copyVisible(approachMore);
+  const metricTiles = p.metrics.map((m, i) => (
+    <MetricTile key={m.label} m={m} circleNote={isOptuna && i === p.metrics.length - 1} />
+  ));
   const approachList = (
     <>
       <Meta fields={["Approach"]} />
@@ -231,24 +233,32 @@ function ChapterBody({
           // method bullets sit behind a visible "Read the approach"; the
           // text stays in the DOM (find-in-page opens it) and phones keep it
           // open in flow. The tiles keep their own caveats (never folded).
-          <Collapse summary={approachMore.text} className="lg:order-2 lg:col-span-12">
-            <div className="dw:pt-tier-pair">{approachList}</div>
-          </Collapse>
+          // The DOM order is the visual order (tiles, then the fold) at
+          // every width, so tab and reading order match what is on screen.
+          <>
+            <dl
+              id={`${entry.id}-metrics`}
+              data-research=""
+              className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-12 lg:grid-cols-3"
+            >
+              {metricTiles}
+            </dl>
+            <Collapse summary={approachMore.text} className="lg:col-span-12" chip>
+              <div className="dw:pt-tier-pair">{approachList}</div>
+            </Collapse>
+          </>
         ) : (
-          <div className="lg:col-span-7">{approachList}</div>
+          <>
+            <div className="lg:col-span-7">{approachList}</div>
+            <dl
+              id={`${entry.id}-metrics`}
+              data-research=""
+              className="grid grid-cols-1 gap-tier-group sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1"
+            >
+              {metricTiles}
+            </dl>
+          </>
         )}
-        <dl
-          id={`${entry.id}-metrics`}
-          data-research=""
-          className={cn(
-            "grid grid-cols-1 gap-tier-group sm:grid-cols-3",
-            foldApproach ? "lg:order-1 lg:col-span-12 lg:grid-cols-3" : "lg:col-span-5 lg:grid-cols-1",
-          )}
-        >
-          {p.metrics.map((m, i) => (
-            <MetricTile key={m.label} m={m} circleNote={isOptuna && i === p.metrics.length - 1} />
-          ))}
-        </dl>
       </div>
 
       <div data-stage-block="" className="split-stack mt-tier-block grid grid-cols-1 gap-tier-group sm:grid-cols-2 lg:gap-x-6">

@@ -20,3 +20,25 @@
     padding-block: var(--spacing-tier-group);
   }
 }
+
+/* LAYOUT SHIFT AT LOAD (Oct 16, fix2b): the server renders the Journey as the
+   STACK (the no-JS truth, ~3.3 viewports tall); right after hydration the
+   lazy voyage takes its place (components/site/journey-experience.tsx), about
+   a third shorter. That swap moved everything below by about -935 px at
+   1440x900, so a cold #journey (or a jump past it) landed and then slid.
+   Where the voyage will replace it (desktop, fine pointer, motion on, not
+   started paused: the same gate as the experience) the stack holds the
+   voyage's height until then: its steps are 4 x 40vh (above), the head is
+   about 70 px taller in the half-width column, so the stack's own box is
+   160vh + 4.5rem (within 20 px of the voyage from 1024x768 to 2560x1300).
+   The stack is clipped, not scaled, and it is only ever on screen for the
+   first seconds. A stack that stays (OS reduced motion, paused at boot, no
+   JS, or a voyage chunk that failed: `data-stack-final`) keeps its full
+   height: none of these selectors match it. Unlayered,
+   so it wins over the utility classes. */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion-boot="paused"]) [data-voyage="stack"]:not([data-stack-final]) {
+    height: calc(160vh + 4.5rem);
+    overflow: clip;
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, useEffect, useRef, useState } from "react";
+import { createElement, Suspense, useEffect, useRef, useState } from "react";
 import type { ComponentType, RefObject } from "react";
 import {
   isMotionValue,
@@ -215,15 +215,24 @@ export function Loader(props: LoaderProps) {
   // (never created in render); the key re-mounts the renderer when the
   // progress source (a useTransform binds to one MotionValue) or the
   // variant changes.
+  // Its own Suspense boundary: the world renderers are next/dynamic (ssr),
+  // which adds NO boundary of its own, so the first time a renderer's chunk
+  // is missing (the loader shows after its 400 ms delay, long after
+  // hydration) React hid the whole section's content (`display: none
+  // !important` on the Suspense wrapper, 60-250 ms): the document shrank by
+  // the section's height and the scroll position with it (Games > "Fly the
+  // homemade drone" ended on the Kill-list; fix2b).
   const motif = (
     <span aria-hidden="true" className="inline-flex items-center">
-      {createElement(rendererFor(kind, variant), {
-        key: `${external ? "motion-value" : "number"}:${variant}`,
-        mode,
-        size,
-        progress,
-        animate,
-      })}
+      <Suspense fallback={null}>
+        {createElement(rendererFor(kind, variant), {
+          key: `${external ? "motion-value" : "number"}:${variant}`,
+          mode,
+          size,
+          progress,
+          animate,
+        })}
+      </Suspense>
     </span>
   );
 

@@ -563,7 +563,6 @@ const copy = {
      egg's egg.hunt.name.* text. hp-lumos's hint is "pause.tooltip.resume";
      the OS reduced-motion Lumos toast is "egg.toast.lumos.os" (reused). */
   "egg.hunt.chip": p3("{n}/12"),
-  "egg.hunt.chip.name": p3("Easter-egg hunt: {n} of 12 found. Show hints"),
   "egg.hunt.toast": p3("Egg {n} of 12 · {name}"),
   "egg.hunt.panel.title": p3("The egg hunt"),
   "egg.hunt.reset": p3("Reset the egg hunt"),
@@ -645,10 +644,6 @@ const copy = {
   "sound.disabled": p3("Sound follows motion: resume motion to hear it"),
   /* the director's cut (PHASE3-SPEC §11.1) */
   "dc.button": p3("▶ Director's cut"),
-  "dc.sound": p3("(sound on)"),
-  "dc.stop": p3("■ Stop"),
-  "dc.speed": p3("2×"),
-  "dc.act": p3("Act {n}/4"),
   "dc.cmd": p3("Play the director's cut"),
   "dc.paused": p3("Motion is paused"),
   /* the DVD chapter select (PHASE3-SPEC §11.2). The intermission and credits
