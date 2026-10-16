@@ -144,8 +144,14 @@ function Follow({ path }: { path: string }) {
     };
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
+    // and a slow look every 0.7 s: a jump that lands while the page is still
+    // settling must not leave the wrong bed until the next scroll
+    const iv = window.setInterval(() => {
+      if (document.visibilityState === "visible") read();
+    }, 700);
     return () => {
       window.clearTimeout(t);
+      window.clearInterval(iv);
       window.removeEventListener("scroll", schedule);
     };
   }, []);

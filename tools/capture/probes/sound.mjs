@@ -204,7 +204,21 @@ export default async function probe(page, ctx) {
             () => true,
             () => false,
           );
-          seen.push({ id, want: bed, got: (await engineState(page))?.bed ?? null, ok, ms: Date.now() - t });
+          const diag = ok
+            ? undefined
+            : await page.evaluate(() => {
+                const y = innerHeight * 0.475;
+                const ids = [...document.querySelectorAll("section[id],footer[id],[data-act-card][id]")].map((e) => e.id);
+                let hit = null;
+                for (const i of ids) {
+                  const r = document.getElementById(i)?.getBoundingClientRect();
+                  if (r && r.height > 0 && r.top <= y && r.bottom > y) hit = i;
+                }
+                const ph = {};
+                document.querySelectorAll("[data-card-phase]").forEach((e) => (ph[e.id] = e.getAttribute("data-card-phase")));
+                return { hit, scrollY: Math.round(scrollY), phases: ph, storm: window.__p3sound?.state?.().storm };
+              });
+          seen.push({ id, want: bed, got: (await engineState(page))?.bed ?? null, ok, ms: Date.now() - t, diag });
         }
         const st = await engineState(page);
         set(
@@ -228,6 +242,8 @@ export default async function probe(page, ctx) {
             return true;
           }, frac);
         const waitFor = (fn, arg) => page.waitForFunction(fn, arg, { timeout: 5000, polling: 50 }).then(() => true, () => false);
+        await at(-0.2); // approach from above, as a reader does: the pin goes live on its way in
+        await sleep(1200);
         const hasCard = await at(0.1);
         const a = hasCard && (await waitFor((w) => document.getElementById("act-2")?.getAttribute("data-card-phase") === w, "a"));
         const aBed = a && (await waitFor(() => { const s = window.__p3sound?.state?.(); return s?.bed === "pirates" && s?.storm === true; }));
