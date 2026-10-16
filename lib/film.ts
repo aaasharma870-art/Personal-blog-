@@ -659,6 +659,10 @@ const copy = {
   "chapter.prologue": p3("Prologue"),
   "palette.play": p3("Play"),
   "palette.hints": p3("Show egg hints"),
+  // blur worker (LENGTH-2): the labels of the two folded passages, one block
+  // at the very end of the copy object so a merge never conflicts
+  "about.bio.more": p3("Read more"),
+  "optuna.approach.more": p3("Read the approach"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 

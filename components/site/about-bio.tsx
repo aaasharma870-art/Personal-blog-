@@ -13,6 +13,7 @@ import { Rise } from "@/components/site/world-motion";
  *  stays open as before. */
 export function AboutBio() {
   const summary = copyText("about.philosophy.summary");
+  const more = copyText("about.bio.more");
   const note = (
     <figure>
       <figcaption>
@@ -23,9 +24,18 @@ export function AboutBio() {
   );
   return (
     <div className="max-w-body">
-      <Rise className="space-y-tier-group">
+      <Rise>
         <p className="type-body text-fg">{about.bio}</p>
-        <p className="type-body text-fg-muted">{about.bioSecond}</p>
+        {copyVisible(more) ? (
+          // LENGTH-2: the second paragraph sits behind a visible "Read more"
+          // on desktop (closed <details>, text in the DOM; phones keep it
+          // open in flow)
+          <Collapse summary={more.text} className="mt-tier-group" summaryClassName="mb-tier-group">
+            <p className="type-body text-fg-muted">{about.bioSecond}</p>
+          </Collapse>
+        ) : (
+          <p className="mt-tier-group type-body text-fg-muted">{about.bioSecond}</p>
+        )}
       </Rise>
       <Rise delay={0.08} className="mt-tier-block border-t border-rule pt-tier-group">
         {copyVisible(summary) ? (
