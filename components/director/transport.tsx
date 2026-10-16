@@ -27,7 +27,7 @@ import { clock } from "./plan";
    bottom-left column (<= 27 rem) at 1024 / 1280 / 1440.
 
    TWO PARTS (Oct 16 review: nothing may sit on a held frame's caption):
-   - the PROGRESS LINE: a slim dark capsule hugging the bottom edge (16 px, 6 px
+   - the PROGRESS LINE: a slim dark capsule hugging the bottom edge (16 px, 4 px
      off it), always there: the line, its fill and a tick per chapter (a press
      seeks there). It never reaches a caption (they end well above it).
    - the CARD above it, only while it is wanted:
@@ -153,6 +153,7 @@ export function Transport() {
   // and the palette hand focus back to their own buttons a moment later, so look again twice
   useEffect(() => {
     pauseBtn.current?.focus({ preventScroll: true });
+    had.current = Boolean(pauseBtn.current && document.activeElement === pauseBtn.current);
     const again = () => {
       const a = document.activeElement;
       if (!a || a === document.body || (a instanceof Element && a.closest("[data-dock-pop], [data-dock-cut]"))) pauseBtn.current?.focus({ preventScroll: true });
@@ -233,7 +234,7 @@ export function Transport() {
       data-house-type=""
       role="group"
       aria-label={t("dc.group")}
-      className="pointer-events-none absolute bottom-1.5"
+      className="pointer-events-none absolute bottom-1"
       style={{ width: W, left: `max(50%, calc(${W} / 2 + 28rem))`, transform: "translateX(-50%)" }}
       data-dc-open={open ? "" : undefined}
     >

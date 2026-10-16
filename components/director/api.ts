@@ -11,14 +11,16 @@
    playing. "quick" is the ~90-second skim of the best parts, "full" the
    ~3-minute main cut; both lengths are COMPUTED from the live page (the
    plan's total shows in `state.total` once a run starts, and
-   `directorsCutLengths()` gives both before one does).
+   `directorsCutLengths()` gives both before one does). A run ALWAYS starts
+   at the top of the page (a hard cut through the dip when the page is far
+   down), so those lengths are true every time.
    It does NOT touch the sound: the cut starts with the sound as the visitor
    left it (the old click-borrow that unmuted is gone).
    stopDirectorsCut(reason) ends a run (Esc, the switch, Pause, the fast
    lane, a game, the end). A wheel / touch / key / click on the page PAUSES
    it instead (the transport shows "Paused · Resume"); presses inside any
-   `[data-dc-keep]` element (the header control group, the transport) never
-   pause it. pauseDirectorsCut / resumeDirectorsCut / seekDirectorsCut /
+   `[data-dc-keep]` element (the header control group, the transport, the
+   Sound and Eggs toggles) never pause it. pauseDirectorsCut / resumeDirectorsCut / seekDirectorsCut /
    stepDirectorsCut / restartDirectorsCut drive the transport.
    useDirectorsCut() reads the state ({ running }: false on the server and in
    hydration). The progress BAR is not React state: the transport reads
