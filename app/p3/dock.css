@@ -1,0 +1,307 @@
+/* ============================================================================
+   app/p3/dock.css: the header control dock and the "try" look (Oct 16 fix).
+   Replay intro, Director's cut ON/OFF and Games sit in the fixed header as
+   labelled, solid, ringed buttons; the games' own pills, the Run button and
+   the closing "Play it again" wear the same look. OWNER: dock worker.
+   Imported by app/layout.tsx after ./game.css. Plain CSS, no @apply. The
+   popovers' own rules are in dock-lazy.css (loaded with their chunk).
+
+   Rules kept (W1 lessons): desktop-only UI is shown by the FULL DESKTOP_FINE
+   media query (never `lg:`); nothing keys on a runtime class of <html>
+   except the boot gate; every-frame motion is transform / opacity only (the
+   cue is a box-shadow ring, twice, silent). Reduced motion / Pause: no cue.
+   ========================================================================== */
+
+:root {
+  /* plane-independent: the same solid face on dark grounds, parchment and photos */
+  --dock-fill: #0a1317;
+  --dock-fill-hover: #14262f;
+  --dock-ink: #f1f6fa;
+  --dock-ring: #5eead4;
+  --dock-halo: rgb(0 0 0 / 0.6);
+  --dock-pulse: rgb(94 234 212 / 0.6);
+}
+
+/* — a pointer on everything clickable (Tailwind v4 preflight leaves buttons
+     on the default arrow). In the base layer so `aria-disabled:cursor-not-
+     allowed` utilities still win. — */
+@layer base {
+  button:not(:disabled):not([aria-disabled="true"]),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  a[href] {
+    cursor: pointer;
+  }
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+/* — The dock: DESKTOP_FINE only (a phone or touch tablet never shows a
+     control it cannot use; the server markup is the same for everyone) — */
+.dock {
+  display: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .dock {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 0.25rem;
+  }
+}
+.dock-item {
+  position: relative;
+  display: inline-flex;
+}
+
+/* the one "try" button: solid dark face, 1.5 px aqua ring, verb label */
+.dock-btn {
+  display: inline-flex;
+}
+.dock-btn,
+.try-btn {
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 0.9375rem 0 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--dock-fill);
+  color: var(--dock-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-transform: none;
+  white-space: nowrap;
+  touch-action: manipulation;
+  box-shadow:
+    inset 0 0 0 1.5px var(--dock-ring),
+    0 0 0 1px var(--dock-halo);
+  transition:
+    background-color var(--dur-micro, 180ms) ease,
+    transform var(--dur-micro, 180ms) var(--ease-out, ease);
+}
+.dock-btn:hover,
+.try-btn:hover {
+  background: var(--dock-fill-hover);
+}
+.dock-btn:active,
+.try-btn:active {
+  transform: translateY(1px);
+}
+.dock-btn > svg,
+.try-btn > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+  color: var(--dock-ring);
+}
+.dock-btn > svg.dock-caret {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: -0.125rem;
+  transition: transform var(--dur-micro, 180ms) var(--ease-out, ease);
+}
+.dock-btn[aria-expanded="true"] > svg.dock-caret {
+  transform: rotate(180deg);
+}
+.dock-btn[aria-disabled="true"] {
+  opacity: 0.6;
+}
+.dock-btn[aria-disabled="true"]:hover {
+  background: var(--dock-fill);
+}
+.dock-btn[aria-disabled="true"] > svg {
+  color: var(--dock-ink);
+}
+
+/* the ON / OFF state chip on the Director's cut button */
+.dock-chip {
+  display: inline-flex;
+  align-items: center;
+  min-width: 2.375rem;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 0 0 1px rgb(241 246 250 / 0.55);
+}
+.dock-btn[aria-pressed="true"] {
+  background: #0f2d2a;
+}
+.dock-btn[aria-pressed="true"] .dock-chip {
+  background: var(--dock-ring);
+  color: #04201c;
+  box-shadow: none;
+}
+
+/* full words from 80rem, the short ones below (never hide a control) */
+.dock-s {
+  display: inline;
+}
+.dock-f {
+  display: none;
+}
+@media (min-width: 80rem) {
+  .dock-s {
+    display: none;
+  }
+  .dock-f {
+    display: inline;
+  }
+}
+
+/* a note under a disabled button (motion is off): why it does nothing */
+.dock-note {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  background: var(--dock-fill);
+  color: var(--dock-ink);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  white-space: normal;
+  box-shadow:
+    inset 0 0 0 1px rgb(94 234 212 / 0.45),
+    0 14px 36px -12px rgb(0 0 0 / 0.75);
+}
+
+/* — Visible words on the quiet chrome from 90rem: Eggs / Sound / Pause — */
+.dock-word {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (min-width: 90rem) and (hover: hover) and (pointer: fine) {
+  .dock-word {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+  }
+  .hunt-chip,
+  .sound-toggle > button,
+  [data-motion-toggle] {
+    gap: 0.5rem;
+    padding-inline: 0.625rem;
+  }
+}
+
+/* — The silent cue: two ring pulses (2 x 1.4 s), once per session per
+     control, set by the dock after the intro. Nothing under reduced motion
+     or Pause. — */
+.dock-btn[data-cue] {
+  animation: dock-pulse 1.4s var(--ease-out, ease-out) 2;
+}
+@keyframes dock-pulse {
+  from {
+    box-shadow:
+      inset 0 0 0 1.5px var(--dock-ring),
+      0 0 0 1px var(--dock-halo),
+      0 0 0 0 var(--dock-pulse);
+  }
+  to {
+    box-shadow:
+      inset 0 0 0 1.5px var(--dock-ring),
+      0 0 0 1px var(--dock-halo),
+      0 0 0 14px transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock-btn[data-cue] {
+    animation: none;
+  }
+}
+:root[data-motion="paused"] .dock-btn[data-cue] {
+  animation: none;
+}
+
+/* — The games' own pills, the Run button and the closing button wear the
+     same look (DESKTOP_FINE; the pills exist only there) — */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  html.js .game-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem 0 0.875rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--dock-fill);
+    color: var(--dock-ink);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    text-transform: none;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 0 0 1.5px var(--dock-ring),
+      0 0 0 1px var(--dock-halo),
+      0 8px 20px -10px rgb(0 0 0 / 0.7);
+    transition: background-color var(--dur-micro, 180ms) ease;
+  }
+  html.js .game-pill:hover {
+    background: var(--dock-fill-hover);
+  }
+  html.js .game-pill:focus-visible {
+    outline: 2px solid var(--dock-ring);
+    outline-offset: 3px;
+  }
+  /* the Run button in the gauntlet: it holds the invite ring span */
+  button:has(> [data-run-ring]) {
+    background: var(--dock-fill);
+    color: var(--dock-ink);
+    border-radius: 999px;
+    padding-inline: 1rem;
+    font-weight: 600;
+    box-shadow:
+      inset 0 0 0 1.5px var(--dock-ring),
+      0 0 0 1px var(--dock-halo);
+  }
+  button:has(> [data-run-ring]):hover {
+    background: var(--dock-fill-hover);
+  }
+  button:has(> [data-run-ring])[aria-disabled="true"] {
+    color: rgb(241 246 250 / 0.7);
+    background: var(--dock-fill);
+  }
+}
+.game-pill-verb {
+  font-weight: 700;
+}
+
+/* — The closing "Play it again" (credits, after the last line) — */
+.try-btn.try-end {
+  min-height: 3.25rem;
+  padding: 0 1.5rem 0 1.25rem;
+  font-size: 1rem;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+.try-btn.try-end > svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+.try-btn.try-end:focus-visible,
+.dock-btn:focus-visible {
+  outline: 2px solid var(--dock-ring);
+  outline-offset: 3px;
+  border-radius: 999px;
+}

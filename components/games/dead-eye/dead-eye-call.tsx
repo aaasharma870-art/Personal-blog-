@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { beatAttrs } from "@/lib/beats";
 import { film } from "@/lib/film";
+import { copyText, copyVisible } from "@/lib/sections";
 import { effectiveVariant, type VariantChoice } from "@/lib/variants";
 import type { DeadEyeCopy } from "@/components/games/shared";
 
@@ -31,6 +32,8 @@ import type { DeadEyeCopy } from "@/components/games/shared";
    Server-only: never import this file from a client component.
    ========================================================================== */
 
+const PLAY = copyText("dock.games.play");
+
 /** `children`: the pill's face, server markup (the eye-ring glyph and the
  *  lettered "DEAD EYE"). */
 export function DeadEyeCall({ copy, choice, children }: { copy: DeadEyeCopy; choice: VariantChoice; children: ReactNode }) {
@@ -45,6 +48,8 @@ export function DeadEyeCall({ copy, choice, children }: { copy: DeadEyeCopy; cho
       data-copy={JSON.stringify(copy)}
       {...beatAttrs("B28", { weight: 1 })}
     >
+      {/* a verb first, so the pill reads as a thing to press ("Play DEAD EYE") */}
+      {copyVisible(PLAY) ? <span className="game-pill-verb">{PLAY.text}</span> : null}
       {children}
     </button>
   );

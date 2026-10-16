@@ -33,6 +33,10 @@ type MotionToggleProps = {
   label?: string;
   /** Render the label as visible Meta text beside the glyph (default: sr-only). */
   showLabel?: boolean;
+  /** A short visible word beside the glyph from 90rem up (the header's
+   *  "Pause"; app/p3/dock.css `.dock-word`). Hidden from assistive tech: the
+   *  accessible name stays `label`. */
+  word?: string;
   className?: string;
 };
 
@@ -44,6 +48,7 @@ const FLAT = "M0 6 C2 6 4 6 6 6 S10 6 12 6 S16 6 18 6 S22 6 24 6 S28 6 30 6 S34 
 export function MotionToggle({
   label = "Pause motion",
   showLabel = false,
+  word,
   className,
 }: MotionToggleProps) {
   const { paused, reduced, setPaused } = useMotionPreference();
@@ -79,6 +84,11 @@ export function MotionToggle({
         />
       </svg>
       <span className={showLabel ? "type-meta" : "sr-only"}>{label}</span>
+      {word && !showLabel ? (
+        <span aria-hidden="true" className="dock-word type-meta">
+          {word}
+        </span>
+      ) : null}
     </button>
   );
 }

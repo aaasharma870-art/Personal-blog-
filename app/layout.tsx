@@ -13,6 +13,7 @@ import "./p3/cards.css";
 import "./p3/plates.css";
 import "./p3/words.css";
 import "./p3/game.css";
+import "./p3/dock.css";
 import "./p3/sound.css";
 import "./p3/games.css";
 import "./p3/world-pirates.css";

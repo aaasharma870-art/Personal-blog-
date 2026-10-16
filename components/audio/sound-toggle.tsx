@@ -81,6 +81,12 @@ export function SoundToggle({ follow = true, className }: { follow?: boolean; cl
           </g>
         </svg>
         <span className="sr-only">{copyVisible(NAME) ? NAME.text : "Sound"}</span>
+        {/* the visible word from 90rem up (app/p3/dock.css `.dock-word`) */}
+        {copyVisible(NAME) ? (
+          <span aria-hidden="true" className="dock-word type-meta">
+            {NAME.text}
+          </span>
+        ) : null}
       </button>
       {mounted && copyVisible(tip) ? (
         <span

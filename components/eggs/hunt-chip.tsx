@@ -27,6 +27,8 @@ import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hu
 // safeLazy: a failed chunk opens nothing, never an application error (W3 review #6)
 const HuntPanel = safeLazy(() => import("@/components/eggs/hunt-panel"));
 const preload = () => void import("@/components/eggs/hunt-panel");
+/** The visible word before the count from 90rem up ("Eggs 0/12"; app/p3/dock.css). */
+const EGGS_WORD = copyText("dock.eggs");
 
 export function HuntChip() {
   const { count, enabled } = useHuntState();
@@ -51,7 +53,7 @@ export function HuntChip() {
   if (!film.enabled || !film.eggs.enabled || !enabled) return null;
   const n = count === null ? "–" : String(count);
   const label = copyText("egg.hunt.chip", { n });
-  const name = copyText("egg.hunt.chip.name", { n });
+  const name = copyText("dock.eggs.name", { n });
   if (!copyVisible(label) || !copyVisible(name)) return null;
 
   const close = (refocus: boolean) => {
@@ -76,6 +78,12 @@ export function HuntChip() {
         onPointerEnter={preload}
         onFocus={preload}
       >
+        {copyVisible(EGGS_WORD) ? (
+          <span aria-hidden="true" className="dock-word">
+            {EGGS_WORD.text}
+            {"\u00a0"}
+          </span>
+        ) : null}
         <span key={tick} className="hunt-chip-n" data-tick={tick ? "" : undefined} aria-hidden="true">
           {label.text}
         </span>

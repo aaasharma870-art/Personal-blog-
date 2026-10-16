@@ -136,6 +136,11 @@ export default function DeadEyeHud({
             </p>
           ) : best ? (
             <p className="tnum type-meta text-fg-muted">{best}</p>
+          ) : copy.help && !result ? (
+            // how to play, for a first-time visitor; the clock is not touched
+            <p className="type-small text-fg-muted" data-de-help="" aria-hidden="true">
+              {copy.help}
+            </p>
           ) : null}
         </div>
         {phase === "paint" ? (
