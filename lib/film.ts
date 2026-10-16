@@ -659,6 +659,21 @@ const copy = {
   "chapter.prologue": p3("Prologue"),
   "palette.play": p3("Play"),
   "palette.hints": p3("Show egg hints"),
+  /* the director's cut transport (components/director/transport.tsx): the
+     two tours' bar with chapter ticks, pause / prev / next, Exit, and the
+     end state. UI labels only: no facts. */
+  "dc.pause": p3("Pause"),
+  "dc.resume": p3("Resume"),
+  "dc.paused.now": p3("Paused"),
+  "dc.prev": p3("Previous chapter"),
+  "dc.next": p3("Next chapter"),
+  "dc.exit": p3("Exit"),
+  "dc.replay": p3("Play again"),
+  "dc.group": p3("Director's cut"),
+  "dc.progress": p3("Director's cut progress"),
+  "dc.goto": p3("Go to {name}"),
+  "dc.tour.quick": p3("Quick tour"),
+  "dc.tour.full": p3("Full tour"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 

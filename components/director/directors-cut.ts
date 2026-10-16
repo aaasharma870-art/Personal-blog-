@@ -1,399 +1,666 @@
 /* ============================================================================
    THE DIRECTOR'S CUT — the player (PHASE3-SPEC §11.1, P3-10 #1) — OWNER:
-   W3-CINEMA. The lazy half of ./api.ts (DP-13): loaded on the first start,
-   on DESKTOP_FINE with motion on, on the home page.
+   W3-CINEMA; the camera rewrite (Oct 16). The lazy half of ./api.ts (DP-13):
+   loaded on the first start, on DESKTOP_FINE with motion on, on the home page.
 
-   It plays the page as a film from the top to the post-credits scene.
-   THE SHOT LIST is the manifest read from the page itself:
-     - the items and their TEMPO come from the hero button's server markup
-       (`data-dc-shots`, written by directors-cut-button.tsx from lib/page.ts
-       and lib/film.ts: the tempo fields never reach the browser bundle,
-       scripts/build/browser-data-loader.cjs);
-     - the STARS and their weights are the page's own beat markers
-       (`[data-beat-star][data-beat-weight]`, lib/beats.ts beatAttrs), and
-       their positions are measured on the live layout at every step (the
-       real geometry, not the `estVh` estimate it was written from).
-   It chains one linear glide per segment, `lenis.scrollTo(y, { duration:
-   dist / speed, easing: t => t })` (a rAF glide under `?skip=smooth`), at
-   the tempo speed of the item at the reading line:
-       act cards 140 px/s · slow 90 · medium 110 · brisk 150
-   and DWELLS on the heavier stars: 1.2 s on weight 3, 0.6 s on weight 2,
-   none on weight 1 (a time star centred; a scroll star where its range
-   lets go of the spotlight: a card star's end, the house lights down). A segment is at most one
-   viewport, so a layout change (a font swap, a section streaming in) is
-   picked up on the next step. "2×" doubles every speed and halves every
-   dwell. It ends on the post-credits scene (the end of the page).
-
-   STOP: any wheel, touch, key or pointerdown (the stop pill's own presses
-   excepted), Esc, Pause / reduced motion, the fast lane (`fastlane`), a
-   game starting, the ■ Stop button, or the end. The pill — "■ Stop · 2× ·
-   Act n/4" — is a fixed bottom-centre box in the stage's "stop" layer
-   (components/stage/stage-layers.tsx, --z-stop 30: above the bars, below
-   the toasts' corner and the cut, clear of the toasts' bottom-left column).
-   Built as plain DOM (no React root): it exists only while a run does.
-
-   SOUND: the click borrowed the sound (./api.ts); `dc:start` is emitted
-   once the borrow resolves, `dc:stop` on stop, and the borrowed state is
-   restored 1.6 s later so the reel run-out is heard. Toys and eggs never
-   auto-play: the cut only scrolls (the Snitch and the post-credits scene
-   play as they always do).
+   It plays the page as a film with a CAMERA, not an autoscroll:
+     ./storyboard.ts  reads the live page into keys (hero, each act card's
+                      landed world and title, section heads, stars, the end);
+     ./plan.ts        turns keys into legs with speed envelopes (ramp, cruise,
+                      ramp), holds at rest and dips to dark, and SOLVES the
+                      cruise so the tour's total lands on its target;
+     this file        conducts the plan: ONE lenis.scrollTo per leg, shaped
+                      by the envelope's easing, adjacent legs sharing their
+                      boundary speed (no stop-start); Lenis stays the only
+                      scroll writer (a rAF writer under ?skip=smooth). Each
+                      leg re-resolves its target from the live DOM when it
+                      starts, so a font swap or a streamed section only moves
+                      the next leg, never breaks the run.
+   TRANSPORT (./transport.tsx, the React half): progress, chapter ticks, prev
+   / pause / next, Exit. INPUT: a wheel, touch, click or scroll key on the
+   page PAUSES (the camera freezes where it is and hands the scroll over:
+   "Paused · Resume" resumes from wherever the page is now); Esc exits; Space
+   / K pause or resume, ← / → (and [ / ]) step a chapter; presses inside any
+   `[data-dc-keep]` (the header control group, the transport) are ignored;
+   Pause / reduced motion, the fast lane, a game, the intro stop it; a hidden
+   tab or a modal's scroll lock pauses it.
+   SOUND: none of its own choosing: it starts with the sound as the visitor
+   left it. `dc:start` / `dc:stop` are emitted (the engine voices only the
+   run-out at a natural end); the title sting plays at an act-title hold.
    ========================================================================== */
 
 import { emit, on } from "@/lib/events";
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
-import { getLenis, haltGlide, scrollToTarget, type LenisLike, type LenisScrollOptions } from "@/lib/smooth-scroll";
-import { copyText } from "@/lib/sections";
-import { setDirectorsCutState, type Tour } from "./api";
-import { DWELL, SPEED } from "./timing";
+import { sound } from "@/lib/audio";
+import { getLenis, haltGlide, scrollToTarget, setCameraOwnsScroll, whenUnlocked } from "@/lib/smooth-scroll";
+import { markWorldFontsReady } from "@/lib/world-fonts";
+import type { WorldId } from "@/lib/worlds";
+import { inKeep, setDirectorsCutEnded, setDirectorsCutState, setPlayhead, type Tour } from "./api";
+import { easeOf, solveLeg, type El, type ElDip, type ElHold, type ElLeg, type Env, type Key, type Plan } from "./plan";
+import { maxScroll, planTour, type Cut } from "./storyboard";
+import { TOURS } from "./timing";
 
-export { DWELL, SPEED };
+/** What the next conducted element starts from (after a pause / seek / start). */
+type Entry = { y?: number; rest?: boolean; holdLeft?: number };
 
-/** A tempo code (spec §11.1; speeds in ./timing); `c` = act cards. */
-type TempoCode = keyof typeof SPEED;
-/** Restore the borrowed sound this long after the stop (the run-out). */
-const RESTORE_MS = 1600;
-/** A segment never runs longer than this share of the viewport. */
-const MAX_SEGMENT_VH = 1;
-/** Scroll stars (their box is the spotlight range): the cards' pin-spacer
- *  markers, the films' markers, the scrubbed sentences. */
-const SCROLL_STAR = "[data-card-beat], [data-beat-scroll], [data-words=\"scrub\"]";
-
-type Item = { id: string; tempo: TempoCode };
 type Run = {
+  tour: Tour;
+  cut: Cut | null;
+  plan: Plan | null;
+  /** bumped by every pause / resume / seek / stop: a conductor of an older
+   *  generation returns at its next await */
+  gen: number;
   stopped: boolean;
-  rate: 1 | 2;
-  done: Set<Element>;
-  restore: Promise<() => void>;
-  undo: (() => void)[];
-  pill: HTMLElement | null;
-  act: HTMLElement | null;
-  returnFocus: HTMLElement | null;
+  paused: boolean;
+  idx: number;
+  entry: Entry | null;
+  /** the playhead's current segment: plan seconds tFrom -> tTo over wall ms */
+  seg: { tFrom: number; tTo: number; w0: number; wDur: number } | null;
+  frozen: number;
   wake: (() => void) | null;
+  cancelGlide: (() => void) | null;
+  holdEnd: number;
+  holdY: number;
+  pausedHold: number | null;
+  samples: { t: number; y: number }[];
+  chapter: number;
+  undo: (() => void)[];
+  raf: number;
+  tick: number;
+  startedAt: number;
 };
 
 let run: Run | null = null;
 
-/* — the shot list ——————————————————————————————————————————————————— */
-
-/** The items in page order with their tempo (the hero button's data). */
-function readItems(): Item[] {
-  const raw = document.querySelector<HTMLElement>("[data-dc-shots]")?.dataset.dcShots ?? "";
-  const items: Item[] = [];
-  for (const tok of raw.split(/\s+/)) {
-    const i = tok.lastIndexOf(":");
-    if (i < 1) continue;
-    const t = tok.slice(i + 1);
-    if (t in SPEED) items.push({ id: tok.slice(0, i), tempo: t as TempoCode });
-  }
-  if (items.length) return items;
-  // no hero button on this page: cards by their marker, everything else medium
-  return [...document.querySelectorAll<HTMLElement>("section[id], footer[id], [data-act-card][id]")].map((el) => ({
-    id: el.id,
-    tempo: el.hasAttribute("data-act-card") ? "c" : "m",
-  }));
+/** `?debug=dc`: a trace on window for the probes. */
+function note(msg: string): void {
+  if (typeof window === "undefined" || !/[?&]debug=dc\b/.test(window.location.search)) return;
+  const w = window as unknown as { __dcLog?: string[] };
+  (w.__dcLog ??= []).push(`${Math.round(performance.now())} ${msg}`);
 }
 
-const pageTop = (el: Element): number => el.getBoundingClientRect().top + window.scrollY;
-const maxScroll = (): number => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-const shown = (el: Element): boolean => el.getClientRects().length > 0;
+const clampY = (y: number): number => Math.min(maxScroll(), Math.max(0, y));
+const liveY = (k: Key): number => clampY(k.resolve?.() ?? k.y);
 
-/** The speed (px/s) of the item at the reading line (the viewport centre). */
-function speedAt(items: Item[], y: number): number {
-  const line = y + window.innerHeight / 2;
-  let tempo: TempoCode = "m";
-  for (const it of items) {
-    const el = document.getElementById(it.id);
-    if (!el || !shown(el)) continue;
-    if (pageTop(el) <= line) tempo = it.tempo;
-    else break;
-  }
-  return SPEED[tempo];
+/* — the playhead ————————————————————————————————————————————————————— */
+
+function playheadOf(r: Run): number {
+  if (r.paused) return r.frozen;
+  const s = r.seg;
+  if (!s) return 0;
+  const f = s.wDur > 0 ? Math.min(1, Math.max(0, (performance.now() - s.w0) / s.wDur)) : 1;
+  return s.tFrom + (s.tTo - s.tFrom) * f;
 }
 
-/** The next stop after `y`: an item boundary (the speed changes when its
- *  top reaches the reading line), a heavy star's dwell point (centred), at
- *  most one viewport ahead, never past the end. */
-function nextStop(items: Item[], done: Set<Element>, y: number): { y: number; dwell: number; star: Element | null } {
-  const vh = window.innerHeight;
-  const max = maxScroll();
-  let best = Math.min(max, y + MAX_SEGMENT_VH * vh);
-  let dwell = 0;
-  let star: Element | null = null;
-  const consider = (cy: number, d: number, s: Element | null) => {
-    if (cy <= y + 4 || cy > best + 0.5) return;
-    if (cy < best - 0.5 || (d > dwell && Math.abs(cy - best) <= 0.5)) {
-      best = cy;
-      dwell = d;
-      star = s;
-    }
-  };
-  for (const it of items) {
-    const el = document.getElementById(it.id);
-    if (el && shown(el)) consider(pageTop(el) - vh / 2, 0, null);
-  }
-  for (const el of document.querySelectorAll<HTMLElement>("[data-beat-star][data-beat-weight]")) {
-    const d = DWELL[Number(el.dataset.beatWeight)] ?? 0;
-    if (!d || done.has(el) || !shown(el)) continue;
-    const r = el.getBoundingClientRect();
-    // a SCROLL star's box is its spotlight range: dwell where it lets go
-    // (its bottom at 20% of the viewport: a card star's end, the house
-    // lights fully down); a TIME star is centred while it plays
-    const at = el.matches(SCROLL_STAR) ? r.bottom - 0.2 * vh : r.top + r.height / 2 - vh / 2;
-    consider(Math.min(max, Math.max(0, at + window.scrollY)), d, el);
-  }
-  return { y: best, dwell, star };
+function setSeg(r: Run, tFrom: number, tTo: number, wallSeconds: number): void {
+  r.seg = { tFrom, tTo, w0: performance.now(), wDur: wallSeconds * 1000 };
 }
 
-/* — the glides ——————————————————————————————————————————————————————— */
+function publish(r: Run, patch: Parameters<typeof setDirectorsCutState>[1] = {}): void {
+  if (r.stopped) return;
+  setDirectorsCutState(true, { elapsed: Math.round(playheadOf(r)), ...patch });
+}
 
-const linear = (t: number) => t;
+function enterChapter(r: Run, el: El): void {
+  const ch = r.cut?.display[el.chapter] ?? -1;
+  if (ch !== r.chapter && ch >= 0) {
+    r.chapter = ch;
+    publish(r, { chapter: ch });
+  }
+}
 
-/** One linear glide to `y` over `s` seconds (Lenis, else a rAF glide).
- *  Resolves `true` on arrival (or the safety cap), `false` when woken early
- *  (a stop, or the 2× toggle re-timing the segment from where it is). */
-function glide(r: Run, y: number, s: number): Promise<boolean> {
+/* — glides ——————————————————————————————————————————————————————————— */
+
+/** One glide to `y1` shaped by `env`. Resolves true on arrival, false when
+ *  cancelled (a pause / seek / stop) or when something else stopped it
+ *  (a modal's scroll lock, the visitor's own scroll). */
+function glide(r: Run, y1: number, env: Env): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
     let settled = false;
-    const end = (arrived: boolean) => {
+    let raf = 0;
+    const end = (ok: boolean) => {
       if (settled) return;
       settled = true;
       clearTimeout(cap);
       cancelAnimationFrame(raf);
-      r.wake = null;
-      resolve(arrived);
+      if (r.cancelGlide === cancel) r.cancelGlide = null;
+      resolve(ok);
     };
-    const finish = () => end(true);
-    r.wake = () => end(false);
-    const cap = window.setTimeout(finish, s * 1000 + 800);
-    let raf = 0;
-    const l: LenisLike | null = getLenis();
+    const cancel = () => end(false);
+    r.cancelGlide = cancel;
+    const dur = Math.max(0.05, env.T);
+    // a glide that never reports (stopped by a lock, overridden): near its end = arrived
+    const cap = window.setTimeout(() => end(Math.abs(window.scrollY - y1) < 12), dur * 1000 + 1500);
+    const ease = easeOf(env);
+    const l = getLenis();
     if (l) {
-      // Lenis 1.3 takes `easing` with `duration`; LenisLike types the subset the page uses
-      const opts: LenisScrollOptions & { easing: (t: number) => number } = {
-        duration: s,
-        easing: linear,
-        force: true,
-        onComplete: finish,
-      };
-      l.scrollTo(y, opts);
+      l.scrollTo(y1, { duration: dur, easing: ease, force: true, onComplete: () => end(true) });
       return;
     }
     const y0 = window.scrollY;
     const t0 = performance.now();
     const step = (now: number) => {
-      if (r.stopped) return end(false);
-      const k = Math.min(1, (now - t0) / (s * 1000));
-      window.scrollTo({ top: y0 + (y - y0) * k, behavior: "instant" });
-      if (k >= 1) finish();
+      if (settled) return;
+      const k = Math.min(1, (now - t0) / (dur * 1000));
+      window.scrollTo({ top: y0 + (y1 - y0) * ease(k), behavior: "instant" });
+      if (k >= 1) end(true);
       else raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
   });
 }
 
-function wait(r: Run, ms: number): Promise<void> {
-  return new Promise<void>((resolve) => {
-    const t = window.setTimeout(done, ms);
-    function done() {
+function wait(r: Run, ms: number): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    const t = window.setTimeout(() => {
+      r.wake = null;
+      resolve(true);
+    }, ms);
+    r.wake = () => {
       clearTimeout(t);
       r.wake = null;
-      resolve();
-    }
-    r.wake = done;
+      resolve(false);
+    };
   });
 }
 
-/* — the pill —————————————————————————————————————————————————————————— */
+/** The recent speed (px/s) from the rAF samples. */
+function speedOf(r: Run): number {
+  const s = r.samples;
+  if (s.length < 2) return 0;
+  const last = s[s.length - 1];
+  let j = s.length - 2;
+  while (j > 0 && last.t - s[j].t < 140) j--;
+  const dt = (last.t - s[j].t) / 1000;
+  return dt > 0.03 ? Math.max(0, (last.y - s[j].y) / dt) : 0;
+}
 
-/** The copy without its leading ▶ / ■ glyph (accessible names). */
-const unglyph = (t: string): string => t.replace(/^[▶■]\s*/u, "");
+function worldOf(id: string): WorldId | null {
+  const w = document.getElementById(id.split(":")[0])?.closest("[data-world]")?.getAttribute("data-world");
+  return w && w !== "house" ? (w as WorldId) : null;
+}
 
-function buildPill(r: Run): HTMLElement {
-  const box = document.createElement("div");
-  box.setAttribute("role", "group");
-  box.setAttribute("aria-label", unglyph(copyText("dc.button").text));
-  box.dataset.dcPill = "";
-  box.dataset.world = "house";
-  box.dataset.tone = "deep";
-  box.dataset.houseType = "";
-  box.className =
-    "pointer-events-auto inline-flex items-center gap-1 rounded-pill bg-bg px-2 type-meta text-fg shadow-[inset_0_0_0_1px_var(--rule)]";
-  // bottom-centre, clear of the egg toasts' bottom-left column (≤ 27 rem)
-  box.style.cssText = "position:absolute;pointer-events:auto;bottom:1rem;left:max(50%,37rem);transform:translateX(-50%);white-space:nowrap";
+const warmWorld = (k: Key | undefined): void => {
+  const w = k ? worldOf(k.id) : null;
+  if (w) void markWorldFontsReady(w).catch(() => {});
+};
 
-  const button = (text: string) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "inline-flex min-h-11 items-center rounded-pill px-3 text-fg-muted transition-colors hover:text-fg";
-    b.textContent = text;
-    return b;
-  };
-  const dot = () => {
-    const s = document.createElement("span");
-    s.setAttribute("aria-hidden", "true");
-    s.className = "text-fg-ghost";
-    s.textContent = "·";
-    return s;
-  };
+/* — the elements ——————————————————————————————————————————————————— */
 
-  const stopText = copyText("dc.stop").text;
-  const stopBtn = button(stopText);
-  stopBtn.setAttribute("aria-label", unglyph(stopText));
-  stopBtn.dataset.dcStop = "";
-  stopBtn.addEventListener("click", () => stop("stop"));
-
-  const speedBtn = button(copyText("dc.speed").text);
-  speedBtn.dataset.dcSpeed = "";
-  speedBtn.setAttribute("aria-pressed", "false");
-  speedBtn.addEventListener("click", () => {
-    r.rate = r.rate === 2 ? 1 : 2;
-    speedBtn.setAttribute("aria-pressed", String(r.rate === 2));
-    // re-time the running segment (or dwell) from here at the new speed
-    r.wake?.();
-  });
-
-  const act = document.createElement("span");
-  act.dataset.dcAct = "";
-  act.className = "px-2 text-fg-muted";
-  const actDot = dot();
-  act.hidden = actDot.hidden = true;
-  r.act = act;
-
-  box.append(stopBtn, dot(), speedBtn, actDot, act);
-  const layer = document.querySelector('[data-stage-layers="stop"]');
-  if (layer) layer.append(box);
-  else {
-    box.style.position = "fixed";
-    box.style.zIndex = "30";
-    document.body.append(box);
+async function doHold(r: Run, g: number, el: ElHold, entry: Entry | null): Promise<boolean> {
+  const plan = r.plan!;
+  const key = plan.keys[el.key];
+  const left = entry?.holdLeft ?? el.dur;
+  enterChapter(r, el);
+  setSeg(r, el.t0 + (el.dur - left), el.t0 + el.dur, left);
+  r.holdEnd = performance.now() + left * 1000;
+  r.holdY = window.scrollY;
+  let ms = left * 1000;
+  if (key.sting && entry?.holdLeft == null) {
+    // the card's damped progress settles first, then the title lands
+    const settle = Math.min(ms, key.settle * 1000);
+    if (settle > 0 && !(await wait(r, settle))) return false;
+    sound.cue("title-sting");
+    ms -= settle;
   }
-  return box;
+  if (ms > 0 && !(await wait(r, ms))) return false;
+  return g === r.gen && !r.stopped;
 }
 
-/** "Act n/4" for the card the reading line has passed (hidden before Act I). */
-function updateAct(r: Run): void {
-  const el = r.act;
-  if (!el) return;
-  const line = window.scrollY + window.innerHeight / 2;
-  const cards = [...document.querySelectorAll<HTMLElement>("[data-act-card]")].filter(shown);
-  let n = 0;
-  cards.forEach((c, i) => {
-    if (pageTop(c) <= line) n = i + 1;
-  });
-  const hide = n === 0;
-  el.hidden = hide;
-  if (el.previousElementSibling instanceof HTMLElement) el.previousElementSibling.hidden = hide;
-  if (!hide) el.textContent = copyText("dc.act", { n }).text;
+async function doLeg(r: Run, g: number, el: ElLeg, entry: Entry | null): Promise<boolean> {
+  const plan = r.plan!;
+  const a = plan.keys[el.a];
+  const b = plan.keys[el.b];
+  enterChapter(r, el);
+  // the live geometry NOW: this leg ends where its key is today
+  const yA = liveY(a);
+  const yB = liveY(b);
+  const yStart = yA + el.f0 * (yB - yA);
+  const y1 = clampY(yA + el.f1 * (yB - yA));
+  const y0 = entry?.y ?? window.scrollY;
+  const d = y1 - y0;
+  if (b.dip) warmWorld(plan.keys[el.b + 1]);
+  if (d > 1) {
+    const v0 = entry?.rest ? 0 : el.env.v0;
+    const env = solveLeg(d, v0, el.env.v1, el.env.c, TOURS[r.tour].a);
+    const planned = Math.max(1, y1 - yStart);
+    const done = Math.min(1, Math.max(0, (y0 - yStart) / planned));
+    setSeg(r, el.t0 + el.env.T * done, el.t0 + el.env.T, env.T);
+    const ok = await glide(r, y1, env);
+    if (g !== r.gen || r.stopped) return false;
+    if (!ok) {
+      // stopped by something else (a scroll lock, the visitor's scroll): pause
+      pause();
+      return false;
+    }
+    // layout moved under the leg and the key is a rest: one short corrective glide
+    if (el.f1 === 1 && el.env.v1 === 0) {
+      const yNow = liveY(b);
+      const off = yNow - window.scrollY;
+      if (Math.abs(off) > 8) {
+        const fix = solveLeg(Math.abs(off), 0, 0, 300, TOURS[r.tour].a);
+        const ok2 = await glide(r, yNow, fix);
+        if (g !== r.gen || r.stopped) return false;
+        if (!ok2) {
+          pause();
+          return false;
+        }
+      }
+    }
+  } else {
+    setSeg(r, el.t0 + el.env.T, el.t0 + el.env.T, 0);
+  }
+  return true;
 }
 
-/* — the run ——————————————————————————————————————————————————————————— */
+/** A dip to dark: the existing cut (fade in, jump, fade out) to `y`. */
+async function dipTo(y: number, key: Key | undefined): Promise<void> {
+  const w = key ? worldOf(key.id) : null;
+  if (w) await markWorldFontsReady(w).catch(() => {});
+  await scrollToTarget(y, { cut: true, history: false });
+}
 
-async function loop(r: Run): Promise<void> {
-  // the film starts at the top (a hard cut there when the page is elsewhere).
-  // Either way scrollToTarget first waits for a closing menu / palette to
-  // release its scroll lock (Lenis's start() would cancel a glide begun
-  // while it was stopped).
-  // Still in the opening screen (the hero button): it plays from there.
-  const far = window.scrollY > window.innerHeight;
-  await scrollToTarget(far ? 0 : window.scrollY, far ? { cut: true } : { immediate: true });
+async function doDip(r: Run, g: number, el: ElDip): Promise<boolean> {
+  const plan = r.plan!;
+  enterChapter(r, el);
+  const inKey = plan.keys[el.b];
+  setSeg(r, el.t0, el.t0 + el.dur, el.dur);
+  await dipTo(liveY(inKey), inKey);
+  return g === r.gen && !r.stopped;
+}
+
+/* — the conductor ———————————————————————————————————————————————————— */
+
+async function conduct(r: Run, g: number): Promise<void> {
+  const plan = r.plan!;
+  try {
+    while (!r.stopped && g === r.gen) {
+      if (r.idx >= plan.els.length) {
+        stop("end");
+        return;
+      }
+      const el = plan.els[r.idx];
+      const entry = r.entry;
+      r.entry = null;
+      const ok = el.k === "hold" ? await doHold(r, g, el, entry) : el.k === "leg" ? await doLeg(r, g, el, entry) : await doDip(r, g, el);
+      if (!ok || g !== r.gen || r.stopped) return;
+      r.idx++;
+    }
+  } catch {
+    if (g === r.gen) stop("error");
+  }
+}
+
+/** Where on the plan the page is at `y`: the element to resume from. */
+function locate(r: Run, y: number): { idx: number; entry: Entry } {
+  const plan = r.plan!;
+  const ys = plan.keys.map(liveY);
+  const els = plan.els;
+  // a rest (hold) the page is at
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i];
+    if (el.k === "hold" && Math.abs(y - ys[el.key]) <= 6) return { idx: i, entry: { holdLeft: el.dur } };
+  }
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i];
+    if (el.k === "leg") {
+      const ya = ys[el.a] + el.f0 * (ys[el.b] - ys[el.a]);
+      const yb = ys[el.a] + el.f1 * (ys[el.b] - ys[el.a]);
+      if (y >= ya - 2 && y <= yb + 2) return { idx: i, entry: { y, rest: true } };
+    } else if (el.k === "dip" && y > ys[el.a] && y < ys[el.b]) {
+      return { idx: i, entry: {} };
+    }
+  }
+  if (y <= ys[0]) return { idx: 0, entry: { rest: true } };
+  return { idx: els.length - 1, entry: {} };
+}
+
+/** The plan second the page is at (for the playhead after a resume). */
+function timeAt(r: Run, idx: number, entry: Entry): number {
+  const el = r.plan!.els[idx];
+  if (!el) return r.plan!.total;
+  if (el.k === "leg" && entry.y != null) {
+    const yA = liveY(r.plan!.keys[el.a]);
+    const yB = liveY(r.plan!.keys[el.b]);
+    const ya = yA + el.f0 * (yB - yA);
+    const yb = yA + el.f1 * (yB - yA);
+    return el.t0 + el.env.T * Math.min(1, Math.max(0, (entry.y - ya) / Math.max(1, yb - ya)));
+  }
+  if (el.k === "hold" && entry.holdLeft != null) return el.t0 + (el.dur - entry.holdLeft);
+  return el.t0;
+}
+
+function launch(r: Run, loc: { idx: number; entry: Entry }): void {
+  const g = ++r.gen;
+  r.idx = loc.idx;
+  r.entry = loc.entry;
+  r.paused = false;
+  r.pausedHold = null;
+  r.frozen = timeAt(r, loc.idx, loc.entry);
+  r.seg = null;
+  setCameraOwnsScroll(true);
+  const el = r.plan!.els[loc.idx];
+  if (el) enterChapter(r, el);
+  publish(r, { paused: false, elapsed: Math.round(r.frozen) });
+  void conduct(r, g);
+}
+
+/* — start ——————————————————————————————————————————————————————————— */
+
+/** Seconds a fly-to takes for distance d. */
+const flyEnv = (d: number, a: number): Env => solveLeg(d, 0, 0, Math.max(300, d / 0.9), a);
+
+async function begin(r: Run, fromTop: boolean): Promise<void> {
+  // a closing menu / palette releases its scroll lock first (a glide begun
+  // while Lenis is stopped would be cancelled by its start())
+  await whenUnlocked();
   if (r.stopped) return;
-  const items = readItems();
-  while (!r.stopped) {
-    updateAct(r);
-    const y = window.scrollY;
-    const max = maxScroll();
-    if (y >= max - 2) return stop("end");
-    const next = nextStop(items, r.done, y);
-    const dist = next.y - y;
-    let arrived = true;
-    if (dist > 1) {
-      const speed = speedAt(items, y) * r.rate;
-      arrived = await glide(r, next.y, Math.max(0.05, dist / speed));
+  const cut = planTour(r.tour);
+  if (!cut) {
+    stop("empty");
+    return;
+  }
+  r.cut = cut;
+  r.plan = cut.plan;
+  if (typeof window !== "undefined" && /[?&]debug=dc\b/.test(window.location.search)) {
+    (window as unknown as { __dcCam?: unknown }).__dcCam = { plan: cut.plan, cut, run: r };
+  }
+  setDirectorsCutState(true, { tour: r.tour, total: Math.round(cut.plan.total), chapters: cut.labels, starts: cut.starts.map((s) => Math.round(s)), chapter: 0, elapsed: 0, paused: false });
+  setPlayhead(() => playheadOf(r));
+  const vh = window.innerHeight;
+  const y = window.scrollY;
+  if (fromTop && y > 2) {
+    if (y > 1.2 * vh) await scrollToTarget(0, { cut: true, history: false });
+    else {
+      const ok = await glide(r, 0, flyEnv(y, TOURS[r.tour].a));
+      if (!ok && !r.stopped) return;
     }
     if (r.stopped) return;
-    if (!arrived) continue; // re-timed (2×): carry on from here
-    if (next.star) {
-      r.done.add(next.star);
-      if (next.dwell) await wait(r, next.dwell / r.rate);
-    }
-    // a glide that did not move (a lock, a layout jump): never spin
-    if (Math.abs(window.scrollY - y) < 1 && !next.star && dist > 1) {
-      await wait(r, 120);
-      if (Math.abs(window.scrollY - y) < 1) return stop("stuck");
-    }
+    launch(r, { idx: 0, entry: { rest: true } });
+    return;
   }
+  if (y < 0.5 * vh) {
+    launch(r, { idx: 0, entry: { rest: true } });
+    return;
+  }
+  // from here: continue the tour from where the page is
+  launch(r, locate(r, y));
 }
 
-/** Start a run (./api.ts calls it from the click, with the borrowed sound). */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function play(borrowed: Promise<() => void>, _tour: Tour = "full"): void {
+/** Start a run (./api.ts calls it from the click). */
+export function play(tour: Tour, fromTop = false): void {
   if (run) return;
   if (motionOffNow()) {
     setDirectorsCutState(false);
-    void borrowed.then((restore) => restore());
     return;
   }
   const r: Run = {
+    tour,
+    cut: null,
+    plan: null,
+    gen: 0,
     stopped: false,
-    rate: 1,
-    done: new Set(),
-    restore: borrowed.catch(() => () => {}),
-    undo: [],
-    pill: null,
-    act: null,
-    returnFocus: document.activeElement instanceof HTMLElement ? document.activeElement : null,
+    paused: false,
+    idx: 0,
+    entry: null,
+    seg: null,
+    frozen: 0,
     wake: null,
+    cancelGlide: null,
+    holdEnd: 0,
+    holdY: 0,
+    pausedHold: null,
+    samples: [],
+    chapter: -1,
+    undo: [],
+    raf: 0,
+    tick: 0,
+    startedAt: performance.now(),
   };
   run = r;
-  r.pill = buildPill(r);
-  // keyboard users land on ■ Stop (a fixed pill: no scroll)
-  r.pill.querySelector<HTMLElement>("[data-dc-stop]")?.focus({ preventScroll: true });
 
-  const inPill = (e: Event) => e.target instanceof Node && Boolean(r.pill?.contains(e.target));
+  /* input: page presses pause, the keys below steer, the keep zones are ignored */
   const opts = { capture: true, passive: true } as const;
   const onInput = (e: Event) => {
-    if (inPill(e)) return;
-    stop(e.type);
-  };
-  const onKey = (e: KeyboardEvent) => {
-    if (e.key === "Escape") return stop("escape");
-    if (inPill(e)) return;
-    stop("key");
+    if (inKeep(e)) return;
+    if (!r.plan) return stop(e.type);
+    freeze(r, e.type);
   };
   for (const ev of ["wheel", "touchstart", "pointerdown"] as const) {
     window.addEventListener(ev, onInput, opts);
     r.undo.push(() => window.removeEventListener(ev, onInput, opts));
   }
-  window.addEventListener("keydown", onKey, opts);
-  r.undo.push(() => window.removeEventListener("keydown", onKey, opts));
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === "Escape") return stop("escape");
+    if (e.ctrlKey || e.metaKey || e.altKey || e.key === "Tab" || e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
+    if (inKeep(e)) return;
+    const t = e.target;
+    if (t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (!r.plan) return stop("key");
+    switch (e.key) {
+      case " ":
+      case "k":
+      case "K":
+        e.preventDefault();
+        return r.paused ? resume() : pause();
+      case "ArrowRight":
+      case "]":
+        e.preventDefault();
+        return step(1);
+      case "ArrowLeft":
+      case "[":
+        e.preventDefault();
+        return step(-1);
+      case "ArrowDown":
+      case "ArrowUp":
+      case "PageDown":
+      case "PageUp":
+      case "Home":
+      case "End":
+        return freeze(r, `key:${e.key}`);
+      default:
+    }
+  };
+  window.addEventListener("keydown", onKey, true);
+  r.undo.push(() => window.removeEventListener("keydown", onKey, true));
   r.undo.push(onMotionOffChange(() => motionOffNow() && stop("pause")));
   r.undo.push(on("fastlane", () => stop("fastlane")));
   r.undo.push(on("game:start", () => stop("game")));
-
-  void r.restore.then(() => {
-    if (!r.stopped) emit("dc:start");
+  const onVis = () => {
+    if (document.hidden) freeze(r, "hidden");
+  };
+  document.addEventListener("visibilitychange", onVis);
+  r.undo.push(() => document.removeEventListener("visibilitychange", onVis));
+  const mo = new MutationObserver(() => {
+    if (document.documentElement.classList.contains("intro-armed")) stop("intro");
   });
-  void loop(r).catch(() => stop("error"));
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  r.undo.push(() => mo.disconnect());
+
+  /* the sampler: speed for a graceful pause; a scroll lock pauses */
+  const sample = () => {
+    if (r.stopped) return;
+    const now = performance.now();
+    r.samples.push({ t: now, y: window.scrollY });
+    if (r.samples.length > 40) r.samples.shift();
+    if (!r.paused && r.plan && document.body.style.overflow === "hidden") freeze(r, "lock");
+    r.raf = requestAnimationFrame(sample);
+  };
+  r.raf = requestAnimationFrame(sample);
+  // the elapsed second for the dock (the bar itself reads the playhead per frame)
+  r.tick = window.setInterval(() => {
+    if (!r.paused && r.plan) publish(r);
+  }, 1000);
+
+  emit("dc:start");
+  void begin(r, fromTop).catch(() => stop("error"));
+}
+
+/* — pause, resume, seek ———————————————————————————————————————————— */
+
+/** Freeze where the page is NOW (a wheel, a click, a key): the visitor owns
+ *  the scroll from here. */
+function freeze(r: Run, why = "input"): void {
+  if (r.stopped || !r.plan) return;
+  note(`freeze:${why}`);
+  if (r.paused) {
+    // already paused: a graceful decel still gliding gives way to the visitor's scroll
+    if (r.cancelGlide) {
+      r.cancelGlide();
+      const l = getLenis();
+      if (l && l.isScrolling === "smooth") haltGlide();
+      setCameraOwnsScroll(false);
+    }
+    return;
+  }
+  r.frozen = playheadOf(r);
+  r.pausedHold = r.holdEnd > performance.now() ? (r.holdEnd - performance.now()) / 1000 : null;
+  r.paused = true;
+  r.gen++;
+  r.cancelGlide?.();
+  r.wake?.();
+  const l = getLenis();
+  if (l && l.isScrolling === "smooth") haltGlide();
+  setCameraOwnsScroll(false);
+  publish(r, { paused: true, elapsed: Math.round(r.frozen) });
+}
+
+/** Pause with a graceful stop: a glide in flight eases to rest. */
+export function pause(): void {
+  const r = run;
+  if (!r || r.stopped || r.paused || !r.plan) return;
+  const v = speedOf(r);
+  const l = getLenis();
+  if (!(l && l.isScrolling === "smooth" && v > 40)) return freeze(r);
+  r.frozen = playheadOf(r);
+  r.pausedHold = null;
+  r.paused = true;
+  r.gen++;
+  r.wake?.();
+  publish(r, { paused: true, elapsed: Math.round(r.frozen) });
+  const a = TOURS[r.tour].a;
+  const rr = Math.max(0.35, (1.5 * v) / a);
+  const y1 = clampY(window.scrollY + (v * rr) / 2);
+  r.cancelGlide?.();
+  void glide(r, y1, { v0: v, v1: 0, c: v, r1: 0, r2: rr, T: rr }).then(() => {
+    if (!r.paused) return;
+    setCameraOwnsScroll(false);
+  });
+}
+
+/** Resume from where the page is now. */
+export function resume(): void {
+  const r = run;
+  if (!r || r.stopped || !r.paused || !r.plan) return;
+  r.cancelGlide?.();
+  const y = window.scrollY;
+  if (r.pausedHold != null && Math.abs(y - r.holdY) <= 6) {
+    const el = r.plan.els[r.idx];
+    if (el && el.k === "hold") return launch(r, { idx: r.idx, entry: { holdLeft: Math.max(0.2, r.pausedHold) } });
+  }
+  launch(r, locate(r, y));
+}
+
+/** Go to the first frame of display chapter `i`, then play on. */
+export function seek(i: number): void {
+  const r = run;
+  if (!r || r.stopped || !r.plan || !r.cut) return;
+  const cut = r.cut;
+  const ci = Math.min(cut.firstEl.length - 1, Math.max(0, i));
+  let idx = cut.firstEl[ci];
+  const g = ++r.gen;
+  r.cancelGlide?.();
+  r.wake?.();
+  const l = getLenis();
+  if (l && l.isScrolling === "smooth") haltGlide();
+  // the playhead holds at the chapter's start while the camera flies there
+  r.paused = false;
+  r.pausedHold = null;
+  r.holdEnd = 0;
+  r.seg = { tFrom: r.plan.els[idx]?.t0 ?? 0, tTo: r.plan.els[idx]?.t0 ?? 0, w0: performance.now(), wDur: 1 };
+  publish(r, { paused: false, chapter: ci });
+  r.chapter = ci;
+  setCameraOwnsScroll(true);
+  const plan = r.plan;
+  void (async () => {
+    const keys = plan.keys;
+    const el = plan.els[idx];
+    let y = 0;
+    let keyAt: Key | undefined;
+    if (el.k === "hold") {
+      keyAt = keys[el.key];
+      y = liveY(keyAt);
+    } else if (el.k === "leg") {
+      keyAt = keys[el.a];
+      const yA = liveY(keys[el.a]);
+      y = yA + el.f0 * (liveY(keys[el.b]) - yA);
+    } else {
+      keyAt = keys[el.b];
+      y = liveY(keyAt);
+      idx++;
+    }
+    const vh = window.innerHeight;
+    const d = Math.abs(y - window.scrollY);
+    if (d > 2) {
+      if (d <= 1.2 * vh) {
+        const ok = await glide(r, y, flyEnv(d, TOURS[r.tour].a));
+        if (g !== r.gen || r.stopped) return;
+        if (!ok) return void pause();
+      } else {
+        const lead = Math.min(y, 0.6 * vh);
+        await dipTo(y - lead, keyAt);
+        if (g !== r.gen || r.stopped) return;
+        const ok = await glide(r, y, flyEnv(lead, TOURS[r.tour].a));
+        if (g !== r.gen || r.stopped) return;
+        if (!ok) return void pause();
+      }
+    }
+    if (g !== r.gen || r.stopped) return;
+    launch(r, { idx, entry: { rest: true } });
+  })().catch(() => stop("error"));
+}
+
+/** The next (+1) or previous (-1) chapter (previous: this chapter's start first). */
+export function step(dir: 1 | -1): void {
+  const r = run;
+  if (!r || r.stopped || !r.cut) return;
+  const cut = r.cut;
+  const cur = Math.max(0, r.chapter);
+  if (dir > 0) {
+    if (cur >= cut.labels.length - 1) return;
+    return seek(cur + 1);
+  }
+  const into = playheadOf(r) - (cut.starts[cur] ?? 0);
+  seek(into > 3 || cur === 0 ? cur : cur - 1);
+}
+
+/** Both tours' computed lengths (s) from the live page. */
+export function lengths(): Record<Tour, number> {
+  return { quick: planTour("quick")?.plan.total ?? 0, full: planTour("full")?.plan.total ?? 0 };
 }
 
 /** End the run (idempotent). */
 export function stop(reason: string): void {
   const r = run;
   if (!r || r.stopped) return;
+  note(`stop:${reason}`);
   r.stopped = true;
   run = null;
+  r.gen++;
+  r.cancelGlide?.();
+  r.wake?.();
   // halt the programmatic glide in place: the input that stopped us (a
   // wheel, a key) owns the scroll from here
   const l = getLenis();
   if (l && l.isScrolling === "smooth") haltGlide();
-  r.wake?.();
+  cancelAnimationFrame(r.raf);
+  clearInterval(r.tick);
   for (const u of r.undo) u();
-  const focusWasIn = Boolean(r.pill?.contains(document.activeElement));
-  r.pill?.remove();
-  if (focusWasIn && r.returnFocus?.isConnected) r.returnFocus.focus({ preventScroll: true });
+  setCameraOwnsScroll(false);
+  setPlayhead(() => 0);
   const max = maxScroll();
   const pct = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 100;
   emit("dc:stop", { reason, pct });
-  setDirectorsCutState(false);
-  void r.restore.then((restore) => window.setTimeout(restore, RESTORE_MS));
+  if (reason === "end") setDirectorsCutEnded();
+  else setDirectorsCutState(false);
 }

@@ -22,9 +22,10 @@
 //   chapter      the menu's chapter select: "▶ Director's cut" first, 7 tiles with lazy 16:9 images ≤ 640 w; the
 //                act-2 tile closes the menu and lands #act-2 at its landAt (± 6 px) with focus inside and #act-2
 //                pushed
-//   dc.run       the hero button starts the cut (window.__dc), the stop pill sits in the stage's "stop" layer with
-//                focus on ■ Stop, the page glides at a tempo speed (30–400 px/s headless), 2× toggles without
-//                stopping, a wheel stops it (pill gone) ≤ 400 ms
+//   dc.run       the hero button starts the cut (window.__dc); the transport sits in the stage's "stop" layer
+//                (a progress bar, ≥ 4 chapter ticks, a "0:05 / 1:30" clock, pause / Exit); the pause button
+//                rests the page (± 3 px over 0.7 s) and resumes it, a wheel PAUSES (the run lives, "Paused"),
+//                Exit ends it ≤ 400 ms
 //   dc.esc / dc.pause / dc.fastlane   Escape, the Pause toggle and the fast lane each stop a running cut
 //   analytics    no request to an analytics host during the whole probe (track() is a no-op, spec §11.4)
 //  expected OFF (own contexts): 390×844 touch and 1024×1366 touch hide the button; at 390 the credits disclosure
@@ -290,27 +291,46 @@ export default async function probe(page, ctx) {
       await jump(page, 0);
       await sleep(300);
       await page.click('[data-dc="hero"]');
-      return page.waitForFunction(() => window.__dc === true && !!document.querySelector('[data-stage-layers="stop"] [data-dc-pill]'), null, { timeout: 6000 }).then(() => true, () => false);
+      return page.waitForFunction(() => window.__dc === true && !!document.querySelector('[data-stage-layers="stop"] [data-dc-transport]'), null, { timeout: 6000 }).then(() => true, () => false);
     };
-    const stopped = (ms = 400) => page.waitForFunction(() => window.__dc === false && !document.querySelector("[data-dc-pill]"), null, { timeout: ms, polling: 16 }).then(() => true, () => false);
+    const stopped = (ms = 400) => page.waitForFunction(() => window.__dc === false && !document.querySelector("[data-dc-transport]"), null, { timeout: ms, polling: 16 }).then(() => true, () => false);
 
+    // The camera worker's transport: progress + chapter ticks + prev / pause / next + Exit; a wheel PAUSES
+    // (Paused · Resume), the pause button rests the page and resumes it; Esc and Exit end the run.
     await run("dc.run", async () => {
       const started = await startCut();
       if (!started) return set("dc.run", false, { why: "did not start" });
-      const focus = await page.evaluate(() => document.activeElement?.hasAttribute("data-dc-stop") ?? false);
-      await sleep(1500);
-      const y0 = await page.evaluate(() => scrollY);
-      const t0 = Date.now();
+      await sleep(5000);
+      const ui = await page.evaluate(() => {
+        const t = document.querySelector("[data-dc-transport]");
+        const clock = t?.querySelector("[data-dc-clock]")?.textContent ?? "";
+        return {
+          ticks: t?.querySelectorAll("[data-dc-tick]").length ?? 0,
+          clock,
+          hasBar: !!t?.querySelector('[role="progressbar"]'),
+          buttons: ["data-dc-pause", "data-dc-exit"].every((a) => !!t?.querySelector("[" + a + "]")),
+          y: scrollY,
+        };
+      });
+      const moved = await page.evaluate(() => scrollY);
+      const clockOk = /^\d+:\d\d \/ \d+:\d\d$/.test(ui.clock);
+      // the pause button: rests the page, keeps the run, then resumes it
+      await page.click("[data-dc-pause]");
+      await sleep(1800);
+      const p1 = await page.evaluate(() => scrollY);
+      await sleep(700);
+      const p2 = await page.evaluate(() => ({ y: scrollY, running: window.__dc, label: document.querySelector("[data-dc-pause]")?.getAttribute("aria-label") }));
+      await page.click("[data-dc-pause]");
       await sleep(2500);
-      const y1 = await page.evaluate(() => scrollY);
-      const speed = ((y1 - y0) / (Date.now() - t0)) * 1000;
-      await page.click("[data-dc-speed]");
-      await sleep(400);
-      const twoX = await page.evaluate(() => ({ pressed: document.querySelector("[data-dc-speed]")?.getAttribute("aria-pressed"), running: window.__dc }));
+      const p3 = await page.evaluate(() => ({ y: scrollY, running: window.__dc }));
+      // a wheel on the page pauses (the run stays, the label reads Paused)
       await page.mouse.move(ctx.vw.width / 2, ctx.vw.height / 2);
       await page.mouse.wheel(0, 120);
+      await sleep(700);
+      const w = await page.evaluate(() => ({ running: window.__dc, paused: /paused/i.test(document.querySelector("[data-dc-chapter]")?.textContent ?? "") }));
+      await page.click("[data-dc-exit]");
       const stop = await stopped();
-      set("dc.run", focus && speed >= 30 && speed <= 400 && twoX.pressed === "true" && twoX.running === true && stop, { focus, speed: Math.round(speed), twoX, stop });
+      set("dc.run", ui.ticks >= 4 && clockOk && ui.hasBar && ui.buttons && Math.abs(p2.y - p1) <= 3 && p2.running === true && p3.y > p2.y + 20 && w.running === true && w.paused && stop, { ui, moved, p1, p2, p3, w, stop });
     });
 
     await run("dc.esc", async () => {
