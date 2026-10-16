@@ -62,7 +62,7 @@ export function HuntChip() {
   };
 
   return (
-    <span className="hunt-chip-wrap" data-house-type="">
+    <span className="hunt-chip-wrap" data-house-type="" data-dc-keep="">
       <button
         ref={btn}
         type="button"

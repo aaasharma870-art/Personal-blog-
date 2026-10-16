@@ -321,6 +321,7 @@ function PauseWithTooltip() {
       <MotionToggle
         word={copyVisible(paused ? RESUME_WORD : PAUSE_WORD) ? (paused ? RESUME_WORD : PAUSE_WORD).text : undefined}
         sub={paused && copyVisible(PAUSED_SUB) ? PAUSED_SUB.text : undefined}
+        reserve={copyVisible(PAUSED_SUB) ? PAUSED_SUB.text : undefined}
       />
       {/* the Lumos / Nox alias is the lumos egg's hint (W2-HUNT): gone
           when the visitor turns the eggs off for the session */}

@@ -218,6 +218,17 @@ html.js .game-pill > svg {
     text-align: left;
   }
 }
+/* The Pause word keeps the width of "Resume / Motion paused" (a hidden copy of the
+   reason shares its cell): pausing never moves the dock beside it */
+.dock-word-fixed {
+  display: inline-grid;
+}
+.dock-word-fixed > * {
+  grid-area: 1 / 1;
+}
+.dock-ghost {
+  visibility: hidden;
+}
 /* "Resume" with the persistent reason under it while motion is paused */
 .dock-stack {
   display: inline-flex;

@@ -52,7 +52,7 @@ export function SoundToggle({ follow = true, className }: { follow?: boolean; cl
   const tip = noted ? NOTE : on ? ON : OFF;
 
   return (
-    <span className={cn("sound-toggle group/sound relative", className)}>
+    <span className={cn("sound-toggle group/sound relative", className)} data-dc-keep="">
       <button
         type="button"
         data-sound-toggle={on ? "on" : "off"}
