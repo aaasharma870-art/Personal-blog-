@@ -252,9 +252,11 @@ const renderSlot = (s: Slot, phase: EnterPhase) => (typeof s === "function" ? s(
 /** band: 4:3 → 21:9, rounded, in the page column · bleed: 4:3 → 3:1, full
  *  width, square edges (the work head: 3:1 keeps the heading and its first
  *  numbers in the first screen; LENGTH-1) · inset: 16:9, rounded. */
-export type PlateShape = "band" | "bleed" | "inset";
+export type PlateShape = "band" | "band3" | "bleed" | "inset";
 const SHAPE: Record<PlateShape, { frame: string; box: string }> = {
   band: { frame: "sm:overflow-hidden sm:rounded-frame", box: "aspect-[4/3] rounded-frame sm:aspect-[21/9] sm:rounded-none" },
+  // band3: the band at 3:1 (the Optuna head, LENGTH-2: 562 -> 437 px at 1440)
+  band3: { frame: "sm:overflow-hidden sm:rounded-frame", box: "aspect-[4/3] rounded-frame sm:aspect-[3/1] sm:rounded-none" },
   bleed: { frame: "", box: "aspect-[4/3] sm:aspect-[3/1]" },
   inset: { frame: "", box: "aspect-video rounded-frame" },
 };
@@ -443,6 +445,10 @@ export function HeadBand({
   const variant = useVariant(choice, pieceKey);
   const id = headPlateOf(spec, variant);
   if (!id) return null;
+  // LENGTH-2: the head used to be a still after its entrance; it now drifts
+  // 1.04 -> 1 over its passage (scroll-driven, the machine board's recipe;
+  // frozen under reduced motion and Pause by LivePlate's own gate)
+  const camera: CameraSpec = { kind: "drift", scale: [1.04, 1], focal: resolveMedia(id)?.focal ?? [0.5, 0.5], driver: "flow" };
   return (
     <PlateBand
       plate={id}
@@ -450,6 +456,7 @@ export function HeadBand({
       shape="bleed"
       sizes="100vw"
       enterAt={0.9}
+      camera={camera}
       className={className}
       caption={<SceneCaption k={captionKey} place="bl" />}
       captionClassName="px-gutter sm:absolute sm:inset-y-0 sm:left-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:right-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:px-0"

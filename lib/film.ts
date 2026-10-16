@@ -694,7 +694,6 @@ const copy = {
   "dc.cmd.quick": p3("Director's cut: quick tour"),
   "dc.cmd.full": p3("Director's cut: full tour"),
   "toy.deadeye.help": p3("Click the killed ideas to mark them, then Fire."),
-=======
   /* the director's cut transport (components/director/transport.tsx): the
      two tours' bar with chapter ticks, pause / prev / next, Exit, and the
      end state. UI labels only: no facts. */
@@ -708,6 +707,10 @@ const copy = {
   "dc.group": p3("Director's cut"),
   "dc.progress": p3("Director's cut progress"),
   "dc.goto": p3("Go to {name}"),
+  // blur worker (LENGTH-2): the labels of the two folded passages, one block
+  // at the very end of the copy object so a merge never conflicts
+  "about.bio.more": p3("Read more"),
+  "optuna.approach.more": p3("Read the approach"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
 
