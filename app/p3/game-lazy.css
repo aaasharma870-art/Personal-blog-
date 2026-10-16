@@ -11,6 +11,7 @@
 
 /* — The hunt panel (lazy; non-modal popover under the chip) ——————————— */
 .hunt-panel {
+  white-space: normal; /* the header's chips are nowrap; the hint text is not */
   position: absolute;
   right: 0;
   top: calc(100% + 0.5rem);
