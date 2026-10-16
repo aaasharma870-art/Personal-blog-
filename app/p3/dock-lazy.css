@@ -19,6 +19,7 @@
   background: var(--dock-fill);
   color: var(--dock-ink);
   white-space: normal;
+  border: 1px solid transparent;
   box-shadow:
     inset 0 0 0 1px rgb(94 234 212 / 0.5),
     0 22px 56px -14px rgb(0 0 0 / 0.8);
@@ -74,8 +75,8 @@
   gap: 0.25rem;
   width: 100%;
   min-height: 3.75rem;
-  padding: 0.75rem 1rem;
-  border: 0;
+  padding: calc(0.75rem - 1.5px) calc(1rem - 1.5px);
+  border: 1.5px solid transparent;
   border-radius: 0.875rem;
   background: #12222b;
   color: var(--dock-ink);
@@ -169,8 +170,8 @@
   flex: none;
   min-width: 4.5rem;
   min-height: 2.75rem;
-  padding: 0 1rem;
-  border: 0;
+  padding: 0 calc(1rem - 1.5px);
+  border: 1.5px solid transparent;
   border-radius: 999px;
   background: #12222b;
   color: var(--dock-ink);

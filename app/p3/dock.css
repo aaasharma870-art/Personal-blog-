@@ -64,8 +64,10 @@
   align-items: center;
   gap: 0.5rem;
   min-height: 2.75rem;
-  padding: 0 0.9375rem 0 0.75rem;
-  border: 0;
+  /* the 1.5 px transparent border keeps the button's edge in forced-colors
+     mode (box-shadows are dropped there); the padding gives it back */
+  padding: 0 calc(0.9375rem - 1.5px) 0 calc(0.75rem - 1.5px);
+  border: 1.5px solid transparent;
   border-radius: 999px;
   background: var(--dock-fill);
   color: var(--dock-ink);
@@ -93,7 +95,8 @@
   transform: translateY(1px);
 }
 .dock-btn > svg,
-.try-btn > svg {
+.try-btn > svg,
+html.js .game-pill > svg {
   width: 1.125rem;
   height: 1.125rem;
   flex: none;
@@ -124,7 +127,8 @@
   align-items: center;
   min-width: 2.375rem;
   justify-content: center;
-  padding: 0.25rem 0.5rem;
+  padding: calc(0.25rem - 1px) calc(0.5rem - 1px);
+  border: 1px solid transparent;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -165,6 +169,7 @@
   width: max-content;
   max-width: min(18rem, calc(100vw - 2rem));
   padding: 0.625rem 0.875rem;
+  border: 1px solid transparent;
   border-radius: 0.75rem;
   background: var(--dock-fill);
   color: var(--dock-ink);
@@ -176,7 +181,14 @@
     0 14px 36px -12px rgb(0 0 0 / 0.75);
 }
 
-/* — Visible words on the quiet chrome from 90rem: Eggs / Sound / Pause — */
+/* — Visible words on the quiet chrome from 80rem: Eggs / Sound / Pause.
+     The chips keep their words on one line themselves (no `white-space`
+     on the header cluster: the hunt panel hangs off it). — */
+.hunt-chip,
+.sound-toggle > button,
+[data-motion-toggle] {
+  white-space: nowrap;
+}
 .dock-word {
   position: absolute;
   width: 1px;
@@ -186,7 +198,7 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-@media (min-width: 90rem) and (hover: hover) and (pointer: fine) {
+@media (min-width: 80rem) and (hover: hover) and (pointer: fine) {
   .dock-word {
     position: static;
     width: auto;
@@ -205,6 +217,18 @@
   .hunt-chip .hunt-chip-n {
     text-align: left;
   }
+}
+/* "Resume" with the persistent reason under it while motion is paused */
+.dock-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+.dock-sub {
+  color: var(--fg-ghost);
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 /* — The silent cue: two ring pulses (2 x 1.4 s), once per session per
@@ -244,8 +268,8 @@
     align-items: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding: 0 1rem 0 0.875rem;
-    border: 0;
+    padding: 0 calc(1rem - 1.5px) 0 calc(0.875rem - 1.5px);
+    border: 1.5px solid transparent;
     border-radius: 999px;
     background: var(--dock-fill);
     color: var(--dock-ink);
@@ -264,16 +288,13 @@
   html.js .game-pill:hover {
     background: var(--dock-fill-hover);
   }
-  html.js .game-pill:focus-visible {
-    outline: 2px solid var(--dock-ring);
-    outline-offset: 3px;
-  }
   /* the Run button in the gauntlet: it holds the invite ring span */
   button:has(> [data-run-ring]) {
     background: var(--dock-fill);
     color: var(--dock-ink);
+    border: 1.5px solid transparent;
     border-radius: 999px;
-    padding-inline: 1rem;
+    padding-inline: calc(1rem - 1.5px);
     font-weight: 600;
     box-shadow:
       inset 0 0 0 1.5px var(--dock-ring),
@@ -303,9 +324,48 @@
   width: 1.375rem;
   height: 1.375rem;
 }
-.try-btn.try-end:focus-visible,
-.dock-btn:focus-visible {
-  outline: 2px solid var(--dock-ring);
+/* focus: a dark halo then an aqua ring, so it reads on the bright meadow and
+   on parchment too; the transparent outline is the forced-colors ring */
+.dock-btn:focus-visible,
+.try-btn:focus-visible,
+html.js .game-pill:focus-visible,
+button:has(> [data-run-ring]):focus-visible {
+  outline: 2px solid transparent;
   outline-offset: 3px;
-  border-radius: 999px;
+  box-shadow:
+    inset 0 0 0 1.5px var(--dock-ring),
+    0 0 0 3px var(--dock-fill),
+    0 0 0 5px var(--dock-ring);
+}
+
+/* — The dock's controls inside the Menu sheet (below 64rem) — */
+.menu-ctl {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+.menu-ctl-narrow {
+  display: none;
+  gap: 0.75rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .menu-ctl-narrow {
+    display: grid;
+  }
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .menu-ctl {
+    display: none;
+  }
+}
+.menu-ctl-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.875rem;
+}
+.menu-ctl-why {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--fg-muted);
 }
