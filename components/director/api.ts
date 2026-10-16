@@ -154,6 +154,9 @@ const loadPlayer = (): Promise<Player> => {
   return player;
 };
 
+/** Set while a start waits for the player chunk: a stop in that window cancels it. */
+let cancelPending: (() => void) | null = null;
+
 /** An event inside the control group or the transport never pauses the cut. */
 export const KEEP = "[data-dc-keep]";
 export const inKeep = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest(KEEP));
@@ -178,7 +181,11 @@ export function startDirectorsCut(tour: Tour = "full", o: { top?: boolean } = {}
     cancelled = true;
   });
   for (const ev of INPUT) window.addEventListener(ev, cancel, opts);
+  cancelPending = () => {
+    cancelled = true;
+  };
   const settle = () => {
+    cancelPending = null;
     offFast();
     for (const ev of INPUT) window.removeEventListener(ev, cancel, opts);
   };
@@ -199,6 +206,11 @@ export function startDirectorsCut(tour: Tour = "full", o: { top?: boolean } = {}
 /** Stop a running director's cut (no-op when none runs). */
 export function stopDirectorsCut(reason: string): void {
   if (!state.running) return;
+  // still loading the player: cancel the start (the one stop; nothing plays later)
+  if (cancelPending) {
+    cancelPending();
+    return;
+  }
   void loadPlayer().then((m) => m.stop(reason));
 }
 
