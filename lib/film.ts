@@ -883,7 +883,7 @@ export const film = {
       maskOrigin: [0.519, 0.5], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
       // pin wrapper 180vh (80 travel) + the program block ≈ 60vh
-      estVh: { d: 2.4, t: 2.4 },
+      estVh: { d: 2.446, t: 2.53 },
       // the program block reads over the stage (spec §3.2): the opening's exit
       // frame. SEQ-PEARL failed Check L2 (W1 assembler, 2026-10-01) and has no
       // end still, so the exit frame is iconic-pearl at the code push's end

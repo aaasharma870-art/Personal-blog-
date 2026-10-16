@@ -61,7 +61,7 @@
    canvas, which draws nothing from p .50): solid world lettering over a
    gently dimmed plate. Opacity / a 3 % scale only, scrubbed by scroll
    (cardPin.title); nothing is a mask, a zoom or a timer. The face and the
-   case come from the lettering registry (lettered-title font-world-act /
+   case come from the lettering registry (the lettered-title classes /
    uppercase, set in the markup); the size is fitted to the frame in JS
    (--title-fs), 30 % of the frame's height at most. */
 .act-card-title {
