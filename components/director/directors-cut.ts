@@ -43,7 +43,7 @@ import { emit, on } from "@/lib/events";
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { getLenis, haltGlide, scrollToTarget, type LenisLike, type LenisScrollOptions } from "@/lib/smooth-scroll";
 import { copyText } from "@/lib/sections";
-import { setDirectorsCutState } from "./api";
+import { setDirectorsCutState, type Tour } from "./api";
 import { DWELL, SPEED } from "./timing";
 
 export { DWELL, SPEED };
@@ -325,7 +325,8 @@ async function loop(r: Run): Promise<void> {
 }
 
 /** Start a run (./api.ts calls it from the click, with the borrowed sound). */
-export function play(borrowed: Promise<() => void>): void {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function play(borrowed: Promise<() => void>, _tour: Tour = "full"): void {
   if (run) return;
   if (motionOffNow()) {
     setDirectorsCutState(false);

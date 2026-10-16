@@ -21,17 +21,32 @@ import { on } from "@/lib/events";
 import { DESKTOP_FINE, motionOffNow } from "@/lib/flags";
 import { sound } from "@/lib/audio";
 
-export type DirectorsCutState = { running: boolean };
+/** The two guided tours: "quick" is the ~90-second skim of the best parts,
+ *  "full" the ~3-minute main cut. */
+export type Tour = "quick" | "full";
 
-const STOPPED: DirectorsCutState = { running: false };
-const RUNNING: DirectorsCutState = { running: true };
+export type DirectorsCutState = {
+  running: boolean;
+  paused: boolean;
+  /** which tour plays (null when none runs) */
+  tour: Tour | null;
+  /** seconds played and the plan's total seconds (0 when idle) */
+  elapsed: number;
+  total: number;
+  /** index into `chapters` of the chapter on screen (-1 when idle) */
+  chapter: number;
+  chapters: readonly string[];
+};
+
+const STOPPED: DirectorsCutState = { running: false, paused: false, tour: null, elapsed: 0, total: 0, chapter: -1, chapters: [] };
 
 let state: DirectorsCutState = STOPPED;
+let wantedTour: Tour = "full";
 const listeners = new Set<() => void>();
 
-/** The player only: publish the running state. */
-export function setDirectorsCutState(running: boolean): void {
-  const next = running ? RUNNING : STOPPED;
+/** The player only: publish the running state (progress via `patch`). */
+export function setDirectorsCutState(running: boolean, patch: Partial<DirectorsCutState> = {}): void {
+  const next: DirectorsCutState = running ? { ...(state.running ? state : STOPPED), running: true, tour: wantedTour, ...patch } : STOPPED;
   if (next === state) return;
   state = next;
   if (typeof window !== "undefined") {
@@ -66,9 +81,10 @@ const loadPlayer = (): Promise<Player> => {
 
 const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 
-/** Start the director's cut (call it from the click). */
-export function startDirectorsCut(): void {
+/** Start a guided tour (call it from the click). */
+export function startDirectorsCut(tour: Tour = "full"): void {
   if (!directorsCutAvailable() || state.running) return;
+  wantedTour = tour;
   // the click is the consent and the gesture: borrow the sound NOW
   const borrowed = sound.borrow();
   setDirectorsCutState(true);
@@ -94,7 +110,7 @@ export function startDirectorsCut(): void {
     (m) => {
       settle();
       if (cancelled) abort();
-      else m.play(borrowed);
+      else m.play(borrowed, tour);
     },
     () => {
       settle();
