@@ -108,7 +108,7 @@ export function FilmScreen({
       aria-labelledby={titleId}
       data-films-world={world}
       {...planeAttrs("deep", world)}
-      className="relative py-[clamp(4rem,11vh,7.5rem)] text-fg"
+      className="relative py-[clamp(2rem,5vh,3.5rem)] text-fg xl:py-[clamp(3rem,12.5vh,7rem)]"
     >
       <div
         aria-hidden="true"
@@ -128,68 +128,73 @@ export function FilmScreen({
         beat={FILM_BEATS[world].title}
       />
 
-      <FilmFrame
-        world={world}
-        choice={choice}
-        bearing={bearing}
-        gates={gauntlet.length}
-        beat={{ finale: FILM_BEATS[world].finale, weight: FILM_BEATS[world].weight }}
-        marks={first ? <LightsMarks /> : null}
-        lights={first}
-        carry={last}
-        className="mt-tier-group"
-      />
+      {/* LENGTH-1: from 80rem the picture takes 8 of 12 columns and the quote
+          and the reason sit beside it (they were a 220 px row under it, 1000 px a
+          film); below that the screen stacks as before */}
+      <div className="mt-tier-group xl:grid xl:grid-cols-12 xl:items-center xl:gap-x-6">
+        <FilmFrame
+          world={world}
+          choice={choice}
+          bearing={bearing}
+          gates={gauntlet.length}
+          beat={{ finale: FILM_BEATS[world].finale, weight: FILM_BEATS[world].weight }}
+          marks={first ? <LightsMarks /> : null}
+          lights={first}
+          carry={last}
+          className="mx-auto max-w-[70rem] xl:col-span-8 xl:mx-0 xl:max-w-none"
+        />
 
-      {world === "idiots" ? (
-        // the 3 Idiots finale's text equivalent: the gates it draws, in order
-        <ol className="sr-only">
-          {gauntlet.map((g) => (
-            <li key={g.n}>{g.title}</li>
-          ))}
-        </ol>
-      ) : null}
+        {world === "idiots" ? (
+          // the 3 Idiots finale's text equivalent: the gates it draws, in order
+          <ol className="sr-only">
+            {gauntlet.map((g) => (
+              <li key={g.n}>{g.title}</li>
+            ))}
+          </ol>
+        ) : null}
 
-      <div className="mt-tier-block grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
-        <div className="lg:col-span-5">
-          {spec.line ? (
-            // the film's most famous line, LETTERED in its world face (ART-DIRECTOR #11:
-            // it was 10 px mono); the speaker and work stay beside it in Meta
-            <p className="films-line max-w-[34rem] text-[clamp(1.75rem,1.15rem+1.7vw,2.75rem)] leading-[1.12] tracking-[0.01em] text-fg" data-films-line={world}>
-              <FilmQuote id={spec.line} rendition="lettered" />
-            </p>
-          ) : null}
-        </div>
-        <div className="lg:col-span-7">
-          {borrowed ? <p className="max-w-body type-body text-fg">{borrowed.text}</p> : null}
-          {reason ? (
-            <p className="mt-tier-group max-w-body type-body text-fg-muted" data-copy-status={reason.status}>
-              {reason.text}
-            </p>
-          ) : null}
-          {links.length || card ? (
-            <p className="mt-tier-group flex flex-wrap items-center type-meta text-fg-muted">
-              <span>Seen here in</span>
-              {card ? (
-                <span className="inline-flex items-center">
-                  <Sep />
-                  <a
-                    href={`#${card.id}`}
-                    className="inline-flex min-h-11 items-center px-0.5 transition-colors hover:text-fg"
-                  >
-                    {`Act ${card.numeral}`}
-                  </a>
-                </span>
-              ) : null}
-              {links.map((s) => (
-                <span key={s.id} className="inline-flex items-center">
-                  <Sep />
-                  <a href={`#${s.id}`} className="inline-flex min-h-11 items-center px-0.5 transition-colors hover:text-fg">
-                    {s.nav?.label ?? s.id}
-                  </a>
-                </span>
-              ))}
-            </p>
-          ) : null}
+        <div className="mt-tier-group grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6 xl:col-span-4 xl:mt-0 xl:grid-cols-1">
+          <div className="lg:col-span-5 xl:col-span-1">
+            {spec.line ? (
+              // the film's most famous line, LETTERED in its world face (ART-DIRECTOR #11:
+              // it was 10 px mono); the speaker and work stay beside it in Meta
+              <p className="films-line max-w-[34rem] text-[clamp(1.75rem,1.15rem+1.7vw,2.75rem)] leading-[1.12] tracking-[0.01em] text-fg" data-films-line={world}>
+                <FilmQuote id={spec.line} rendition="lettered" />
+              </p>
+            ) : null}
+          </div>
+          <div className="lg:col-span-7 xl:col-span-1">
+            {borrowed ? <p className="max-w-body type-body text-fg">{borrowed.text}</p> : null}
+            {reason ? (
+              <p className="mt-tier-group max-w-body type-body text-fg-muted" data-copy-status={reason.status}>
+                {reason.text}
+              </p>
+            ) : null}
+            {links.length || card ? (
+              <p className="mt-tier-group flex flex-wrap items-center type-meta text-fg-muted">
+                <span>Seen here in</span>
+                {card ? (
+                  <span className="inline-flex items-center">
+                    <Sep />
+                    <a
+                      href={`#${card.id}`}
+                      className="inline-flex min-h-11 items-center px-0.5 transition-colors hover:text-fg"
+                    >
+                      {`Act ${card.numeral}`}
+                    </a>
+                  </span>
+                ) : null}
+                {links.map((s) => (
+                  <span key={s.id} className="inline-flex items-center">
+                    <Sep />
+                    <a href={`#${s.id}`} className="inline-flex min-h-11 items-center px-0.5 transition-colors hover:text-fg">
+                      {s.nav?.label ?? s.id}
+                    </a>
+                  </span>
+                ))}
+              </p>
+            ) : null}
+          </div>
         </div>
       </div>
     </article>

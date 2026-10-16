@@ -1,6 +1,6 @@
 "use client";
 
-import Image, { getImageProps } from "next/image";
+import Image from "next/image";
 import {
   useEffect,
   useEffectEvent,
@@ -23,7 +23,7 @@ import { spotlight } from "@/lib/spotlight";
 import {
   STAGE_IMAGE,
   poseTransform,
-  rackSoft,
+  rackDim,
   shotArrival,
   shotLocal,
   stageAt,
@@ -81,7 +81,7 @@ import { StageVideo } from "./stage-video";
    stageAt(scrollY + innerHeight, shots, { fade: 40vh }) picks the shot in
    force (`a`), the next (`b`) and the crossfade `mix` (b's opacity); each
    mounted layer gets its camera pose, a split window's arrival (B19: the
-   plate slides in over 40vh) and its rack focus (the soft rung's opacity).
+   plate slides in over 40vh) and its rack focus (a small dim, opacity only).
    Transform / opacity only; values are written only when they change.
 
    THE CAMERA (W2-PLATES, spec §6.1 per-cue ranges; `stage.camera`).
@@ -863,8 +863,6 @@ type Plate = {
   src: string;
   focal: Pt;
   aspect: number;
-  /** The rack-focus copy: the soft rung of the same plate. */
-  soft: string;
   /** The registered line (plate row) for depth, or null. */
   line: number | null;
 };
@@ -888,7 +886,7 @@ type Geom = {
 type LayerEls = {
   layer: HTMLDivElement | null;
   cam: HTMLDivElement | null;
-  soft: HTMLImageElement | null;
+  dim: HTMLDivElement | null;
   video: HTMLDivElement | null;
   far: HTMLDivElement | null;
   near: HTMLDivElement | null;
@@ -923,21 +921,11 @@ function plateOf(media: MediaId): Plate | null {
   let a: MediaAsset | null = resolveMedia(media);
   if (a && a.kind !== "image") a = a.poster ? resolveMedia(a.poster) : null;
   if (!a || a.kind !== "image") return null;
-  const h = Math.max(1, Math.round((STAGE_IMAGE.softWidth * a.height) / a.width));
-  const { props } = getImageProps({
-    src: a.src,
-    alt: "",
-    width: STAGE_IMAGE.softWidth,
-    height: h,
-    quality: STAGE_IMAGE.softQuality,
-  });
-  const first = props.srcSet?.split(", ")[0]?.split(" ")[0];
   return {
     id: a.id,
     src: a.src,
     focal: a.focal ?? [0.5, 0.5],
     aspect: a.width / a.height,
-    soft: first || props.src,
     line: lineOf(a),
   };
 }
@@ -1119,9 +1107,9 @@ export function Stage() {
         e.c = c;
         e.cam.style.transform = c;
       }
-      if (e.soft && Math.abs(s - e.s) > 0.001) {
+      if (e.dim && Math.abs(s - e.s) > 0.001) {
         e.s = s;
-        e.soft.style.opacity = s.toFixed(3);
+        e.dim.style.opacity = (s * STAGE_IMAGE.dimMax).toFixed(3);
       }
     };
 
@@ -1215,16 +1203,16 @@ export function Stage() {
         const onScreen = m.top < sy + vh && m.bottom > sy;
         let o = k <= ka ? 1 : FIRST_IN_WINDOW[k] ? 1 : k === kb ? mix : 0;
         let t = "none";
-        let soft = 0;
+        let dim = 0;
         if (s.mode === "split") {
           if (FIRST_IN_WINDOW[k]) {
             const arr = shotArrival(sy, vh, m.splitTop);
             o *= arr;
             const dir = s.side === "left" ? -1 : 1;
             t = arr >= 1 ? "none" : `translate3d(${((1 - arr) * 10 * dir).toFixed(3)}%, 0, 0)`;
-            soft = arr >= 1 ? rackSoft(sy, vh, m.edges) : 0;
+            dim = arr >= 1 ? rackDim(sy, vh, m.edges) : 0;
           } else {
-            soft = rackSoft(sy, vh, m.edges);
+            dim = rackDim(sy, vh, m.edges);
           }
           if (ready.current.has(k) && m.windowEl && FIRST_IN_WINDOW[k]) want.add(m.windowEl);
         } else if (onScreen && o > 0) {
@@ -1241,7 +1229,7 @@ export function Stage() {
         opacityOf.set(k, o);
         if (s.cue.weather && onScreen && o > 0.02 && docOn) weather.push(k);
         if (!e) continue;
-        write(e, o, t, poseTransform(cam.pose), soft);
+        write(e, o, t, poseTransform(cam.pose), dim);
         const org = `${(cam.origin[0] * 100).toFixed(2)}% ${(cam.origin[1] * 100).toFixed(2)}%`;
         if (e.cam && org !== e.org) {
           e.org = org;
@@ -1489,19 +1477,18 @@ export function Stage() {
     else done();
   };
 
-  type Part = "layer" | "cam" | "soft" | "video" | "far" | "near" | "grade";
+  type Part = "layer" | "cam" | "dim" | "video" | "far" | "near" | "grade";
   const bind = (k: number, part: Part) => (el: HTMLElement | null) => {
     let e = els.current.get(k);
     if (!e) {
       e = {
-        layer: null, cam: null, soft: null, video: null, far: null, near: null, grade: null,
+        layer: null, cam: null, dim: null, video: null, far: null, near: null, grade: null,
         o: -1, t: "", c: "", s: -1, f: "", g: -1, org: "", row: "",
       };
       els.current.set(k, e);
     }
-    if (part === "soft") e.soft = el as HTMLImageElement | null;
-    else e[part] = el as HTMLDivElement | null;
-    if (!e.layer && !e.cam && !e.soft && !e.video && !e.far && !e.near && !e.grade) els.current.delete(k);
+    e[part] = el as HTMLDivElement | null;
+    if (!e.layer && !e.cam && !e.dim && !e.video && !e.far && !e.near && !e.grade) els.current.delete(k);
   };
 
   const weatherRun = new Set(weatherOn ? weatherOn.split(",").map(Number) : []);
@@ -1543,16 +1530,8 @@ export function Stage() {
           )}
           <div ref={bind(k, "video")} className="stage-video-host" />
           {split ? (
-            // the rack-focus copy: the soft rung stretched (never `filter`)
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              ref={bind(k, "soft")}
-              src={plate.soft}
-              alt=""
-              decoding="async"
-              className="stage-soft"
-              style={{ objectPosition: position }}
-            />
+            // rack focus: a small black multiply (never a blurred copy)
+            <div ref={bind(k, "dim")} className="stage-dim" />
           ) : null}
         </div>
         {grade ? <div ref={bind(k, "grade")} className="plate-grade" style={{ backgroundColor: grade }} /> : null}

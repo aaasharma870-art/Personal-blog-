@@ -158,7 +158,7 @@ function LumosRow({ p, index, ribbons, body }: { p: Principle; index: number; ri
     <li
       ref={ref}
       {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
-      className="relative grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-4 gap-y-tier-pair border-b border-rule py-tier-block sm:grid-cols-12 sm:gap-x-6"
+      className="relative grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-4 gap-y-tier-pair border-b border-rule py-tier-group sm:grid-cols-12 sm:gap-x-6"
       data-candle-row={index + 1}
     >
       {/* the hall's candles in this row's free corner (below the thinker) */}

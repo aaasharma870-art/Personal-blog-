@@ -187,7 +187,7 @@ export function Beyond({ entry, number }: SectionProps<"story">) {
         as="article"
         key={b.kicker}
         id={noteAnchor(entry.id, b.kicker)}
-        className="split-stack split-stack-wide grid grid-cols-1 gap-tier-group border-b border-rule py-tier-block lg:grid-cols-12 lg:gap-x-6"
+        className="split-stack split-stack-wide grid grid-cols-1 gap-tier-group border-b border-rule py-tier-group lg:grid-cols-12 lg:gap-x-6"
       >
         <div className="lg:col-span-4">
           <Meta fields={[b.kicker]} />

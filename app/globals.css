@@ -163,7 +163,7 @@
        mt-tier-block, px-gutter, py-section. — */
   --spacing-tier-pair: 0.75rem;
   --spacing-tier-group: 1.5rem;
-  --spacing-tier-block: 4rem;
+  --spacing-tier-block: 3rem; /* was 4rem: LENGTH-1 (Oct 16 "too much blank space"); still 2x the group tier */
   --spacing-gutter: clamp(1.25rem, 0.54rem + 3.85vw, 4rem);
 
   /* — Measures + page container (max-w-page / -body / -lead / -title) — */
@@ -334,7 +334,7 @@
 
   /* density (DESIGN v2 §3.2): data-density="spacious|default|tight" */
   --density-spacious: clamp(5.5rem, 10vw, 8.75rem);
-  --density-default: clamp(4.5rem, 8vw, 7.5rem);
+  --density-default: clamp(3.5rem, 5vw, 4.5rem); /* was clamp(4.5rem, 8vw, 7.5rem): 230 px of padding between every pair of sections */
   --density-tight: clamp(4rem, 7vw, 6.25rem);
   --section-pad: var(--density-default);
 

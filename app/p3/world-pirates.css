@@ -6,3 +6,17 @@
    ever needs Tailwind's theme). Tokens and custom variants (dw / df / boot /
    stage-live, the --z-* scale) live in app/globals.css.
    ========================================================================== */
+
+/* LENGTH-1 (Oct 16, "too much blank space"): the journey steps were 62vh
+   boxes (558 px at 1440x900) around about 170 px of text, i.e. 380 px of
+   empty column per step while the sticky plate sat on the right. 40vh keeps
+   the one-step-at-a-time reading and the sail's step positions (the sail
+   reads the steps' measured boxes), at about two thirds of the length. The
+   voyage's article is the only one with data-step; phones (journey-stack)
+   are untouched. Unlayered, so it wins over the utility classes. */
+@media (min-width: 64rem) {
+  article[id^="journey-step-"][data-step] {
+    min-height: 40vh;
+    padding-block: var(--spacing-tier-group);
+  }
+}

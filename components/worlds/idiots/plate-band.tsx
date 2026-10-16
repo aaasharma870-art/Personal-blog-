@@ -249,12 +249,13 @@ function usePlateEntrance(
 type Slot = ReactNode | ((phase: EnterPhase) => ReactNode);
 const renderSlot = (s: Slot, phase: EnterPhase) => (typeof s === "function" ? s(phase) : s);
 
-/** band: 4:3 → 21:9, rounded, in the page column · bleed: 4:3 → 21:9, full
- *  width, square edges · inset: 16:9, rounded. */
+/** band: 4:3 → 21:9, rounded, in the page column · bleed: 4:3 → 3:1, full
+ *  width, square edges (the work head: 3:1 keeps the heading and its first
+ *  numbers in the first screen; LENGTH-1) · inset: 16:9, rounded. */
 export type PlateShape = "band" | "bleed" | "inset";
 const SHAPE: Record<PlateShape, { frame: string; box: string }> = {
   band: { frame: "sm:overflow-hidden sm:rounded-frame", box: "aspect-[4/3] rounded-frame sm:aspect-[21/9] sm:rounded-none" },
-  bleed: { frame: "", box: "aspect-[4/3] sm:aspect-[21/9]" },
+  bleed: { frame: "", box: "aspect-[4/3] sm:aspect-[3/1]" },
   inset: { frame: "", box: "aspect-video rounded-frame" },
 };
 

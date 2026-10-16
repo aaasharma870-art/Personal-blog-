@@ -520,7 +520,7 @@ function MapRoom({
       </div>
 
       {/* the room */}
-      <div className="relative px-3 py-8 sm:px-8 sm:py-10">
+      <div className="relative px-3 py-5 sm:px-8 sm:py-6">
         <RoomWalls seed={index} className="stroke-(--world-line) opacity-85" />
         <RoomWalls
           seed={index}

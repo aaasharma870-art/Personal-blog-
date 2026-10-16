@@ -12,8 +12,8 @@
      stageAt(line, shots, { fade })  → which shot is in force, the next one
                                         and the crossfade `mix`
      shotLocal / stageCamera         → the camera pose (transform only)
-     shotArrival / rackSoft          → a split window's arrival and its
-                                        rack focus (opacity only)
+     shotArrival / rackDim           → a split window's arrival and its
+                                        rack focus (a dim, opacity only)
    Loops are never named here: the stage asks `loopFor(cue.media)`
    (lib/loops.ts, DP-5).
 
@@ -238,11 +238,14 @@ export function shotArrival(scrollY: number, vh: number, splitTop: number, span 
   return 1 - (1 - p) ** 3;
 }
 
-/** Rack focus (split windows only): the soft layer's opacity. Sharp (0)
- *  within 15vh of a text-block edge (30vh between blocks), soft (1) once
- *  the reading line is 25vh inside a block. `edges` = page ys of the block
- *  boundaries, sorted. Reading line = 40% down the viewport. */
-export function rackSoft(scrollY: number, vh: number, edges: readonly number[]): number {
+/** Rack focus (split windows only): how far the plate steps back, 0..1.
+ *  The picture is NEVER blurred or swapped for a low-res copy (that read as
+ *  "random blurry moments"): the stage multiplies it by a small DIM
+ *  (STAGE_IMAGE.dimMax of black) so the eye goes to the text. Clear (0)
+ *  within 15vh of a text-block edge (30vh between blocks), fully dimmed (1)
+ *  once the reading line is 25vh inside a block. `edges` = page ys of the
+ *  block boundaries, sorted. Reading line = 40% down the viewport. */
+export function rackDim(scrollY: number, vh: number, edges: readonly number[]): number {
   if (!edges.length) return 0;
   const line = scrollY + 0.4 * vh;
   let d = Infinity;
@@ -252,18 +255,23 @@ export function rackSoft(scrollY: number, vh: number, edges: readonly number[]):
 
 /** next/image settings shared by a split window's SSR poster and the
  *  stage's layer of the same plate, so both request the same URL (the layer
- *  is a cache hit, "the same pixels"). The rack-focus soft copy is the
- *  640 px rung at q75, stretched (a free, pre-rasterised blur; never
- *  `filter`): ≈ 2.4× in a portrait window, soft but clean. The W1 visual
- *  gate rejected the 384 px q55 rung (≈ 4× upscale: JPEG blocks and smear,
- *  "broken", not out of focus). */
+ *  is a cache hit, "the same pixels").
+ *  `sizes` is the DISPLAYED width of the plate, not its slot: a split
+ *  window is a portrait box (≈ 5/12 of the page wide, 100svh tall) and the
+ *  16:9 plate is `object-fit: cover`, so it is scaled to the window HEIGHT
+ *  (≈ 1.78 × 100vh css px wide) and cropped. `42vw` made Chrome fetch the
+ *  640 px rung and stretch it 2.3× (the always-smeared window picture); the
+ *  height-based size picks 1920 at DPR 1 and the 2560 rung at DPR 2
+ *  (next.config.ts deviceSizes). Backdrops are drawn full width, and the
+ *  act-1 exit frame is pushed to 1.3×, so they ask for 130vw at q75.
+ *  `dimMax` = the black multiplied over a window plate at full rack focus
+ *  (a small step back, not a mood change). */
 export const STAGE_IMAGE = {
-  windowSizes: "42vw",
-  backdropSizes: "100vw",
+  windowSizes: "calc(100vh * 1.78)",
+  backdropSizes: "calc(100vw * 1.3)",
   quality: 75,
-  backdropQuality: 55,
-  softWidth: 640,
-  softQuality: 75,
+  backdropQuality: 75,
+  dimMax: 0.18,
 } as const;
 
 /* — Validator rules (spec §3.2; scripts/checks/stage.mjs) —————————————— */

@@ -1,3 +1,4 @@
+import { Collapse } from "@/components/primitives/collapse";
 import { capabilities, featuredProjects, gauntlet } from "@/lib/content";
 import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
@@ -150,11 +151,22 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
               every device, so it renders everywhere (the W1 line, "no WebGL,
               just native scroll", was retired when WebGL shipped in W2). */}
           {copyVisible(pencilQ) && copyVisible(pencilBody) ? (
-            <p className="mt-tier-group max-w-body type-small text-fg-muted">
-              <span className="text-fg">{pencilQ.text}</span> {pencilBody.text}
-            </p>
-          ) : null}
-          {copyVisible(pencilNote) ? (
+            // folded on desktop (LENGTH-1): the question is the visible
+            // summary, the answer and its footnote stay in the DOM (find-in-
+            // page opens it); phones keep them open in flow (words.css)
+            <Collapse
+              className="mt-tier-group max-w-body"
+              summary={pencilQ.text}
+              summaryClassName="type-small text-fg"
+            >
+              <p className="mt-tier-pair type-small text-fg-muted">{pencilBody.text}</p>
+              {copyVisible(pencilNote) ? (
+                <p className="mt-tier-pair type-small text-fg-muted">
+                  <span className="type-meta">Footnote</span> {pencilNote.text}
+                </p>
+              ) : null}
+            </Collapse>
+          ) : copyVisible(pencilNote) ? (
             <p className="mt-tier-pair max-w-body type-small text-fg-muted">
               <span className="type-meta">Footnote</span> {pencilNote.text}
             </p>

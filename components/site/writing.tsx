@@ -114,7 +114,7 @@ export function Writing({ entry, number }: SectionProps<"index">) {
               as="li"
               key={post.title}
               delay={Math.min(i, 3) * 0.06}
-              className="grid grid-cols-[1fr_auto] items-start gap-x-6 border-b border-rule py-tier-block"
+              className="grid grid-cols-[1fr_auto] items-start gap-x-6 border-b border-rule py-tier-group"
             >
               <div className="min-w-0">
                 <Meta fields={[`Entry ${ROMAN[i] ?? i + 1}`, post.tag, "Draft"]} />
