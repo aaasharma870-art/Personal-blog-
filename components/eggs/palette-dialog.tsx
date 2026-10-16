@@ -324,8 +324,10 @@ export default function PaletteDialog({
       const dcKeys = "director's cut directors autoplay film watch movie tour";
       // opens the header's chooser (Quick / Full); the two entries start a tour at once
       toy("dc", pageText("dc.cmd"), dcKeys, () => void (openCutChooser() || startDirectorsCut()), page.fine);
-      toy("dc-quick", pageText("dc.cmd.quick"), `${dcKeys} quick short skim 90 seconds`, () => startDirectorsCut("quick"), page.fine);
-      toy("dc-full", pageText("dc.cmd.full"), `${dcKeys} full long main 3 minutes`, () => startDirectorsCut("full"), page.fine);
+      // the two direct starts only while motion is on (the first entry opens the
+      // chooser, which says "Motion is paused" under Pause)
+      toy("dc-quick", pageText("dc.cmd.quick"), `${dcKeys} quick short skim 90 seconds`, () => startDirectorsCut("quick"), page.fine && !reduce);
+      toy("dc-full", pageText("dc.cmd.full"), `${dcKeys} full long main 3 minutes`, () => startDirectorsCut("full"), page.fine && !reduce);
     }
     // 5. links
     for (const c of paletteCommands) {
@@ -342,7 +344,7 @@ export default function PaletteDialog({
       });
     }
     return out;
-  }, [go, page, paused, setPaused]);
+  }, [go, page, paused, reduce, setPaused]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
