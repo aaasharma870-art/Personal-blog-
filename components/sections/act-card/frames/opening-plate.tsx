@@ -29,12 +29,13 @@ import { FRAME_ASPECT, PlateBox, anchor, coverBox, inBox, plateOf } from "@/comp
  *       stern (and was clipped by the alt's crop); the plates carry the
  *       ship alone, which already passes blind at 0.8–0.9.
  *   The frame is aria-hidden (the card's h2 and caption carry it).
- * Phase 3 PIN MODE (PHASE3-SPEC §7.1, §6.2; card-p3.tsx): no slit — the
- *   Pirates spyglass IRIS, pre-opened to a 12 % disc on the lit stern (the
- *   hook), opens to the far corner over star (a) (mask-on-transform on the
- *   `[data-iris]` boxes below, which are plain frame-sized boxes otherwise);
- *   push-in #1 is the frame's code push (CardShell's content box) with the
- *   L01 loop from p .50 (PlateLayers).
+ * Phase 3 PIN MODE (PHASE3-SPEC §7.1, §6.2; card-p3.tsx): no slit — a SOFT
+ *   aperture, already wide open on the ship at the hook (the first frame
+ *   shows the hull and the rigging, not a ring on black) and clearing the
+ *   frame over star (a) (mask-on-transform on the `[data-iris]` boxes below,
+ *   which are plain frame-sized boxes otherwise); no brass rim. Push-in #1
+ *   is the frame's code push (CardShell's content box) with the L01 loop
+ *   from p .50 (PlateLayers).
  */
 
 const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
@@ -81,7 +82,6 @@ export function OpeningPlateFrame({ plate: id, alt = false }: { plate: MediaId |
           </motion.div>
         </div>
       </div>
-      <span aria-hidden="true" className="act-card-iris-rim" data-iris-rim="" />
     </motion.div>
   );
 }

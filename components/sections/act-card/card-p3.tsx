@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { animate, motion, useMotionValue, useMotionValueEvent, useTransform, type MotionValue } from "motion/react";
 import { getImageProps } from "next/image";
@@ -15,6 +15,7 @@ import { isMediaId, resolveMedia } from "@/lib/media";
 import { cardPin } from "@/lib/motion";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 import { spotlight } from "@/lib/spotlight";
+import { cn } from "@/lib/utils";
 import { useVariant } from "@/lib/use-variant";
 import type { Variant, VariantChoice } from "@/lib/variants";
 import { eggEnabled, eggsSessionOff, triggerEgg } from "@/components/eggs/egg-bus";
@@ -53,10 +54,14 @@ import type { CardPinSpec, PinWeather, PushSpec } from "@/components/sections/ac
                the ICE board (1 → 1.35, FIG. 0 inside; ALT rack + 1 → 1.2),
                #3 SEQ-HALL on the card canvas (+ a 1.06 code scale; ALT the
                crane on L02), the tintype's push toward the sun (1 → 1.04).
-     iris      the opening's css-tier aperture: a 12 % disc pre-opened on
-               the stern (the hook) that opens to the far corner over star
-               (a): a static radial mask on a scaled box, the plate counter-
-               scaled inside it (mask-on-transform), a brass rim riding it.
+     iris      the opening's css-tier aperture: a SOFT vignette already wide
+               open on the ship at the hook (no black start, no ring) that
+               clears the frame over star (a): a static radial mask (solid
+               core + feather) on a scaled box, the plate counter-scaled
+               inside it (mask-on-transform); gone (mask off) once clear.
+     title     the act title (crossings pass): solid world lettering over a
+               gently dimmed plate, scroll-scrubbed and reversible, held
+               still over p .66–.88 (cardPin.title); no mask, no zoom.
      crossings the impact (§7.6; once per world per view) and the
                `transition:meet` sound cue fire when the damped p crosses
                them going forward — never on a jump, never under RM.
@@ -68,9 +73,9 @@ import type { CardPinSpec, PinWeather, PushSpec } from "@/components/sections/ac
                tentacle tip (DOM, above the canvas) breaking the foam, 1.5 s.
                RM / Pause: the static tip. It counts once (pc-kraken).
    FRAME LAYERS (a portal into the card frame): the GL layer (GlGate), the
-   SEQ canvas, the css title mask (DEFAULT) or the plain bars (ALT), the
-   static carried shape, weather, the kraken. Layers the GL tier draws
-   itself carry `data-gl-replaced` (hidden under `[data-gl="on"]`).
+   SEQ canvas, the DOM title card (DEFAULT, both tiers) or the plain bars
+   (ALT), the static carried shape, weather, the kraken. Layers the GL tier
+   draws itself carry `data-gl-replaced` (hidden under `[data-gl="on"]`).
    ========================================================================== */
 
 const A = 2.39;
@@ -166,7 +171,7 @@ export function CardP3(props: Props) {
       {active && pushSpec.seq ? (
         <SeqCanvas seq={pushSpec.seq} b={b} push={pushSpec} mine={spec.toPlate[choreo] === pushSpec.seq.plate} />
       ) : null}
-      {active && title === "default" ? <TitleMask t={t} text={spec.title.text} origin={spec.title.origin} /> : null}
+      {active && title === "default" ? <TitleCard t={t} title={spec.title} /> : null}
       {active && title === "alt" ? <Bars t={t} /> : null}
       {active && spec.shape ? <ShapeLayer t={t} shape={spec.shape} /> : null}
       {pinned ? spec.weather.map((w) => <WeatherCue key={w.beat} w={w} t={t} live={live} />) : null}
@@ -342,15 +347,17 @@ function usePush(b: MotionValue<number>, content: RefObject<HTMLDivElement | nul
   }, [b, content, active, spec]);
 }
 
-/** The opening's css-tier iris (mask-on-transform). opening-plate.tsx
- *  renders `[data-iris] > [data-iris-inner]` + `[data-iris-rim]` as plain
- *  frame-sized boxes; this writes their geometry while live. */
+/** The opening's css-tier aperture (mask-on-transform). opening-plate.tsx
+ *  renders `[data-iris] > [data-iris-inner]` as plain frame-sized boxes;
+ *  this writes their geometry while live. The disc is a SOFT vignette: a
+ *  solid core (`core` of the radius) and a feather to the edge, so the plate
+ *  is visible and already wide open at the hook, and the frame is simply
+ *  clear (the mask is removed) once the edge has passed the far corner. */
 function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | null>, active: boolean, spec: CardPinSpec, choreo: Variant) {
   useEffect(() => {
     const iris = spec.iris?.[choreo];
     const outer = content.current?.querySelector<HTMLElement>("[data-iris]");
     const inner = outer?.querySelector<HTMLElement>("[data-iris-inner]");
-    const rim = content.current?.querySelector<HTMLElement>("[data-iris-rim]");
     if (!active || !iris || !outer || !inner) return;
     const [cx, cy] = iris.center;
     const R = iris.r1;
@@ -364,7 +371,13 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
       "transform-origin": "50% 50%",
       "will-change": "transform",
     };
-    const disc = "radial-gradient(closest-side, #000 calc(100% - 1.5px), transparent 100%)";
+    const disc = `radial-gradient(closest-side, #000 ${(iris.core * 100).toFixed(1)}%, transparent 100%)`;
+    let masked = true;
+    const mask = (on: boolean) => {
+      if (on === masked) return;
+      masked = on;
+      css(outer, on ? { "mask-image": disc, "-webkit-mask-image": disc } : { "mask-image": "none", "-webkit-mask-image": "none" });
+    };
     css(outer, { ...box, "mask-image": disc, "-webkit-mask-image": disc });
     css(inner, {
       left: `${((-(cx - R / A) / ((2 * R) / A)) * 100).toFixed(3)}%`,
@@ -376,14 +389,14 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
       "transform-origin": `${(cx * 100).toFixed(3)}% ${(cy * 100).toFixed(3)}%`,
       "will-change": "transform",
     });
-    if (rim) css(rim, { ...box, display: "block" });
     const write = (v: number) => {
       // the radius grows geometrically, eased (the GL iris' curve)
       const e = ss(v);
       const s = (iris.r0 * Math.pow(R / iris.r0, e)) / R;
       css(outer, { transform: `scale(${s.toFixed(5)})` });
       css(inner, { transform: `scale(${(1 / s).toFixed(5)})` });
-      if (rim) css(rim, { transform: `scale(${s.toFixed(5)})`, opacity: v >= 1 ? "0" : "1" });
+      // the solid core covers the frame from here: the mask is only cost
+      mask(v < 1);
     };
     // the frames' p is star (a)'s progress (0 → 1 over p 0–.45)
     const pa = (v: number) => remap(v, spec.a[0], spec.a[1]);
@@ -391,7 +404,7 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
     const off = t.on("change", (v) => write(pa(v)));
     return () => {
       off();
-      for (const el of [outer, inner, rim]) el?.removeAttribute("style");
+      for (const el of [outer, inner]) el?.removeAttribute("style");
     };
   }, [t, content, active, spec, choreo]);
 }
@@ -694,109 +707,64 @@ function KrakenLayer({
 
 /* — frame layers ——————————————————————————————————————————————————————— */
 
-/** The act title as a mask, css tier (§8.1): a deep rect with the title
- *  cut out, faded in at p .68 (the frame outside the letters collapses to
- *  the world deep) and zoomed ×1 → ×6 about the title's mask origin by
- *  transform (no will-change: Chrome re-rasters it crisp) by p .88, then
- *  faded out by state (300 ms) to the full frame. The world outside the
- *  letters dims to a third (never black). aria-hidden: the h2 carries it.
- *  The SVG is stretched over the frame (preserveAspectRatio none): the
- *  pinned frame is always 2.39:1, the viewBox's own ratio. */
-const VB_W = 2390;
-const VB_H = 1000;
-/** The css title's zoom ends here; the mask is gone (by state) after it. */
-const TITLE_DONE = 0.88;
-type TitleFit = { size: number; base: number; origin: readonly [number, number] };
-/** The title's size and zoom origin, as the GL title sets it (lib/gl/plan.ts
- *  `titleXf`): cap = 20 % of the frame height, the ink ≤ 72 % of its width,
- *  centred; the origin is `maskOrigin` in the title's INK box (cap top →
- *  ink bottom), measured with the face's own metrics. */
-function fitTitle(el: SVGTextElement, text: string, origin: readonly [number, number]): TitleFit | null {
-  const cs = getComputedStyle(el);
-  const c = document.createElement("canvas").getContext("2d");
-  if (!c) return null;
-  const face = (px: number) => `${cs.fontStyle} ${cs.fontWeight} ${px}px ${cs.fontFamily}`;
-  c.font = face(100);
-  const capR = (c.measureText("H").actualBoundingBoxAscent || 70) / 100;
-  const m = c.measureText(text);
-  const inkR = (m.actualBoundingBoxLeft + m.actualBoundingBoxRight) / 100;
-  if (!(inkR > 0)) return null;
-  const size = Math.min((0.2 * VB_H) / capR, (0.72 * VB_W) / inkR);
-  const cap = capR * size;
-  const base = VB_H / 2 + cap / 2;
-  // text-anchor middle centres the ADVANCE: the ink sits from its left bearing
-  const x0 = VB_W / 2 - (m.width / 100) * size * 0.5 - (m.actualBoundingBoxLeft / 100) * size;
-  const x1 = x0 + inkR * size;
-  const y0 = base - cap;
-  const y1 = base + (m.actualBoundingBoxDescent / 100) * size;
-  return { size, base, origin: [(x0 + origin[0] * (x1 - x0)) / VB_W, (y0 + origin[1] * (y1 - y0)) / VB_H] };
-}
-
-function TitleMask({ t, text, origin }: { t: MotionValue<number>; text: string; origin: readonly [number, number] }) {
-  const id = useId();
-  const textRef = useRef<SVGTextElement>(null);
-  const [fit, setFit] = useState<TitleFit>({ size: 280, base: VB_H / 2 + 100, origin: [0.5, 0.5] });
-  useEffect(() => {
-    const el = textRef.current;
-    if (!el) return;
-    let cancelled = false;
-    const measure = () => {
-      if (cancelled) return;
-      const f = fitTitle(el, text, origin);
-      if (f) setFit(f);
+/** The act title (§8.1; crossings pass), both tiers: SOLID world lettering
+ *  over a gently dimmed plate, fully visible and still for a generous hold
+ *  (cardPin.title: .66–.88 of the card), scroll-scrubbed and reversible.
+ *  The old title was a text-shaped hole filled with the busy plate (it read
+ *  "The Cro::ing"), zoomed ×6 and cropped, then popped by a 300 ms timer.
+ *  Nothing here is a mask, a zoom or a timer: opacity and a 3 % settle only.
+ *  aria-hidden: the card's h2 / program carry the title as text. Sized to the
+ *  frame (≤ 30 % of its height, ≤ 68 % of its width) from the face's real
+ *  advance, re-measured when the face swaps in and on resize. */
+function TitleCard({ t, title }: { t: MotionValue<number>; title: CardPinSpec["title"] }) {
+  const layer = useRef<HTMLDivElement>(null);
+  const text = useRef<HTMLParagraphElement>(null);
+  const k = cardPin.title;
+  const opacity = useTransform(t, (v) => Math.min(remap(v, k.in[0], k.in[1]), 1 - remap(v, k.out[0], k.out[1])));
+  // the plate dims a little ahead of the letters and returns as they leave
+  const dim = useTransform(t, (v) => k.dim * Math.min(remap(v, k.in[0] - 0.04, k.in[1]), 1 - remap(v, k.out[0], k.out[1] + 0.02)));
+  // a 3 % settle in (0.97 → 1), a 3 % drift out (1 → 1.03): identity over the hold
+  const scale = useTransform(t, (v) => 0.97 + 0.03 * remap(v, k.in[0], k.in[1]) + 0.03 * remap(v, k.out[0], k.out[1]));
+  useLayoutEffect(() => {
+    const box = layer.current;
+    const el = text.current;
+    if (!box || !el) return;
+    let off = false;
+    const fit = () => {
+      if (off) return;
+      // the advance at a reference size, then the size that fits the frame
+      el.style.setProperty("--title-fs", "100px");
+      const w = el.getBoundingClientRect().width;
+      const H = box.clientHeight;
+      const W = box.clientWidth;
+      if (!(w > 0) || !(H > 0)) return;
+      el.style.setProperty("--title-fs", `${Math.min(0.3 * H, (0.68 * W * 100) / w).toFixed(2)}px`);
     };
-    measure();
+    fit();
     // the world face may still be swapping in (lib/world-fonts.ts)
-    void document.fonts?.ready.then(measure);
+    void document.fonts?.ready.then(fit);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
+    ro?.observe(box);
     return () => {
-      cancelled = true;
+      off = true;
+      ro?.disconnect();
     };
-  }, [origin, text]);
-  const opacity = useTransform(t, (v) => remap(v, cardPin.titleIn, cardPin.titleIn + 0.06));
-  const scale = useTransform(t, (v) => {
-    const k = remap(v, cardPin.titleIn, TITLE_DONE);
-    // legible first, then the zoom accelerates (the GL title's t³ curve)
-    return Math.pow(6, k * k * k);
-  });
-  // the exit is a STATE, not a scrub (W2 gate): from TITLE_DONE the mask
-  // fades out over 300 ms and the clean plate holds to p 1, so a reader who
-  // stops in the tail never keeps a giant half-letter over the plate
-  const [out, setOut] = useState(() => t.get() >= TITLE_DONE);
-  useMotionValueEvent(t, "change", (v) => setOut(v >= TITLE_DONE));
+  }, [title.text]);
   return (
-    <div className="act-card-title-mask-wrap" data-gl-replaced="" data-out={out ? "" : undefined}>
-      <motion.svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        focusable="false"
-        className="act-card-title-mask"
-        style={{
-          opacity,
-          scale,
-          transformOrigin: `${(fit.origin[0] * 100).toFixed(2)}% ${(fit.origin[1] * 100).toFixed(2)}%`,
-        }}
+    <div ref={layer} className="act-card-title" aria-hidden="true">
+      <motion.div className="act-card-title-dim" style={{ opacity: dim }} />
+      <motion.p
+        ref={text}
+        data-act-title=""
+        className={cn(
+          "act-card-title-text",
+          title.lettered ? "lettered-title font-world-act" : "font-serif",
+          title.upper && "uppercase",
+        )}
+        style={{ opacity, scale }}
       >
-        <defs>
-          <mask id={`${id}m`} maskUnits="userSpaceOnUse" x={0} y={0} width={VB_W} height={VB_H}>
-            <rect width={VB_W} height={VB_H} fill="#fff" />
-            <text
-              ref={textRef}
-              x={VB_W / 2}
-              y={fit.base}
-              textAnchor="middle"
-              fontSize={fit.size}
-              fill="#000"
-              className="act-card-title-mask-text"
-            >
-              {text}
-            </text>
-          </mask>
-        </defs>
-        {/* the world outside the letters dims to a third, never to black:
-            the camera dives INTO the title instead of cutting away (W2 judge) */}
-        <rect width={VB_W} height={VB_H} fill="var(--bg)" fillOpacity={0.68} mask={`url(#${id}m)`} />
-      </motion.svg>
+        {title.text}
+      </motion.p>
     </div>
   );
 }

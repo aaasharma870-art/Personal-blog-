@@ -22,7 +22,9 @@ import { getMedia, isMediaId, type MediaId } from "@/lib/media";
      motion is on, the tab is visible and no `own` section is within one
      viewport. On `play: false` it PAUSES at once (the paused frame is the
      outgoing still), releases the lock, and unloads after 1.5 s unless it
-     resumes first. A new host or loop unloads at once.
+     resumes first (never while `hold`: the outgoing loop of a crossfade
+     keeps its paused frame until the host changes). A new host or loop
+     unloads at once.
    - Reduced motion / Pause / phones: the stage never asks it to play, so 0
      video bytes are requested.
    ========================================================================== */
@@ -39,6 +41,11 @@ export type StageVideoProps = {
   /** Bumped when the stage paused the element itself (in its frame loop):
    *  the effect re-checks, so a play asked in the same render resumes. */
   nonce?: number;
+  /** The shot is mid-crossfade and this is its OUTGOING loop: keep the
+   *  element paused on its current frame (never unload it by timer) until
+   *  the stage hands the host over (crossings pass: unloading it at the first
+   *  step of a fade popped the plate). No decoder runs while held. */
+  hold?: boolean;
 };
 
 const UNLOAD_MS = 1500;
@@ -107,7 +114,7 @@ function fadeIn(r: Run): void {
   }
 }
 
-export function StageVideo({ host, loop, focal, play, nonce = 0 }: StageVideoProps): null {
+export function StageVideo({ host, loop, focal, play, nonce = 0, hold = false }: StageVideoProps): null {
   const run = useRef<Run | null>(null);
 
   // one element for the stage's life
@@ -152,7 +159,11 @@ export function StageVideo({ host, loop, focal, play, nonce = 0 }: StageVideoPro
       // let go of the lock, and of the queue if the claim was waiting
       r.held = false;
       releaseDecoder(r.id);
-      if (r.src !== null && r.unloadTimer === null) {
+      if (hold && r.unloadTimer !== null) {
+        window.clearTimeout(r.unloadTimer);
+        r.unloadTimer = null;
+      }
+      if (!hold && r.src !== null && r.unloadTimer === null) {
         r.unloadTimer = window.setTimeout(() => {
           r.unloadTimer = null;
           if (!r.wantPlay) unload(r);
@@ -224,7 +235,7 @@ export function StageVideo({ host, loop, focal, play, nonce = 0 }: StageVideoPro
       }
     };
     // `nonce`: a re-check after the stage's own pause (see the prop)
-  }, [host, loop, play, focal, nonce]);
+  }, [host, loop, play, focal, nonce, hold]);
 
   // Pause / reduced motion: pause in the click's own task (`first`), before
   // the stage re-renders with `play: false`

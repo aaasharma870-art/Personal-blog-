@@ -106,11 +106,15 @@ html[data-letterbox] {
    outer gutters (the container's padding and anything outside 90rem) */
 .stage-scrim[data-zone="gutters"] {
   --scrim-edge: calc(max(0px, (100% - var(--container-page, 90rem)) / 2) + var(--spacing-gutter, 4rem));
+  /* the gutter's plate feathers INTO the text scrim over the 3 rem before the
+     content box (never a one-pixel edge, crossings pass D5); the scrim is at
+     full .86 from the content box's own edge inward, so text contrast holds */
+  --scrim-feather: 3rem;
   background-image: linear-gradient(
     to right,
-    var(--scrim-i) 0 var(--scrim-edge),
+    var(--scrim-i) 0 max(0px, calc(var(--scrim-edge) - var(--scrim-feather))),
     var(--scrim-t) var(--scrim-edge) calc(100% - var(--scrim-edge)),
-    var(--scrim-i) calc(100% - var(--scrim-edge)) 100%
+    var(--scrim-i) min(100%, calc(100% - var(--scrim-edge) + var(--scrim-feather))) 100%
   );
 }
 

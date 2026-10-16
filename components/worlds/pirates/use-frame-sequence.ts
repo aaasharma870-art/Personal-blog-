@@ -62,7 +62,7 @@ export function useFrameSequence(
   urls: readonly string[],
   enabled: boolean,
   o?: FrameSequenceOptions,
-): FrameSequence & { frameAt(i: number): CanvasImageSource | null } {
+): FrameSequence & { frameAt(i: number): CanvasImageSource | null; exactAt(i: number): CanvasImageSource | null } {
   const key = urls.length ? `${urls[0]}#${urls.length}` : "";
   const win = Math.max(0, Math.round(o?.window ?? 0));
   const indexRef = o?.index;
@@ -153,6 +153,12 @@ export function useFrameSequence(
     (i: number): CanvasImageSource | null => (win ? (engine.current?.frameAt(i) ?? null) : (frames.current[i] ?? null)),
     [win],
   );
+  // frame i only (no nearest-neighbour fallback, no side effect): a host that
+  // blends two neighbours needs both exact
+  const exactAt = useCallback(
+    (i: number): CanvasImageSource | null => (win ? (engine.current?.exact(i) ?? null) : (frames.current[i] ?? null)),
+    [win],
+  );
 
   if (win) {
     const mine = winState.key === key;
@@ -165,6 +171,7 @@ export function useFrameSequence(
       failed: mine && winState.failed > 0,
       tick: mine ? winState.tick : 0,
       frameAt,
+      exactAt,
     };
   }
   const mine = progress.key === key;
@@ -177,5 +184,6 @@ export function useFrameSequence(
     ready: mine && !failed && urls.length > 0 && progress.done === urls.length,
     failed,
     frameAt,
+    exactAt,
   };
 }

@@ -79,17 +79,21 @@ export type CardPinSpec = {
   /** The push-in, per choreography (its settled plate) and per
    *  `card-<kind>.push` variant: push[choreo][push]. */
   push: Readonly<Record<Variant, Readonly<Record<Variant, PushSpec>>>>;
-  /** The act title as a mask (§8.1): the text, its world face, and the
-   *  zoom origin in the title's ink box (film.acts[].maskOrigin). */
-  title: { text: string; origin: readonly [number, number] };
+  /** The act title (§8.1; crossings pass: solid lettering, no mask): the
+   *  text and how it sets in its world face (letteringFor: only a title the
+   *  face's glyph subset holds is lettered; `upper` = text-transform). */
+  title: { text: string; lettered: boolean; upper: boolean };
   /** The css tier's static carried shape (the incoming half, §7.3). */
   shape: { id: CarriedShapeId; at: Pos; size: number; range: readonly [number, number] } | null;
   weather: readonly PinWeather[];
   beats: readonly PinBeat[];
-  /** The iris (opening, css tier) per choreography (its plate's stern):
-   *  the disc's centre and radii, in frame HEIGHTS (r0 = .12 × the frame
-   *  diagonal; r1 = the farthest corner). */
-  iris?: Readonly<Record<Variant, { center: Pos; r0: number; r1: number } | null>> | null;
+  /** The opening's soft aperture (css tier) per choreography: a feathered
+   *  vignette that is already wide open at the hook and clears the frame
+   *  by p .45 (no rim, no black start). The centre and the radii are in
+   *  frame HEIGHTS: `r0` the feather's outer edge at the hook, `r1` where
+   *  it has cleared the farthest corner; `core` = the solid fraction of the
+   *  radius (the rest is the feather). */
+  iris?: Readonly<Record<Variant, { center: Pos; r0: number; r1: number; core: number } | null>> | null;
   /** The kraken (seam, pc-kraken): where the tentacle breaks the foam. */
   kraken?: { at: Pos } | null;
 };

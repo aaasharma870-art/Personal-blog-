@@ -259,7 +259,7 @@ export const VARIANT_REGISTRY = {
   "card-opening.push": {
     default: {
       name: "code-push-l01",
-      note: "Push-in #1: a code push on the L01 loop, 1 → 1.3 about the stern (transform only), over p .50–1; THE CROSSING opens over it from p .68. (DEFAULT since SEQ-PEARL failed Check L2.)",
+      note: "Push-in #1: a code push on the L01 loop, 1 → 1.3 about the stern (transform only), over p .50–1; THE CROSSING holds over it from p .66 to .88. (DEFAULT since SEQ-PEARL failed Check L2.)",
     },
     alt: {
       name: "code-rack-l01",
@@ -294,8 +294,8 @@ export const VARIANT_REGISTRY = {
   /* — Phase 3 card title + carried shape (SPEC §7.1, §7.3, §8.1) — */
   "title.mask": {
     default: {
-      name: "text-as-mask",
-      note: "Each card exits through its act title as a mask: the letters open from p .68 over the still-moving push and reach full-bleed at p 1 (GL SDF knockout; css knockout on the css tier).",
+      name: "solid-title",
+      note: "Each card shows its act title as solid world lettering over a gently dimmed plate: in over p .58–.66, held still to .88, out by .97 (scroll-scrubbed and reversible, the same DOM layer on the GL and css tiers; no mask, no zoom, no timer).",
     },
     alt: {
       name: "rising-title",

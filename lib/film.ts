@@ -846,7 +846,7 @@ export const film = {
   sound: true as boolean,
   /** Pinned card travel in vh, DESKTOP_FINE boot gate only; 0 below
    *  (PHASE3-SPEC §7.1; validator check 5: each ≤ 110, sum ≤ 400). */
-  cardTravel: { opening: 90, seam: 110, tintype: 90, ignite: 110 } as Readonly<
+  cardTravel: { opening: 80, seam: 80, tintype: 80, ignite: 80 } as Readonly<
     Record<"opening" | "seam" | "tintype" | "ignite", number>
   >,
   prologue: {
@@ -882,8 +882,8 @@ export const film = {
       landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
       maskOrigin: [0.519, 0.5], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      // pin wrapper 190vh (90 travel) + the program block ≈ 76vh
-      estVh: { d: 2.648, t: 2.705 },
+      // pin wrapper 180vh (80 travel) + the program block ≈ 60vh
+      estVh: { d: 2.446, t: 2.53 },
       // the program block reads over the stage (spec §3.2): the opening's exit
       // frame. SEQ-PEARL failed Check L2 (W1 assembler, 2026-10-01) and has no
       // end still, so the exit frame is iconic-pearl at the code push's end
@@ -894,13 +894,13 @@ export const film = {
         cues: [{ at: "act-1-program", media: "iconic-pearl", camera: "drift", depth: true, weather: "spray" }],
       },
       beats: [
-        { id: "B03", at: 0, span: 40.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
-        { id: "B03-impact", at: 40.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
-        { id: "B04", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
-        { id: "B04-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
-        { id: "B04-spray", at: 45, span: 45, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        { id: "B03", at: 0, span: 39.6, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B03-impact", at: 39.6, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B04", at: 40.4, span: 39.6, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B04-subtitle", at: 40.4, span: 39.6, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B04-spray", at: 40.4, span: 39.6, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
         // the program block (a backdrop sibling of the pin): the breath
-        { id: "B06", at: 90, span: 74.8, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
+        { id: "B06", at: 80, span: 60, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       ],
     },
     {
@@ -913,13 +913,13 @@ export const film = {
       landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
       maskOrigin: [0.507, 0.505], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 2.1, t: 2.1 },
+      estVh: { d: 1.8, t: 1.8 },
       beats: [
-        { id: "B13", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
-        { id: "B13-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
-        { id: "B14", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
-        { id: "B14-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
-        { id: "B14-chalk", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        { id: "B13", at: 0, span: 39.6, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B13-impact", at: 39.6, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B14", at: 40.4, span: 39.6, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B14-subtitle", at: 40.4, span: 39.6, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B14-chalk", at: 40.4, span: 39.6, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
       ],
     },
     {
@@ -932,15 +932,15 @@ export const film = {
       landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
       maskOrigin: [0.499, 0.457], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 1.9, t: 1.9 },
+      estVh: { d: 1.8, t: 1.8 },
       beats: [
         // the other half of the films' carried shape (B35): the card's sun
         // mark, on screen as the card rises (before the pin)
         { id: "B35-sun", at: -45, span: 45, kind: "match-cut", timing: "scroll", feature: "P3-6" },
-        { id: "B36", at: 0, span: 40.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
-        { id: "B36-impact", at: 2.7, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
-        { id: "B38", at: 45, span: 45, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "sun", feature: "P3-5" },
-        { id: "B38-subtitle", at: 45, span: 45, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B36", at: 0, span: 39.6, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B36-impact", at: 2.6, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B38", at: 40.4, span: 39.6, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "sun", feature: "P3-5" },
+        { id: "B38-subtitle", at: 40.4, span: 39.6, kind: "subtitle", timing: "scroll", feature: "P3-7" },
       ],
     },
     {
@@ -953,15 +953,15 @@ export const film = {
       landAt: 0.47, // W2-CARDS (spec .45): inside the settle (.45–.50), the new world fully shown
       maskOrigin: [0.472, 0.469], // W2-CARDS: the zoom origin in the title's ink box
       tempo: "slow",
-      estVh: { d: 2.1, t: 2.1 },
+      estVh: { d: 1.8, t: 1.8 },
       beats: [
-        { id: "B48", at: 0, span: 49.5, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
+        { id: "B48", at: 0, span: 39.6, kind: "transition", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
         // the RDR2 side of the burn (p < .1) keeps the camp's fireflies
-        { id: "B48-fireflies", at: 0, span: 11, kind: "stage-cue", timing: "scroll", world: "rdr2", feature: "P3-6" },
-        { id: "B48-impact", at: 49.5, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
-        { id: "B50", at: 55, span: 55, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
-        { id: "B50-subtitle", at: 55, span: 55, kind: "subtitle", timing: "scroll", feature: "P3-7" },
-        { id: "B50-motes", at: 55, span: 55, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
+        { id: "B48-fireflies", at: 0, span: 8.8, kind: "stage-cue", timing: "scroll", world: "rdr2", feature: "P3-6" },
+        { id: "B48-impact", at: 39.6, span: 0, kind: "impact", timing: "scroll", feature: "P3-6" },
+        { id: "B50", at: 40.4, span: 39.6, kind: "push-title", timing: "scroll", star: true, weight: 3, push: "in", feature: "P3-5" },
+        { id: "B50-subtitle", at: 40.4, span: 39.6, kind: "subtitle", timing: "scroll", feature: "P3-7" },
+        { id: "B50-motes", at: 40.4, span: 39.6, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
       ],
     },
   ] as const satisfies readonly ActSpec[],

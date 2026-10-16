@@ -22,6 +22,13 @@
      p ≥ b.range[1]          transparent (full-bleed; the stage takes over)
    So the push layers (SEQ canvas, L08 camera group) must NOT carry
    `data-gl-replaced`: they sit under the GL canvas and show through it.
+   CROSSINGS PASS: the act title is no longer drawn here. gl-frame.tsx hosts
+   with `title: false` (the SDF knockout chunk never loads) and the title is
+   a solid DOM layer above the canvas on BOTH tiers (card-p3.tsx TitleCard);
+   the `title` flavour and `b.maskOrigin` stay in the types for /lab/p3/gl.
+   The opening's `iris` is a SOFT aperture (no brass rim): `radius` =
+   [feather's outer edge at the hook, where its solid half clears the far
+   corner] and the solid core is the first half of the radius.
 
    `a.flavour` NAMES THE IN HALF the variant chose: "chalk" | "duster"
    (seam: the `wave` OUT half is implied), "ink" | "lumos" (ignite: the

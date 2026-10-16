@@ -82,6 +82,17 @@ import {
      shows the active step's still (no canvas, no loop, no sail), the
      captions show, the compass simply points.
 
+   SMOOTH SEA (crossings pass, report-D D1 / D6 / D7): the scrub position is
+   a FRACTIONAL frame position (no rounding): the floor frame is drawn, then
+   the ceil frame over it at globalAlpha = the fraction, on the same canvas
+   in one rAF-coalesced paint. The picture changes on every scroll tick
+   instead of one whole frame every ≈ 23 px (≈ 10 changes a second at
+   reading speed). Within SNAP of a whole frame the single frame is drawn,
+   so a resting sea is never half-blended. Frame 48 of the shipped sequence
+   is byte-for-byte frame 47 (the join of clips 2 and 3: a 23 px freeze,
+   then a lurch of MAD 5.8 into frame 49): it is skipped, so the positions
+   run over 71 distinct frames (0 / 24 / 47 / 70 are the step beats).
+
    RASTER (P3-2, spec §12.1 #3): the sticky column is never repainted while
    it scrolls. The sequence canvas is its own layer (a frame draw uploads
    the canvas, nothing else), and the caption veil (the calm bottom + the
@@ -122,6 +133,17 @@ const REST_TOLERANCE = 3;
 const HOLD: CameraSpec = { kind: "hold", scale: [1, 1], driver: "sticky" };
 /** The decoded window: ±12 frames (spec §6.2). */
 const WINDOW = 12;
+/** The shipped sequence has 72 frames; frame 48 is byte-identical to frame 47
+ *  (clip 2's end still = clip 3's start still), so it is skipped. */
+const SEQ_TOTAL = 72;
+const DUP_FRAME = 48;
+/** Within this fraction of a whole frame the single frame is drawn (a
+ *  resting sea is never a half-blend); blends are quantised to 1/16. */
+const SNAP = 0.06;
+const LEVELS = 16;
+/** How long the sea must be still before it counts as at rest (ms): a short
+ *  pause in a slow read must not flash the captions or the loop. */
+const IDLE_MS = 450;
 const SIZES = "(min-width: 1280px) 42vw, 50vw";
 
 /** A frame's intrinsic size (an ImageBitmap, or an <img>). */
@@ -160,14 +182,23 @@ export function JourneyVoyage({
   const rootRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawnFrame = useRef(-1);
-  /** The frame the sea wants now (the decode window centres on it). */
+  /** What is on the canvas: the quantised blend key (-1 = nothing yet). */
+  const drawnKey = useRef(-1);
+  /** The sea's wanted position (fractional, in distinct-frame space; -1 =
+   *  not asked yet): a resize or a late decode repaints it. */
+  const wantPos = useRef(-1);
+  /** The REAL frame the sea wants now (the decode window centres on it). */
   const index = useRef(0);
 
   const seq = useFrameSequence(urls, near && !reduced, { window: WINDOW, index });
   const live = seq.ready && near && !reduced;
-  const beats = beatFrames(seq.total || 1, n);
+  // distinct frames: the duplicate join frame is skipped (see the header)
+  const skip = seq.total === SEQ_TOTAL ? DUP_FRAME : -1;
+  const distinct = skip >= 0 ? seq.total - 1 : seq.total;
+  const beats = beatFrames(distinct || 1, n);
   const beat = beats[active] ?? 0;
+  /** A distinct-frame index → the real frame number. */
+  const realOf = (k: number) => (skip >= 0 && k >= skip ? k + 1 : k);
 
   /* — the active step: the article crossing the viewport's centre line — */
   useEffect(() => {
@@ -205,7 +236,7 @@ export function JourneyVoyage({
   /** The scrub: the viewport centre's position between the step centres
    *  (read live from the articles' rects: nothing above the section can
    *  leave it stale), piecewise-linear between the beats — positional,
-   *  never time-based: the same scrollY gives the same frame. */
+   *  never time-based: the same scrollY gives the same (fractional) frame. */
   const scrubFrame = useEffectEvent((): number => {
     const root = stepsRef.current;
     const els = root ? root.querySelectorAll<HTMLElement>("[data-step]") : [];
@@ -223,31 +254,66 @@ export function JourneyVoyage({
         const t = b > a ? (mid - a) / (b - a) : 1;
         const f0 = beats[i] ?? 0;
         const f1 = beats[i + 1] ?? f0;
-        return Math.round(f0 + t * (f1 - f0));
+        return f0 + t * (f1 - f0);
       }
     }
     return beats[beats.length - 1] ?? 0;
   });
 
-  /** Paint frame i (object-fit: cover) unless it is already on the canvas.
-   *  Window mode: frame i, else its nearest decoded neighbour (the exact one
-   *  repaints on `seq.tick`), else nothing yet. */
-  const paint = useEffectEvent((i: number, force = false) => {
-    index.current = i;
+  /** Paint position `pos` (fractional, distinct-frame space; object-fit:
+   *  cover): the floor frame, then the ceil frame over it at globalAlpha =
+   *  the fraction. Window mode: a frame that is not decoded yet falls back
+   *  to the single nearest decoded one (the exact ones repaint on
+   *  `seq.tick`), else nothing yet. Unchanged blends are not redrawn. */
+  const paint = useEffectEvent((pos: number, force = false) => {
+    const top = Math.max(0, distinct - 1);
+    const p = Math.min(top, Math.max(0, pos));
+    wantPos.current = p;
+    let k0 = Math.floor(p);
+    let f = p - k0;
+    if (f < SNAP) f = 0;
+    else if (f > 1 - SNAP) {
+      k0 += 1;
+      f = 0;
+    }
+    k0 = Math.min(top, k0);
+    const k1 = f > 0 ? Math.min(top, k0 + 1) : k0;
+    if (k1 === k0) f = 0;
+    const level = Math.round(f * LEVELS);
+    f = level / LEVELS;
+    const nearest = f >= 0.5 ? k1 : k0;
+    index.current = realOf(nearest);
     const c = canvasRef.current;
     if (!c || !c.width) return;
-    if (!force && i === drawnFrame.current) return;
-    const img = seq.frameAt(i);
-    if (!img) return;
+    const key = k0 * (LEVELS + 1) + level;
+    if (!force && key === drawnKey.current) return;
+    // asking sets the decode window's centre; it also returns the nearest decoded frame
+    const near1 = seq.frameAt(realOf(nearest));
+    const a = f > 0 ? seq.exactAt(realOf(k0)) : null;
+    const b = f > 0 ? seq.exactAt(realOf(k1)) : null;
+    const blend = a && b;
+    if (!blend && !near1) return;
     const ctx = c.getContext("2d");
     if (!ctx) return;
-    const [iw, ih] = sizeOf(img);
-    const s = Math.max(c.width / iw, c.height / ih);
-    const sw = c.width / s;
-    const sh = c.height / s;
-    ctx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, c.width, c.height);
-    drawnFrame.current = i;
-    c.dataset.frame = String(i);
+    const cover = (img: CanvasImageSource) => {
+      const [iw, ih] = sizeOf(img);
+      const s = Math.max(c.width / iw, c.height / ih);
+      const sw = c.width / s;
+      const sh = c.height / s;
+      ctx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, c.width, c.height);
+    };
+    ctx.globalAlpha = 1;
+    if (blend) {
+      cover(a);
+      ctx.globalAlpha = f;
+      cover(b);
+      ctx.globalAlpha = 1;
+    } else if (near1) {
+      cover(near1);
+    }
+    drawnKey.current = key;
+    c.dataset.frame = String(realOf(nearest));
+    c.dataset.blend = blend ? f.toFixed(3) : "0";
     c.dataset.drawn = "";
   });
 
@@ -255,7 +321,7 @@ export function JourneyVoyage({
   useEffect(() => {
     const c = canvasRef.current;
     if (!live || !c) return;
-    drawnFrame.current = -1;
+    drawnKey.current = -1;
     const fit = () => {
       const box = c.parentElement;
       if (!box) return;
@@ -266,7 +332,7 @@ export function JourneyVoyage({
         c.width = w;
         c.height = h;
       }
-      const again = drawnFrame.current >= 0 ? drawnFrame.current : variant === "default" ? scrubFrame() : beat;
+      const again = wantPos.current >= 0 ? wantPos.current : variant === "default" ? scrubFrame() : beat;
       paint(again, true);
     };
     fit();
@@ -279,7 +345,7 @@ export function JourneyVoyage({
 
   /* — window mode: the asked frame decoded → draw it over its neighbour — */
   useEffect(() => {
-    if (live) paint(index.current, true);
+    if (live && wantPos.current >= 0) paint(wantPos.current, true);
   }, [live, seq.tick]);
 
   /* — DEFAULT: the scroll scrubs the sea; at rest the frame is noted — */
@@ -293,17 +359,18 @@ export function JourneyVoyage({
     };
     const settle = () => {
       setMoving(false);
-      setRest(index.current);
+      // at rest: the nearest distinct frame (the beats' space)
+      setRest(Math.round(wantPos.current));
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(tick);
       setMoving(true);
       setRest(null);
       window.clearTimeout(idle);
-      idle = window.setTimeout(settle, 220);
+      idle = window.setTimeout(settle, IDLE_MS);
     };
     tick();
-    idle = window.setTimeout(settle, 220);
+    idle = window.setTimeout(settle, IDLE_MS);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -316,7 +383,7 @@ export function JourneyVoyage({
   useEffect(() => {
     if (!live || variant !== "alt") return;
     const to = beat;
-    const from = drawnFrame.current < 0 ? to : drawnFrame.current;
+    const from = wantPos.current < 0 ? to : Math.round(wantPos.current);
     if (from === to) {
       paint(to, true);
       // an interrupted sail may have stopped exactly on this beat
@@ -335,7 +402,7 @@ export function JourneyVoyage({
         setRest(null);
       }
       const k = Math.min(1, (now - t0) / duration);
-      paint(Math.round(from + (to - from) * easeInOut(k)));
+      paint(from + (to - from) * easeInOut(k));
       if (k < 1) raf = requestAnimationFrame(step);
       else {
         setSailing(false);
@@ -483,22 +550,24 @@ export function JourneyVoyage({
               </div>
             ) : null}
 
-            {/* the caption veil, ONE layer that fades when the sea moves (at
-                rest only): the calm bottom and the step captions */}
+            {/* a calm bottom for the caption: CONSTANT and light, so the
+                picture's exposure never pumps when the sea stops or moves
+                (D6; the caption carries its own scrim) */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-1/2 bg-linear-to-t from-(--world-deep)/40 to-transparent"
+            />
+
+            {/* the step captions, ONE layer that fades by opacity when the sea
+                moves (at rest only): MOMENT • FILM, cross-dissolving on the
+                step (hidden from assistive tech while the sea moves). In
+                200 ms, out 120 ms: a short pause never flashes them. */}
             <div
               className={cn(
-                "pointer-events-none absolute inset-0 z-[1] transition-opacity duration-300 will-change-[opacity] motion-off:transition-none",
-                showCaption ? "opacity-100" : "opacity-0",
+                "pointer-events-none absolute inset-0 z-[1] transition-opacity will-change-[opacity] motion-off:transition-none",
+                showCaption ? "opacity-100 duration-200" : "opacity-0 duration-120",
               )}
             >
-              {/* a calm bottom for the caption */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-(--world-deep)/85 to-transparent"
-              />
-
-              {/* the step captions: MOMENT • FILM, cross-dissolving on the
-                  step (hidden from assistive tech while the sea moves) */}
               {captions.map((c, i) => (
                 <div
                   key={i}

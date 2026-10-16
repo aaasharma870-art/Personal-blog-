@@ -2,7 +2,7 @@ import { film, type ActSpec } from "@/lib/film";
 import { coverOf } from "@/lib/gl/cover";
 import type { GlFlavour } from "@/lib/gl/types";
 import { markOf, rectOf, sequenceFrames, type MediaId } from "@/lib/media";
-import type { ActCardItem } from "@/lib/sections";
+import { letteringFor, type ActCardItem } from "@/lib/sections";
 import type { SkyKey } from "@/lib/sky";
 import type { Variant } from "@/lib/variants";
 import { FRAME_ASPECT, anchor, clamp01, coverBox, inBox, plateOf, type Box, type Plate, type Pos } from "@/components/sections/act-card/plate";
@@ -124,8 +124,15 @@ const frac = (b: Box, pt: Pos): Pos => inBox(b, pt);
 /** p range of a beat (vh at p × travel). */
 const toP = (vh: number, travel: number) => (travel > 0 ? vh / travel : 0);
 
+/** The opening's soft aperture: the feather's outer radius at the hook (frame
+ *  heights; the frame is 2.39 wide, so 1.3 already spans most of it) and the
+ *  solid fraction of the radius. */
+const IRIS_R0 = 1.3;
+const IRIS_CORE = 0.5;
+
 const IMPACT: Record<CardPinSpec["kind"], ImpactSpec> = {
-  opening: { at: 0.45, shake: 3, flash: 0.16, bloomEv: 0 },
+  // the opening's soft aperture finishes at .45: a small thump, no white flash
+  opening: { at: 0.45, shake: 2, flash: 0.05, bloomEv: 0 },
   seam: { at: 0.45, shake: 2, flash: 0, bloomEv: 0, puff: true },
   tintype: { at: 0.03, shake: 2, flash: 0.18, bloomEv: 0 },
   ignite: { at: 0.45, shake: 0, flash: 0, bloomEv: 0.35 },
@@ -165,7 +172,7 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
   const regs = {} as PinRegs;
   const gl = {} as ByVariant<GlCardData | null>;
   const push = {} as ByVariant<ByVariant<PushSpec>>;
-  const iris: Record<Variant, { center: Pos; r0: number; r1: number } | null> = { default: null, alt: null };
+  const iris: Record<Variant, { center: Pos; r0: number; r1: number; core: number } | null> = { default: null, alt: null };
   let shape: CardPinSpec["shape"] = null;
 
   for (const v of VARIANTS) {
@@ -183,21 +190,17 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       cTo = plainBox(toP_);
       const stern = (markOf(toP_.asset.id, "stern") as Pos | null) ?? [0.87, 0.6];
       const onStern = frac(cTo, stern);
-      // the hook's disc (r0 = 12 % of the diagonal, in frame heights) sits
-      // wholly inside the frame, its brass rim too: on the stern, pulled in
-      // from the edge (W2 gate: the frame shaved a D-shaped porthole)
-      const r0 = 0.12 * Math.hypot(A, 1);
-      const m = 0.015;
-      const c: Pos = [
-        Math.min(1 - r0 / A - m, Math.max(r0 / A + m, onStern[0])),
-        Math.min(1 - r0 - m, Math.max(r0 + m, onStern[1])),
-      ];
+      // the aperture opens on the ship, not on a corner: halfway between the
+      // stern and the frame's middle, so the first frame already shows the
+      // hull and the rigging (crossings pass; the old 12 % disc on the stern
+      // read as a loading ring on a black frame)
+      const c: Pos = [0.5 * onStern[0] + 0.5 * 0.5, 0.5 * onStern[1] + 0.5 * 0.5];
       center = c;
       // the hero plate (outgoing) with its horizon on the disc's row
       const hero = plateOf(plates.from[v]);
       cFrom = hero ? (reg(hero, ["horizon"], 1.2, A, c[1]) ?? plainBox(hero)) : null;
       const far = Math.max(...[0, 1].flatMap((x) => [0, 1].map((y) => Math.hypot((c[0] - x) * A, c[1] - y))));
-      iris[v] = { center: c, r0, r1: far };
+      iris[v] = { center: c, r0: IRIS_R0, r1: (far / IRIS_CORE) * 1.02, core: IRIS_CORE };
       // the push still dives at the stern itself
       pv.default = { origin: onStern, scale: [1, 1.3], loop: true };
       pv.alt = { origin: onStern, scale: [1, 1.15], rack: true, loop: true };
@@ -272,6 +275,7 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
               ? { inset: { x: PLATE.x / VB.w, y: PLATE.y / VB.h, w: PLATE.w / VB.w, h: PLATE.h / VB.h, r: PLATE.r / VB.h } }
               : {}),
             ...(center ? { center } : {}),
+            ...(kind === "opening" && iris[v] ? { radius: [iris[v].r0, iris[v].r1] as const } : {}),
             ...(kind === "seam" || kind === "ignite"
               ? { shapes: kind === "seam" ? { from: "ring32", to: "gear12", at: 0.22 } : { from: "wheel12", to: "snitch", at: 0.22 } }
               : {}),
@@ -309,7 +313,7 @@ export function buildPin(item: ActCardItem, plates: PinPlates, title: string): {
       gl,
       toPlate: { default: plates.to.default, alt: plates.to.alt },
       push,
-      title: { text: title, origin: act?.maskOrigin ?? [0.5, 0.5] },
+      title: { text: title, ...letteringFor(item.lettering, title) },
       shape,
       weather,
       beats,

@@ -678,13 +678,19 @@ export function WeatherImpl({
 /** `tick` counts the asked frame's arrivals (a host redraws on it: a frame
  *  drawn from a neighbour is replaced once the exact one decodes). */
 export type SeqState = { fetched: number; failed: number; ready: boolean; tick: number };
-export type SeqHandle = { frameAt(i: number): ImageBitmap | null; drop(): void };
+/** `frameAt(i)`: frame i, else the nearest decoded one (and sets the window's
+ *  centre); `exact(i)`: frame i only, with no side effect (a host that
+ *  blends two neighbours). */
+export type SeqHandle = { frameAt(i: number): ImageBitmap | null; exact(i: number): ImageBitmap | null; drop(): void };
 
 type SeqBlobs = { blobs: (Blob | null)[]; done: number; failed: number; subs: Set<() => void> };
 
 /** Compressed frames per sequence, kept for the page's life (≈ 1.3–3.7 MB). */
 const SEQ = new Map<string, SeqBlobs>();
 const SEQ_MAX_BYTES = 128 * 1024 * 1024;
+/** createImageBitmap calls in flight per sequence (a wheel flick crosses
+ *  several frames at once: two decoders left holes, D1). */
+const SEQ_DECODES = 4;
 const SEQ_FRAME_GUESS = 1280 * 720 * 4;
 let seqResident: { evict(): void } | null = null;
 let seqBytes = 0;
@@ -794,7 +800,7 @@ export function seqWindow(
       if (i < 0 || i >= n || bm.has(i)) continue;
       complete = false;
       const blob = store.blobs[i];
-      if (pending.has(i) || !blob || pending.size >= 2 || seqBytes + SEQ_FRAME_GUESS > SEQ_MAX_BYTES) continue;
+      if (pending.has(i) || !blob || pending.size >= SEQ_DECODES || seqBytes + SEQ_FRAME_GUESS > SEQ_MAX_BYTES) continue;
       pending.add(i);
       createImageBitmap(blob).then(
         (b) => {
@@ -804,8 +810,8 @@ export function seqWindow(
             bm.set(i, b);
             seqBytes += bytesOf(b);
             seqPeak = Math.max(seqPeak, seqBytes);
-            // the frame the host asked for: redraw it over the neighbour
-            if (i === asked) {
+            // the frame the host asked for (or its blend partner): redraw
+            if (asked >= 0 && Math.abs(i - asked) <= 1) {
               tick++;
               report(state());
             }
@@ -846,6 +852,7 @@ export function seqWindow(
       }
       return null;
     },
+    exact: (i) => bm.get(i) ?? null,
     drop() {
       dead = true;
       store.subs.delete(onFetch);
@@ -904,11 +911,19 @@ type LayerEls = {
 
 /** `n` counts the pauses the frame loop made itself (StageVideo re-checks on
  *  each, so a pause and a play inside one render never leave it paused). */
-type VideoState = { k: number; host: HTMLElement | null; play: boolean; n: number };
-const NO_VIDEO: VideoState = { k: -1, host: null, play: false, n: 0 };
+type VideoState = { k: number; host: HTMLElement | null; play: boolean; n: number; hold: boolean };
+const NO_VIDEO: VideoState = { k: -1, host: null, play: false, n: 0, hold: false };
 
 const FADE_VH = 0.4;
 const MOUNT_MARGIN_VH = 0.5;
+/** The NEXT shot mounts this far ahead of the viewport's bottom (vh): well
+ *  before its crossfade starts (FADE_VH), so its plate is fetched and
+ *  decoded by the time the ramp begins (it used to mount 0.1 vh = 90 px
+ *  ahead and could pop in mid-fade on a cold or slow connection). */
+const NEXT_MOUNT_VH = FADE_VH + 1;
+/** The incoming plate may rise at most this fast (opacity per second): a
+ *  late decode eases in over about a quarter of a second instead of popping. */
+const RISE_PER_S = 4;
 const OWN_CLEAR_VH = 1;
 /** Pointer shift (spec §6.1: ≤ 6 px, the hero and the stage only). */
 const POINTER_PX = 6;
@@ -1144,9 +1159,15 @@ export function Stage() {
 
     let lastMounted = "";
     let lastWeather = "";
+    let lastStepMs = 0;
+    let easeRaf = 0;
 
     step.current = () => {
       const { on: motionOn, visibleDoc: docOn } = settings.current;
+      const nowMs = performance.now();
+      const dtS = Math.min(0.1, Math.max(0.001, (nowMs - lastStepMs) / 1000));
+      lastStepMs = nowMs;
+      let easing = false;
       if (!motionOn) {
         mark(new Set());
         if (lastWeather !== "") {
@@ -1180,9 +1201,12 @@ export function Stage() {
       const lo = sy - MOUNT_MARGIN_VH * vh;
       const hi = sy + vh + MOUNT_MARGIN_VH * vh;
       const near: number[] = [];
+      // the next shot (the one after the current) mounts early (NEXT_MOUNT_VH)
+      const nextK = (a >= 0 ? index[a + 1] : index[0]) ?? -1;
+      const hiNext = sy + vh + NEXT_MOUNT_VH * vh;
       index.forEach((k) => {
         const m = g[k];
-        if (m && m.top < hi && m.bottom > lo) near.push(k);
+        if (m && m.bottom > lo && (m.top < hi || (k === nextK && m.top < hiNext))) near.push(k);
       });
       const key = near.join(",");
       if (key !== lastMounted) {
@@ -1201,7 +1225,16 @@ export function Stage() {
         const e = els.current.get(k);
         if (!m) continue;
         const onScreen = m.top < sy + vh && m.bottom > sy;
-        let o = k <= ka ? 1 : FIRST_IN_WINDOW[k] ? 1 : k === kb ? mix : 0;
+        // the incoming plate shows only once it has DECODED (never a pop-in),
+        // and rises at most RISE_PER_S (a late decode eases in)
+        let o = k <= ka ? 1 : FIRST_IN_WINDOW[k] ? 1 : k === kb ? (ready.current.has(k) ? mix : 0) : 0;
+        if (k === kb && k > ka && e && e.o >= 0 && o > e.o) {
+          const cap = e.o + RISE_PER_S * dtS;
+          if (o > cap) {
+            o = cap;
+            easing = true;
+          }
+        }
         let t = "none";
         let dim = 0;
         if (s.mode === "split") {
@@ -1255,6 +1288,14 @@ export function Stage() {
       }
       setRoot(rootWanted);
       mark(want);
+      // an incoming plate is still easing in (a late decode): keep stepping
+      // until it reaches the scroll's mix, even if the scroll has stopped
+      if (easing && !easeRaf) {
+        easeRaf = requestAnimationFrame(() => {
+          easeRaf = 0;
+          step.current();
+        });
+      }
       const wkey = weather.join(",");
       if (wkey !== lastWeather) {
         lastWeather = wkey;
@@ -1262,7 +1303,13 @@ export function Stage() {
       }
 
       // the one video: the settled shot, on screen, clear of own sections
-      const kv = mix <= 0.02 ? ka : mix >= 0.98 ? kb : -1;
+      // mid-fade the OUTGOING shot keeps its video element, paused on its
+      // current frame (`hold`): tearing it down at the first step of the fade
+      // popped the plate (D4); it is released when the incoming plate has
+      // taken over (mix ≥ .98), and no decoder runs during the fade
+      const fadingNow = mix > 0.02 && mix < 0.98;
+      const kv = mix <= 0.02 ? ka : mix >= 0.98 ? kb : ka;
+      const hold = fadingNow && kv >= 0;
       let play = false;
       let host: HTMLElement | null = null;
       if (kv >= 0 && near.includes(kv) && ready.current.has(kv) && loopsRef.current[kv] && docOn) {
@@ -1277,7 +1324,7 @@ export function Stage() {
         play = onScreen && clear && host !== null && !fading && (opacityOf.get(kv) ?? 0) >= 0.98;
       }
       const v = videoRef.current;
-      if (v.k !== kv || v.host !== host || v.play !== play) {
+      if (v.k !== kv || v.host !== host || v.play !== play || v.hold !== hold) {
         // the loop stops IN THIS FRAME, with the layers' opacity writes above:
         // the state below lands a render later, and a crossfade never starts
         // with the outgoing loop still decoding (0 during a fade, P3-2 #5;
@@ -1287,7 +1334,7 @@ export function Stage() {
           v.host?.querySelector("video")?.pause();
           n += 1;
         }
-        videoRef.current = { k: kv, host, play, n };
+        videoRef.current = { k: kv, host, play, n, hold };
         setVideo(videoRef.current);
       }
     };
@@ -1418,6 +1465,7 @@ export function Stage() {
     return () => {
       if (raf) cancelAnimationFrame(raf);
       if (praf) cancelAnimationFrame(praf);
+      if (easeRaf) cancelAnimationFrame(easeRaf);
       ro.disconnect();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("pointermove", onPointer);
@@ -1569,7 +1617,7 @@ export function Stage() {
           const host = hosts.get(k);
           return host ? createPortal(layer(k), host, `stage-${k}`) : null;
         })}
-      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} nonce={video.n} />
+      <StageVideo host={video.host} loop={vLoop} focal={vFocal} play={video.play && on} nonce={video.n} hold={video.hold} />
     </>
   );
 }

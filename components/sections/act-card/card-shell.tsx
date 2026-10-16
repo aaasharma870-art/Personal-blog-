@@ -86,7 +86,7 @@ const CardP3 = safeLazy(() => import("@/components/sections/act-card/card-p3").t
  * PHASE 3 PIN MODE (PHASE3-SPEC §7.1; PHASE3-PLAN §6.1 W2-CARDS):
  *   pinned = travel > 0 && DESKTOP_FINE && !pausedAtBoot. The four
  *   authored cards (opening, seam, tintype, ignite) pin for
- *   `film.cardTravel` (90 / 110 / 90 / 110 vh). The card stage sits in its
+ *   `film.cardTravel` (80 / 80 / 80 / 80 vh). The card stage sits in its
  *   own PIN WRAPPER (`data-act-card-pin`, the p target; the opening's
  *   program is a sibling after it, its own `stage-backdrop` block). The
  *   travel, the sticky stage, the opening's letterbox grid, the registered
@@ -488,7 +488,7 @@ function ProgramStage({
     <div
       ref={ref}
       id={program?.id}
-      className={cn("relative px-gutter pt-tier-group pb-section sm:pt-tier-block", program && "stage-backdrop isolate")}
+      className={cn("relative px-gutter pt-tier-group pb-tier-block sm:pt-tier-group", program && "stage-backdrop isolate")}
       data-beat="B06"
       data-beat-star=""
       data-beat-weight="1"
