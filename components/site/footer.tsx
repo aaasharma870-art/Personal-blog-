@@ -156,6 +156,13 @@ const Dot = () => (
   </span>
 );
 
+/** The end button's accessible name: the last line, then the action
+ *  ("<line> Play it again"); just the action if the line may not render. */
+function lastLineName(id: QuoteId, action: string): string {
+  const q = quotes[id];
+  return copyVisible({ text: q.text, status: q.status }) ? `${q.text} ${action}` : action;
+}
+
 export function Footer({ entry }: SectionProps<"credits">) {
   const playAgain = copyText("mischief.again");
   const year = new Date().getFullYear(); // the build year (static page)
@@ -345,19 +352,29 @@ export function Footer({ entry }: SectionProps<"credits">) {
 
         {on && credits.lastLine ? (
           <div className="mt-tier-block flex flex-col items-center gap-3 text-center" data-credits-last="">
-            <p className="text-(length:--text-heading) leading-(--text-heading--line-height) text-fg">
-              <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
-              {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
-            </p>
-            {hp ? <InkFold /> : null}
-            {/* the clear end: restarts the loop (intro replay, or the top
-                with motion off); the quiet "Back to the opening" link above
-                stays the scroll-only way back */}
             {copyVisible(playAgain) ? (
-              <div className="mt-tier-pair">
-                <PlayAgain label={playAgain.text} />
-              </div>
-            ) : null}
+              /* the last line IS the button: one large solid aqua-ringed
+                 button, the lettered line as its face, "Play it again"
+                 under it; it restarts the loop (intro replay, or the top
+                 with motion off). The quiet "Back to the opening" link above
+                 stays the scroll-only way back. */
+              <PlayAgain
+                label={playAgain.text}
+                name={lastLineName(credits.lastLine, playAgain.text)}
+                fold={hp ? <InkFold /> : null}
+              >
+                <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
+                {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
+              </PlayAgain>
+            ) : (
+              <>
+                <p className="text-(length:--text-heading) leading-(--text-heading--line-height) text-fg">
+                  <FilmQuote id={credits.lastLine} rendition="lettered" attribution="credits" />
+                  {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
+                </p>
+                {hp ? <InkFold /> : null}
+              </>
+            )}
           </div>
         ) : null}
         <PostCredits />

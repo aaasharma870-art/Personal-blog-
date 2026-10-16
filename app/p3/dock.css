@@ -312,17 +312,58 @@ html.js .game-pill > svg {
   font-weight: 700;
 }
 
-/* — The closing "Play it again" (credits, after the last line) — */
+/* — The end: the last line IS the button ("Mischief managed." lettered, with
+     "Play it again" under it; components/site/play-again.tsx). One large,
+     solid, aqua-ringed button; the lettered face keeps its world lettering. — */
 .try-btn.try-end {
-  min-height: 3.25rem;
-  padding: 0 1.5rem 0 1.25rem;
-  font-size: 1rem;
-  gap: 0.625rem;
-  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 4.5rem;
+  max-width: 100%;
+  padding: calc(1rem - 1.5px) calc(2.25rem - 1.5px);
+  border-radius: 1.5rem;
+  font-weight: 400;
+  text-align: center;
+  white-space: normal;
+  box-shadow:
+    inset 0 0 0 1.5px var(--dock-ring),
+    0 0 0 1px var(--dock-halo),
+    0 16px 36px -18px rgb(0 0 0 / 0.85);
 }
-.try-btn.try-end > svg {
-  width: 1.375rem;
-  height: 1.375rem;
+.try-btn.try-end:hover {
+  background: var(--dock-fill-hover);
+}
+.try-end-line {
+  display: block;
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  color: var(--dock-ink);
+}
+.try-end-fold {
+  display: flex;
+  line-height: 0;
+}
+.try-end-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--dock-ring);
+}
+.try-end-sub > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+  transition: transform 420ms var(--ease-out, ease);
+}
+.try-end:hover .try-end-sub > svg,
+.try-end:focus-visible .try-end-sub > svg {
+  transform: rotate(-180deg);
 }
 /* focus: a dark halo then an aqua ring, so it reads on the bright meadow and
    on parchment too; the transparent outline is the forced-colors ring */
