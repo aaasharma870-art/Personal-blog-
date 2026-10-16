@@ -257,8 +257,20 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
     setSeg(r, tTo, tTo, 0);
     return last - first + 1;
   }
+  const lastLeg = legs[legs.length - 1];
+  // a span that ends at a dip keeps its speed past the end for a moment: the cut's
+  // fade-in (140 ms) then runs while the page still moves, and Lenis's one lost frame
+  // at a glide's end never shows. The jump itself cancels this run-out.
+  const runOut = plan.keys[lastLeg.b].dip && lastLeg.env.v1 > 40 ? lastLeg.env.v1 : 0;
+  const main = easeOfMany(envs);
+  if (runOut) envs.push({ v0: runOut, v1: runOut, c: runOut, r1: 0, r2: 0, T: 0.5 });
   const { T, ease } = easeOfMany(envs);
-  setSeg(r, tFrom, tTo, T);
+  setSeg(r, tFrom, tTo, main.T);
+  if (runOut) {
+    void glide(r, clampY(at + runOut * 0.5), { v0: envs[0].v0, v1: runOut, c: 0, r1: 0, r2: 0, T }, ease);
+    const waited = await wait(r, main.T * 1000);
+    return waited && g === r.gen && !r.stopped ? last - first + 1 : 0;
+  }
   const ok = await glide(r, at, { v0: envs[0].v0, v1: envs[envs.length - 1].v1, c: 0, r1: 0, r2: 0, T }, ease);
   if (g !== r.gen || r.stopped) return 0;
   if (!ok) {
@@ -267,7 +279,6 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
     return 0;
   }
   // layout moved under the glide and it ends on a rest: one short corrective glide
-  const lastLeg = legs[legs.length - 1];
   if (lastLeg.env.v1 === 0) {
     const yNow = liveY(plan.keys[lastLeg.b]);
     const off = yNow - window.scrollY;
@@ -296,12 +307,6 @@ async function doDip(r: Run, g: number, el: ElDip): Promise<boolean> {
   enterChapter(r, el);
   const inKey = plan.keys[el.b];
   setSeg(r, el.t0, el.t0 + el.dur, el.dur);
-  // the page keeps moving at the speed it left the last leg while the screen fades
-  // to dark (the cut's 140 ms fade-in), so there is no stop before the dip: the
-  // jump itself cancels this run-out
-  const prev = plan.els[r.idx - 1];
-  const v = prev?.k === "leg" ? prev.env.v1 : 0;
-  if (v > 40) void glide(r, clampY(window.scrollY + v * 0.4), { v0: v, v1: v, c: v, r1: 0, r2: 0, T: 0.4 });
   await dipTo(liveY(inKey), inKey);
   return g === r.gen && !r.stopped;
 }
