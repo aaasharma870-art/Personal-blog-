@@ -349,6 +349,13 @@
   gap: 0.125rem;
   min-width: 17rem;
 }
+/* the how-to line ("Click the killed ideas to mark them, then Fire."): wraps
+   inside the pill rather than widening it */
+.de-read [data-de-help] {
+  max-width: 20rem;
+  white-space: normal;
+  line-height: 1.3;
+}
 
 /* the core (IC-RD-09): a white ring that drains clockwise from 12 o'clock,
    two half-discs turned by transform under the inner core */

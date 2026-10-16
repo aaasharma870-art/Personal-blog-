@@ -8,8 +8,11 @@
    script recorded before this ran (`data-enhance-queue`): the delegated
    listener below takes those replays like any click.
 
-   - A click (or Enter / Space) starts the cut (components/director/api.ts:
-     it borrows the sound inside the click and loads the player).
+   - A click (or Enter / Space) opens the header dock's chooser (Quick tour /
+     Full tour; components/site/control-dock.tsx), or stops a cut that is
+     running. Only if no dock answers does it start the cut itself
+     (components/director/api.ts: it borrows the sound inside the click and
+     loads the player).
    - Reduced motion or Pause: every control is aria-disabled ("Motion is
      paused" shows by CSS from the first paint) and a press does nothing.
    - Intent (hover, focus) warms the player chunk.
@@ -17,6 +20,7 @@
 
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { startDirectorsCut } from "@/components/director/api";
+import { openCutChooser } from "@/components/site/dock-actions";
 
 const SEL = "[data-dc]";
 
@@ -34,7 +38,8 @@ export default function bind(root: Document): () => void {
     if (!t) return;
     e.preventDefault();
     if (motionOffNow() || t.getAttribute("aria-disabled") === "true") return;
-    startDirectorsCut();
+    // the dock opens the chooser (or stops a run); nobody listening: start it
+    if (!openCutChooser()) startDirectorsCut();
   };
 
   let warmed = false;

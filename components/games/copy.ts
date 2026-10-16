@@ -48,5 +48,5 @@ export function deadEyeCopy(): DeadEyeCopy | null {
   const fire = text("toy.deadeye.fire");
   const release = text("toy.deadeye.release");
   if (!pill || !survivor || !score || !fire || !release) return null;
-  return { pill, survivor, score, fire, release, best: optional("toy.deadeye.best") };
+  return { pill, survivor, score, fire, release, best: optional("toy.deadeye.best"), help: optional("toy.deadeye.help") };
 }

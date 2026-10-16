@@ -38,9 +38,14 @@ import { VARIANT_JS } from "./variant-snippet";
      codeflight, landing), and window.__introV = { "<key>": variant } is what
      the controller plays (the hero plate's variant rides along: the flight
      is registered to the default plate only).
-   window.__intro.replay() is the palette's "Watch the intro again" (I33):
-   clears intro-seen, returns to the top (the flight lands on the hero) and
-   re-arms; never under reduced motion or Pause. Returns false if refused.
+   window.__intro.replay() is the header's "Replay intro" button and the
+   palette's "Watch the intro again" (I33): clears intro-seen, returns to the
+   top (the flight lands on the hero) and re-arms; never under reduced motion
+   or Pause. Returns false if refused. If the controller was never loaded (a
+   revisit that did not arm), it is fetched first and the intro arms when it
+   is ready (up to 8 s; no play screen without a controller behind it).
+   window.__intro.prime() only fetches the controller (the button calls it on
+   hover / focus / idle), so a replay usually arms at once.
    ========================================================================== */
 
 const SOURCE = `(function(w,d,C){var V=${VARIANT_JS},R=d.documentElement,K={PageDown:1,PageUp:1," ":1,Spacebar:1,ArrowDown:1,ArrowUp:1,Home:1,End:1},y0=null;
@@ -49,7 +54,8 @@ function end(r){if(!R.classList.contains("intro-armed"))return;if(r==="fastlane-
 function early(e){if(w.__introReady||!R.classList.contains("intro-armed"))return;var t=e.type,k=e.key,g=e.target;if(t==="touchstart"){y0=e.touches&&e.touches[0]?e.touches[0].clientY:null;return}if(t==="touchmove"&&(y0===null||!e.touches[0]||Math.abs(e.touches[0].clientY-y0)<10))return;if(t==="keydown"&&k!=="Escape"&&!K[k])return;if(t==="keydown"&&k===" "&&g&&g.closest&&g.closest("#intro button"))return;if(t==="wheel"&&e.ctrlKey)return;if(t==="click"){if(g&&g.closest&&g.closest("#intro-play")){w.__introQueued="play";return}if(g&&g.closest&&g.closest("#intro-fastlane")){end("fastlane-early");return}if(!(g&&g.closest&&g.closest("#intro-skip")))return}end(t==="click"?"skip":k==="Escape"?"esc":"scroll")}
 function go(){var X=w.__introV={},k,a;for(k in C.v){a=X[k]=V(C.v,k);if(k.indexOf("intro.")===0)R.classList.toggle("intro-alt-"+k.slice(6),a==="alt")}R.classList.add("intro-armed");R.removeAttribute("data-intro");w.__introReady=false;w.__introQueued=null;try{performance.mark("intro:arm")}catch(e){}if(w.__introCtl){w.__introCtl.arm();return}if(!d.getElementById("intro-ctl")){var s=d.createElement("script");s.id="intro-ctl";s.src=C.src;s.async=true;d.head.appendChild(s)}setTimeout(function(){if(!w.__introReady){w.__introFailed=1;end("failsafe")}},C.failsafe)}
 ["keydown","wheel","touchstart","touchmove","click"].forEach(function(t){w.addEventListener(t,early,{capture:true,passive:true})});
-w.__intro={replay:function(){if(R.classList.contains("intro-armed")||!ok(1))return false;try{w.sessionStorage.removeItem("intro-seen")}catch(e){}try{w.scrollTo({top:0,left:0,behavior:"instant"})}catch(e){w.scrollTo(0,0)}w.__introReplay=1;go();return true}};
+function ld(cb){if(w.__introCtl){if(cb)cb(1);return}if(!d.getElementById("intro-ctl")){var s=d.createElement("script");s.id="intro-ctl";s.src=C.src;s.async=true;d.head.appendChild(s)}if(!cb)return;var n=0,t=setInterval(function(){if(w.__introCtl){clearInterval(t);cb(1)}else if(++n>80){clearInterval(t);cb(0)}},100)}
+w.__intro={prime:function(){if(!w.__introCtl&&ok(1))ld()},replay:function(){if(R.classList.contains("intro-armed")||!ok(1))return false;try{w.sessionStorage.removeItem("intro-seen")}catch(e){}try{w.scrollTo({top:0,left:0,behavior:"instant"})}catch(e){w.scrollTo(0,0)}try{if(location.hash)history.replaceState(null,"",location.pathname+location.search)}catch(e){}w.__introReplay=1;if(w.__introCtl){go();return true}ld(function(k){if(k){if(!R.classList.contains("intro-armed"))go()}else try{w.sessionStorage.setItem("intro-seen","1")}catch(e){}});return true}};
 if(ok(0))go()})(window,document,__CFG__);`;
 
 export function IntroHeadScript() {

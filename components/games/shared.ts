@@ -48,6 +48,8 @@ export type DeadEyeCopy = {
   release: string;
   /** "Best: {n}/5 · {s} s" once lib/film.ts has `toy.deadeye.best` (handoff), else null. */
   best: string | null;
+  /** "Click the killed ideas to mark them, then Fire." (how to play; shown in the HUD until the result). */
+  help: string | null;
 };
 
 /** The window event that calls Dead Eye from outside the ledger (the typed

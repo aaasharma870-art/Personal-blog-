@@ -37,6 +37,7 @@ import { useActiveSection } from "@/components/site/use-active-section";
 import { recordVisit } from "@/components/eggs/egg-bus";
 import { HuntChip } from "@/components/eggs/hunt-chip";
 import { SoundToggle } from "@/components/audio/sound-toggle";
+import { ControlDock } from "@/components/site/control-dock";
 
 /** The DVD chapter select (spec §11.2, W3-CINEMA): fetched only when the
  *  menu opens on DESKTOP_FINE (plan DP-17). */
@@ -182,10 +183,12 @@ function HeaderGround({ className, children }: { className: string; children: Re
  *  under reduced motion / Pause. */
 function ActLabel() {
   const label = labelFor(useContext(ActiveContext));
+  const [num = "", ...rest] = label.split(" · ");
+  const film = rest.join(" · ");
   const reduce = useReducedMotion();
   const mounted = useMounted();
   return (
-    <p className="hidden truncate type-meta text-fg-muted sm:block" data-act-label="">
+    <p className="hidden truncate type-meta text-fg-muted @min-[13rem]:block" data-act-label="">
       <motion.span
         key={label}
         className="block truncate"
@@ -193,7 +196,10 @@ function ActLabel() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduce ? 0 : dur.micro, ease }}
       >
-        {label}
+        {/* "ACT I" alone when the cluster is tight; the film's name joins it
+            when there is room (container query on the left cluster) */}
+        {num}
+        {film ? <span className="hidden @min-[22rem]:inline">{` · ${film}`}</span> : null}
       </motion.span>
     </p>
   );
@@ -206,6 +212,7 @@ function ActLabel() {
    Below 64rem it stays "Work", a native anchor (phones unchanged). Both
    labels are server markup; CSS (`dw:`) picks one, so SSR is identical for
    every visitor. Off the home page (the 404) it is a plain /#work link. — */
+const PAUSE_WORD = copyText("dock.pause");
 const FAST_LANE = copyText("fastlane.label");
 const FAST_LANE_SHOWN = copyVisible(FAST_LANE);
 
@@ -300,7 +307,7 @@ function PauseWithTooltip() {
   const tip = copyText(paused ? "pause.tooltip.resume" : "pause.tooltip.pause");
   return (
     <span className="group/tip relative inline-flex">
-      <MotionToggle />
+      <MotionToggle word={copyVisible(PAUSE_WORD) ? PAUSE_WORD.text : undefined} />
       {/* the Lumos / Nox alias is the lumos egg's hint (W2-HUNT): gone
           when the visitor turns the eggs off for the session */}
       {mounted && copyVisible(tip) ? (
@@ -399,12 +406,17 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
-        <div className="flex min-w-0 items-center gap-4">
+        {/* the left cluster takes what the right one leaves; the act label
+            shows only when it has room (container query: never a clipped
+            stub, never an overlap with the control dock) */}
+        <div className="flex min-w-0 flex-1 items-center gap-4 @container">
           <Logo base={base} />
           <ActLabel />
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex flex-none items-center gap-1 whitespace-nowrap sm:gap-2">
+          {/* Replay intro · Director's cut · Games: home page, desktop fine pointer */}
+          {base ? null : <ControlDock />}
           {workHref ? <WorkPill base={base} href={workHref} /> : null}
           <HuntChip />
           <SoundToggle />

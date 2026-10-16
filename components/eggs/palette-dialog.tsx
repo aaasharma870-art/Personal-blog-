@@ -5,7 +5,7 @@ import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, CornerDownLeft, Gamepad2, Hash, Mail, Pause, Play, Search, Sparkles } from "lucide-react";
 import { film, type CopyKey } from "@/lib/film";
-import { DESKTOP_FINE, useReducedMotion } from "@/lib/flags";
+import { DESKTOP_FINE, motionOffNow, useReducedMotion } from "@/lib/flags";
 import { lockScroll, unlockScroll } from "@/lib/smooth-scroll";
 import {
   actCards,
@@ -26,6 +26,7 @@ import { eggCopy, type EggCopyKey } from "@/components/eggs/egg-copy";
 import { eggEnabled, eggsSessionOff, triggerEgg, type EggId } from "@/components/eggs/egg-bus";
 import { HUNT_PANEL_EVENT, foundIds } from "@/components/eggs/hunt-store";
 import { startDirectorsCut } from "@/components/director/api";
+import { openCutChooser, replayIntro } from "@/components/site/dock-actions";
 
 /* ============================================================================
    COMMAND PALETTE — the dialog (lazy). OWNER: W2-HUNT in W2. The always-loaded
@@ -143,7 +144,9 @@ function snapshotPage(): PageSnapshot {
     // The game's own gate (components/eggs/dead-eye.ts): the kill-list, the
     // DEAD EYE pill (#deadeye-call) and the full DESKTOP_FINE query.
     deadEye: fine && Boolean(document.getElementById("kill-list")) && Boolean(document.getElementById("deadeye-call")),
-    intro: typeof intro?.replay === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    // not under OS reduced motion AND not under Pause (the replay refuses both;
+    // the header's "Replay intro" button says why)
+    intro: typeof intro?.replay === "function" && !motionOffNow(),
     eggsOff: eggsSessionOff(),
     fine,
     drone: fine && Boolean(document.getElementById("drone-takeoff")),
@@ -273,7 +276,7 @@ export default function PaletteDialog({
         eggText("cmd.intro"),
         "intro prologue replay again hogwarts broom play",
         () => {
-          (window as Window & { __intro?: IntroApi }).__intro?.replay?.();
+          replayIntro();
         },
         page.intro,
       );
@@ -318,7 +321,13 @@ export default function PaletteDialog({
         },
         page.found > 0,
       );
-      toy("dc", pageText("dc.cmd"), "director's cut directors autoplay film watch movie", () => startDirectorsCut(), page.fine);
+      const dcKeys = "director's cut directors autoplay film watch movie tour";
+      // opens the header's chooser (Quick / Full); the two entries start a tour at once
+      toy("dc", pageText("dc.cmd"), dcKeys, () => void (openCutChooser() || startDirectorsCut()), page.fine);
+      // the two direct starts only while motion is on (the first entry opens the
+      // chooser, which says "Motion is paused" under Pause)
+      toy("dc-quick", pageText("dc.cmd.quick"), `${dcKeys} quick short skim 90 seconds`, () => startDirectorsCut("quick"), page.fine && !reduce);
+      toy("dc-full", pageText("dc.cmd.full"), `${dcKeys} full long main 3 minutes`, () => startDirectorsCut("full"), page.fine && !reduce);
     }
     // 5. links
     for (const c of paletteCommands) {
@@ -335,7 +344,7 @@ export default function PaletteDialog({
       });
     }
     return out;
-  }, [go, page, paused, setPaused]);
+  }, [go, page, paused, reduce, setPaused]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

@@ -250,6 +250,11 @@
   function arm() {
     if (st !== "idle" || !R.classList.contains("intro-armed") || !init()) return;
     setState("armed");
+    // a replay while the old "ACT I · THE CROSSING" titles still hang
+    // (html.intro-caps-linger, #intro-caps above the overlay): clear them
+    // before the new play screen shows. After setState, so it does not end
+    // the quiet window (st is no longer idle).
+    capsStop(0);
     w.__introReady = true;
     mark("ready");
     R.removeAttribute("data-intro");

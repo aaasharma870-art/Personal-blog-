@@ -12,8 +12,11 @@ import { Glyphed } from "@/components/director/glyphed";
    so a touch tablet never shows a button that cannot work and nothing pops
    in (no CLS: the CTA row reserves its line either way). The desktop
    enhancer's dc binder (components/enhance/binders/dc.ts) wires the click
-   to startDirectorsCut(); a click before the binder ran is recorded by the
-   boot script (`data-enhance-queue`) and replayed. Under reduced motion or
+   to the header dock's chooser (Quick / Full tour; it stops a run that is
+   going); a click before the binder ran is recorded by the boot script
+   (`data-enhance-queue`) and replayed. It wears the solid "try" look
+   (app/p3/dock.css, like the dock's buttons); the old grey "(sound on)"
+   suffix is gone, since the chooser says "Sound stays as you set it.". Under reduced motion or
    Pause it reads "Motion is paused" (CSS, from the first paint) and the
    binder marks it aria-disabled.
 
@@ -45,7 +48,6 @@ function shotList(): string {
 export function DirectorsCutButton() {
   const label = copyText("dc.button");
   if (!copyVisible(label)) return null;
-  const sound = copyText("dc.sound");
   const paused = copyText("dc.paused");
   return (
     <button
@@ -54,10 +56,9 @@ export function DirectorsCutButton() {
       data-dc-shots={shotList()}
       data-enhance-queue='[data-dc="hero"]'
       data-house-type=""
-      className="type-meta hidden min-h-11 items-center gap-2 rounded-full border border-rule px-5 text-fg-muted transition-colors duration-(--dur-micro) hover:border-accent-bright hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
+      className="try-btn hidden df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
     >
       <Glyphed text={label.text} />
-      {copyVisible(sound) ? <span className="text-fg-ghost motion-off:hidden">{sound.text}</span> : null}
       {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
     </button>
   );

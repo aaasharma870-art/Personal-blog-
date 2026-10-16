@@ -24,6 +24,7 @@ import { Lettered } from "@/components/primitives/scene-caption";
 import { InkFold, SeekerRow, Snitch } from "@/components/eggs/snitch";
 import { HuntCredits } from "@/components/eggs/hunt-credits";
 import { PostCredits } from "@/components/site/post-credits";
+import { PlayAgain } from "@/components/site/play-again";
 import { StageScrim } from "@/components/stage/scrim";
 import { Collapse } from "@/components/primitives/collapse";
 import { typeCredits } from "@/lib/fonts";
@@ -156,6 +157,7 @@ const Dot = () => (
 );
 
 export function Footer({ entry }: SectionProps<"credits">) {
+  const playAgain = copyText("mischief.again");
   const year = new Date().getFullYear(); // the build year (static page)
   const on = credits.enabled;
   const lines = on ? linesQuoted() : [];
@@ -231,7 +233,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
       id={anchorId(entry)}
       aria-labelledby="credits-title"
       {...planeAttrs("deep", "house")}
-      className={`relative isolate z-(--z-main) bg-bg py-section text-fg${scrim ? " stage-backdrop" : ""}`}
+      className={`relative isolate z-(--z-main) bg-bg pt-section pb-section text-fg boot:pb-0 ${scrim ? "stage-backdrop" : ""}`}
     >
       {scrim ? <StageScrim scrim={scrim} /> : null}
       {fromWorld !== "house" ? (
@@ -348,6 +350,14 @@ export function Footer({ entry }: SectionProps<"credits">) {
               {hp ? <HallowsMark className="ml-3 size-4 align-[-1px]" /> : null}
             </p>
             {hp ? <InkFold /> : null}
+            {/* the clear end: restarts the loop (intro replay, or the top
+                with motion off); the quiet "Back to the opening" link above
+                stays the scroll-only way back */}
+            {copyVisible(playAgain) ? (
+              <div className="mt-tier-pair">
+                <PlayAgain label={playAgain.text} />
+              </div>
+            ) : null}
           </div>
         ) : null}
         <PostCredits />

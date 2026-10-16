@@ -136,7 +136,7 @@
   }
 }
 
-/* — The post-credits tail + scene (spec §9.4, B58): the BOOT GATE only —— */
+/* — The post-credits tail + scene (spec §9.4, B58): the BOOT GATE only; 36vh since the closing button sits above it —— */
 .post-credits {
   display: none;
 }
@@ -144,7 +144,7 @@
   html.js:not([data-motion-boot="paused"]) .post-credits {
     display: block;
     position: relative;
-    height: 60vh;
+    height: 36vh;
     overflow: hidden;
     contain: layout paint;
   }
