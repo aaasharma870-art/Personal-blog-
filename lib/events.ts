@@ -50,8 +50,8 @@ export type P3Events = {
   /** A card's two halves meet at the carried line/shape (§7.1). */
   "transition:meet": { card: TransitionKind };
   /** A pinned card's phase changed (a < b < m < e, the `data-card-phase`
-   *  attribute): `card` = the section id. The engine voices a -> b (the act
-   *  title pushes in) with the title-sting, once per card per view. */
+   *  attribute): `card` = the section id. The engine voices the arrival at
+   *  "m" (the act title appears) with the title-sting, once per card per view. */
   "card:phase": { card: string; phase: string; prev: string };
   "letterbox": { state: "close" | "open" };
   "title:in-character": { world: WorldId; id: string };

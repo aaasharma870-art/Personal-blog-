@@ -235,6 +235,9 @@ export default async function probe(page, ctx) {
         const b = await waitFor(() => ["b", "m", "e"].includes(document.getElementById("act-2")?.getAttribute("data-card-phase") ?? ""));
         const bBed = b && (await waitFor(() => { const s = window.__p3sound?.state?.(); return s?.bed === "idiots" && s?.storm === false; }));
         set("bed.card", hasCard ? a && aBed && b && bBed : null, { hasCard, phaseA: a, pirates_storm_in_a: aBed, phaseB: b, idiots_no_storm_from_b: bBed });
+        // leave the card (its bars open and close on their own) before the next checks
+        await page.evaluate(() => (window.__lenis ? window.__lenis.scrollTo(0, { immediate: true, force: true }) : window.scrollTo(0, 0)));
+        await sleep(2500);
       }
 
       if (ready && want("pause")) {

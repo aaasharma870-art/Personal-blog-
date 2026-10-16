@@ -689,10 +689,12 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   // The broom flight of the intro (sound on only; the intro is silent otherwise).
   on("intro:flight", () => play(INTRO_CUES.flight));
   on("intro:land", () => play(INTRO_CUES.land));
-  // The act title pushes in (a -> b): one soft sting per card per view.
+  // The act title appears (phase "m", the lower bar's title state: p .58 once
+  // the crossings pass lands, .68 before): one soft sting per card per view.
+  // Not when the card is crossed backwards or jumped past the title ("e").
   const stung = new Set<string>();
   on("card:phase", (d) => {
-    if (d.prev !== "a" || (d.phase !== "b" && d.phase !== "m") || stung.has(d.card)) return;
+    if (d.phase !== "m" || (d.prev !== "a" && d.prev !== "b") || stung.has(d.card)) return;
     stung.add(d.card);
     // never on top of the world's impact (a quick scroll crosses both at once)
     auto("title-sting", Math.max(0, 0.55 - (performance.now() - impactAt) / 1000));
