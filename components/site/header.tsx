@@ -183,10 +183,12 @@ function HeaderGround({ className, children }: { className: string; children: Re
  *  under reduced motion / Pause. */
 function ActLabel() {
   const label = labelFor(useContext(ActiveContext));
+  const [num = "", ...rest] = label.split(" · ");
+  const film = rest.join(" · ");
   const reduce = useReducedMotion();
   const mounted = useMounted();
   return (
-    <p className="hidden truncate type-meta text-fg-muted @min-[15rem]:block" data-act-label="">
+    <p className="hidden truncate type-meta text-fg-muted @min-[13rem]:block" data-act-label="">
       <motion.span
         key={label}
         className="block truncate"
@@ -194,7 +196,10 @@ function ActLabel() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduce ? 0 : dur.micro, ease }}
       >
-        {label}
+        {/* "ACT I" alone when the cluster is tight; the film's name joins it
+            when there is room (container query on the left cluster) */}
+        {num}
+        {film ? <span className="hidden @min-[22rem]:inline">{` · ${film}`}</span> : null}
       </motion.span>
     </p>
   );

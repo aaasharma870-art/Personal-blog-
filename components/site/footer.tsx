@@ -233,7 +233,7 @@ export function Footer({ entry }: SectionProps<"credits">) {
       id={anchorId(entry)}
       aria-labelledby="credits-title"
       {...planeAttrs("deep", "house")}
-      className={`relative isolate z-(--z-main) bg-bg py-section text-fg${scrim ? " stage-backdrop" : ""}`}
+      className={`relative isolate z-(--z-main) bg-bg pt-section pb-section text-fg boot:pb-0${scrim ? " stage-backdrop" : ""}`}
     >
       {scrim ? <StageScrim scrim={scrim} /> : null}
       {fromWorld !== "house" ? (

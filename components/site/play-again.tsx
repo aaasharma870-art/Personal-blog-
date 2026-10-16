@@ -5,7 +5,7 @@ import { goTop, replayIntro } from "@/components/site/dock-actions";
 
 /* ============================================================================
    PLAY IT AGAIN (Oct 16 fix, complaint 7): the clear button under the page's
-   last line, "Mischief managed." It restarts the loop: with motion on it
+   last line (the lettered Q-HP-2 in the credits). It restarts the loop: with motion on it
    scrolls to the top and replays the intro from its Play card
    (window.__intro.replay(), components/site/dock-actions.ts); with motion
    off (Pause or OS reduced motion) it only goes to the top, through the cut.

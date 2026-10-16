@@ -201,6 +201,10 @@
     gap: 0.5rem;
     padding-inline: 0.625rem;
   }
+  /* "Eggs 0/12": the count box still reserves "12/12", read from the left */
+  .hunt-chip .hunt-chip-n {
+    text-align: left;
+  }
 }
 
 /* — The silent cue: two ring pulses (2 x 1.4 s), once per session per
