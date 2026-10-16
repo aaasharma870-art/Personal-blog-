@@ -264,13 +264,14 @@ export function rackDim(scrollY: number, vh: number, edges: readonly number[]): 
  *  height-based size picks 1920 at DPR 1 and the 2560 rung at DPR 2
  *  (next.config.ts deviceSizes). Backdrops are drawn full width, and the
  *  act-1 exit frame is pushed to 1.3×, so they ask for 130vw at q75.
- *  `dimMax` = the black multiplied over a window plate at full rack focus. */
+ *  `dimMax` = the black multiplied over a window plate at full rack focus
+ *  (a small step back, not a mood change). */
 export const STAGE_IMAGE = {
   windowSizes: "calc(100vh * 1.78)",
   backdropSizes: "calc(100vw * 1.3)",
   quality: 75,
   backdropQuality: 75,
-  dimMax: 0.28,
+  dimMax: 0.18,
 } as const;
 
 /* — Validator rules (spec §3.2; scripts/checks/stage.mjs) —————————————— */
