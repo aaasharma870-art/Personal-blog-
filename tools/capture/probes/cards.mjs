@@ -5,7 +5,7 @@
 // { raw(), t(), tier() }) and the window CustomEvents of lib/events.ts.
 //
 // Checks (each { pass, … }; the probe passes when every check that ran does):
-//  pins      the four [data-act-card-pin] wrappers travel film.cardTravel (90/110/90/110 vh, ±2 px) above a
+//  pins      the four [data-act-card-pin] wrappers travel film.cardTravel (80/80/80/80 vh, ±2 px) above a
 //            sticky 100svh stage; the opening's program (#act-1-program, a stage-backdrop) is the wrapper's next
 //            sibling inside #act-1 (P3-6 #1: p spans the wrapper, not the program).
 //  stars     every star marker on a pin spacer ([data-card-beat][data-beat-star]) spans ≥ 300 px (P3-6 #2).
@@ -21,7 +21,7 @@
 //  phone     390×844 touch: no pin travel; the subtitle is screen-reader only (1 px); no card chunk handle.
 // Flags: --cards-skip=pins,stars,scrub,damping,impacts,landAt,rm,phone   --cards-landat=.47 (the expected landAt: lib/film.ts acts[].landAt, W2-CARDS handoff)
 
-const TRAVEL = { opening: 90, seam: 110, tintype: 90, ignite: 110 };
+const TRAVEL = { opening: 80, seam: 80, tintype: 80, ignite: 80 };
 const PS = [0.05, 0.22, 0.45, 0.5, 0.75, 0.9, 1];
 const phaseOf = (v) => (v >= 0.88 ? "e" : v >= 0.58 ? "m" : v >= 0.5 ? "b" : "a");
 
