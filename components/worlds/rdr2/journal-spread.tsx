@@ -353,8 +353,8 @@ export function JournalSpread({
               >
                 <div className="min-w-0">
                   <MetaLine fields={[`Entry ${ROMAN[i] ?? i + 1}`, post.tag, "Draft"]} />
-                  <h3 className="mt-tier-pair type-title text-fg">{post.title}</h3>
-                  <p className="mt-tier-group max-w-body type-body text-fg-muted">{post.angle}</p>
+                  <h3 className="mt-tier-pair type-heading text-fg">{post.title}</h3>
+                  <p className="mt-tier-pair max-w-body type-body text-fg-muted">{post.angle}</p>
                 </div>
                 {/* one page (< 1024): the entry's sketch inline (hidden on
                     the desktop spread, so not rendered once it is up) */}

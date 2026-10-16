@@ -487,7 +487,9 @@ function MapRoom({
   return (
     <li
       {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
-      className="relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]"
+      // the beat's room keeps >= 300 px (B54 is a scroll star; the rooms are
+      // now compact, LENGTH-2)
+      className={`relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]${index === RIBBONS_BEAT_ROOM ? " min-h-[19.5rem]" : ""}`}
       data-room={index + 1}
       data-active={active ? "" : undefined}
     >
@@ -534,7 +536,7 @@ function MapRoom({
         <div className="relative grid grid-cols-1 gap-tier-pair sm:grid-cols-12 sm:gap-x-6">
           <Meta className="sm:col-span-2" fields={[p.n]} />
           <div className="sm:col-span-7">
-            <h3 className="type-title text-fg max-sm:hyphens-auto max-sm:[overflow-wrap:break-word]">{p.title}</h3>
+            <h3 className="type-title [--text-title:clamp(1.75rem,3vw,3rem)] text-fg max-sm:hyphens-auto max-sm:[overflow-wrap:break-word]">{p.title}</h3>
             {ribbons ? <PatronusRibbons className="mt-tier-pair" /> : null}
             {body ?? <p className="mt-tier-group max-w-body type-body text-fg-muted">{p.body}</p>}
           </div>

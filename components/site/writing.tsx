@@ -118,8 +118,8 @@ export function Writing({ entry, number }: SectionProps<"index">) {
             >
               <div className="min-w-0">
                 <Meta fields={[`Entry ${ROMAN[i] ?? i + 1}`, post.tag, "Draft"]} />
-                <h3 className="mt-tier-pair type-title text-fg">{post.title}</h3>
-                <p className="mt-tier-group max-w-body type-body text-fg-muted">{post.angle}</p>
+                <h3 className="mt-tier-pair type-heading text-fg">{post.title}</h3>
+                <p className="mt-tier-pair max-w-body type-body text-fg-muted">{post.angle}</p>
               </div>
               <div className="pt-1">
                 <JournalVignette index={i} className="size-16" />

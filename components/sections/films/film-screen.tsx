@@ -108,7 +108,11 @@ export function FilmScreen({
       aria-labelledby={titleId}
       data-films-world={world}
       {...planeAttrs("deep", world)}
-      className="relative py-[clamp(2rem,5vh,3.5rem)] text-fg xl:py-[clamp(3rem,12.5vh,7rem)]"
+      className={`relative py-[clamp(2rem,5vh,3.5rem)] text-fg${
+        // the first screen keeps a breath after the house lights (B30, a weight-3
+        // scroll star: nothing heavier for a viewport after it); the others do not need it
+        first ? " xl:pb-[calc(clamp(2rem,5vh,3.5rem)+15vh)]" : ""
+      }`}
     >
       <div
         aria-hidden="true"
