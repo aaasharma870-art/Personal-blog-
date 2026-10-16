@@ -87,6 +87,10 @@ const BURST_MAX = 3;
 const BURST_MS = 250;
 /** The card each world's impact belongs to (the transition:meet card kind). */
 const SCENE_OF: Partial<Record<WorldId, string>> = { pirates: "opening", idiots: "seam", rdr2: "tintype", hp: "ignite" };
+/** No two cues start within this many ms of each other: the later one is
+ *  nudged back (a duster swipe and the chalk tock, the credits run-out and
+ *  the Snitch). Ticks that repeat on purpose are exempt. */
+const STACK_MS = 100;
 /** A found-chime waits for the egg's own sound to end, unless that sound is
  *  a long spoken line (then the chime is skipped). */
 const FOUND_SKIP_TAIL = 2.2;
@@ -165,6 +169,20 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   let running = false;
   let voices = 0;
   const last = new Map<CueId, number>();
+  /** Scheduled start times (performance.now ms) of recent and coming cues. */
+  const startsAt: number[] = [];
+  function unstack(now: number, wait: number): number {
+    while (startsAt.length && startsAt[0] < now - 500) startsAt.shift();
+    let at = now + wait * 1000;
+    for (let i = 0; i < 8; i++) {
+      const hit = startsAt.find((p) => Math.abs(at - p) < STACK_MS);
+      if (hit === undefined) break;
+      at = hit + STACK_MS;
+    }
+    startsAt.push(at);
+    startsAt.sort((a, b) => a - b);
+    return (at - now) / 1000;
+  }
   const log: { id: CueId; t: number; at: number }[] = [];
   /** Every timer that should only tick while running (bed events, loops). */
   type Timed = { arm(): void; disarm(): void };
@@ -331,7 +349,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       if (now - (last.get(id) ?? -1e9) < (MIN_GAP[id] ?? (REPEATABLE.has(id) ? 15 : 70))) return;
       if (voices >= MAX_VOICES) return;
       last.set(id, now);
-      const wait = Math.max(0, delay - late);
+      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay - late));
       if (isFileCue(id)) {
         playFile(id, o, wait);
         return;

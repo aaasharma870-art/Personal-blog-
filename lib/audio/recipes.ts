@@ -30,6 +30,7 @@ const LEVELS: Partial<Record<CueId, number>> = {
   "impact-lumos": -19,
   "kraken-rumble": -19,
   "wave-wash": -20,
+  shutter: -19,
   "letterbox-whum": -23,
   "title-sting": -25,
   "typewriter-click": -27,

@@ -128,12 +128,18 @@ function Follow({ path }: { path: string }) {
   // leave the observer stale). Passive listener; one timeout per event.
   useEffect(() => {
     let t = 0;
+    const read = () => {
+      const id = probeActive();
+      const base = observedRef.current;
+      setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
+    };
     const schedule = () => {
       window.clearTimeout(t);
+      // twice: a long jump can still be settling (pin spacers, lazy images)
+      // at the first look, and no scroll event follows to correct it
       t = window.setTimeout(() => {
-        const id = probeActive();
-        const base = observedRef.current;
-        setProbe((prev) => (prev.id === id && prev.base === base ? prev : { id, base }));
+        read();
+        t = window.setTimeout(read, 450);
       }, SETTLE_MS);
     };
     schedule();
