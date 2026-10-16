@@ -760,7 +760,6 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     play("postcredits-chime", {}, 0.95);
   });
   on("dc:start", () => play("projector-start"));
-  // The cut's one reel run-out (the credits entry cue stays silent during a cut).
   on("dc:stop", () => play("reel-runout"));
   // Obliviate fires the same event to reset the Snitch: only a catch tings.
   window.addEventListener(SNITCH_EVENT, () => {

@@ -307,7 +307,7 @@ function usePhase(t: MotionValue<number>, section: RefObject<HTMLElement | null>
       const prev = cur;
       cur = ph;
       el.setAttribute("data-card-phase", ph);
-      // sound: the act title pushes in (a -> b), the bed follows the phase
+      // sound: the bed follower reads the phase; the act title (m) gets its sting
       if (prev) emit("card:phase", { card: el.id, phase: ph, prev });
     };
     set(t.get());

@@ -255,9 +255,9 @@
   function arm() {
     if (st !== "idle" || !R.classList.contains("intro-armed") || !init()) return;
     setState("armed");
-    fire("p3:view-reset"); // a new pass: impacts, entry cues and crossings re-arm
     w.__introReady = true;
     mark("ready");
+    fire("p3:view-reset"); // a new pass: impacts, entry cues and crossings re-arm
     R.removeAttribute("data-intro");
     armAt = last = now();
     awakeUntil = armAt + C.t.rest;
