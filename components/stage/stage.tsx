@@ -678,13 +678,19 @@ export function WeatherImpl({
 /** `tick` counts the asked frame's arrivals (a host redraws on it: a frame
  *  drawn from a neighbour is replaced once the exact one decodes). */
 export type SeqState = { fetched: number; failed: number; ready: boolean; tick: number };
-export type SeqHandle = { frameAt(i: number): ImageBitmap | null; drop(): void };
+/** `frameAt(i)`: frame i, else the nearest decoded one (and sets the window's
+ *  centre); `exact(i)`: frame i only, with no side effect (a host that
+ *  blends two neighbours). */
+export type SeqHandle = { frameAt(i: number): ImageBitmap | null; exact(i: number): ImageBitmap | null; drop(): void };
 
 type SeqBlobs = { blobs: (Blob | null)[]; done: number; failed: number; subs: Set<() => void> };
 
 /** Compressed frames per sequence, kept for the page's life (≈ 1.3–3.7 MB). */
 const SEQ = new Map<string, SeqBlobs>();
 const SEQ_MAX_BYTES = 128 * 1024 * 1024;
+/** createImageBitmap calls in flight per sequence (a wheel flick crosses
+ *  several frames at once: two decoders left holes, D1). */
+const SEQ_DECODES = 4;
 const SEQ_FRAME_GUESS = 1280 * 720 * 4;
 let seqResident: { evict(): void } | null = null;
 let seqBytes = 0;
@@ -794,7 +800,7 @@ export function seqWindow(
       if (i < 0 || i >= n || bm.has(i)) continue;
       complete = false;
       const blob = store.blobs[i];
-      if (pending.has(i) || !blob || pending.size >= 2 || seqBytes + SEQ_FRAME_GUESS > SEQ_MAX_BYTES) continue;
+      if (pending.has(i) || !blob || pending.size >= SEQ_DECODES || seqBytes + SEQ_FRAME_GUESS > SEQ_MAX_BYTES) continue;
       pending.add(i);
       createImageBitmap(blob).then(
         (b) => {
@@ -804,8 +810,8 @@ export function seqWindow(
             bm.set(i, b);
             seqBytes += bytesOf(b);
             seqPeak = Math.max(seqPeak, seqBytes);
-            // the frame the host asked for: redraw it over the neighbour
-            if (i === asked) {
+            // the frame the host asked for (or its blend partner): redraw
+            if (asked >= 0 && Math.abs(i - asked) <= 1) {
               tick++;
               report(state());
             }
@@ -846,6 +852,7 @@ export function seqWindow(
       }
       return null;
     },
+    exact: (i) => bm.get(i) ?? null,
     drop() {
       dead = true;
       store.subs.delete(onFetch);
