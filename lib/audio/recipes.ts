@@ -137,7 +137,7 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     noise(k, 0, { f: 2600, q: 1.2, peak: 0.2, a: 0.001, d: 0.05 });
   },
   "impact-flash": (k) => {
-    // The flash-powder "poof": a soft puff of air rising, like flash-whumpf.
+    // The flash-powder "poof": a soft puff of air rising (it follows the tintype's shutter by 90 ms).
     // No white-noise crack, no fast attack: never a shot.
     noise(k, 0, { f: 700, to: 2200, glide: 0.3, q: 0.8, peak: 0.28, a: 0.06, d: 0.5, swell: true });
     noise(k, 0, { n: "brown", type: "lowpass", f: 450, to: 900, glide: 0.2, q: 0.6, peak: 0.35, a: 0.035, d: 0.55 });

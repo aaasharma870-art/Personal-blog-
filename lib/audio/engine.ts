@@ -50,6 +50,7 @@ import {
 } from "./cues";
 import { PEAK_CAP_DB, RECIPES, droneHum, levelOf } from "./recipes";
 import { dbToGain, filter, gain, holdAt, rng, type Kit } from "./synth";
+import type { WorldId } from "../worlds";
 import type { CueOptions, SoundLoop } from "./index";
 
 /** Bed loudness target (spec §3.5). */
@@ -84,6 +85,8 @@ const MIN_GAP: Partial<Record<CueId, number>> = {
  *  window, so a scrollbar drag does not fire every cue of the page at once. */
 const BURST_MAX = 3;
 const BURST_MS = 250;
+/** The card each world's impact belongs to (the transition:meet card kind). */
+const SCENE_OF: Partial<Record<WorldId, string>> = { pirates: "opening", idiots: "seam", rdr2: "tintype", hp: "ignite" };
 /** A found-chime waits for the egg's own sound to end, unless that sound is
  *  a long spoken line (then the chime is skipped). */
 const FOUND_SKIP_TAIL = 2.2;
@@ -624,12 +627,14 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
    *  only the newest BURST_MAX play, and never more than BURST_MAX starts per
    *  BURST_MS. A long jump (scrollbar drag, Home / End) crosses many cards in
    *  one tick: the ones nearest where the visitor lands are the ones heard. */
-  let autoQ: { id: CueId; delay: number }[] = [];
+  let autoQ: { id: CueId; delay: number; scene?: string }[] = [];
   let autoT = 0;
   const autoStarts: number[] = [];
   function autoFlush(): void {
     autoT = 0;
-    const batch = autoQ.slice(-BURST_MAX);
+    // several cards crossed in one tick: only the last card's scene is heard
+    const lastScene = [...autoQ].reverse().find((q) => q.scene)?.scene;
+    const batch = autoQ.filter((q) => !q.scene || q.scene === lastScene).slice(-BURST_MAX);
     autoQ = [];
     const now = performance.now();
     while (autoStarts.length && now - autoStarts[0] > BURST_MS) autoStarts.shift();
@@ -639,11 +644,11 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       play(q.id, {}, q.delay);
     }
   }
-  function auto(id: CueId, delay = 0): void {
-    autoQ.push({ id, delay });
+  function auto(id: CueId, delay = 0, scene?: string): void {
+    autoQ.push({ id, delay, scene });
     if (!autoT) autoT = window.setTimeout(autoFlush, 0);
   }
-  const autoShots = (list?: readonly Shot[]) => list?.forEach(([id, dt]) => auto(id, dt));
+  const autoShots = (list: readonly Shot[] | undefined, scene: string) => list?.forEach(([id, dt]) => auto(id, dt, scene));
 
   /** Dead Eye: a round is live from game:start until its finish / stop, so
    *  the exhale plays once (finish, then a stop seconds later is silent). */
@@ -655,11 +660,14 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     // 0.12 s after the strike, not on top of it
     play("deadeye-release", {}, 0.12);
   };
+  let impactAt = -1e9;
   on("impact", (d) => {
     const id = IMPACT_CUES[d.world];
-    if (id) auto(id, IMPACT_DELAY[d.world] ?? 0);
+    if (!id) return;
+    impactAt = performance.now();
+    auto(id, IMPACT_DELAY[d.world] ?? 0, SCENE_OF[d.world]);
   });
-  on("transition:meet", (d) => autoShots(MEET_CUES[d.card]));
+  on("transition:meet", (d) => autoShots(MEET_CUES[d.card], d.card));
   // The broom flight of the intro (sound on only; the intro is silent otherwise).
   on("intro:flight", () => play(INTRO_CUES.flight));
   on("intro:land", () => play(INTRO_CUES.land));
@@ -668,7 +676,8 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   on("card:phase", (d) => {
     if (d.prev !== "a" || (d.phase !== "b" && d.phase !== "m") || stung.has(d.card)) return;
     stung.add(d.card);
-    auto("title-sting");
+    // never on top of the world's impact (a quick scroll crosses both at once)
+    auto("title-sting", Math.max(0, 0.55 - (performance.now() - impactAt) / 1000));
   });
   on("p3:view-reset", () => stung.clear());
   // The bars closing only (not opening), at most one whum per 1.2 s.
@@ -689,8 +698,8 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       const id = FOUND_CUES[String(d.id).split("-")[0]];
       // found inside an egg's own voice: the chime follows its tail (or is skipped after a long spoken line)
       const since = (performance.now() - eggAt) / 1000;
-      const inEgg = since < 0.3;
-      const wait = inEgg ? Math.max(0, eggTail + 0.12 - since) : 0;
+      const inEgg = since < eggTail;
+      const wait = inEgg ? eggTail + 0.12 - since : 0;
       if (id && !(inEgg && eggTail > FOUND_SKIP_TAIL)) play(id, {}, wait);
       if (d.count >= 12) play("hunt-complete", {}, wait + 0.5);
     }, 30),
