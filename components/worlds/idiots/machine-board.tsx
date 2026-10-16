@@ -31,7 +31,7 @@ import { PlateBox, plateOf, type Plate } from "@/components/sections/act-card/pl
    Kalam chalk through <FilmQuote> — because the automated research pipeline
    below is literally "a machine" in that sense. HTML chalk only (no text in
    the media), registered to the board rect measured on the plate
-   (lib/media.ts rects.boardRect) through the band's cover crop, at 21:9 and
+   (lib/media.ts rects.boardRect) through the band's cover crop, at 3:1 and
    at 4:3.
      DEFAULT "chalk-write": when the band scrolls in, the question writes
              itself on left → right, its underline draws, then the answer
@@ -160,8 +160,10 @@ function ChalkWrite({
 
 type Box = { x: number; y: number; w: number; h: number };
 
-/** The band's frame: 4:3 below 640, 21:9 from 640 (PlateBand "band"). */
-const BAND_ASPECT = { base: 4 / 3, sm: 21 / 9 };
+/** The band's frame: 4:3 below 640, 3:1 from 640 (PlateBand "band3"; it was
+ *  21:9, LENGTH-2). The plate is width-bound at both, so the board keeps its
+ *  size and only the vertical crop changes. */
+const BAND_ASPECT = { base: 4 / 3, sm: 3 };
 /** The drone's rows on the slate (board-local v): above the answer line
  *  (it starts at v .48) and clear of the ALT's circle round its phrase. */
 const DRONE_V = { v0: 0.06, v1: 0.42 };
@@ -335,12 +337,12 @@ export function MachineBoard({
   const circleOn = alt && quotes["Q-3I-3"].text.includes(CIRCLED);
   const camera = driftOf((id ? getMedia(id).focal : null) ?? [0.5, 0.5]);
 
-  // the board rect in the band box, ≥ 640 (21:9) and below (4:3)
+  // the board rect in the band box, ≥ 640 (3:1) and below (4:3)
   let vars: CSSProperties | undefined;
   if (id && rect) {
     const a = getMedia(id);
     const ratio = a.width / a.height;
-    const lg = coverRect(rect, ratio, 21 / 9, a.focal ?? [0.5, 0.5]);
+    const lg = coverRect(rect, ratio, BAND_ASPECT.sm, a.focal ?? [0.5, 0.5]);
     const sm = coverRect(rect, ratio, 4 / 3, a.focal ?? [0.5, 0.5]);
     const w = (b: typeof lg) => b.x1 - b.x0;
     const h = (b: typeof lg) => b.y1 - b.y0;
@@ -371,7 +373,7 @@ export function MachineBoard({
       <PlateBand
         plate={id}
         entrance="none"
-        shape="band"
+        shape="band3"
         amount={0.4}
         camera={camera}
         star={{ id: "B22", weight: 2 }}

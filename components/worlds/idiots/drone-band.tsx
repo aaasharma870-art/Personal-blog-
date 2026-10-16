@@ -84,7 +84,7 @@ export function DroneBand({
   return (
     <div className={cn("scene-caption-host", className)} data-band={plate} {...beatAttrs("B26", { weight: 1 })}>
       <SettleFrame entrance={variant === "alt" ? "wipe" : "settle"} className="relative sm:overflow-hidden sm:rounded-frame">
-        <div ref={box} className="relative aspect-[4/3] overflow-hidden rounded-frame sm:aspect-[21/9] sm:rounded-none">
+        <div ref={box} className="relative aspect-[4/3] overflow-hidden rounded-frame sm:aspect-[3/1] sm:rounded-none">
           <LivePlate media={plate} camera={CAMERA} progress={p} depth={false} className="size-full" sizes="(min-width: 90rem) 1312px, 100vw" />
           {game && sprite ? (
             <div className="drone-pill-row">
