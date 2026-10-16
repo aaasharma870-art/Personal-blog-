@@ -30,6 +30,7 @@ const LEVELS: Partial<Record<CueId, number>> = {
   "impact-lumos": -19,
   "kraken-rumble": -19,
   "wave-wash": -20,
+  shutter: -19,
   "letterbox-whum": -23,
   "title-sting": -25,
   "typewriter-click": -27,
@@ -62,8 +63,12 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     sweepPan(k, 0, -0.7, 0.7, 1.2);
   },
   "broom-land": (k) => {
-    tone(k, 0, { f: 92, to: 46, glide: 0.16, peak: 0.45, d: 0.28 });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 420, peak: 0.3, a: 0.01, d: 0.18 });
+    // A soft landing thump: a short sub thump under a 230-340 Hz body and a
+    // 480 Hz noise thud, so a laptop speaker plays it too.
+    tone(k, 0, { f: 92, to: 46, glide: 0.16, peak: 0.2, d: 0.28 });
+    tone(k, 0, { f: 340, to: 230, glide: 0.1, peak: 0.42, a: 0.003, d: 0.24 });
+    tone(k, 0, { f: 170, to: 120, glide: 0.1, peak: 0.12, a: 0.003, d: 0.2 });
+    noise(k, 0, { f: 480, q: 0.8, peak: 0.35, a: 0.004, d: 0.2 });
   },
   "wave-wash": (k) => {
     noise(k, 0, { n: "brown", type: "lowpass", f: 280, to: 1700, glide: 0.75, q: 0.6, peak: 0.5, a: 0.75, d: 0.75, swell: true });
@@ -80,15 +85,17 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     sweepPan(k, 0, 0.4, -0.4, 0.35);
   },
   shutter: (k) => {
-    noise(k, 0, { type: "highpass", f: 2000, peak: 0.45, a: 0.001, d: 0.025 });
-    tone(k, 0, { f: 1150, peak: 0.2, a: 0.001, d: 0.05 });
-    noise(k, 0.065, { type: "highpass", f: 1600, peak: 0.35, a: 0.001, d: 0.03 });
-    tone(k, 0.065, { f: 820, peak: 0.16, a: 0.001, d: 0.05 });
-  },
-  "flash-whumpf": (k) => {
-    noise(k, 0, { n: "brown", type: "lowpass", f: 600, to: 1600, glide: 0.08, q: 0.7, peak: 0.5, a: 0.015, d: 0.65 });
-    tone(k, 0, { f: 62, to: 40, peak: 0.3, a: 0.01, d: 0.3 });
-    noise(k, 0.01, { type: "highpass", f: 4000, peak: 0.08, a: 0.005, d: 0.3 });
+    // Two mechanical clicks, each with a 600-900 Hz wooden body that rings for
+    // 100 ms, so a laptop speaker plays more than a tick (a bare click was
+    // 11 dB under the poof it used to be stacked on).
+    noise(k, 0, { type: "highpass", f: 2000, peak: 0.22, a: 0.001, d: 0.025 });
+    tone(k, 0, { f: 1150, peak: 0.14, a: 0.001, d: 0.05 });
+    noise(k, 0, { f: 750, q: 1.1, peak: 0.4, a: 0.001, d: 0.09 });
+    tone(k, 0, { f: 720, to: 600, glide: 0.05, peak: 0.38, a: 0.001, d: 0.12 });
+    noise(k, 0.065, { type: "highpass", f: 1600, peak: 0.2, a: 0.001, d: 0.03 });
+    tone(k, 0.065, { f: 820, peak: 0.12, a: 0.001, d: 0.05 });
+    noise(k, 0.065, { f: 650, q: 1.1, peak: 0.36, a: 0.001, d: 0.11 });
+    tone(k, 0.065, { f: 880, to: 700, glide: 0.05, peak: 0.34, a: 0.001, d: 0.14 });
   },
   "match-strike": (k) => {
     for (let i = 0; i < 3; i++) noise(k, i * 0.045, { f: 2600, q: 1.6, peak: 0.35 - i * 0.05, a: 0.004, d: 0.04 });
@@ -101,9 +108,13 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     noise(k, 0.3, { type: "highpass", f: 6000, peak: 0.06, a: 0.5, d: 0.4, swell: true });
   },
   "letterbox-whum": (k) => {
-    tone(k, 0, { f: 55, peak: 0.4, a: 0.12, d: 0.28, swell: true });
+    // The bars close: a low swell with a 220/330 Hz body and soft air above it.
+    tone(k, 0, { f: 55, peak: 0.28, a: 0.12, d: 0.28, swell: true });
     tone(k, 0, { f: 110, peak: 0.14, a: 0.1, d: 0.3, swell: true });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 300, peak: 0.2, a: 0.12, d: 0.28, swell: true });
+    tone(k, 0, { f: 220, peak: 0.2, a: 0.12, d: 0.3, swell: true });
+    tone(k, 0, { f: 330, peak: 0.1, a: 0.12, d: 0.3, swell: true });
+    noise(k, 0, { f: 700, q: 0.7, peak: 0.22, a: 0.12, d: 0.28, swell: true });
+    noise(k, 0, { n: "brown", type: "lowpass", f: 300, peak: 0.12, a: 0.12, d: 0.28, swell: true });
   },
   "projector-start": (k) => {
     noise(k, 0, { n: "clatter", f: 2600, q: 1.1, speed: 0.25, speedTo: 1, glide: 1.1, peak: 0.45, a: 0.4, d: 1.1, swell: true });
@@ -120,13 +131,14 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
   },
   "impact-chalk": (k) => {
     // The chalk circle's "tock": a hollow wooden knock with a body.
-    tone(k, 0, { f: 930, to: 720, glide: 0.04, peak: 0.36, a: 0.001, d: 0.12 });
-    tone(k, 0, { f: 190, peak: 0.3, a: 0.002, d: 0.22 });
-    tone(k, 0, { f: 72, to: 50, peak: 0.25, a: 0.004, d: 0.25 });
-    noise(k, 0, { f: 2600, q: 1.2, peak: 0.3, a: 0.001, d: 0.05 });
+    tone(k, 0, { f: 930, to: 720, glide: 0.04, peak: 0.22, a: 0.001, d: 0.12 });
+    tone(k, 0, { f: 250, peak: 0.42, a: 0.002, d: 0.3 });
+    tone(k, 0, { f: 72, to: 50, peak: 0.1, a: 0.004, d: 0.25 });
+    noise(k, 0, { f: 500, q: 1, peak: 0.25, a: 0.002, d: 0.12 });
+    noise(k, 0, { f: 2600, q: 1.2, peak: 0.2, a: 0.001, d: 0.05 });
   },
   "impact-flash": (k) => {
-    // The flash-powder "poof": a soft puff of air rising, like flash-whumpf.
+    // The flash-powder "poof": a soft puff of air rising (it follows the tintype's shutter by 90 ms).
     // No white-noise crack, no fast attack: never a shot.
     noise(k, 0, { f: 700, to: 2200, glide: 0.3, q: 0.8, peak: 0.28, a: 0.06, d: 0.5, swell: true });
     noise(k, 0, { n: "brown", type: "lowpass", f: 450, to: 900, glide: 0.2, q: 0.6, peak: 0.35, a: 0.035, d: 0.55 });
@@ -174,8 +186,12 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     [523.25, 659.25, 783.99].forEach((f) => tone(k, 0, { f, type: "triangle", lp: 2400, peak: 0.13, a: 0.01, d: 1.25 }));
   },
   "deadeye-swell": (k) => {
-    noise(k, 0, { n: "brown", type: "lowpass", f: 2000, to: 280, glide: 1.0, peak: 0.45, a: 0.6, d: 0.6, swell: true });
-    tone(k, 0, { f: 48, peak: 0.25, a: 0.6, d: 0.6, swell: true });
+    // The held breath: a slow swell with a 250-600 Hz body (the sub alone was
+    // inaudible on a laptop speaker).
+    noise(k, 0, { n: "brown", type: "lowpass", f: 2000, to: 280, glide: 1.0, peak: 0.3, a: 0.6, d: 0.6, swell: true });
+    tone(k, 0, { f: 48, peak: 0.16, a: 0.6, d: 0.6, swell: true });
+    noise(k, 0, { f: 600, to: 330, glide: 1.0, q: 1.1, peak: 0.34, a: 0.6, d: 0.6, swell: true });
+    tone(k, 0, { f: 260, to: 330, glide: 1.0, peak: 0.12, a: 0.6, d: 0.6, swell: true });
     noise(k, 0, { f: 3000, to: 600, q: 2, peak: 0.12, a: 0.5, d: 0.6, swell: true });
   },
   "deadeye-scratch": (k) => {
@@ -183,8 +199,10 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
   },
   "deadeye-strike": (k) => {
     // The ink strike: a muffled "thock", never a gunshot.
-    tone(k, 0, { f: 150, to: 68, glide: 0.06, peak: 0.45, a: 0.002, d: 0.16 });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 520, peak: 0.3, a: 0.002, d: 0.09 });
+    tone(k, 0, { f: 150, to: 68, glide: 0.06, peak: 0.2, a: 0.002, d: 0.16 });
+    tone(k, 0, { f: 420, to: 280, glide: 0.05, peak: 0.42, a: 0.002, d: 0.14 });
+    noise(k, 0, { f: 700, q: 0.9, peak: 0.3, a: 0.002, d: 0.08 });
+    noise(k, 0, { n: "brown", type: "lowpass", f: 520, peak: 0.1, a: 0.002, d: 0.09 });
   },
   "deadeye-release": (k) => {
     noise(k, 0, { f: 950, to: 420, q: 0.7, peak: 0.4, a: 0.15, d: 0.75, swell: true });
@@ -240,9 +258,15 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
     sweepPan(k, 0, 0.3, -0.3, 1.5);
   },
   "kraken-rumble": (k) => {
-    tone(k, 0, { f: 44, to: 58, glide: 1.2, peak: 0.3, a: 0.45, d: 0.95, swell: true });
-    tone(k, 0, { f: 63, to: 52, glide: 1.2, peak: 0.18, a: 0.5, d: 0.9, swell: true });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 120, peak: 0.4, a: 0.5, d: 0.9, swell: true });
+    // The deep: a sub swell under a 120-340 Hz groan (slow wobble) and a dark
+    // wash, so it is not pure sub on a laptop speaker.
+    tone(k, 0, { f: 44, to: 58, glide: 1.2, peak: 0.1, a: 0.45, d: 0.95, swell: true });
+    tone(k, 0, { f: 63, to: 52, glide: 1.2, peak: 0.05, a: 0.5, d: 0.9, swell: true });
+    tone(k, 0, { type: "sawtooth", f: 120, to: 170, glide: 1.2, lp: 900, peak: 0.3, a: 0.45, d: 0.95, swell: true, am: [3.2, 0.5] });
+    tone(k, 0, { type: "sawtooth", f: 90, to: 140, glide: 1.2, lp: 700, peak: 0.2, a: 0.5, d: 0.9, swell: true, am: [2.4, 0.5] });
+    tone(k, 0, { f: 240, to: 340, glide: 1.2, peak: 0.12, a: 0.45, d: 0.95, swell: true, am: [3.2, 0.5] });
+    noise(k, 0, { f: 320, q: 0.8, peak: 0.2, a: 0.5, d: 0.9, swell: true });
+    noise(k, 0, { n: "brown", speed: 3, type: "lowpass", f: 700, peak: 0.34, a: 0.5, d: 0.9, swell: true });
   },
   "wave-slap": (k) => {
     noise(k, 0, { n: "brown", type: "lowpass", f: 1300, peak: 0.45, a: 0.008, d: 0.35 });
@@ -250,10 +274,16 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
   },
   "heartbeat-2": (k) => {
     // Two heartbeats at ~60 bpm (lub-dub, lub-dub); nothing else.
+    // Each beat is the chest thump plus a 150-260 Hz knock and a soft noise
+    // "thud", so it is heard on a laptop speaker.
     [0, 1].forEach((o) => {
-      tone(k, o, { f: 58, to: 40, glide: 0.09, peak: 0.36, a: 0.008, d: 0.12 });
+      tone(k, o, { f: 58, to: 40, glide: 0.09, peak: 0.24, a: 0.008, d: 0.12 });
       tone(k, o, { f: 116, to: 80, glide: 0.09, peak: 0.1, a: 0.008, d: 0.08 });
-      tone(k, o + 0.19, { f: 52, to: 38, glide: 0.08, peak: 0.26, a: 0.008, d: 0.1 });
+      tone(k, o, { f: 230, to: 150, glide: 0.08, peak: 0.28, a: 0.006, d: 0.12 });
+      noise(k, o, { f: 380, q: 0.9, peak: 0.3, a: 0.006, d: 0.09 });
+      tone(k, o + 0.19, { f: 52, to: 38, glide: 0.08, peak: 0.16, a: 0.008, d: 0.1 });
+      tone(k, o + 0.19, { f: 200, to: 140, glide: 0.07, peak: 0.2, a: 0.006, d: 0.1 });
+      noise(k, o + 0.19, { f: 340, q: 0.9, peak: 0.2, a: 0.006, d: 0.08 });
     });
   },
   "quad-spinup": (k) => {
@@ -281,7 +311,11 @@ export const RECIPES: Record<RecipeCueId, Recipe> = {
   },
   "fire-crackle": (k) => {
     noise(k, 0, { n: "pops", f: 2000, q: 0.6, peak: 0.45, a: 0.08, d: 1.1, swell: true });
-    noise(k, 0, { n: "brown", type: "lowpass", f: 220, peak: 0.25, a: 0.15, d: 1.0, swell: true });
+    noise(k, 0, { n: "crackle", f: 3000, q: 0.7, peak: 0.3, a: 0.1, d: 1.0, swell: true });
+    noise(k, 0, { n: "pops", f: 1000, q: 0.7, peak: 0.34, a: 0.1, d: 1.0, swell: true });
+    noise(k, 0, { n: "pops", f: 450, q: 0.8, peak: 0.3, a: 0.12, d: 1.0, swell: true });
+    // the fire's body: brown noise pitched up two octaves, 200-1500 Hz
+    noise(k, 0, { n: "brown", speed: 4, type: "lowpass", f: 1500, peak: 0.3, a: 0.15, d: 1.0, swell: true });
   },
 
   /* — Hunt UI, post-credits, the toggle ————————————————————————————— */

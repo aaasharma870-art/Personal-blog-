@@ -26,6 +26,16 @@ export type P3Events = {
   "intro:titles": void;
   /** The opening titles end, or are cut by input/Pause (marks `intro:titles-end`). */
   "intro:titles-end": void;
+  /** The intro controller: the broom flight begins (video or code flight).
+   *  The sound engine voices it (broom-whoosh); silent while muted. */
+  "intro:flight": void;
+  /** The intro controller: the broom has landed on the hero (the hold, or
+   *  the dome opening on the code flight). broom-land + the Pirates bed. */
+  "intro:land": void;
+  /** A new pass over the page begins (the controller's arm(): first load,
+   *  every Replay intro, the end "Play it again"): per-view guards re-arm
+   *  (lib/impact.ts fired set, entry cues, card crossings, title stings). */
+  "p3:view-reset": void;
   /** <PageHydrated/>: the last Suspense child committed. */
   "page:hydrated": void;
   "ladder:step": { step: LadderStep };
@@ -39,6 +49,10 @@ export type P3Events = {
   "impact": { world: WorldId };
   /** A card's two halves meet at the carried line/shape (§7.1). */
   "transition:meet": { card: TransitionKind };
+  /** A pinned card's phase changed (a < b < m < e, the `data-card-phase`
+   *  attribute): `card` = the section id. The engine voices the arrival at
+   *  "m" (the act title appears) with the title-sting, once per card per view. */
+  "card:phase": { card: string; phase: string; prev: string };
   "letterbox": { state: "close" | "open" };
   "title:in-character": { world: WorldId; id: string };
   "hunt:found": { id: HuntId; count: number };

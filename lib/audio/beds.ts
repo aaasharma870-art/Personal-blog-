@@ -75,13 +75,18 @@ export const BEDS: Record<BedId, BedBuild> = {
      sparse courtyard FM chirps 2–5 kHz. No crowd murmur. */
   idiots: (k) => {
     const c = k.ctx;
-    wire(k.src(noiseSrc(c, "brown")), filter(c, "lowpass", 200), gain(c, 0.6), k.out);
+    wire(k.src(noiseSrc(c, "brown")), filter(c, "lowpass", 200), gain(c, 0.45), k.out);
     const fan = gain(c, 0.75);
     fan.connect(k.out);
     k.src(lfo(c, 5.5, 0.25, fan.gain));
     k.src(osc(c, "sine", 70)).connect(gain(c, 0.085)).connect(fan);
     k.src(osc(c, "sine", 140)).connect(gain(c, 0.03)).connect(fan);
     wire(k.src(noiseSrc(c, "white", 0.93)), filter(c, "bandpass", 500, 1.2), gain(c, 0.12), fan);
+    // Room air and the blades' swish (300-2000 Hz): the part a laptop speaker plays.
+    const air = gain(c, 0.3);
+    wire(k.src(noiseSrc(c, "white", 0.88)), filter(c, "bandpass", 700, 0.6), air, k.out);
+    k.src(lfo(c, 0.07, 0.06, air.gain));
+    wire(k.src(noiseSrc(c, "white", 1.07)), filter(c, "bandpass", 1500, 0.8), gain(c, 0.05), fan);
 
     k.every(3, 9, (v) => {
       const n = 2 + Math.floor(v.rnd() * 3);
@@ -131,16 +136,18 @@ export const BEDS: Record<BedId, BedBuild> = {
     const drift = k.src(osc(c, "sine", 0.03));
     (
       [
-        [110, 0.12],
+        [110, 0.09],
         [165, 0.07],
         [220, 0.05],
+        [330, 0.045],
+        [440, 0.025],
       ] as const
     ).forEach(([f, g], i) => {
       const o = k.src(osc(c, "sine", f));
-      drift.connect(gain(c, i === 1 ? -3 : 3)).connect(o.detune);
+      drift.connect(gain(c, i % 2 ? -3 : 3)).connect(o.detune);
       o.connect(gain(c, g)).connect(k.out);
     });
-    wire(k.src(noiseSrc(c, "crackle", 1.3)), filter(c, "bandpass", 3200, 0.7), gain(c, 0.35), k.out);
+    wire(k.src(noiseSrc(c, "crackle", 1.3)), filter(c, "bandpass", 3200, 0.7), gain(c, 0.5), k.out);
     const bp = filter(c, "bandpass", 450, 1.2);
     const wind = gain(c, 0.4);
     wire(k.src(noiseSrc(c, "white", 0.95)), bp, wind, k.out);

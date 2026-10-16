@@ -12,13 +12,21 @@
    pulse is transform / opacity on a layer that exists only for its run.
    ========================================================================== */
 
-import { emit } from "./events";
+import { emit, on } from "./events";
 import { motionOffNow, onMotionOffChange } from "./flags";
 import type { WorldId } from "./worlds";
 
 export type ImpactOptions = { el?: HTMLElement; shake?: number; flash?: number; bloomEv?: number };
 
 const fired = new Set<WorldId>();
+
+/** A new pass over the page (Replay intro, "Play it again"): the impacts
+ *  fire again, once per world per pass (the controller's arm() sends
+ *  `p3:view-reset`). */
+export function resetViewState(): void {
+  fired.clear();
+}
+on("p3:view-reset", resetViewState);
 
 const live = new Set<Animation>();
 let watching = false;

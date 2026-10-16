@@ -16,6 +16,8 @@
 //   events          letterbox / impact / transition:meet / hunt-free events reach the engine as cues
 //   bed.follow      the bed follows the world at the reading line (about → pirates, work → idiots,
 //                   experiment → silent, beyond → rdr2, principles → hp, films → house) (P3-9 #2)
+//   bed.card        inside the pinned seam card (data-card-phase): "a" plays pirates + storm, from "b" idiots with the
+//                   storm off (the classroom is never under the Pirates storm)
 //   pause           Pause suspends the context ≤ 100 ms; the toggle turns aria-disabled with its note;
 //                   resuming runs again (P3-9 #3)
 //   hidden          a hidden tab suspends ≤ 100 ms; visible again runs
@@ -155,14 +157,16 @@ export default async function probe(page, ctx) {
       }
 
       if (ready && want("events")) {
+        // Spaced like a real scroll: the engine keeps at most 3 page-driven cue starts per 250 ms
+        // (a scrollbar drag must not fire every cue at once) and no two cues within 100 ms.
         await page.evaluate(() => {
           const fire = (k, d) => window.dispatchEvent(new CustomEvent(k, { detail: d }));
           fire("letterbox", { state: "close" });
-          fire("impact", { world: "idiots" });
-          fire("transition:meet", { card: "seam" });
-          fire("game:fire");
+          setTimeout(() => fire("impact", { world: "idiots" }), 300);
+          setTimeout(() => fire("transition:meet", { card: "seam" }), 600);
+          setTimeout(() => fire("game:fire"), 900);
         });
-        await sleep(700);
+        await sleep(2200);
         const ids = ((await engineState(page))?.cues ?? []).map((c) => c.id);
         const need = ["letterbox-whum", "impact-chalk", "wave-recede", "duster-swipe", "deadeye-strike"];
         set(
@@ -200,7 +204,21 @@ export default async function probe(page, ctx) {
             () => true,
             () => false,
           );
-          seen.push({ id, want: bed, got: (await engineState(page))?.bed ?? null, ok, ms: Date.now() - t });
+          const diag = ok
+            ? undefined
+            : await page.evaluate(() => {
+                const y = innerHeight * 0.475;
+                const ids = [...document.querySelectorAll("section[id],footer[id],[data-act-card][id]")].map((e) => e.id);
+                let hit = null;
+                for (const i of ids) {
+                  const r = document.getElementById(i)?.getBoundingClientRect();
+                  if (r && r.height > 0 && r.top <= y && r.bottom > y) hit = i;
+                }
+                const ph = {};
+                document.querySelectorAll("[data-card-phase]").forEach((e) => (ph[e.id] = e.getAttribute("data-card-phase")));
+                return { hit, scrollY: Math.round(scrollY), phases: ph, storm: window.__p3sound?.state?.().storm };
+              });
+          seen.push({ id, want: bed, got: (await engineState(page))?.bed ?? null, ok, ms: Date.now() - t, diag });
         }
         const st = await engineState(page);
         set(
@@ -208,6 +226,34 @@ export default async function probe(page, ctx) {
           seen.every((s) => s.skipped || s.ok),
           { seen, trims: st?.trims },
         );
+      }
+
+      if (ready && want("bed.card")) {
+        // Card-aware beds: inside the pinned seam card the classroom must not sit under the Pirates storm.
+        // Phase "a" (p < .50, the old world) keeps pirates + storm; from "b" the bed is idiots, storm off.
+        const at = async (frac) =>
+          page.evaluate((frac) => {
+            const el = document.getElementById("act-2");
+            if (!el) return false;
+            const travel = Math.max(1, el.getBoundingClientRect().height - innerHeight);
+            const y = el.getBoundingClientRect().top + scrollY + frac * travel;
+            if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true, force: true });
+            else window.scrollTo(0, y);
+            return true;
+          }, frac);
+        const waitFor = (fn, arg) => page.waitForFunction(fn, arg, { timeout: 5000, polling: 50 }).then(() => true, () => false);
+        await at(-0.2); // approach from above, as a reader does: the pin goes live on its way in
+        await sleep(1200);
+        const hasCard = await at(0.1);
+        const a = hasCard && (await waitFor((w) => document.getElementById("act-2")?.getAttribute("data-card-phase") === w, "a"));
+        const aBed = a && (await waitFor(() => { const s = window.__p3sound?.state?.(); return s?.bed === "pirates" && s?.storm === true; }));
+        await at(0.75);
+        const b = await waitFor(() => ["b", "m", "e"].includes(document.getElementById("act-2")?.getAttribute("data-card-phase") ?? ""));
+        const bBed = b && (await waitFor(() => { const s = window.__p3sound?.state?.(); return s?.bed === "idiots" && s?.storm === false; }));
+        set("bed.card", hasCard ? a && aBed && b && bBed : null, { hasCard, phaseA: a, pirates_storm_in_a: aBed, phaseB: b, idiots_no_storm_from_b: bBed });
+        // leave the card (its bars open and close on their own) before the next checks
+        await page.evaluate(() => (window.__lenis ? window.__lenis.scrollTo(0, { immediate: true, force: true }) : window.scrollTo(0, 0)));
+        await sleep(2500);
       }
 
       if (ready && want("pause")) {

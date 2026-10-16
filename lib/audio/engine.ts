@@ -36,6 +36,8 @@ import {
   FILE_CUES,
   FOUND_CUES,
   IMPACT_CUES,
+  IMPACT_DELAY,
+  INTRO_CUES,
   MEET_CUES,
   TOY_CUES,
   fileBase,
@@ -48,12 +50,19 @@ import {
 } from "./cues";
 import { PEAK_CAP_DB, RECIPES, droneHum, levelOf } from "./recipes";
 import { dbToGain, filter, gain, holdAt, rng, type Kit } from "./synth";
+import type { WorldId } from "../worlds";
 import type { CueOptions, SoundLoop } from "./index";
 
 /** Bed loudness target (spec §3.5). */
 const BED_LUFS = -30;
-/** Crossfade between beds (seconds, equal power). */
-const XFADE = 1.5;
+/** Loudness is weighed the way a laptop speaker plays it: K-weighting with a
+ *  160 Hz high-pass (BS.1770's own is 38 Hz, which counts sub-bass a small
+ *  speaker cannot play), and the master cuts below 75 Hz. */
+const WEIGHT_HP_HZ = 160;
+const SUB_CUT_HZ = 75;
+/** Crossfade between beds (seconds, equal power). 1.1 s so a flick through
+ *  the cards does not outrun the fade (was 1.5). */
+const XFADE = 1.1;
 /** SFX duck depth under effects (dB). */
 const DUCK_DB = -6;
 const MAX_VOICES = 24;
@@ -61,8 +70,30 @@ const MAX_VOICES = 24;
  *  same-id repeat inside 70 ms (an event voiced twice). */
 const REPEATABLE = new Set<CueId>(["compass-ratchet", "typewriter-click", "deadeye-scratch", "drone-gate", "candle-fwip"]);
 /** Cues with a longer minimum gap (ms): a reader nudging the wheel at a
- *  card edge closes the bars again and again. */
-const MIN_GAP: Partial<Record<CueId, number>> = { "letterbox-whum": 1200 };
+ *  card edge closes the bars again and again, or wiggles across a meet. */
+const MIN_GAP: Partial<Record<CueId, number>> = {
+  "letterbox-whum": 1200,
+  "wave-wash": 2500,
+  "wave-recede": 2500,
+  "duster-swipe": 2500,
+  shutter: 2500,
+  "match-strike": 2500,
+  "shimmer-rise": 2500,
+};
+/** The burst limiter for cues the PAGE starts (meet, impact, letterbox,
+ *  title sting; never a visitor's own click): at most this many starts per
+ *  window, so a scrollbar drag does not fire every cue of the page at once. */
+const BURST_MAX = 3;
+const BURST_MS = 250;
+/** The card each world's impact belongs to (the transition:meet card kind). */
+const SCENE_OF: Partial<Record<WorldId, string>> = { pirates: "opening", idiots: "seam", rdr2: "tintype", hp: "ignite" };
+/** No two cues start within this many ms of each other: the later one is
+ *  nudged back (a duster swipe and the chalk tock, the credits run-out and
+ *  the Snitch). Ticks that repeat on purpose are exempt. */
+const STACK_MS = 100;
+/** A found-chime waits for the egg's own sound to end, unless that sound is
+ *  a long spoken line (then the chime is skipped). */
+const FOUND_SKIP_TAIL = 2.2;
 /** A cue that waits for a resume gives up after this long (s). */
 const LATE = 1.5;
 
@@ -82,7 +113,8 @@ export type EngineState = {
   files: Partial<Record<FileCueId, "pending" | "ok" | "missing">>;
   norms: number;
   voices: number;
-  cues: { id: CueId; t: number }[];
+  /** `t` = when it was asked, `at` = when it starts (t + its offset). */
+  cues: { id: CueId; t: number; at: number }[];
 };
 
 export type Engine = {
@@ -122,6 +154,9 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
 
   /* — The master graph ———————————————————————————————————————————— */
   const ceiling = new WaveShaperNode(ctx, { curve: ceilingCurve(), oversample: "none" });
+  // Below ~75 Hz a laptop speaker plays nothing, and the energy there only eats
+  // the ceiling's headroom: a 2nd-order high-pass (flat, Butterworth) before it.
+  const subCut = filter(ctx, "highpass", SUB_CUT_HZ, -3);
   const master = gain(ctx, 0);
   const sfxBus = gain(ctx, 1);
   const bedBus = gain(ctx, 1);
@@ -129,12 +164,26 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   const bedGate = gain(ctx, 1);
   bedBus.connect(slow).connect(bedGate).connect(master);
   sfxBus.connect(master);
-  master.connect(ceiling).connect(ctx.destination);
+  master.connect(subCut).connect(ceiling).connect(ctx.destination);
 
   let running = false;
   let voices = 0;
   const last = new Map<CueId, number>();
-  const log: { id: CueId; t: number }[] = [];
+  /** Scheduled start times (performance.now ms) of recent and coming cues. */
+  const startsAt: number[] = [];
+  function unstack(now: number, wait: number): number {
+    while (startsAt.length && startsAt[0] < now - 500) startsAt.shift();
+    let at = now + wait * 1000;
+    for (let i = 0; i < 8; i++) {
+      const hit = startsAt.find((p) => Math.abs(at - p) < STACK_MS);
+      if (hit === undefined) break;
+      at = hit + STACK_MS;
+    }
+    startsAt.push(at);
+    startsAt.sort((a, b) => a - b);
+    return (at - now) / 1000;
+  }
+  const log: { id: CueId; t: number; at: number }[] = [];
   /** Every timer that should only tick while running (bed events, loops). */
   type Timed = { arm(): void; disarm(): void };
   const timed = new Set<Timed>();
@@ -193,10 +242,11 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   const norms = new Map<CueId, number>();
   const measured = new Map<CueId, { peakDb: number; lufs: number }>();
 
-  /** K-weighting (BS.1770): a +4 dB high shelf at ~1.7 kHz, a 38 Hz high-pass. */
+  /** K-weighting (BS.1770): a +4 dB high shelf at ~1.7 kHz, then a high-pass
+   *  at WEIGHT_HP_HZ (laptop-speaker weighting; the standard's is 38 Hz). */
   function kWeight(c: BaseAudioContext): { input: AudioNode; output: AudioNode } {
     const shelf = new BiquadFilterNode(c, { type: "highshelf", frequency: 1681, gain: 4 });
-    const hp = new BiquadFilterNode(c, { type: "highpass", frequency: 38, Q: 0.5 });
+    const hp = new BiquadFilterNode(c, { type: "highpass", frequency: WEIGHT_HP_HZ, Q: 0.5 });
     shelf.connect(hp);
     return { input: shelf, output: hp };
   }
@@ -268,8 +318,9 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   }
 
   /* — Cues ——————————————————————————————————————————————————————————— */
-  function remember(id: CueId): void {
-    log.push({ id, t: Math.round(performance.now()) });
+  function remember(id: CueId, wait = 0): void {
+    const t = Math.round(performance.now());
+    log.push({ id, t, at: Math.round(t + wait * 1000) });
     if (log.length > 40) log.shift();
   }
 
@@ -298,7 +349,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       if (now - (last.get(id) ?? -1e9) < (MIN_GAP[id] ?? (REPEATABLE.has(id) ? 15 : 70))) return;
       if (voices >= MAX_VOICES) return;
       last.set(id, now);
-      const wait = Math.max(0, delay - late);
+      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay - late));
       if (isFileCue(id)) {
         playFile(id, o, wait);
         return;
@@ -307,13 +358,14 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       const k: Kit = { ctx, out: v, t0: ctx.currentTime + 0.005 + wait, rate: clamp(o.rate ?? 1, 0.25, 4), rnd, pan: p.pan, end: 0 };
       RECIPES[id](k);
       occupy(p, wait + k.end);
-      remember(id);
+      remember(id, wait);
     });
   }
 
   /* — Files (TTS) ————————————————————————————————————————————————————— */
   const files = new Map<FileCueId, Promise<AudioBuffer | null>>();
   const fileState: Partial<Record<FileCueId, "pending" | "ok" | "missing">> = {};
+  const fileLen = new Map<FileCueId, number>();
   const probe = document.createElement("audio");
   const exts: readonly string[] = probe.canPlayType('audio/webm; codecs="opus"') ? ["webm", "mp3"] : ["mp3"];
 
@@ -333,6 +385,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
           try {
             const buf = await ctx.decodeAudioData(await res.arrayBuffer());
             fileState[id] = "ok";
+            fileLen.set(id, buf.duration);
             return buf;
           } catch {
             // undecodable here: try the next format
@@ -359,7 +412,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
         const wait = Math.max(0, delay - late);
         s.start(ctx.currentTime + 0.005 + wait);
         occupy(p, wait + buf.duration / rate);
-        remember(id);
+        remember(id, wait);
       });
     });
   }
@@ -587,41 +640,105 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
 
   /* — Page events → cues ———————————————————————————————————————————— */
   const shots = (list?: readonly Shot[]) => list?.forEach(([id, dt]) => play(id, {}, dt));
-  let releasedAt = -1e9;
+
+  /** Cues the page starts (not the visitor): collected for one task, then
+   *  only the newest BURST_MAX play, and never more than BURST_MAX starts per
+   *  BURST_MS. A long jump (scrollbar drag, Home / End) crosses many cards in
+   *  one tick: the ones nearest where the visitor lands are the ones heard. */
+  let autoQ: { id: CueId; delay: number; scene?: string }[] = [];
+  let autoT = 0;
+  const autoStarts: number[] = [];
+  function autoFlush(): void {
+    autoT = 0;
+    // several cards crossed in one tick: only the last card's scene is heard
+    const lastScene = [...autoQ].reverse().find((q) => q.scene)?.scene;
+    const batch = autoQ.filter((q) => !q.scene || q.scene === lastScene).slice(-BURST_MAX);
+    autoQ = [];
+    const now = performance.now();
+    while (autoStarts.length && now - autoStarts[0] > BURST_MS) autoStarts.shift();
+    for (const q of batch) {
+      if (autoStarts.length >= BURST_MAX) break;
+      autoStarts.push(now);
+      play(q.id, {}, q.delay);
+    }
+  }
+  function auto(id: CueId, delay = 0, scene?: string): void {
+    autoQ.push({ id, delay, scene });
+    if (!autoT) autoT = window.setTimeout(autoFlush, 0);
+  }
+  const autoShots = (list: readonly Shot[] | undefined, scene: string) => list?.forEach(([id, dt]) => auto(id, dt, scene));
+
+  /** Dead Eye: a round is live from game:start until its finish / stop, so
+   *  the exhale plays once (finish, then a stop seconds later is silent). */
+  let deadeyeLive = false;
   const release = () => {
     slowmo(false);
-    if (performance.now() - releasedAt < 1500) return;
-    releasedAt = performance.now();
-    play("deadeye-release");
+    if (!deadeyeLive) return;
+    deadeyeLive = false;
+    // 0.12 s after the strike, not on top of it
+    play("deadeye-release", {}, 0.12);
   };
+  let impactAt = -1e9;
   on("impact", (d) => {
     const id = IMPACT_CUES[d.world];
-    if (id) play(id);
+    if (!id) return;
+    impactAt = performance.now();
+    auto(id, IMPACT_DELAY[d.world] ?? 0, SCENE_OF[d.world]);
   });
-  on("transition:meet", (d) => shots(MEET_CUES[d.card]));
+  on("transition:meet", (d) => autoShots(MEET_CUES[d.card], d.card));
+  // The broom flight of the intro (sound on only; the intro is silent otherwise).
+  on("intro:flight", () => play(INTRO_CUES.flight));
+  on("intro:land", () => play(INTRO_CUES.land));
+  // The act title appears (phase "m", the lower bar's title state: p .58 once
+  // the crossings pass lands, .68 before): one soft sting per card per view.
+  // Not when the card is crossed backwards or jumped past the title ("e").
+  const stung = new Set<string>();
+  on("card:phase", (d) => {
+    if (d.phase !== "m" || (d.prev !== "a" && d.prev !== "b") || stung.has(d.card)) return;
+    stung.add(d.card);
+    // never on top of the world's impact (a quick scroll crosses both at once)
+    auto("title-sting", Math.max(0, 0.55 - (performance.now() - impactAt) / 1000));
+  });
+  on("p3:view-reset", () => stung.clear());
   // The bars closing only (not opening), at most one whum per 1.2 s.
   on("letterbox", (d) => {
-    if (d.state === "close") play("letterbox-whum");
+    if (d.state === "close") auto("letterbox-whum");
   });
   // One task later: the egg host's listener has run (Lumos has resumed
   // motion, Nox has paused it), whatever order the listeners were added in.
   const soon = (fn: () => void) => window.setTimeout(fn, 0);
+  /** The egg voiced in the last task: when, and how long its sound lasts (s). */
+  let eggAt = -1e9;
+  let eggTail = 0;
+  const tailOf = (list: readonly Shot[]) =>
+    list.reduce((m, [id, dt]) => Math.max(m, dt + (isFileCue(id) ? (fileLen.get(id) ?? 1.5) : 0.8)), 0);
   on("hunt:found", (d) =>
-    soon(() => {
+    // after the egg's own handler (which is also one task later)
+    window.setTimeout(() => {
       const id = FOUND_CUES[String(d.id).split("-")[0]];
-      if (id) play(id);
-      if (d.count >= 12) play("hunt-complete", {}, 0.5);
-    }),
+      // found inside an egg's own voice: the chime follows its tail (or is skipped after a long spoken line)
+      const since = (performance.now() - eggAt) / 1000;
+      const inEgg = since < eggTail;
+      const wait = inEgg ? eggTail + 0.12 - since : 0;
+      if (id && !(inEgg && eggTail > FOUND_SKIP_TAIL)) play(id, {}, wait);
+      if (d.count >= 12) play("hunt-complete", {}, wait + 0.5);
+    }, 30),
   );
   on("egg:trigger", (d) =>
     soon(() => {
       if (!eggEnabled(d.id)) return;
       if (d.id === "nox") hooks.grace(1500);
-      shots(EGG_CUES[d.id]);
+      const list = EGG_CUES[d.id];
+      if (list) {
+        eggAt = performance.now();
+        eggTail = tailOf(list);
+      }
+      shots(list);
     }),
   );
   on("game:start", (d) => {
     if (d.game !== "deadeye") return;
+    deadeyeLive = true;
     slowmo(true);
     play("deadeye-swell");
   });

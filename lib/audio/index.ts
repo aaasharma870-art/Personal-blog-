@@ -10,7 +10,8 @@
    The engine already voices the page events (impact, transition:meet,
    letterbox, hunt:found, egg:trigger, game:*, toy, post-credits, dc:*; see
    lib/audio/cues.ts). Call `sound.cue` only for sounds no event carries
-   (e.g. "typewriter-click", "title-sting", "tts-mischief" on the map close).
+   (e.g. "typewriter-click" in the ALT title, "tts-mischief" on the map close;
+   the title sting is voiced from the `card:phase` event).
    ========================================================================== */
 
 import type { BedId, CueId } from "./cues";

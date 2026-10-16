@@ -141,7 +141,12 @@
   }
   /** The overlay is already leaving on its own (no dismissal any more). */
   function exiting() { return st === "hold" || st === "reveal" || st === "landing" || domeOn; }
-  function setState(s) { st = s; w.__introState = s; }
+  function setState(s) {
+    var was = st;
+    st = s; w.__introState = s;
+    // sound (engine, sound on only): the broom takes off / lands on the hero
+    if (s === "flight" || (s === "code" && was !== "flight")) fire("intro:flight"); else if (s === "hold") fire("intro:land");
+  }
   function on(t, type, fn, o) { t.addEventListener(type, fn, o); offs.push(function () { t.removeEventListener(type, fn, o); }); }
   function later(fn, ms) { var id = setTimeout(fn, ms); timers.push(id); return id; }
   function ses(k, v) { try { w.sessionStorage.setItem(k, v); } catch { /* storage blocked */ } }
@@ -257,6 +262,7 @@
     capsStop(0);
     w.__introReady = true;
     mark("ready");
+    fire("p3:view-reset"); // a new pass: impacts, entry cues and crossings re-arm
     R.removeAttribute("data-intro");
     armAt = last = now();
     awakeUntil = armAt + C.t.rest;
@@ -1450,6 +1456,7 @@
     if (altLand) return fold();
     domeOn = true;
     mark("landing");
+    fire("intro:land");
     R.classList.add("intro-landing");
     anim(intro, [{ clipPath: "ellipse(150% 150% at 50% -20%)" }, { clipPath: "ellipse(150% 150% at 50% -150%)" }],
       C.t.dome, C.easeClip, function () { finish(true, "played"); });
