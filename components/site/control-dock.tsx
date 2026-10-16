@@ -3,13 +3,12 @@
 import { Suspense, useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
 import { ChevronDown, Gamepad2, Play, RotateCcw, Square } from "lucide-react";
 import { on } from "@/lib/events";
-import { motionOffNow } from "@/lib/flags";
 import { safeLazy } from "@/lib/safe-lazy";
 import { copyText, copyVisible } from "@/lib/sections";
 import type { CopyKey } from "@/lib/film";
 import { stopDirectorsCut, useDirectorsCut } from "@/components/director/api";
 import { useMotionPreference } from "@/components/providers/motion-provider";
-import { DC_CHOOSER_EVENT, primeIntro, replayIntro } from "@/components/site/dock-actions";
+import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
 
 /* ============================================================================
    CONTROL DOCK (Oct 16 fix; complaints 1, 5, 6): three labelled, solid,
@@ -22,10 +21,14 @@ import { DC_CHOOSER_EVENT, primeIntro, replayIntro } from "@/components/site/doc
    hidden control.
    - Replay: window.__intro.replay() (components/site/dock-actions.ts). Motion
      off (Pause or OS reduced motion): aria-disabled, and a press says why.
-   - Director's cut: aria-pressed, an ON/OFF chip. Running: a press STOPS it.
-     Off: a press opens the chooser (Quick / Full tour). The hero button and
-     the palette open the same chooser (DC_CHOOSER_EVENT). Motion off:
-     aria-disabled, "Motion is paused".
+   - Director's cut: an ON/OFF chip. Running: aria-pressed and a press STOPS
+     it (a press that began while a tour ran never re-opens the chooser, even
+     though the player's own pointerdown / keydown stops the run first).
+     Off: a menu button ("Director's cut, off"; aria-haspopup / aria-expanded)
+     that opens the chooser (Quick / Full tour). The hero button and the
+     palette open the same chooser (DC_CHOOSER_EVENT) and focus returns to
+     them. Motion off: aria-disabled, with the reason for its cause (the
+     Pause toggle, or the system's reduced motion).
    - Games: the menu of things to try (components/site/dock-popovers.tsx).
    The group carries `data-dc-keep`: the player ignores presses inside it, so
    the switch stops a run instead of stopping it and restarting it.
@@ -37,6 +40,9 @@ import { DC_CHOOSER_EVENT, primeIntro, replayIntro } from "@/components/site/doc
    ========================================================================== */
 
 const Popover = safeLazy(() => import("@/components/site/dock-popovers"));
+/** replay / prime live in a lazy module (warmed on hover, focus and idle) */
+const actions = () => import("@/components/site/dock-actions");
+const primeIntro = () => void actions().then((m) => m.primeIntro()).catch(() => {});
 const warmPopovers = () => void import("@/components/site/dock-popovers").catch(() => {});
 
 const text = (k: CopyKey): string | null => {
@@ -55,34 +61,23 @@ function useMounted(): boolean {
 
 type Open = "cut" | "games" | "note-replay" | "note-cut" | null;
 
-const CUE_KEY = "aryan:dock-cue";
-
-function cueSeen(name: string): boolean {
-  try {
-    return window.sessionStorage.getItem(`${CUE_KEY}:${name}`) === "1";
-  } catch {
-    return false;
-  }
-}
-function cueMark(name: string): void {
-  try {
-    window.sessionStorage.setItem(`${CUE_KEY}:${name}`, "1");
-  } catch {
-    /* in-memory only: it plays once per page view */
-  }
-}
-
 export function ControlDock() {
   const mounted = useMounted();
   const dc = useDirectorsCut();
-  const { reduced } = useMotionPreference();
+  const { reduced, paused } = useMotionPreference();
   // motion is off for any reason (Pause or OS reduced motion); false until hydrated
   const off = mounted && reduced;
   const [open, setOpen] = useState<Open>(null);
+  /** the popover whose chunk actually mounted (aria-expanded follows it) */
+  const [ready, setReady] = useState<Open>(null);
   const groupRef = useRef<HTMLDivElement>(null);
   const replayRef = useRef<HTMLButtonElement>(null);
   const cutRef = useRef<HTMLButtonElement>(null);
   const gamesRef = useRef<HTMLButtonElement>(null);
+  /** a press on the cut switch (or the hero button) began while a tour ran */
+  const pressed = useRef<boolean | null>(null);
+  /** who opened the chooser from outside the dock (the hero button, the palette) */
+  const invoker = useRef<HTMLElement | null>(null);
   const live = useRef<{ off: boolean; running: boolean; open: Open }>({ off, running: dc.running, open });
   useEffect(() => {
     live.current = { off, running: dc.running, open };
@@ -91,21 +86,33 @@ export function ControlDock() {
   const replayLabel = text("dock.replay");
   const replayShort = text("dock.replay.short") ?? replayLabel;
   const cutLabel = text("dock.cut");
+  const cutOffName = text("dock.cut.name.off") ?? cutLabel;
   const cutShort = text("dock.cut.short") ?? cutLabel;
+  const cutTip = text("dock.cut.blurb");
   const onWord = text("dock.cut.on") ?? "ON";
   const offWord = text("dock.cut.off") ?? "OFF";
   const gamesLabel = text("dock.games");
   const group = text("dock.group") ?? "Controls";
-  const replayWhy = text("dock.replay.paused");
-  const cutWhy = text("dc.paused");
+  // the reason follows the cause: the Pause toggle, or the system's reduced motion
+  const replayWhy = text(paused ? "dock.replay.paused" : "dock.replay.reduced");
+  const cutWhy = text(paused ? "dc.paused" : "dock.cut.reduced");
 
   const triggerOf = (o: Open): HTMLButtonElement | null =>
     o === "cut" || o === "note-cut" ? cutRef.current : o === "games" ? gamesRef.current : o === "note-replay" ? replayRef.current : null;
 
   const close = (refocus: boolean) => {
     const was = live.current.open;
+    const from = invoker.current;
+    invoker.current = null;
     setOpen(null);
-    if (refocus) triggerOf(was)?.focus();
+    if (!refocus) return;
+    // a chooser the hero button or the palette opened returns focus to them
+    const back = (was === "cut" || was === "note-cut") && from && from.isConnected ? from : triggerOf(was);
+    back?.focus();
+  };
+  const show = (k: Open) => {
+    setReady(null);
+    setOpen(k);
   };
 
   const closeEvent = useEffectEvent((refocus: boolean) => close(refocus));
@@ -137,17 +144,54 @@ export function ControlDock() {
     };
   }, [open]);
 
+  // a press on the cut switch / the hero button that began while a tour ran:
+  // the player's own pointerdown / keydown stops the run first, so by the time
+  // the click arrives nothing is running. Remember it, so that click does not
+  // re-open the chooser (capture, registered before any player exists).
+  useEffect(() => {
+    const note = (e: Event) => {
+      const t = e.target instanceof Element ? e.target : null;
+      if (!t?.closest("[data-dock-cut], [data-dc]")) return;
+      if (e.type === "keydown") {
+        const k = e as KeyboardEvent;
+        if (k.repeat || (k.key !== "Enter" && k.key !== " ")) return;
+      }
+      pressed.current = live.current.running;
+    };
+    window.addEventListener("pointerdown", note, true);
+    window.addEventListener("keydown", note, true);
+    return () => {
+      window.removeEventListener("pointerdown", note, true);
+      window.removeEventListener("keydown", note, true);
+    };
+  }, []);
+
   // the hero's "Director's cut" and the palette open this same chooser
   useEffect(() => {
-    const show = (e: Event) => {
+    const showChooser = (e: Event) => {
       const d = (e as CustomEvent<{ handled?: boolean } | null>).detail;
       if (d) d.handled = true;
+      const began = pressed.current === true;
+      pressed.current = null;
       if (live.current.running) stopDirectorsCut("toggle");
-      else setOpen(live.current.off ? "note-cut" : "cut");
+      else if (!began) {
+        const a = document.activeElement;
+        invoker.current = a instanceof HTMLElement && a !== document.body && !groupRef.current?.contains(a) ? a : null;
+        show(live.current.off ? "note-cut" : "cut");
+      }
     };
-    window.addEventListener(DC_CHOOSER_EVENT, show);
-    return () => window.removeEventListener(DC_CHOOSER_EVENT, show);
+    window.addEventListener(DC_CHOOSER_EVENT, showChooser);
+    return () => window.removeEventListener(DC_CHOOSER_EVENT, showChooser);
   }, []);
+
+  // a popover whose chunk never arrived (a failed load) does not stay "open"
+  useEffect(() => {
+    if (open !== "cut" && open !== "games") return;
+    const t = window.setTimeout(() => {
+      if (live.current.open === open && ready !== open) setOpen(null);
+    }, 4000);
+    return () => window.clearTimeout(t);
+  }, [open, ready]);
 
   // a game starting closes any popover
   useEffect(() => on("game:start", () => setOpen(null)), []);
@@ -161,39 +205,20 @@ export function ControlDock() {
     return () => window.clearTimeout(idle);
   }, []);
 
-  // the silent cue: two ring pulses on the cut and games buttons, once per
-  // session each, after the intro (or at once when it is not showing)
+  // the silent cue (components/site/dock-cue.ts, lazy): two ring pulses on the
+  // cut and games buttons, once per session each, after the intro
   useEffect(() => {
-    let timers: number[] = [];
-    const clear = () => {
-      timers.forEach((t) => window.clearTimeout(t));
-      timers = [];
+    let off = () => {};
+    let dead = false;
+    void import("@/components/site/dock-cue")
+      .then((m) => {
+        if (!dead) off = m.armCues(cutRef.current, gamesRef.current);
+      })
+      .catch(() => {});
+    return () => {
+      dead = true;
+      off();
     };
-    const cue = (name: string, el: HTMLElement | null, delay: number) => {
-      if (!el || cueSeen(name)) return;
-      timers.push(
-        window.setTimeout(() => {
-          if (motionOffNow() || document.documentElement.classList.contains("intro-armed")) return;
-          cueMark(name);
-          el.setAttribute("data-cue", "");
-          el.addEventListener("animationend", () => el.removeAttribute("data-cue"), { once: true });
-        }, delay),
-      );
-    };
-    const run = (lead: number) => {
-      cue("cut", cutRef.current, lead);
-      cue("games", gamesRef.current, lead + 700);
-    };
-    if (document.documentElement.classList.contains("intro-armed")) {
-      const onEnd = () => run(1800);
-      window.addEventListener("intro:end", onEnd, { once: true });
-      return () => {
-        window.removeEventListener("intro:end", onEnd);
-        clear();
-      };
-    }
-    run(1500);
-    return clear;
   }, []);
 
   const onReplay = () => {
@@ -202,9 +227,12 @@ export function ControlDock() {
       return;
     }
     setOpen(null);
-    replayIntro();
+    void actions().then((m) => m.replayIntro());
   };
   const onCut = () => {
+    // did this press begin while a tour ran? (then the player stopped it first)
+    const began = pressed.current === true;
+    pressed.current = null;
     if (live.current.off) {
       setOpen((o) => (o === "note-cut" ? null : "note-cut"));
       return;
@@ -213,9 +241,12 @@ export function ControlDock() {
       stopDirectorsCut("toggle");
       return;
     }
-    setOpen((o) => (o === "cut" ? null : "cut"));
+    if (began) return;
+    if (live.current.open === "cut") close(false);
+    else show("cut");
   };
-  const onGames = () => setOpen((o) => (o === "games" ? null : "games"));
+  const onGames = () => (live.current.open === "games" ? close(false) : show("games"));
+
   if (!replayLabel && !cutLabel && !gamesLabel) return null;
 
   return (
@@ -258,13 +289,13 @@ export function ControlDock() {
             type="button"
             className="dock-btn"
             data-dock-cut=""
-            aria-label={cutLabel}
-            aria-pressed={dc.running}
+            aria-label={(dc.running ? cutLabel : cutOffName) ?? undefined}
+            aria-pressed={dc.running ? true : undefined}
             aria-haspopup={dc.running || off ? undefined : "dialog"}
-            aria-expanded={dc.running || off ? undefined : open === "cut"}
+            aria-expanded={dc.running || off ? undefined : open === "cut" && ready === "cut"}
             aria-disabled={off || undefined}
             aria-describedby={off && open === "note-cut" ? "dock-note-cut" : undefined}
-            title={off && cutWhy ? cutWhy : dc.running ? (text("dock.cut.stop") ?? undefined) : undefined}
+            title={off && cutWhy ? cutWhy : dc.running ? (text("dock.cut.stop") ?? undefined) : (cutTip ?? undefined)}
             onClick={onCut}
             onPointerEnter={warmPopovers}
             onFocus={warmPopovers}
@@ -283,7 +314,7 @@ export function ControlDock() {
           </button>
           {open === "cut" ? (
             <Suspense fallback={null}>
-              <Popover kind="cut" onDone={close} />
+              <Popover kind="cut" onDone={close} onReady={() => setReady("cut")} />
             </Suspense>
           ) : null}
           {open === "note-cut" && cutWhy ? (
@@ -302,7 +333,7 @@ export function ControlDock() {
             className="dock-btn"
             data-dock-games=""
             aria-haspopup="dialog"
-            aria-expanded={open === "games"}
+            aria-expanded={open === "games" && ready === "games"}
             onClick={onGames}
             onPointerEnter={warmPopovers}
             onFocus={warmPopovers}
@@ -313,7 +344,7 @@ export function ControlDock() {
           </button>
           {open === "games" ? (
             <Suspense fallback={null}>
-              <Popover kind="games" onDone={close} />
+              <Popover kind="games" onDone={close} onReady={() => setReady("games")} />
             </Suspense>
           ) : null}
         </span>
