@@ -54,6 +54,10 @@ export type Key = {
   dip?: boolean;
   /** the live y of this key (null: gone); set by the storyboard */
   resolve?: () => number | null;
+  /** never merged into a neighbour (two frames of one tall block, a pass the camera must make) */
+  keep?: boolean;
+  /** called as the camera sets out for this key (a lens that must be open when it arrives) */
+  prep?: () => void;
 };
 
 export type Env = { v0: number; v1: number; c: number; r1: number; r2: number; T: number };
@@ -181,7 +185,7 @@ export function easeOfMany(envs: Env[]): { T: number; ease: (x: number) => numbe
 /** Sort by y and merge keys closer than MERGE_VH (card and dip-edge keys stay). */
 export function normalizeKeys(keys: Key[], vh: number): Key[] {
   const sorted = keys.map((k, i) => ({ k, i })).sort((p, q) => p.k.y - q.k.y || p.i - q.i).map((p) => p.k);
-  const fixed = (k: Key) => k.kind.startsWith("card") || k.kind.startsWith("edge") || k.kind === "hero" || k.kind === "end";
+  const fixed = (k: Key) => k.kind.startsWith("card") || k.kind.startsWith("edge") || k.kind === "hero" || k.kind === "end" || Boolean(k.keep);
   const out: Key[] = [];
   for (const k of sorted) {
     const last = out[out.length - 1];

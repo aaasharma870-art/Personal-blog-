@@ -40,7 +40,7 @@ import { motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { getLenis, haltGlide, scrollToTarget, setCameraOwnsScroll, whenUnlocked } from "@/lib/smooth-scroll";
 import { markWorldFontsReady } from "@/lib/world-fonts";
 import type { WorldId } from "@/lib/worlds";
-import { inKeep, inPopover, setDirectorsCutEnded, START_GRACE_MS, setDirectorsCutState, setPlayhead, type Tour } from "./api";
+import { inKeep, inPopover, overlayOpen, setDirectorsCutEnded, START_GRACE_MS, setDirectorsCutState, setPlayhead, type Tour } from "./api";
 import { easeOf, easeOfMany, solveLeg, type El, type ElDip, type ElHold, type ElLeg, type Env, type Key, type Plan } from "./plan";
 import { maxScroll, planTour, type Cut } from "./storyboard";
 import { TOURS } from "./timing";
@@ -76,6 +76,10 @@ type Run = {
 };
 
 let run: Run | null = null;
+
+/** A hold keeps the camera still. A page that has moved this far (px) on its own during a hold was
+ *  scrolled by something else (focus on a link the Tab key reached): the tour pauses where it is. */
+const DIVERGE_PX = 48;
 
 /** `?debug=dc`: a trace on window for the probes. */
 function note(msg: string): void {
@@ -229,6 +233,15 @@ function worldOf(id: string): WorldId | null {
   return w && w !== "house" ? (w as WorldId) : null;
 }
 
+/** What a key needs done as the camera sets out for it (a closed lens opens): never fatal. */
+const prepKey = (k: Key | undefined): void => {
+  try {
+    k?.prep?.();
+  } catch {
+    /* a frame's extra never stops the film */
+  }
+};
+
 const warmWorld = (k: Key | undefined): void => {
   const w = k ? worldOf(k.id) : null;
   if (w) void markWorldFontsReady(w).catch(() => {});
@@ -269,6 +282,7 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
   legs.forEach((el, i) => {
     const b = plan.keys[el.b];
     const yb = liveY(b);
+    prepKey(b);
     if (b.dip) warmWorld(plan.keys[el.b + 1]);
     const d = yb - at;
     if (d > 1) {
@@ -350,6 +364,7 @@ async function doDip(r: Run, g: number, el: ElDip): Promise<boolean> {
   const plan = r.plan!;
   enterChapter(r, el);
   const inKey = plan.keys[el.b];
+  prepKey(inKey);
   setSeg(r, el.t0, el.t0 + el.dur, el.dur);
   await dipTo(liveY(inKey), inKey);
   return g === r.gen && !r.stopped;
@@ -518,7 +533,11 @@ export function play(tour: Tour): void {
     r.undo.push(() => window.removeEventListener(ev, onInput, opts));
   }
   const onKey = (e: KeyboardEvent) => {
-    if (e.key === "Escape") return stop("escape");
+    if (e.key === "Escape") {
+      // an open menu, panel or dialog takes the first Esc (it closes itself); the next one ends the tour
+      if (overlayOpen()) return;
+      return stop("escape");
+    }
     if (e.ctrlKey || e.metaKey || e.altKey || e.key === "Tab" || e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
     const t = e.target;
     if (t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
@@ -579,6 +598,9 @@ export function play(tour: Tour): void {
     r.samples.push({ t: now, y: window.scrollY });
     if (r.samples.length > 40) r.samples.shift();
     if (!r.paused && r.plan && document.body.style.overflow === "hidden") freeze(r, "lock");
+    // the page moved on its own during a hold (Tab onto a link scrolls it natively): the visitor has the
+    // scroll now, so the tour pauses here ("Resume" carries on from the plan position at this y)
+    if (!r.paused && r.plan && r.holdEnd > now && Math.abs(window.scrollY - r.holdY) > DIVERGE_PX) freeze(r, "moved");
     if (!r.paused && r.plan) followChapter(r);
     r.raf = requestAnimationFrame(sample);
   };
@@ -697,6 +719,7 @@ export function seek(i: number): void {
     }
     const vh = window.innerHeight;
     const d = Math.abs(y - window.scrollY);
+    prepKey(keyAt);
     if (d > 2) {
       if (d <= 1.2 * vh) {
         const ok = await glide(r, y, flyEnv(d, TOURS[r.tour].a));

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { dur, ease, easeDraw, springPlayful, springSettle } from "@/lib/motion";
@@ -104,10 +104,50 @@ function horizontal(spec: SchematicSpec): Layout {
   return { W, H, boxes, joints, tapes };
 }
 
+/** The node labels are HTML over the SVG, 13 px mono (the type floor), so they do not scale with the
+ *  drawing: in a narrow column the drawing's boxes shrink and a note wraps to a second line that ran
+ *  into the next node (Systems' FIG. 3 at 1024). A box is as tall as its longest text needs. */
+const MONO_ADV = 8.6; // px per character: 13 px mono (0.6 em) + 0.04 em tracking, rounded up
+const LINE_PX = 16.5; // leading-tight at 13 px, rounded up
+const PAD_PX = 12; // the box's own breathing room, top and bottom together
+const BOX_PAD_X = 16; // px-2 each side
+
+/** Lines `text` takes when wrapped at spaces into `cpl` characters. */
+function wrapLines(text: string, cpl: number): number {
+  let lines = 1;
+  let col = 0;
+  for (const word of text.split(/\s+/)) {
+    if (!word) continue;
+    if (col === 0) col = word.length;
+    else if (col + 1 + word.length <= cpl) col += 1 + word.length;
+    else {
+      lines += 1;
+      col = word.length;
+    }
+    while (col > cpl && cpl > 0) {
+      lines += 1;
+      col -= cpl;
+    }
+  }
+  return lines;
+}
+
+/** Node height in SVG units for a stack drawn `widthPx` wide (null: not measured, the roomy default). */
+function stackNodeHeight(spec: SchematicSpec, W: number, boxW: number, widthPx: number | null): number {
+  const base = 64;
+  if (!widthPx || widthPx < 80) return base;
+  const scale = widthPx / W;
+  const cpl = Math.max(4, Math.floor((boxW * scale - BOX_PAD_X) / MONO_ADV));
+  const nodes = [...spec.chain, ...(spec.fork ?? []), ...(spec.branch ? [spec.branch] : [])];
+  let most = 1;
+  for (const n of nodes) most = Math.max(most, wrapLines(n.label, cpl) + (n.note ? wrapLines(n.note, cpl) : 0));
+  return Math.max(base, Math.ceil((most * LINE_PX + PAD_PX) / scale));
+}
+
 /** < 1024: top → bottom (the M1 stack, plus the fork / branch). */
-function vertical(spec: SchematicSpec): Layout {
+function vertical(spec: SchematicSpec, widthPx: number | null = null): Layout {
   const W = 360;
-  const NH = 64;
+  const NH = stackNodeHeight(spec, W, spec.fork || spec.branch ? 150 : W - 72, widthPx);
   const GAP = 30;
   const n = spec.chain.length;
   const yOf = (i: number) => 24 + i * (NH + GAP);
@@ -144,7 +184,20 @@ function vertical(spec: SchematicSpec): Layout {
   return { W, H: 24 + rows * NH + (rows - 1) * GAP + 24, boxes, joints, tapes };
 }
 
-function Drawing({ layout, phase, alt, className }: { layout: Layout; phase: EnterPhase; alt: boolean; className?: string }) {
+function Drawing({ spec, dir, phase, alt, className }: { spec: SchematicSpec; dir: "h" | "v"; phase: EnterPhase; alt: boolean; className?: string }) {
+  // the stack's node height follows the width it is actually drawn at (see stackNodeHeight)
+  const box = useRef<HTMLDivElement>(null);
+  const [px, setPx] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = box.current;
+    if (!el || dir !== "v" || typeof ResizeObserver === "undefined") return;
+    const measure = () => setPx(el.clientWidth > 0 ? Math.round(el.clientWidth) : null);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [dir]);
+  const layout = dir === "v" ? vertical(spec, px) : horizontal(spec);
   const { W, H, boxes, joints, tapes } = layout;
   const armed = phase === "armed";
   const live = phase === "entered";
@@ -164,7 +217,7 @@ function Drawing({ layout, phase, alt, className }: { layout: Layout; phase: Ent
         };
   const jointDelay = (o: number) => (alt ? 0.45 + o * step * 0.8 : 0.25 + o * step);
   return (
-    <div className={cn("relative mx-auto w-full", className)} style={{ aspectRatio: `${W} / ${H}` }}>
+    <div ref={box} className={cn("relative mx-auto w-full", className)} style={{ aspectRatio: `${W} / ${H}` }}>
       <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false" className="absolute inset-0 size-full overflow-visible">
         {joints.map((j, i) =>
           j.dashed ? (
@@ -327,11 +380,11 @@ export function BlueprintSchematic({
     >
       <figcaption className="type-meta text-fg-muted">{fig}</figcaption>
       {compact ? (
-        <Drawing layout={vertical(spec)} phase={phase} alt={alt} className="mt-tier-group max-w-[26rem]" />
+        <Drawing spec={spec} dir="v" phase={phase} alt={alt} className="mt-tier-group max-w-[26rem]" />
       ) : (
         <>
-          <Drawing layout={vertical(spec)} phase={phase} alt={alt} className="mt-tier-group max-w-[26rem] lg:hidden" />
-          <Drawing layout={horizontal(spec)} phase={phase} alt={alt} className="mt-tier-group hidden lg:block" />
+          <Drawing spec={spec} dir="v" phase={phase} alt={alt} className="mt-tier-group max-w-[26rem] lg:hidden" />
+          <Drawing spec={spec} dir="h" phase={phase} alt={alt} className="mt-tier-group hidden lg:block" />
         </>
       )}
       {after ? <div className="mt-tier-group">{after}</div> : null}

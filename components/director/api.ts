@@ -208,6 +208,11 @@ export const KEEP = "[data-dc-keep]";
 export const inKeep = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest(KEEP));
 /** The dock's open menus (the chooser, Games): their keys are their own. */
 export const inPopover = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest("[data-dock-pop]"));
+/** A menu, panel or dialog that is open owns Esc: the dock's chooser and Games menu, the egg-hunt panel,
+ *  and any modal (the site menu, the palette, the map). The first Esc is theirs; the tour (or its end card)
+ *  takes the next one. All of them are mounted only while open. */
+export const OVERLAY = '[data-dock-pop], [data-hunt-panel], [role="dialog"][aria-modal="true"]';
+export const overlayOpen = (): boolean => typeof document !== "undefined" && document.querySelector(OVERLAY) !== null;
 
 const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 
