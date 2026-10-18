@@ -38,8 +38,10 @@ import type { SectionProps } from "@/components/sections/types";
 export function Principles({ entry, number }: SectionProps<"principles">) {
   const titleId = `${entry.id}-title`;
   const choice = variantChoiceOf(entry);
+  // fix2c (L1): pt-8 instead of 72 px: the Act IV card's own bottom padding
+  // already opens the gap above the map sheet
   return (
-    <WorldSection entry={entry} labelledBy={titleId}>
+    <WorldSection entry={entry} labelledBy={titleId} className="pt-8">
       <PrinciplesStage
         choice={choice}
         ribbons={slot(entry, "emphasis") === "ribbon"}
