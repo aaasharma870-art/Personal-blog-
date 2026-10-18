@@ -108,10 +108,17 @@ export function FilmScreen({
       aria-labelledby={titleId}
       data-films-world={world}
       {...planeAttrs("deep", world)}
-      className={`relative py-[clamp(2rem,5vh,3.5rem)] text-fg${
+      className={`relative text-fg ${
         // the first screen keeps a breath after the house lights (B30, a weight-3
-        // scroll star: nothing heavier for a viewport after it); the others do not need it
-        first ? " xl:pb-[calc(clamp(2rem,5vh,3.5rem)+15vh)]" : ""
+        // scroll star: nothing heavier for a viewport after it, so B32-finale
+        // stays where the spec put it); the others do not need it.
+        // fix2c (L1): the other screens' BOTTOM padding was clamp(2rem,5vh,3.5rem):
+        // it is clamp(1.25rem,3vh,2.25rem) now (the text-free band between two
+        // films). The top stays: B32-finale sits 0.4vh outside B30's breath
+        // (the probe's pacing rule), so nothing above it may move up.
+        first
+          ? "py-[clamp(2rem,5vh,3.5rem)] xl:pb-[calc(clamp(2rem,5vh,3.5rem)+15vh)]"
+          : "pt-[clamp(2rem,5vh,3.5rem)] pb-[clamp(1.25rem,3vh,2.25rem)]"
       }`}
     >
       <div

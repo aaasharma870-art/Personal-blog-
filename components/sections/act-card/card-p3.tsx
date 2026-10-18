@@ -731,7 +731,8 @@ function KrakenLayer({
  *  Nothing here is a mask, a zoom or a timer: opacity and a 3 % settle only.
  *  aria-hidden: the card's h2 / program carry the title as text. Sized to the
  *  frame (≤ 30 % of its height, ≤ 68 % of its width) from the face's real
- *  advance, re-measured when the face swaps in and on resize. */
+ *  advance, re-measured when the face swaps in (fonts `loadingdone`, the
+ *  `data-fonts` token), when the text changes size, and on resize. */
 function TitleCard({ t, title }: { t: MotionValue<number>; title: CardPinSpec["title"] }) {
   const layer = useRef<HTMLDivElement>(null);
   const text = useRef<HTMLParagraphElement>(null);
@@ -746,23 +747,54 @@ function TitleCard({ t, title }: { t: MotionValue<number>; title: CardPinSpec["t
     const el = text.current;
     if (!box || !el) return;
     let off = false;
+    let raf = 0;
     const fit = () => {
       if (off) return;
-      // the advance at a reference size, then the size that fits the frame
+      // the advance at a reference size, then the size that fits the frame.
+      // CODE-04: measured with the transform ignored (offsetWidth: the 0.97
+      // scrub scale is on the element at mount, getBoundingClientRect
+      // includes it) and uncapped (max-width: 100% would clip the reference
+      // advance of a long title in a narrow frame)
       el.style.setProperty("--title-fs", "100px");
-      const w = el.getBoundingClientRect().width;
+      const cap = el.style.maxWidth;
+      el.style.maxWidth = "none";
+      const w = el.offsetWidth;
+      el.style.maxWidth = cap;
       const H = box.clientHeight;
       const W = box.clientWidth;
       if (!(w > 0) || !(H > 0)) return;
       el.style.setProperty("--title-fs", `${Math.min(0.3 * H, (0.68 * W * 100) / w).toFixed(2)}px`);
     };
+    // every re-fit after the first is coalesced into the next frame: the
+    // observers below fire inside layout, and a size change made there to an
+    // observed element would raise "ResizeObserver loop" errors
+    const later = () => {
+      if (off || raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        fit();
+      });
+    };
     fit();
-    // the world face may still be swapping in (lib/world-fonts.ts)
-    void document.fonts?.ready.then(fit);
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null;
+    // CODE-04: the world face is swapped in AFTER the first fit (Rye /
+    // fontWorldRdr2Head were not in yet: the fit used the fallback's width and
+    // Act III's title drew at 78 % of the frame). `document.fonts.ready` may
+    // already be resolved when nothing is loading, so also re-fit when any face
+    // finishes loading and when the world's font token lands on <html>
+    // (lib/world-fonts.ts: the token is what swaps the stack), and when the
+    // text itself changes size.
+    void document.fonts?.ready.then(later);
+    document.fonts?.addEventListener?.("loadingdone", later);
+    const mo = typeof MutationObserver !== "undefined" ? new MutationObserver(later) : null;
+    mo?.observe(document.documentElement, { attributes: true, attributeFilter: ["data-fonts"] });
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(later) : null;
     ro?.observe(box);
+    ro?.observe(el);
     return () => {
       off = true;
+      if (raf) cancelAnimationFrame(raf);
+      document.fonts?.removeEventListener?.("loadingdone", later);
+      mo?.disconnect();
       ro?.disconnect();
     };
   }, [title.text]);

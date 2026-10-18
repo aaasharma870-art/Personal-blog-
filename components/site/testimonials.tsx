@@ -50,8 +50,10 @@ export function Testimonials({ entry, number }: SectionProps<"quotes">) {
   );
 
   if (campfire && media) {
+    // fix2c (L1): pb-8 instead of the section's 72 px: the camp plate runs to
+    // the section's edge and the Act IV card follows with its own padding
     return (
-      <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip">
+      <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip pb-8">
         <CampfireStage
           choice={variantChoiceOf(entry)}
           media={media}

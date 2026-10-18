@@ -711,6 +711,7 @@ const copy = {
   // blur worker (LENGTH-2): the labels of the two folded passages, one block
   // at the very end of the copy object so a merge never conflicts
   "about.bio.more": p3("Read more"),
+  "about.bio.less": p3("Show less"),
   "optuna.approach.more": p3("Read the approach"),
 } as const satisfies Record<string, Copy>;
 export type CopyKey = keyof typeof copy;
@@ -798,6 +799,8 @@ const captions = {
   // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
   "cap.work.head": { world: "idiots", moment: moment("THE ASTRONAUT PEN ON VIRUS’S DESK"), variant: "both", place: "bl", where: "work head band, calm dark left (iconic-pen-alt; ALT iconic-pen)" },
   // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
+  // fix2c: the head's right column (iconic-corridor-alt; ALT iconic-corridor). New wording: proposed + unsigned
+  "cap.work.side": { world: "idiots", moment: p3("THE CORRIDOR AT ICE"), variant: "both", place: "under", where: "work head, right column beside the h2 (iconic-corridor-alt; ALT iconic-corridor); never beside a metric" },
   "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
   "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "head", where: "above the Trading_Algos chalkboard panel, naming it as it enters (never beside a metric)" },
   // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself

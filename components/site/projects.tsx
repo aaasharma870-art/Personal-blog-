@@ -5,7 +5,7 @@ import { Meta, SectionHead } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { SceneCaption } from "@/components/primitives/scene-caption";
 import { IdiotsSection } from "@/components/worlds/idiots/idiots-section";
-import { HeadBand } from "@/components/worlds/idiots/plate-band";
+import { HeadBand, SidePlate } from "@/components/worlds/idiots/plate-band";
 import { gauntlet } from "@/lib/content";
 import { film } from "@/lib/film";
 import { quotes } from "@/lib/quotes";
@@ -63,6 +63,7 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
 
   const choice = variantChoiceOf(entry);
   const head = entry.props.head;
+  const side = entry.props.side;
   // the manifest's variant for the in-character title (server: no ?variant=)
   const titleVariant = effectiveVariant(choice, "words.title-idiots", "", film.defaultVariant);
 
@@ -85,25 +86,37 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
         ) : null
       }
     >
-      <SectionHead
-        id={titleId}
-        number={number}
-        label={entry.nav?.label ?? "Work"}
-        title="Led by what survived scrutiny."
-        intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
-        inCharacter
-        world="idiots"
-        beat="B16"
-        variant={titleVariant}
-      />
+      {/* fix2c: the head is two columns at >= 64rem: the h2, intro and
+          standing rule left, the ICE corridor plate right (it used to be 45 %
+          empty grid); below 64rem the plate is hidden and the stack is today's */}
+      <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+        <div className={side ? "lg:col-span-7" : "lg:col-span-12"}>
+          <SectionHead
+            id={titleId}
+            number={number}
+            label={entry.nav?.label ?? "Work"}
+            title="Led by what survived scrutiny."
+            intro="The portfolio opens with the two projects I would defend in a room of people who know markets — the research and the pipeline behind it."
+            inCharacter
+            world="idiots"
+            beat="B16"
+            variant={titleVariant}
+          />
 
-      <Rise className="mt-tier-group max-w-body">
-        <Meta fields={["Standing rule"]} />
-        <p className="mt-tier-pair type-body text-fg-muted">
-          Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
-          figures below are the ones that earned their place under that rule.
-        </p>
-      </Rise>
+          <Rise className="mt-tier-group max-w-body">
+            <Meta fields={["Standing rule"]} />
+            <p className="mt-tier-pair type-body text-fg-muted">
+              Any trading result above roughly Sharpe 2.0 is treated as curve-fit or data-leak until proven otherwise. The
+              figures below are the ones that earned their place under that rule.
+            </p>
+          </Rise>
+        </div>
+        {side ? (
+          <div className="hidden lg:col-span-5 lg:block">
+            <SidePlate spec={side} choice={choice} pieceKey="work.head" captionKey="cap.work.side" />
+          </div>
+        ) : null}
+      </div>
 
       {/* ── the dawn board: the seven gates ─────────────────────────── */}
       <div className="mt-tier-block border-t border-rule pt-tier-block">
