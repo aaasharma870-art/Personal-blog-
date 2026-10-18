@@ -33,9 +33,14 @@ export function JourneyStack({
   cartouche,
   coin = null,
   marginal = null,
+  final = false,
 }: {
   /** The section head (server-rendered), above the stack. */
   head?: ReactNode;
+  /** This stack is the page's final Journey (the voyage's chunk failed), not
+   *  the stand-in the voyage replaces: it keeps its full height instead of
+   *  holding the voyage's (app/p3/world-pirates.css). */
+  final?: boolean;
   stills: readonly MediaId[];
   captions: readonly ReactNode[];
   cartouche: ReactNode;
@@ -45,7 +50,7 @@ export function JourneyStack({
   return (
     <>
       {head}
-      <div className="mt-tier-block" data-voyage="stack">
+      <div className="mt-tier-block" data-voyage="stack" data-stack-final={final ? "" : undefined}>
         {cartouche}
         <JourneyChart
           className="mt-tier-group max-w-[40rem] pb-12 pt-6"

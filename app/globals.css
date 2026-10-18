@@ -567,6 +567,23 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* No browser scroll anchoring on the desktop path (Oct 16, fix2b). Every
+   jump here is ours (Lenis, the fast lane, the palette, the Games menu, a
+   #hash), and layout settles under it for the first seconds (a heading's
+   word spans, the Journey's stack becoming the voyage, a face swap).
+   Chrome's anchoring answered each of those with a scroll of its own
+   (+2045 px after "Skip to the research" landed), and ScrollTrigger then
+   adopted the new position: 3 of 14 jumps ended 1900 px past the Work
+   heading. With the anchor off, the page stays where the jump put it and
+   our own re-land (lib/smooth-scroll.ts) is the only thing that moves it.
+   Phones and touch tablets (< 64rem) keep the browser's anchoring. */
+@media (min-width: 64rem) {
+  html,
+  body {
+    overflow-anchor: none;
+  }
+}
+
 body {
   background-color: var(--color-canvas);
   color: var(--color-ink);

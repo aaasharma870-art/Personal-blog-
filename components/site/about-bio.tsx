@@ -30,7 +30,7 @@ export function AboutBio() {
           // LENGTH-2: the second paragraph sits behind a visible "Read more"
           // on desktop (closed <details>, text in the DOM; phones keep it
           // open in flow)
-          <Collapse summary={more.text} className="mt-tier-group" summaryClassName="mb-tier-group">
+          <Collapse summary={more.text} className="mt-tier-group" summaryClassName="mb-tier-group" chip>
             <p className="type-body text-fg-muted">{about.bioSecond}</p>
           </Collapse>
         ) : (
@@ -41,7 +41,7 @@ export function AboutBio() {
         {copyVisible(summary) ? (
           // the gap rides the summary: phones hide it and show the note in
           // flow, as before (words.css)
-          <Collapse summary={summary.text} summaryClassName="mb-tier-group">
+          <Collapse summary={summary.text} summaryClassName="mb-tier-group" chip>
             {note}
           </Collapse>
         ) : (

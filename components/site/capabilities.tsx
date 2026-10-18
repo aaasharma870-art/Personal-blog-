@@ -157,8 +157,16 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
             <Collapse
               className="mt-tier-group max-w-body"
               summary={pencilQ.text}
-              summaryClassName="type-small text-fg"
+              summaryClassName="type-small"
+              chip
             >
+              {/* phones hide the summary and show the fold open, so the
+                  question is repeated here, as visible text, only where the
+                  summary is hidden (app/p3/words.css `data-collapse-q`):
+                  the answer and the footnote never lose their question */}
+              <p data-collapse-q="" className="type-small text-fg">
+                {pencilQ.text}
+              </p>
               <p className="mt-tier-pair type-small text-fg-muted">{pencilBody.text}</p>
               {copyVisible(pencilNote) ? (
                 <p className="mt-tier-pair type-small text-fg-muted">

@@ -194,19 +194,29 @@ function ActLabel() {
   const film = rest.join(" · ");
   const reduce = useReducedMotion();
   const mounted = useMounted();
+  // WHEN it shows (container query on the left cluster, which is at most
+  // ~12.5rem wide from 1440 up: the right cluster is the dock and the chips).
+  // The cluster holds the [AS] logo (3.1rem + its gap), so: "ACT I" … "ACT IV"
+  // (the longest, 55 px) from 8rem; "CREDITS" (71 px) from 9rem;
+  // "INTERMISSION" (124 px) from 12rem. Never a clipped stub.
+  // HOW MUCH: the film's name rides in a second flex item of a wrapping row
+  // whose height is one line, so it shows exactly when the whole label fits
+  // and is clipped away (never half drawn) when it does not: at 1440 and up
+  // "ACT II · 3 IDIOTS" fits, the longer names show "ACT I" / "ACT III" /
+  // "ACT IV" alone. The full text stays in the DOM either way.
+  // (from 640 px up, as before: a phone's header keeps no act label)
+  const tier = film ? "sm:@min-[8rem]:block" : num.length <= 8 ? "sm:@min-[9rem]:block" : "sm:@min-[12rem]:block";
   return (
-    <p className="hidden truncate type-meta text-fg-muted @min-[13rem]:block" data-act-label="">
+    <p className={cn("hidden min-w-0 overflow-hidden type-meta text-fg-muted", tier)} data-act-label="">
       <motion.span
         key={label}
-        className="block truncate"
+        className="flex max-h-[1lh] flex-wrap overflow-hidden"
         initial={mounted && !reduce ? { opacity: 0, y: 4 } : false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduce ? 0 : dur.micro, ease }}
       >
-        {/* "ACT I" alone when the cluster is tight; the film's name joins it
-            when there is room (container query on the left cluster) */}
-        {num}
-        {film ? <span className="hidden @min-[22rem]:inline">{` · ${film}`}</span> : null}
+        <span className="whitespace-nowrap">{num}</span>
+        {film ? <span className="whitespace-pre">{` · ${film}`}</span> : null}
       </motion.span>
     </p>
   );

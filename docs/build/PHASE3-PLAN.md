@@ -247,14 +247,14 @@ Texts come from the spec where it gives them; "draft" = page microcopy C0 writes
 | `fastlane.label` | "Skip to the research" |
 | `optuna.appendix.summary` | "Where the discipline started · Automated 0DTE Options Bots · paper-traded on a no-code platform; not a proven edge" (C0 verifies every phrase against `optionAlpha.tag/name/summary/honest` in `lib/content.ts`; any phrase not found there → use the nearest existing words and flag) |
 | `about.philosophy.summary`, `credits.more.summary` | "The philosophy note" · draft ("More credits: media, fonts and quotes") |
-| `egg.hunt.chip`, `.chip.name`, `.toast`, `.panel.title`, `.reset`, `.reset.confirm`, `.off`, `.complete` | "{n}/12" · "Easter-egg hunt: {n} of 12 found. Show hints" · "Egg {n} of 12 · {name}" · draft · "Reset the egg hunt" · draft · "Turn off easter eggs" · "12 / 12" |
+| `egg.hunt.chip`, `.toast`, `.panel.title`, `.reset`, `.reset.confirm`, `.off`, `.complete` | "{n}/12" · "Egg {n} of 12 · {name}" · draft · "Reset the egg hunt" · draft · "Turn off easter eggs" · "12 / 12" (the chip's accessible name is `dock.eggs.name`; `egg.hunt.chip.name` was retired Oct 16) |
 | `egg.hunt.name.<HuntId>` ×12 | "The cursed coin" (pc-coin, spec) + 11 drafts in the same register |
 | `egg.hunt.hint.<HuntId>` ×12 | spec §9.1 hint column ("I solemnly swear…", "Lumos — resume motion" = existing `pause.tooltip.resume`, "parley?", "Hold the coin to the moonlight", "HERE BE MONSTERS", "Kept for the one who proves worthy.", "Warm your hands by the fire", …; drafts where the hint is a drawing) |
 | `egg.hunt.credit.<HuntId>` ×12 | spec §9.4 rows ("Solemn swearer — you" … "Warmed by the fire — you") |
 | `egg.console`, `egg.parley.fallback`, `egg.quad.toast`, `egg.pen.read`, `egg.pen.win`, `egg.bone.note`, `egg.fire.toast`, `toast.lumos.os` | "12 eggs hide on this page (on a desktop browser)" · "Parley granted — the terms are at Contact." · "It flies. Take it up in Systems." · "Kept for the one who proves worthy. Read the whole ledger." · "Worthy." · "another bone for the collector" · draft · draft |
 | `toy.compass.label`; `toy.drone.cmd/.pill/.gate/.next/.score/.rm/.help`; `toy.deadeye.pill/.survivor/.score/.fire/.release`; `toy.candles.lumos/.done` | "Spin Jack's compass"; "Fly the homemade drone" · "▲ Take off" · "Gate {n} of 7 · {title}" · "Next: the kill-list ↓" · "{n}/7 gates · {s} s" · "Motion is off: here is the flight plan" · draft; "DEAD EYE" · "Survived: not a target" · "{n}/5 marked · {s} s of Dead Eye left" · "Fire" · "Release"; "Lumos" · "The hall is lit." |
 | `sound.name/.on/.off/.disabled` | "Sound" · "Sound on" · "Sound off" · "Sound follows motion: resume motion to hear it" |
-| `dc.button/.sound/.stop/.speed/.act/.cmd/.paused` | "▶ Director's cut" · "(sound on)" · "■ Stop" · "2×" · "Act {n}/4" · "Play the director's cut" · "Motion is paused" |
+| `dc.button/.cmd/.paused` | "▶ Director's cut" · "Play the director's cut" · "Motion is paused" (`dc.sound` "(sound on)", `dc.stop`, `dc.speed` and `dc.act` were retired Oct 16: the cut no longer touches the sound and the transport has its own `dock.*` words) |
 | `chapter.heading/.prologue/.intermission/.credits`, `palette.play/.hints` | draft · existing strings where they exist (reuse, do not duplicate) · "Play" · "Show egg hints" |
 
 ### 4.5 Variant keys (C0-LIB registers DEFAULT and ALT; notes from the spec)

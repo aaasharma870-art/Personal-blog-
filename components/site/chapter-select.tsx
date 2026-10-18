@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { MouseEvent } from "react";
+import { Play } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { film } from "@/lib/film";
 import { useReducedMotion } from "@/lib/flags";
@@ -21,7 +22,7 @@ import {
 import { planeAttrs, type WorldId } from "@/lib/worlds";
 import { cn } from "@/lib/utils";
 import { startDirectorsCut } from "@/components/director/api";
-import { Glyphed } from "@/components/director/glyphed";
+import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
 
 /* ============================================================================
    DVD CHAPTER SELECT (spec §11.2; plan DP-17; P3-10 #2) — OWNER: W3-CINEMA.
@@ -33,9 +34,12 @@ import { Glyphed } from "@/components/director/glyphed";
    Menu when nothing did).
 
    ▶ Director's cut first (the DVD "Play movie"): it closes the menu and
-   starts the cut (components/director/api.ts; the click is the sound
-   consent). aria-disabled with "Motion is paused" under reduced motion /
-   Pause.
+   opens the header dock's tour chooser (Quick / Full; the same window event
+   as the hero button and the palette, DC_CHOOSER_EVENT), wearing the same
+   solid "try" look as the dock; it never starts a tour blindly, and it does
+   not touch the sound. aria-disabled with "Motion is paused" under reduced
+   motion / Pause. (Only when no dock answers, e.g. the cinema lab, it starts
+   the default tour.)
 
    Then SEVEN TILES in page order, every one a real link:
      Prologue (the hero, MV-01) · I The Crossing (iconic-pearl) · II The
@@ -151,7 +155,6 @@ export function ChapterSelect({ onPick }: ChapterSelectProps) {
   const off = useReducedMotion();
   const heading = copyText("chapter.heading");
   const play = copyText("dc.button");
-  const sound = copyText("dc.sound");
   const paused = copyText("dc.paused");
 
   const go = (href: string, id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -165,7 +168,10 @@ export function ChapterSelect({ onPick }: ChapterSelectProps) {
   const onPlay = () => {
     if (off) return;
     onPick?.();
-    startDirectorsCut();
+    // the dock's chooser answers (Quick / Full tour); `handled` is set by it
+    const detail: { handled?: boolean } = {};
+    window.dispatchEvent(new CustomEvent(DC_CHOOSER_EVENT, { detail }));
+    if (!detail.handled) startDirectorsCut();
   };
 
   if (!TILES.length) return null;
@@ -189,18 +195,14 @@ export function ChapterSelect({ onPick }: ChapterSelectProps) {
             type="button"
             onClick={onPlay}
             aria-disabled={off || undefined}
+            aria-haspopup={off ? undefined : "dialog"}
             data-dc-menu=""
-            className={cn(
-              "type-meta inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-5 transition-colors duration-(--dur-micro)",
-              off ? "cursor-not-allowed text-fg-muted opacity-60" : "text-fg hover:border-accent-bright hover:text-accent-bright",
-            )}
+            className="try-btn inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
           >
-            <Glyphed text={play.text} />
-            {off ? (
-              copyVisible(paused) ? <span>{paused.text}</span> : null
-            ) : copyVisible(sound) ? (
-              <span className="text-fg-ghost">{sound.text}</span>
-            ) : null}
+            <Play aria-hidden="true" strokeWidth={2} />
+            {/* the copy's leading play glyph is the icon above */}
+            <span>{play.text.replace(/^▶\s*/u, "")}</span>
+            {off && copyVisible(paused) ? <span>{paused.text}</span> : null}
           </button>
         ) : null}
       </div>

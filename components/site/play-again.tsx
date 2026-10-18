@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { RotateCcw } from "lucide-react";
 
 /* ============================================================================
@@ -19,7 +19,20 @@ import { RotateCcw } from "lucide-react";
    footer). A real <button> in the solid "try" look (app/p3/dock.css
    `.try-end`), 44 px+ tall, hover / focus / active states.
    The label is `mischief.again` (lib/film.ts, proposed, unsigned).
+   Without JavaScript nothing can restart the loop, so the server markup
+   looks like plain text (app/p3/dock.css `html:not(.js)`: no ring, no
+   "Play it again") and carries no "Play it again" in its accessible name:
+   `aria-label` is set once the page has hydrated.
    ========================================================================== */
+
+/** true after hydration (server + hydration render = false). */
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
 
 export function PlayAgain({
   label,
@@ -32,12 +45,13 @@ export function PlayAgain({
   fold?: ReactNode;
   children: ReactNode;
 }) {
+  const mounted = useMounted();
   return (
     <button
       type="button"
       className="try-btn try-end inline-flex"
       data-play-again=""
-      aria-label={name}
+      aria-label={mounted ? name : undefined}
       onClick={() => {
         // dock-actions loads on the press (it is not in the first load);
         // "off": refused (motion is off): just go to the top

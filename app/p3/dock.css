@@ -38,12 +38,15 @@
 }
 
 /* — The dock: DESKTOP_FINE only (a phone or touch tablet never shows a
-     control it cannot use; the server markup is the same for everyone) — */
+     control it cannot use; the server markup is the same for everyone) AND
+     only with JavaScript (`html.js`, set by the boot head script before the
+     first paint): without it every one of these is a dead button, so none
+     shows (Oct 16, fix2b) — */
 .dock {
   display: none;
 }
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
-  .dock {
+  html.js .dock {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -409,4 +412,28 @@ button:has(> [data-run-ring]):focus-visible {
   font-size: 0.875rem;
   line-height: 1.35;
   color: var(--fg-muted);
+}
+
+/* — No JavaScript (`html:not(.js)`): the controls that only a script can
+     work stay out of sight instead of sitting there dead — the hero's
+     Director's cut button, the hunt chip — and the closing button keeps its
+     lettered line as plain text (no ring, no "Play it again"). — */
+html:not(.js) [data-dc="hero"],
+html:not(.js) .hunt-chip-wrap {
+  display: none;
+}
+html:not(.js) .try-btn.try-end {
+  min-height: 0;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+  cursor: default;
+}
+html:not(.js) .try-end-sub {
+  display: none;
+}
+html:not(.js) .try-end-line {
+  color: inherit;
 }
