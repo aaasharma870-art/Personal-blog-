@@ -64,10 +64,10 @@ c=mix(c,vec3(.9,.85,.74),S(-bw-2.*h,-bw,d));return vec4(mix(c,uDeep,HI()*S(h,3.*
 vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*vec2(4.,10.)+vec2(uP*3.,0.));float s=N(q*vec2(A,1.)*220.);
 // fix2c (L2): the veil used to be a flat bright slab (foam .93, chalk .88 with
 // full-strength speckle): the harshest frame on a skim. It now stays in the
-// dark world: the same clouds and speckle blended 36 % into the world's deep,
+// dark world: the same clouds and speckle blended 30 % into the world's deep,
 // the speckle halved, so the wipe reads as smoke and chalk dust, not a flash.
 vec3 v=mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.9+.15*s),k);
-return mix(uDeep,v,.36);}
+return mix(uDeep,v,.3);}
 `;
 
 const SHAPES = `
