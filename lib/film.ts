@@ -709,7 +709,7 @@ const copy = {
   "dc.prev": p3("Previous chapter"),
   "dc.next": p3("Next chapter"),
   "dc.exit": p3("Exit"),
-  "dc.replay": p3("Play again"),
+  "dc.replay": p3("Replay the tour"),
   "dc.group": p3("Director's cut"),
   "dc.progress": p3("Director's cut progress"),
   "dc.goto": p3("Go to {name}"),

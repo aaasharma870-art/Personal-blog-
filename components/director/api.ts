@@ -50,7 +50,7 @@ export type DirectorsCutState = {
   chapters: readonly string[];
   /** chapter start seconds (the transport's ticks), parallel to `chapters` */
   starts: readonly number[];
-  /** the run finished: the transport offers Play again / Skip to the research for a while */
+  /** the run finished: the transport offers Replay the tour / Skip to the research for a while */
   ended: boolean;
 };
 
@@ -68,6 +68,10 @@ const STOPPED: DirectorsCutState = {
 
 /** How long the end state stays up (it waits while the pointer or the keyboard focus is on it). */
 const END_MS = 12000;
+/** A press on the page this soon after a start is the second click of a double click on the
+ *  chooser's button (the chooser has closed, so it lands on the page): it never pauses or
+ *  cancels the run. A wheel, a touch and the keys still do. */
+export const START_GRACE_MS = 600;
 /** Least time left once the pointer or the focus leaves the end card. */
 const END_MIN_MS = 4000;
 
@@ -76,6 +80,13 @@ let wantedTour: Tour = "full";
 let endTimer: ReturnType<typeof setTimeout> | undefined;
 /** when the end state goes away (ms, performance.now clock); 0 while it waits */
 let endDue = 0;
+/** while the end card shows: the fast lane, Replay intro and the page's end button (all emit
+ *  `fastlane`) take it away with them, so a stale card never survives them */
+let offEndFast: (() => void) | null = null;
+const dropEndFast = (): void => {
+  offEndFast?.();
+  offEndFast = null;
+};
 let playhead: () => number = () => 0;
 const listeners = new Set<() => void>();
 
@@ -93,6 +104,7 @@ function commit(next: DirectorsCutState): void {
 export function setDirectorsCutState(running: boolean, patch: Partial<DirectorsCutState> = {}): void {
   clearTimeout(endTimer);
   endDue = 0;
+  dropEndFast();
   if (!running) {
     commit(STOPPED);
     return;
@@ -114,12 +126,15 @@ export function setDirectorsCutEnded(): void {
     ended: true,
   });
   armEnd(END_MS);
+  dropEndFast();
+  offEndFast = on("fastlane", () => clearDirectorsCutEnded());
 }
 
 function armEnd(ms: number): void {
   clearTimeout(endTimer);
   endDue = performance.now() + ms;
   endTimer = setTimeout(() => {
+    dropEndFast();
     if (state.ended) commit(STOPPED);
   }, ms);
 }
@@ -144,6 +159,7 @@ export function holdDirectorsCutEnd(on: boolean): void {
 export function clearDirectorsCutEnded(): void {
   clearTimeout(endTimer);
   endDue = 0;
+  dropEndFast();
   if (state.ended) commit(STOPPED);
 }
 
@@ -206,8 +222,10 @@ export function startDirectorsCut(tour: Tour = "full"): boolean {
   // run would ignore it)
   let cancelled = false;
   const opts = { capture: true, passive: true } as const;
+  const t0 = performance.now();
   const cancel = (e: Event) => {
     if (inKeep(e)) return;
+    if (e.type === "pointerdown" && performance.now() - t0 < START_GRACE_MS) return;
     cancelled = true;
   };
   const offFast = on("fastlane", () => {

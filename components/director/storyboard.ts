@@ -9,7 +9,7 @@
      card-in         an act card at p .03 (the hook frame), a pass
      card-land       p = the act's `landAt` (.47): the new world fully shown, held
      card-title      p ~ .80: the title letters open, the logline on the lower
-                     bar, held (the title sting plays here; .90 crops it)
+                     bar, held (the engine's title sting plays as it opens; .90 crops it)
      card-out        p 1: the pin lets go, a pass
      head            a section's heading frame: the h2 AND its lede / caveat
                      in the viewport (h2 at 30 % of the viewport), held
@@ -194,7 +194,7 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
     keys.push(
       k("in", "card-in", 0.03),
       k("land", "card-land", Math.min(0.95, landAt), { hold: H.land, settle: P.settle }),
-      k("title", "card-title", titleAt, { hold: H.title, sting: true }),
+      k("title", "card-title", titleAt, { hold: H.title }),
       k("out", "card-out", 1),
     );
     return { id: it.id, keys, endY: at(1), endKey: keys[3] };

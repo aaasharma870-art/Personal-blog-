@@ -33,7 +33,7 @@ import { clock } from "./plan";
    - the CARD above it, only while it is wanted:
        RUNNING  [|<] [pause] [>|]  the chapter on screen      0:41 / 1:30  [Exit]
        PAUSED   the same, "Paused · Resume" where the chapter name was
-       ENDED    [Play again] [Skip to the research] [x]   (12 s; it waits while
+       ENDED    [Replay the tour] [Skip to the research] [x]   (12 s; it waits while
                 the pointer or the keyboard focus is on it)
      Wanted = the pointer is on the line / the card, the pointer moves near the
      bottom centre or a key is pressed (it goes again after a moment), keyboard
@@ -92,6 +92,7 @@ export function Transport() {
   const bar = useRef<HTMLDivElement>(null);
   const clockEl = useRef<HTMLSpanElement>(null);
   const pauseBtn = useRef<HTMLButtonElement>(null);
+  const againBtn = useRef<HTMLButtonElement>(null);
   /** focus was last inside the transport (it is not on <body> by choice) */
   const had = useRef(false);
   const live = s.running;
@@ -176,12 +177,17 @@ export function Transport() {
       if (had.current && (!a || a === document.body)) document.querySelector<HTMLElement>("[data-dock-cut]")?.focus({ preventScroll: true });
     };
   }, []);
-  // the focused control went away (Resume, Play again): on to the Pause button
+  // the focused control went away (Resume, Replay the tour): on to the Pause button
   useEffect(() => {
     if (s.ended || !had.current) return;
     const a = document.activeElement;
     if (!a || a === document.body) pauseBtn.current?.focus({ preventScroll: true });
   }, [s.paused, s.ended]);
+
+  // the end card takes the focus on its first button (its own, so a keyboard visitor lands on it)
+  useEffect(() => {
+    if (s.ended) againBtn.current?.focus({ preventScroll: true });
+  }, [s.ended]);
 
   // the end card waits while the pointer or the keyboard focus is on it
   useEffect(() => {
@@ -259,7 +265,7 @@ export function Transport() {
           <div className="flex flex-col rounded-[1.1rem] bg-bg px-3 py-1 text-fg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)]">
             {s.ended ? (
               <div key="ended" className="flex flex-wrap items-center gap-2">
-                <button type="button" className={textBtn} onClick={() => restartDirectorsCut()} autoFocus>
+                <button ref={againBtn} type="button" className={textBtn} onClick={() => restartDirectorsCut()}>
                   <RotateCcw aria-hidden="true" className="size-4" />
                   {t("dc.replay")}
                 </button>
