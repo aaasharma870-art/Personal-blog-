@@ -924,6 +924,9 @@ const NEXT_MOUNT_VH = FADE_VH + 1;
 /** The incoming plate may rise at most this fast (opacity per second): a
  *  late decode eases in over about a quarter of a second instead of popping. */
 const RISE_PER_S = 4;
+/** The longest step the rise limit counts (s), so a step after an idle spell
+ *  (a late decode) lifts by 0.1 at most, not by 0.4. */
+const RISE_DT_MAX_S = 0.025;
 const OWN_CLEAR_VH = 1;
 /** Pointer shift (spec §6.1: ≤ 6 px, the hero and the stage only). */
 const POINTER_PX = 6;
@@ -1161,6 +1164,11 @@ export function Stage() {
     let lastWeather = "";
     let lastStepMs = 0;
     let easeRaf = 0;
+    /** Per mounted layer: the opacity its rise limit last allowed. It lives
+     *  here, not in `els`: every Stage render re-binds the refs, which drops
+     *  and re-creates a layer's `els` entry (and its `o`), and a plate that
+     *  lags a fast scroll must keep easing in across that. */
+    const risen = new Map<number, number>();
 
     step.current = () => {
       const { on: motionOn, visibleDoc: docOn } = settings.current;
@@ -1226,15 +1234,24 @@ export function Stage() {
         if (!m) continue;
         const onScreen = m.top < sy + vh && m.bottom > sy;
         // the incoming plate shows only once it has DECODED (never a pop-in),
-        // and rises at most RISE_PER_S (a late decode eases in)
+        // and rises at most RISE_PER_S (a late decode, or a scroll faster
+        // than that, eases in). The limit follows the plate to the moment
+        // it becomes the current shot (k <= ka) until it is fully in: it
+        // used to lift only while it was the NEXT shot, so a fast fling
+        // lagged and then jumped to 1 at the hand-over (up to 0.5 in a frame)
         let o = k <= ka ? 1 : FIRST_IN_WINDOW[k] ? 1 : k === kb ? (ready.current.has(k) ? mix : 0) : 0;
-        if (k === kb && k > ka && e && e.o >= 0 && o > e.o) {
-          const cap = e.o + RISE_PER_S * dtS;
+        const was = risen.get(k) ?? -1;
+        if (e && was >= 0 && was < 1 && !FIRST_IN_WINDOW[k]) {
+          // a current shot that is still rising and not decoded: wait where it is
+          if (k <= ka && !ready.current.has(k)) o = was;
+          const cap = was + RISE_PER_S * Math.min(dtS, RISE_DT_MAX_S);
           if (o > cap) {
             o = cap;
             easing = true;
           }
         }
+        if (e) risen.set(k, o);
+        else risen.delete(k);
         let t = "none";
         let dim = 0;
         if (s.mode === "split") {
@@ -1286,6 +1303,7 @@ export function Stage() {
           e.grade.style.opacity = l.toFixed(3);
         }
       }
+      for (const k of risen.keys()) if (!near.includes(k)) risen.delete(k);
       setRoot(rootWanted);
       mark(want);
       // an incoming plate is still easing in (a late decode): keep stepping
@@ -1306,10 +1324,17 @@ export function Stage() {
       // mid-fade the OUTGOING shot keeps its video element, paused on its
       // current frame (`hold`): tearing it down at the first step of the fade
       // popped the plate (D4); it is released when the incoming plate has
-      // taken over (mix ≥ .98), and no decoder runs during the fade
+      // taken over, and no decoder runs during the fade. "Taken over" is the
+      // incoming layer's REAL opacity (>= .98), not the scroll's mix: a plate
+      // that lags the scroll (rise limit) or is not decoded yet has not.
       const fadingNow = mix > 0.02 && mix < 0.98;
-      const kv = mix <= 0.02 ? ka : mix >= 0.98 ? kb : ka;
-      const hold = fadingNow && kv >= 0;
+      let kv = mix <= 0.02 ? ka : mix >= 0.98 ? kb : ka;
+      let hold = fadingNow && kv >= 0;
+      const cur = videoRef.current.k;
+      if (kv >= 0 && cur >= 0 && cur !== kv && near.includes(cur) && (opacityOf.get(kv) ?? 0) < 0.98) {
+        kv = cur;
+        hold = true;
+      }
       let play = false;
       let host: HTMLElement | null = null;
       if (kv >= 0 && near.includes(kv) && ready.current.has(kv) && loopsRef.current[kv] && docOn) {
