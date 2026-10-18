@@ -11,7 +11,11 @@ import { Rise } from "@/components/site/world-motion";
  *  native <details> closed at ≥ 64rem, summary "The philosophy note"
  *  (`about.philosophy.summary`); phones keep it open in flow (words.css),
  *  no-JS opens it natively. When the summary may not render, the note
- *  stays open as before. */
+ *  stays open as before.
+ *  fix2c (M3): the SECOND paragraph (the personal one) is a PREVIEW fold at
+ *  >= 64rem with JS (components/site/bio-fold.tsx): the first three lines
+ *  show behind a fade and a chip-styled "Read more" opens the rest; the full
+ *  text is always in the DOM, unchanged. */
 export function AboutBio() {
   const summary = copyText("about.philosophy.summary");
   const more = copyText("about.bio.more");

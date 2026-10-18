@@ -375,7 +375,7 @@ export const page: readonly SectionEntry[] = [
       ],
     },
     tempo: "brisk",
-    estVh: { d: 2.629, t: 2.933 },
+    estVh: { d: 2.644, t: 2.951 },
     beats: [
       { id: "B22", at: 0, span: 67.7, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
       { id: "B23", at: 67.7, span: 72.3, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
@@ -411,7 +411,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 1.885, t: 2.156 },
+    estVh: { d: 1.896, t: 2.156 },
     beats: [
       { id: "B26", at: 0, span: 79.1, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 79.1, span: 97, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -463,7 +463,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     stage: { mode: "own" },
     tempo: "slow",
-    estVh: { d: 3.603, t: 5.082 },
+    estVh: { d: 3.543, t: 5.022 },
     // each screen's title + finale belong to that film's world (rations)
     beats: [
       { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
@@ -549,7 +549,7 @@ export const page: readonly SectionEntry[] = [
     },
     stage: { mode: "own" }, // campSticky; no letterbox, no subtitle
     tempo: "slow",
-    estVh: { d: 1.328, t: 1.734 },
+    estVh: { d: 1.283, t: 1.702 },
     beats: [
       { id: "B47", at: 0, span: 128.3, kind: "signature", timing: "scroll", star: true, weight: 2, feature: "P3-5" },
       { id: "B47-fireflies", at: 41.4, span: 86.9, kind: "stage-cue", timing: "scroll", feature: "P3-6" },
@@ -566,7 +566,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Principles", primary: true },
     stage: { mode: "opaque" }, // the map sheet
     tempo: "medium",
-    estVh: { d: 2.352, t: 2.607 },
+    estVh: { d: 2.308, t: 2.576 },
     beats: [
       { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       { id: "B53", at: 0, span: 77.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
