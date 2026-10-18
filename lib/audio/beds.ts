@@ -75,7 +75,7 @@ export const BEDS: Record<BedId, BedBuild> = {
      sparse courtyard FM chirps 2–5 kHz. No crowd murmur. */
   idiots: (k) => {
     const c = k.ctx;
-    wire(k.src(noiseSrc(c, "brown")), filter(c, "lowpass", 200), gain(c, 0.45), k.out);
+    wire(k.src(noiseSrc(c, "brown")), filter(c, "lowpass", 200), gain(c, 0.36), k.out);
     const fan = gain(c, 0.75);
     fan.connect(k.out);
     k.src(lfo(c, 5.5, 0.25, fan.gain));
@@ -83,7 +83,9 @@ export const BEDS: Record<BedId, BedBuild> = {
     k.src(osc(c, "sine", 140)).connect(gain(c, 0.03)).connect(fan);
     wire(k.src(noiseSrc(c, "white", 0.93)), filter(c, "bandpass", 500, 1.2), gain(c, 0.12), fan);
     // Room air and the blades' swish (300-2000 Hz): the part a laptop speaker plays.
-    const air = gain(c, 0.3);
+    // (fix2d S8: the brown floor 0.45 → 0.36 and the air 0.3 → 0.32 lift the
+    // share of power above 200 Hz from 36.8 % to about 44 % of the bed.)
+    const air = gain(c, 0.32);
     wire(k.src(noiseSrc(c, "white", 0.88)), filter(c, "bandpass", 700, 0.6), air, k.out);
     k.src(lfo(c, 0.07, 0.06, air.gain));
     wire(k.src(noiseSrc(c, "white", 1.07)), filter(c, "bandpass", 1500, 0.8), gain(c, 0.05), fan);

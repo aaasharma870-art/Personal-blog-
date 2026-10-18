@@ -15,7 +15,7 @@
      canPlayType, fetched after the first unmute, decoded to AudioBuffers,
      played by AudioBufferSourceNode. A 404 is a silent no-op.
    - Event listeners (lib/events.ts) voice the page: impact, transition:meet,
-     letterbox, hunt:found, egg:trigger, game:*, toy, post-credits, dc:*.
+     letterbox, hunt:found, egg:trigger, game:*, toy, post-credits.
    - `setRunning(false)` (Pause / RM / hidden tab / muted) silences the
      master at once, every cue is a no-op and every timer (bed events,
      re-triggered loops) stops until it runs again; the store suspends the
@@ -96,6 +96,9 @@ const STACK_MS = 100;
 const FOUND_SKIP_TAIL = 2.2;
 /** A cue that waits for a resume gives up after this long (s). */
 const LATE = 1.5;
+/** How long the credits' reel run-out sounds (s): the Snitch's flutter, if it
+ *  is asked inside this window, starts after it. */
+const REEL_TAIL = 1.6;
 
 export type EngineHooks = {
   /** Keep the context running `ms` longer even though motion just turned
@@ -639,7 +642,6 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   }
 
   /* — Page events → cues ———————————————————————————————————————————— */
-  const shots = (list?: readonly Shot[]) => list?.forEach(([id, dt]) => play(id, {}, dt));
 
   /** Cues the page starts (not the visitor): collected for one task, then
    *  only the newest BURST_MAX play, and never more than BURST_MAX starts per
@@ -648,10 +650,22 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   let autoQ: { id: CueId; delay: number; scene?: string }[] = [];
   let autoT = 0;
   const autoStarts: number[] = [];
+  /** A card's scene (its meet and its impact) is heard only while that card
+   *  is on screen when the queue flushes: a long jump (End, a scrollbar drag)
+   *  crosses cards the visitor never sees, and a scene played at a landing
+   *  spot that shows something else is noise. No such card in the page (the
+   *  sound lab): kept. */
+  function sceneShown(scene: string): boolean {
+    const el = document.querySelector<HTMLElement>(`[data-act-card="${scene}"]`);
+    if (!el) return true;
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight;
+  }
   function autoFlush(): void {
     autoT = 0;
-    // several cards crossed in one tick: only the last card's scene is heard
-    const lastScene = [...autoQ].reverse().find((q) => q.scene)?.scene;
+    // several cards crossed in one tick: only the last card's scene is heard,
+    // and only if that card is on screen
+    const lastScene = [...autoQ].reverse().find((q) => q.scene && sceneShown(q.scene))?.scene;
     const batch = autoQ.filter((q) => !q.scene || q.scene === lastScene).slice(-BURST_MAX);
     autoQ = [];
     const now = performance.now();
@@ -729,11 +743,15 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       if (!eggEnabled(d.id)) return;
       if (d.id === "nox") hooks.grace(1500);
       const list = EGG_CUES[d.id];
+      // the Snitch's wing flutter waits for the reel's run-out when the credits
+      // have just started it (a jump to the end: the two never play on top of each other)
+      const since = (performance.now() - (last.get("reel-runout") ?? -1e9)) / 1000;
+      const behind = d.id === "snitch" && since < REEL_TAIL ? REEL_TAIL - since : 0;
       if (list) {
         eggAt = performance.now();
-        eggTail = tailOf(list);
+        eggTail = tailOf(list) + behind;
       }
-      shots(list);
+      list?.forEach(([id, dt]) => play(id, {}, dt + behind));
     }),
   );
   on("game:start", (d) => {
@@ -759,12 +777,12 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     play("postcredits-whoosh");
     play("postcredits-chime", {}, 0.95);
   });
-  // The director's cut: no cue at its start (the films chapter's entry cue is
-  // the projector starting, where the page becomes one); the reel runs out
-  // ONCE, at a natural end, and not when the credits' entry cue just played it.
-  on("dc:stop", (d) => {
-    if (d.reason === "end" && performance.now() - (last.get("reel-runout") ?? -1e9) > 15000) play("reel-runout");
-  });
+  // The director's cut plays no cue of its own: not at its start (the films
+  // chapter's entry cue is the projector starting, where the page becomes
+  // one), and not at its end. The credits' reel run-out belongs to the bed
+  // follower (components/audio/bed-follower.tsx): it is held while the cut
+  // runs and plays once when the cut ends, is stopped or is paused with the
+  // page at the credits, never twice in a view.
   // Obliviate fires the same event to reset the Snitch: only a catch tings.
   window.addEventListener(SNITCH_EVENT, () => {
     if (snitchCaught()) play("snitch-ting");

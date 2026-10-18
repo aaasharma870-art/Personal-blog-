@@ -28,3 +28,39 @@
 [data-sound-toggle="on"] .sound-toggle__mute {
   opacity: 0;
 }
+
+/* — The Play card's sound button (components/intro/intro-sound.tsx, fix2d S6).
+     The header is inert under the prologue dialog; this is its twin inside the
+     skip row (it wears .intro-skip: Meta, muted → ink, 44 px, leaves with Skip).
+     Same gate as the header toggle: DESKTOP_FINE (the full media query). — */
+.intro-sound {
+  display: none;
+  align-items: center;
+  gap: 0.5em;
+  margin-right: 0.75rem;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .intro-sound {
+    display: inline-flex;
+  }
+}
+.intro-sound[hidden] {
+  display: none;
+}
+.intro-sound__icon {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.intro-sound__waves,
+.intro-sound__mute {
+  transition: opacity var(--dur-micro, 150ms) ease-out;
+}
+[data-intro-sound="off"] .intro-sound__waves,
+[data-intro-sound="on"] .intro-sound__mute {
+  opacity: 0;
+}
+/* the focus ring only once a key has been used, like Play and Skip (app/intro.css) */
+html:not(.intro-kbd) #intro-sound:focus-visible {
+  outline: none;
+}
