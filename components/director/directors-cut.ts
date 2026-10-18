@@ -21,21 +21,26 @@
    page PAUSES (the camera freezes where it is and hands the scroll over:
    "Paused · Resume" resumes from wherever the page is now); Esc exits; Space
    / K pause or resume, ← / → (and [ / ]) step a chapter; presses inside any
-   `[data-dc-keep]` (the header control group, the transport) are ignored;
+   `[data-dc-keep]` (the header control group, the transport, the Sound and
+   Eggs toggles) never pause it, and there only K, the arrows and [ / ] steer
+   (a focused button keeps Space and Enter for itself; the transport moves
+   focus to its Pause button when a tour starts, so Space pauses there);
    Pause / reduced motion, the fast lane, a game, the intro stop it; a hidden
    tab or a modal's scroll lock pauses it.
+   START: always from the top of the page (a hard cut through the dip when
+   the page is far down), so "about 1½ / 3 minutes" is true every time.
    SOUND: none of its own choosing: it starts with the sound as the visitor
    left it. `dc:start` / `dc:stop` are emitted (the engine voices only the
-   run-out at a natural end); the title sting plays at an act-title hold.
+   run-out at a natural end, and the one title sting per card as the card's
+   title appears: the camera adds no cue of its own).
    ========================================================================== */
 
 import { emit, on } from "@/lib/events";
 import { motionOffNow, onMotionOffChange } from "@/lib/flags";
-import { sound } from "@/lib/audio";
 import { getLenis, haltGlide, scrollToTarget, setCameraOwnsScroll, whenUnlocked } from "@/lib/smooth-scroll";
 import { markWorldFontsReady } from "@/lib/world-fonts";
 import type { WorldId } from "@/lib/worlds";
-import { inKeep, setDirectorsCutEnded, setDirectorsCutState, setPlayhead, type Tour } from "./api";
+import { inKeep, inPopover, setDirectorsCutEnded, START_GRACE_MS, setDirectorsCutState, setPlayhead, type Tour } from "./api";
 import { easeOf, easeOfMany, solveLeg, type El, type ElDip, type ElHold, type ElLeg, type Env, type Key, type Plan } from "./plan";
 import { maxScroll, planTour, type Cut } from "./storyboard";
 import { TOURS } from "./timing";
@@ -124,15 +129,24 @@ function followChapter(r: Run): void {
 
 /** One glide to `y1` shaped by `env`. Resolves true on arrival, false when
  *  cancelled (a pause / seek / stop) or when something else stopped it
- *  (a modal's scroll lock, the visitor's own scroll). */
-function glide(r: Run, y1: number, env: Env, easing?: (x: number) => number): Promise<boolean> {
+ *  (a modal's scroll lock, the visitor's own scroll).
+ *  `settle` (a glide that ends on a rest): returns where the target is NOW.
+ *  Layout still moves while the camera flies (sections rendering ahead of it),
+ *  so twice on the way in, half way and at four fifths, the glide is
+ *  re-aimed: its remaining distance changes by a smoothstep blend, so the
+ *  speed curve never jolts and the camera lands where the frame is, with no
+ *  corrective drift after the stop. */
+function glide(r: Run, y1: number, env: Env, easing?: (x: number) => number, settle?: () => number | null): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
     let settled = false;
     let raf = 0;
+    let target = y1;
+    const timers: number[] = [];
     const end = (ok: boolean) => {
       if (settled) return;
       settled = true;
       clearTimeout(cap);
+      timers.forEach((t) => clearTimeout(t));
       cancelAnimationFrame(raf);
       if (r.cancelGlide === cancel) r.cancelGlide = null;
       resolve(ok);
@@ -141,11 +155,35 @@ function glide(r: Run, y1: number, env: Env, easing?: (x: number) => number): Pr
     r.cancelGlide = cancel;
     const dur = Math.max(0.05, env.T);
     // a glide that never reports (stopped by a lock, overridden): near its end = arrived
-    const cap = window.setTimeout(() => end(Math.abs(window.scrollY - y1) < 12), dur * 1000 + 1500);
+    const cap = window.setTimeout(() => end(Math.abs(window.scrollY - target) < 12), dur * 1000 + 1500);
     const ease = easing ?? easeOf(env);
     const l = getLenis();
     if (l) {
+      const from = window.scrollY;
+      const t0 = performance.now();
       l.scrollTo(y1, { duration: dur, easing: ease, force: true, onComplete: () => end(true) });
+      if (settle && dur > 0.8) {
+        const aim = () => {
+          if (settled) return;
+          const yNew = settle();
+          if (yNew == null || Math.abs(yNew - target) < 6) return;
+          const k = Math.min(0.9, (performance.now() - t0) / (dur * 1000));
+          const was = target;
+          const p0 = from + (was - from) * ease(k);
+          const delta = yNew - was;
+          if (Math.abs(yNew - p0) < 2) return;
+          target = yNew;
+          const rem = Math.max(0.1, dur * (1 - k));
+          const blend = (u: number): number => {
+            const kk = k + u * (1 - k);
+            const sm = u * u * (3 - 2 * u);
+            return (from + (was - from) * ease(kk) + delta * sm - p0) / (yNew - p0);
+          };
+          note(`aim:${Math.round(delta)}@${k.toFixed(2)}`);
+          l.scrollTo(yNew, { duration: rem, easing: blend, force: true, onComplete: () => end(true) });
+        };
+        timers.push(window.setTimeout(aim, dur * 500), window.setTimeout(aim, dur * 800));
+      }
       return;
     }
     const y0 = window.scrollY;
@@ -199,21 +237,13 @@ const warmWorld = (k: Key | undefined): void => {
 /* — the elements ——————————————————————————————————————————————————— */
 
 async function doHold(r: Run, g: number, el: ElHold, entry: Entry | null): Promise<boolean> {
-  const plan = r.plan!;
-  const key = plan.keys[el.key];
   const left = entry?.holdLeft ?? el.dur;
   enterChapter(r, el);
   setSeg(r, el.t0 + (el.dur - left), el.t0 + el.dur, left);
   r.holdEnd = performance.now() + left * 1000;
   r.holdY = window.scrollY;
-  let ms = left * 1000;
-  if (key.sting && entry?.holdLeft == null) {
-    // the card's damped progress settles first, then the title lands
-    const settle = Math.min(ms, key.settle * 1000);
-    if (settle > 0 && !(await wait(r, settle))) return false;
-    sound.cue("title-sting");
-    ms -= settle;
-  }
+  // no sound of its own here: the engine voices one title sting per card (lib/audio/engine.ts, phase "m")
+  const ms = left * 1000;
   if (ms > 0 && !(await wait(r, ms))) return false;
   return g === r.gen && !r.stopped;
 }
@@ -271,18 +301,32 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
     const waited = await wait(r, main.T * 1000);
     return waited && g === r.gen && !r.stopped ? last - first + 1 : 0;
   }
-  const ok = await glide(r, at, { v0: envs[0].v0, v1: envs[envs.length - 1].v1, c: 0, r1: 0, r2: 0, T }, ease);
+  // a span that ends on a rest re-aims at the live frame on the way in (see glide)
+  const toRest = lastLeg.env.v1 === 0 ? () => liveY(plan.keys[lastLeg.b]) : undefined;
+  const ok = await glide(r, at, { v0: envs[0].v0, v1: envs[envs.length - 1].v1, c: 0, r1: 0, r2: 0, T }, ease, toRest);
   if (g !== r.gen || r.stopped) return 0;
   if (!ok) {
-    // stopped by something else (a scroll lock, the visitor's scroll): pause
-    pause();
-    return 0;
+    // The glide ended short and no input said why (an input, a scroll lock, a hidden tab all
+    // bump `gen` and returned above): layout moved under it (the page got shorter near the end,
+    // Lenis clamped the target). Glide the rest of the way once; only a second miss pauses.
+    const yT = clampY(liveY(plan.keys[lastLeg.b]));
+    const rest = yT - window.scrollY;
+    if (Math.abs(rest) > 12) {
+      note(`reglide:${Math.round(rest)}`);
+      const again = await glide(r, yT, flyEnv(Math.abs(rest), A));
+      if (g !== r.gen || r.stopped) return 0;
+      if (!again) {
+        pause();
+        return 0;
+      }
+    }
   }
-  // layout moved under the glide and it ends on a rest: one short corrective glide
+  // layout moved under the glide and it ends on a rest: one short corrective glide, but only for a
+  // real miss (the glide re-aims on the way in; a few px of settle are not worth a visible drift)
   if (lastLeg.env.v1 === 0) {
     const yNow = liveY(plan.keys[lastLeg.b]);
     const off = yNow - window.scrollY;
-    if (Math.abs(off) > 8) {
+    if (Math.abs(off) > 40) {
       const fix = solveLeg(Math.abs(off), 0, 0, 300, A);
       const ok2 = await glide(r, yNow, fix);
       if (g !== r.gen || r.stopped) return 0;
@@ -395,7 +439,7 @@ function launch(r: Run, loc: { idx: number; entry: Entry }): void {
 /** Seconds a fly-to takes for distance d. */
 const flyEnv = (d: number, a: number): Env => solveLeg(d, 0, 0, Math.max(300, d / 0.9), a);
 
-async function begin(r: Run, fromTop: boolean): Promise<void> {
+async function begin(r: Run): Promise<void> {
   // a closing menu / palette releases its scroll lock first (a glide begun
   // while Lenis is stopped would be cancelled by its start())
   await whenUnlocked();
@@ -414,26 +458,22 @@ async function begin(r: Run, fromTop: boolean): Promise<void> {
   setPlayhead(() => playheadOf(r));
   const vh = window.innerHeight;
   const y = window.scrollY;
-  if (fromTop && y > 2) {
+  // the tour is a film: it always opens at the top, so "about 1½ / 3 minutes" is true
+  // every time. A little way down (even a few px) the camera flies up first; further
+  // down, the cut (the dip to dark) takes it there; at the top it simply starts
+  if (y > 2) {
     if (y > 1.2 * vh) await scrollToTarget(0, { cut: true, history: false });
     else {
       const ok = await glide(r, 0, flyEnv(y, TOURS[r.tour].a));
       if (!ok && !r.stopped) return;
     }
     if (r.stopped) return;
-    launch(r, { idx: 0, entry: { rest: true } });
-    return;
   }
-  if (y < 0.5 * vh) {
-    launch(r, { idx: 0, entry: { rest: true } });
-    return;
-  }
-  // from here: continue the tour from where the page is
-  launch(r, locate(r, y));
+  launch(r, { idx: 0, entry: { rest: true } });
 }
 
 /** Start a run (./api.ts calls it from the click). */
-export function play(tour: Tour, fromTop = false): void {
+export function play(tour: Tour): void {
   if (run) return;
   if (motionOffNow()) {
     setDirectorsCutState(false);
@@ -468,6 +508,8 @@ export function play(tour: Tour, fromTop = false): void {
   const opts = { capture: true, passive: true } as const;
   const onInput = (e: Event) => {
     if (inKeep(e)) return;
+    // the second click of a double click on the chooser's button lands on the page, just after the start
+    if (e.type === "pointerdown" && performance.now() - r.startedAt < START_GRACE_MS) return;
     if (!r.plan) return stop(e.type);
     freeze(r, e.type);
   };
@@ -478,23 +520,31 @@ export function play(tour: Tour, fromTop = false): void {
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Escape") return stop("escape");
     if (e.ctrlKey || e.metaKey || e.altKey || e.key === "Tab" || e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
-    if (inKeep(e)) return;
     const t = e.target;
     if (t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-    if (!r.plan) return stop("key");
+    if (inKeep(e)) {
+      // the control group, the transport, the Sound / Eggs toggles: a press never pauses the cut,
+      // and a focused button keeps Space and Enter. K, the arrows and [ / ] still steer from there
+      // (focus lives on the transport's Pause button), except inside the dock's open menus
+      if (inPopover(e) || !r.plan) return;
+      if (!/^(k|K|ArrowLeft|ArrowRight|\[|\])$/.test(e.key)) return;
+    } else if (!r.plan) return stop("key");
     switch (e.key) {
       case " ":
       case "k":
       case "K":
         e.preventDefault();
+        if (e.repeat) return;
         return r.paused ? resume() : pause();
       case "ArrowRight":
       case "]":
         e.preventDefault();
+        if (e.repeat) return;
         return step(1);
       case "ArrowLeft":
       case "[":
         e.preventDefault();
+        if (e.repeat) return;
         return step(-1);
       case "ArrowDown":
       case "ArrowUp":
@@ -539,7 +589,7 @@ export function play(tour: Tour, fromTop = false): void {
   }, 1000);
 
   emit("dc:start");
-  void begin(r, fromTop).catch(() => stop("error"));
+  void begin(r).catch(() => stop("error"));
 }
 
 /* — pause, resume, seek ———————————————————————————————————————————— */

@@ -313,7 +313,8 @@ export function ControlDock() {
             <span className="dock-f">{cutLabel}</span>
             <span className="dock-s">{cutShort}</span>{" "}
             <span className="dock-chip">{dc.running ? onWord : offWord}</span>
-            {!dc.running && !off ? <ChevronDown className="dock-caret" aria-hidden="true" strokeWidth={2.25} /> : null}
+            {/* while motion is off the caret keeps its room (hidden): pausing never moves the dock */}
+            {!dc.running ? <ChevronDown className={off ? "dock-caret invisible" : "dock-caret"} aria-hidden="true" strokeWidth={2.25} /> : null}
           </button>
           {open === "cut" ? (
             <Suspense fallback={null}>

@@ -39,6 +39,9 @@ type MotionToggleProps = {
   word?: string;
   /** A second, quieter line under `word` (the header's "Motion paused"). */
   sub?: string;
+  /** The widest `sub` it ever shows: its width is kept even while only `word` shows, so the
+   *  words changing ("Pause" / "Resume · Motion paused") never moves what sits beside the button. */
+  reserve?: string;
   className?: string;
 };
 
@@ -52,6 +55,7 @@ export function MotionToggle({
   showLabel = false,
   word,
   sub,
+  reserve,
   className,
 }: MotionToggleProps) {
   const { paused, reduced, setPaused } = useMotionPreference();
@@ -88,15 +92,18 @@ export function MotionToggle({
       </svg>
       <span className={showLabel ? "type-meta" : "sr-only"}>{label}</span>
       {word && !showLabel ? (
-        <span aria-hidden="true" className="dock-word type-meta">
+        <span aria-hidden="true" className={cn("dock-word type-meta", reserve && "dock-word-fixed")}>
           {sub ? (
             <span className="dock-stack">
               <span>{word}</span>
               <span className="dock-sub">{sub}</span>
             </span>
+          ) : reserve ? (
+            <span>{word}</span>
           ) : (
             word
           )}
+          {reserve ? <span className="dock-sub dock-ghost">{reserve}</span> : null}
         </span>
       ) : null}
     </button>

@@ -11,14 +11,16 @@
    playing. "quick" is the ~90-second skim of the best parts, "full" the
    ~3-minute main cut; both lengths are COMPUTED from the live page (the
    plan's total shows in `state.total` once a run starts, and
-   `directorsCutLengths()` gives both before one does).
+   `directorsCutLengths()` gives both before one does). A run ALWAYS starts
+   at the top of the page (a hard cut through the dip when the page is far
+   down), so those lengths are true every time.
    It does NOT touch the sound: the cut starts with the sound as the visitor
    left it (the old click-borrow that unmuted is gone).
    stopDirectorsCut(reason) ends a run (Esc, the switch, Pause, the fast
    lane, a game, the end). A wheel / touch / key / click on the page PAUSES
    it instead (the transport shows "Paused · Resume"); presses inside any
-   `[data-dc-keep]` element (the header control group, the transport) never
-   pause it. pauseDirectorsCut / resumeDirectorsCut / seekDirectorsCut /
+   `[data-dc-keep]` element (the header control group, the transport, the
+   Sound and Eggs toggles) never pause it. pauseDirectorsCut / resumeDirectorsCut / seekDirectorsCut /
    stepDirectorsCut / restartDirectorsCut drive the transport.
    useDirectorsCut() reads the state ({ running }: false on the server and in
    hydration). The progress BAR is not React state: the transport reads
@@ -48,7 +50,7 @@ export type DirectorsCutState = {
   chapters: readonly string[];
   /** chapter start seconds (the transport's ticks), parallel to `chapters` */
   starts: readonly number[];
-  /** the run finished: the transport offers Play again / Skip to the research for a while */
+  /** the run finished: the transport offers Replay the tour / Skip to the research for a while */
   ended: boolean;
 };
 
@@ -64,12 +66,27 @@ const STOPPED: DirectorsCutState = {
   ended: false,
 };
 
-/** How long the end state stays up. */
+/** How long the end state stays up (it waits while the pointer or the keyboard focus is on it). */
 const END_MS = 12000;
+/** A press on the page this soon after a start is the second click of a double click on the
+ *  chooser's button (the chooser has closed, so it lands on the page): it never pauses or
+ *  cancels the run. A wheel, a touch and the keys still do. */
+export const START_GRACE_MS = 600;
+/** Least time left once the pointer or the focus leaves the end card. */
+const END_MIN_MS = 4000;
 
 let state: DirectorsCutState = STOPPED;
 let wantedTour: Tour = "full";
 let endTimer: ReturnType<typeof setTimeout> | undefined;
+/** when the end state goes away (ms, performance.now clock); 0 while it waits */
+let endDue = 0;
+/** while the end card shows: the fast lane, Replay intro and the page's end button (all emit
+ *  `fastlane`) take it away with them, so a stale card never survives them */
+let offEndFast: (() => void) | null = null;
+const dropEndFast = (): void => {
+  offEndFast?.();
+  offEndFast = null;
+};
 let playhead: () => number = () => 0;
 const listeners = new Set<() => void>();
 
@@ -85,18 +102,19 @@ function commit(next: DirectorsCutState): void {
 
 /** The player only: publish the running state (progress via `patch`). */
 export function setDirectorsCutState(running: boolean, patch: Partial<DirectorsCutState> = {}): void {
+  clearTimeout(endTimer);
+  endDue = 0;
+  dropEndFast();
   if (!running) {
     commit(STOPPED);
     return;
   }
-  clearTimeout(endTimer);
   commit({ ...(state.running ? state : STOPPED), running: true, tour: wantedTour, ...patch, ended: false });
 }
 
 /** The player only: a run reached its end (the end state shows for a while). */
 export function setDirectorsCutEnded(): void {
   const s = state;
-  clearTimeout(endTimer);
   commit({
     ...STOPPED,
     tour: s.tour ?? wantedTour,
@@ -107,14 +125,41 @@ export function setDirectorsCutEnded(): void {
     chapter: s.chapters.length - 1,
     ended: true,
   });
+  armEnd(END_MS);
+  dropEndFast();
+  offEndFast = on("fastlane", () => clearDirectorsCutEnded());
+}
+
+function armEnd(ms: number): void {
+  clearTimeout(endTimer);
+  endDue = performance.now() + ms;
   endTimer = setTimeout(() => {
+    dropEndFast();
     if (state.ended) commit(STOPPED);
-  }, END_MS);
+  }, ms);
+}
+
+/** The end card waits while the pointer or the keyboard focus is on it
+ *  (`on`), and goes after what is left of its time (at least a few seconds)
+ *  once they leave. */
+export function holdDirectorsCutEnd(on: boolean): void {
+  if (!state.ended) return;
+  if (on) {
+    if (endDue > 0) {
+      clearTimeout(endTimer);
+      endTimer = undefined;
+      endDue = -Math.max(END_MIN_MS, endDue - performance.now());
+    }
+    return;
+  }
+  if (endDue < 0) armEnd(-endDue);
 }
 
 /** Dismiss the end state. */
 export function clearDirectorsCutEnded(): void {
   clearTimeout(endTimer);
+  endDue = 0;
+  dropEndFast();
   if (state.ended) commit(STOPPED);
 }
 
@@ -157,15 +202,19 @@ const loadPlayer = (): Promise<Player> => {
 /** Set while a start waits for the player chunk: a stop in that window cancels it. */
 let cancelPending: (() => void) | null = null;
 
-/** An event inside the control group or the transport never pauses the cut. */
+/** An event inside the control group, the transport or a header toggle (Sound, Eggs)
+ *  never pauses the cut. */
 export const KEEP = "[data-dc-keep]";
 export const inKeep = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest(KEEP));
+/** The dock's open menus (the chooser, Games): their keys are their own. */
+export const inPopover = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest("[data-dock-pop]"));
 
 const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 
-/** Start a guided tour (call it from the click). */
-export function startDirectorsCut(tour: Tour = "full", o: { top?: boolean } = {}): void {
-  if (!directorsCutAvailable() || state.running) return;
+/** Start a guided tour (call it from the click). Always from the top of the
+ *  page. Returns whether it started (the caller's focus return depends on it). */
+export function startDirectorsCut(tour: Tour = "full"): boolean {
+  if (!directorsCutAvailable() || state.running) return false;
   wantedTour = tour;
   setDirectorsCutState(true, { tour, paused: false, elapsed: 0, total: 0, chapter: -1, chapters: [], starts: [] });
   // input while the player loads (the palette and the chapter select do not
@@ -173,8 +222,10 @@ export function startDirectorsCut(tour: Tour = "full", o: { top?: boolean } = {}
   // run would ignore it)
   let cancelled = false;
   const opts = { capture: true, passive: true } as const;
+  const t0 = performance.now();
   const cancel = (e: Event) => {
     if (inKeep(e)) return;
+    if (e.type === "pointerdown" && performance.now() - t0 < START_GRACE_MS) return;
     cancelled = true;
   };
   const offFast = on("fastlane", () => {
@@ -194,13 +245,14 @@ export function startDirectorsCut(tour: Tour = "full", o: { top?: boolean } = {}
     (m) => {
       settle();
       if (cancelled) abort();
-      else m.play(tour, Boolean(o.top));
+      else m.play(tour);
     },
     () => {
       settle();
       abort();
     },
   );
+  return true;
 }
 
 /** Stop a running director's cut (no-op when none runs). */
@@ -238,7 +290,7 @@ export function stepDirectorsCut(dir: 1 | -1): void {
 export function restartDirectorsCut(): void {
   const tour = state.tour ?? wantedTour;
   clearDirectorsCutEnded();
-  startDirectorsCut(tour, { top: true });
+  startDirectorsCut(tour);
 }
 
 /** The two tours' computed lengths in seconds, from the live page (the

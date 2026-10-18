@@ -72,9 +72,9 @@ function CutChooser({ box, onDone }: BoxProps) {
     { tour: "full", title: text("dock.cut.full"), sees: text("dock.cut.full.sees") },
   ];
   const start = (tour: Tour) => {
-    // inside the click (the tour starts from the click; the sound stays as set)
-    startDirectorsCut(tour);
-    onDone(true);
+    // a tour that starts takes the focus itself (its Pause button: Space / K / arrows steer it),
+    // so the dock does not hand it back to the switch; one that cannot start keeps the old return
+    onDone(!startDirectorsCut(tour));
   };
   return (
     <div ref={box} className="dock-pop" role="dialog" aria-labelledby={titleId} tabIndex={-1} data-dock-pop="cut" data-lenis-prevent="">

@@ -52,8 +52,6 @@ export type Key = {
   cap?: number;
   /** a dip to dark follows this key (it is an `edge-out`) */
   dip?: boolean;
-  /** play the title sting when the hold lands */
-  sting?: boolean;
   /** the live y of this key (null: gone); set by the storyboard */
   resolve?: () => number | null;
 };
