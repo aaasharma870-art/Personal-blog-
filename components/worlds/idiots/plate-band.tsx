@@ -17,6 +17,7 @@ import type { CameraSpec } from "@/components/primitives/camera";
 import { LivePlate } from "@/components/primitives/live-plate";
 import { MediaFrame } from "@/components/primitives/media-frame";
 import { SceneCaption } from "@/components/primitives/scene-caption";
+import { WeatherLayer } from "@/components/stage/weather-layer";
 import { useEnterOnce, type EnterPhase } from "@/components/primitives/use-enter-once";
 
 /* ============================================================================
@@ -252,13 +253,15 @@ const renderSlot = (s: Slot, phase: EnterPhase) => (typeof s === "function" ? s(
 /** band: 4:3 → 21:9, rounded, in the page column · bleed: 4:3 → 3:1, full
  *  width, square edges (the work head: 3:1 keeps the heading and its first
  *  numbers in the first screen; LENGTH-1) · inset: 16:9, rounded. */
-export type PlateShape = "band" | "band3" | "bleed" | "inset";
+export type PlateShape = "band" | "band3" | "bleed" | "inset" | "side";
 const SHAPE: Record<PlateShape, { frame: string; box: string }> = {
   band: { frame: "sm:overflow-hidden sm:rounded-frame", box: "aspect-[4/3] rounded-frame sm:aspect-[21/9] sm:rounded-none" },
   // band3: the band at 3:1 (the Optuna head, LENGTH-2: 562 -> 437 px at 1440)
   band3: { frame: "sm:overflow-hidden sm:rounded-frame", box: "aspect-[4/3] rounded-frame sm:aspect-[3/1] sm:rounded-none" },
   bleed: { frame: "", box: "aspect-[4/3] sm:aspect-[3/1]" },
   inset: { frame: "", box: "aspect-video rounded-frame" },
+  // side: the work head's right column (fix2c): 5:4, rounded, beside the text
+  side: { frame: "", box: "aspect-[5/4] rounded-frame" },
 };
 
 export function PlateBand({
@@ -460,6 +463,51 @@ export function HeadBand({
       className={className}
       caption={<SceneCaption k={captionKey} place="bl" />}
       captionClassName="px-gutter sm:absolute sm:inset-y-0 sm:left-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:right-[calc(max(0px,(100%_-_var(--container-page))/2)_+_var(--spacing-gutter)_-_24px)] sm:px-0"
+    />
+  );
+}
+
+/**
+ * SidePlate — the work head's RIGHT COLUMN (fix2c, "add visuals": the first
+ * screen after the hero CTA used to be the h2 and 45 % empty grid). The ICE
+ * stone corridor (iconic-corridor-alt, the head plate it was made for, S08;
+ * ALT iconic-corridor with its L10 loop), 5:4, rounded, beside the h2 at ≥
+ * 64rem (the host hides it below). Existing machinery only: the settle
+ * entrance on the 90 % line (never armed at opacity 0), the slow scroll drift
+ * 1.05 → 1 of a LivePlate camera (a loop's plate stays still), and 3 Idiots
+ * chalk dust rising in the beam (WeatherLayer, image zone; ≤ 16 sprites, gone
+ * under reduced motion and Pause). 0 video bytes on the DEFAULT side (no loop
+ * is registered to the alt plate); the ALT plays L10 through the decoder
+ * lock. Decorative plate; the caption (under it) names the scene.
+ */
+export function SidePlate({
+  spec,
+  choice,
+  pieceKey,
+  captionKey,
+  className,
+}: {
+  spec: HeadPlate;
+  choice: VariantChoice;
+  pieceKey: string;
+  captionKey: CaptionKey;
+  className?: string;
+}) {
+  const variant = useVariant(choice, pieceKey);
+  const id = headPlateOf(spec, variant);
+  if (!id) return null;
+  const camera: CameraSpec = { kind: "drift", scale: [1.05, 1], focal: resolveMedia(id)?.focal ?? [0.5, 0.5], driver: "flow" };
+  return (
+    <PlateBand
+      plate={id}
+      entrance="slow-settle"
+      shape="side"
+      sizes="(min-width: 64rem) 40vw, 100vw"
+      enterAt={0.9}
+      camera={camera}
+      className={className}
+      overlay={<WeatherLayer kind="chalk" zone="image" />}
+      caption={<SceneCaption k={captionKey} place="under" />}
     />
   );
 }

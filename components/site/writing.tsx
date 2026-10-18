@@ -8,6 +8,7 @@ import { Meta, WorldSection, recedeInto } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 import { JournalVignette, NibTitle } from "@/components/site/rdr2-graphite";
 import { SceneCaption } from "@/components/primitives/scene-caption";
+import { WeatherLayer } from "@/components/stage/weather-layer";
 import { EggHotspot } from "@/components/eggs/egg-hotspot";
 import { FlyThrough } from "@/components/words/fly-through";
 import { JournalSpread } from "@/components/worlds/rdr2/journal-spread";
@@ -144,7 +145,12 @@ export function Writing({ entry, number }: SectionProps<"index">) {
             {...planeAttrs(dusk.tone, dusk.world)}
             {...beatAttrs("B46", { weight: 1 })}
             className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent,#000_85%)] boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]"
-          />
+          >
+            {/* fix2c: the dusk is no longer an empty 300 px: the camp's
+                fireflies (the stage's own sprites; a slow blink, <= 16, gone
+                under reduced motion and Pause) rise in it as the paper dims */}
+            <WeatherLayer kind="fireflies" zone="frame" count={9} />
+          </div>
         </>
       ) : null}
     </WorldSection>

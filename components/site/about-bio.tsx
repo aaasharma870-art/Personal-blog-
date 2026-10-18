@@ -1,6 +1,7 @@
 import { about } from "@/lib/content";
 import { copyText, copyVisible } from "@/lib/sections";
 import { Collapse } from "@/components/primitives/collapse";
+import { BioFold } from "@/components/site/bio-fold";
 import { Meta } from "@/components/site/world-kit";
 import { Rise } from "@/components/site/world-motion";
 
@@ -14,6 +15,7 @@ import { Rise } from "@/components/site/world-motion";
 export function AboutBio() {
   const summary = copyText("about.philosophy.summary");
   const more = copyText("about.bio.more");
+  const less = copyText("about.bio.less");
   const note = (
     <figure>
       <figcaption>
@@ -27,12 +29,11 @@ export function AboutBio() {
       <Rise>
         <p className="type-body text-fg">{about.bio}</p>
         {copyVisible(more) ? (
-          // LENGTH-2: the second paragraph sits behind a visible "Read more"
-          // on desktop (closed <details>, text in the DOM; phones keep it
-          // open in flow)
-          <Collapse summary={more.text} className="mt-tier-group" summaryClassName="mb-tier-group">
-            <p className="type-body text-fg-muted">{about.bioSecond}</p>
-          </Collapse>
+          // fix2c (M3): the second paragraph, the personal one, is a PREVIEW
+          // fold on desktop: its first lines show behind a fade with a
+          // visible "Read more" button (the whole text stays in the DOM;
+          // phones and no-JS keep it in full, in flow)
+          <BioFold className="mt-tier-group" text={about.bioSecond} more={more.text} less={less.text} />
         ) : (
           <p className="mt-tier-group type-body text-fg-muted">{about.bioSecond}</p>
         )}

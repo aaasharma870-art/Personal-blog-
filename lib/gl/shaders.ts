@@ -62,7 +62,12 @@ float HI(){return step(1e-4,uInset.x+uInset.y+2.-uInset.z-uInset.w);}
 vec4 inset(vec3 c,float k){float d=PL(),h=.5/uRes.y,bw=mix(.05,HI()>0.?h:-.01,k);
 c=mix(c,vec3(.9,.85,.74),S(-bw-2.*h,-bw,d));return vec4(mix(c,uDeep,HI()*S(h,3.*h,d)),1.);}
 vec3 veil(vec2 q,float k){float n=fbm(q*vec2(A,1.)*vec2(4.,10.)+vec2(uP*3.,0.));float s=N(q*vec2(A,1.)*220.);
-return mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.8+.3*s),k);}
+// fix2c (L2): the veil used to be a flat bright slab (foam .93, chalk .88 with
+// full-strength speckle): the harshest frame on a skim. It now stays in the
+// dark world: the same clouds and speckle blended 36 % into the world's deep,
+// the speckle halved, so the wipe reads as smoke and chalk dust, not a flash.
+vec3 v=mix(mix(vec3(.5,.7,.72),vec3(.93,.97,.96),n),vec3(.88,.89,.86)*(.9+.15*s),k);
+return mix(uDeep,v,.36);}
 `;
 
 const SHAPES = `
@@ -102,7 +107,7 @@ return vec4(mix(o2,c,1.-S(.5*r,r,d)),1.);}`,
 float j=(fbm(G2()*9.+vec2(t*3.,0.))-.5)*.08,dx=f-uv.x-j,nr=exp(-abs(dx)*14.);vec2 q=uv;q.x+=nr*.03*sign(dx);q.y-=nr*.02;
 float b=exp(-pow(D(uv,vec2(.62,uRow+.16))/.24,2.))*uKraken*S(uRow-.02,uRow+.04,uv.y);q.y+=b*.05;
 vec3 c=mix(F(q)*(1.-.7*b)*(1.+.25*nr),veil(uv,0.),S(-.015,.03,dx));
-return vec4(mix(c,vec3(.95,1.,1.),exp(-dx*dx/3e-4)*.85),1.);}`,
+return vec4(mix(c,vec3(.95,1.,1.),exp(-dx*dx/3e-4)*.55),1.);}`,
 
   // 3 Idiots chalk IN: foam turns to chalk speckle; a noisy diagonal edge
   // uncovers the hall

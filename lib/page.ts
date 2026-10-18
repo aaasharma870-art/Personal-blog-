@@ -185,7 +185,7 @@ export type SectionEntry =
   | Entry<"story", StoryProps>
   /** `head`: the full-bleed band above the h2 (M2 fix round 3: Virus's
    *  astronaut pen on his desk, iconic-pen-alt). */
-  | Entry<"gauntlet", { board: MediaId; head?: HeadPlate }>
+  | Entry<"gauntlet", { board: MediaId; head?: HeadPlate; side?: HeadPlate }>
   /** `head`: the band at the chapter's head, before its facts (M2 finish:
    *  optuna-screener's lecture-hall board, IC-3I-05). */
   | Entry<"chapter", { projectId: string; cover: CodeRef; appendix?: readonly ChapterAppendix[]; head?: HeadPlate }>
@@ -333,7 +333,9 @@ export const page: readonly SectionEntry[] = [
     // "generic architecture"): Virus's astronaut pen on his desk — the
     // OTHER pen plate from the kill-list's (platePick swaps sides per
     // variant, so the two sections never show the same picture in one view)
-    props: { board: "MV-06", head: { media: "iconic-pen-alt" } },
+    // side (fix2c): the head's right column, the ICE corridor (the plate made
+    // for this head, S08); the pen band stays above it
+    props: { board: "MV-06", head: { media: "iconic-pen-alt" }, side: { media: "iconic-corridor-alt" } },
   },
   {
     id: "trading-algos",
