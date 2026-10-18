@@ -57,6 +57,9 @@
    holds its frame on #intro-still, frees its decoder, then the flight's
    first frame crossfades in (t.liveFade). Until L05 is registered the
    play screen is the still, as before.
+   SOUND (fix2d S6): #intro-sound is React's (components/intro/intro-sound.tsx):
+   the header's sound switch, reachable under the dialog. The controller only
+   puts it in the Tab cycle (Play, Sound, fast lane, Skip) while it shows.
    FAST LANE (PHASE3-SPEC §11.3): #intro-fastlane ("Skip to the research",
    DESKTOP_WIDE) = dismiss(), then — once the page is live — the jump
    (IntroBridge: scrollToTarget; before hydration the browser's own hash
@@ -100,7 +103,7 @@
   var BOLT = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#e9b44c" d="M19.5 1.5 6.5 18h8.2l-2.9 12.5L25.5 13h-8.3z"/></svg>');
 
-  var C, intro, stage, film, play, skip, fast, lensL, lensR, statusEl, statusText, broom;
+  var C, intro, stage, film, play, skip, fast, snd, lensL, lensR, statusEl, statusText, broom;
   var st = "idle", inited = false, hydrated = !!w.__introHydrated;
   var cv = null, cx = null, dpr = 1, W = 0, H = 0;
   var plate = null, fitP = null, img = null, imgFor = "", imgOk = false, showPlate = false, plateAt = -1;
@@ -210,6 +213,7 @@
     play = d.getElementById("intro-play");
     skip = d.getElementById("intro-skip");
     fast = d.getElementById("intro-fastlane");
+    snd = d.getElementById("intro-sound"); // optional: the Play card's sound switch (React, not ours)
     if (!stage || !play || !skip) return false;
     // the viewport-sized picture in the middle third of the 300% stage
     // (app/intro.css): every layer the controller draws lives in it
@@ -1909,6 +1913,8 @@
     dismiss("fastlane");
   }
   function fastOn() { return !!(fast && w.matchMedia && w.matchMedia("(min-width: 64rem)").matches); }
+  /** The sound switch is in the Tab cycle only while it shows (DESKTOP_FINE, Web Audio). */
+  function sndOn() { return !!(snd && snd.getClientRects().length); }
 
   /** S4 / end of SX: release everything, hand the page back. Light work on
    *  the played path: the video, `inert` and the hero's media re-render are
@@ -2040,7 +2046,7 @@
       e.preventDefault();
       e.stopPropagation();
       if (st === "leaving" || exiting()) return;
-      var list = (st === "armed" ? [play] : []).concat(fastOn() ? [fast, skip] : [skip]), i = list.indexOf(d.activeElement);
+      var list = (st === "armed" ? [play] : []).concat(sndOn() ? [snd] : [], fastOn() ? [fast, skip] : [skip]), i = list.indexOf(d.activeElement);
       focus(i < 0 ? list[0] : list[(i + (e.shiftKey ? list.length - 1 : 1)) % list.length]);
       return;
     }

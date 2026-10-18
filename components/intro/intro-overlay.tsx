@@ -4,6 +4,7 @@ import { FilmQuote } from "@/components/site/film-quote";
 import { Lettered, SceneCaption } from "@/components/primitives/scene-caption";
 import { beatAttrs } from "@/lib/beats";
 import { BROOM_SVG } from "./broom";
+import { IntroSound } from "./intro-sound";
 import type { IntroModel, IntroTitles } from "./intro-model";
 
 /* ============================================================================
@@ -59,6 +60,10 @@ import type { IntroModel, IntroTitles } from "./intro-model";
      act title is the registered lettering through <Lettered>. aria-hidden
      like the captions. Played path only: no JS / RM / Pause / ?skip /
      seen / a dismissal never show them.
+   - SOUND (fix2d S6): a small "Sound off / on" button in the skip row
+     (./intro-sound.tsx), the header toggle's twin: the header is inert under
+     the dialog, so without it a first-time visitor could not hear the intro.
+     Muted by default; DESKTOP_FINE only; in the Tab cycle (the controller).
    - FAST LANE (PHASE3-SPEC §11.3): "Skip to the research" in the skip row,
      DESKTOP_WIDE only (app/intro.css). The controller treats it as
      dismiss() then the jump (IntroBridge: scrollToTarget). A real link to
@@ -159,6 +164,9 @@ export function IntroOverlay({ model }: { model: IntroModel }) {
       </div>
 
       <div className="intro-top">
+        {/* fix2d S6: the sound switch of the header, reachable on the first
+            pass (the page behind is inert); DESKTOP_FINE only (sound.css) */}
+        <IntroSound />
         {model.fastLane ? (
           <a
             id="intro-fastlane"

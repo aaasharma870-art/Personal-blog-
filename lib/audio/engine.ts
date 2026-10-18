@@ -15,7 +15,7 @@
      canPlayType, fetched after the first unmute, decoded to AudioBuffers,
      played by AudioBufferSourceNode. A 404 is a silent no-op.
    - Event listeners (lib/events.ts) voice the page: impact, transition:meet,
-     letterbox, hunt:found, egg:trigger, game:*, toy, post-credits, dc:*.
+     letterbox, hunt:found, egg:trigger, game:*, toy, post-credits.
    - `setRunning(false)` (Pause / RM / hidden tab / muted) silences the
      master at once, every cue is a no-op and every timer (bed events,
      re-triggered loops) stops until it runs again; the store suspends the
@@ -96,6 +96,14 @@ const STACK_MS = 100;
 const FOUND_SKIP_TAIL = 2.2;
 /** A cue that waits for a resume gives up after this long (s). */
 const LATE = 1.5;
+/** Two cues that meet at the credits (a jump to the end brings the reel's
+ *  run-out and the Snitch's wing flutter within a second of each other): the
+ *  later one starts after the earlier one's tail instead of on top of it.
+ *  cue → [the cue it waits for, that cue's tail in s]. */
+const AFTER: Partial<Record<CueId, readonly [CueId, number]>> = {
+  "snitch-flutter": ["reel-runout", 1.6],
+  "reel-runout": ["snitch-flutter", 0.8],
+};
 
 export type EngineHooks = {
   /** Keep the context running `ms` longer even though motion just turned
@@ -348,8 +356,10 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       const now = performance.now();
       if (now - (last.get(id) ?? -1e9) < (MIN_GAP[id] ?? (REPEATABLE.has(id) ? 15 : 70))) return;
       if (voices >= MAX_VOICES) return;
+      const after = AFTER[id];
+      const behind = after ? Math.max(0, after[1] - (now - (last.get(after[0]) ?? -1e9)) / 1000) : 0;
       last.set(id, now);
-      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay - late));
+      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay + behind - late));
       if (isFileCue(id)) {
         playFile(id, o, wait);
         return;
@@ -648,10 +658,26 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   let autoQ: { id: CueId; delay: number; scene?: string }[] = [];
   let autoT = 0;
   const autoStarts: number[] = [];
+  /** Is this card on screen (a third of the viewport or more)? A sliver at an
+   *  edge is not what the visitor is looking at. */
+  function onScreen(el: HTMLElement): boolean {
+    const r = el.getBoundingClientRect();
+    return Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0) >= window.innerHeight / 3;
+  }
+  /** A card's scene (its meet and its impact) is heard only while that card
+   *  is on screen when the queue flushes: a long jump (End, a scrollbar drag)
+   *  crosses cards the visitor never sees, and a scene played at a landing
+   *  spot that shows something else is noise. No such card in the page (the
+   *  sound lab): kept. */
+  function sceneShown(scene: string): boolean {
+    const el = document.querySelector<HTMLElement>(`[data-act-card="${scene}"]`);
+    return !el || onScreen(el);
+  }
   function autoFlush(): void {
     autoT = 0;
-    // several cards crossed in one tick: only the last card's scene is heard
-    const lastScene = [...autoQ].reverse().find((q) => q.scene)?.scene;
+    // several cards crossed in one tick: only the last card's scene is heard,
+    // and only if that card is on screen
+    const lastScene = [...autoQ].reverse().find((q) => q.scene && sceneShown(q.scene))?.scene;
     const batch = autoQ.filter((q) => !q.scene || q.scene === lastScene).slice(-BURST_MAX);
     autoQ = [];
     const now = performance.now();
@@ -695,6 +721,10 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   const stung = new Set<string>();
   on("card:phase", (d) => {
     if (d.phase !== "m" || (d.prev !== "a" && d.prev !== "b") || stung.has(d.card)) return;
+    // a card the visitor jumped past (its damped p catches up off screen) stays
+    // silent, and sings when the title next appears on screen
+    const el = document.getElementById(d.card);
+    if (el && !onScreen(el)) return;
     stung.add(d.card);
     // never on top of the world's impact (a quick scroll crosses both at once)
     auto("title-sting", Math.max(0, 0.55 - (performance.now() - impactAt) / 1000));
@@ -759,12 +789,12 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
     play("postcredits-whoosh");
     play("postcredits-chime", {}, 0.95);
   });
-  // The director's cut: no cue at its start (the films chapter's entry cue is
-  // the projector starting, where the page becomes one); the reel runs out
-  // ONCE, at a natural end, and not when the credits' entry cue just played it.
-  on("dc:stop", (d) => {
-    if (d.reason === "end" && performance.now() - (last.get("reel-runout") ?? -1e9) > 15000) play("reel-runout");
-  });
+  // The director's cut plays no cue of its own: not at its start (the films
+  // chapter's entry cue is the projector starting, where the page becomes
+  // one), and not at its end. The credits' reel run-out belongs to the bed
+  // follower (components/audio/bed-follower.tsx): it is held while the cut
+  // runs and plays once when the cut ends, is stopped or is paused with the
+  // page at the credits, never twice in a view.
   // Obliviate fires the same event to reset the Snitch: only a catch tings.
   window.addEventListener(SNITCH_EVENT, () => {
     if (snitchCaught()) play("snitch-ting");

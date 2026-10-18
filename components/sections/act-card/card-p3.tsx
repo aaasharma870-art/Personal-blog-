@@ -156,7 +156,7 @@ export function CardP3(props: Props) {
   usePhase(t, section, active);
   usePush(b, content, active, pushSpec);
   useIris(t, content, active, spec, choreo);
-  useCrossings(t, spec, pinned, liveRef, tierRef, frameRef);
+  useCrossings(t, enter, spec, pinned, liveRef, tierRef, frameRef, section);
   useStars(pinNode, pinned);
   useKraken(spec, pinned, liveRef, raw, t, kraken, section, pinEl, content, tipRef, massRef);
 
@@ -414,32 +414,52 @@ function useIris(t: MotionValue<number>, content: RefObject<HTMLDivElement | nul
 
 function useCrossings(
   t: MotionValue<number>,
+  enter: MotionValue<number>,
   spec: CardPinSpec,
   pinned: boolean,
   liveRef: RefObject<boolean>,
   tierRef: RefObject<GlTier | null>,
   frameRef: RefObject<HTMLDivElement | null>,
+  section: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     if (!pinned) return;
     let prev = t.get();
     let snapUntil = 0;
-    // sound: one meet per crossing. A wiggle across the line stays silent
-    // until the reader has gone back 0.08 of p and a second has passed.
+    // sound: the meet plays ONCE per card per pass. Wiggling the wheel back
+    // and forth across the line stays silent; it re-arms only when the reader
+    // has left the card entirely (its top is back below the viewport, `enter`
+    // 0) or a new pass starts (p3:view-reset).
     let armed = true;
-    let firedAt = -1e9;
     const offJump = onEvent("scroll:jump", (d) => {
       if (d.immediate) snapUntil = performance.now() + 400;
     });
     const offReset = onEvent("p3:view-reset", () => {
       armed = true;
     });
+    const offEnter = enter.on("change", (e) => {
+      if (e <= 0) armed = true;
+    });
+    // sound: from the impact on, the new world is on screen. The section
+    // carries `data-card-landed`, which the bed follower reads (the phase
+    // only leaves "a" at p .50, up to a second after the picture changed;
+    // the director's cut holds the landed world at p .47, inside the settle).
+    // Position only: a jump or a backwards scroll updates it as well.
+    const sec = section.current;
+    let landed = false;
+    const markLanded = (v: number) => {
+      const l = v >= spec.impact.at;
+      if (l === landed) return;
+      landed = l;
+      if (l) sec?.setAttribute("data-card-landed", "");
+      else sec?.removeAttribute("data-card-landed");
+    };
+    markLanded(t.get());
     const off = t.on("change", (v) => {
+      markLanded(v);
       const go = liveRef.current && performance.now() >= snapUntil && !motionOffNow();
-      if (!armed && v < spec.meet - 0.08 && performance.now() - firedAt > 1000) armed = true;
       if (go && armed && prev < spec.meet && v >= spec.meet) {
         armed = false;
-        firedAt = performance.now();
         emit("transition:meet", { card: spec.kind });
       }
       if (go && prev < spec.impact.at && v >= spec.impact.at) {
@@ -459,10 +479,12 @@ function useCrossings(
     });
     return () => {
       off();
+      offEnter();
       offJump();
       offReset();
+      sec?.removeAttribute("data-card-landed");
     };
-  }, [t, spec, pinned, liveRef, tierRef, frameRef]);
+  }, [t, enter, spec, pinned, liveRef, tierRef, frameRef, section]);
 }
 
 /** The seam's impact: a chalk-dust puff where the duster slaps (no flash):

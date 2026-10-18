@@ -9,19 +9,27 @@
    - CARD-AWARE: inside a pinned act card the picture changes at the card's
      own progress, not when its box reaches the reading line. The card
      publishes its phase as `data-card-phase` (a below p .50, then b, m, e;
-     components/sections/act-card/card-p3.tsx usePhase). While it is "a" the
-     bed is the OLD world's (the seam keeps Pirates + storm, the ignite
-     card keeps the campfire); from "b" on it is the card's world with the
-     storm off, so the classroom is never under the sea and the Great Hall
-     hum never starts under the campfire. No attribute (unpinned, reduced
-     motion, phones): the whole card box plays the card's world as before.
+     components/sections/act-card/card-p3.tsx usePhase) and, from the world
+     change on (the impact, p .45; the director's cut holds the landed world
+     at p .47), `data-card-landed` (useCrossings). While the phase is "a"
+     and the card has not landed, the bed is the OLD world's (the seam keeps
+     Pirates + storm, the ignite card keeps the campfire); from the impact
+     on it is the card's world with the storm off, so the classroom is never
+     under the sea and the Great Hall hum never starts under the campfire,
+     and neither lingers after the picture has changed. No attribute
+     (unpinned, reduced motion, phones): the whole card box plays the card's
+     world as before.
    - The intro: while html.intro-armed (the Play card, the flight) the bed
      is the Harry Potter hall; the broom landing hands over to Pirates.
    - The experiment section is a silent bed; off the home page, the house.
    - Entering the films chapter starts a projector; the credits run the reel
      out (once per page view each, even if Pause unmounts and remounts the
-     follower; a new pass re-arms them: p3:view-reset). During the director's
-     cut the credits stay silent: dc:stop plays the one run-out.
+     follower; a new pass re-arms them: p3:view-reset). While the director's
+     cut RUNS (not paused) the credits stay silent, and the entry cue is not
+     counted as played: it plays the moment the run ends, is paused or
+     stopped with the page at the credits, so a cut that finishes, a cut
+     that is stopped there and a cut the visitor paused and carried to the
+     credits each give exactly one run-out. A new cut run re-arms it.
    - Never on /lab/**: the sound lab picks its beds by hand (the header's
      toggle would otherwise force the house bed over the bench).
    ========================================================================== */
@@ -32,6 +40,7 @@ import { actCards, anchors, cardAnchors, sectionById, worldOf } from "@/lib/sect
 import { bedLayer, sound, type BedId } from "@/lib/audio";
 import { ENTRY_CUES, SILENT_SECTIONS } from "@/lib/audio/cues";
 import { on } from "@/lib/events";
+import { useDirectorsCut } from "@/components/director/api";
 import { useActiveSection } from "@/components/site/use-active-section";
 
 const DEBOUNCE_MS = 150;
@@ -58,12 +67,23 @@ export function resetViewState(): void {
   played.ids.clear();
 }
 on("p3:view-reset", resetViewState);
+// a new cut run (Play again, a second tour) is a new film: its end runs the reel out again
+on("dc:start", () => {
+  played.ids.delete("credits");
+});
 
-/* — The pinned card's phase (a, b, m, e; "" = not pinned / not live) ——— */
-const phaseOfCard = (id: string): string => document.getElementById(id)?.getAttribute("data-card-phase") ?? "";
+/* — The pinned card's phase (a, b, m, e; "" = not pinned / not live) ———
+   "a" before the world has landed reads as "a"; once the card has landed
+   (data-card-landed: the impact at p .45, the picture already changed) it
+   reads as "b", .05 of p before the phase attribute leaves "a". */
+const phaseOfCard = (id: string): string => {
+  const el = document.getElementById(id);
+  const ph = el?.getAttribute("data-card-phase") ?? "";
+  return ph === "a" && el?.hasAttribute("data-card-landed") ? "b" : ph;
+};
 function subscribePhase(cb: () => void): () => void {
   const mo = new MutationObserver(cb);
-  mo.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-card-phase"] });
+  mo.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-card-phase", "data-card-landed"] });
   return () => mo.disconnect();
 }
 
@@ -164,6 +184,9 @@ function Follow({ path }: { path: string }) {
   );
   const intro = useSyncExternalStore(subscribeIntro, introHeld, () => false);
   const key = bedKey(active, home, phase, intro);
+  // The director's cut runs on its own (not paused): the credits' run-out waits for its end.
+  const dc = useDirectorsCut();
+  const cutRuns = dc.running && !dc.paused;
 
   // The bed: at once on mount (sound just came on), then debounced.
   const first = useRef(true);
@@ -190,11 +213,19 @@ function Follow({ path }: { path: string }) {
     }
     const cue = home ? ENTRY_CUES[active] : undefined;
     if (!cue || played.ids.has(active)) return;
-    played.ids.add(active);
-    // during the director's cut dc:stop plays the one reel run-out
-    if (cue === "reel-runout" && (window as Window & { __dc?: boolean }).__dc) return;
-    sound.cue(cue);
-  }, [active, home, path]);
+    // A cut that runs on its own plays the one reel run-out when it ends: this
+    // run is not counted, and the effect runs again when the cut ends, is
+    // paused or is stopped (cutRuns changes), with the page still at the credits.
+    if (cue === "reel-runout" && cutRuns) return;
+    // Only where the reader stays: a scrollbar drag or End sweeps the sections
+    // between and must not start the projector on the way (the same 150 ms as the bed).
+    const t = window.setTimeout(() => {
+      if (played.ids.has(active)) return;
+      played.ids.add(active);
+      sound.cue(cue);
+    }, DEBOUNCE_MS);
+    return () => window.clearTimeout(t);
+  }, [active, home, path, cutRuns]);
 
   return null;
 }
