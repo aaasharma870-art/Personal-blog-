@@ -258,7 +258,7 @@ export function Transport() {
         >
           <div className="flex flex-col rounded-[1.1rem] bg-bg px-3 py-1 text-fg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)]">
             {s.ended ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div key="ended" className="flex flex-wrap items-center gap-2">
                 <button type="button" className={textBtn} onClick={() => restartDirectorsCut()} autoFocus>
                   <RotateCcw aria-hidden="true" className="size-4" />
                   {t("dc.replay")}
@@ -271,7 +271,7 @@ export function Transport() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-1">
+              <div key="running" className="flex items-center gap-1">
                 <button
                   type="button"
                   className={iconBtn}
