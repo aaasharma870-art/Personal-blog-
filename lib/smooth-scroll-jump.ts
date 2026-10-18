@@ -24,7 +24,8 @@ import {
   type ScrollTarget,
   type ScrollToTargetOptions,
 } from "./smooth-scroll";
-import { markWorldFontsReady } from "./world-fonts";
+import { whenLadder } from "./ladder";
+import { markWorldFontsReady, worldFontsMarked } from "./world-fonts";
 import { WORLD_IDS, type WorldId } from "./worlds";
 
 const noop = () => {};
@@ -33,11 +34,29 @@ const LONG_JUMP_VIEWPORTS = 3;
 
 const FILM_WORLDS: ReadonlySet<string> = new Set(WORLD_IDS.filter((w) => w !== "house"));
 
-/** The cut's readiness: the target world's fonts (≤ 300 ms, B1-TYPE). */
+/** The cut's readiness: the fonts of the target's world (≤ 300 ms, B1-TYPE)
+ *  AND of every film world above it (≤ 600 ms). A face that swaps in above
+ *  the landing re-flows the page under it: the Pirates body face moved the
+ *  Work heading 93 px up 0.1–0.25 s after the cut (Oct 18, fix3a). Worlds
+ *  already live cost nothing. */
+const OWN_FONT_WAIT_MS = 300;
+const ABOVE_FONT_WAIT_MS = 600;
 function cutReady(el: Element | null): Promise<void> {
-  const w = el?.closest("[data-world]")?.getAttribute("data-world");
-  if (!w || !FILM_WORLDS.has(w)) return Promise.resolve();
-  return markWorldFontsReady(w as WorldId).catch(noop);
+  if (!el) return Promise.resolve();
+  const own = el.closest("[data-world]")?.getAttribute("data-world") ?? null;
+  const marked = worldFontsMarked();
+  const worlds = new Set<string>();
+  for (const plane of document.querySelectorAll("[data-world]")) {
+    const w = plane.getAttribute("data-world");
+    if (!w || !FILM_WORLDS.has(w) || marked.has(w) || plane.closest("header, #intro, #intro-caps")) continue;
+    // a plane before the target, or the one holding it
+    if (plane === el || plane.contains(el) || plane.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) worlds.add(w);
+  }
+  if (own && FILM_WORLDS.has(own) && !marked.has(own)) worlds.add(own);
+  if (!worlds.size) return Promise.resolve();
+  return Promise.all(
+    [...worlds].map((w) => markWorldFontsReady(w as WorldId, w === own ? OWN_FONT_WAIT_MS : ABOVE_FONT_WAIT_MS).catch(noop)),
+  ).then(noop);
 }
 
 /* — history + focus ——————————————————————————————————————————————— */
@@ -133,9 +152,12 @@ function lenisGlide(l: LenisLike, y: number): Promise<boolean> {
 
 /* — holding a landing ———————————————————————————————————————————————— */
 
-/** How long an instant landing is held (the page settles in the first
- *  seconds: a face swap, a lazy chunk, the Journey stack becoming the voyage). */
-const HOLD_MS = 4000;
+/** The longest an instant landing is held, whatever happens (the page is
+ *  SETTLED long before: see `holdLanding`). */
+const HOLD_CAP_MS = 12000;
+/** The page counts as settled after this long without a size change, once
+ *  its faces have loaded and the warm-up ladder is done. */
+const HOLD_QUIET_MS = 1000;
 /** A target this far (px) from where it should be is put back. */
 const HOLD_SLACK = 3;
 
@@ -146,29 +168,38 @@ let releaseHold: (() => void) | null = null;
  *  browser's own scroll anchoring used to absorb that; it is off on desktop
  *  (app/globals.css: it and ScrollTrigger once fought over the position and
  *  a landing ended 1900 px late), so the jump is HELD instead: whenever the
- *  document's height changes within HOLD_MS, the target is measured again and
- *  put back, instantly, if it moved. Ends at once when the visitor takes the
- *  scroll (wheel, touch, press, key), a newer jump starts, the director's cut
- *  owns the scroll or the time is up. */
+ *  document's height changes, the target is measured again and put back,
+ *  instantly, if it moved. Ends when the page has SETTLED (every font
+ *  loaded, the warm-up ladder done, HOLD_QUIET_MS without a size change;
+ *  capped at HOLD_CAP_MS: a slow CPU used to outlast the old fixed 4 s and
+ *  was left 83-93 px short), at once when the visitor takes the scroll
+ *  (wheel, touch, press, key), a newer jump starts, or the director's cut
+ *  owns the scroll. */
 function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: number): void {
   releaseHold?.();
   if (typeof ResizeObserver === "undefined") return;
-  const until = performance.now() + HOLD_MS;
+  const t0 = performance.now();
   let timer = 0;
+  let lastChange = t0;
+  // the ladder only runs with motion on: with it off there is nothing to wait for
+  let ladderDone = motionOffNow();
+  if (!ladderDone) void whenLadder(5).then(() => (ladderDone = true));
   const opts = { capture: true, passive: true } as const;
   const ro = new ResizeObserver(() => {
+    lastChange = performance.now();
     window.clearTimeout(timer);
     timer = window.setTimeout(check, 80);
   });
   const stop = () => {
     window.clearTimeout(timer);
     window.clearTimeout(cap);
+    window.clearInterval(settle);
     ro.disconnect();
     for (const ev of USER_SCROLL_INPUT) window.removeEventListener(ev, stop, opts);
     if (releaseHold === stop) releaseHold = null;
   };
   function check() {
-    if (seq !== jumpSeq || performance.now() > until || !el.isConnected || cameraOwnsScroll()) return stop();
+    if (seq !== jumpSeq || !el.isConnected || cameraOwnsScroll()) return stop();
     const y = clampY(targetY(el, block));
     if (Math.abs(y - window.scrollY) < HOLD_SLACK) return;
     const l = getLenis();
@@ -177,7 +208,11 @@ function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: nu
     gsapIfLoaded()?.ScrollTrigger.update();
     emit("scroll:jump", { y, immediate: true });
   }
-  const cap = window.setTimeout(stop, HOLD_MS);
+  const cap = window.setTimeout(stop, HOLD_CAP_MS);
+  const settle = window.setInterval(() => {
+    const fontsDone = !document.fonts || document.fonts.status !== "loading";
+    if (ladderDone && fontsDone && performance.now() - lastChange >= HOLD_QUIET_MS) stop();
+  }, 250);
   ro.observe(document.documentElement);
   for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, stop, opts);
   releaseHold = stop;

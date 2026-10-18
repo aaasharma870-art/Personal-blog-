@@ -6,7 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, CornerDownLeft, Gamepad2, Hash, Mail, Pause, Play, Search, Sparkles } from "lucide-react";
 import { film, type CopyKey } from "@/lib/film";
 import { DESKTOP_FINE, motionOffNow, useReducedMotion } from "@/lib/flags";
-import { lockScroll, unlockScroll } from "@/lib/smooth-scroll";
+import { emit } from "@/lib/events";
+import { lockScroll, scrollToTarget, unlockScroll } from "@/lib/smooth-scroll";
 import {
   actCards,
   copyText,
@@ -62,7 +63,7 @@ import { openCutChooser, replayIntro } from "@/components/site/dock-actions";
      tooltip's). The Pause command is the plain WCAG control: no spell
      aliases, never a trigger, never counted.
    - Parley counts and toasts, then jumps to Contact.
-   - A "Play" group: Fly the homemade drone (scroll to Systems, focus the
+   - A "Play" group: Fly the homemade drone (scroll to Systems, press the
      take-off control, when it is on the page), Dead Eye, Show egg hints,
      Reset the egg hunt (an explicit confirm), Play the director's cut.
      The drone, the hints and the cut are DESKTOP_FINE only.
@@ -301,7 +302,17 @@ export default function PaletteDialog({
         pageText("toy.drone.cmd"),
         "drone quadcopter fly game gates systems",
         () => {
-          void go("systems").then(() => document.getElementById("drone-takeoff")?.focus({ preventScroll: true }));
+          // like the Games row (components/site/dock-popovers.tsx): stop any
+          // tour or game, land on Systems, bring Take off into view and press
+          // it: the drone flies (Oct 18, fix3a; it used to only focus the pill)
+          emit("fastlane");
+          void go("systems").then(async () => {
+            const t = document.getElementById("drone-takeoff");
+            if (!t) return;
+            const r = t.getBoundingClientRect();
+            if (r.top < 72 || r.bottom > window.innerHeight) await scrollToTarget(t, { immediate: true, block: "center", history: false });
+            t.click();
+          });
         },
         page.drone,
       );

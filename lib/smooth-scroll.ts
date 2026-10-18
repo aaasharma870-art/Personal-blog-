@@ -212,9 +212,14 @@ function landAtY(el: Element): number | null {
 
 /** The page y that puts `el` where `block` says, with the native anchor
  *  offset (the target's scroll-margin-top + the root's scroll-padding-top). */
-export function targetY(el: Element, block: "start" | "center" | "nearest"): number {
-  const land = landAtY(el);
+export function targetY(target: Element, block: "start" | "center" | "nearest"): number {
+  const land = landAtY(target);
   if (land != null) return land;
+  // A chapter whose first screen is a picture band (Optuna's machine board)
+  // lands on its head row, the eyebrow and the title, not on the band: the
+  // row carries `data-land-head` and its own scroll-margin-top (Oct 18, fix3a:
+  // Menu > Optuna used to land with the title at the bottom edge).
+  const el = target.querySelector("[data-land-head]") ?? target;
   const r = el.getBoundingClientRect();
   const y0 = window.scrollY;
   const vh = window.innerHeight;

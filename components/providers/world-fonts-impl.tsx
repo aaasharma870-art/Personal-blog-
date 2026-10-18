@@ -7,7 +7,13 @@
    (phones never start it, so they fetch no world face):
    1. waits for the warm-up — ladder step 5 on DESKTOP_FINE (after the
       prologue's quiet window, one idle slice per step); on a wide touch
-      screen the quiet end, then an idle slice (`onIdle`);
+      screen the quiet end, then an idle slice (`onIdle`). The PIRATES body
+      face does not wait for step 5 (Oct 18, fix3a): it is the one swap that
+      re-flows the first section after the hero (About: −93 px @1440, −124 px
+      @1024), so late (2.4–2.8 s) it landed under a visitor who had already
+      scrolled or jumped (the Work landing bounced, a reader saw the page
+      jump). It swaps at the quiet end plus one idle slice instead, while
+      the hero is all that is on screen;
    2. then adds a world's token (lib/world-fonts.ts markWorldFontsReady)
       when any of its planes comes within 150% of a viewport (above or
       below), so the faces swap while the world is still off screen. At the
@@ -29,6 +35,9 @@ import { WORLD_IDS, type WorldId } from "@/lib/worlds";
 
 /** PHASE3-SPEC §5.5: a world loads when one of its planes is this close. */
 const APPROACH_MARGIN = "150% 0px";
+/** The cap on the early Pirates swap's face load (the token follows the
+ *  face, never the other way round: one swap, on a loaded face). */
+const EARLY_PIRATES_MS = 4000;
 /** If the ladder never reaches step 5 (a stalled step), start anyway this
  *  long after the quiet end. */
 const LADDER_FALLBACK_MS = 8000;
@@ -96,6 +105,19 @@ function warmedUp(): Promise<void> {
   return whenQuietEnd().then(() => new Promise<void>((r) => void onIdle(r, { timeout: 2000 })));
 }
 
+/** The Pirates body face at the quiet end plus one idle slice (any device
+ *  that gets world faces, motion on or off): see the header, point 1. */
+function earlyPirates(isCancelled: () => boolean): void {
+  void whenQuietEnd().then(() => {
+    onIdle(
+      () => {
+        if (!isCancelled()) void markWorldFontsReady("pirates", EARLY_PIRATES_MS);
+      },
+      { timeout: 1500 },
+    );
+  });
+}
+
 export default function WorldFontsImpl(): null {
   useEffect(() => {
     if (typeof window.matchMedia !== "function" || typeof IntersectionObserver === "undefined") return;
@@ -107,6 +129,7 @@ export default function WorldFontsImpl(): null {
       if (armed || !wide.matches) return;
       armed = true;
       wide.removeEventListener("change", arm);
+      earlyPirates(() => cancelled);
       void warmedUp().then(() => {
         if (!cancelled) stop = watchWorlds();
       });

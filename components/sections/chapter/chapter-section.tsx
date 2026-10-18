@@ -28,6 +28,7 @@ import {
 import type { ChapterAppendix } from "@/lib/page";
 import { beatAttrs } from "@/lib/beats";
 import { copyText, copyVisible, variantChoiceOf } from "@/lib/sections";
+import { cn } from "@/lib/utils";
 import type { SectionProps } from "@/components/sections/types";
 
 /* ============================================================================
@@ -155,7 +156,18 @@ function ChapterBody({
   return (
     <div>
       {/* the claim, beside the problem it answers */}
-      <div data-stage-block="" className="split-stack grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6">
+      <div
+        data-stage-block=""
+        // a chapter that opens with a picture band (`head`: Optuna's machine
+        // board) is landed on this row, not on the band (lib/smooth-scroll.ts
+        // targetY); 3rem on top of the root's scroll padding puts the eyebrow
+        // at ~140 px and the title under it, where Work's heading lands
+        {...(entry.props.head ? { "data-land-head": "" } : {})}
+        className={cn(
+          "split-stack grid grid-cols-1 gap-tier-group lg:grid-cols-12 lg:gap-x-6",
+          entry.props.head && "scroll-mt-12",
+        )}
+      >
         <div className="lg:col-span-7">
           <Meta fields={[number, p.status]} />
           <h2 id={titleId} className="mt-tier-pair max-w-title type-title text-fg">
