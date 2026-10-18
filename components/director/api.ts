@@ -210,9 +210,14 @@ export const inKeep = (e: Event): boolean => e.target instanceof Element && Bool
 export const inPopover = (e: Event): boolean => e.target instanceof Element && Boolean(e.target.closest("[data-dock-pop]"));
 /** A menu, panel or dialog that is open owns Esc: the dock's chooser and Games menu, the egg-hunt panel,
  *  and any modal (the site menu, the palette, the map). The first Esc is theirs; the tour (or its end card)
- *  takes the next one. All of them are mounted only while open. */
+ *  takes the next one. */
 export const OVERLAY = '[data-dock-pop], [data-hunt-panel], [role="dialog"][aria-modal="true"]';
-export const overlayOpen = (): boolean => typeof document !== "undefined" && document.querySelector(OVERLAY) !== null;
+/** Only a SHOWN one counts: the intro's dialog (#intro) stays in the DOM, display: none, for the whole visit. */
+export const overlayOpen = (): boolean => {
+  if (typeof document === "undefined") return false;
+  for (const el of document.querySelectorAll(OVERLAY)) if (el.getClientRects().length > 0) return true;
+  return false;
+};
 
 const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 

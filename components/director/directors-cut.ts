@@ -484,6 +484,12 @@ async function begin(r: Run): Promise<void> {
     }
     if (r.stopped) return;
   }
+  // every tour is a new pass over the page (what Replay intro does in its arm()): the world-change impacts
+  // (lib/impact.ts), the title stings (the engine), the entry cues (components/audio/bed-follower.tsx) and
+  // the cards' crossings re-arm, so a second tour in the same page view (Replay the tour, or the skim then
+  // the main cut) plays the same cues and shakes as the first. Once per run: after the fly to the top
+  // (nothing it crossed counts) and before the first leg.
+  emit("p3:view-reset");
   launch(r, { idx: 0, entry: { rest: true } });
 }
 
