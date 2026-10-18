@@ -56,7 +56,8 @@ const IDLE_MS = 2600;
 /** The pointer wakes the card from this far above / beside the progress line (px). */
 const WAKE_UP = 120;
 const WAKE_SIDE = 60;
-/** Chapter ticks sit at least this far apart (px): a 24 px target each, none overlapping. */
+/** Chapter ticks sit at least this far apart (px): a 24 px wide target each (as tall as the line,
+ *  so it never reaches above it onto a caption), none overlapping. */
 const TICK_GAP = 24;
 const t = (key: Parameters<typeof copyText>[0], extra?: Record<string, string | number>) => copyText(key, extra).text;
 
@@ -374,13 +375,13 @@ export function Transport() {
                 onKeyUp={(e) => {
                   if (e.key === " ") e.preventDefault();
                 }}
-                className="group absolute top-1/2 flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
+                className="group absolute top-0 flex h-5 w-6 -translate-x-1/2 items-start justify-center focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent"
                 style={{ left: `${8 + x}px` }}
               >
                 <span
                   aria-hidden="true"
-                  className={`block w-0.5 rounded-pill transition-[height,background-color] duration-(--dur-micro) ${
-                    i === s.chapter ? "h-3 bg-fg" : "h-2 bg-fg-muted group-hover:h-3 group-hover:bg-fg"
+                  className={`block w-0.5 rounded-pill transition-[height,margin,background-color] duration-(--dur-micro) ${
+                    i === s.chapter ? "mt-0.5 h-3 bg-fg" : "mt-1 h-2 bg-fg-muted group-hover:mt-0.5 group-hover:h-3 group-hover:bg-fg"
                   }`}
                 />
               </button>
