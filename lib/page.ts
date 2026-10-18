@@ -615,7 +615,7 @@ export const page: readonly SectionEntry[] = [
       // beats probe, 1440) closes the B56 → B57 gap. B57 stays on the Snitch, so the spotlight's
       // "host left the viewport" test for the dart is unchanged.
       { id: "B57-roll", at: 11.7, span: 166.4, kind: "stage-cue", timing: "scroll", feature: "existing" },
-      // B58: "Mischief managed" → the post-credits scene in the +60vh tail
+      // B58: "Mischief managed" → the post-credits scene in the 36vh tail
       { id: "B58", at: 92.8, span: 69.5, kind: "post-credits", timing: "time", star: true, weight: 3, feature: "P3-8" },
     ],
     props: {},

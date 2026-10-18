@@ -64,7 +64,9 @@ import "@/components/games/games.css";
    in any string.
    ========================================================================== */
 
-/** The course's drawing box: the band is exactly 21:9 at ≥ 640 px. */
+/** The course's drawing box (viewBox units). It stretches to the band, which is
+ *  3:1 at ≥ 640 px and 4:3 below (components/worlds/idiots/drone-band.tsx); the
+ *  gates and posts are placed in box fractions, so they follow it. */
 const VB_W = 2100;
 const VB_H = 900;
 /** The posts above / below each opening (viewBox units). */

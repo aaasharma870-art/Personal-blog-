@@ -11,8 +11,8 @@
    - A click (or Enter / Space) opens the header dock's chooser (Quick tour /
      Full tour; components/site/control-dock.tsx), or stops a cut that is
      running. Only if no dock answers does it start the cut itself
-     (components/director/api.ts: it borrows the sound inside the click and
-     loads the player).
+     (components/director/api.ts: it loads the player; the sound stays as the
+     visitor set it).
    - Reduced motion or Pause: every control is aria-disabled ("Motion is
      paused" shows by CSS from the first paint) and a press does nothing.
    - Intent (hover, focus) warms the player chunk.

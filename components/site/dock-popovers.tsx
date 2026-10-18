@@ -23,7 +23,7 @@ import "@/app/p3/dock-lazy.css";
    NON-MODAL: no focus trap, no scroll lock. The first button takes focus
    when a popover opens. Everything here is a real <button>.
    - Chooser: two big buttons, "Quick tour" and "Full tour"; a press starts
-     that tour (components/director/api.ts: the click is the sound consent).
+     that tour (components/director/api.ts; the cut leaves the sound as set).
    - Games: one row per thing to try, each "bold verb, one plain line, Play".
      Fly the drone / Dead Eye jump there through the film cut and START
      (the palette only focuses the pill); the hunt row opens the hint panel;
@@ -72,7 +72,7 @@ function CutChooser({ box, onDone }: BoxProps) {
     { tour: "full", title: text("dock.cut.full"), sees: text("dock.cut.full.sees") },
   ];
   const start = (tour: Tour) => {
-    // inside the click: the click is the sound consent (api.ts borrows it)
+    // inside the click (the tour starts from the click; the sound stays as set)
     startDirectorsCut(tour);
     onDone(true);
   };

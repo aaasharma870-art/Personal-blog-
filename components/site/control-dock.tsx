@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
 import { ChevronDown, Gamepad2, Play, RotateCcw, Square } from "lucide-react";
 import { on } from "@/lib/events";
+import { useDesktopFine } from "@/lib/flags";
 import { safeLazy } from "@/lib/safe-lazy";
 import { copyText, copyVisible } from "@/lib/sections";
 import type { CopyKey } from "@/lib/film";
@@ -24,11 +25,14 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    - Director's cut: an ON/OFF chip. Running: aria-pressed and a press STOPS
      it (a press that began while a tour ran never re-opens the chooser, even
      though the player's own pointerdown / keydown stops the run first).
-     Off: a menu button ("Director's cut, off"; aria-haspopup / aria-expanded)
-     that opens the chooser (Quick / Full tour). The hero button and the
-     palette open the same chooser (DC_CHOOSER_EVENT) and focus returns to
-     them. Motion off: aria-disabled, with the reason for its cause (the
-     Pause toggle, or the system's reduced motion).
+     Off: a menu button (aria-haspopup / aria-expanded) that opens the
+     chooser (Quick / Full tour). Its accessible name is its visible words
+     ("Director's cut OFF", "Tour OFF" below 80rem), read from the content
+     with no aria-label (WCAG 2.5.3 label in name: the short word "Tour" and
+     the ON / OFF chip are part of the name; the title is the description).
+     The hero button and the palette open the same chooser (DC_CHOOSER_EVENT)
+     and focus returns to them. Motion off: aria-disabled, with the reason
+     for its cause (the Pause toggle, or the system's reduced motion).
    - Games: the menu of things to try (components/site/dock-popovers.tsx).
    The group carries `data-dc-keep`: the player ignores presses inside it, so
    the switch stops a run instead of stopping it and restarting it.
@@ -63,6 +67,8 @@ type Open = "cut" | "games" | "note-replay" | "note-cut" | null;
 
 export function ControlDock() {
   const mounted = useMounted();
+  // the dock is display:none below DESKTOP_FINE: nothing is warmed for it there
+  const fine = useDesktopFine();
   const dc = useDirectorsCut();
   const { reduced, paused } = useMotionPreference();
   // motion is off for any reason (Pause or OS reduced motion); false until hydrated
@@ -86,7 +92,6 @@ export function ControlDock() {
   const replayLabel = text("dock.replay");
   const replayShort = text("dock.replay.short") ?? replayLabel;
   const cutLabel = text("dock.cut");
-  const cutOffName = text("dock.cut.name.off") ?? cutLabel;
   const cutShort = text("dock.cut.short") ?? cutLabel;
   const cutTip = text("dock.cut.blurb");
   const onWord = text("dock.cut.on") ?? "ON";
@@ -197,17 +202,20 @@ export function ControlDock() {
   useEffect(() => on("game:start", () => setOpen(null)), []);
 
   // warm the intro controller and the popover chunk when the visitor is near
+  // (only where the dock shows: hover and focus still prime it on a laptop)
   useEffect(() => {
+    if (!fine) return;
     const idle = window.setTimeout(() => {
       primeIntro();
       warmPopovers();
     }, 2500);
     return () => window.clearTimeout(idle);
-  }, []);
+  }, [fine]);
 
   // the silent cue (components/site/dock-cue.ts, lazy): two ring pulses on the
   // cut and games buttons, once per session each, after the intro
   useEffect(() => {
+    if (!fine) return;
     let off = () => {};
     let dead = false;
     void import("@/components/site/dock-cue")
@@ -219,7 +227,7 @@ export function ControlDock() {
       dead = true;
       off();
     };
-  }, []);
+  }, [fine]);
 
   const onReplay = () => {
     if (live.current.off) {
@@ -289,7 +297,6 @@ export function ControlDock() {
             type="button"
             className="dock-btn"
             data-dock-cut=""
-            aria-label={(dc.running ? cutLabel : cutOffName) ?? undefined}
             aria-pressed={dc.running ? true : undefined}
             aria-haspopup={dc.running || off ? undefined : "dialog"}
             aria-expanded={dc.running || off ? undefined : open === "cut" && ready === "cut"}
@@ -301,15 +308,11 @@ export function ControlDock() {
             onFocus={warmPopovers}
           >
             {dc.running ? <Square aria-hidden="true" strokeWidth={2} fill="currentColor" /> : <Play aria-hidden="true" strokeWidth={2} />}
-            <span className="dock-f" aria-hidden="true">
-              {cutLabel}
-            </span>
-            <span className="dock-s" aria-hidden="true">
-              {cutShort}
-            </span>
-            <span className="dock-chip" aria-hidden="true">
-              {dc.running ? onWord : offWord}
-            </span>
+            {/* no aria-hidden: the name is what the visitor sees (one of the two
+                words is display:none at any width); the spaces keep "cut OFF" apart */}
+            <span className="dock-f">{cutLabel}</span>
+            <span className="dock-s">{cutShort}</span>{" "}
+            <span className="dock-chip">{dc.running ? onWord : offWord}</span>
             {!dc.running && !off ? <ChevronDown className="dock-caret" aria-hidden="true" strokeWidth={2.25} /> : null}
           </button>
           {open === "cut" ? (
