@@ -297,12 +297,13 @@ function MenuLink({ id, href, label, onPick }: { id: string; href: string; label
   );
 }
 
-/** The [AS] logo: the bracket's chrome use (DESIGN §5.1 ⑤, not counted). */
+/** The [AS] logo: the bracket's chrome use (DESIGN §5.1 ⑤, not counted). Its
+ *  accessible name starts with the visible initials (WCAG 2.5.3). */
 function Logo({ base }: { base: string }) {
   return (
     <a
       href={`${base}${topHref}`}
-      aria-label={`${site.name} — back to the top`}
+      aria-label={`${site.initials}, ${site.name}, back to the top`}
       className="group inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-control px-1"
     >
       <svg viewBox="0 0 8 28" aria-hidden="true" focusable="false" className="h-6 w-2 stroke-fg-ghost transition-colors duration-(--dur-micro) group-hover:stroke-fg-muted">

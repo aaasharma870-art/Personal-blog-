@@ -295,6 +295,9 @@ export function spanUnit<T>(at: readonly number[], to: readonly T[]): [number[],
    jump (the cut, the chapter select, a hash) sets p = p_raw. In-flow
    motion is never damped. Reduced motion / Pause: no damping (the card is
    the static settled frame). */
+/** The act title's phases: ONE source for `cardPin.title` and the lower bar's
+ *  `titleIn` / `titleOut` below. */
+const TITLE = { in: [0.58, 0.66], out: [0.88, 0.97], dim: 0.52 } as const;
 export const cardPin = {
   /** Star (a): the world transition. */
   a: [0, 0.45],
@@ -304,14 +307,14 @@ export const cardPin = {
   b: [0.5, 1],
   /** The hook frame is every p ≤ hook. */
   hook: 0.05,
-  /** The act title starts to appear (the lower bar's phase "m"). */
-  titleIn: 0.58,
-  /** The subtitle fades out as the title leaves (phase "e"). */
-  titleOut: 0.88,
+  /** The act title starts to appear (the lower bar's phase "m"): title.in[0]. */
+  titleIn: TITLE.in[0],
+  /** The subtitle fades out as the title leaves (phase "e"): title.out[0]. */
+  titleOut: TITLE.out[0],
   /** The act title (card-p3.tsx TitleCard): solid lettering over a dimmed
    *  plate, scroll-scrubbed and reversible. Fully visible and still over
    *  [in[1], out[0]] (.22 of the card); `dim` is the plate's peak dim. */
-  title: { in: [0.58, 0.66], out: [0.88, 0.97], dim: 0.52 },
+  title: TITLE,
   /** Damping rate λ (1/s) and the snap epsilon. Lenis already smooths the
    *  scroll (lerp .1): at 8 the card trailed the page by ≈ 90 px. */
   lambda: 12,

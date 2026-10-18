@@ -1,4 +1,5 @@
-/* =====================================================================   FILM — everything about the works, acts, slots, copy, lettering and eggs
+/* ============================================================================
+   FILM — everything about the works, acts, slots, copy, lettering and eggs
    (SPEC v2 §12.1). DATA ONLY: no React, no JSX, type-only imports, so Node
    imports it directly (scripts/check-manifest.mjs).
 
@@ -662,7 +663,6 @@ const copy = {
   "dock.replay.reduced": p3("Reduced motion is on in your system settings, so the intro cannot replay."),
   "dock.cut": p3("Director's cut"),
   "dock.cut.short": p3("Tour"),
-  "dock.cut.name.off": p3("Director's cut, off"),
   "dock.cut.reduced": p3("Reduced motion is on in your system settings."),
   "dock.cut.on": p3("ON"),
   "dock.cut.off": p3("OFF"),

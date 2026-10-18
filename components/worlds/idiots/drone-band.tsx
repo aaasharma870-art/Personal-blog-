@@ -27,7 +27,7 @@ const CAMERA: CameraSpec = { kind: "drift", scale: [1, 1.02], driver: "progress"
 /**
  * DroneBand — the systems section's head band (RECOGNIZABILITY S10): the
  * homemade quadcopter from 3 Idiots hovering in the college courtyard
- * (iconic-drone; the ALT plate is iconic-drone-alt), 21:9 ≥ 640, 4:3 below,
+ * (iconic-drone; the ALT plate is iconic-drone-alt), 3:1 ≥ 640, 4:3 below,
  * the focal point on the drone. The scene caption (THE HOMEMADE DRONE •
  * 3 IDIOTS) sits on its calm lower left. Sensitivity (IC-3I-08): the caption
  * names no character, the plate has no window or feed, and nothing links it
