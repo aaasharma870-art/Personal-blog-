@@ -237,7 +237,6 @@ const warmWorld = (k: Key | undefined): void => {
 /* — the elements ——————————————————————————————————————————————————— */
 
 async function doHold(r: Run, g: number, el: ElHold, entry: Entry | null): Promise<boolean> {
-  const plan = r.plan!;
   const left = entry?.holdLeft ?? el.dur;
   enterChapter(r, el);
   setSeg(r, el.t0 + (el.dur - left), el.t0 + el.dur, left);
