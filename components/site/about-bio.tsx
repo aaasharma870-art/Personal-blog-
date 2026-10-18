@@ -42,7 +42,7 @@ export function AboutBio() {
         {copyVisible(summary) ? (
           // the gap rides the summary: phones hide it and show the note in
           // flow, as before (words.css)
-          <Collapse summary={summary.text} summaryClassName="mb-tier-group">
+          <Collapse summary={summary.text} summaryClassName="mb-tier-group" chip>
             {note}
           </Collapse>
         ) : (

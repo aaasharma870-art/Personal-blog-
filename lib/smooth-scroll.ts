@@ -247,6 +247,27 @@ export function loadJumps(): Promise<Jumps> {
 
 if (typeof window !== "undefined") window.addEventListener("intro:end", () => void loadJumps().catch(noop), { once: true });
 
+/** The page keeps settling for its first seconds (a face swap above, the
+ *  Journey becoming the voyage). The browser's scroll anchoring that used to
+ *  absorb it is off on desktop (app/globals.css), so a NATIVE jump to a
+ *  `#hash` target inside that window (a "#work" link clicked before the
+ *  desktop chunk takes links over) is held like a scripted one
+ *  (./smooth-scroll-jump `holdNativeJump`). Our own jumps push history with
+ *  pushState, which fires no `hashchange`. */
+const NATIVE_HOLD_WINDOW_MS = 12000;
+if (typeof window !== "undefined") {
+  window.addEventListener("hashchange", () => {
+    if (performance.now() > NATIVE_HOLD_WINDOW_MS) return;
+    try {
+      if (!window.matchMedia(DESKTOP_FINE).matches || motionOffNow()) return;
+    } catch {
+      return;
+    }
+    const el = resolveTarget(window.location.hash);
+    if (el) void loadJumps().then((m) => m.holdNativeJump(el)).catch(noop);
+  });
+}
+
 /** Scroll to an element, an id ("#about" or "about") or a page y. Resolves
  *  on arrival (and after the focus move). Unknown targets resolve at once.
  *  A newer jump supersedes an older one (the older skips its focus). */

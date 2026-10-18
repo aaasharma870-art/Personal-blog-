@@ -106,6 +106,55 @@ function jump(id: string): Promise<void> {
   return el ? scrollToTarget(el, { cut: true, focus: true, history: "replace" }) : Promise.resolve();
 }
 
+/** Is `el` on screen: its box inside the viewport, below the header. */
+function onScreen(el: Element): boolean {
+  const r = el.getBoundingClientRect();
+  return r.height > 0 && r.top >= 72 && r.bottom <= window.innerHeight;
+}
+
+/** The section's head is where a "start" jump puts it: its top within the
+ *  upper part of the viewport (a tall section is judged by its top only). */
+function atHead(el: Element): boolean {
+  const r = el.getBoundingClientRect();
+  return r.top > -40 && r.top < window.innerHeight * 0.5;
+}
+
+/** The jump through the film cut to `section`, then a check that the row's
+ *  subject really is on screen (`ok`), because the page above it can still
+ *  re-flow for a few seconds after load (a lazy loader, a face swap) and
+ *  leave a jump short or long. Checked at once (a good landing adds no
+ *  wait); when it is off, up to three re-lands with `redo`, each instant and
+ *  followed by a 350 ms settle and another check. Resolves when `ok` holds,
+ *  or after the last try. */
+async function jumpAndShow(section: string, ok: (el: HTMLElement) => boolean, redo: (el: HTMLElement) => Promise<void>): Promise<void> {
+  await jump(section);
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(section);
+    if (!el || ok(el)) return;
+    if (i === 3) return;
+    await redo(el);
+    await new Promise<void>((r) => window.setTimeout(r, 350));
+  }
+}
+
+/** Fly the drone: the section, then the take-off pill centred if it is not on screen. */
+const showDrone = () =>
+  jumpAndShow(
+    "systems",
+    () => {
+      const t = document.getElementById("drone-takeoff");
+      return !t || onScreen(t);
+    },
+    () => {
+      const t = document.getElementById("drone-takeoff");
+      return t ? scrollToTarget(t, { immediate: true, block: "center", history: false }) : Promise.resolve();
+    },
+  );
+
+/** Dead Eye: the kill-list's head. */
+const showKillList = () =>
+  jumpAndShow("kill-list", atHead, (el) => scrollToTarget(el, { immediate: true, history: false }));
+
 /** Start a Dead Eye round: the DEAD_EYE_CALL event the games binder answers;
  *  before the binder ran, a click on the pill (the boot script queues it). */
 function startDeadEye(): void {
@@ -146,7 +195,7 @@ function GamesMenu({ box, onDone }: BoxProps) {
       run: () => {
         onDone(false);
         emit("fastlane");
-        void jump("systems").then(() => document.getElementById("drone-takeoff")?.click());
+        void showDrone().then(() => document.getElementById("drone-takeoff")?.click());
       },
     });
   if (page.deadEye)
@@ -158,7 +207,7 @@ function GamesMenu({ box, onDone }: BoxProps) {
       run: () => {
         onDone(false);
         emit("fastlane");
-        void jump("kill-list").then(startDeadEye);
+        void showKillList().then(startDeadEye);
       },
     });
   if (page.hunt && huntOn)

@@ -305,7 +305,9 @@ export default function PaletteDialog({
         },
         page.drone,
       );
-      toy("deadeye", eggText("cmd.deadeye"), "dead eye deadeye red dead kill-list killed mark game", fire("dead-eye"), eggEnabled("dead-eye") && page.deadEye);
+      // with the easter eggs off for the session the Games menu hides Dead Eye
+      // (components/site/dock-popovers.tsx); so does the palette
+      toy("deadeye", eggText("cmd.deadeye"), "dead eye deadeye red dead kill-list killed mark game", fire("dead-eye"), eggEnabled("dead-eye") && page.deadEye && !page.eggsOff);
       toy(
         "hints",
         pageText("palette.hints"),

@@ -12,6 +12,7 @@ import { emit } from "./events";
 import { DESKTOP_FINE, DESKTOP_WIDE, motionOffNow } from "./flags";
 import { gsapIfLoaded } from "./gsap";
 import {
+  cameraOwnsScroll,
   clampY,
   dropHashHold,
   getCutRunner,
@@ -130,6 +131,65 @@ function lenisGlide(l: LenisLike, y: number): Promise<boolean> {
   });
 }
 
+/* — holding a landing ———————————————————————————————————————————————— */
+
+/** How long an instant landing is held (the page settles in the first
+ *  seconds: a face swap, a lazy chunk, the Journey stack becoming the voyage). */
+const HOLD_MS = 4000;
+/** A target this far (px) from where it should be is put back. */
+const HOLD_SLACK = 3;
+
+let releaseHold: (() => void) | null = null;
+
+/** After an instant jump (the cut, the fast lane, a menu / palette / Games
+ *  jump) the page above the target can still re-flow for a few seconds. The
+ *  browser's own scroll anchoring used to absorb that; it is off on desktop
+ *  (app/globals.css: it and ScrollTrigger once fought over the position and
+ *  a landing ended 1900 px late), so the jump is HELD instead: whenever the
+ *  document's height changes within HOLD_MS, the target is measured again and
+ *  put back, instantly, if it moved. Ends at once when the visitor takes the
+ *  scroll (wheel, touch, press, key), a newer jump starts, the director's cut
+ *  owns the scroll or the time is up. */
+function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: number): void {
+  releaseHold?.();
+  if (typeof ResizeObserver === "undefined") return;
+  const until = performance.now() + HOLD_MS;
+  let timer = 0;
+  const opts = { capture: true, passive: true } as const;
+  const ro = new ResizeObserver(() => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(check, 80);
+  });
+  const stop = () => {
+    window.clearTimeout(timer);
+    window.clearTimeout(cap);
+    ro.disconnect();
+    for (const ev of USER_SCROLL_INPUT) window.removeEventListener(ev, stop, opts);
+    if (releaseHold === stop) releaseHold = null;
+  };
+  function check() {
+    if (seq !== jumpSeq || performance.now() > until || !el.isConnected || cameraOwnsScroll()) return stop();
+    const y = clampY(targetY(el, block));
+    if (Math.abs(y - window.scrollY) < HOLD_SLACK) return;
+    const l = getLenis();
+    if (l) l.scrollTo(y, { immediate: true, force: true });
+    else window.scrollTo({ top: y, behavior: "instant" });
+    gsapIfLoaded()?.ScrollTrigger.update();
+    emit("scroll:jump", { y, immediate: true });
+  }
+  const cap = window.setTimeout(stop, HOLD_MS);
+  ro.observe(document.documentElement);
+  for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, stop, opts);
+  releaseHold = stop;
+}
+
+/** The browser's own jump to a `#hash` target (a link clicked before the
+ *  desktop chunk takes links over, a hash typed into the address bar) is held
+ *  the same way (lib/smooth-scroll.ts `hashchange`). */
+export function holdNativeJump(el: Element): void {
+  holdLanding(el, "start", jumpSeq);
+}
+
 /* — jumps ——————————————————————————————————————————————————————————— */
 
 let jumpSeq = 0;
@@ -141,8 +201,9 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
   const el = typeof t === "number" ? null : resolveTarget(t);
   if (typeof t !== "number" && !el) return;
   const seq = ++jumpSeq;
-  // an explicit jump supersedes the load-time hash
+  // an explicit jump supersedes the load-time hash and any held landing
   dropHashHold();
+  releaseHold?.();
 
   // a closing modal (menu, palette, map) releases its lock first: Lenis's
   // start() would cancel a glide begun while it was stopped
@@ -211,6 +272,8 @@ export async function scrollToTarget(t: ScrollTarget, o: ScrollToTargetOptions =
       await jump();
     }
     await nextFrame();
+    // the page may still settle above the target: hold the landing
+    if (el && seq === jumpSeq) holdLanding(el, o.block ?? "start", seq);
     return;
   }
 

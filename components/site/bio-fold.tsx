@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +34,8 @@ export function BioFold({ text, more, less, className }: { text: string; more: s
       >
         {text}
       </p>
+      {/* the same chip as the other folds (fix2b's `Collapse chip`: a 32 px
+          bordered pill in the full text colour, a chevron that turns over) */}
       <button
         type="button"
         aria-expanded={open}
@@ -41,12 +44,10 @@ export function BioFold({ text, more, less, className }: { text: string; more: s
           setOpen((v) => !v);
           requestScrollRefresh();
         }}
-        className="mt-tier-pair hidden min-h-11 items-center gap-2 rounded-control px-3 type-small text-fg shadow-[inset_0_0_0_1px_var(--rule)] transition-colors hover:bg-surface-2 lg:[html.js_&]:inline-flex"
+        className="collapse-chip mt-tier-pair hidden min-h-8 w-fit cursor-pointer select-none items-center gap-2 rounded-full border py-1 pr-3 pl-3.5 type-meta text-fg transition-colors duration-(--dur-micro) lg:[html.js_&]:inline-flex"
       >
         <span>{open ? less : more}</span>
-        <span aria-hidden="true" className={cn("transition-transform duration-(--dur-base)", open && "rotate-180")}>
-          ↓
-        </span>
+        <ChevronDown aria-hidden="true" strokeWidth={2} className="collapse-chev" style={open ? { transform: "rotate(180deg)" } : undefined} />
       </button>
     </div>
   );
