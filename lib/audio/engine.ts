@@ -96,9 +96,14 @@ const STACK_MS = 100;
 const FOUND_SKIP_TAIL = 2.2;
 /** A cue that waits for a resume gives up after this long (s). */
 const LATE = 1.5;
-/** How long the credits' reel run-out sounds (s): the Snitch's flutter, if it
- *  is asked inside this window, starts after it. */
-const REEL_TAIL = 1.6;
+/** Two cues that meet at the credits (a jump to the end brings the reel's
+ *  run-out and the Snitch's wing flutter within a second of each other): the
+ *  later one starts after the earlier one's tail instead of on top of it.
+ *  cue → [the cue it waits for, that cue's tail in s]. */
+const AFTER: Partial<Record<CueId, readonly [CueId, number]>> = {
+  "snitch-flutter": ["reel-runout", 1.6],
+  "reel-runout": ["snitch-flutter", 0.8],
+};
 
 export type EngineHooks = {
   /** Keep the context running `ms` longer even though motion just turned
@@ -351,8 +356,10 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       const now = performance.now();
       if (now - (last.get(id) ?? -1e9) < (MIN_GAP[id] ?? (REPEATABLE.has(id) ? 15 : 70))) return;
       if (voices >= MAX_VOICES) return;
+      const after = AFTER[id];
+      const behind = after ? Math.max(0, after[1] - (now - (last.get(after[0]) ?? -1e9)) / 1000) : 0;
       last.set(id, now);
-      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay - late));
+      const wait = REPEATABLE.has(id) ? Math.max(0, delay - late) : unstack(now, Math.max(0, delay + behind - late));
       if (isFileCue(id)) {
         playFile(id, o, wait);
         return;
@@ -642,6 +649,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   }
 
   /* — Page events → cues ———————————————————————————————————————————— */
+  const shots = (list?: readonly Shot[]) => list?.forEach(([id, dt]) => play(id, {}, dt));
 
   /** Cues the page starts (not the visitor): collected for one task, then
    *  only the newest BURST_MAX play, and never more than BURST_MAX starts per
@@ -650,6 +658,12 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   let autoQ: { id: CueId; delay: number; scene?: string }[] = [];
   let autoT = 0;
   const autoStarts: number[] = [];
+  /** Is this card on screen (a third of the viewport or more)? A sliver at an
+   *  edge is not what the visitor is looking at. */
+  function onScreen(el: HTMLElement): boolean {
+    const r = el.getBoundingClientRect();
+    return Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0) >= window.innerHeight / 3;
+  }
   /** A card's scene (its meet and its impact) is heard only while that card
    *  is on screen when the queue flushes: a long jump (End, a scrollbar drag)
    *  crosses cards the visitor never sees, and a scene played at a landing
@@ -657,9 +671,7 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
    *  sound lab): kept. */
   function sceneShown(scene: string): boolean {
     const el = document.querySelector<HTMLElement>(`[data-act-card="${scene}"]`);
-    if (!el) return true;
-    const r = el.getBoundingClientRect();
-    return r.bottom > 0 && r.top < window.innerHeight;
+    return !el || onScreen(el);
   }
   function autoFlush(): void {
     autoT = 0;
@@ -709,6 +721,10 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
   const stung = new Set<string>();
   on("card:phase", (d) => {
     if (d.phase !== "m" || (d.prev !== "a" && d.prev !== "b") || stung.has(d.card)) return;
+    // a card the visitor jumped past (its damped p catches up off screen) stays
+    // silent, and sings when the title next appears on screen
+    const el = document.getElementById(d.card);
+    if (el && !onScreen(el)) return;
     stung.add(d.card);
     // never on top of the world's impact (a quick scroll crosses both at once)
     auto("title-sting", Math.max(0, 0.55 - (performance.now() - impactAt) / 1000));
@@ -743,15 +759,11 @@ export function createEngine(ctx: AudioContext, hooks: EngineHooks): Engine {
       if (!eggEnabled(d.id)) return;
       if (d.id === "nox") hooks.grace(1500);
       const list = EGG_CUES[d.id];
-      // the Snitch's wing flutter waits for the reel's run-out when the credits
-      // have just started it (a jump to the end: the two never play on top of each other)
-      const since = (performance.now() - (last.get("reel-runout") ?? -1e9)) / 1000;
-      const behind = d.id === "snitch" && since < REEL_TAIL ? REEL_TAIL - since : 0;
       if (list) {
         eggAt = performance.now();
-        eggTail = tailOf(list) + behind;
+        eggTail = tailOf(list);
       }
-      list?.forEach(([id, dt]) => play(id, {}, dt + behind));
+      shots(list);
     }),
   );
   on("game:start", (d) => {
