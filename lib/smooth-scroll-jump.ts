@@ -24,6 +24,7 @@ import {
   type ScrollTarget,
   type ScrollToTargetOptions,
 } from "./smooth-scroll";
+import { pageHydrated } from "./hydrated";
 import { whenLadder } from "./ladder";
 import { markWorldFontsReady, worldFontsMarked } from "./world-fonts";
 import { WORLD_IDS, type WorldId } from "./worlds";
@@ -161,6 +162,12 @@ const HOLD_QUIET_MS = 1000;
 /** A target this far (px) from where it should be is put back. */
 const HOLD_SLACK = 3;
 
+/** The Journey is still the server's STACK although the voyage will replace
+ *  it (motion on): that swap is the last layout change above Work (+10 px
+ *  @1440, −13 px @1024; the voyage chunk arrives 2-6 s in on a slow CPU). */
+const voyagePending = (): boolean =>
+  !motionOffNow() && document.querySelector('[data-voyage="stack"]') !== null;
+
 let releaseHold: (() => void) | null = null;
 
 /** After an instant jump (the cut, the fast lane, a menu / palette / Games
@@ -170,7 +177,8 @@ let releaseHold: (() => void) | null = null;
  *  a landing ended 1900 px late), so the jump is HELD instead: whenever the
  *  document's height changes, the target is measured again and put back,
  *  instantly, if it moved. Ends when the page has SETTLED (every font
- *  loaded, the warm-up ladder done, HOLD_QUIET_MS without a size change;
+ *  loaded, the page hydrated, the warm-up ladder done, the Journey's voyage
+ *  mounted, HOLD_QUIET_MS without a size change;
  *  capped at HOLD_CAP_MS: a slow CPU used to outlast the old fixed 4 s and
  *  was left 83-93 px short), at once when the visitor takes the scroll
  *  (wheel, touch, press, key), a newer jump starts, or the director's cut
@@ -187,6 +195,10 @@ function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: nu
   const opts = { capture: true, passive: true } as const;
   const ro = new ResizeObserver(() => {
     lastChange = performance.now();
+    // put it back in the SAME frame (an observer runs after layout, before
+    // paint: the reader never sees the 10-14 px the Journey's voyage adds or
+    // takes), and once more when the burst is over
+    check();
     window.clearTimeout(timer);
     timer = window.setTimeout(check, 80);
   });
@@ -211,7 +223,8 @@ function holdLanding(el: Element, block: "start" | "center" | "nearest", seq: nu
   const cap = window.setTimeout(stop, HOLD_CAP_MS);
   const settle = window.setInterval(() => {
     const fontsDone = !document.fonts || document.fonts.status !== "loading";
-    if (ladderDone && fontsDone && performance.now() - lastChange >= HOLD_QUIET_MS) stop();
+    const settled = ladderDone && fontsDone && pageHydrated() && !voyagePending();
+    if (settled && performance.now() - lastChange >= HOLD_QUIET_MS) stop();
   }, 250);
   ro.observe(document.documentElement);
   for (const ev of USER_SCROLL_INPUT) window.addEventListener(ev, stop, opts);

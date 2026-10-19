@@ -18,8 +18,9 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    Real <button>s, 44 px tall, always on screen (the header never hides).
    DESKTOP_FINE only (app/p3/dock.css: the full media query, never `lg:`):
    the server markup is the same for everyone and nothing shifts when the
-   client hydrates; short words below 80rem (Replay / Cut / Games), never a
-   hidden control.
+   client hydrates; short words below 84rem (Replay / Tour / Games), never a
+   hidden control (84rem: from 80rem the full words sat on the [AS] logo at
+   1280-1325 px, Oct 18 fix3a).
    - Replay: window.__intro.replay() (components/site/dock-actions.ts). Motion
      off (Pause or OS reduced motion): aria-disabled, and a press says why.
    - Director's cut: an ON/OFF chip. Running: aria-pressed and a press STOPS
@@ -27,7 +28,7 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
      though the player's own pointerdown / keydown stops the run first).
      Off: a menu button (aria-haspopup / aria-expanded) that opens the
      chooser (Quick / Full tour). Its accessible name is its visible words
-     ("Director's cut OFF", "Tour OFF" below 80rem), read from the content
+     ("Director's cut OFF", "Tour OFF" below 84rem), read from the content
      with no aria-label (WCAG 2.5.3 label in name: the short word "Tour" and
      the ON / OFF chip are part of the name; the title is the description).
      The hero button and the palette open the same chooser (DC_CHOOSER_EVENT)

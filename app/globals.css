@@ -576,6 +576,13 @@ html {
    adopted the new position: 3 of 14 jumps ended 1900 px past the Work
    heading. With the anchor off, the page stays where the jump put it and
    our own re-land (lib/smooth-scroll.ts) is the only thing that moves it.
+   A world-face swap above the viewport (the one reflow that is ours, not the
+   layout's) keeps the reader in place by itself: lib/world-fonts.ts
+   addTokenKeepingView (Oct 18, fix3a), the Pirates body face at the quiet end
+   (components/providers/world-fonts-impl.tsx), and every jump awaits the
+   faces above its target (lib/smooth-scroll-jump.ts cutReady). The anchoring
+   stays off: the 1900 px landings above came from the browser's choice of
+   anchor, not from a face swap.
    Phones and touch tablets (< 64rem) keep the browser's anchoring. */
 @media (min-width: 64rem) {
   html,
