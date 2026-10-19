@@ -322,17 +322,13 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
   if (!ok) {
     // The glide ended short and no input said why (an input, a scroll lock, a hidden tab all
     // bump `gen` and returned above): layout moved under it (the page got shorter near the end,
-    // Lenis clamped the target). Glide the rest of the way once; only a second miss pauses.
-    const yT = clampY(liveY(plan.keys[lastLeg.b]));
-    const rest = yT - window.scrollY;
-    if (Math.abs(rest) > 12) {
-      note(`reglide:${Math.round(rest)}`);
-      const again = await glide(r, yT, flyEnv(Math.abs(rest), A));
-      if (g !== r.gen || r.stopped) return 0;
-      if (!again) {
-        pause();
-        return 0;
-      }
+    // Lenis clamped the target) or the frames were too slow to finish it. Reach the rest of the way (see recover).
+    const lastKey = plan.keys[lastLeg.b];
+    const got = await recover(r, g, () => liveY(lastKey), A, lastKey);
+    if (got === "gone") return 0;
+    if (got === "lost") {
+      pause();
+      return 0;
     }
   }
   // layout moved under the glide and it ends on a rest: one short corrective glide, but only for a
@@ -345,8 +341,13 @@ async function doSpan(r: Run, g: number, first: number, entry: Entry | null): Pr
       const ok2 = await glide(r, yNow, fix);
       if (g !== r.gen || r.stopped) return 0;
       if (!ok2) {
-        pause();
-        return 0;
+        const lastKey = plan.keys[lastLeg.b];
+        const got = await recover(r, g, () => liveY(lastKey), A, lastKey);
+        if (got === "gone") return 0;
+        if (got === "lost") {
+          pause();
+          return 0;
+        }
       }
     }
   }
@@ -358,6 +359,33 @@ async function dipTo(y: number, key: Key | undefined): Promise<void> {
   const w = key ? worldOf(key.id) : null;
   if (w) await markWorldFontsReady(w).catch(() => {});
   await scrollToTarget(y, { cut: true, history: false });
+}
+
+/** How many times a glide that ended short is aimed again before the cut takes over. */
+const RE_AIMS = 3;
+
+/** A glide ended short of `aim()` and nothing said why (an input, a scroll lock or a hidden tab would have bumped
+ *  `gen`): slow frames, or a layout that moved. A visitor never asked for a pause, so the camera tries again up
+ *  to RE_AIMS times, then, when less than a screenful is left, cuts the last bit through the dip. Only a miss
+ *  that is still bigger than that (something really holds the scroll) is given up: "lost", the caller pauses.
+ *  "gone": the run moved on meanwhile (an input, a seek, a stop): the caller returns. */
+async function recover(r: Run, g: number, aim: () => number, a: number, key: Key | undefined): Promise<"ok" | "gone" | "lost"> {
+  for (let n = 1; n <= RE_AIMS; n++) {
+    const yT = clampY(aim());
+    const rest = yT - window.scrollY;
+    if (Math.abs(rest) <= 12) return "ok";
+    note(`reglide:${n}:${Math.round(rest)}`);
+    const ok = await glide(r, yT, flyEnv(Math.abs(rest), a));
+    if (g !== r.gen || r.stopped) return "gone";
+    if (ok) return "ok";
+  }
+  const yT = clampY(aim());
+  const left = Math.abs(yT - window.scrollY);
+  if (left <= 12) return "ok";
+  if (left >= window.innerHeight) return "lost";
+  note(`snap:${Math.round(left)}`);
+  await dipTo(yT, key);
+  return g !== r.gen || r.stopped ? "gone" : "ok";
 }
 
 async function doDip(r: Run, g: number, el: ElDip): Promise<boolean> {
@@ -729,18 +757,32 @@ export function seek(i: number): void {
     const vh = window.innerHeight;
     const d = Math.abs(y - window.scrollY);
     prepKey(keyAt);
+    // the chapter's first frame, from the live geometry (re-aims follow a layout that moved)
+    const yLive = (): number => {
+      if (el.k === "leg") {
+        const yA = liveY(keys[el.a]);
+        return yA + el.f0 * (liveY(keys[el.b]) - yA);
+      }
+      return liveY(keyAt!);
+    };
+    const a = TOURS[r.tour].a;
     if (d > 2) {
+      let ok: boolean;
       if (d <= 1.2 * vh) {
-        const ok = await glide(r, y, flyEnv(d, TOURS[r.tour].a));
+        ok = await glide(r, y, flyEnv(d, a));
         if (g !== r.gen || r.stopped) return;
-        if (!ok) return void pause();
       } else {
         const lead = Math.min(y, 0.6 * vh);
         await dipTo(y - lead, keyAt);
         if (g !== r.gen || r.stopped) return;
-        const ok = await glide(r, y, flyEnv(lead, TOURS[r.tour].a));
+        ok = await glide(r, y, flyEnv(lead, a));
         if (g !== r.gen || r.stopped) return;
-        if (!ok) return void pause();
+      }
+      if (!ok) {
+        // slow frames can end the glide short: aim again, then cut (see recover), pause only when stuck
+        const got = await recover(r, g, yLive, a, keyAt);
+        if (got === "gone") return;
+        if (got === "lost") return void pause();
       }
     }
     if (g !== r.gen || r.stopped) return;

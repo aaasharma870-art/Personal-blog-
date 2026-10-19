@@ -438,10 +438,12 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
 
       {/* ≥ 1024: the lane (cols 8–9, empty in every row). DEFAULT: ONE lens
           — the bracket + the figure — travels to the active row. ALT: the
-          lane stays empty (only Dead Eye's plate uses it). */}
+          lane stays empty (only Dead Eye's plate uses it). The lane sits 20 px low (top-5): the bracket's
+          arms reach 16 px past the figure, so at the first row they touched the plate caption above the
+          list, and the FIG label (mt-5) clears the bottom arms. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden grid-cols-12 gap-x-6 lg:grid">
         <div ref={laneRef} className="relative col-span-2 col-start-8">
-          <motion.div className="absolute inset-x-0 top-0 will-change-transform" style={{ y: ly }}>
+          <motion.div className="absolute inset-x-0 top-5 will-change-transform" style={{ y: ly }}>
             {lensOn ? (
               <>
                 <Lens
@@ -461,7 +463,7 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
                     ) : null}
                   </div>
                 </Lens>
-                <p className={cn("mt-3 type-meta transition-colors duration-(--dur-micro)", active !== null ? "text-fg-muted" : "text-fg-ghost")}>
+                <p className={cn("mt-5 type-meta transition-colors duration-(--dur-micro)", active !== null ? "text-fg-muted" : "text-fg-ghost")}>
                   {lensRowData?.figLabel}
                 </p>
               </>
