@@ -130,7 +130,10 @@ const HEADER_H = 68;
  *  program's last credit, "ACT IV • AFTER HARRY POTTER", half hidden). `y`, moved down (never more than 12 %
  *  of the viewport) until every visible line of the section before sits behind the header. */
 function clearTail(el: Element, y: number): number {
-  const prev = el.previousElementSibling;
+  // the block before the section (sections may sit in a wrapper of their own: climb to the first one that has a sibling)
+  let up: Element | null = el;
+  while (up && !up.previousElementSibling && up.parentElement && up.parentElement.tagName !== "MAIN") up = up.parentElement;
+  const prev = up?.previousElementSibling;
   if (!prev || !shown(prev)) return y;
   const sy = window.scrollY;
   const seen = pageTop(el);
@@ -276,7 +279,8 @@ function frameFilm(y: number, film: HTMLElement): number {
   const reach = 0.14 * vh;
   const cand = new Set<number>([y]);
   for (const [t, b] of lines) {
-    for (const v of [b - (vh - LINE_CLEAR), t - (vh - LINE_CLEAR) - 1, b - HEADER_H, t - HEADER_H - 1]) if (Math.abs(v - y) <= reach) cand.add(Math.round(v));
+    // a line just above the progress line's zone, just below the frame's edge, just behind the header, just under it
+    for (const v of [b - (vh - LINE_CLEAR), t - vh, b - HEADER_H, t - HEADER_H]) if (Math.abs(v - y) <= reach) cand.add(Math.round(v));
   }
   if (titleTop !== null) cand.add(Math.round(titleTop - HEADER_H - 6));
   let best = y;
