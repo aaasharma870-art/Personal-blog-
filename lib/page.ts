@@ -176,7 +176,12 @@ export type ChapterAppendix = "origin" | "supporting";
 /** An Act II head plate (M2 finish; components/worlds/idiots/plate-band.tsx).
  *  `media` is the DEFAULT plate; the ALT plays the other side of its media
  *  pair (lib/media.ts `variants` / `variantOf`). */
-export type HeadPlate = { media: MediaId };
+export type HeadPlate = {
+  media: MediaId;
+  /** The plate's own weather (fix3c: the work head's side plate; none when
+   *  left out). */
+  weather?: "spray" | "chalk" | "fireflies" | "motes";
+};
 
 /** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
  *  retired D-3 layer, kept only until the retirement pass deletes them. */
@@ -323,19 +328,22 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Work", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 2.287, t: 2.477 },
+    estVh: { d: 2.25, t: 2.362 },
     beats: [
       { id: "B16", at: -100, span: 100, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
       { id: "B17", at: 0, span: 80, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
-      { id: "B18", at: 80, span: 47, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
+      { id: "B18", at: 80, span: 45, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
     ],
     // head (M2 fix round 3, blind D24/A24: the corridor alone scored 3I .40,
     // "generic architecture"): Virus's astronaut pen on his desk — the
     // OTHER pen plate from the kill-list's (platePick swaps sides per
     // variant, so the two sections never show the same picture in one view)
-    // side (fix2c): the head's right column, the ICE corridor (the plate made
-    // for this head, S08); the pen band stays above it
-    props: { board: "MV-06", head: { media: "iconic-pen-alt" }, side: { media: "iconic-corridor-alt" } },
+    // side (fix2c): the head's right column; the pen band stays above it.
+    // fix3c: the yellow scooter at Pangong lake (the F-3I pair; the films
+    // chapter plays the other side, platePick swaps per variant), not the ICE
+    // corridor: that colonnade already shows in the Trading_Algos and Optuna
+    // windows right below (three stone corridors in four screens)
+    props: { board: "MV-06", head: { media: "iconic-pen-alt" }, side: { media: "F-3I-alt" } },
   },
   {
     id: "trading-algos",
@@ -346,7 +354,7 @@ export const page: readonly SectionEntry[] = [
     // split, window right (spec §3.2): the corridor, panning left, chalk dust
     stage: { mode: "split", side: "right", cues: [{ media: "iconic-corridor", camera: "pan-l", weather: "chalk" }] },
     tempo: "brisk",
-    estVh: { d: 1.938, t: 2.679 },
+    estVh: { d: 1.939, t: 2.678 },
     beats: [
       { id: "B19", at: -100, span: 100, kind: "stage-cue", timing: "scroll", star: true, weight: 1, feature: "P3-2" },
       { id: "B20", at: 0, span: 88.6, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -397,9 +405,9 @@ export const page: readonly SectionEntry[] = [
     tone: "raised",
     stage: { mode: "opaque" }, // H4: no film here
     tempo: "brisk",
-    estVh: { d: 1.026, t: 1.113 },
+    estVh: { d: 0.91, t: 0.977 },
     beats: [
-      { id: "B25", at: 0, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-7" },
+      { id: "B25", at: 0, span: 90, kind: "signature", timing: "time", star: true, weight: 1, feature: "P3-7" },
     ],
     props: { demo: "backtest" },
   },
@@ -411,7 +419,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Systems", primary: true },
     stage: { mode: "own" },
     tempo: "brisk",
-    estVh: { d: 1.956, t: 2.156 },
+    estVh: { d: 1.896, t: 2.195 },
     beats: [
       { id: "B26", at: 0, span: 79.1, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B27", at: 79.1, span: 97, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
@@ -440,7 +448,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Kill-list", keywords: ["killed", "rejected", "post-mortem", "graveyard"] },
     stage: { mode: "opaque" }, // the head inset keeps its own plate
     tempo: "brisk",
-    estVh: { d: 2.244, t: 2.738 },
+    estVh: { d: 2.245, t: 2.696 },
     beats: [
       { id: "B28", at: 0, span: 92.1, kind: "toy-invite", timing: "time", star: true, weight: 1, needsIdle: true, feature: "P3-8" },
       { id: "B29", at: 92.1, span: 87.5, kind: "physical-word", timing: "time", star: true, weight: 1, feature: "P3-7" },
@@ -463,7 +471,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Films", keywords: ["movies", "game", "intermission", "credits"] },
     stage: { mode: "own" },
     tempo: "slow",
-    estVh: { d: 3.541, t: 5.022 },
+    estVh: { d: 3.481, t: 4.927 },
     // each screen's title + finale belong to that film's world (rations)
     beats: [
       { id: "B30", at: -44.6, span: 40, kind: "letterbox", timing: "scroll", star: true, weight: 3, feature: "P3-6" },
@@ -476,7 +484,7 @@ export const page: readonly SectionEntry[] = [
       { id: "B33-finale", at: 184.9, span: 39.7, kind: "signature", timing: "time", star: true, weight: 2, world: "rdr2", feature: "existing" },
       { id: "B34", at: 224.6, span: 39.7, kind: "title", timing: "time", star: true, weight: 1, world: "hp", feature: "P3-7" },
       { id: "B34-finale", at: 264.2, span: 39.7, kind: "signature", timing: "time", star: true, weight: 2, world: "hp", feature: "existing" },
-      { id: "B35", at: 303.9, span: 48.6, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B35-sun", feature: "P3-6" },
+      { id: "B35", at: 303.9, span: 44.1, kind: "match-cut", timing: "scroll", star: true, weight: 1, pairWith: "B35-sun", feature: "P3-6" },
     ],
     props: { order: "acts" },
   },
@@ -527,11 +535,11 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Writing", primary: true },
     stage: { mode: "opaque" }, // paper
     tempo: "medium",
-    estVh: { d: 1.967, t: 2.47 },
+    estVh: { d: 1.845, t: 2.328 },
     beats: [
       { id: "B44", at: 0, span: 65.5, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },
       { id: "B45", at: 65.5, span: 67.6, kind: "fly-through", timing: "time", star: true, weight: 2, needsIdle: true, feature: "P3-7" },
-      { id: "B46", at: 160.2, span: 36.5, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
+      { id: "B46", at: 148, span: 36.5, kind: "signature", timing: "scroll", star: true, weight: 1, feature: "existing" },
     ],
     props: { source: "writing", preview: "vignette" },
   },
@@ -607,7 +615,7 @@ export const page: readonly SectionEntry[] = [
       cues: [{ media: "MV-08", camera: "push", weather: "motes" }],
     },
     tempo: "slow",
-    estVh: { d: 1.637, t: 1.837 },
+    estVh: { d: 1.638, t: 1.836 },
     beats: [
       // B57: IC-HP-12's existing once-per-session dart, the §2.1 exception
       { id: "B57", at: 0, span: 92.8, kind: "signature", timing: "time", star: true, weight: 2, feature: "existing" },

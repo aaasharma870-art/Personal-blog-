@@ -137,14 +137,21 @@ export function Writing({ entry, number }: SectionProps<"index">) {
       {dusk ? (
         <>
           {/* room for the dusk: no text ever sits under the fade */}
-          <div aria-hidden="true" className="h-[18vh] boot:h-[max(18vh,calc(19.5rem_-_var(--spacing-section)))]" />
+          {/* fix3c: the first 35 % of the dusk box is fully transparent (the mask
+              below), so the room is 35 % of the box shorter: the box now starts
+              over the foot of the last line's own clear space, never over text
+              and never visibly (B46 keeps its >= 300 px box) */}
+          <div
+            aria-hidden="true"
+            className="h-[max(0px,calc(0.65_*_(18vh_+_var(--spacing-section))_-_var(--spacing-section)))] boot:h-[max(0px,calc(0.65_*_max(18vh_+_var(--spacing-section),19.5rem)_-_var(--spacing-section)))]"
+          />
           {/* B46: the camp fades up out of this dusk (a scroll star) */}
           <div
             aria-hidden="true"
             data-dusk=""
             {...planeAttrs(dusk.tone, dusk.world)}
             {...beatAttrs("B46", { weight: 1 })}
-            className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent,#000_85%)] boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]"
+            className="pointer-events-none absolute bottom-[calc(-1*var(--spacing-section))] left-1/2 h-[calc(18vh+var(--spacing-section))] w-screen -translate-x-1/2 bg-bg [mask-image:linear-gradient(to_bottom,transparent_35%,#000_85%)] boot:h-[max(calc(18vh_+_var(--spacing-section)),19.5rem)]"
           >
             {/* fix2c: the dusk is no longer an empty 300 px: the camp's
                 fireflies (the stage's own sprites; a slow blink, <= 16, gone

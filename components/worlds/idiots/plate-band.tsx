@@ -469,16 +469,17 @@ export function HeadBand({
 
 /**
  * SidePlate — the work head's RIGHT COLUMN (fix2c, "add visuals": the first
- * screen after the hero CTA used to be the h2 and 45 % empty grid). The ICE
- * stone corridor (iconic-corridor-alt, the head plate it was made for, S08;
- * ALT iconic-corridor with its L10 loop), 5:4, rounded, beside the h2 at ≥
- * 64rem (the host hides it below). Existing machinery only: the settle
- * entrance on the 90 % line (never armed at opacity 0), the slow scroll drift
- * 1.05 → 1 of a LivePlate camera (a loop's plate stays still), and 3 Idiots
- * chalk dust rising in the beam (WeatherLayer, image zone; ≤ 16 sprites, gone
- * under reduced motion and Pause). 0 video bytes on the DEFAULT side (no loop
- * is registered to the alt plate); the ALT plays L10 through the decoder
- * lock. Decorative plate; the caption (under it) names the scene.
+ * screen after the hero CTA used to be the h2 and 45 % empty grid). fix3c: the
+ * yellow scooter at Pangong lake (F-3I-alt; the ALT side plays F-3I with its
+ * L22 lake loop), not the ICE stone corridor, which already shows in the two
+ * windows right below. 5:4, rounded, beside the h2 at ≥ 64rem (the host hides
+ * it below), cropped about the plate's registered `focal` (the scooter).
+ * Existing machinery only: the settle entrance on the 90 % line (never armed
+ * at opacity 0), the slow scroll drift 1.05 → 1 of a LivePlate camera (a
+ * loop's plate stays still), and the plate's own weather when its spec names
+ * one (`HeadPlate.weather`; none for the lake). 0 video bytes on the DEFAULT
+ * side (no loop is registered to the alt plate); the ALT plays L22 through
+ * the decoder lock. Decorative plate; the caption (under it) names the scene.
  */
 export function SidePlate({
   spec,
@@ -506,7 +507,7 @@ export function SidePlate({
       enterAt={0.9}
       camera={camera}
       className={className}
-      overlay={<WeatherLayer kind="chalk" zone="image" />}
+      overlay={spec.weather ? <WeatherLayer kind={spec.weather} zone="image" /> : undefined}
       caption={<SceneCaption k={captionKey} place="under" />}
     />
   );

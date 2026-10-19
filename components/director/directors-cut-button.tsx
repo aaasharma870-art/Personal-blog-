@@ -49,6 +49,14 @@ export function DirectorsCutButton() {
   const label = copyText("dc.button");
   if (!copyVisible(label)) return null;
   const paused = copyText("dc.paused");
+  // fix3c: the same word as the header dock's button at every width. The dock
+  // wears its short word ("Tour") below 80rem and the full one above; this
+  // button reuses the dock's own .dock-s / .dock-f switch (app/p3/dock.css), so
+  // the two never disagree, wherever that breakpoint sits. Below it the full
+  // label is the tooltip.
+  const full = label.text.replace(/^▶\s*/u, "");
+  const shortCopy = copyText("dock.cut.short");
+  const short = copyVisible(shortCopy) ? shortCopy.text : null;
   return (
     <button
       type="button"
@@ -56,11 +64,19 @@ export function DirectorsCutButton() {
       data-dc-shots={shotList()}
       data-enhance-queue='[data-dc="hero"]'
       data-house-type=""
+      title={short ? full : undefined}
       className="try-btn hidden df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
     >
       <Play aria-hidden="true" strokeWidth={2} />
       {/* the copy's leading play glyph is the icon above */}
-      <span>{label.text.replace(/^▶\s*/u, "")}</span>
+      {short ? (
+        <>
+          <span className="dock-f">{full}</span>
+          <span className="dock-s">{short}</span>
+        </>
+      ) : (
+        <span>{full}</span>
+      )}
       {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
     </button>
   );

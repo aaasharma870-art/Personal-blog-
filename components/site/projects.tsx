@@ -74,6 +74,9 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
       grid
       gridMask="linear-gradient(to bottom, black 0%, black 18%, transparent 72%)"
       fadeIn
+      // fix3c: the pen band sits flush under the act card (the section's own
+      // 72 px top padding was a strip of a different shade between them)
+      className={head ? "pt-0" : undefined}
       lead={
         head ? (
           <HeadBand
@@ -87,8 +90,9 @@ export function Projects({ entry, number }: SectionProps<"gauntlet">) {
       }
     >
       {/* fix2c: the head is two columns at >= 64rem: the h2, intro and
-          standing rule left, the ICE corridor plate right (it used to be 45 %
-          empty grid); below 64rem the plate is hidden and the stack is today's */}
+          standing rule left, a film plate right (fix3c: the Pangong lake; it
+          used to be 45 % empty grid); below 64rem the plate is hidden and the
+          stack is today's */}
       <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
         <div className={side ? "lg:col-span-7" : "lg:col-span-12"}>
           <SectionHead

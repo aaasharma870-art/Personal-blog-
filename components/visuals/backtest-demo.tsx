@@ -99,8 +99,12 @@ export function BacktestDemo() {
   }, [endVal, reduce]);
 
   return (
-    <div className="surface-1 rounded-frame p-tier-group sm:p-8">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <div className="surface-1 rounded-frame p-tier-group sm:p-8 dw:grid dw:grid-cols-[minmax(0,1fr)_clamp(18.5rem,27%,22rem)] dw:gap-x-10">
+      {/* fix3c: at >= 64rem the card spans the page column in two columns: the
+          title and the plot left, the toggle and the explanation in a right
+          rail (the card used to stop at 56rem and leave 37 % of the row empty).
+          Same DOM order at every width: only the grid cell moves. */}
+      <div className="flex flex-wrap items-start justify-between gap-3 dw:col-start-1 dw:row-start-1">
         <div>
           <p className="type-meta text-fg-muted">
             Interactive<span aria-hidden="true" className="text-fg-ghost">{" • "}</span>
@@ -117,7 +121,7 @@ export function BacktestDemo() {
       </div>
 
       {/* toggle */}
-      <div className="mt-tier-group inline-flex flex-wrap rounded-control p-1 shadow-[inset_0_0_0_1px_var(--rule)]">
+      <div className="mt-tier-group inline-flex flex-wrap rounded-control p-1 shadow-[inset_0_0_0_1px_var(--rule)] dw:col-start-2 dw:row-start-1 dw:row-span-1 dw:mt-0 dw:flex dw:flex-col dw:self-start dw:gap-1">
         {(
           [
             ["naive", "Naïve · zero-cost · in-sample"],
@@ -130,26 +134,30 @@ export function BacktestDemo() {
             aria-pressed={mode === m}
             onClick={() => setMode(m)}
             className={cn(
-              "min-h-11 rounded-[9px] px-3 type-small transition-colors",
+              "min-h-11 rounded-[9px] px-3 type-small transition-colors dw:flex dw:items-center dw:gap-3 dw:text-left",
               mode === m
                 ? m === "naive"
-                  ? "bg-surface-2 text-fg"
-                  : "bg-surface-2 text-kill"
+                  ? "bg-surface-2 text-fg dw:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_45%,transparent)]"
+                  : "bg-surface-2 text-kill dw:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--kill)_45%,transparent)]"
                 : "text-fg-muted hover:text-fg",
             )}
           >
+            <span
+              aria-hidden="true"
+              className={cn("hidden h-0.5 w-5 shrink-0 rounded-full dw:block", m === "naive" ? "bg-accent" : "bg-kill")}
+            />
             {label}
           </button>
         ))}
       </div>
 
       {/* chart */}
-      <div className="relative mt-4">
+      <div className="relative mt-4 dw:col-start-1 dw:row-start-2">
         <svg
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="none"
-          className="h-60 w-full touch-pan-y"
+          className="h-60 w-full touch-pan-y dw:h-72"
           role="img"
           aria-label="Conceptual, synthetic equity curve illustrating how realistic costs and out-of-sample testing erode a naïve backtest."
           onPointerMove={onMove}
@@ -250,7 +258,7 @@ export function BacktestDemo() {
         </div>
       </div>
 
-      <p className="mt-tier-group max-w-body type-small text-fg-muted">
+      <p className="mt-tier-group max-w-body type-small text-fg-muted dw:col-start-2 dw:row-start-2 dw:mt-4">
         Synthetic illustration, not my results. Same idea every strategy meets:
         a curve that looks unbeatable with{" "}
         <span className="text-fg">no costs and in-sample tuning</span>{" "}
