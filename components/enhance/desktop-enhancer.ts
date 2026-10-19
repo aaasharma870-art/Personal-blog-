@@ -10,7 +10,10 @@
    on `[data-enhance-queue]` elements that the pre-paint boot script
    recorded before anything was bound (components/site/boot-head-script.tsx).
    The attribute's value is the selector the click replays on (empty = the
-   element's #id).
+   element's #id). Nothing binds before the page has HYDRATED (lib/hydrated.ts,
+   Oct 18 fix3a): the binders reach into sections' server markup (the games'
+   drone host is appended inside Systems), which a Suspense boundary that has
+   not hydrated yet would find changed (React #418).
    One binder per idle slice (lib/idle.ts): the step-2 task stays short (no
    long task under the first wheel, P3-2 #9). The boot script keeps
    recording until the last slice, so each binder's own queued clicks are
@@ -20,6 +23,7 @@
    stops.
    ========================================================================== */
 
+import { whenPageHydrated } from "@/lib/hydrated";
 import { onIdle } from "@/lib/idle";
 import bindWords from "./binders/words";
 import bindHotspots from "./binders/hotspots";
@@ -82,7 +86,9 @@ export default function enhance(root: Document): () => void {
   const undo: (() => void)[] = [];
   const owned: string[] = [];
   let cancel = () => {};
+  let stopped = false;
   const step = (i: number) => {
+    if (stopped) return;
     const next = BINDERS[i];
     if (!next) {
       // all bound: a claimed element's remaining clicks were answered live
@@ -104,8 +110,11 @@ export default function enhance(root: Document): () => void {
       cancel = onIdle(() => step(i + 1), { timeout: 500 });
     }
   };
-  cancel = onIdle(() => step(0), { timeout: 500 });
+  void whenPageHydrated().then(() => {
+    if (!stopped) cancel = onIdle(() => step(0), { timeout: 500 });
+  });
   return () => {
+    stopped = true;
     cancel();
     for (const u of undo) u();
   };

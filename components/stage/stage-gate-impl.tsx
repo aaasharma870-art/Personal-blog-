@@ -1,8 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { bootGateOn, shouldSkip, useDesktopFine, useMotionPausedAtBoot, useReducedMotion, useSaveData, useSkipFlags } from "@/lib/flags";
+import { pageHydrated, subscribePageHydrated } from "@/lib/hydrated";
 import { registerChunk, useLadder } from "@/lib/ladder";
 
 /* ============================================================================
@@ -15,7 +16,11 @@ import { registerChunk, useLadder } from "@/lib/ladder";
      DESKTOP_FINE · motion on (no OS reduced motion, not paused) · the view
      did not start paused · the boot gate is on (html.js; the CSS layout
      gates key on the same) · no Save-Data / slow link · no `?skip=stage`
-     · ladder step 3 reached (after the intro's quiet window; lib/ladder).
+     · ladder step 3 reached (after the intro's quiet window; lib/ladder)
+     · the page has HYDRATED (lib/hydrated.ts; Oct 18, fix3a): the stage
+       portals its layers into the split windows, which live in the sections'
+       own Suspense boundaries; a layer put there before the boundary hydrated
+       made React throw #418 on a slow CPU.
    Phones, reduced motion and a paused view never fetch the chunk. Once
    mounted it stays mounted: a mid-session Pause or reduced motion is the
    stage's own concern (it stops at once; the CSS drops it in the same
@@ -35,9 +40,10 @@ export default function StageGateImpl() {
   const saveData = useSaveData();
   const skip = useSkipFlags();
   const step3 = useLadder(3);
+  const hydrated = useSyncExternalStore(subscribePageHydrated, pageHydrated, () => false);
   const [armed, setArmed] = useState(false);
 
-  const eligible = fine && !reduced && !pausedAtBoot && !saveData && !shouldSkip("stage", skip) && step3;
+  const eligible = fine && !reduced && !pausedAtBoot && !saveData && !shouldSkip("stage", skip) && step3 && hydrated;
 
   // the ladder prefetches the stage chunk early (idle slices) on desktop
   useEffect(() => {
