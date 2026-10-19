@@ -9,6 +9,7 @@ import {
   clearDirectorsCutEnded,
   getPlayhead,
   holdDirectorsCutEnd,
+  lastInputWasKey,
   overlayOpen,
   pauseDirectorsCut,
   restartDirectorsCut,
@@ -168,8 +169,9 @@ export function Transport() {
   useEffect(() => {
     pauseBtn.current?.focus({ preventScroll: true });
     had.current = Boolean(pauseBtn.current && document.activeElement === pauseBtn.current);
-    // the browser's own modality: a script focus shows its ring only after a key
-    kbd.current = Boolean(pauseBtn.current?.matches(":focus-visible"));
+    // the modality of the input that STARTED the tour (api.ts keeps it); :focus-visible would also
+    // remember an unrelated key press from earlier in the page view
+    kbd.current = lastInputWasKey();
     const key = () => {
       kbd.current = true;
     };

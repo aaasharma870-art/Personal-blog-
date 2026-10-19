@@ -221,6 +221,21 @@ export const overlayOpen = (): boolean => {
 
 const INPUT = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
 
+/** Which input made the latest press, a key or a pointer. The lazy transport mounts AFTER the click that
+ *  starts a tour, so it cannot see that input itself, and the browser's `:focus-visible` on its script-focused
+ *  Pause button also remembers an earlier, unrelated key press. A tour started by the mouse must not arm the
+ *  end card's "Replay the tour" button (Space / Enter would restart a 90-180 s tour). This file loads with
+ *  the page (the dock, the palette and the chooser import it), so these listeners are in place before any
+ *  start. */
+let lastWasKey = false;
+if (typeof window !== "undefined") {
+  const seen = { capture: true, passive: true } as const;
+  window.addEventListener("keydown", () => (lastWasKey = true), seen);
+  window.addEventListener("pointerdown", () => (lastWasKey = false), seen);
+}
+/** Whether the latest press (before a start, or before now) was a key. */
+export const lastInputWasKey = (): boolean => lastWasKey;
+
 /** Start a guided tour (call it from the click). Always from the top of the
  *  page. Returns whether it started (the caller's focus return depends on it). */
 export function startDirectorsCut(tour: Tour = "full"): boolean {

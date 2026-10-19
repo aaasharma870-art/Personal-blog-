@@ -122,6 +122,38 @@ function headY(el: Element): number {
   return title ? Math.max(pageTop(title) - 0.3 * vh, base) : base;
 }
 
+/** The header covers the top 68 px of a frame. */
+const HEADER_H = 68;
+
+/** A head frame puts the section's top 0.15 vh below the top of the frame, so the last lines of the section
+ *  BEFORE it can show in the strip under the header, sliced by its edge (About's frame showed the opening
+ *  program's last credit, "ACT IV • AFTER HARRY POTTER", half hidden). `y`, moved down (never more than 12 %
+ *  of the viewport) until every visible line of the section before sits behind the header. */
+function clearTail(el: Element, y: number): number {
+  const prev = el.previousElementSibling;
+  if (!prev || !shown(prev)) return y;
+  const sy = window.scrollY;
+  const seen = pageTop(el);
+  let lowest = 0;
+  const walk = document.createTreeWalker(prev, NodeFilter.SHOW_TEXT);
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+    if (!n.textContent?.trim()) continue;
+    const p = n.parentElement;
+    if (!p || p.closest("script, style, noscript")) continue;
+    const cs = getComputedStyle(p);
+    if (cs.display === "none" || cs.visibility === "hidden" || Number(cs.opacity) < 0.1) continue;
+    const range = document.createRange();
+    range.selectNodeContents(n);
+    for (const r of range.getClientRects()) {
+      if (r.width < 4 || r.height < 6) continue;
+      const bottom = r.bottom + sy;
+      if (bottom <= seen) lowest = Math.max(lowest, bottom);
+    }
+  }
+  const need = lowest - (y + HEADER_H) + 2;
+  return need > 0 && need <= 0.12 * vhNow() ? y + need : y;
+}
+
 /** A time star's centred frame. */
 function starY(el: Element): number {
   const r = el.getBoundingClientRect();
@@ -191,6 +223,72 @@ function starFrameY(el: Element, id: string): number {
 function tallFilm(el: Element): HTMLElement | null {
   const film = el.closest<HTMLElement>("[data-films-world]");
   return film && film.getBoundingClientRect().height > vhNow() - 100 ? film : null;
+}
+
+/** The visible text lines of `root` as page-y [top, bottom] pairs, trimmed by 15 % each side (a line box is
+ *  taller than its glyphs). */
+function textLines(root: Element): [number, number][] {
+  const sy = window.scrollY;
+  const out: [number, number][] = [];
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+    if (!n.textContent?.trim() || n.parentElement?.closest("script, style, noscript")) continue;
+    const range = document.createRange();
+    range.selectNodeContents(n);
+    for (const r of range.getClientRects()) {
+      if (r.width < 4 || r.height < 8) continue;
+      const trim = 0.15 * r.height;
+      out.push([r.top + sy + trim, r.bottom + sy - trim]);
+    }
+  }
+  return out;
+}
+
+/** Frame 1 of a film block taller than the viewport holds its title, the plate and the caption, with the first
+ *  lines of the quote and the paragraphs under them. `y`, moved (at most 14 % of the viewport either way) to
+ *  where the fewest of those lines are sliced by the header's lower edge or lie under the progress line, the
+ *  title and the caption counting triple: the block's own bottom is frame 2's. */
+function frameFilm(y: number, film: HTMLElement): number {
+  const vh = vhNow();
+  const lines = textLines(film);
+  const title = film.querySelector("h3");
+  const tr = title?.getBoundingClientRect();
+  const titleTop = tr ? tr.top + window.scrollY : null;
+  const titleBottom = tr ? tr.bottom + window.scrollY : null;
+  const zone = (v: number): number => v + vh - LINE_CLEAR;
+  const cost = (v: number): number => {
+    let c = 0;
+    for (const [t, b] of lines) {
+      const head = t < v + HEADER_H && b > v + HEADER_H;
+      const under = b > zone(v) && t < v + vh;
+      if (!head && !under) continue;
+      c += titleTop !== null && titleBottom !== null && t >= titleTop - 2 && b <= titleBottom + 2 ? 3 : 1;
+    }
+    for (const cap of film.querySelectorAll<HTMLElement>(CAPTION)) {
+      const r = cap.getBoundingClientRect();
+      if (r.height < 4) continue;
+      const t = r.top + window.scrollY;
+      const b = r.bottom + window.scrollY;
+      if (b > zone(v) || t < v + HEADER_CLEAR) c += 3;
+    }
+    return c;
+  };
+  const reach = 0.14 * vh;
+  const cand = new Set<number>([y]);
+  for (const [t, b] of lines) {
+    for (const v of [b - (vh - LINE_CLEAR), t - (vh - LINE_CLEAR) - 1, b - HEADER_H, t - HEADER_H - 1]) if (Math.abs(v - y) <= reach) cand.add(Math.round(v));
+  }
+  if (titleTop !== null) cand.add(Math.round(titleTop - HEADER_H - 6));
+  let best = y;
+  let bestCost = cost(y);
+  for (const v of cand) {
+    const c = cost(v);
+    if (c < bestCost || (c === bestCost && Math.abs(v - y) < Math.abs(best - y))) {
+      best = v;
+      bestCost = c;
+    }
+  }
+  return best;
 }
 
 /** The wake-up a closed ledger lens needs before the kill-list's head is held (components/site/ledger-reckoning.tsx). */
@@ -282,14 +380,14 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
   const headKey = mk({
     id: `${it.id}:head`,
     kind: "head",
-    y: fitCaptions(hy),
+    y: fitCaptions(clearTail(el, hy)),
     hold: research ? H.headResearch : H.head,
     tempo,
     chapter,
     prep: PREP[it.id],
     resolve: () => {
       const e = document.getElementById(it.id);
-      return e ? fitCaptions(headY(e)) : null;
+      return e ? fitCaptions(clearTail(e, headY(e))) : null;
     },
   });
   keys.push(headKey);
@@ -314,9 +412,23 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
    *  (the plate-centred frame, as before) and then the bottom of the block (quote, its
    *  attribution and the paragraphs under it, which a centred frame slices mid-sentence). */
   const finaleKeys = (s: HTMLElement, hold: number): Key[] => {
-    const first = starKey(s, hold, "finale");
     const film = tallFilm(s);
     const beat = s.dataset.beat ?? "";
+    let first = starKey(s, hold, "finale");
+    if (film) {
+      // a tall block: frame 1 is fitted to its text (frameFilm); frame 2 shows the bottom
+      const plain = first.resolve;
+      first = {
+        ...first,
+        y: frameFilm(first.y, film),
+        resolve: () => {
+          const e = s.isConnected ? s : starEl(beat);
+          const f = e?.closest<HTMLElement>("[data-films-world]");
+          const y0 = plain?.() ?? null;
+          return y0 !== null && f ? frameFilm(y0, f) : y0;
+        },
+      };
+    }
     const lowY = (f: Element): number => f.getBoundingClientRect().bottom + window.scrollY - vhNow() + LINE_CLEAR + 16;
     // the second frame must be a real step down from the first (else the plate frame already shows it all)
     if (!film || lowY(film) - first.y < 0.12 * vhNow()) return [first];

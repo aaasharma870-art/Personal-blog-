@@ -44,18 +44,30 @@ type Box = { key: string; x: number; y: number; w: number; h: number; node: Sche
 type Joint = { d: string; dashed?: boolean; order: number };
 type Layout = { W: number; H: number; boxes: Box[]; joints: Joint[]; tapes: { x: number; y: number; order: number }[] };
 
-/** ≥ 1024: left → right. */
-function horizontal(spec: SchematicSpec): Layout {
+/** ≥ 1024: left → right. The boxes are as tall as their wrapped text needs at the width the drawing is
+ *  actually drawn at (`widthPx`, null = not measured yet: the roomy default). */
+function horizontal(spec: SchematicSpec, widthPx: number | null = null): Layout {
   const W = 1000;
   const n = spec.chain.length;
   const boxes: Box[] = [];
   const joints: Joint[] = [];
   const tapes: Layout["tapes"] = [];
-  const NH = 76;
+  // the chain boxes, and (fork) the two terminal boxes; the wide branch box is one line and keeps its own height
+  const cw = spec.fork ? 200 : n > 5 ? 138 : 170;
+  const FW = 190;
+  const NH = fitHeight(
+    [
+      [spec.chain, cw],
+      ...(spec.fork ? ([[spec.fork, FW]] as [readonly SchematicNode[], number][]) : []),
+    ],
+    W,
+    widthPx,
+    76,
+  );
   if (spec.fork) {
-    const cw = 200;
     const gap = n > 1 ? (740 - 20 - n * cw) / Math.max(1, n - 1) : 0;
-    const cy = 130;
+    const f1y = 24 + NH + 60;
+    const cy = (24 + f1y + NH) / 2;
     spec.chain.forEach((node, i) => {
       boxes.push({ key: `c${i}`, x: 20 + i * (cw + gap), y: cy - NH / 2, w: cw, h: NH, node, order: i });
       if (i > 0) {
@@ -68,14 +80,13 @@ function horizontal(spec: SchematicSpec): Layout {
     const endX = 20 + (n - 1) * (cw + gap) + cw;
     const fx = 790;
     const [a, b] = spec.fork;
-    boxes.push({ key: "f0", x: fx, y: 24, w: 190, h: NH, node: a, order: n });
-    boxes.push({ key: "f1", x: fx, y: 160, w: 190, h: NH, node: b, order: n });
+    boxes.push({ key: "f0", x: fx, y: 24, w: FW, h: NH, node: a, order: n });
+    boxes.push({ key: "f1", x: fx, y: f1y, w: FW, h: NH, node: b, order: n });
     const mx = (endX + fx) / 2;
-    joints.push({ d: `M${endX} ${cy} L${mx} ${cy} M${mx} ${24 + NH / 2} L${mx} ${160 + NH / 2} M${mx} ${24 + NH / 2} L${fx} ${24 + NH / 2} M${mx} ${160 + NH / 2} L${fx} ${160 + NH / 2}`, order: n - 1 });
+    joints.push({ d: `M${endX} ${cy} L${mx} ${cy} M${mx} ${24 + NH / 2} L${mx} ${f1y + NH / 2} M${mx} ${24 + NH / 2} L${fx} ${24 + NH / 2} M${mx} ${f1y + NH / 2} L${fx} ${f1y + NH / 2}`, order: n - 1 });
     tapes.push({ x: mx, y: cy, order: n - 1 });
-    return { W, H: 260, boxes, joints, tapes };
+    return { W, H: f1y + NH + 24, boxes, joints, tapes };
   }
-  const cw = n > 5 ? 138 : 170;
   const gap = n > 1 ? (W - 24 - n * cw) / (n - 1) : 0;
   const top = 24;
   const xOf = (i: number) => 12 + i * (cw + gap);
@@ -132,16 +143,22 @@ function wrapLines(text: string, cpl: number): number {
   return lines;
 }
 
-/** Node height in SVG units for a stack drawn `widthPx` wide (null: not measured, the roomy default). */
-function stackNodeHeight(spec: SchematicSpec, W: number, boxW: number, widthPx: number | null): number {
-  const base = 64;
+/** Node height in SVG units for boxes drawn `widthPx` wide: the tallest wrapped text of any group
+ *  (nodes with the box width they sit in, in SVG units). null / tiny width: not measured, `base`. */
+function fitHeight(groups: readonly (readonly [readonly SchematicNode[], number])[], W: number, widthPx: number | null, base: number): number {
   if (!widthPx || widthPx < 80) return base;
   const scale = widthPx / W;
-  const cpl = Math.max(4, Math.floor((boxW * scale - BOX_PAD_X) / MONO_ADV));
-  const nodes = [...spec.chain, ...(spec.fork ?? []), ...(spec.branch ? [spec.branch] : [])];
   let most = 1;
-  for (const n of nodes) most = Math.max(most, wrapLines(n.label, cpl) + (n.note ? wrapLines(n.note, cpl) : 0));
+  for (const [nodes, boxW] of groups) {
+    const cpl = Math.max(4, Math.floor((boxW * scale - BOX_PAD_X) / MONO_ADV));
+    for (const n of nodes) most = Math.max(most, wrapLines(n.label, cpl) + (n.note ? wrapLines(n.note, cpl) : 0));
+  }
   return Math.max(base, Math.ceil((most * LINE_PX + PAD_PX) / scale));
+}
+
+/** The stack's node height (see fitHeight). */
+function stackNodeHeight(spec: SchematicSpec, W: number, boxW: number, widthPx: number | null): number {
+  return fitHeight([[[...spec.chain, ...(spec.fork ?? []), ...(spec.branch ? [spec.branch] : [])], boxW]], W, widthPx, 64);
 }
 
 /** < 1024: top → bottom (the M1 stack, plus the fork / branch). */
@@ -185,19 +202,20 @@ function vertical(spec: SchematicSpec, widthPx: number | null = null): Layout {
 }
 
 function Drawing({ spec, dir, phase, alt, className }: { spec: SchematicSpec; dir: "h" | "v"; phase: EnterPhase; alt: boolean; className?: string }) {
-  // the stack's node height follows the width it is actually drawn at (see stackNodeHeight)
+  // the node height follows the width the drawing is actually drawn at (see fitHeight); a drawing hidden
+  // at this breakpoint (display: none) reads 0 and keeps the roomy default
   const box = useRef<HTMLDivElement>(null);
   const [px, setPx] = useState<number | null>(null);
   useLayoutEffect(() => {
     const el = box.current;
-    if (!el || dir !== "v" || typeof ResizeObserver === "undefined") return;
+    if (!el || typeof ResizeObserver === "undefined") return;
     const measure = () => setPx(el.clientWidth > 0 ? Math.round(el.clientWidth) : null);
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [dir]);
-  const layout = dir === "v" ? vertical(spec, px) : horizontal(spec);
+  }, []);
+  const layout = dir === "v" ? vertical(spec, px) : horizontal(spec, px);
   const { W, H, boxes, joints, tapes } = layout;
   const armed = phase === "armed";
   const live = phase === "entered";
