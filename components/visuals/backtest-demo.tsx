@@ -99,7 +99,7 @@ export function BacktestDemo() {
   }, [endVal, reduce]);
 
   return (
-    <div className="surface-1 rounded-frame p-tier-group sm:p-8 dw:grid dw:grid-cols-[minmax(0,1fr)_clamp(15rem,27%,22rem)] dw:gap-x-10">
+    <div className="surface-1 rounded-frame p-tier-group sm:p-8 dw:grid dw:grid-cols-[minmax(0,1fr)_clamp(18.5rem,27%,22rem)] dw:gap-x-10">
       {/* fix3c: at >= 64rem the card spans the page column in two columns: the
           title and the plot left, the toggle and the explanation in a right
           rail (the card used to stop at 56rem and leave 37 % of the row empty).
@@ -137,8 +137,8 @@ export function BacktestDemo() {
               "min-h-11 rounded-[9px] px-3 type-small transition-colors dw:flex dw:items-center dw:gap-3 dw:text-left",
               mode === m
                 ? m === "naive"
-                  ? "bg-surface-2 text-fg"
-                  : "bg-surface-2 text-kill"
+                  ? "bg-surface-2 text-fg dw:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_45%,transparent)]"
+                  : "bg-surface-2 text-kill dw:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--kill)_45%,transparent)]"
                 : "text-fg-muted hover:text-fg",
             )}
           >
