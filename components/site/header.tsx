@@ -304,7 +304,7 @@ function Logo({ base }: { base: string }) {
     <a
       href={`${base}${topHref}`}
       aria-label={`${site.initials}, ${site.name}, back to the top`}
-      className="group inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-control px-1"
+      className="group inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1 rounded-control px-1"
     >
       <svg viewBox="0 0 8 28" aria-hidden="true" focusable="false" className="h-6 w-2 stroke-fg-ghost transition-colors duration-(--dur-micro) group-hover:stroke-fg-muted">
         <path d="M7 1 L1 1 L1 27 L7 27" fill="none" strokeWidth={1.5} strokeLinecap="square" vectorEffect="non-scaling-stroke" />
@@ -326,7 +326,7 @@ function PauseWithTooltip() {
   const { paused } = useMotionPreference();
   const tip = copyText(paused ? "pause.tooltip.resume" : "pause.tooltip.pause");
   return (
-    <span className="group/tip relative inline-flex">
+    <span className="needs-js group/tip relative inline-flex">
       {/* the visible word follows the state: "Pause", or "Resume" with the
           persistent reason "Motion paused" (the accessible name stays) */}
       <MotionToggle
@@ -432,10 +432,12 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-(--header-h) w-full max-w-page items-center justify-between gap-4 px-gutter">
-        {/* the left cluster takes what the right one leaves; the act label
-            shows only when it has room (container query: never a clipped
-            stub, never an overlap with the control dock) */}
-        <div className="flex min-w-0 flex-1 items-center gap-4 @container">
+        {/* the left cluster takes what the right one leaves, but never less
+            than the [AS] logo (3.25rem: the logo is 49 px; Oct 18 fix3a: at
+            1280-1325 the dock used to sit on top of it); the act label shows
+            only when it has room (container query: never a clipped stub,
+            never an overlap with the control dock) */}
+        <div className="flex min-w-[3.25rem] flex-1 items-center gap-4 @container">
           <Logo base={base} />
           <ActLabel />
         </div>
@@ -454,7 +456,7 @@ export function Header() {
             aria-expanded={open}
             aria-controls="site-menu"
             aria-haspopup="dialog"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control px-3 type-meta text-fg-muted transition-colors duration-(--dur-micro) hover:text-fg"
+            className="needs-js inline-flex min-h-11 min-w-11 items-center justify-center rounded-control px-3 type-meta text-fg-muted transition-colors duration-(--dur-micro) hover:text-fg"
           >
             Menu
           </button>

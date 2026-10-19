@@ -147,14 +147,18 @@ html.js .game-pill > svg {
   box-shadow: none;
 }
 
-/* full words from 80rem, the short ones below (never hide a control) */
+/* full words from 84rem, the short ones below (never hide a control).
+   84rem, not 80rem (Oct 18, fix3a): the full-word cluster (with the Pause
+   word holding the width of "Resume / Motion paused") is ~1160 px wide, so
+   the header needs ~1320 px to keep the [AS] logo clear of it; at 80rem it
+   sat on top of the logo from 1280 to 1325. */
 .dock-s {
   display: inline;
 }
 .dock-f {
   display: none;
 }
-@media (min-width: 80rem) {
+@media (min-width: 84rem) {
   .dock-s {
     display: none;
   }
@@ -184,7 +188,7 @@ html.js .game-pill > svg {
     0 14px 36px -12px rgb(0 0 0 / 0.75);
 }
 
-/* — Visible words on the quiet chrome from 80rem: Eggs / Sound / Pause.
+/* — Visible words on the quiet chrome from 84rem: Eggs / Sound / Pause.
      The chips keep their words on one line themselves (no `white-space`
      on the header cluster: the hunt panel hangs off it). — */
 .hunt-chip,
@@ -201,7 +205,7 @@ html.js .game-pill > svg {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-@media (min-width: 80rem) and (hover: hover) and (pointer: fine) {
+@media (min-width: 84rem) and (hover: hover) and (pointer: fine) {
   .dock-word {
     position: static;
     width: auto;
@@ -427,10 +431,14 @@ button:has(> [data-run-ring]):focus-visible {
 
 /* — No JavaScript (`html:not(.js)`): the controls that only a script can
      work stay out of sight instead of sitting there dead — the hero's
-     Director's cut button, the hunt chip — and the closing button keeps its
-     lettered line as plain text (no ring, no "Play it again"). — */
+     Director's cut button, the hunt chip, the Sound and Pause buttons and
+     the header's Menu button (`.needs-js`, Oct 18 fix3a) — and the closing
+     button keeps its lettered line as plain text (no ring, no "Play it
+     again"). — */
 html:not(.js) [data-dc="hero"],
-html:not(.js) .hunt-chip-wrap {
+html:not(.js) .hunt-chip-wrap,
+html:not(.js) .sound-toggle,
+html:not(.js) .needs-js {
   display: none;
 }
 html:not(.js) .try-btn.try-end {

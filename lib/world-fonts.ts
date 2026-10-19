@@ -14,6 +14,7 @@
    ========================================================================== */
 
 import { DESKTOP_WIDE } from "./flags";
+import { cameraOwnsScroll } from "./smooth-scroll";
 import type { WorldId } from "./worlds";
 
 /** A world's faces as `[css var on <html>, weight]` (lib/fonts.ts, app/
@@ -54,6 +55,55 @@ function addToken(world: WorldId): boolean {
   return true;
 }
 
+/** The block under the reading line (a bit above the middle of the
+ *  viewport) whose top edge a face swap would move only by the content ABOVE
+ *  it. Null at the top of the page (nothing above to change), under a fixed
+ *  or sticky box (a pinned stage does not follow the document), or when
+ *  nothing but the page itself is there. */
+function readingAnchor(): HTMLElement | null {
+  if (window.scrollY < 8) return null;
+  const hit = document.elementFromPoint(window.innerWidth / 2, Math.min(window.innerHeight * 0.4, 360));
+  let e: Element | null = hit;
+  let block: HTMLElement | null = null;
+  for (; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+    const cs = window.getComputedStyle(e);
+    if (cs.position === "fixed" || cs.position === "sticky") return null;
+    if (!block && e instanceof HTMLElement && !cs.display.startsWith("inline") && cs.display !== "contents") block = e;
+  }
+  return block;
+}
+
+/** Add `world`'s token and keep the reader where they were. The browser's own
+ *  scroll anchoring is off on desktop (app/globals.css), so a face that swaps
+ *  in above the viewport (Pirates: About −93 px @1440) used to move the page
+ *  under a visitor who had already scrolled (Oct 18, fix3a). The anchor's top
+ *  is read before and after the token; the difference is scrolled away,
+ *  instantly. A glide or a wheel in flight (Lenis smooth) owns the position
+ *  and is left alone, as is a camera move (the director's cut). Wide screens
+ *  only; the token is the only thing that moves. */
+function addTokenKeepingView(world: WorldId): void {
+  let anchor: HTMLElement | null = null;
+  let before = 0;
+  try {
+    anchor = readingAnchor();
+    before = anchor ? anchor.getBoundingClientRect().top : 0;
+  } catch {
+    anchor = null;
+  }
+  if (!addToken(world) || !anchor) return;
+  try {
+    const dy = anchor.getBoundingClientRect().top - before;
+    if (Math.abs(dy) < 1) return;
+    const l = window.__lenis;
+    if (cameraOwnsScroll() || (l && l.isScrolling === "smooth")) return;
+    const y = Math.max(0, window.scrollY + dy);
+    if (l) l.scrollTo(y, { immediate: true, force: true });
+    else window.scrollTo({ top: y, behavior: "instant" });
+  } catch {
+    /* the swap stands; only the correction is skipped */
+  }
+}
+
 /** Load `world`'s faces, then mark them live (the token), and resolve —
  *  when they have loaded, or after `timeoutMs` (default 300 ms), whichever
  *  comes first. The token waits for the faces so the swap happens once,
@@ -86,7 +136,7 @@ export function markWorldFontsReady(world: WorldId, timeoutMs = 300): Promise<vo
     const finish = () => {
       if (done) return;
       done = true;
-      addToken(world);
+      addTokenKeepingView(world);
       resolve();
     };
     const t = window.setTimeout(finish, Math.max(0, timeoutMs));
