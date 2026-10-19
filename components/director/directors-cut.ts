@@ -440,6 +440,8 @@ function launch(r: Run, loc: { idx: number; entry: Entry }): void {
   r.entry = loc.entry;
   r.paused = false;
   r.pausedHold = null;
+  // no hold is running until doHold says so (the divergence guard in the sampler watches holdEnd)
+  r.holdEnd = 0;
   r.frozen = timeAt(r, loc.idx, loc.entry);
   r.seg = null;
   setCameraOwnsScroll(true);
@@ -639,6 +641,7 @@ function freeze(r: Run, why = "input"): void {
   }
   r.frozen = playheadOf(r);
   r.pausedHold = r.holdEnd > performance.now() ? (r.holdEnd - performance.now()) / 1000 : null;
+  r.holdEnd = 0;
   r.paused = true;
   r.gen++;
   r.cancelGlide?.();
