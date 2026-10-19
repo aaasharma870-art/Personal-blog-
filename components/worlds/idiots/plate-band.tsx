@@ -503,7 +503,9 @@ export function SidePlate({
       plate={id}
       entrance="slow-settle"
       shape="side"
-      sizes="(min-width: 64rem) 40vw, 100vw"
+      // the plate is cover-cropped (2.33:1 image in a ~1.25:1 box), so the
+      // image is laid out ~1.9x wider than the box: ask for that width
+      sizes="(min-width: 90rem) 1010px, (min-width: 64rem) 72vw, 100vw"
       enterAt={0.9}
       camera={camera}
       className={className}

@@ -34,7 +34,9 @@
 @media (min-width: 64rem) {
   section#work {
     /* + the root's scroll-padding-top (header + 24 px) keeps the heading
-       just under the header */
-    scroll-margin-top: calc(0px - var(--section-pad) - 100vw / 3 - var(--spacing-tier-block));
+       just under the header. The section's own top padding is 0 since the
+       Oct 17 trim (pt-0), so no --section-pad term (it landed 47-55 px too
+       high and hid the eyebrow under the header). */
+    scroll-margin-top: calc(0px - 100vw / 3 - var(--spacing-tier-block));
   }
 }
