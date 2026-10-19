@@ -801,7 +801,7 @@ export const mediaAssets = {
   },
   "F-3I": {
     kind: "image", status: "accepted", src: "/media/films/films-idiots.webp",
-    width: 2520, height: 1080, alt: null, marks: { scooter: [0.79, 0.62] },
+    width: 2520, height: 1080, focal: [0.79, 0.5], alt: null, marks: { scooter: [0.79, 0.62] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (ref MV-06)", 4.5, "a4ec7e96-84d8-4d8a-a6b9-b71c6547e72f",
       "the yellow scooter at Pangong lake at first light (no badge or plate at 100%); scooter at x ~0.79 (plan 0.72; y provisional); FLAG: left 45% SD 41.6 (the pale sky) -> captions under the frame"),
     accept: cleanM2(["IC-3I-10"]),
@@ -810,7 +810,7 @@ export const mediaAssets = {
   },
   "F-3I-alt": {
     kind: "image", status: "accepted", src: "/media/films/films-idiots-alt.webp",
-    width: 2520, height: 1080, alt: null, marks: { scooter: [0.76, 0.6] },
+    width: 2520, height: 1080, focal: [0.76, 0.5], alt: null, marks: { scooter: [0.76, 0.6] },
     provenance: hf2("gpt_image_2_5 21:9 2k xhigh (text-only)", 4.5, "8b981679-0da7-4154-ac7e-3f274bb00a6c",
       "ALT: the sun disc and its reflection compete with the scooter as the warm point; left 45% SD 49.8"),
     accept: cleanM2(["IC-3I-10"]),

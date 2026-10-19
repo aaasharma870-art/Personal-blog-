@@ -176,7 +176,12 @@ export type ChapterAppendix = "origin" | "supporting";
 /** An Act II head plate (M2 finish; components/worlds/idiots/plate-band.tsx).
  *  `media` is the DEFAULT plate; the ALT plays the other side of its media
  *  pair (lib/media.ts `variants` / `variantOf`). */
-export type HeadPlate = { media: MediaId };
+export type HeadPlate = {
+  media: MediaId;
+  /** The plate's own weather (fix3c: the work head's side plate; none when
+   *  left out). */
+  weather?: "spray" | "chalk" | "fireflies" | "motes";
+};
 
 /** Every section type (SPEC v2 §12.2). `credibility` and `mediaBand` are the
  *  retired D-3 layer, kept only until the retirement pass deletes them. */
@@ -333,9 +338,12 @@ export const page: readonly SectionEntry[] = [
     // "generic architecture"): Virus's astronaut pen on his desk — the
     // OTHER pen plate from the kill-list's (platePick swaps sides per
     // variant, so the two sections never show the same picture in one view)
-    // side (fix2c): the head's right column, the ICE corridor (the plate made
-    // for this head, S08); the pen band stays above it
-    props: { board: "MV-06", head: { media: "iconic-pen-alt" }, side: { media: "iconic-corridor-alt" } },
+    // side (fix2c): the head's right column; the pen band stays above it.
+    // fix3c: the yellow scooter at Pangong lake (the F-3I pair; the films
+    // chapter plays the other side, platePick swaps per variant), not the ICE
+    // corridor: that colonnade already shows in the Trading_Algos and Optuna
+    // windows right below (three stone corridors in four screens)
+    props: { board: "MV-06", head: { media: "iconic-pen-alt" }, side: { media: "F-3I-alt" } },
   },
   {
     id: "trading-algos",

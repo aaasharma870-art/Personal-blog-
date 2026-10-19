@@ -799,8 +799,9 @@ const captions = {
   // M2 finish (Act II builder): the work head band, above the h2 (BLIND-1 D24)
   "cap.work.head": { world: "idiots", moment: moment("THE ASTRONAUT PEN ON VIRUS’S DESK"), variant: "both", place: "bl", where: "work head band, calm dark left (iconic-pen-alt; ALT iconic-pen)" },
   // M2 finish: `under` the board (was bl): no scrim over the board, its frame or the chalk ledge (BLIND-1 D25)
-  // fix2c: the head's right column (iconic-corridor-alt; ALT iconic-corridor). New wording: proposed + unsigned
-  "cap.work.side": { world: "idiots", moment: p3("THE CORRIDOR AT ICE"), variant: "both", place: "under", where: "work head, right column beside the h2 (iconic-corridor-alt; ALT iconic-corridor); never beside a metric" },
+  // fix2c: the head's right column; fix3c: now the F-3I pair (default F-3I-alt; ALT F-3I). The wording is the films screen's own
+  // (cap.films.idiots), kept as proposed + unsigned here because it is a new placement.
+  "cap.work.side": { world: "idiots", moment: p3("THE YELLOW SCOOTER AT PANGONG LAKE"), variant: "both", place: "under", where: "work head, right column beside the h2 (F-3I-alt; ALT F-3I); never beside a metric" },
   "cap.work": { world: "idiots", moment: moment("THE ICE CHALKBOARD"), variant: "both", place: "under", where: "under the gauntlet board (never over its labels)" },
   "cap.trading-algos": { world: "idiots", moment: moment("A RANCHO-STYLE BLUEPRINT"), variant: "both", place: "head", where: "above the Trading_Algos chalkboard panel, naming it as it enters (never beside a metric)" },
   // M2 finish: the chapter's head band (IC-3I-05); Q-3I-3 is chalked on the board itself

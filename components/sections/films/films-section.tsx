@@ -61,7 +61,10 @@ export function FilmsSection({ entry }: SectionProps<"films">) {
   const choice = variantChoiceOf(entry);
   const bearing = nextActBearing(entry.id);
   return (
-    <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip scroll-mt-24">
+    <WorldSection entry={entry} labelledBy={titleId} className="overflow-x-clip scroll-mt-24 pb-4">
+      {/* fix3c: pb-4 (was the section's 72 px): the last screen already ends
+          in its own padding, and the act card under it opens with its own
+          header clearance (the text-free band between the two was 214 px) */}
       <SectionHead
         id={titleId}
         label="Intermission"
