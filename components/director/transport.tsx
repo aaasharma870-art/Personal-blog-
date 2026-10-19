@@ -9,6 +9,7 @@ import {
   clearDirectorsCutEnded,
   getPlayhead,
   holdDirectorsCutEnd,
+  overlayOpen,
   pauseDirectorsCut,
   restartDirectorsCut,
   resumeDirectorsCut,
@@ -48,6 +49,12 @@ import { clock } from "./plan";
    api.ts). The labels are lib/film.ts copy (dc.*, proposed + unsigned).
    Focus never falls to <body>: after Resume it is on Pause; after Exit, Esc
    or the end card's timeout it returns to the dock's Director's cut button.
+   KEYBOARD vs POINTER. Keyboard focus never keeps the card open: it wakes for a moment on every
+   key (like the pointer), then tucks again, and the focused control stays visible on its own, with
+   its ring, over the empty bottom edge. The END card puts focus on "Replay the tour" only when the
+   last thing the visitor did was press a key (then its ring shows); after the mouse, focus rests on
+   the group (no armed button: Space / Enter anywhere never restarts a 90-180 s tour), and Esc closes
+   the end card.
    ========================================================================== */
 
 const W = "min(34rem, calc(100vw - 30rem))";
@@ -96,13 +103,18 @@ export function Transport() {
   const againBtn = useRef<HTMLButtonElement>(null);
   /** focus was last inside the transport (it is not on <body> by choice) */
   const had = useRef(false);
+  /** the last thing the visitor did was press a key (false: a pointer press) */
+  const kbd = useRef(false);
   const live = s.running;
   const frozen = s.paused || s.ended;
   const [awake, setAwake] = useState(false);
   const [hover, setHover] = useState(false);
   const [focused, setFocused] = useState(false);
   const [trackW, setTrackW] = useState(528);
-  const open = awake || hover || focused || frozen;
+  const open = awake || hover || frozen;
+  // keyboard focus inside the tucked card: only the focused control shows (with its ring), alone
+  const ring = !open && focused;
+  const dim = ring ? " opacity-0 focus-visible:bg-bg focus-visible:opacity-100" : "";
 
   // the card shows for a moment when the pointer comes near or a key is pressed, then goes again
   useEffect(() => {
@@ -156,6 +168,14 @@ export function Transport() {
   useEffect(() => {
     pauseBtn.current?.focus({ preventScroll: true });
     had.current = Boolean(pauseBtn.current && document.activeElement === pauseBtn.current);
+    // the browser's own modality: a script focus shows its ring only after a key
+    kbd.current = Boolean(pauseBtn.current?.matches(":focus-visible"));
+    const key = () => {
+      kbd.current = true;
+    };
+    const press = () => {
+      kbd.current = false;
+    };
     const again = () => {
       const a = document.activeElement;
       if (!a || a === document.body || (a instanceof Element && a.closest("[data-dock-pop], [data-dock-cut]"))) pauseBtn.current?.focus({ preventScroll: true });
@@ -169,10 +189,14 @@ export function Transport() {
     };
     document.addEventListener("focusin", seen);
     document.addEventListener("pointerdown", away, true);
+    window.addEventListener("keydown", key, true);
+    window.addEventListener("pointerdown", press, true);
     return () => {
       timers.forEach((x) => window.clearTimeout(x));
       document.removeEventListener("focusin", seen);
       document.removeEventListener("pointerdown", away, true);
+      window.removeEventListener("keydown", key, true);
+      window.removeEventListener("pointerdown", press, true);
       // gone (Exit, Esc, the end card's timeout) with the focus on it: back to the switch, never <body>
       const a = document.activeElement;
       if (had.current && (!a || a === document.body)) document.querySelector<HTMLElement>("[data-dock-cut]")?.focus({ preventScroll: true });
@@ -185,9 +209,29 @@ export function Transport() {
     if (!a || a === document.body) pauseBtn.current?.focus({ preventScroll: true });
   }, [s.paused, s.ended]);
 
-  // the end card takes the focus on its first button (its own, so a keyboard visitor lands on it)
+  // the end card: after a key press focus goes to its first button, with its ring (a keyboard visitor
+  // lands on it). After the mouse it goes to the group itself, so no invisible button is armed: Space
+  // and Enter anywhere stay a plain scroll, never a restart of a 90-180 s tour.
   useEffect(() => {
-    if (s.ended) againBtn.current?.focus({ preventScroll: true });
+    if (!s.ended) return;
+    const btn = againBtn.current;
+    if (kbd.current && btn) {
+      btn.focus({ preventScroll: true });
+      if (btn.matches(":focus-visible")) return;
+    }
+    const a = document.activeElement;
+    if (!a || a === document.body || wrap.current?.contains(a)) wrap.current?.focus({ preventScroll: true });
+  }, [s.ended]);
+
+  // Esc closes the end card (an open menu, panel or dialog takes its own Esc first)
+  useEffect(() => {
+    if (!s.ended) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented || overlayOpen()) return;
+      clearDirectorsCutEnded();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [s.ended]);
 
   // the end card waits while the pointer or the keyboard focus is on it
@@ -241,9 +285,11 @@ export function Transport() {
       data-house-type=""
       role="group"
       aria-label={t("dc.group")}
-      className="pointer-events-none absolute bottom-1"
+      tabIndex={-1}
+      className="pointer-events-none absolute bottom-1 outline-none"
       style={{ width: W, left: `max(50%, calc(${W} / 2 + 28rem))`, transform: "translateX(-50%)" }}
       data-dc-open={open ? "" : undefined}
+      data-dc-ring={ring ? "" : undefined}
     >
       <div
         ref={root}
@@ -260,10 +306,14 @@ export function Transport() {
         {/* the card: above the line, in only while wanted (focusable either way) */}
         <div
           className="absolute inset-x-0 bottom-full pb-1.5 transition-[opacity,transform] duration-300 ease-out"
-          style={{ opacity: open ? 1 : 0, transform: open ? "translateY(0)" : "translateY(10px)", pointerEvents: open ? "auto" : "none" }}
+          style={{ opacity: open || ring ? 1 : 0, transform: open ? "translateY(0)" : "translateY(10px)", pointerEvents: open ? "auto" : "none" }}
           data-dc-card=""
         >
-          <div className="flex flex-col rounded-[1.1rem] bg-bg px-3 py-1 text-fg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)]">
+          <div
+            className={`flex flex-col rounded-[1.1rem] px-3 py-1 text-fg transition-[background-color,box-shadow] duration-300 ${
+              ring ? "bg-transparent shadow-none" : "bg-bg shadow-[0_10px_34px_rgba(0,0,0,.5),inset_0_0_0_1px_var(--rule)]"
+            }`}
+          >
             {s.ended ? (
               <div key="ended" className="flex flex-wrap items-center gap-2">
                 <button ref={againBtn} type="button" className={textBtn} onClick={() => restartDirectorsCut()}>
@@ -281,7 +331,7 @@ export function Transport() {
               <div key="running" className="flex items-center gap-1">
                 <button
                   type="button"
-                  className={iconBtn}
+                  className={iconBtn + dim}
                   aria-label={t("dc.prev")}
                   title={t("dc.prev")}
                   onClick={(e) => {
@@ -294,7 +344,7 @@ export function Transport() {
                 <button
                   ref={pauseBtn}
                   type="button"
-                  className={iconBtn}
+                  className={iconBtn + dim}
                   aria-label={s.paused ? t("dc.resume") : t("dc.pause")}
                   title={s.paused ? t("dc.resume") : t("dc.pause")}
                   onClick={toggle}
@@ -304,7 +354,7 @@ export function Transport() {
                 </button>
                 <button
                   type="button"
-                  className={iconBtn}
+                  className={iconBtn + dim}
                   aria-label={t("dc.next")}
                   title={t("dc.next")}
                   onClick={(e) => {
@@ -314,7 +364,7 @@ export function Transport() {
                 >
                   <SkipForward aria-hidden="true" className="size-4" />
                 </button>
-                <span className="type-meta min-w-0 flex-1 truncate px-2 text-fg-muted" data-dc-chapter="">
+                <span className={`type-meta min-w-0 flex-1 truncate px-2 text-fg-muted${ring ? " opacity-0" : ""}`} data-dc-chapter="">
                   {s.paused ? (
                     <>
                       <span className="text-fg">{t("dc.paused.now")}</span>
@@ -327,10 +377,10 @@ export function Transport() {
                     name
                   )}
                 </span>
-                <span ref={clockEl} className="type-meta shrink-0 tabular-nums text-fg-muted" data-dc-clock="">
+                <span ref={clockEl} className={`type-meta shrink-0 tabular-nums text-fg-muted${ring ? " opacity-0" : ""}`} data-dc-clock="">
                   {total > 0 ? `${clock(0)} / ${clock(total)}` : ""}
                 </span>
-                <button type="button" className={`${textBtn} ml-1 px-3`} onClick={() => stopDirectorsCut("exit")} data-dc-exit="">
+                <button type="button" className={`${textBtn} ml-1 px-3${dim}`} onClick={() => stopDirectorsCut("exit")} data-dc-exit="">
                   {t("dc.exit")}
                 </button>
               </div>

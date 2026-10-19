@@ -15,7 +15,11 @@
                      in the viewport (h2 at 30 % of the viewport), held
      star            a time star of weight >= the tour's minW, centred, held
                      (its entrance plays: spotlight stars need rest)
-     finale          a film's finale frame, held
+     finale          a film's finale frame, held (a film block taller than the
+                     viewport gets two: the plate and its caption, then the quote)
+   EVERY held frame of a plain section is fitted (fitCaptions, starFrameY): no plate
+   caption under the progress line (a caption that ends below the line's clearance
+   is pulled up into the frame), and a research claim never held without its caveat.
      end             the bottom of the page, held
      edge-out/in     the two ends of a dip to dark (QUICK, far-apart scenes)
    Card scroll stars are NOT held: the card's own land / title keys replace
@@ -124,6 +128,77 @@ function starY(el: Element): number {
   return r.top + window.scrollY + r.height / 2 - vhNow() / 2;
 }
 
+/* — framing: captions clear of the line, caveats in the frame ——————————— */
+
+/** Plate captions (a card's own are pinned, so they are never measured here). */
+const CAPTION = ".scene-caption, [data-card-caption]";
+/** The progress line occupies the bottom 20 px (4 px off the edge, 16 px tall): a caption ends 24 px above the edge. */
+const LINE_CLEAR = 24;
+/** The header covers the top 68 px; a caption pulled into the frame starts below 72. */
+const HEADER_CLEAR = 72;
+
+/** `y`, moved down (never more than 14 % of the viewport) so that the lowest caption that
+ *  starts in the frame ends above the progress line, as long as its top then still clears the
+ *  header. The viewport can be short (1280x720, 1366x768) where plates and their captions
+ *  were centred on the plate alone. */
+function fitCaptions(y: number): number {
+  const vh = vhNow();
+  const sy = window.scrollY;
+  let out = y;
+  for (let pass = 0; pass < 2; pass++) {
+    let need = 0;
+    for (const c of document.querySelectorAll<HTMLElement>(CAPTION)) {
+      if (c.closest("[data-act-card]") || !shown(c)) continue;
+      const r = c.getBoundingClientRect();
+      if (r.height < 4) continue;
+      const top = r.top + sy;
+      const bottom = r.bottom + sy;
+      // in the frame at all (a caption whose first pixels touch the bottom edge belongs to the next scene)
+      if (top >= out + vh - 4 || bottom <= out + HEADER_CLEAR) continue;
+      const short = bottom - (out + vh - LINE_CLEAR);
+      if (short > 0 && short <= 0.14 * vh && top - (out + short) >= HEADER_CLEAR) need = Math.max(need, short);
+    }
+    if (!need) break;
+    out += need;
+  }
+  return out;
+}
+
+/** Research claims held in a frame carry their caveat in the same frame: star id -> the element
+ *  that holds the caveat. B20 is Trading_Algos-'s FIG. 1 ("3 strategies" survive); the caveat
+ *  ("of many more tested", lib/content.ts) is the first metric tile under it. */
+const CAVEAT: Readonly<Record<string, string>> = { B20: "#trading-algos-metrics > :first-child" };
+
+/** A star's frame: centred, the caveat pulled in when it is just out of frame (never more than
+ *  would push the star's own top under the header); when the viewport cannot hold both, the
+ *  frame is the caveat's (the claim with its caveat, never the claim alone). */
+function starFrameY(el: Element, id: string): number {
+  const y0 = starY(el);
+  const sel = CAVEAT[id];
+  const cav = sel ? document.querySelector(sel) : null;
+  if (!cav || !shown(cav)) return y0;
+  const vh = vhNow();
+  const sy = window.scrollY;
+  const c = cav.getBoundingClientRect();
+  const need = c.bottom + sy - (y0 + vh - LINE_CLEAR - 8);
+  if (need <= 0) return y0;
+  const top = el.getBoundingClientRect().top + sy;
+  if (need <= top - HEADER_CLEAR - y0) return y0 + need;
+  return c.top + sy + c.height / 2 - vh / 2;
+}
+
+/** A finale block (one film: plate, caption, quote) that does not fit the viewport. */
+function tallFilm(el: Element): HTMLElement | null {
+  const film = el.closest<HTMLElement>("[data-films-world]");
+  return film && film.getBoundingClientRect().height > vhNow() - 100 ? film : null;
+}
+
+/** The wake-up a closed ledger lens needs before the kill-list's head is held (components/site/ledger-reckoning.tsx). */
+const wakeLedger = (): void => {
+  window.dispatchEvent(new Event("ledger:wake"));
+};
+const PREP: Readonly<Record<string, () => void>> = { "kill-list": wakeLedger };
+
 function starEl(id: string): HTMLElement | null {
   return document.querySelector<HTMLElement>(`[data-beat="${CSS.escape(id)}"][data-beat-star]`);
 }
@@ -207,30 +282,60 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
   const headKey = mk({
     id: `${it.id}:head`,
     kind: "head",
-    y: hy,
+    y: fitCaptions(hy),
     hold: research ? H.headResearch : H.head,
     tempo,
     chapter,
+    prep: PREP[it.id],
     resolve: () => {
       const e = document.getElementById(it.id);
-      return e ? headY(e) : null;
+      return e ? fitCaptions(headY(e)) : null;
     },
   });
   keys.push(headKey);
 
-  const starKey = (s: HTMLElement, hold: number, kind: "star" | "finale"): Key =>
-    mk({
+  const starKey = (s: HTMLElement, hold: number, kind: "star" | "finale"): Key => {
+    const beat = s.dataset.beat ?? "";
+    return mk({
       id: `${it.id}:${s.dataset.beat ?? "star"}`,
       kind,
-      y: starY(s),
+      y: fitCaptions(starFrameY(s, beat)),
       hold,
       tempo,
       chapter,
       resolve: () => {
-        const e = s.isConnected ? s : starEl(s.dataset.beat ?? "");
-        return e ? starY(e) : null;
+        const e = s.isConnected ? s : starEl(beat);
+        return e ? fitCaptions(starFrameY(e, beat)) : null;
       },
     });
+  };
+
+  /** A film block taller than the viewport: its finale is two frames, the plate with its caption
+   *  (the plate-centred frame, as before) and then the bottom of the block (quote, its
+   *  attribution and the paragraphs under it, which a centred frame slices mid-sentence). */
+  const finaleKeys = (s: HTMLElement, hold: number): Key[] => {
+    const first = starKey(s, hold, "finale");
+    const film = tallFilm(s);
+    const beat = s.dataset.beat ?? "";
+    const lowY = (f: Element): number => f.getBoundingClientRect().bottom + window.scrollY - vhNow() + LINE_CLEAR + 16;
+    // the second frame must be a real step down from the first (else the plate frame already shows it all)
+    if (!film || lowY(film) - first.y < 0.12 * vhNow()) return [first];
+    const second = mk({
+      id: `${it.id}:${beat}:quote`,
+      kind: "finale",
+      y: lowY(film),
+      hold: hold * 1.2,
+      tempo,
+      chapter,
+      keep: true,
+      resolve: () => {
+        const e = s.isConnected ? s : starEl(beat);
+        const f = e?.closest("[data-films-world]");
+        return f ? lowY(f) : null;
+      },
+    });
+    return [{ ...first, hold: hold * 0.6, keep: true }, second];
+  };
 
   if (tour === "full") {
     for (const s of el.querySelectorAll<HTMLElement>("[data-beat-star][data-beat-weight]")) {
@@ -243,7 +348,8 @@ function sceneOf(tour: Tour, it: Item, chapter: number, last: boolean, q: QuickS
       const hold = fin ? H.finale : w >= 3 ? H.w3 : H.w2;
       const y = starY(s);
       if (y < hy + 0.35 * vh || y > bottom - 0.5 * vh) continue;
-      keys.push(starKey(s, hold, fin ? "finale" : "star"));
+      if (fin) keys.push(...finaleKeys(s, hold));
+      else keys.push(starKey(s, hold, "star"));
     }
     // scrubbed sentences: a slow zone (the spotlight's range: top at 92 % -> bottom at 52 %)
     for (const s of el.querySelectorAll<HTMLElement>("[data-words=\"scrub\"]")) {

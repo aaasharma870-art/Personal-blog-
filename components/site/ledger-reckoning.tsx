@@ -245,6 +245,14 @@ export function LedgerIndex({ rows, choice }: { rows: readonly LedgerRow[]; choi
     return () => io.disconnect();
   }, [reduced, lensOn]);
 
+  // the director's cut sends "ledger:wake" as it sets out for the kill-list's head frame: the same
+  // first activation as a row touch, so the camera never holds the empty closed bracket
+  useEffect(() => {
+    const wake = () => setLensState((s) => (s === "closed" ? "aperture" : s));
+    window.addEventListener("ledger:wake", wake);
+    return () => window.removeEventListener("ledger:wake", wake);
+  }, []);
+
   // the lens / index bar travel (springFollow; instant under reduced motion)
   const ly = useMotionValue(0);
   const by = useMotionValue(0);
