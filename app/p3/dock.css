@@ -124,6 +124,36 @@ html.js .game-pill > svg {
   color: var(--dock-ink);
 }
 
+/* A press the page has queued and not answered yet (the boot script marks the
+   button aria-busy; the enhancer / the dock clear it): a pressed look and a
+   pulsing icon, so a press during startup never feels dead (Oct 20, fix5). */
+.try-btn[aria-busy="true"]:not([aria-disabled="true"]),
+html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) {
+  background: var(--dock-fill-hover);
+  cursor: progress;
+}
+.try-btn[aria-busy="true"]:not([aria-disabled="true"]) > svg,
+html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
+  animation: dock-busy 0.7s ease-in-out infinite alternate;
+}
+@keyframes dock-busy {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .try-btn[aria-busy="true"] > svg,
+  html.js .game-pill[aria-busy="true"] > svg {
+    animation: none;
+  }
+}
+:root[data-motion="paused"] .try-btn[aria-busy="true"] > svg {
+  animation: none;
+}
+
 /* the ON / OFF state chip on the Director's cut button */
 .dock-chip {
   display: inline-flex;
@@ -147,22 +177,33 @@ html.js .game-pill > svg {
   box-shadow: none;
 }
 
-/* full words from 84rem, the short ones below (never hide a control).
-   84rem, not 80rem (Oct 18, fix3a): the full-word cluster (with the Pause
-   word holding the width of "Resume / Motion paused") is ~1160 px wide, so
-   the header needs ~1320 px to keep the [AS] logo clear of it; at 80rem it
-   sat on top of the logo from 1280 to 1325. */
-.dock-s {
+/* The Director's cut button reads "Director's cut" at EVERY width (its own
+   word, never "Tour": Oct 20, fix5; a 1920x1080 laptop at 150% scaling is
+   1280 CSS px and Aryan saw "no Director's cut buttons"); the header makes
+   the room instead:
+   - Replay: "Replay intro" from 70rem (1120 px), "Replay" below (its full
+     name is the aria-label, so the accessible name never changes);
+   - the Work pill: "Skip to the research" from 70rem, "Work" below
+     (.work-f / .work-s, components/site/header.tsx);
+   - Eggs / Sound / Pause words from 84rem (see .dock-word below).
+   At 1024 px the whole cluster is ~780 px of ~860 available (swept every
+   10 px from 1024 to 2560: no overlap with the [AS] logo, no horizontal
+   scroll). Never hide a control. */
+.dock-s,
+.work-s {
   display: inline;
 }
-.dock-f {
+.dock-f,
+.work-f {
   display: none;
 }
-@media (min-width: 84rem) {
-  .dock-s {
+@media (min-width: 70rem) {
+  .dock-s,
+  .work-s {
     display: none;
   }
-  .dock-f {
+  .dock-f,
+  .work-f {
     display: inline;
   }
 }

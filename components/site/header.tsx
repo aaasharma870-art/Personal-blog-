@@ -223,11 +223,13 @@ function ActLabel() {
 }
 
 /* — The fast lane (spec §11.3, DP-14; P3-10 #3): at DESKTOP_WIDE the Work
-   pill reads "Skip to the research" (fastlane.label, proposed + unsigned)
-   and jumps to #work through the cut — world fonts ready, focus moved, the
+   pill jumps to #work through the cut — world fonts ready, focus moved, the
    director's cut and any game stopped (`fastlane`), never a 20-screen glide.
-   Below 64rem it stays "Work", a native anchor (phones unchanged). Both
-   labels are server markup; CSS (`dw:`) picks one, so SSR is identical for
+   Below 64rem it is "Work", a native anchor (phones unchanged). Its label
+   reads "Skip to the research" (fastlane.label, proposed + unsigned) from
+   70rem and "Work" below, so the header has room for "Director's cut" at
+   every laptop width (Oct 20, fix5). Both labels are server markup; CSS
+   (.work-s / .work-f, app/p3/dock.css) picks one, so SSR is identical for
    every visitor. Off the home page (the 404) it is a plain /#work link. — */
 const PAUSE_WORD = copyText("dock.pause");
 const RESUME_WORD = copyText("dock.resume");
@@ -269,8 +271,8 @@ function WorkPill({ base, href }: { base: string; href: string }) {
     >
       {FAST_LANE_SHOWN ? (
         <>
-          <span className="dw:hidden">Work</span>
-          <span className="hidden dw:inline">{FAST_LANE.text}</span>
+          <span className="work-s">Work</span>
+          <span className="work-f">{FAST_LANE.text}</span>
         </>
       ) : (
         "Work"

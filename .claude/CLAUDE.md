@@ -9,3 +9,5 @@
 - The P3-0 questions are already answered in `CONTINUE.md`; do not ask them again. Ask Aryan only when a detail is his to decide: his words, his facts, what goes public.
 
 **Next.js 16 note:** this project runs Next 16, which has breaking changes from older versions. Before writing Next-specific code, check the docs bundled in `node_modules/next/dist/docs` rather than relying on memory.
+
+**How to run it for review (2026-10-20):** `npm install`, `npm run build && npm start`, open http://localhost:3000 in a NEW tab or private window (the intro plays once per tab), window >= 1024 px with a mouse, OS reduced motion off. `npm run dev` works too (localhost, 127.0.0.1 and LAN hosts) but is slower; judge timing on the production build.

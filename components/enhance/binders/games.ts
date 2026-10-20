@@ -38,6 +38,7 @@
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { DESKTOP_FINE, motionOffNow, onMotionOffChange } from "@/lib/flags";
+import { pageHydrated, whenPageHydrated } from "@/lib/hydrated";
 import { effectiveVariant, type Variant } from "@/lib/variants";
 import { armInvite } from "@/components/games/invite";
 import { DEAD_EYE_CALL, type DeadEyeAction, type DeadEyeCopy, type DroneCopy } from "@/components/games/shared";
@@ -88,6 +89,13 @@ export default function bind(doc: Document): () => void {
     const sprite = pill.parentElement?.querySelector("img")?.getAttribute("src");
     if (!sprite) return;
     if (!drone) {
+      // the drone's host is appended inside the Systems section: not before the
+      // page has hydrated (React #418; Oct 20, fix5: the only binder that
+      // changes server markup). A press that early is answered right after.
+      if (!pageHydrated()) {
+        void whenPageHydrated(8000).then(() => renderDrone(pill));
+        return;
+      }
       const box = pill.closest(".drone-pill-row")?.parentElement;
       const copy = copyOf<DroneCopy>(pill);
       if (!(box instanceof HTMLDivElement) || !copy) return;

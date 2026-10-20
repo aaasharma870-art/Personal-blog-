@@ -4,10 +4,12 @@ import { beatAttrs, type Beat } from "@/lib/beats";
 import { resolveMedia, type MediaAsset } from "@/lib/media";
 import type { SectionEntry } from "@/lib/page";
 import { STAGE_IMAGE, type StageCue } from "@/lib/stage";
+import { StageWindowHost } from "./stage-window-host";
 
 /* ============================================================================
    STAGE WINDOW + STAGE SPLIT (spec §3.2, split mode) — OWNER: B1-STAGE.
-   Server markup only.
+   Server markup only (the host column is a client component with a ref, so the
+   stage knows when its boundary hydrated: ./stage-window-host.tsx).
 
    <StageSplit entry> wraps a section's research body when its StageSpec is
    `split` (anything else: the children, unwrapped, byte-for-byte today's
@@ -77,7 +79,7 @@ export function StageWindow({ section, cue, side, beat, rack }: StageWindowProps
           style={{ objectFit: "cover", objectPosition: `${fx * 100}% ${fy * 100}%` }}
         />
       ) : null}
-      <div data-stage-window-host="" className="stage-window-host" {...attrsOf(rack)} />
+      <StageWindowHost {...attrsOf(rack)} />
     </div>
   );
 }

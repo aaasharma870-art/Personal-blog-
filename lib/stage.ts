@@ -261,8 +261,9 @@ export function rackDim(scrollY: number, vh: number, edges: readonly number[]): 
  *  16:9 plate is `object-fit: cover`, so it is scaled to the window HEIGHT
  *  (≈ 1.78 × 100vh css px wide) and cropped. `42vw` made Chrome fetch the
  *  640 px rung and stretch it 2.3× (the always-smeared window picture); the
- *  height-based size picks 1920 at DPR 1 and the 2560 rung at DPR 2
- *  (next.config.ts deviceSizes). Backdrops are drawn full width, and the
+ *  height-based size picks 1920 at DPR 1 and the 2048 rung (the top one,
+ *  next.config.ts deviceSizes; Oct 20: the 2560 rung is gone, it made a cold
+ *  DPR 2 plate 2x slower) at DPR 2. Backdrops are drawn full width, and the
  *  act-1 exit frame is pushed to 1.3×, so they ask for 130vw at q75.
  *  `dimMax` = the black multiplied over a window plate at full rack focus
  *  (a small step back, not a mood change). */

@@ -194,6 +194,10 @@ export const intro = {
   loaderDelayMs: 250,
   motesRestMs: 5000,
   failsafeMs: 3000,
+  /** `next dev` only (NODE_ENV !== "production"): a cold dev start compiles
+   *  and hydrates on the same main thread, so the controller can take well
+   *  over 3 s to run; the failsafe would skip the intro (Oct 20, fix5). */
+  failsafeDevMs: 20_000,
   mobileFlightS: 1.6,
   mobileTotalMaxS: 2.4,
   /* — P3-3 hand-off (PHASE3-SPEC §4.2) — */

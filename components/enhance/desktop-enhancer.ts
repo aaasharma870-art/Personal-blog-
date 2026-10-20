@@ -10,10 +10,14 @@
    on `[data-enhance-queue]` elements that the pre-paint boot script
    recorded before anything was bound (components/site/boot-head-script.tsx).
    The attribute's value is the selector the click replays on (empty = the
-   element's #id). Nothing binds before the page has HYDRATED (lib/hydrated.ts,
-   Oct 18 fix3a): the binders reach into sections' server markup (the games'
-   drone host is appended inside Systems), which a Suspense boundary that has
-   not hydrated yet would find changed (React #418).
+   element's #id). It does NOT wait for the page to hydrate (Oct 20, fix5;
+   fix3a had made it: in `next dev` the hero "Director's cut" and the eggs then
+   answered ~10 s after the intro). Every binder only listens (delegated clicks)
+   or arms elements by attribute; the one that changes server markup, the
+   games' drone host inside Systems, waits for that boundary (games.ts), and
+   the words binder has always waited for `page:hydrated` (<= 3 s).
+   The binders run in the order a visitor reaches for them: the Director's
+   cut button first, then the eggs, the words, the games.
    One binder per idle slice (lib/idle.ts): the step-2 task stays short (no
    long task under the first wheel, P3-2 #9). The boot script keeps
    recording until the last slice, so each binder's own queued clicks are
@@ -23,7 +27,6 @@
    stops.
    ========================================================================== */
 
-import { whenPageHydrated } from "@/lib/hydrated";
 import { onIdle } from "@/lib/idle";
 import bindWords from "./binders/words";
 import bindHotspots from "./binders/hotspots";
@@ -36,9 +39,9 @@ export type Binder = (root: Document) => () => void;
 /** Each binder and the queued elements it answers (`[data-enhance-queue]`
  *  markup it handles; null: none). */
 const BINDERS: readonly (readonly [Binder, string | null])[] = [
-  [bindWords, null],
-  [bindHotspots, "[data-egg-hotspot]"],
   [bindDc, "[data-dc]"],
+  [bindHotspots, "[data-egg-hotspot]"],
+  [bindWords, null],
   [bindGames, "#drone-takeoff, #deadeye-call"],
 ];
 
@@ -66,6 +69,7 @@ function drain(root: Document, take: (el: Element) => boolean, replay: (el: Elem
     const el = queuedEl(root, sel);
     if (el && !take(el)) continue;
     q.splice(i, 1);
+    el?.removeAttribute("aria-busy"); // the boot script marks a queued press busy
     if (el && replay(el) && now - t <= REPLAY_MAX_AGE_MS) latest.set(el, Math.max(t, latest.get(el) ?? 0));
   }
   if (!latest.size) return;
@@ -110,9 +114,7 @@ export default function enhance(root: Document): () => void {
       cancel = onIdle(() => step(i + 1), { timeout: 500 });
     }
   };
-  void whenPageHydrated().then(() => {
-    if (!stopped) cancel = onIdle(() => step(0), { timeout: 500 });
-  });
+  cancel = onIdle(() => step(0), { timeout: 500 });
   return () => {
     stopped = true;
     cancel();

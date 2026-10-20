@@ -580,7 +580,8 @@ export function introPrepaintVariants(): PrepaintVariants {
 export function introHeadConfig() {
   return {
     src: INTRO_CONTROLLER_SRC,
-    failsafe: introTiming.failsafeMs,
+    // production: 3 s; `next dev`: 20 s (a cold dev start is slow, not broken)
+    failsafe: process.env.NODE_ENV === "production" ? introTiming.failsafeMs : introTiming.failsafeDevMs,
     /** Routes the prologue may arm on (it lands on the home hero). `?intro=1`
      *  forces it anywhere, e.g. a future /lab/intro. */
     paths: ["/"],

@@ -18,9 +18,9 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    Real <button>s, 44 px tall, always on screen (the header never hides).
    DESKTOP_FINE only (app/p3/dock.css: the full media query, never `lg:`):
    the server markup is the same for everyone and nothing shifts when the
-   client hydrates; short words below 84rem (Replay / Tour / Games), never a
-   hidden control (84rem: from 80rem the full words sat on the [AS] logo at
-   1280-1325 px, Oct 18 fix3a).
+   client hydrates. "Director's cut" is the word at EVERY width (Oct 20,
+   fix5: below 84rem it had read "Tour"); the header makes the room (Replay
+   says "Replay" below 70rem, the Work pill says "Work"; app/p3/dock.css).
    - Replay: window.__intro.replay() (components/site/dock-actions.ts). Motion
      off (Pause or OS reduced motion): aria-disabled, and a press says why.
    - Director's cut: an ON/OFF chip. Running: aria-pressed and a press STOPS
@@ -28,9 +28,9 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
      though the player's own pointerdown / keydown stops the run first).
      Off: a menu button (aria-haspopup / aria-expanded) that opens the
      chooser (Quick / Full tour). Its accessible name is its visible words
-     ("Director's cut OFF", "Tour OFF" below 84rem), read from the content
-     with no aria-label (WCAG 2.5.3 label in name: the short word "Tour" and
-     the ON / OFF chip are part of the name; the title is the description).
+     ("Director's cut OFF"), read from the content with no aria-label (WCAG
+     2.5.3 label in name: the ON / OFF chip is part of the name; the title is
+     the description).
      The hero button and the palette open the same chooser (DC_CHOOSER_EVENT)
      and focus returns to them. Motion off: aria-disabled, with the reason
      for its cause (the Pause toggle, or the system's reduced motion).
@@ -93,7 +93,6 @@ export function ControlDock() {
   const replayLabel = text("dock.replay");
   const replayShort = text("dock.replay.short") ?? replayLabel;
   const cutLabel = text("dock.cut");
-  const cutShort = text("dock.cut.short") ?? cutLabel;
   const cutTip = text("dock.cut.blurb");
   const onWord = text("dock.cut.on") ?? "ON";
   const offWord = text("dock.cut.off") ?? "OFF";
@@ -309,10 +308,8 @@ export function ControlDock() {
             onFocus={warmPopovers}
           >
             {dc.running ? <Square aria-hidden="true" strokeWidth={2} fill="currentColor" /> : <Play aria-hidden="true" strokeWidth={2} />}
-            {/* no aria-hidden: the name is what the visitor sees (one of the two
-                words is display:none at any width); the spaces keep "cut OFF" apart */}
-            <span className="dock-f">{cutLabel}</span>
-            <span className="dock-s">{cutShort}</span>{" "}
+            {/* no aria-hidden: the name is what the visitor sees; the space keeps "cut OFF" apart */}
+            <span>{cutLabel}</span>{" "}
             <span className="dock-chip">{dc.running ? onWord : offWord}</span>
             {/* while motion is off the caret keeps its room (hidden): pausing never moves the dock */}
             {!dc.running ? <ChevronDown className={off ? "dock-caret invisible" : "dock-caret"} aria-hidden="true" strokeWidth={2.25} /> : null}
