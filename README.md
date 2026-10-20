@@ -251,13 +251,25 @@ Sections are server components; motion is isolated to small `"use client"` leave
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
+npm run dev      # http://localhost:3000 (slower, see "Running it" below)
 npm run build    # production build (also type-checks)
 npm run start    # serve the production build
 npx eslint .     # lint
 ```
 
-> Node 18+ recommended. The site is fully static — `npm run build` emits prerendered HTML.
+> Node 20.9 or newer (22 LTS recommended; Next 16 needs at least 20.9). The site is fully static — `npm run build` emits prerendered HTML.
+
+### Running it (to see the site as designed)
+
+1. `npm install`, then `npm run build && npm start`, and open <http://localhost:3000>.
+2. Use a **new tab or a private window**: the intro plays once per tab (it remembers that in
+   `sessionStorage`; the **Replay intro** button in the header plays it again).
+3. Use a laptop-size window, **1024 px wide or more, with a mouse**, and the operating system's
+   *reduce motion* setting **off**. Phones and touch screens get a lighter page without the
+   Director's cut, the games and the dock.
+4. `npm run dev` also works (it accepts `localhost`, `127.0.0.1` and local-network addresses) but it
+   is slower: the first load compiles the page for several seconds, and the animations, the dock
+   and the Director's cut come alive a little later than in the production build.
 
 ---
 

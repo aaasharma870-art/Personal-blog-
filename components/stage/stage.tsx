@@ -11,9 +11,10 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useScroll, type MotionValue } from "motion/react";
-import { emit } from "@/lib/events";
+import { emit, on as onEvent } from "@/lib/events";
 import { film, type ActSpec } from "@/lib/film";
 import { motionOffNow, onMotionOffChange, useDesktopFine, useDocumentVisible, useReducedMotion } from "@/lib/flags";
+import { elHydrated } from "@/lib/hydrated";
 import { loopFor } from "@/lib/loops";
 import { markOf, resolveMedia, type MediaAsset, type MediaId } from "@/lib/media";
 import { requestScrollRefresh } from "@/lib/smooth-scroll";
@@ -1370,6 +1371,7 @@ export function Stage() {
       vhRef.current = vh;
       const sy = window.scrollY;
       const nextHosts = new Map<number, HTMLElement>();
+      let waiting = false;
       SHOTS.forEach((s, k) => {
         // the shot starts at its first cue whose anchor exists (a cue naming
         // an id the page does not render yet is skipped, never guessed)
@@ -1405,6 +1407,15 @@ export function Stage() {
             geom.current[k] = null;
             return;
           }
+          // its section's boundary has not hydrated yet: a layer portalled in
+          // now would make React throw #418 when that boundary hydrates. Only
+          // THIS window waits (the others, and the backdrops, go live now);
+          // it is measured again as soon as the boundary has hydrated.
+          if (!elHydrated(host)) {
+            waiting = true;
+            geom.current[k] = null;
+            return;
+          }
           const r = split.getBoundingClientRect();
           splitTop = r.top + sy;
           top = splitTop;
@@ -1437,6 +1448,10 @@ export function Stage() {
         return nextHosts;
       });
       step.current();
+      // a window waits for its boundary: look again shortly (hydration sends
+      // no event per boundary), until the whole page has hydrated
+      if (waiting) retry();
+      else window.clearTimeout(retryT);
     };
 
     // measure once now and on any size change (batched into one frame)
@@ -1448,6 +1463,12 @@ export function Stage() {
         measure.current();
       });
     };
+    let retryT = 0;
+    const retry = () => {
+      window.clearTimeout(retryT);
+      retryT = window.setTimeout(schedule, 250);
+    };
+    const offHydrated = onEvent("page:hydrated", schedule);
     schedule();
     const ro = new ResizeObserver(schedule);
     ro.observe(document.body);
@@ -1489,6 +1510,8 @@ export function Stage() {
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      window.clearTimeout(retryT);
+      offHydrated();
       if (praf) cancelAnimationFrame(praf);
       if (easeRaf) cancelAnimationFrame(easeRaf);
       ro.disconnect();

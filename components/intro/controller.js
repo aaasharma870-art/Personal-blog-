@@ -232,15 +232,25 @@
     if (broom && broom.parentNode !== film) film.appendChild(broom);
     E = bez(C.ease);
     ED = bez(C.easeDraw);
-    play.addEventListener("click", function () { launch(); });
-    skip.addEventListener("click", function () { dismiss("skip"); });
-    if (fast) {
-      fast.addEventListener("click", function (e) {
+    // The three presses are taken at the WINDOW in the capture phase, never on
+    // the buttons themselves (Oct 20, fix5). React's root listener (on the
+    // document, capture) stops a click that targets a Suspense boundary which
+    // has not hydrated yet and replays it only to React handlers; a native
+    // listener on the button never saw it, so on a slow CPU (4x: 5 of 8
+    // first presses) Play did nothing until a second click after hydration.
+    // The window sees the event before React does. launch / dismiss / fastLane
+    // are idempotent (each returns unless the state allows it).
+    w.addEventListener("click", function (e) {
+      var t = e.target, b = t && t.closest ? t.closest("#intro-play, #intro-skip, #intro-fastlane") : null;
+      if (!b || !intro.contains(b)) return;
+      if (b === play) launch();
+      else if (b === skip) dismiss("skip");
+      else if (b === fast) {
         e.preventDefault(); // the jump waits for the overlay to go (inert off)
         e.stopPropagation(); // and is the bridge's, not the page's anchor handler
         fastLane();
-      });
-    }
+      }
+    }, true);
     play.addEventListener("pointerenter", function (e) { if (e.pointerType !== "touch") { hover = true; intent(); } });
     play.addEventListener("pointerleave", function () { hover = false; intent(); });
     play.addEventListener("focus", function () { kfocus = modality === "key"; intent(); });
@@ -251,8 +261,18 @@
 
   function onHydrated() {
     hydrated = true;
-    if (st !== "idle" && st !== "hold" && st !== "reveal") setInert(true);
+    if (w.__pageHydrated) inertOn();
     if (st === "armed") liveSoon();
+  }
+
+  /** `inert` goes on the page behind only once EVERY section has hydrated
+   *  (`page:hydrated`; Oct 20, fix5). IntroBridge's own boundary hydrates
+   *  first; the body-level siblings in later Suspense boundaries (the credits
+   *  frame) got `inert=""` before React reached them: a dev hydration
+   *  mismatch ("a tree hydrated but some attributes ... didn't match"). Until
+   *  then Tab is trapped by the controller's key handler and the dialog is aria-modal. */
+  function inertOn() {
+    if (st !== "idle" && st !== "hold" && st !== "reveal") setInert(true);
   }
 
   /** S0: armed. Called at boot and by window.__intro.replay(). */
@@ -321,7 +341,8 @@
       offs.push(function () { mo.disconnect(); });
     }
 
-    if (hydrated) setInert(true);
+    if (hydrated && w.__pageHydrated) setInert(true);
+    else on(w, "page:hydrated", inertOn);
     if (altPlay) later(setInked, C.ink.routeMs); // the bracket inks in when the route arrives
     focus(play);
     // text boxes move when the web fonts swap in: re-place the candles

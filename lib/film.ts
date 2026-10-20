@@ -662,7 +662,6 @@ const copy = {
   "dock.replay.paused": p3("Turn motion on to replay the intro."),
   "dock.replay.reduced": p3("Reduced motion is on in your system settings, so the intro cannot replay."),
   "dock.cut": p3("Director's cut"),
-  "dock.cut.short": p3("Tour"),
   "dock.cut.reduced": p3("Reduced motion is on in your system settings."),
   "dock.cut.on": p3("ON"),
   "dock.cut.off": p3("OFF"),
