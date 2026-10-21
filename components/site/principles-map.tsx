@@ -488,8 +488,14 @@ function MapRoom({
     <li
       {...(index === RIBBONS_BEAT_ROOM ? beatAttrs("B54", { weight: 2 }) : {})}
       // the beat's room keeps >= 300 px (B54 is a scroll star; the rooms are
-      // now compact, LENGTH-2)
-      className={`relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]${index === RIBBONS_BEAT_ROOM ? " min-h-[19.5rem]" : ""}`}
+      // now compact, LENGTH-2). cn(), not a template literal: Tailwind reads
+      // class names from source text, and `]${` glued the grid-cols class
+      // to the interpolation, so it was never generated and the hall column
+      // (corridor + footprints) collapsed into the room
+      className={cn(
+        "relative grid grid-cols-[var(--hall-w)_minmax(0,1fr)]",
+        index === RIBBONS_BEAT_ROOM && "min-h-[19.5rem]",
+      )}
       data-room={index + 1}
       data-active={active ? "" : undefined}
     >

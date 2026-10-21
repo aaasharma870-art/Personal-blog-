@@ -574,7 +574,7 @@ export const page: readonly SectionEntry[] = [
     nav: { label: "Principles", primary: true },
     stage: { mode: "opaque" }, // the map sheet
     tempo: "medium",
-    estVh: { d: 2.308, t: 2.576 },
+    estVh: { d: 2.308, t: 2.703 },
     beats: [
       { id: "B52", at: -100, span: 100, kind: "signature", timing: "time", star: true, weight: 1, feature: "existing" },
       { id: "B53", at: 0, span: 77.4, kind: "title", timing: "time", star: true, weight: 1, feature: "P3-7" },
