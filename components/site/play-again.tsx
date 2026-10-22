@@ -10,11 +10,11 @@ import { RotateCcw } from "lucide-react";
    the lettered line (`children`: the FilmQuote and the Hallows mark, rendered
    by the footer, so the quoted line is never written here) with a small
    "↻ Play it again" sub-line inside it (`label`); the ink fold-line (`fold`)
-   sits between the two. It restarts the loop: with motion on it scrolls to
-   the top and replays the intro from its Play card
-   (window.__intro.replay(), components/site/dock-actions.ts); with motion off
-   (Pause or OS reduced motion) it only goes to the top, focus on the hero
-   title. The quiet "↑ Back to the opening" link above stays the scroll-only
+   sits between the two. It restarts the loop: with motion on it replays the
+   intro like a brand-new visit (replayIntro(), components/site/dock-actions.ts:
+   the page reloads at the top into the Play card, through the same cold path
+   as a first visit); with motion off (Pause or OS reduced motion) it only
+   goes to the top, focus on the hero title. The quiet "↑ Back to the opening" link above stays the scroll-only
    way back. `name` is the accessible name ("<line> <label>", built by the
    footer). A real <button> in the solid "try" look (app/p3/dock.css
    `.try-end`), 44 px+ tall, hover / focus / active states.
