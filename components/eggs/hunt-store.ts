@@ -18,6 +18,7 @@
 import { useSyncExternalStore } from "react";
 import { film } from "@/lib/film";
 import { eggsSessionOff, subscribeEggs } from "@/components/eggs/egg-bus";
+import { readSession, writeSession } from "@/lib/session";
 
 /** The 12 hunt eggs (spec §9.1), three per world. */
 export const HUNT_IDS = [
@@ -43,6 +44,20 @@ export function isHuntId(id: string): id is HuntId {
 
 /** Opens the hunt panel (the palette's "Show egg hints"); the chip listens. */
 export const HUNT_PANEL_EVENT = "hunt:panel";
+
+/** The one-time nudge (components/eggs/hunt-nudge.tsx) is remembered per tab
+ *  (sessionStorage via lib/session; in memory when storage is blocked), so it
+ *  shows once and never nags: shown, dismissed, or the panel opened. */
+const NUDGE_KEY = "eggs:nudge";
+/** This page view's mark, for when storage is blocked (then it is once per view). */
+let nudgeMark = false;
+export function nudgeSeen(): boolean {
+  return nudgeMark || readSession(NUDGE_KEY) === "1";
+}
+export function markNudgeSeen(): void {
+  nudgeMark = true;
+  writeSession(NUDGE_KEY, "1");
+}
 
 const KEY = "aryan:hunt:v1";
 

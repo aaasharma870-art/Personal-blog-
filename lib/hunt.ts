@@ -114,3 +114,13 @@ export function worthyOfPen(total?: number): boolean {
   const n = total ?? ledgerRows();
   return s.deadEye !== undefined || (n > 0 && s.rows.length >= n);
 }
+
+/** Where the visitor stands on the pen (Oct 22, fix/eggs): the ledger rows
+ *  read of the rows rendered, and whether Dead Eye is won. The panel and the
+ *  pen's toast show it, so "read the whole ledger" is a count, not a guess. */
+export function penProgress(): { read: number; total: number; won: boolean } {
+  if (typeof window === "undefined") return { read: 0, total: 0, won: false };
+  const s = readHunt();
+  const total = ledgerRows();
+  return { read: Math.min(s.rows.length, total), total, won: s.deadEye !== undefined };
+}

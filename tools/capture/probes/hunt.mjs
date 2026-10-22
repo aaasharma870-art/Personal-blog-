@@ -36,7 +36,12 @@ export default async function probe(page, ctx) {
   const set = (name, pass, detail = {}) => (checks[name] = { pass: Boolean(pass), ...detail });
   const sleep = ctx.sleep;
   const found = () => page.evaluate((k) => Object.keys(JSON.parse(localStorage.getItem(k) ?? "null")?.found ?? {}), KEY);
-  const chipText = () => page.evaluate(() => document.querySelector("[data-hunt-chip]")?.textContent?.trim() ?? null);
+  // the count box alone (the chip also reads "Eggs" from 84rem: dock-word, Oct 22 fix/eggs)
+  const chipText = () =>
+    page.evaluate(() => {
+      const b = document.querySelector("[data-hunt-chip]");
+      return b ? (b.querySelector(".hunt-chip-n")?.textContent?.trim() ?? null) : null;
+    });
   const seed = (ids) =>
     page.evaluate(
       ([k, ids]) => localStorage.setItem(k, JSON.stringify({ v: 1, found: Object.fromEntries(ids.map((i) => [i, Date.now()])), rows: [] })),
@@ -61,7 +66,7 @@ export default async function probe(page, ctx) {
   await run("ssr", async () => {
     const res = await page.request.get(ctx.url("/?skip=intro"));
     const html = await res.text();
-    const m = /data-hunt-chip[^>]*>(?:<[^>]+>)*([^<]*)</.exec(html);
+    const m = /data-hunt-chip[^>]*>[\s\S]*?class="hunt-chip-n"[^>]*>([^<]*)</.exec(html);
     set("ssr", m && m[1].includes("–/12"), { text: m?.[1] ?? null });
   });
 

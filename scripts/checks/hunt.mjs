@@ -14,7 +14,11 @@
 //   - a spell (typed / palette) names its palette words; the egg host listens for each
 //     typed buffer; the palette dialog marks each spell word (hidden until queried);
 //   - B2 patronus is off; B9 the egg host ignores typed keys while html[data-game] is set;
-//     the post-credits tail carries its beat (B58).
+//     the post-credits tail carries its beat (B58);
+//   - Oct 22 (fix/eggs) every egg can be COLLECTED from the panel: a `how` copy key, and either a
+//     "Take me there" `target` (an #id that exists on the page) or a spell `word` (the panel's
+//     "Show the word", tied to the host's typed buffer); an egg with a `tip` wears a marker
+//     (`data-egg-glint="<id>"` on a host: <EggHotspot> sets it for every hotspot).
 import { HUNT_ROWS, HUNT_WORLDS } from "../../components/eggs/hunt-rows.ts";
 
 const PREFIX = { pirates: "pc-", idiots: "3i-", rdr2: "rd-", hp: "hp-" };
@@ -25,7 +29,7 @@ const TYPED = { "hp-map": "solemnlyswear", "hp-lumos": ["lumos", "nox"], "pc-par
 /** Hosts that name the same place ("global" spells live in the chrome). */
 const sameHost = (a, b) => a === b || (["global", "chrome"].includes(a) && ["global", "chrome"].includes(b));
 
-export default function run({ film, err, warn, readFile }) {
+export default function run({ film, err, warn, readFile, uiFiles, ROOT }) {
   const P = "[P3 #7] hunt";
   const rows = Object.entries(HUNT_ROWS);
   if (rows.length !== 12) err(`${P}: ${rows.length} eggs in components/eggs/hunt-rows.ts (exactly 12)`);
@@ -45,6 +49,11 @@ export default function run({ film, err, warn, readFile }) {
       const key = r[k];
       if (typeof key !== "string" || !film.copy[key]?.text) err(`${P} ${id}: the ${k} copy key "${key}" is missing from lib/film.ts copy`);
     }
+    // collectable: how to, and where (a target) or what (a spell word); copy keys must exist
+    if (typeof r.how !== "string" || !film.copy[r.how]?.text) err(`${P} ${id}: the how copy key "${r.how}" is missing from lib/film.ts copy`);
+    if (r.tip !== undefined && (typeof r.tip !== "string" || !film.copy[r.tip]?.text)) err(`${P} ${id}: the tip copy key "${r.tip}" is missing from lib/film.ts copy`);
+    if (r.target === undefined && r.word === undefined) err(`${P} ${id}: neither a "Take me there" target nor a spell word (the panel could not help collect it)`);
+    if (r.target !== undefined && !/^#[A-Za-z][\w-]*$/.test(r.target)) err(`${P} ${id}: target "${r.target}" is not an #id`);
     if (r.keyboard !== true) err(`${P} ${id}: keyboard must be true (every egg has a keyboard path)`);
     if (typeof r.rm !== "string" || !r.rm.trim()) err(`${P} ${id}: no reduced-motion state (rm)`);
     if (r.browse !== false) err(`${P} ${id}: browse must be false (hidden from the palette's empty-query list)`);
@@ -69,6 +78,39 @@ export default function run({ film, err, warn, readFile }) {
     }
   }
   if (spells !== 4) err(`${P}: ${spells} spells (one per world: 4)`);
+
+  // a spell's `word` is what the panel shows: it must be the very buffer the egg host listens for
+  for (const [id, r] of rows) {
+    const spell = r.trigger?.includes("typed") || r.trigger?.includes("palette");
+    if (spell && typeof r.word !== "string") err(`${P} ${id}: a spell names its word (the panel's "Show the word")`);
+    if (typeof r.word === "string" && TYPED[id]) {
+      const typed = [TYPED[id]].flat()[0];
+      if (!r.word.replace(/[^a-z]/gi, "").toLowerCase().endsWith(typed)) err(`${P} ${id}: word "${r.word}" is not the typed buffer "${typed}"`);
+    }
+  }
+
+  // "Take me there" lands on something real, and a marker host exists for every egg with a tip
+  const sources = (uiFiles ?? [])
+    .map((f) => String(f))
+    .filter((f) => /\.(tsx?|jsx?)$/.test(f) && /[\\/](components|app|lib)[\\/]/.test(f))
+    .map((f) => ({ f, src: readFile(f.startsWith(ROOT) ? f.slice(ROOT.length + 1) : f) }));
+  const anySource = (re) => sources.some((x) => re.test(x.src));
+  for (const [id, r] of rows) {
+    if (r.target !== undefined) {
+      const frag = r.target.slice(1);
+      const ok =
+        film.acts.some((a) => a.id === frag) ||
+        r.trigger?.includes("hotspot") && frag === `egg-${id}` ||
+        anySource(new RegExp(`id=["'\`]${frag}["'\`]`));
+      if (!ok) err(`${P} ${id}: "Take me there" target ${r.target} is not an act card, a hotspot (egg-${id}) or an id in the source`);
+    }
+    if (r.tip !== undefined) {
+      // <EggHotspot> sets it for every hotspot; the Run button, the kraken and the snitch carry it by hand
+      const viaHotspot = r.trigger?.includes("hotspot") && anySource(/data-egg-glint=\{hunt\}/);
+      const marked = viaHotspot || anySource(new RegExp(`data-egg-glint=[^\\n]{0,48}["'\`]${id}["'\`]`));
+      if (!marked) err(`${P} ${id}: it has a tip but no host wears its marker (data-egg-glint="${id}")`);
+    }
+  }
 
   // B2 (spec §3.6): patronus is not one of the 12 and stays off
   if (registry.get("patronus")?.enabled) err(`${P}: B2 the patronus egg must be enabled:false`);

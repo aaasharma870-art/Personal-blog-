@@ -16,6 +16,10 @@
    already stops CSS animations.
    ========================================================================== */
 
+:root {
+  --egg-gold: #e8b84a;
+}
+
 /* — The hunt chip (spec §9.3): DESKTOP_FINE only ——————————————————————— */
 .hunt-chip-wrap {
   display: none;
@@ -32,9 +36,10 @@
   min-width: 2.75rem;
   align-items: center;
   justify-content: center;
-  padding-inline: 0.5rem;
+  /* the glyph takes the room the word has not (the cluster is tight at 1024) */
+  padding-inline: 0.25rem;
   border-radius: var(--radius-control);
-  color: var(--fg-muted);
+  color: var(--fg);
   transition: color var(--dur-micro) ease;
   touch-action: manipulation;
 }
@@ -45,6 +50,28 @@
 }
 .hunt-chip[data-complete] {
   color: var(--w-ink-contour); /* Snitch gold at 12/12 */
+}
+/* Oct 22 (fix/eggs): the egg. An outline at 0, filled gold once anything is
+   found, and the count in gold with it, so the counter reads as a counter. */
+.hunt-chip-egg {
+  flex: none;
+  width: 0.8125rem;
+  height: 1rem;
+  margin-inline-end: 0.3125rem;
+  fill: none;
+  stroke: var(--egg-gold);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.hunt-chip[data-any] .hunt-chip-egg {
+  fill: var(--egg-gold);
+}
+.hunt-chip[data-any] .hunt-chip-n {
+  color: var(--egg-gold);
+}
+.hunt-chip[data-complete] .hunt-chip-egg {
+  fill: currentColor;
+  stroke: currentColor;
 }
 /* the count box reserves "12/12": the count arriving never shifts the row */
 .hunt-chip-n {

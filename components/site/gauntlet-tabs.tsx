@@ -12,6 +12,7 @@ import { dur, ease } from "@/lib/motion";
 import { useVariant } from "@/lib/use-variant";
 import type { VariantChoice } from "@/lib/variants";
 import { cn } from "@/lib/utils";
+import { EggGlint } from "@/components/eggs/egg-glint";
 import { eggsSessionOff, triggerEgg } from "@/components/eggs/egg-bus";
 import {
   GauntletBoard,
@@ -219,6 +220,9 @@ export function GauntletTabs({
               }}
               aria-disabled={running || undefined}
               aria-describedby={labelId}
+              // 3i-quad's marker: the first Run that clears a hypothesis counts
+              id="egg-3i-quad"
+              data-egg-glint={quadcopter ? "3i-quad" : undefined}
               className={cn(
                 "relative inline-flex min-h-11 items-center gap-2 rounded-control px-4 type-small text-fg shadow-[inset_0_0_0_1px_var(--rule)] transition-colors duration-(--dur-micro) hover:bg-surface-1",
                 running && "text-fg-muted",
@@ -232,6 +236,7 @@ export function GauntletTabs({
                 data-run-ring=""
                 className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 shadow-[inset_0_0_0_1.5px_var(--w-chalk)]"
               />
+              {quadcopter ? <EggGlint badge /> : null}
             </button>
           ) : null}
           {canRun && fine && !reduce && live.runs === 0 ? (

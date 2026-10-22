@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import type { Variant } from "@/lib/variants";
 import type { ToneId, WorldId } from "@/lib/worlds";
 import { EggHint } from "@/components/eggs/egg-hint";
+import { EggGlint } from "@/components/eggs/egg-glint";
 import { FilmQuote } from "@/components/site/film-quote";
 import { FilmTitle, SceneCaption } from "@/components/primitives/scene-caption";
 import {
@@ -516,8 +517,9 @@ export function ActCardSection({
       // changes is right below. Only on a card that pins (else no chunk
       // binds it), and gone with the eggs (P3-8 #2, W2 gate)
       <EggHint egg="hidden-kraken">
-        <button type="button" className="act-card-kraken type-meta" data-kraken="">
+        <button type="button" id="egg-pc-kraken" className="act-card-kraken type-meta" data-kraken="" data-egg-glint="pc-kraken">
           {krakenHint.text}
+          <EggGlint badge />
         </button>
       </EggHint>
     ) : null;

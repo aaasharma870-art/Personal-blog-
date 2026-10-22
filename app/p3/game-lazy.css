@@ -16,7 +16,7 @@
   right: 0;
   top: calc(100% + 0.5rem);
   z-index: 1;
-  width: min(22rem, calc(100vw - 2rem));
+  width: min(30rem, calc(100vw - 2rem));
   max-height: calc(100vh - var(--header-h, 4rem) - 1.5rem);
   overflow-y: auto;
   overscroll-behavior: contain;

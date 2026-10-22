@@ -20,6 +20,7 @@ import {
   subscribeEggs,
   triggerEgg,
 } from "@/components/eggs/egg-bus";
+import { EggGlint } from "@/components/eggs/egg-glint";
 import { HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
 
 /* ============================================================================
@@ -194,11 +195,14 @@ export function Snitch({ className }: { className?: string }) {
         caught ? "opacity-70" : "hover:opacity-90",
         className,
       )}
+      id="egg-hp-snitch"
       data-egg="snitch"
+      data-egg-glint="hp-snitch"
       data-darting={darting ? "" : undefined}
       {...beatAttrs(STAR, { weight: 2 })}
     >
       <SnitchArt flutter={darting} />
+      <EggGlint badge />
     </motion.button>
   );
 }

@@ -265,6 +265,10 @@ html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
   .hunt-chip .hunt-chip-n {
     text-align: left;
   }
+  /* the chip's own gap spaces the egg glyph here */
+  .hunt-chip .hunt-chip-egg {
+    margin-inline-end: 0;
+  }
 }
 /* The Pause word keeps the width of "Resume / Motion paused" (a hidden copy of the
    reason shares its cell): pausing never moves the dock beside it */
