@@ -1,8 +1,9 @@
 /* ============================================================================
    app/p3/dock.css: the header control dock and the "try" look (Oct 16 fix).
    Replay intro, Director's cut ON/OFF and Games sit in the fixed header as
-   labelled, solid, ringed buttons; the games' own pills, the Run button and
-   the closing "Play it again" wear the same look. OWNER: dock worker.
+   labelled, solid, ringed buttons; the Run button and the closing "Play it
+   again" wear the same look (the games' own keys are arcade keys now:
+   app/p3/arcade.css). OWNER: dock worker.
    Imported by app/layout.tsx after ./game.css. Plain CSS, no @apply. The
    popovers' own rules are in dock-lazy.css (loaded with their chunk).
 
@@ -98,8 +99,7 @@
   transform: translateY(1px);
 }
 .dock-btn > svg,
-.try-btn > svg,
-html.js .game-pill > svg {
+.try-btn > svg {
   width: 1.125rem;
   height: 1.125rem;
   flex: none;
@@ -127,13 +127,11 @@ html.js .game-pill > svg {
 /* A press the page has queued and not answered yet (the boot script marks the
    button aria-busy; the enhancer / the dock clear it): a pressed look and a
    pulsing icon, so a press during startup never feels dead (Oct 20, fix5). */
-.try-btn[aria-busy="true"]:not([aria-disabled="true"]),
-html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) {
+.try-btn[aria-busy="true"]:not([aria-disabled="true"]) {
   background: var(--dock-fill-hover);
   cursor: progress;
 }
-.try-btn[aria-busy="true"]:not([aria-disabled="true"]) > svg,
-html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
+.try-btn[aria-busy="true"]:not([aria-disabled="true"]) > svg {
   animation: dock-busy 0.7s ease-in-out infinite alternate;
 }
 @keyframes dock-busy {
@@ -145,8 +143,7 @@ html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .try-btn[aria-busy="true"] > svg,
-  html.js .game-pill[aria-busy="true"] > svg {
+  .try-btn[aria-busy="true"] > svg {
     animation: none;
   }
 }
@@ -319,34 +316,10 @@ html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
   animation: none;
 }
 
-/* — The games' own pills, the Run button and the closing button wear the
-     same look (DESKTOP_FINE; the pills exist only there) — */
+/* — The Run button in the gauntlet wears the same look (DESKTOP_FINE). The
+     games' own keys ("Play DEAD EYE", "Take off") are arcade keys now
+     (app/p3/arcade.css), not "try" pills — */
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
-  html.js .game-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 2.75rem;
-    padding: 0 calc(1rem - 1.5px) 0 calc(0.875rem - 1.5px);
-    border: 1.5px solid transparent;
-    border-radius: 999px;
-    background: var(--dock-fill);
-    color: var(--dock-ink);
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.005em;
-    text-transform: none;
-    white-space: nowrap;
-    box-shadow:
-      inset 0 0 0 1.5px var(--dock-ring),
-      0 0 0 1px var(--dock-halo),
-      0 8px 20px -10px rgb(0 0 0 / 0.7);
-    transition: background-color var(--dur-micro, 180ms) ease;
-  }
-  html.js .game-pill:hover {
-    background: var(--dock-fill-hover);
-  }
   /* the Run button in the gauntlet: it holds the invite ring span */
   button:has(> [data-run-ring]) {
     background: var(--dock-fill);
@@ -367,10 +340,6 @@ html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
     background: var(--dock-fill);
   }
 }
-.game-pill-verb {
-  font-weight: 700;
-}
-
 /* — The end: the credits' last line IS the button (the lettered line as its
      face, "Play it again" under it; components/site/play-again.tsx). One large,
      solid, aqua-ringed button; the lettered face keeps its world lettering. — */
@@ -428,7 +397,6 @@ html.js .game-pill[aria-busy="true"]:not([aria-disabled="true"]) > svg {
    on parchment too; the transparent outline is the forced-colors ring */
 .dock-btn:focus-visible,
 .try-btn:focus-visible,
-html.js .game-pill:focus-visible,
 button:has(> [data-run-ring]):focus-visible {
   outline: 2px solid transparent;
   outline-offset: 3px;

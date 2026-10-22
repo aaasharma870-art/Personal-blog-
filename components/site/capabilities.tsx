@@ -11,7 +11,7 @@ import { actCards, acts, copyText, copyVisible, enabledSections, variantChoiceOf
 import { beatAttrs } from "@/lib/beats";
 import type { CopyKey } from "@/lib/film";
 import type { SectionProps } from "@/components/sections/types";
-import { droneCopy } from "@/components/games/copy";
+import { droneCopy, droneKeyCopy } from "@/components/games/copy";
 import chalkDrone from "@/assets/p3/games/drone-chalk.png";
 import blueprintDrone from "@/assets/p3/games/drone-blueprint.png";
 
@@ -85,6 +85,7 @@ export function Capabilities({ entry, number }: SectionProps<"matrix">) {
           caption={<SceneCaption k="cap.systems" place="bl" />}
           className="mb-tier-block"
           game={droneCopy(gauntlet.map((g) => g.title))}
+          keys={droneKeyCopy()}
           sprites={SPRITES}
         />
       ) : null}

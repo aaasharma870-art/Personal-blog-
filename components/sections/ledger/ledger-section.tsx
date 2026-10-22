@@ -7,7 +7,7 @@ import { PenInset } from "@/components/worlds/idiots/plate-band";
 import { PhysicalWord } from "@/components/words/physical-word";
 import { DeadEyeCall } from "@/components/games/dead-eye/dead-eye-call";
 import { EyeRing } from "@/components/games/dead-eye/eye-ring";
-import { deadEyeCopy } from "@/components/games/copy";
+import { deadEyeCopy, deadEyeKeyCopy } from "@/components/games/copy";
 import { featuredProjects, killList, survivors } from "@/lib/content";
 import { variantChoiceOf } from "@/lib/sections";
 import { effectiveVariant } from "@/lib/variants";
@@ -31,16 +31,18 @@ import type { SectionProps } from "@/components/sections/types";
    mask from the rows' measured span, CSS vars written by the list); then
    T5 crossfades the idiots canvas into the intermission's deep over the
    last 30vh.
-   DEAD EYE (PHASE3-SPEC §9.2 #3, a real game now; W3-GAMES): the Meta pill
-   "DEAD EYE" (Rye, our eye-ring glyph) joins the header's Meta row
+   DEAD EYE (PHASE3-SPEC §9.2 #3, a real game now; W3-GAMES): its arcade key
+   "Play DEAD EYE" (Rye, our eye-ring glyph, a Ready / Live lamp) sits in a
+   small plate under the intro with a one-line "Mini-game" note
    (components/games/dead-eye/dead-eye-call.tsx; DESKTOP_FINE only, by the
-   full media query: phones keep today's header), and the typed word and
-   the palette call the same round. The list keeps its DOM contract
+   full media query: phones keep today's header; Oct 22: it was a small pill
+   in the Meta row that nobody noticed), and the typed word and the palette
+   call the same round. The list keeps its DOM contract
    (data-verdict / data-reason / data-name) and grades its lens figure while
    a round runs. The section carries two EMPTY, hidden layers for a round
    (`[data-deadeye-layer]`): the grade at z −1 (an opacity overlay on the
    media layer, below every word: B6) and the marks at z 1; a round fills
-   them and empties them on exit. B28 (the invite) is the pill's.
+   them and empties them on exit. B28 (the invite) is the key's.
    PHASE 3 WORDS: the intro's "Killed" is the act's physical word (B29, an
    ember strike drawn once through the spotlight; words.physical).
    ========================================================================== */
@@ -134,23 +136,20 @@ export function LedgerSection({ entry, number }: SectionProps<"ledger">) {
     >
       <header className="grid grid-cols-1 gap-tier-block lg:grid-cols-12 lg:items-start lg:gap-x-6">
         <div className="min-w-0 lg:col-span-6 lg:pt-tier-group">
-          {game ? (
-            <div className="game-row">
-              {meta}
-              <DeadEyeCall copy={game} choice={choice}>
-                <EyeRing className="size-5" />
-                <Lettered world="rdr2" text={game.pill} />
-              </DeadEyeCall>
-            </div>
-          ) : (
-            meta
-          )}
+          {meta}
           <MaskReveal as="h2" id={titleId} className="mt-tier-group max-w-title type-chapter text-fg">
             The kill-list
           </MaskReveal>
           <p className="mt-tier-group max-w-body type-body text-fg-muted">
             <PhysicalWord text={INTRO} word="Killed" kind="strike" beat="B29" variant={effectiveVariant(choice, "words.physical", "")} />
           </p>
+          {game ? (
+            <DeadEyeCall copy={game} choice={choice} keys={deadEyeKeyCopy()} icon={<EyeRing className="arcade-key-ico" />}>
+              <span className="arcade-key-name">
+                <Lettered world="rdr2" text={game.pill} />
+              </span>
+            </DeadEyeCall>
+          ) : null}
         </div>
         {entry.props.head ? (
           <PenInset

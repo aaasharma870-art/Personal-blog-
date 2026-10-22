@@ -6,8 +6,10 @@
    script recorded before this ran (`data-enhance-queue`): the delegated
    listener below takes those replays like any click.
 
-   Both game pills are plain markup with no first-load handler:
-   - "▲ Take off" (`#drone-takeoff`, components/worlds/idiots/drone-band.tsx)
+   Both game keys (arcade keys, app/p3/arcade.css) are plain markup with no
+   first-load handler; each key's `aria-pressed` is its lamp (Dead Eye: the
+   round; the drone: `game:start` / `game:stop`):
+   - "Take off" (`#drone-takeoff`, components/worlds/idiots/drone-band.tsx)
      carries the drone's strings (`data-copy`), the `systems.drone` variant
      (`data-variant`, useVariant's live value) and sits beside the chalk
      drone whose src the game flies. Each press renders the lazy game
@@ -37,6 +39,7 @@
 
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import { on } from "@/lib/events";
 import { DESKTOP_FINE, motionOffNow, onMotionOffChange } from "@/lib/flags";
 import { pageHydrated, whenPageHydrated } from "@/lib/hydrated";
 import { effectiveVariant, type Variant } from "@/lib/variants";
@@ -128,11 +131,21 @@ export default function bind(doc: Document): () => void {
         () => {},
       );
   };
+  const dronePill = () => doc.getElementById(DRONE);
   const dropDrone = () => {
     const d = drone;
     drone = null;
+    dronePill()?.setAttribute("aria-pressed", "false");
     if (d) drop(d.root, () => d.host.remove());
   };
+  // the key's lamp and its Live word follow the flight (`aria-pressed`, like
+  // Dead Eye's key); the flight lands, finishes or is cut short with game:stop
+  const offStart = on("game:start", (d) => {
+    if (d.game === "drone") dronePill()?.setAttribute("aria-pressed", "true");
+  });
+  const offStop = on("game:stop", (d) => {
+    if (d.game === "drone") dronePill()?.setAttribute("aria-pressed", "false");
+  });
 
   /* — Dead Eye ——————————————————————————————————————————————————————— */
   let hudMod: HudMod | null = null;
@@ -188,7 +201,12 @@ export default function bind(doc: Document): () => void {
   /* — the presses (and the boot script's replays) ———————————————————————— */
   const onClick = (e: MouseEvent) => {
     const t = e.target instanceof Element ? e.target.closest<HTMLButtonElement>(`#${DRONE}, #${DEAD_EYE}`) : null;
-    if (!t || dead || !fine.matches) return;
+    if (!t) return;
+    // the boot script marked a press it recorded as queued `aria-busy`; this
+    // press is answered here, and nothing else clears the mark for it (the
+    // enhancer's drain only clears the entries it still finds in the queue)
+    t.removeAttribute("aria-busy");
+    if (dead || !fine.matches) return;
     // bound while the enhancer's queue still records (the binders bind one
     // per idle slice, the replay comes after the last): this press is
     // answered now, so it must not be replayed too (a second toggle)
@@ -265,6 +283,8 @@ export default function bind(doc: Document): () => void {
     window.removeEventListener(DEAD_EYE_CALL, onCall);
     fine.removeEventListener("change", onFine);
     offMotion();
+    offStart();
+    offStop();
     warm.disconnect();
     offInvite?.();
     stopRound();

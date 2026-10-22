@@ -12,7 +12,7 @@
 
 import { film, type Copy, type CopyKey } from "@/lib/film";
 import { copyText, copyVisible } from "@/lib/sections";
-import type { DeadEyeCopy, DroneCopy } from "@/components/games/shared";
+import type { DeadEyeCopy, DroneCopy, GameKeyCopy } from "@/components/games/shared";
 
 const text = (k: CopyKey, extra?: Record<string, string | number>): string | null => {
   const c = copyText(k, extra);
@@ -50,3 +50,16 @@ export function deadEyeCopy(): DeadEyeCopy | null {
   if (!pill || !survivor || !score || !fire || !release) return null;
   return { pill, survivor, score, fire, release, best: optional("toy.deadeye.best"), help: optional("toy.deadeye.help") };
 }
+
+/** The words around a game's arcade key ("Mini-game", Ready / Live, and the
+ *  one line about what you do), or null when any may not render: the key then
+ *  shows its label alone rather than a hole. */
+function keyCopy(what: "game.drone.what" | "game.deadeye.what", still?: "game.drone.what.still"): GameKeyCopy | null {
+  const tag = text("game.kicker");
+  const line = text(what);
+  const ready = text("game.ready");
+  const live = text("game.live");
+  return tag && line && ready && live ? { tag, what: line, whatStill: still ? text(still) : null, ready, live } : null;
+}
+export const droneKeyCopy = () => keyCopy("game.drone.what", "game.drone.what.still");
+export const deadEyeKeyCopy = () => keyCopy("game.deadeye.what");

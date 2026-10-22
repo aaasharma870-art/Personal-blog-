@@ -14,11 +14,12 @@ import { Play } from "lucide-react";
    enhancer's dc binder (components/enhance/binders/dc.ts) wires the click
    to the header dock's chooser (Quick / Full tour; it stops a run that is
    going); a click before the binder ran is recorded by the boot script
-   (`data-enhance-queue`) and replayed. It wears the solid "try" look
-   (app/p3/dock.css, like the dock's buttons); the old grey "(sound on)"
-   suffix is gone, since the chooser says "Sound stays as you set it.". Under reduced motion or
-   Pause it reads "Motion is paused" (CSS, from the first paint) and the
-   binder marks it aria-disabled.
+   (`data-enhance-queue`) and replayed. It wears the arcade key look
+   (app/p3/arcade.css, Oct 22: "Director's cut" with a "Tour" window; the old
+   aqua "try" look is still the header dock's and the menu's); the old grey
+   "(sound on)" suffix is gone, since the chooser says "Sound stays as you
+   set it.". Under reduced motion or Pause the window reads "Motion is paused"
+   (CSS, from the first paint) and the binder marks it aria-disabled.
 
    `data-dc-shots` carries the SHOT LIST's tempo from the manifest (lib/
    page.ts sections, lib/film.ts acts): "id:t" per page item in render
@@ -49,6 +50,7 @@ export function DirectorsCutButton() {
   const label = copyText("dc.button");
   if (!copyVisible(label)) return null;
   const paused = copyText("dc.paused");
+  const tag = copyText("game.tour");
   // fix5 (Oct 20): "Director's cut" at EVERY width, the same word as the header
   // dock's button (fix3c had shortened both to "Tour" below 84rem, so a laptop
   // at 1280 CSS px saw no "Director's cut" button at all).
@@ -60,12 +62,25 @@ export function DirectorsCutButton() {
       data-dc-shots={shotList()}
       data-enhance-queue='[data-dc="hero"]'
       data-house-type=""
-      className="try-btn hidden df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
+      className="arcade-key arcade-key--big hidden df:inline-flex motion-off:cursor-not-allowed motion-off:opacity-60"
     >
-      <Play aria-hidden="true" strokeWidth={2} />
-      {/* the copy's leading play glyph is the icon above */}
-      <span>{full}</span>
-      {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
+      <span className="arcade-key-face">
+        <Play className="arcade-key-ico" aria-hidden="true" strokeWidth={2} />
+        {/* the copy's leading play glyph is the icon above */}
+        <span className="arcade-key-name">{full}</span>
+        {/* the window says what it is ("Tour"); under reduced motion or Pause it says why it does nothing */}
+        {copyVisible(tag) || copyVisible(paused) ? (
+          <span className="arcade-key-win">
+            <i className="arcade-lamp" aria-hidden="true" />
+            {copyVisible(tag) ? (
+              <span aria-hidden="true" className="motion-off:hidden">
+                {tag.text}
+              </span>
+            ) : null}
+            {copyVisible(paused) ? <span className="hidden motion-off:inline">{paused.text}</span> : null}
+          </span>
+        ) : null}
+      </span>
     </button>
   );
 }
