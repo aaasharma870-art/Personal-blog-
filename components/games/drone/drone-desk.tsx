@@ -23,7 +23,8 @@ import { armInvite } from "@/components/games/invite";
    2. THE INVITE (B26, a toy-invite time star): on scroll-idle, once, the
       chalk drone beside "▲ Take off" lifts 8 px (the IC-3I-08 lift
       microbeat, ≤ 400 ms up) through the spotlight (components/games/
-      invite.ts).
+      invite.ts). Where the chalk drone is not drawn (below 80 rem) the key
+      itself pulses once instead (Oct 22, round 2).
    3. THE PREFETCH: when the band comes within a viewport, the game chunk is
       fetched at idle, so the first take-off answers at once (INP).
    ========================================================================== */
@@ -87,21 +88,32 @@ export default function DroneDesk({
     };
   }, [band, p]);
 
-  // 2. the B26 invite: the chalk drone beside the pill lifts once
+  // 2. the B26 invite: the chalk drone beside the key lifts once. Below 80 rem
+  //    the chalk drone is not drawn (app/p3/games.css, the plate is narrow), so
+  //    the invite would claim the spotlight for something nobody can see: the
+  //    key itself gives the nod then (the same small pulse as Dead Eye's B28).
   useEffect(() => {
     const host = band.current;
     if (!host) return;
-    return armInvite(host, "B26", () =>
-      mark.current?.animate(
-        [
-          { transform: "translateY(0)" },
-          { transform: "translateY(-8px)", offset: 0.42, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
-          { transform: "translateY(-8px)", offset: 0.55 },
-          { transform: "translateY(0)" },
-        ],
-        { duration: 900, easing: "cubic-bezier(0.65, 0, 0.35, 1)" },
-      ),
-    );
+    return armInvite(host, "B26", () => {
+      const drone = mark.current;
+      if (drone && drone.getClientRects().length > 0) {
+        return drone.animate(
+          [
+            { transform: "translateY(0)" },
+            { transform: "translateY(-8px)", offset: 0.42, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+            { transform: "translateY(-8px)", offset: 0.55 },
+            { transform: "translateY(0)" },
+          ],
+          { duration: 900, easing: "cubic-bezier(0.65, 0, 0.35, 1)" },
+        );
+      }
+      const key = drone?.parentElement?.querySelector<HTMLElement>("#drone-takeoff");
+      return key?.animate([{ transform: "scale(1)" }, { transform: "scale(1.06)", offset: 0.35 }, { transform: "scale(1)" }], {
+        duration: 700,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      });
+    });
   }, [band, mark]);
 
   // 3. warm the game chunk when the band is within a viewport

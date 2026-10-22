@@ -5,8 +5,9 @@
 // so a copy change never needs a probe edit.
 //
 //   beats        [data-beat] B26 (systems band), B28 (the DEAD EYE pill), B29 (the "Killed" physical word)
-//   keys         both keys are arcade keys ≥ 44 px, aria-pressed="false" at rest, and their one-line "Mini-game" note
-//                (aria-describedby) is rendered
+//   keys         both keys are arcade keys ≥ 44 px, aria-pressed="false" and not aria-busy at rest, and their one-line
+//                "Mini-game" note (aria-describedby) is rendered; the drone's line is the "motion is off: flight plan"
+//                one under --rm and the "fly" one otherwise
 //   pills        the arcade keys "Take off" (#drone-takeoff) and "Play DEAD EYE" (#deadeye-call) shown on DESKTOP_FINE
 //   drone.keys   arrows move the drone only while the play field has focus (blurred: no move); each key is
 //                held for a count of drawn frames (18 blurred, 12 focused), not ms: the flight steps per frame
@@ -211,11 +212,18 @@ export default async function probe(page, ctx) {
           arcade: el.classList.contains("arcade-key"),
           pressed: el.getAttribute("aria-pressed"),
           what: what ? what.textContent.trim() : null,
+          // what a reader sees (a hidden span is left out): the drone's line changes with Pause / reduced motion
+          line: what ? what.innerText.replace(/\s+/g, " ").trim() : null,
+          busy: el.getAttribute("aria-busy"),
           whatShown: Boolean(w && w.width > 0 && w.height > 0),
         };
       }),
     );
-    set("keys", r.every((k) => k && k.arcade && k.h >= 44 && k.pressed === "false" && k.what && k.whatShown), { keys: r });
+    // round 2: with Pause / reduced motion a press opens the flight plan, so the drone's line says that instead of
+    // "fly"; Dead Eye's line stays (a round runs untimed); no key is left busy at rest
+    const want = [ctx.rm ? copy("game.drone.what.still") : copy("game.drone.what"), copy("game.deadeye.what")];
+    const lineOk = r.every((k, i) => k && want[i] && k.line && k.line.includes(want[i]) && (i !== 0 || ctx.rm || !k.line.includes(copy("game.drone.what.still") ?? "\u0000")));
+    set("keys", r.every((k) => k && k.arcade && k.h >= 44 && k.pressed === "false" && k.busy === null && k.what && k.whatShown) && lineOk, { keys: r, want });
   });
 
   if (ctx.rm) {

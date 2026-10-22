@@ -650,6 +650,9 @@ const copy = {
   "game.tour": p3("Tour"),
   "game.spin": p3("Spin it"),
   "game.drone.what": p3("Fly the drone through seven gates. Arrow keys or WASD. Esc lands."),
+  /* the same line while Pause or reduced motion is on: the press opens the
+     flight plan (drone-game.tsx phase "plan"), nothing flies */
+  "game.drone.what.still": p3("Motion is off. Press to read the flight plan: the seven gates."),
   "game.deadeye.what": p3("Mark the killed ideas below, then Fire. Esc stops it."),
   /* sound (PHASE3-SPEC §10.4) */
   "sound.name": p3("Sound"),

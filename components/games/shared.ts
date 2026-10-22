@@ -36,6 +36,9 @@ export type GameKeyCopy = {
   tag: string;
   /** The one plain line about what you do and how to stop. */
   what: string;
+  /** The same line while Pause or reduced motion is on, when the press does
+   *  something else (the drone: it opens the flight plan); null: `what` stays. */
+  whatStill: string | null;
   /** The key's state window while it waits ("Ready"). */
   ready: string;
   /** … and while the game runs ("Live"). */

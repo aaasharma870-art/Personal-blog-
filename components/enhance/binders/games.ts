@@ -201,7 +201,12 @@ export default function bind(doc: Document): () => void {
   /* — the presses (and the boot script's replays) ———————————————————————— */
   const onClick = (e: MouseEvent) => {
     const t = e.target instanceof Element ? e.target.closest<HTMLButtonElement>(`#${DRONE}, #${DEAD_EYE}`) : null;
-    if (!t || dead || !fine.matches) return;
+    if (!t) return;
+    // the boot script marked a press it recorded as queued `aria-busy`; this
+    // press is answered here, and nothing else clears the mark for it (the
+    // enhancer's drain only clears the entries it still finds in the queue)
+    t.removeAttribute("aria-busy");
+    if (dead || !fine.matches) return;
     // bound while the enhancer's queue still records (the binders bind one
     // per idle slice, the replay comes after the last): this press is
     // answered now, so it must not be replayed too (a second toggle)

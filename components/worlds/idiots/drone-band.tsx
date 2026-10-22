@@ -45,7 +45,9 @@ const CAMERA: CameraSpec = { kind: "drift", scale: [1, 1.02], driver: "progress"
  *   looked like the header's buttons). All of it is plain markup shown ONLY on
  *   DESKTOP_FINE after JS by the full media query (app/p3/games.css); the
  *   key's lamp and Ready / Live word follow its `aria-pressed`, which the
- *   games binder sets while the drone flies. The key carries no handler
+ *   games binder sets while the drone flies. With Pause or reduced motion on a
+ *   press opens the flight plan instead of flying, so the line says that then
+ *   (`game.drone.what.still`, swapped by the `motion-off:` variant). The key carries no handler
  *   here (first-load budget): the desktop enhancer's games binder
  *   (components/enhance/binders/games.ts) mounts the lazy game
  *   (components/games/drone/drone-game.tsx) on a press, reading the strings
@@ -105,7 +107,16 @@ export function DroneBand({
               {keys ? (
                 <p id="drone-what" className="arcade-what">
                   <span className="arcade-what-tag">{keys.tag}</span>
-                  {keys.what}
+                  {/* with Pause or reduced motion on, a press opens the flight plan
+                      instead of flying: the line says so (motion-off: = both) */}
+                  {keys.whatStill ? (
+                    <>
+                      <span className="motion-off:hidden">{keys.what}</span>
+                      <span className="hidden motion-off:inline">{keys.whatStill}</span>
+                    </>
+                  ) : (
+                    keys.what
+                  )}
                 </p>
               ) : null}
               <button

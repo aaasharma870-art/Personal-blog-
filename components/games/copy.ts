@@ -54,12 +54,12 @@ export function deadEyeCopy(): DeadEyeCopy | null {
 /** The words around a game's arcade key ("Mini-game", Ready / Live, and the
  *  one line about what you do), or null when any may not render: the key then
  *  shows its label alone rather than a hole. */
-function keyCopy(what: "game.drone.what" | "game.deadeye.what"): GameKeyCopy | null {
+function keyCopy(what: "game.drone.what" | "game.deadeye.what", still?: "game.drone.what.still"): GameKeyCopy | null {
   const tag = text("game.kicker");
   const line = text(what);
   const ready = text("game.ready");
   const live = text("game.live");
-  return tag && line && ready && live ? { tag, what: line, ready, live } : null;
+  return tag && line && ready && live ? { tag, what: line, whatStill: still ? text(still) : null, ready, live } : null;
 }
-export const droneKeyCopy = () => keyCopy("game.drone.what");
+export const droneKeyCopy = () => keyCopy("game.drone.what", "game.drone.what.still");
 export const deadEyeKeyCopy = () => keyCopy("game.deadeye.what");

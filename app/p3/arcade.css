@@ -5,7 +5,8 @@
    every in-page game / tour button, so the style can be switched here and
    nowhere else. Direction A "brass bezel" (design/mockups/a-brass-bezel):
    a brass bezel with a dark lip, a dark glass face, a verb label, and a state
-   window with a lamp (OFF dull, ON lit). The world only recolours the lamp.
+   window with a lamp (lit and steady at rest = Ready, brighter with a halo =
+   Live, dull = the key cannot be used now). The world only recolours the lamp.
 
    USE IT (markup; `<button>` only):
      <button class="arcade-key [arcade-key--big]" aria-pressed="false">
@@ -138,6 +139,11 @@
     border-radius: 12px;
     font-size: 0.75rem;
   }
+  .arcade-key--tag {
+    /* a cue inside another control (the compass is a grab cursor): the cue
+       itself is a press */
+    cursor: pointer;
+  }
   .arcade-key--tag .arcade-key-face {
     gap: 0.4375rem;
     padding: 0 0.75rem 0 0.625rem;
@@ -219,15 +225,22 @@
   .arcade-key[data-on] .arcade-key-win {
     color: var(--ak-lamp);
   }
+  /* lit and steady at rest (Ready): a lamp that is on says "this works"; Live
+     is the same lamp brighter with a halo, and the word says which it is */
   .arcade-lamp {
     flex: none;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #6b5a3b, var(--ak-lamp-off) 70%);
+    background: radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--ak-lamp-core) 55%, var(--ak-lamp)),
+      var(--ak-lamp) 55%,
+      var(--ak-lamp-deep)
+    );
     box-shadow:
-      inset 0 0 0 1px rgb(0 0 0 / 0.65),
-      0 0 0 1px rgb(255 255 255 / 0.1);
+      0 0 5px 1px color-mix(in srgb, var(--ak-lamp) 38%, transparent),
+      inset 0 0 0 1px rgb(0 0 0 / 0.35);
   }
   .arcade-key[aria-pressed="true"] .arcade-lamp,
   .arcade-key[data-on] .arcade-lamp {
@@ -235,6 +248,13 @@
     box-shadow:
       0 0 9px 3px color-mix(in srgb, var(--ak-lamp) 60%, transparent),
       inset 0 0 0 1px rgb(0 0 0 / 0.35);
+  }
+  /* out: the key cannot be used now (the hero tour under Pause / reduced motion) */
+  .arcade-key[aria-disabled="true"] .arcade-lamp {
+    background: radial-gradient(circle at 35% 30%, #6b5a3b, var(--ak-lamp-off) 70%);
+    box-shadow:
+      inset 0 0 0 1px rgb(0 0 0 / 0.65),
+      0 0 0 1px rgb(255 255 255 / 0.1);
   }
 
   /* — states — */
@@ -368,6 +388,17 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
+}
+
+/* — The lettered game name ("DEAD EYE", a Western display face): that face
+     loads only when its world is near, so on the kill-list the name is set in
+     the serif fallback, whose weight the lettering rule in app/globals.css
+     fixes at 400 (unlayered): lighter than the bold mono beside it. Hence this
+     rule is outside the layer too. The display face itself is a single weight
+     and the lettering rule keeps `font-synthesis: none`, so it does not turn
+     faux bold once it has loaded. — */
+.arcade-key .arcade-key-name [data-lettered] {
+  font-weight: 700;
 }
 
 /* — Focus (keyboard): a 3 px white ring on a dark moat, so it reads on any
