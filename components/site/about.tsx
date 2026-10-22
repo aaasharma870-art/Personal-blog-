@@ -52,6 +52,7 @@ export function About({ entry, number }: SectionProps<"story">) {
     );
   });
   const toy = copyText("toy.compass.label");
+  const spin = copyText("game.spin");
 
   return (
     <WorldSection entry={entry} labelledBy={titleId} ground>
@@ -85,6 +86,7 @@ export function About({ entry, number }: SectionProps<"story">) {
             choice={choice}
             bodies={bodies}
             toy={copyVisible(toy) ? toy.text : null}
+            spin={copyVisible(spin) ? spin.text : null}
             caption={<SceneCaption k="cap.about" place="under" className="mt-0" />}
           />
         </div>

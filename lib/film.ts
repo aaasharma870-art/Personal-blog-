@@ -648,6 +648,7 @@ const copy = {
   "game.ready": p3("Ready"),
   "game.live": p3("Live"),
   "game.tour": p3("Tour"),
+  "game.spin": p3("Spin it"),
   "game.drone.what": p3("Fly the drone through seven gates. Arrow keys or WASD. Esc lands."),
   "game.deadeye.what": p3("Mark the killed ideas below, then Fire. Esc stops it."),
   /* sound (PHASE3-SPEC §10.4) */

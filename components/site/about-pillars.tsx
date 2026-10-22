@@ -74,6 +74,7 @@ export function AboutPillars({
   caption = null,
   bodies,
   toy = null,
+  spin = null,
 }: {
   choice: VariantChoice;
   /** cap.about (server-rendered), shown under the compass below lg. */
@@ -83,6 +84,8 @@ export function AboutPillars({
   bodies?: readonly ReactNode[];
   /** The toy's label (toy.compass.label); null = no toy. */
   toy?: string | null;
+  /** The small visible cue under the compass ("Spin it", game.spin); null = none. */
+  spin?: string | null;
 }) {
   const variant = useVariant(choice, "about.compass");
   const reduced = useReducedMotion();
@@ -186,6 +189,7 @@ export function AboutPillars({
               <CompassToy
                 api={api}
                 label={toy}
+                cue={spin}
                 bearings={HEADINGS}
                 point={point}
                 alt={alt}

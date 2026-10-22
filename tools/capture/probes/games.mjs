@@ -5,7 +5,9 @@
 // so a copy change never needs a probe edit.
 //
 //   beats        [data-beat] B26 (systems band), B28 (the DEAD EYE pill), B29 (the "Killed" physical word)
-//   pills        "▲ Take off" (#drone-takeoff) and "DEAD EYE" (#deadeye-call) shown on DESKTOP_FINE
+//   keys         both keys are arcade keys ≥ 44 px, aria-pressed="false" at rest, and their one-line "Mini-game" note
+//                (aria-describedby) is rendered
+//   pills        the arcade keys "Take off" (#drone-takeoff) and "Play DEAD EYE" (#deadeye-call) shown on DESKTOP_FINE
 //   drone.keys   arrows move the drone only while the play field has focus (blurred: no move); each key is
 //                held for a count of drawn frames (18 blurred, 12 focused), not ms: the flight steps per frame
 //   drone.course a pointer drag flies the 7 gates in order; the live region speaks each gate VERBATIM
@@ -13,7 +15,8 @@
 //                panel shows the real link "Next: the kill-list ↓"; the best time is stored
 //   drone.edge   holding ← into the band's edge: the drone stops dead (x constant: no bounce); held until x has
 //                been still for 8 drawn frames (≤ 15 s: the flight steps per frame), then 5 x two frames apart
-//   drone.esc    Esc lands (≤ 900 ms), focus returns to the pill, html[data-game] cleared
+//   drone.esc    Esc lands (≤ 900 ms), focus returns to the key, html[data-game] cleared; the key's aria-pressed
+//                is "true" while the drone flies and "false" after the landing
 //   drone.off    scrolling the band under 50 % visible lands it
 //   drone.pause  the Pause control lands it at once (≤ 250 ms)
 //   de.start     the pill starts a round: the killed block is brought into view, #kill-list[data-deadeye=on]
@@ -33,7 +36,7 @@
 //                passed the last row; a scripted scrollBy at 60 px / 40 ms outran the IntersectionObserver
 //                frames (1/10 read), and timed 100 px notches still skipped a row at headless frame rates
 //   inp          the slowest click / key event of the probe ≤ 200 ms (Event Timing)
-//   phone        390×844 touch: neither pill shows; no game layer mounts
+//   phone        390×844 touch: neither key is rendered (no box); no game layer mounts
 // Under --rm: drone.plan (a press shows the static labelled flight plan with the 7 titles, no flight,
 // no html[data-game]) and de.untimed (a round has no clock and no time-scale; still painting after 6 s).
 
@@ -193,6 +196,28 @@ export default async function probe(page, ctx) {
     set("pills", r.every((x) => x && x.display !== "none"), { pills: r });
   });
 
+  await run("keys", async () => {
+    // Oct 22: the game keys are arcade keys with a "Mini-game" line, visible at rest (not only after a pulse)
+    const r = await page.evaluate(() =>
+      ["#drone-takeoff", "#deadeye-call"].map((s) => {
+        const el = document.querySelector(s);
+        if (!el) return null;
+        const b = el.getBoundingClientRect();
+        const what = document.getElementById(el.getAttribute("aria-describedby") ?? "");
+        const w = what?.getBoundingClientRect();
+        return {
+          id: el.id,
+          h: Math.round(b.height),
+          arcade: el.classList.contains("arcade-key"),
+          pressed: el.getAttribute("aria-pressed"),
+          what: what ? what.textContent.trim() : null,
+          whatShown: Boolean(w && w.width > 0 && w.height > 0),
+        };
+      }),
+    );
+    set("keys", r.every((k) => k && k.arcade && k.h >= 44 && k.pressed === "false" && k.what && k.whatShown), { keys: r });
+  });
+
   if (ctx.rm) {
     await run("drone.plan", async () => {
       await toBand();
@@ -328,12 +353,18 @@ export default async function probe(page, ctx) {
   await run("drone.esc", async () => {
     await toBand();
     await takeOff();
+    // the key's lamp follows the flight (aria-pressed)
+    const during = await page.evaluate(() => document.getElementById("drone-takeoff")?.getAttribute("aria-pressed"));
     const t0 = Date.now();
     await page.keyboard.press("Escape");
     await landed(1500);
     const ms = Date.now() - t0;
-    const r = await page.evaluate(() => ({ focus: document.activeElement?.id ?? null, game: document.documentElement.getAttribute("data-game") }));
-    set("drone.esc", ms <= 900 && r.focus === "drone-takeoff" && r.game === null, { ms, ...r });
+    const r = await page.evaluate(() => ({
+      focus: document.activeElement?.id ?? null,
+      game: document.documentElement.getAttribute("data-game"),
+      pressed: document.getElementById("drone-takeoff")?.getAttribute("aria-pressed"),
+    }));
+    set("drone.esc", ms <= 900 && r.focus === "drone-takeoff" && r.game === null && during === "true" && r.pressed === "false", { ms, during, ...r });
   });
 
   await run("drone.off", async () => {
@@ -595,7 +626,8 @@ export default async function probe(page, ctx) {
     const r = await p.evaluate(() => ({
       pills: ["#drone-takeoff", "#deadeye-call"].map((s) => {
         const el = document.querySelector(s);
-        return el ? getComputedStyle(el).display : "absent";
+        // the keys sit in plates that are display:none off DESKTOP_FINE: a key with no box is not shown
+        return el ? (el.getClientRects().length === 0 ? "none" : getComputedStyle(el).display) : "absent";
       }),
       game: Boolean(document.querySelector(".drone-game, .de-hud")),
     }));

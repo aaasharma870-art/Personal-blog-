@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { RotateCw } from "lucide-react";
 import { beatAttrs } from "@/lib/beats";
 import { spotlight } from "@/lib/spotlight";
 import type { CompassApi } from "@/components/worlds/pirates/jack-compass";
@@ -32,6 +33,8 @@ export type CompassToyProps = {
   api: CompassApi;
   /** toy.compass.label: "Spin Jack's compass". */
   label: string;
+  /** game.spin: "Spin it", the small visible key under the compass (null = none). */
+  cue?: string | null;
   bearings: readonly number[];
   point: number;
   alt: boolean;
@@ -41,7 +44,7 @@ export type CompassToyProps = {
 
 const INVITE = "B08-invite";
 
-export default function CompassToy({ api, label, bearings, point, alt, setPoint, setBusy }: CompassToyProps) {
+export default function CompassToy({ api, label, cue = null, bearings, point, alt, setPoint, setBusy }: CompassToyProps) {
   const ref = useRef<HTMLButtonElement>(null);
   /** The pillar focused by keyboard since the last spin (its goal). */
   const focused = useRef<number | null>(null);
@@ -111,6 +114,19 @@ export default function CompassToy({ api, label, bearings, point, alt, setPoint,
       onPointerMove={spin.onPointerMove}
       onPointerUp={spin.onPointerUp}
       onPointerCancel={spin.onPointerCancel}
-    />
+    >
+      {/* the visible cue (Oct 22: the compass was an invisible button): a
+          small arcade key under the drawing. Decorative and inside the
+          button, so a press on it spins the compass like a press on the
+          drawing; the button keeps its own name (aria-label). */}
+      {cue ? (
+        <span aria-hidden="true" className="arcade-key arcade-key--tag absolute left-1/2 top-full mt-3 -translate-x-1/2">
+          <span className="arcade-key-face">
+            <RotateCw className="arcade-key-ico" strokeWidth={2.25} />
+            <span className="arcade-key-name">{cue}</span>
+          </span>
+        </span>
+      ) : null}
+    </button>
   );
 }

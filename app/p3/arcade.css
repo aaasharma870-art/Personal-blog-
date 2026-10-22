@@ -24,6 +24,18 @@
    small tag ("Mini-game") and one plain line. `.arcade-plaque` lays a key and
    its line out as one unit (`--panel`: a dark glass plate with a brass edge,
    for keys that sit on a photograph).
+   MODIFIERS: `arcade-key--big` (52 px: the hero and the games), `arcade-key--tag`
+   (36 px, a decorative cue inside another control, e.g. "Spin it" under the
+   compass). SKIN: the lamp takes the colour of the nearest `[data-world]`
+   (pirates teal, idiots blue, rdr2 ember, hp candle); `data-arcade-skin="rdr2"`
+   on a plate or key overrides it (Dead Eye is a Red Dead game inside the
+   3 Idiots kill-list).
+   WHERE IT IS USED NOW: the hero's Director's cut (components/director/
+   directors-cut-button.tsx), Dead Eye (components/games/dead-eye/dead-eye-call.tsx),
+   the drone's Take off (components/worlds/idiots/drone-band.tsx), the compass
+   cue (components/worlds/pirates/compass-toy.tsx). NOT the header dock (dock.css
+   `.dock-btn`): a header re-skin is not approved yet. To re-skin, edit only the
+   `--ak-*` tokens below (or swap this file).
 
    RULES: this file holds only the look (colours, size, states); it never
    decides where a key shows. The gating (DESKTOP_FINE, JS) and the position
@@ -119,6 +131,21 @@
     --ak-h: 3.25rem;
     border-radius: 16px;
     font-size: 0.875rem;
+  }
+  /* a small label key (a cue next to a toy, not a game's start key) */
+  .arcade-key--tag {
+    --ak-h: 2.25rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+  }
+  .arcade-key--tag .arcade-key-face {
+    gap: 0.4375rem;
+    padding: 0 0.75rem 0 0.625rem;
+    border-radius: 10px;
+  }
+  .arcade-key--tag .arcade-key-ico {
+    width: 0.9375rem;
+    height: 0.9375rem;
   }
   .arcade-key-face {
     display: inline-flex;
