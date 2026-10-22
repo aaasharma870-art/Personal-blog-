@@ -14,9 +14,10 @@ import { RotateCcw } from "lucide-react";
    intro like a brand-new visit (replayIntro(), components/site/dock-actions.ts:
    the page reloads at the top into the Play card, through the same cold path
    as a first visit); with motion off (Pause or OS reduced motion) it only
-   goes to the top, focus on the hero title. The quiet "↑ Back to the opening" link above stays the scroll-only
-   way back. `name` is the accessible name ("<line> <label>", built by the
-   footer). A real <button> in the solid "try" look (app/p3/dock.css
+   goes to the top, focus on the hero title. The quiet "↑ Back to the
+   opening" link above stays the scroll-only way back. `name` is the
+   accessible name ("<line> <label>", built by the footer). A real <button>
+   in the solid "try" look (app/p3/dock.css
    `.try-end`), 44 px+ tall, hover / focus / active states.
    The label is `mischief.again` (lib/film.ts, proposed, unsigned).
    Without JavaScript nothing can restart the loop, so the server markup

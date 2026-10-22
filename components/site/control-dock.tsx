@@ -46,7 +46,8 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    ========================================================================== */
 
 const Popover = safeLazy(() => import("@/components/site/dock-popovers"));
-/** replay lives in a lazy module (warmed on hover, focus and idle, so the press is not waiting for the chunk) */
+/** replay lives in a lazy module (warmed on hover, focus and idle, so the
+ *  press is not waiting for the chunk) */
 const actions = () => import("@/components/site/dock-actions");
 const warmActions = () => void actions().catch(() => {});
 const warmPopovers = () => void import("@/components/site/dock-popovers").catch(() => {});

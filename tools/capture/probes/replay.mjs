@@ -13,6 +13,10 @@
 //   marker         the one-shot `intro-replay` marker is gone and `intro-seen` is set again
 //   reload         a plain reload afterwards does NOT replay (no loop)
 //   history        history.length did not grow (the location is replaced, not pushed)
+//   sound.honest   the first visit switches sound on at the Play card; on the replay's Play card (before any press)
+//                  either the button says "Sound on" AND a context is running with the hall's bed started, or it says
+//                  "Sound off" and sessionStorage forgot it. Never "on" and silent (Oct 22 review: the reloaded page
+//                  has no AudioContext; lib/audio/store.ts carrySound)
 // With --rm (reduced motion) only the refusal is checked: no intro on load, replay() false, no marker.
 // Headless Chromium has no H.264: the flight plays from its WebM twin; the check is about the element, not the codec.
 
@@ -29,10 +33,24 @@ async function until(page, fn, ms = 40000) {
 }
 
 /** One intro run on the current document: arm, press Play, wait for the end; returns what played. */
-async function run(page, ctx) {
+async function run(page, ctx, { soundOn = false, card = false } = {}) {
   const armed = await until(page, ARMED, 30000);
   if (!armed) return { armed: false };
   await page.waitForTimeout(900);
+  if (soundOn) {
+    await page.click("#intro-sound");
+    await page.waitForTimeout(1500);
+  }
+  let snd = null;
+  if (card) {
+    await page.waitForTimeout(1800);
+    snd = await page.evaluate(() => ({
+      label: document.querySelector("#intro-sound")?.getAttribute("data-intro-sound") ?? null,
+      sess: sessionStorage.getItem("sound"),
+      ctxs: window.__rpAu.ctx.filter((s) => s === "running").length,
+      starts: window.__rpAu.starts,
+    }));
+  }
   await page.click("#intro-play");
   const ended = await until(page, ENDED, 40000);
   await page.waitForTimeout(1200);
@@ -45,7 +63,7 @@ async function run(page, ctx) {
     di: document.documentElement.getAttribute("data-intro"),
   }));
   ctx.log("run", JSON.stringify(r));
-  return { armed, ended, ...r };
+  return { armed, ended, snd, ...r };
 }
 
 export default async function probe(page, ctx) {
@@ -60,6 +78,22 @@ export default async function probe(page, ctx) {
     setInterval(() => {
       if (window.__introState === "code") window.__rpCode = true;
     }, 50);
+    // realtime audio only (the engine's offline bake is excluded): contexts by state at creation, node starts while running
+    window.__rpAu = { ctx: [], starts: 0 };
+    const AC = window.AudioContext;
+    window.AudioContext = class extends AC {
+      constructor(...a) {
+        super(...a);
+        window.__rpAu.ctx.push(this.state);
+      }
+    };
+    for (const C of [OscillatorNode, AudioBufferSourceNode]) {
+      const start = C.prototype.start;
+      C.prototype.start = function (...a) {
+        if (!(this.context instanceof OfflineAudioContext) && this.context.state === "running") window.__rpAu.starts++;
+        return start.apply(this, a);
+      };
+    }
   });
 
   if (ctx.rm) {
@@ -76,7 +110,7 @@ export default async function probe(page, ctx) {
   const how = ctx.args.how ?? "header";
   const from = ctx.args.from ?? "6000";
   await page.goto(ctx.url("/"), { waitUntil: "load" });
-  const first = await run(page, ctx);
+  const first = await run(page, ctx, { soundOn: true });
   if (!first.ended) return { pass: false, why: "the first visit never played", first };
 
   await page.evaluate(async (f) => {
@@ -102,7 +136,7 @@ export default async function probe(page, ctx) {
     await page.keyboard.press("Enter");
   } else await page.evaluate(() => window.__intro.replay());
 
-  const replay = await run(page, ctx);
+  const replay = await run(page, ctx, { card: true });
   const after = await page.evaluate(() => ({
     url: location.href,
     y: Math.round(scrollY),
@@ -123,6 +157,11 @@ export default async function probe(page, ctx) {
     marker: after.marker === null && after.seen === "1",
     reload: !reload.armed,
     history: after.hist === before.hist,
+    "sound.honest": Boolean(
+      replay.snd &&
+        ((replay.snd.label === "on" && replay.snd.sess === "on" && replay.snd.ctxs >= 1 && replay.snd.starts >= 1) ||
+          (replay.snd.label === "off" && replay.snd.sess === null)),
+    ),
   };
   return { pass: Object.values(checks).every(Boolean), how, from, before, after, checks, first, replay };
 }
