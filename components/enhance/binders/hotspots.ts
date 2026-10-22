@@ -84,7 +84,6 @@ function coinMoons(root: Document): () => void {
   };
 }
 
-
 /* — the markers: found / in view / off, the tip, the call ———————————————— */
 
 const GL = "[data-egg-glint]";
