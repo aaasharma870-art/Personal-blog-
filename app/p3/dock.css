@@ -262,9 +262,12 @@
   .hunt-chip .hunt-chip-n {
     text-align: left;
   }
-  /* the chip's own gap spaces the egg glyph here */
+  /* the word "Eggs" is shown here, so the glyph would only widen the chip:
+     it cost 21 px, which pushed the header's left cluster under the act
+     label's container query (8rem) and hid "ACT I / II / III / IV" from
+     1440 px up (Oct 22 final check). Below 84rem the glyph carries the chip. */
   .hunt-chip .hunt-chip-egg {
-    margin-inline-end: 0;
+    display: none;
   }
 }
 /* The Pause word keeps the width of "Resume / Motion paused" (a hidden copy of the

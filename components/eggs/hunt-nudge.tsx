@@ -26,13 +26,16 @@ import "@/app/p3/eggs-lazy.css";
    its end card, a game (`html[data-game]`), the palette / a menu / the map /
    the hunt panel (director/api `overlayOpen`), while the eggs are off, a
    hidden tab, a pinned act card mid-play (phases a, b, m), or while the page
-   is still scrolling (800 ms of calm first). It never asks the spotlight:
+   is still scrolling (350 ms of calm first; 8 s after a game or tour ends).
+   It never asks the spotlight:
    it is a corner note, not a star (and the spotlight answers each id once).
    Mounted by <HuntChip/> ~5 s after hydration, on DESKTOP_FINE with the eggs
    on and nothing found yet; the chip owns "open the panel".
    ========================================================================== */
 
-const CALM_MS = 800;
+const CALM_MS = 350;
+/** After a game or a tour has ended the page gets this long before the plate may show. */
+const AFTER_BUSY_MS = 8000;
 const AFTER_MS = 25_000;
 const SHOW_MS = 16_000;
 const POLL_MS = 500;
@@ -63,6 +66,7 @@ export default function HuntNudge({ onOpen, onGone }: { onOpen: () => void; onGo
     let alive = true;
     let t0 = Number.POSITIVE_INFINITY;
     let lastScroll = performance.now();
+    let lastBusy = Number.NEGATIVE_INFINITY;
     const onScroll = () => {
       lastScroll = performance.now();
     };
@@ -80,7 +84,11 @@ export default function HuntNudge({ onOpen, onGone }: { onOpen: () => void; onGo
         return;
       }
       if (root.classList.contains("intro-armed") || isQuiet() || eggsSessionOff()) return;
-      if (tourBusy() || root.hasAttribute("data-game") || overlayOpen()) return;
+      if (tourBusy() || root.hasAttribute("data-game")) {
+        lastBusy = performance.now();
+        return;
+      }
+      if (overlayOpen() || performance.now() - lastBusy < AFTER_BUSY_MS) return;
       if (performance.now() - lastScroll < CALM_MS || cardPlaying()) return;
       if (!pastFirstAct() && performance.now() - t0 < AFTER_MS) return;
       alive = false;

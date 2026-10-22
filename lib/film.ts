@@ -624,7 +624,7 @@ const copy = {
   "egg.hunt.word.hide": p3("Hide the word"),
   "egg.hunt.how.spell": p3("Type the spell anywhere on the page, or press {key} and search for it."),
   "egg.hunt.how.pc-coin": p3("Click the brass medallion on the voyage chart."),
-  "egg.hunt.how.pc-kraken": p3("Click “HERE BE MONSTERS” on the storm card, or stay on the storm for a moment."),
+  "egg.hunt.how.pc-kraken": p3("Click “HERE BE MONSTERS” in the top bar of the Workshop card, or stay there a moment."),
   "egg.hunt.how.3i-aal": p3("Press and hold the chalk heart on the Optuna board, or type the spell anywhere."),
   "egg.hunt.how.3i-quad": p3("Press Run on the seven-gate board in Work."),
   "egg.hunt.how.3i-pen": p3("Read every row of the kill-list ledger (or win Dead Eye), then click the astronaut pen in the photo at the top of the kill-list."),

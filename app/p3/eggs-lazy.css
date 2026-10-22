@@ -541,6 +541,8 @@
 
 /* ===== the one-time nudge, under the chip ================================ */
 .egg-nudge {
+  /* opaque (the shared plate is 94 %: page text ghosted through the nudge) */
+  --ek-plate: rgb(5 9 11);
   position: absolute;
   right: 0;
   top: calc(100% + 0.625rem);
