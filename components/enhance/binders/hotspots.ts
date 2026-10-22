@@ -140,8 +140,12 @@ function markers(root: Document): () => void {
       }
       syncOne(el, found);
     }
-    // a find while its tip shows: the tip reads "found" at once
-    if (tipHost) place(tipHost);
+    // a find while its tip shows: the tip reads "found" at once; the eggs
+    // turned off: it goes with the marker
+    if (tipHost) {
+      if (tipHost.hasAttribute("data-egg-off")) hide();
+      else place(tipHost);
+    }
   };
   const arm = (el: HTMLElement) => {
     if (hosts.has(el)) return;

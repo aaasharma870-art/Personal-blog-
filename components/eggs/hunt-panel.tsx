@@ -143,7 +143,9 @@ export default function HuntPanel({
     const t = targetOf(h);
     if (!t) return;
     onClose(false);
-    void scrollToTarget(t.el, { block: h === "pc-kraken" ? "start" : "center", history: false }).then(() => {
+    // a marker is brought to the middle of the screen; a card or a section lands at its top
+    // focus lands on the egg (or the section's heading), so the keyboard and a screen reader arrive with the page
+    void scrollToTarget(t.el, { block: t.marker && h !== "pc-kraken" ? "center" : "start", history: false, focus: true }).then(() => {
       if (t.marker) window.dispatchEvent(new CustomEvent("egg:call", { detail: { hunt: h } }));
     });
   };
@@ -166,8 +168,8 @@ export default function HuntPanel({
             {n}/{HUNT_TOTAL}
           </span>
         </p>
-        {intro ? <p className="egg-intro">{intro}</p> : null}
       </div>
+      {intro ? <p className="egg-intro">{intro}</p> : null}
 
       <div className="mt-4 flex flex-col gap-3">
         {HUNT_WORLDS.map((world) => {

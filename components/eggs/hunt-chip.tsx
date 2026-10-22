@@ -150,7 +150,7 @@ export function HuntChip() {
           <HuntPanel id={panelId} chip={btn} onClose={close} />
         </Suspense>
       ) : null}
-      {nudge && !open ? (
+      {nudge && enabled && !open ? (
         <Suspense fallback={null}>
           <HuntNudge
             onOpen={() => {
