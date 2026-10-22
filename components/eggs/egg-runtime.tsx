@@ -4,7 +4,7 @@ import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react"
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { motionOffNow, setMotionPaused, useReducedMotion } from "@/lib/flags";
-import { markFound, worthyOfPen } from "@/lib/hunt";
+import { markFound, penProgress, worthyOfPen } from "@/lib/hunt";
 import { quotes, type QuoteVerified } from "@/lib/quotes";
 import { copyText, copyVisible } from "@/lib/sections";
 import { useVariant } from "@/lib/use-variant";
@@ -299,7 +299,18 @@ export default function EggRuntime({
       case "worthy-pen":
         // the host draws Rancho's circle when worthyOfPen(); here: count + say
         if (worthyOfPen()) say("idiots", line(copyOf("egg.pen.win")), count("3i-pen"));
-        else say("idiots", line(copyOf("egg.pen.read")));
+        else {
+          // "read the whole ledger" with the count, so it is a goal and not a guess
+          const p = penProgress();
+          const prog = copyText("egg.pen.progress", { n: p.read, total: p.total });
+          say(
+            "idiots",
+            <>
+              {line(copyOf("egg.pen.read"))}
+              {p.total > 0 && copyVisible(prog) ? line(prog.text) : null}
+            </>,
+          );
+        }
         return;
       case "eagle-eye":
         say("rdr2", null, count("rd-eagle"));

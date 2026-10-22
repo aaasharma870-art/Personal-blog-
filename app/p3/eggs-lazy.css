@@ -1,0 +1,615 @@
+/* ============================================================================
+   app/p3/eggs-lazy.css: how the easter eggs are SPOTTED and COLLECTED (Oct 22
+   fix; Aryan: "the counter does not work, how to actually collect and spot
+   the easter eggs"). LAZY: imported by the modules that draw these things
+   (components/enhance/binders/hotspots.ts, components/eggs/hunt-panel.tsx,
+   components/eggs/hunt-nudge.tsx), so the first load pays nothing for it.
+   Desktop only: every rule that shows something sits under the full
+   DESKTOP_FINE media query (never `lg:`), like game.css.
+
+   ONE PLACE for the look. 1) the tokens below (`--ek-*` the brass key,
+   `--eg-*` the marker); 2) `.egg-key`, the "arcade key" of the in-page
+   buttons (Direction A, brass bezel; the panel's "Take me there" and "Show the
+   word" and the nudge's "Open EGGS" are keys); 3) `.egg-glint*`, the marker an
+   unfound egg wears on the page; 4) `.egg-tip`, the one hover / focus tip.
+   Re-skin = edit the tokens (or swap the key block for app/p3/arcade.css).
+
+   MARKER RULES: a ring and a four-point glint on top of the egg's own hit
+   area (a `.egg-glint` child of the button: aria-hidden, no layout, never
+   over Aryan's text or figures, pointer-events none). At REST it is static
+   and fully visible; the slow pulse and the twinkle run only while the host
+   is on screen (`data-in-view`, set by the hotspots binder) and only with
+   motion on: reduced motion and the site Pause (which collapses every
+   animation to its base state) keep the static marker. A found egg wears a
+   calm gold tick instead (`data-found`). "Turn off easter eggs" hides every
+   marker (`data-egg-off`; a hotspot also goes aria-disabled).
+   ========================================================================== */
+
+:root {
+  /* — the brass key (the same look as app/p3/arcade.css, Direction A) — */
+  --ek-bezel-hi: #f0d697;
+  --ek-bezel: #b48c4e;
+  --ek-bezel-lo: #6b5028;
+  --ek-lip: #2b1e0b;
+  --ek-face-hi: #1d2d34;
+  --ek-face-lo: #0a1317;
+  --ek-ink: #f7edd3;
+  --ek-ink-dim: #cdbf9f;
+  --ek-ring: #ffffff;
+  --ek-moat: #05090b;
+  --ek-plate: rgb(5 9 11 / 0.94);
+  --ek-plate-edge: rgb(180 140 78 / 0.75);
+  --ek-lamp: #ffb547;
+  --ek-lamp-core: #fff1c9;
+  --ek-lamp-deep: #b8610f;
+  /* — the marker an unfound egg wears — */
+  --eg-ring: #f0cf7e;
+  --eg-star: #ffe9a8;
+  --eg-glow: rgb(240 200 110 / 0.4);
+  --eg-halo: rgb(8 6 2 / 0.6);
+  /* — the found tick (the same gold everywhere) — */
+  --eg-gold: #e8b84a;
+  --eg-gold-ink: #1b1305;
+}
+
+/* the lamp takes the colour of the nearest world; the bezel is the same everywhere */
+[data-world="pirates"] {
+  --ek-lamp: #5eead4;
+  --ek-lamp-core: #e6fffa;
+  --ek-lamp-deep: #0f766e;
+}
+[data-world="idiots"] {
+  --ek-lamp: #8fd3ff;
+  --ek-lamp-core: #f0fbff;
+  --ek-lamp-deep: #2a7fb0;
+}
+[data-world="rdr2"] {
+  --ek-lamp: #ff7a3d;
+  --ek-lamp-core: #ffe3d0;
+  --ek-lamp-deep: #a8340c;
+}
+[data-world="hp"] {
+  --ek-lamp: #ffd98a;
+  --ek-lamp-core: #fffbe8;
+  --ek-lamp-deep: #b8841f;
+}
+
+/* ===== the key ======================================================== */
+@layer components {
+  .egg-key {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    min-height: 2.25rem;
+    padding: 2px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--ek-bezel-hi) 0, var(--ek-bezel) 48%, var(--ek-bezel-lo) 100%);
+    box-shadow:
+      0 3px 0 var(--ek-lip),
+      0 6px 10px rgb(0 0 0 / 0.5);
+    color: var(--ek-ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      transform 80ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 80ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  /* a 36 px key with a 44 px target */
+  .egg-key::before {
+    content: "";
+    position: absolute;
+    inset: -4px -2px;
+  }
+  .egg-key-face {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
+    box-sizing: border-box;
+    min-height: calc(2.25rem - 4px);
+    padding: 0 0.75rem 0 0.625rem;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--ek-face-hi), var(--ek-face-lo));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      inset 0 -6px 9px rgb(0 0 0 / 0.35);
+    transition: filter 120ms;
+  }
+  .egg-key-lamp {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--ek-lamp-core), var(--ek-lamp) 55%, var(--ek-lamp-deep));
+    box-shadow:
+      0 0 7px 2px color-mix(in srgb, var(--ek-lamp) 55%, transparent),
+      inset 0 0 0 1px rgb(0 0 0 / 0.35);
+  }
+  .egg-key:hover {
+    transform: translateY(-1px);
+  }
+  .egg-key:hover .egg-key-face {
+    filter: brightness(1.22);
+  }
+  .egg-key:active,
+  .egg-key[aria-pressed="true"] {
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 var(--ek-lip),
+      0 1px 3px rgb(0 0 0 / 0.55);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .egg-key,
+    .egg-key-face {
+      transition: none;
+    }
+    .egg-key:hover,
+    .egg-key:active,
+    .egg-key[aria-pressed="true"] {
+      transform: none;
+    }
+  }
+  :root[data-motion="paused"] .egg-key,
+  :root[data-motion="paused"] .egg-key-face {
+    transition: none;
+  }
+  :root[data-motion="paused"] .egg-key:hover,
+  :root[data-motion="paused"] .egg-key:active,
+  :root[data-motion="paused"] .egg-key[aria-pressed="true"] {
+    transform: none;
+  }
+  @media (forced-colors: active) {
+    .egg-key {
+      border: 2px solid ButtonText;
+    }
+  }
+}
+/* focus: a 3 px white ring on a dark moat, OUTSIDE the layer on purpose (the
+   site's global unlayered :focus-visible would win over a layered rule) */
+.egg-key.egg-key:focus-visible {
+  outline: 3px solid var(--ek-ring);
+  outline-offset: 5px;
+  border-radius: 12px;
+  box-shadow:
+    0 3px 0 var(--ek-lip),
+    0 0 0 5px var(--ek-moat);
+}
+@media (forced-colors: active) {
+  .egg-key.egg-key:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* ===== the marker =================================================== */
+/* the unlayered gate: a marker exists only on DESKTOP_FINE (the hotspot
+   buttons it sits on are `display: none` elsewhere; the kraken, Run and
+   snitch hosts get it on desktop only) */
+.egg-glint {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .egg-glint {
+    display: block;
+    animation: egg-glint-in 500ms ease-out both;
+  }
+  [data-egg-off] > .egg-glint,
+  .egg-hotspot[aria-disabled="true"] > .egg-glint {
+    display: none;
+  }
+}
+@keyframes egg-glint-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg-glint {
+    animation: none;
+  }
+}
+
+/* the ring: a bright line with a dark halo, so it reads on a photograph, on
+   chalk and on parchment alike */
+.egg-glint-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 999px;
+  border: 1.5px solid var(--eg-ring);
+  box-shadow:
+    0 0 0 1px var(--eg-halo),
+    inset 0 0 0 1px var(--eg-halo),
+    0 0 14px 1px var(--eg-glow);
+}
+/* the pulse is a second ring that breathes out of the first */
+.egg-glint-ring::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  border: 1.5px solid var(--eg-ring);
+  opacity: 0;
+}
+/* the four-point glint at the top right */
+.egg-glint-star {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 13px;
+  height: 13px;
+  background: var(--eg-star);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 3px var(--eg-glow)) drop-shadow(0 0 1px var(--eg-halo));
+}
+/* the found tick: a gold disc, a dark check (hidden until found) */
+.egg-glint-tick {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: none;
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+.egg-glint-tick circle {
+  fill: var(--eg-gold);
+  stroke: var(--eg-halo);
+  stroke-width: 1;
+}
+.egg-glint-tick path {
+  fill: none;
+  stroke: var(--eg-gold-ink);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+[data-found] > .egg-glint .egg-glint-ring,
+[data-found] > .egg-glint .egg-glint-star {
+  display: none;
+}
+[data-found] > .egg-glint .egg-glint-tick {
+  display: block;
+}
+/* a marker on something that already has a shape (Run, "HERE BE MONSTERS",
+   the snitch): the glint alone, outside the corner, no ring */
+.egg-glint[data-glint="badge"] .egg-glint-ring {
+  display: none;
+}
+.egg-glint[data-glint="badge"] .egg-glint-star {
+  top: -7px;
+  right: -7px;
+  width: 15px;
+  height: 15px;
+}
+.egg-glint[data-glint="badge"] .egg-glint-tick {
+  top: -8px;
+  right: -8px;
+}
+
+/* a host that has no box of its own to anchor the marker (the kraken's text
+   button): the marker's frame is the button */
+.act-card-kraken[data-egg-glint] {
+  position: relative;
+}
+/* The kraken's button is one line of text in the pinned card's top bar, which
+   sits right under the site header: the corner glint (7 px above the box)
+   would be behind the header. Its marker stands to the LEFT of the text,
+   level with it. */
+.act-card-kraken .egg-glint[data-glint="badge"] .egg-glint-star {
+  top: calc(50% - 7.5px);
+  right: auto;
+  left: -26px;
+}
+.act-card-kraken .egg-glint[data-glint="badge"] .egg-glint-tick {
+  top: calc(50% - 9px);
+  right: auto;
+  left: -28px;
+}
+/* a call's ring around the text (see "a call on a host that has a shape") */
+.act-card-kraken[data-egg-glint] {
+  --eg-call-inset: 9px -12px;
+  --eg-call-radius: 10px;
+}
+
+/* the world's accent. Dark grounds: the default gold. Chalk: chalk white
+   with a blue breath. Parchment (the trail map, the journal): sepia ink. */
+[data-egg-glint="3i-aal"],
+[data-egg-glint="3i-pen"],
+[data-egg-glint="3i-quad"] {
+  --eg-ring: #eef3f5;
+  --eg-star: #ffffff;
+  --eg-glow: rgb(143 211 255 / 0.45);
+}
+[data-egg-glint="rd-eagle"],
+[data-egg-glint="rd-bone"] {
+  --eg-ring: #7a4a12;
+  --eg-star: #8a5410;
+  --eg-glow: rgb(122 74 18 / 0.3);
+  --eg-halo: rgb(255 246 226 / 0.75);
+}
+[data-egg-glint="rd-fire"] {
+  --eg-ring: #ffb078;
+  --eg-star: #ffd2ad;
+  --eg-glow: rgb(255 122 61 / 0.45);
+}
+/* the heart sits low on its ledge: the ring hugs it */
+[data-egg-hotspot="3i-aal"] .egg-glint-ring {
+  inset: 6px 3px 0;
+}
+
+/* motion: only while the host is on screen, only with motion on. At rest,
+   under reduced motion and under Pause the marker is the static ring + glint
+   above (the site Pause collapses these animations to their base state). */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-in-view] > .egg-glint .egg-glint-ring::after {
+    animation: egg-glint-pulse 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  [data-in-view] > .egg-glint .egg-glint-star {
+    animation: egg-glint-twinkle 2.8s ease-in-out infinite;
+  }
+  /* "Take me there" arrives and calls: a stronger pulse for ~2 s */
+  [data-call="pulse"] > .egg-glint .egg-glint-ring {
+    border-width: 2.5px;
+    box-shadow:
+      0 0 0 1px var(--eg-halo),
+      0 0 22px 5px var(--eg-glow);
+  }
+  [data-call="pulse"] > .egg-glint .egg-glint-ring::after {
+    animation: egg-glint-pulse 0.9s cubic-bezier(0.22, 1, 0.36, 1) 3;
+  }
+}
+@keyframes egg-glint-pulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+@keyframes egg-glint-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.78) rotate(18deg);
+  }
+}
+/* a call on a host that already has a shape (Run, the kraken's text, the
+   snitch): its ring is hidden at rest (the corner glint alone), so for the call
+   the ring comes back around the host. `--eg-call-inset` / `--eg-call-radius`
+   fit it (the kraken's is a line of text). */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  [data-call] > .egg-glint[data-glint="badge"] .egg-glint-ring {
+    display: block;
+    inset: var(--eg-call-inset, -5px);
+    border-radius: var(--eg-call-radius, 999px);
+  }
+}
+/* a call under reduced motion / Pause: no pulse, the ring just stands out */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  [data-call="still"] > .egg-glint .egg-glint-ring {
+    border-width: 2.5px;
+    box-shadow:
+      0 0 0 1px var(--eg-halo),
+      0 0 0 5px var(--eg-glow);
+  }
+}
+
+/* ===== the tip: one element, on hover and focus ===================== */
+.egg-tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--z-toast, 32);
+  box-sizing: border-box;
+  max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.5rem 0.75rem 0.5625rem;
+  border-radius: 10px;
+  background: var(--ek-plate);
+  box-shadow:
+    inset 0 0 0 1.5px var(--ek-plate-edge),
+    0 3px 0 var(--ek-lip),
+    0 10px 22px -8px rgb(0 0 0 / 0.8);
+  color: var(--ek-ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  will-change: transform;
+}
+.egg-tip[hidden] {
+  display: none;
+}
+.egg-tip::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 0.5rem;
+  background: var(--ek-lamp);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  vertical-align: -0.0625rem;
+}
+
+/* ===== the panel: where, how, "Take me there", "Show the word" ====== */
+/* (the panel's box is app/p3/game-lazy.css .hunt-panel) */
+.egg-intro {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: var(--text-small);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.egg-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.egg-row:first-child {
+  border-top: 0;
+}
+.egg-row-title {
+  margin: 0;
+}
+.egg-row-how {
+  margin: 0.25rem 0 0;
+  color: var(--fg-muted);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.egg-row-where {
+  margin: 0.375rem 0 0;
+  color: var(--fg-ghost);
+}
+/* the keys stack when a row has two (the chalk heart: take me there / show the word) */
+.egg-row-act {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.625rem;
+  align-self: center;
+}
+.egg-row-act .egg-key {
+  justify-content: center;
+}
+.egg-row-act .egg-key-face {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+.egg-row-word {
+  margin: 0.5rem 0 0;
+}
+.egg-word {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  background: var(--ek-moat);
+  box-shadow: inset 0 0 0 1px var(--ek-plate-edge);
+  color: var(--ek-ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.egg-row[data-found] .egg-row-how,
+.egg-row[data-found] .egg-row-where {
+  margin-top: 0.125rem;
+}
+.egg-progress {
+  margin: 0.375rem 0 0;
+  color: var(--fg);
+  font-size: 0.8125rem;
+}
+/* the title and the count stay while the list scrolls. The panel pads 1rem and
+   a sticky offset is measured from INSIDE that padding (Chromium, Firefox), so
+   `top: 0` left the head 1rem low: it covered the first lines of the intro at
+   rest and let the list show through a 1rem gap above it. The head reaches out
+   over the padding (the negative margin), so it sticks at -1rem, flush with
+   the panel's edge. */
+.hunt-panel-head {
+  position: sticky;
+  top: -1rem;
+  z-index: 1;
+  margin: -1rem -1rem 0;
+  padding: 1rem 1rem 0.625rem;
+  background-color: inherit;
+  border-radius: inherit;
+}
+
+/* ===== the one-time nudge, under the chip ================================ */
+.egg-nudge {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.625rem);
+  z-index: 1;
+  box-sizing: border-box;
+  width: min(19.5rem, calc(100vw - 2rem));
+  padding: 0.875rem 1rem 1rem;
+  border-radius: 14px;
+  background: var(--ek-plate);
+  box-shadow:
+    inset 0 0 0 1.5px var(--ek-plate-edge),
+    0 3px 0 var(--ek-lip),
+    0 14px 30px -10px rgb(0 0 0 / 0.85);
+  color: var(--ek-ink);
+  white-space: normal;
+  animation: egg-nudge-in 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+/* the little point at the chip */
+.egg-nudge::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 1.75rem;
+  width: 10px;
+  height: 10px;
+  background: var(--ek-plate);
+  box-shadow: -1.5px -1.5px 0 0 var(--ek-plate-edge);
+  transform: rotate(45deg);
+}
+.egg-nudge-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--ek-ink);
+  text-wrap: pretty;
+}
+.egg-nudge-act {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.75rem;
+}
+.egg-nudge-ghost {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding-inline: 0.5rem;
+  border-radius: 8px;
+  color: var(--ek-ink-dim);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+.egg-nudge-ghost:hover {
+  color: var(--ek-ink);
+}
+@keyframes egg-nudge-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg-nudge {
+    animation: none;
+  }
+}
+:root[data-motion="paused"] .egg-nudge {
+  animation: none;
+}

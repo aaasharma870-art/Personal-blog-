@@ -6,7 +6,7 @@ import { film } from "@/lib/film";
 import { motionOffNow } from "@/lib/flags";
 import { safeLazy } from "@/lib/safe-lazy";
 import { copyText, copyVisible } from "@/lib/sections";
-import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hunt-store";
+import { HUNT_PANEL_EVENT, HUNT_TOTAL, markNudgeSeen, nudgeSeen, useHuntState } from "@/components/eggs/hunt-store";
 
 /* ============================================================================
    HUNT CHIP "n/12" (PHASE3-SPEC §9.3, P3-8) — OWNER: W2-HUNT.
@@ -22,11 +22,28 @@ import { HUNT_PANEL_EVENT, HUNT_TOTAL, useHuntState } from "@/components/eggs/hu
      non-modal popover; Esc closes it and focus returns here. The palette's
      "Show egg hints" opens it too (HUNT_PANEL_EVENT).
    - "Turn off easter eggs" hides it (the count is kept).
+   Oct 22 (fix/eggs): an egg glyph before the count at EVERY desktop width
+   (the word "Eggs" still joins from 84rem), the count in gold once anything
+   is found, the name "n of 12 easter eggs found, open for hints", and the
+   one-time nudge (hunt-nudge.tsx, lazy: mounted ~5 s after hydration, only
+   with the eggs on, nothing found and this tab not yet nudged).
    ========================================================================== */
 
 // safeLazy: a failed chunk opens nothing, never an application error (W3 review #6)
 const HuntPanel = safeLazy(() => import("@/components/eggs/hunt-panel"));
 const preload = () => void import("@/components/eggs/hunt-panel");
+const HuntNudge = safeLazy(() => import("@/components/eggs/hunt-nudge"));
+/** How long after hydration the nudge's watcher is mounted. */
+const NUDGE_ARM_MS = 5000;
+
+/** The egg: an outline at 0, filled gold once something is found. */
+function EggGlyph() {
+  return (
+    <svg className="hunt-chip-egg" viewBox="0 0 14 18" aria-hidden="true" focusable="false">
+      <path d="M7 1.1C4 1.1 1.2 6.2 1.2 10.8c0 3.4 2.5 6.1 5.8 6.1s5.8-2.7 5.8-6.1C12.8 6.2 10 1.1 7 1.1Z" />
+    </svg>
+  );
+}
 /** The visible word before the count from 90rem up ("Eggs 0/12"; app/p3/dock.css). */
 const EGGS_WORD = copyText("dock.eggs");
 
@@ -34,6 +51,7 @@ export function HuntChip() {
   const { count, enabled } = useHuntState();
   const [open, setOpen] = useState(false);
   const [tick, setTick] = useState(0);
+  const [nudge, setNudge] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
@@ -45,10 +63,25 @@ export function HuntChip() {
     [],
   );
   useEffect(() => {
-    const show = () => setOpen(true);
+    const show = () => {
+      markNudgeSeen();
+      setNudge(false);
+      setOpen(true);
+    };
     window.addEventListener(HUNT_PANEL_EVENT, show);
     return () => window.removeEventListener(HUNT_PANEL_EVENT, show);
   }, []);
+  // the one-time nudge: armed once the count is known to be 0 and this tab has not had it. The
+  // panel being open (or opened while the timer ran: a chip press, the palette, "Take me there")
+  // is "seen": the timer is cleared and checked again when it fires, so it never nags
+  const fresh = enabled && count === 0;
+  useEffect(() => {
+    if (!fresh || open || nudgeSeen()) return;
+    const t = window.setTimeout(() => {
+      if (!nudgeSeen()) setNudge(true);
+    }, NUDGE_ARM_MS);
+    return () => window.clearTimeout(t);
+  }, [fresh, open]);
 
   if (!film.enabled || !film.eggs.enabled) return null;
   const n = count === null ? "–" : String(count);
@@ -62,6 +95,7 @@ export function HuntChip() {
     return (
       <span className="hunt-chip-wrap invisible" data-house-type="" aria-hidden="true" inert>
         <span className="hunt-chip type-meta">
+          <EggGlyph />
           {copyVisible(EGGS_WORD) ? (
             <span className="dock-word">
               {EGGS_WORD.text}
@@ -95,10 +129,16 @@ export function HuntChip() {
         aria-controls={open ? panelId : undefined}
         data-hunt-chip=""
         data-complete={count === HUNT_TOTAL ? "" : undefined}
-        onClick={() => setOpen((o) => !o)}
+        data-any={count ? "" : undefined}
+        onClick={() => {
+          markNudgeSeen();
+          setNudge(false);
+          setOpen((o) => !o);
+        }}
         onPointerEnter={preload}
         onFocus={preload}
       >
+        <EggGlyph />
         {copyVisible(EGGS_WORD) ? (
           <span aria-hidden="true" className="dock-word">
             {EGGS_WORD.text}
@@ -112,6 +152,17 @@ export function HuntChip() {
       {open ? (
         <Suspense fallback={null}>
           <HuntPanel id={panelId} chip={btn} onClose={close} />
+        </Suspense>
+      ) : null}
+      {nudge && fresh && !open ? (
+        <Suspense fallback={null}>
+          <HuntNudge
+            onOpen={() => {
+              setNudge(false);
+              setOpen(true);
+            }}
+            onGone={() => setNudge(false)}
+          />
         </Suspense>
       ) : null}
     </span>

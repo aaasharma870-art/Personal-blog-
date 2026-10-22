@@ -4,6 +4,7 @@ import type { HuntId } from "@/lib/hunt";
 import { copyText, copyVisible } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 import type { HUNT_ROWS } from "@/components/eggs/hunt-rows";
+import { EggGlint } from "@/components/eggs/egg-glint";
 
 /* ============================================================================
    EGG HOTSPOT (PHASE3-SPEC §9, §9.1; PHASE3-PLAN §3.7) — OWNER: W2-HUNT.
@@ -25,6 +26,8 @@ import type { HUNT_ROWS } from "@/components/eggs/hunt-rows";
    Enter / Space count as the hold); rd-fire also fires on a 0.8 s hover.
    Renders nothing when the egg is off in the registry or its label may not
    render here (no orphan button).
+   Every hotspot wears an <EggGlint/> (a marker: components/eggs/egg-glint.tsx)
+   and carries `data-egg-glint`: spotting it is part of the egg.
    ========================================================================== */
 
 export type EggHotspotProps = {
@@ -71,11 +74,13 @@ export function EggHotspot({ hunt, label, className, children }: EggHotspotProps
       data-egg={egg}
       data-egg-hold={HOLD_MS[hunt]}
       data-egg-dwell={DWELL_MS[hunt]}
+      data-egg-glint={hunt}
       // a click before the binder is replayed; a hold can't be (a replayed
       // short press is not the hold)
       data-enhance-queue={HOLD_MS[hunt] ? undefined : ""}
     >
       {children}
+      <EggGlint />
     </button>
   );
 }

@@ -36,6 +36,25 @@ export type HuntRow = {
   spell?: readonly string[];
   /** Every egg has a keyboard path (typed, palette or a <button>). */
   keyboard: true;
+  /** HOW to collect it: one plain sentence (lib/film.ts `egg.hunt.how.*`;
+   *  `{key}` = the palette key, "Ctrl K" or "⌘ K"). The panel reads it. */
+  how: CopyKey;
+  /** The in-world marker's hover / focus tip (`egg.hunt.tip.*`): a few words
+   *  naming the action. Only eggs with a marker on the page carry one. */
+  tip?: CopyKey;
+  /** A typed spell as the visitor types it (letters and spaces): the panel's
+   *  opt-in "Show the word". scripts/checks/hunt.mjs ties it to the host's
+   *  typed buffer. */
+  word?: string;
+  /** "Take me there": the element to bring into view (an `#id`). Page-located
+   *  eggs only; a typed spell has none. The kraken's is its act card (the
+   *  button lives in the pinned card's upper bar). */
+  target?: string;
+  /** The egg's own marker, when it is not the scroll `target` (an `#id`): where
+   *  focus lands once "Take me there" has arrived, and the marker that is
+   *  called. Only the kraken: the pinned card is scrolled to, its upper-bar
+   *  button is the egg. */
+  marker?: string;
   /** What it does under reduced motion (spec §9.1 RM column). */
   rm: string;
   /** Never in the palette's empty-query browse list. */
@@ -54,6 +73,8 @@ export const HUNT_ROWS = {
     trigger: ["typed", "palette"],
     spell: ["parley"],
     keyboard: true,
+    how: "egg.hunt.how.spell",
+    word: "parley",
     rm: "toast only",
     browse: false,
   },
@@ -66,6 +87,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.pc-coin",
     trigger: ["hotspot"],
     keyboard: true,
+    how: "egg.hunt.how.pc-coin",
+    tip: "egg.hunt.tip.pc-coin",
+    target: "#egg-pc-coin",
     rm: "an instant swap to the moonlit art, held until the next press or Esc",
     browse: false,
   },
@@ -78,6 +102,10 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.pc-kraken",
     trigger: ["auto", "button"],
     keyboard: true,
+    how: "egg.hunt.how.pc-kraken",
+    tip: "egg.hunt.tip.pc-kraken",
+    target: "#act-2",
+    marker: "#egg-pc-kraken",
     rm: "static tentacle tip + toast",
     browse: false,
   },
@@ -91,6 +119,10 @@ export const HUNT_ROWS = {
     trigger: ["typed", "palette", "hotspot"],
     spell: ["aal"],
     keyboard: true,
+    how: "egg.hunt.how.3i-aal",
+    tip: "egg.hunt.tip.3i-aal",
+    word: "aal izz well",
+    target: "#egg-3i-aal",
     rm: "toast only",
     browse: false,
   },
@@ -103,6 +135,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.3i-quad",
     trigger: ["button"],
     keyboard: true,
+    how: "egg.hunt.how.3i-quad",
+    tip: "egg.hunt.tip.3i-quad",
+    target: "#egg-3i-quad",
     rm: "counts on settle; no lift",
     browse: false,
   },
@@ -115,6 +150,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.3i-pen",
     trigger: ["hotspot"],
     keyboard: true,
+    how: "egg.hunt.how.3i-pen",
+    tip: "egg.hunt.tip.3i-pen",
+    target: "#egg-3i-pen",
     rm: "circle drawn at once",
     browse: false,
   },
@@ -127,6 +165,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.rd-eagle",
     trigger: ["hotspot"],
     keyboard: true,
+    how: "egg.hunt.how.rd-eagle",
+    tip: "egg.hunt.tip.rd-eagle",
+    target: "#egg-rd-eagle",
     rm: "trail bright, static",
     browse: false,
   },
@@ -139,6 +180,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.rd-bone",
     trigger: ["hotspot"],
     keyboard: true,
+    how: "egg.hunt.how.rd-bone",
+    tip: "egg.hunt.tip.rd-bone",
+    target: "#egg-rd-bone",
     rm: "note drawn, static",
     browse: false,
   },
@@ -151,6 +195,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.rd-fire",
     trigger: ["hotspot"],
     keyboard: true,
+    how: "egg.hunt.how.rd-fire",
+    tip: "egg.hunt.tip.rd-fire",
+    target: "#egg-rd-fire",
     rm: "no flare; toast",
     browse: false,
   },
@@ -164,6 +211,8 @@ export const HUNT_ROWS = {
     trigger: ["typed", "palette"],
     spell: ["solemn"],
     keyboard: true,
+    how: "egg.hunt.how.spell",
+    word: "i solemnly swear",
     rm: "opens flat",
     browse: false,
   },
@@ -177,6 +226,8 @@ export const HUNT_ROWS = {
     trigger: ["typed", "palette"],
     spell: ["lumos", "nox"],
     keyboard: true,
+    how: "egg.hunt.how.spell",
+    word: "lumos",
     rm: "toast toast.lumos.os, no light or bloom; still counts",
     browse: false,
   },
@@ -189,6 +240,9 @@ export const HUNT_ROWS = {
     credit: "egg.hunt.credit.hp-snitch",
     trigger: ["button"],
     keyboard: true,
+    how: "egg.hunt.how.hp-snitch",
+    tip: "egg.hunt.tip.hp-snitch",
+    target: "#egg-hp-snitch",
     rm: "rests, catchable",
     browse: false,
   },
