@@ -21,8 +21,9 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    client hydrates. "Director's cut" is the word at EVERY width (Oct 20,
    fix5: below 84rem it had read "Tour"); the header makes the room (Replay
    says "Replay" below 70rem, the Work pill says "Work"; app/p3/dock.css).
-   - Replay: window.__intro.replay() (components/site/dock-actions.ts). Motion
-     off (Pause or OS reduced motion): aria-disabled, and a press says why.
+   - Replay: replayIntro() (components/site/dock-actions.ts): the page reloads
+     into the intro's Play card like a brand-new visit (about a second).
+     Motion off (Pause or OS reduced motion): aria-disabled, and a press says why.
    - Director's cut: an ON/OFF chip. Running: aria-pressed and a press STOPS
      it (a press that began while a tour ran never re-opens the chooser, even
      though the player's own pointerdown / keydown stops the run first).
@@ -45,9 +46,10 @@ import { DC_CHOOSER_EVENT } from "@/components/site/dock-events";
    ========================================================================== */
 
 const Popover = safeLazy(() => import("@/components/site/dock-popovers"));
-/** replay / prime live in a lazy module (warmed on hover, focus and idle) */
+/** replay lives in a lazy module (warmed on hover, focus and idle, so the
+ *  press is not waiting for the chunk) */
 const actions = () => import("@/components/site/dock-actions");
-const primeIntro = () => void actions().then((m) => m.primeIntro()).catch(() => {});
+const warmActions = () => void actions().catch(() => {});
 const warmPopovers = () => void import("@/components/site/dock-popovers").catch(() => {});
 
 const text = (k: CopyKey): string | null => {
@@ -201,12 +203,11 @@ export function ControlDock() {
   // a game starting closes any popover
   useEffect(() => on("game:start", () => setOpen(null)), []);
 
-  // warm the intro controller and the popover chunk when the visitor is near
-  // (only where the dock shows: hover and focus still prime it on a laptop)
+  // warm the replay and popover chunks when the visitor is near (only where the dock shows)
   useEffect(() => {
     if (!fine) return;
     const idle = window.setTimeout(() => {
-      primeIntro();
+      warmActions();
       warmPopovers();
     }, 2500);
     return () => window.clearTimeout(idle);
@@ -271,8 +272,8 @@ export function ControlDock() {
             aria-describedby={off && open === "note-replay" ? "dock-note-replay" : undefined}
             title={off && replayWhy ? replayWhy : undefined}
             onClick={onReplay}
-            onPointerEnter={primeIntro}
-            onFocus={primeIntro}
+            onPointerEnter={warmActions}
+            onFocus={warmActions}
           >
             <RotateCcw aria-hidden="true" strokeWidth={2} />
             <span className="dock-f" aria-hidden="true">

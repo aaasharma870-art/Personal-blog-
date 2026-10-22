@@ -19,18 +19,8 @@ export function openCutChooser(): boolean {
   return detail.handled === true;
 }
 
-type IntroApi = { replay?: () => boolean; prime?: () => void };
+type IntroApi = { replay?: () => boolean };
 const introApi = (): IntroApi | undefined => (window as Window & { __intro?: IntroApi }).__intro;
-
-/** Warm the intro controller (hover / focus / idle): a later replay then arms
- *  at once instead of waiting for the script. */
-export function primeIntro(): void {
-  try {
-    introApi()?.prime?.();
-  } catch {
-    /* no intro on this page */
-  }
-}
 
 /** Move keyboard focus to the hero's title (the h1 takes focus: tabindex -1),
  *  so a jump to the top never leaves it on a control that scrolled away. */
@@ -48,8 +38,16 @@ export function goTop(): void {
 }
 
 /**
- * Replay the intro from its Play card. Returns:
- *  - "replay"  the intro was re-armed (the page is at the top, the play screen shows);
+ * Replay the intro: THE one function every entrance uses (the header's
+ * "Replay intro", the menu's replay row, the palette's "Watch the intro
+ * again" and the closing "Mischief managed" button). A replay is a brand-new
+ * visit: the head script (components/intro/intro-head-script.tsx
+ * `__intro.replay()`) forgets `intro-seen`, leaves a one-shot marker, scrolls
+ * to the top and replaces the location with the clean home URL, so the page
+ * reloads straight into the Play card through the same cold path a first
+ * visit takes (never a re-arm of the controller this page already ran).
+ * Returns:
+ *  - "replay"  the page is reloading into the intro (about a second);
  *  - "busy"    the intro is already on screen: nothing to do;
  *  - "off"     motion is off (Pause or OS reduced motion): refused, the caller says why;
  *  - "top"     there is no intro to arm here: the page just went to the top.

@@ -18,7 +18,10 @@
      allow audio only after a gesture; scrolling is not one).
    - The AudioContext is created ONLY inside a gesture: the first unmute
      click (setSoundOn), the director's cut click (borrowSound) or that
-     first press after a reload. Hovering or focusing the toggle may
+     first press after a reload. One exception: the page a Replay intro
+     reloads into (carrySound: the Replay click was the gesture, in the
+     document before, and the context must come up running or it is dropped
+     and sound goes off). Hovering or focusing the toggle may
      prefetch the chunks (JS only, no audio bytes, no context).
    - Pause, OS reduced motion or a hidden tab: the engine silences the
      master at once and the context suspends 40 ms later (< 100 ms);
@@ -168,6 +171,64 @@ export function borrowSound(): Promise<() => void> {
     borrowToken = null;
     void turn(false, false);
   });
+}
+
+/** The wish could not be honoured: sound goes off and says so (the toggles
+ *  read "Sound off", sessionStorage forgets it). */
+function dropWish(): void {
+  want = false;
+  writeSession("sound", null);
+  notify();
+  emit("sound:change", { on: false });
+}
+
+let carried = false;
+
+/** Replay intro with sound on (components/intro/intro-sound.tsx calls this
+ *  once, when the head script armed the page from a Replay). The page was
+ *  reloaded, so there is no context yet, but the visitor's click was in the
+ *  document before. Chromium keeps its autoplay permission across that
+ *  same-origin navigation (`navigator.userActivation` reads false, yet a
+ *  context created now comes up running), so the hall's bed plays under the
+ *  Play card at once, as it did on the card before the reload. A browser that
+ *  does not carry it (Safari, Firefox) leaves the new context suspended: it is
+ *  dropped and sound goes off honestly (the card reads "Sound off" and the
+ *  visitor switches it on there, exactly as at the very beginning). Never
+ *  makes a context for a muted visitor, under Pause or reduced motion, or
+ *  twice. */
+export function carrySound(): void {
+  const AC = ctor();
+  if (carried || ctx || !AC || !wants() || motionOffNow() || !window.matchMedia(DESKTOP_FINE).matches) return;
+  carried = true;
+  let c: AudioContext;
+  try {
+    c = new AC({ latencyHint: "interactive" });
+  } catch {
+    dropWish();
+    return;
+  }
+  let timer = 0;
+  const settle = () => {
+    window.clearTimeout(timer);
+    c.removeEventListener("statechange", settle);
+    if (ctx) {
+      // the visitor's own click made a context meanwhile: that one wins
+      void c.close().catch(() => {});
+    } else if (c.state === "running" && wants() && !motionOffNow()) {
+      ctx = c;
+      wire();
+      void loadImpl().then((i) => i?.turn(true, false));
+    } else {
+      void c.close().catch(() => {});
+      if (wants()) dropWish();
+    }
+  };
+  if (c.state === "running") settle();
+  else {
+    // some engines start a permitted context a moment later
+    c.addEventListener("statechange", settle);
+    timer = window.setTimeout(settle, 500);
+  }
 }
 
 /** Prefetch both lazy chunks (hover / focus on the toggle). No context. */

@@ -116,7 +116,7 @@ type PageSnapshot = {
   hostOf: ReadonlyMap<string, string>;
   /** Dead Eye: a fine pointer on a ≥ 64 rem viewport, and #kill-list here. */
   deadEye: boolean;
-  /** The prologue can re-arm (window.__intro, motion allowed). */
+  /** The prologue can be replayed (window.__intro.replay exists, motion allowed). */
   intro: boolean;
   eggsOff: boolean;
   /** DESKTOP_FINE (the hunt panel, the drone, the director's cut). */

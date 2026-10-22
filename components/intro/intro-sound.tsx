@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { preloadSound, setSoundOn, useSound } from "@/lib/audio/store";
+import { useEffect, useSyncExternalStore } from "react";
+import { carrySound, preloadSound, setSoundOn, useSound } from "@/lib/audio/store";
 import { copyText, copyVisible } from "@/lib/sections";
 
 /* ============================================================================
@@ -21,6 +21,12 @@ import { copyText, copyVisible } from "@/lib/sections";
    - The controller (components/intro/controller.js) puts it in the dialog's
      Tab cycle: Play, Sound, Skip to the research, Skip. Enter / Space press
      it; it never starts, skips or changes the flight.
+   - A Replay intro reloads the page (components/intro/intro-head-script.tsx
+     sets window.__introReplayed when it armed from the replay marker). With
+     sound on, the button then brings the sound back by itself (carrySound:
+     the hall's bed under the card, as before the reload) or, where the browser
+     does not carry the click's permission, says "Sound off" and waits for the
+     visitor, as at the beginning. A first visit never takes that path.
    ========================================================================== */
 
 const NAME = copyText("sound.name");
@@ -41,6 +47,9 @@ export function IntroSound() {
   const { on, available } = useSound();
   const label = on ? ON : OFF;
   const shown = copyVisible(label);
+  useEffect(() => {
+    if ((window as Window & { __introReplayed?: number }).__introReplayed) carrySound();
+  }, []);
   return (
     <button
       type="button"
