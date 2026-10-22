@@ -29,6 +29,19 @@ export type DroneCopy = {
   best: string | null;
 };
 
+/** The words on a game's arcade key and the line beside it (lib/film.ts
+ *  `game.*`, resolved on the server so no client chunk reads lib/film). */
+export type GameKeyCopy = {
+  /** "Mini-game": the small label over the line, so the key reads as a game. */
+  tag: string;
+  /** The one plain line about what you do and how to stop. */
+  what: string;
+  /** The key's state window while it waits ("Ready"). */
+  ready: string;
+  /** … and while the game runs ("Live"). */
+  live: string;
+};
+
 /** One baked drone sprite (a static image import, resolved on the server). */
 export type DroneSprite = { src: string; width: number; height: number };
 /** The sprite per `systems.drone` variant: default chalk, alt blueprint. */

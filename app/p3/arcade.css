@@ -1,0 +1,366 @@
+/* ============================================================================
+   app/p3/arcade.css: the "arcade key" (Oct 22 fix; Aryan: "the easter eggs,
+   and games aren't properly visible or clear while scrolling ... the actual
+   button you see that appears while scrolling"). ONE place for the look of
+   every in-page game / tour button, so the style can be switched here and
+   nowhere else. Direction A "brass bezel" (design/mockups/a-brass-bezel):
+   a brass bezel with a dark lip, a dark glass face, a verb label, and a state
+   window with a lamp (OFF dull, ON lit). The world only recolours the lamp.
+
+   USE IT (markup; `<button>` only):
+     <button class="arcade-key [arcade-key--big]" aria-pressed="false">
+       <span class="arcade-key-face">
+         <svg class="arcade-key-ico" aria-hidden="true">…</svg>
+         <span class="arcade-key-verb">Play</span>          (optional)
+         <span class="arcade-key-name">Dead Eye</span>
+         <span class="arcade-key-win" aria-hidden="true">   (optional state window)
+           <i class="arcade-lamp"></i>
+           <span class="arcade-key-word"><span class="ak-off">Ready</span><span class="ak-on">Live</span></span>
+         </span>
+       </span>
+     </button>
+   The lamp and the word follow `aria-pressed` (or `data-on`), so the state is a
+   word AND a lamp, never colour alone. Beside it, <p class="arcade-what">: a
+   small tag ("Mini-game") and one plain line. `.arcade-plaque` lays a key and
+   its line out as one unit (`--panel`: a dark glass plate with a brass edge,
+   for keys that sit on a photograph).
+
+   RULES: this file holds only the look (colours, size, states); it never
+   decides where a key shows. The gating (DESKTOP_FINE, JS) and the position
+   live with each host (app/p3/games.css, the hero's `df:` classes). It is in
+   `@layer components` so a Tailwind utility on the element (`hidden df:inline-
+   flex`) still wins over `display`. Every-frame motion: none. A press sinks
+   the key 3 px (transform only, 80 ms); under reduced motion or Pause the
+   key changes state at once with no travel. Targets are 44 px (52 px `--big`).
+   Focus: a 3 px white ring on a dark moat, so it reads on any photograph.
+   ========================================================================== */
+
+@layer components {
+  :root {
+    /* — the style: change these to re-skin every arcade key — */
+    --ak-bezel-hi: #f0d697;
+    --ak-bezel: #b48c4e;
+    --ak-bezel-lo: #6b5028;
+    --ak-lip: #2b1e0b;
+    --ak-face-hi: #1d2d34;
+    --ak-face-lo: #0a1317;
+    --ak-ink: #f7edd3;
+    --ak-ink-dim: #cdbf9f;
+    --ak-window: #05090b;
+    --ak-moat: #05090b;
+    --ak-ring: #ffffff;
+    --ak-plate: rgb(5 9 11 / 0.9);
+    --ak-plate-edge: rgb(180 140 78 / 0.7);
+    /* the lamp (the world recolours these four) */
+    --ak-lamp: #ffb547;
+    --ak-lamp-core: #fff1c9;
+    --ak-lamp-deep: #b8610f;
+    --ak-lamp-off: #3b2d17;
+  }
+
+  /* — per-world lamp: the bezel is the same everywhere — */
+  [data-world="pirates"] {
+    --ak-lamp: #5eead4;
+    --ak-lamp-core: #e6fffa;
+    --ak-lamp-deep: #0f766e;
+    --ak-lamp-off: #12302c;
+  }
+  [data-world="idiots"] {
+    --ak-lamp: #8fd3ff;
+    --ak-lamp-core: #f0fbff;
+    --ak-lamp-deep: #2a7fb0;
+    --ak-lamp-off: #1b2c36;
+  }
+  [data-world="rdr2"],
+  [data-arcade-skin="rdr2"] {
+    --ak-lamp: #ff7a3d;
+    --ak-lamp-core: #ffe3d0;
+    --ak-lamp-deep: #a8340c;
+    --ak-lamp-off: #3a1c10;
+  }
+  [data-world="hp"] {
+    --ak-lamp: #ffd98a;
+    --ak-lamp-core: #fffbe8;
+    --ak-lamp-deep: #b8841f;
+    --ak-lamp-off: #3a2c12;
+  }
+
+  /* — the key: bezel (the button), face (its child) — */
+  .arcade-key {
+    --ak-h: 2.75rem;
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    min-height: var(--ak-h);
+    max-width: 100%;
+    padding: 2px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--ak-bezel-hi) 0, var(--ak-bezel) 48%, var(--ak-bezel-lo) 100%);
+    box-shadow:
+      0 4px 0 var(--ak-lip),
+      0 7px 12px rgb(0 0 0 / 0.55);
+    color: var(--ak-ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+    touch-action: manipulation;
+    transition:
+      transform 80ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 80ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .arcade-key--big {
+    --ak-h: 3.25rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+  }
+  .arcade-key-face {
+    display: inline-flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 0.5625rem;
+    box-sizing: border-box;
+    min-height: calc(var(--ak-h) - 4px);
+    padding: 0 0.875rem 0 0.75rem;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--ak-face-hi), var(--ak-face-lo));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      inset 0 -7px 10px rgb(0 0 0 / 0.35);
+    transition: filter 120ms;
+  }
+  .arcade-key--big .arcade-key-face {
+    padding: 0 1.125rem 0 0.875rem;
+    border-radius: 14px;
+  }
+  .arcade-key-ico {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--ak-ink);
+  }
+  .arcade-key--big .arcade-key-ico {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .arcade-key-verb {
+    color: var(--ak-ink-dim);
+  }
+  .arcade-key-name {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* the state window: a lamp and one word (both follow aria-pressed) */
+  .arcade-key-win {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
+    padding: 0.3125rem 0.5rem;
+    border-radius: 5px;
+    background: var(--ak-window);
+    box-shadow:
+      inset 0 1px 3px #000,
+      0 1px 0 rgb(255 255 255 / 0.08);
+    color: var(--ak-ink-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+  /* both words share one cell, so the key never changes width */
+  .arcade-key-word {
+    display: inline-grid;
+  }
+  .arcade-key-word > * {
+    grid-area: 1 / 1;
+  }
+  .arcade-key .ak-on,
+  .arcade-key[aria-pressed="true"] .ak-off,
+  .arcade-key[data-on] .ak-off {
+    visibility: hidden;
+  }
+  .arcade-key[aria-pressed="true"] .ak-on,
+  .arcade-key[data-on] .ak-on {
+    visibility: visible;
+  }
+  .arcade-key[aria-pressed="true"] .arcade-key-win,
+  .arcade-key[data-on] .arcade-key-win {
+    color: var(--ak-lamp);
+  }
+  .arcade-lamp {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #6b5a3b, var(--ak-lamp-off) 70%);
+    box-shadow:
+      inset 0 0 0 1px rgb(0 0 0 / 0.65),
+      0 0 0 1px rgb(255 255 255 / 0.1);
+  }
+  .arcade-key[aria-pressed="true"] .arcade-lamp,
+  .arcade-key[data-on] .arcade-lamp {
+    background: radial-gradient(circle at 35% 30%, var(--ak-lamp-core), var(--ak-lamp) 55%, var(--ak-lamp-deep));
+    box-shadow:
+      0 0 9px 3px color-mix(in srgb, var(--ak-lamp) 60%, transparent),
+      inset 0 0 0 1px rgb(0 0 0 / 0.35);
+  }
+
+  /* — states — */
+  .arcade-key:hover {
+    transform: translateY(-1px);
+  }
+  .arcade-key:hover .arcade-key-face {
+    filter: brightness(1.22);
+  }
+  /* latched on (a round or a flight is running): the key sits a little down */
+  .arcade-key[aria-pressed="true"],
+  .arcade-key[data-on] {
+    transform: translateY(2px);
+    box-shadow:
+      0 2px 0 var(--ak-lip),
+      0 3px 6px rgb(0 0 0 / 0.5);
+  }
+  .arcade-key[aria-pressed="true"]:hover,
+  .arcade-key[data-on]:hover {
+    transform: translateY(1px);
+  }
+  /* pressed (and a press the page has queued but not answered yet) */
+  .arcade-key:active,
+  .arcade-key[aria-busy="true"] {
+    transform: translateY(3px);
+    box-shadow:
+      0 1px 0 var(--ak-lip),
+      0 2px 4px rgb(0 0 0 / 0.55);
+  }
+  .arcade-key[aria-busy="true"] {
+    cursor: progress;
+  }
+  .arcade-key[aria-busy="true"] .arcade-lamp {
+    animation: ak-busy 0.7s ease-in-out infinite alternate;
+  }
+  @keyframes ak-busy {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.3;
+    }
+  }
+  .arcade-key[aria-disabled="true"] {
+    filter: saturate(0.35) brightness(0.8);
+  }
+  .arcade-key[aria-disabled="true"]:hover {
+    transform: none;
+  }
+  .arcade-key[aria-disabled="true"]:hover .arcade-key-face {
+    filter: none;
+  }
+  /* — reduced motion and the site Pause: the state changes at once, the key
+       does not travel (the lamp, the word and the shadow still show it) — */
+  @media (prefers-reduced-motion: reduce) {
+    .arcade-key,
+    .arcade-key-face {
+      transition: none;
+    }
+    .arcade-key:hover,
+    .arcade-key:active,
+    .arcade-key[aria-busy="true"],
+    .arcade-key[aria-pressed="true"],
+    .arcade-key[data-on] {
+      transform: none;
+    }
+    .arcade-key[aria-busy="true"] .arcade-lamp {
+      animation: none;
+    }
+  }
+  :root[data-motion="paused"] .arcade-key,
+  :root[data-motion="paused"] .arcade-key-face {
+    transition: none;
+  }
+  :root[data-motion="paused"] .arcade-key:hover,
+  :root[data-motion="paused"] .arcade-key:active,
+  :root[data-motion="paused"] .arcade-key[aria-busy="true"],
+  :root[data-motion="paused"] .arcade-key[aria-pressed="true"],
+  :root[data-motion="paused"] .arcade-key[data-on] {
+    transform: none;
+  }
+  :root[data-motion="paused"] .arcade-key[aria-busy="true"] .arcade-lamp {
+    animation: none;
+  }
+
+  /* forced colors drops box-shadows: keep the key's edge and its focus ring */
+  @media (forced-colors: active) {
+    .arcade-key {
+      border: 2px solid ButtonText;
+    }
+  }
+
+  /* — a key and its one plain line, as one unit — */
+  .arcade-plaque {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  /* a dark glass plate with a brass edge, for a key that sits on a photograph
+     (or on the dark ledger: one look, so it always reads as a game plate) */
+  .arcade-plaque--panel {
+    box-sizing: border-box;
+    padding: 0.625rem 0.875rem 0.75rem 0.625rem;
+    border-radius: 1.125rem;
+    background: var(--ak-plate);
+    box-shadow:
+      inset 0 0 0 1.5px var(--ak-plate-edge),
+      0 12px 28px -14px rgb(0 0 0 / 0.85);
+  }
+  .arcade-what {
+    max-width: 15rem;
+    margin: 0;
+    color: var(--ak-ink-dim);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    text-wrap: balance;
+  }
+  .arcade-what-tag {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--ak-lamp);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}
+
+/* — Focus (keyboard): a 3 px white ring on a dark moat, so it reads on any
+     photograph. OUTSIDE the layer on purpose: the site's global
+     `:focus-visible` (outline 2 px aqua, border-radius 3 px, app/globals.css)
+     is unlayered and would win over a layered rule. The doubled class keeps
+     the key's own corners (the global rule would square them). — */
+.arcade-key.arcade-key:focus-visible {
+  outline: 3px solid var(--ak-ring);
+  outline-offset: 5px;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 0 var(--ak-lip),
+    0 0 0 5px var(--ak-moat);
+}
+.arcade-key--big.arcade-key--big:focus-visible {
+  border-radius: 16px;
+}
+@media (forced-colors: active) {
+  .arcade-key.arcade-key:focus-visible {
+    outline-color: Highlight;
+  }
+}

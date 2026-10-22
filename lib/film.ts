@@ -638,6 +638,18 @@ const copy = {
   "toy.deadeye.best": p3("Best {n}/5 · {s} s"),
   "toy.candles.lumos": p3("Lumos"),
   "toy.candles.done": p3("The hall is lit."),
+  /* the in-page game and tour keys (Oct 22, Aryan: "the easter eggs, and games
+     aren't properly visible or clear while scrolling"): each key says it is a
+     game, in plain words, and what you do. The facts are in the code: Dead Eye
+     marks the killed rows then Fire, Esc releases (components/games/dead-eye/
+     run.ts); the drone flies seven gates with arrows / WASD and Esc lands
+     (components/games/drone/drone-game.tsx, course.ts). */
+  "game.kicker": p3("Mini-game"),
+  "game.ready": p3("Ready"),
+  "game.live": p3("Live"),
+  "game.tour": p3("Tour"),
+  "game.drone.what": p3("Fly the drone through seven gates. Arrow keys or WASD. Esc lands."),
+  "game.deadeye.what": p3("Mark the killed ideas below, then Fire. Esc stops it."),
   /* sound (PHASE3-SPEC §10.4) */
   "sound.name": p3("Sound"),
   "sound.on": p3("Sound on"),

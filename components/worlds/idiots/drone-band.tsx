@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import type { CameraSpec } from "@/components/primitives/camera";
 import { LivePlate } from "@/components/primitives/live-plate";
 import { SettleFrame } from "@/components/worlds/idiots/chalk-motion";
-import type { DroneCopy, DroneSprites } from "@/components/games/shared";
+import type { DroneCopy, DroneSprites, GameKeyCopy } from "@/components/games/shared";
 
 /* the desk loads only on DESKTOP_FINE with motion on (DP-13); the game
    itself is mounted by the desktop enhancer's games binder on a press */
@@ -38,10 +38,14 @@ const CAMERA: CameraSpec = { kind: "drift", scale: [1, 1.02], driver: "progress"
  * PHASE 3 (PHASE3-SPEC §6.1, §9.2 #2; W3-GAMES):
  * - the plate is a <LivePlate> (the drift above; phones, reduced motion and
  *   no JS: today's still, identity transform);
- * - "▲ Take off" (a Meta pill, lower right, `#drone-takeoff`: the palette's
- *   "Fly the homemade drone" scrolls here and focuses it) and the small chalk
- *   drone beside it are plain markup shown ONLY on DESKTOP_FINE after JS by
- *   the full media query (app/p3/games.css). The pill carries no handler
+ * - "Take off" (the game's ARCADE KEY, app/p3/arcade.css; lower right,
+ *   `#drone-takeoff`: the palette's "Fly the homemade drone" scrolls here and
+ *   focuses it) sits in a small plate with the small chalk drone and a one-line
+ *   "Mini-game" note about what you do (Oct 22: it was a 100 px pill that
+ *   looked like the header's buttons). All of it is plain markup shown ONLY on
+ *   DESKTOP_FINE after JS by the full media query (app/p3/games.css); the
+ *   key's lamp and Ready / Live word follow its `aria-pressed`, which the
+ *   games binder sets while the drone flies. The key carries no handler
  *   here (first-load budget): the desktop enhancer's games binder
  *   (components/enhance/binders/games.ts) mounts the lazy game
  *   (components/games/drone/drone-game.tsx) on a press, reading the strings
@@ -52,6 +56,7 @@ const CAMERA: CameraSpec = { kind: "drift", scale: [1, 1.02], driver: "progress"
  * - B26, the take-off invite: the band carries the beat; the lazy desk
  *   (DESKTOP_FINE, motion on) lifts the chalk drone 8 px once on
  *   scroll-idle through the spotlight, feeds the camera and warms the game.
+ *   The key is visible at rest; the invite is only an extra.
  * Phones, touch tablets and no JS: exactly today's band.
  */
 export function DroneBand({
@@ -61,6 +66,7 @@ export function DroneBand({
   className,
   game,
   sprites,
+  keys,
 }: {
   media: MediaId;
   choice: VariantChoice;
@@ -71,6 +77,9 @@ export function DroneBand({
   /** The baked chalk / blueprint drone sprites (static imports, resolved on
    *  the server so this first-load file carries no image module). */
   sprites?: DroneSprites;
+  /** The "Mini-game" tag, the one plain line and the Ready / Live words
+   *  (resolved on the server); null = the key alone. */
+  keys?: GameKeyCopy | null;
 }) {
   const variant = useVariant(choice, "systems.band");
   const gameVariant = useVariant(choice, "systems.drone");
@@ -87,14 +96,44 @@ export function DroneBand({
         <div ref={box} className="relative aspect-[4/3] overflow-hidden rounded-frame sm:aspect-[3/1] sm:rounded-none">
           <LivePlate media={plate} camera={CAMERA} progress={p} depth={false} className="size-full" sizes="(min-width: 90rem) 1312px, 100vw" />
           {game && sprite ? (
-            <div className="drone-pill-row">
+            <div className="drone-pill-row arcade-plaque arcade-plaque--panel">
               {/* the band's chalk drone (the B26 invite lifts it; the game
                   flies its src); lazy, so a phone (the row is display:none
                   there) never fetches it */}
               {/* eslint-disable-next-line @next/next/no-img-element -- a 2 KB baked chalk sprite, decorative */}
               <img ref={mark} src={sprite.src} width={sprite.width} height={sprite.height} alt="" aria-hidden="true" loading="lazy" decoding="async" draggable={false} />
-              <button id="drone-takeoff" type="button" className="game-pill type-meta" data-enhance-queue="" data-variant={gameVariant} data-copy={JSON.stringify(game)}>
-                {game.pill}
+              {keys ? (
+                <p id="drone-what" className="arcade-what">
+                  <span className="arcade-what-tag">{keys.tag}</span>
+                  {keys.what}
+                </p>
+              ) : null}
+              <button
+                id="drone-takeoff"
+                type="button"
+                className="arcade-key arcade-key--big"
+                aria-pressed="false"
+                aria-describedby={keys ? "drone-what" : undefined}
+                data-enhance-queue=""
+                data-variant={gameVariant}
+                data-copy={JSON.stringify(game)}
+              >
+                <span className="arcade-key-face">
+                  <svg className="arcade-key-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 4 21 20H3z" fill="currentColor" />
+                  </svg>
+                  {/* the copy's leading ▲ is the icon above */}
+                  <span className="arcade-key-name">{game.pill.replace(/^▲\s*/u, "")}</span>
+                  {keys ? (
+                    <span className="arcade-key-win" aria-hidden="true">
+                      <i className="arcade-lamp" />
+                      <span className="arcade-key-word">
+                        <span className="ak-off">{keys.ready}</span>
+                        <span className="ak-on">{keys.live}</span>
+                      </span>
+                    </span>
+                  ) : null}
+                </span>
               </button>
             </div>
           ) : null}
