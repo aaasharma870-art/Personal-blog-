@@ -50,6 +50,11 @@ export type HuntRow = {
    *  eggs only; a typed spell has none. The kraken's is its act card (the
    *  button lives in the pinned card's upper bar). */
   target?: string;
+  /** The egg's own marker, when it is not the scroll `target` (an `#id`): where
+   *  focus lands once "Take me there" has arrived, and the marker that is
+   *  called. Only the kraken: the pinned card is scrolled to, its upper-bar
+   *  button is the egg. */
+  marker?: string;
   /** What it does under reduced motion (spec §9.1 RM column). */
   rm: string;
   /** Never in the palette's empty-query browse list. */
@@ -100,6 +105,7 @@ export const HUNT_ROWS = {
     how: "egg.hunt.how.pc-kraken",
     tip: "egg.hunt.tip.pc-kraken",
     target: "#act-2",
+    marker: "#egg-pc-kraken",
     rm: "static tentacle tip + toast",
     browse: false,
   },

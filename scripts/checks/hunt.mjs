@@ -18,7 +18,8 @@
 //   - Oct 22 (fix/eggs) every egg can be COLLECTED from the panel: a `how` copy key, and either a
 //     "Take me there" `target` (an #id that exists on the page) or a spell `word` (the panel's
 //     "Show the word", tied to the host's typed buffer); an egg with a `tip` wears a marker
-//     (`data-egg-glint="<id>"` on a host: <EggHotspot> sets it for every hotspot).
+//     (`data-egg-glint="<id>"` on a host: <EggHotspot> sets it for every hotspot); a `marker`
+//     (an #id, the egg's own button when the scroll target is its card) must exist in the source.
 import { HUNT_ROWS, HUNT_WORLDS } from "../../components/eggs/hunt-rows.ts";
 
 const PREFIX = { pirates: "pc-", idiots: "3i-", rdr2: "rd-", hp: "hp-" };
@@ -103,6 +104,11 @@ export default function run({ film, err, warn, readFile, uiFiles, ROOT }) {
         r.trigger?.includes("hotspot") && frag === `egg-${id}` ||
         anySource(new RegExp(`id=["'\`]${frag}["'\`]`));
       if (!ok) err(`${P} ${id}: "Take me there" target ${r.target} is not an act card, a hotspot (egg-${id}) or an id in the source`);
+    }
+    if (r.marker !== undefined) {
+      // the egg's own button, when the scroll target is something bigger (the kraken's card): focus and the call go to it
+      if (!/^#[A-Za-z][\w-]*$/.test(r.marker)) err(`${P} ${id}: marker "${r.marker}" is not an #id`);
+      else if (!anySource(new RegExp(`id=["'\`]${r.marker.slice(1)}["'\`]`))) err(`${P} ${id}: marker ${r.marker} is not an id in the source`);
     }
     if (r.tip !== undefined) {
       // <EggHotspot> sets it for every hotspot; the Run button, the kraken and the snitch carry it by hand

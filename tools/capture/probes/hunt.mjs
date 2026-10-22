@@ -21,13 +21,16 @@
 //                injection removed first) counts on click once the enhancer binds it; a hold
 //                hotspot ignores a short click and counts on a 700 ms press
 //   reset        the palette's "Reset the egg hunt" (confirm accepted) clears the count
-//   guide        (Oct 22, fix/eggs) the panel teaches the hunt: the "how this works" line, a how + where on every
-//                unfound row, "Take me there" on the page-placed eggs (closes the panel, brings the hotspot into
-//                view, calls its marker), "Show the word" on the spells (opt-in; hides again)
+//   guide        (Oct 22, fix/eggs) the panel teaches the hunt: the "how this works" line (its first line is
+//                not under the sticky head), a how + where on every unfound row, "Take me there" on the
+//                page-placed eggs (closes the panel, brings the hotspot into view, calls its marker; the
+//                kraken's takes focus to its button and shows the marker below the header), "Show the
+//                word" on the spells (opt-in; hides again)
 //   markers      every in-world egg wears a marker (ring + glint) at rest, a hover tip names the action, a find
 //                turns it into the gold tick at once, "Turn off easter eggs" hides it
 //   nudge        the one-time "There are 12 easter eggs hidden here" note: shows once the visitor is past the
-//                first act and still, "Not now" dismisses it, a reload of the same tab never shows it again
+//                first act and still, "Not now" dismisses it, a reload of the same tab never shows it again;
+//                a visitor who opened EGGS before it was armed (first seconds) is never nudged
 //   complete     at 11 found, the 12th (palette "aal") turns the chip gold, toasts 12 / 12 and
 //                adds the 12 THE HUNT credit rows (SEEKER steps aside)
 //   tail         the 36vh tail; ≥ 50 % in view for 1 s plays the scene once (extended at 12/12)
@@ -334,6 +337,12 @@ export default async function probe(page, ctx) {
         goto: rows.filter((li) => keys(li, /take me there/i) === 1).length,
         word: rows.filter((li) => keys(li, /show the word/i) === 1).length,
         spoiler: rows.some((li) => li.querySelector(".egg-word")),
+        // the sticky head must not sit on the intro's first line (it did: 1rem of the panel's padding)
+        headClear: (() => {
+          const head = p.querySelector(".hunt-panel-head")?.getBoundingClientRect();
+          const intro = p.querySelector(".egg-intro")?.getBoundingClientRect();
+          return Boolean(head && intro && head.bottom <= intro.top + 1);
+        })(),
       };
     });
     await page.locator('[data-hunt-slot="pc-parley"] .egg-key').click();
@@ -354,14 +363,36 @@ export default async function probe(page, ctx) {
       called = called || s.call;
     }
     const closed = await page.evaluate(() => !document.querySelector("[data-hunt-panel]"));
+    // the kraken: its pinned card is scrolled to; the button in the card's top bar takes focus and its
+    // marker (the glint, left of the text) is below the site header, so the call can be seen
+    await ctx.goto();
+    await sleep(1500);
+    await page.locator("[data-hunt-chip]").click();
+    await page.waitForSelector("[data-hunt-panel]", { timeout: 3000 });
+    await page.locator('[data-hunt-slot="pc-kraken"] .egg-key').click();
+    let kraken = { focus: false, star: false, call: false };
+    for (let i = 0; i < 24 && !(kraken.focus && kraken.star && kraken.call); i++) {
+      await sleep(250);
+      kraken = await page.evaluate(() => {
+        const e = document.querySelector('[data-egg-glint="pc-kraken"]');
+        const star = e?.querySelector(".egg-glint-star")?.getBoundingClientRect();
+        const header = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+        return {
+          focus: document.activeElement === e,
+          star: Boolean(star && star.top >= header && star.bottom < innerHeight),
+          call: e?.hasAttribute("data-call") ?? false,
+        };
+      });
+    }
     // 9 eggs sit on the page (Take me there), 4 are spells (Show the word); the chalk heart is both
-    set("guide", r.intro && r.rows === 12 && r.how === 12 && r.where === 12 && r.goto === 9 && r.word === 4 && !r.spoiler && shownWord === "parley" && hidden && closed && arrived && called, {
+    set("guide", r.intro && r.headClear && r.rows === 12 && r.how === 12 && r.where === 12 && r.goto === 9 && r.word === 4 && !r.spoiler && shownWord === "parley" && hidden && closed && arrived && called && kraken.focus && kraken.star && kraken.call, {
       ...r,
       shownWord,
       hidden,
       closed,
       arrived,
       called,
+      kraken,
     });
   });
 
@@ -430,7 +461,19 @@ export default async function probe(page, ctx) {
     await page.evaluate((y) => scrollTo({ top: y + 200, behavior: "instant" }), about);
     await sleep(3500);
     const again = await page.evaluate(() => Boolean(document.querySelector("[data-egg-nudge]")));
-    set("nudge", none && shown && !stoleFocus && gone && !again, { none, shown, stoleFocus, gone, again });
+    // EGGS opened in the first seconds (before the nudge is armed, ~5 s): it never shows afterwards,
+    // even past the first act and still (it did: the arming timer was never told)
+    await page.evaluate(() => sessionStorage.clear());
+    await ctx.goto();
+    await sleep(1500);
+    await page.locator("[data-hunt-chip]").click();
+    await page.waitForSelector("[data-hunt-panel]", { timeout: 3000 });
+    await sleep(500);
+    await page.keyboard.press("Escape");
+    await page.evaluate((y) => scrollTo({ top: y + 200, behavior: "instant" }), about);
+    await sleep(9500);
+    const early = await page.evaluate(() => Boolean(document.querySelector("[data-egg-nudge]")));
+    set("nudge", none && shown && !stoleFocus && gone && !again && !early, { none, shown, stoleFocus, gone, again, early });
   });
 
   await run("complete", async () => {

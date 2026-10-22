@@ -301,6 +301,25 @@
 .act-card-kraken[data-egg-glint] {
   position: relative;
 }
+/* The kraken's button is one line of text in the pinned card's top bar, which
+   sits right under the site header: the corner glint (7 px above the box)
+   would be behind the header. Its marker stands to the LEFT of the text,
+   level with it. */
+.act-card-kraken .egg-glint[data-glint="badge"] .egg-glint-star {
+  top: calc(50% - 7.5px);
+  right: auto;
+  left: -26px;
+}
+.act-card-kraken .egg-glint[data-glint="badge"] .egg-glint-tick {
+  top: calc(50% - 9px);
+  right: auto;
+  left: -28px;
+}
+/* a call's ring around the text (see "a call on a host that has a shape") */
+.act-card-kraken[data-egg-glint] {
+  --eg-call-inset: 9px -12px;
+  --eg-call-radius: 10px;
+}
 
 /* the world's accent. Dark grounds: the default gold. Chalk: chalk white
    with a blue breath. Parchment (the trail map, the journal): sepia ink. */
@@ -369,6 +388,17 @@
   50% {
     opacity: 0.55;
     transform: scale(0.78) rotate(18deg);
+  }
+}
+/* a call on a host that already has a shape (Run, the kraken's text, the
+   snitch): its ring is hidden at rest (the corner glint alone), so for the call
+   the ring comes back around the host. `--eg-call-inset` / `--eg-call-radius`
+   fit it (the kraken's is a line of text). */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  [data-call] > .egg-glint[data-glint="badge"] .egg-glint-ring {
+    display: block;
+    inset: var(--eg-call-inset, -5px);
+    border-radius: var(--eg-call-radius, 999px);
   }
 }
 /* a call under reduced motion / Pause: no pulse, the ring just stands out */
@@ -493,10 +523,15 @@
   color: var(--fg);
   font-size: 0.8125rem;
 }
-/* the title and the count stay while the list scrolls */
+/* the title and the count stay while the list scrolls. The panel pads 1rem and
+   a sticky offset is measured from INSIDE that padding (Chromium, Firefox), so
+   `top: 0` left the head 1rem low: it covered the first lines of the intro at
+   rest and let the list show through a 1rem gap above it. The head reaches out
+   over the padding (the negative margin), so it sticks at -1rem, flush with
+   the panel's edge. */
 .hunt-panel-head {
   position: sticky;
-  top: 0;
+  top: -1rem;
   z-index: 1;
   margin: -1rem -1rem 0;
   padding: 1rem 1rem 0.625rem;

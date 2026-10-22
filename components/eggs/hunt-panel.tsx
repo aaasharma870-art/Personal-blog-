@@ -143,9 +143,15 @@ export default function HuntPanel({
     const t = targetOf(h);
     if (!t) return;
     onClose(false);
-    // a marker is brought to the middle of the screen; a card or a section lands at its top
-    // focus lands on the egg (or the section's heading), so the keyboard and a screen reader arrive with the page
-    void scrollToTarget(t.el, { block: t.marker && h !== "pc-kraken" ? "center" : "start", history: false, focus: true }).then(() => {
+    // The egg's own button when the scroll target is bigger than it (the kraken: its pinned card is
+    // scrolled to, the button in the card's top bar is the egg). It is a pinned bar, so the scroll
+    // cannot place it: the card lands, then focus goes to the button.
+    const row = HUNT_ROWS[h];
+    const own = "marker" in row ? document.querySelector<HTMLElement>(row.marker) : null;
+    // a marker is brought to the middle of the screen; a card or a section lands at its top.
+    // Focus lands on the egg (or the section's heading), so the keyboard and a screen reader arrive with the page
+    void scrollToTarget(t.el, { block: t.marker && !own ? "center" : "start", history: false, focus: !own }).then(() => {
+      if (own?.isConnected) own.focus({ preventScroll: true });
       if (t.marker) window.dispatchEvent(new CustomEvent("egg:call", { detail: { hunt: h } }));
     });
   };

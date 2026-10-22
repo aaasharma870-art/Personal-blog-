@@ -71,13 +71,17 @@ export function HuntChip() {
     window.addEventListener(HUNT_PANEL_EVENT, show);
     return () => window.removeEventListener(HUNT_PANEL_EVENT, show);
   }, []);
-  // the one-time nudge: armed once the count is known to be 0 and this tab has not had it
+  // the one-time nudge: armed once the count is known to be 0 and this tab has not had it. The
+  // panel being open (or opened while the timer ran: a chip press, the palette, "Take me there")
+  // is "seen": the timer is cleared and checked again when it fires, so it never nags
   const fresh = enabled && count === 0;
   useEffect(() => {
-    if (!fresh || nudgeSeen()) return;
-    const t = window.setTimeout(() => setNudge(true), NUDGE_ARM_MS);
+    if (!fresh || open || nudgeSeen()) return;
+    const t = window.setTimeout(() => {
+      if (!nudgeSeen()) setNudge(true);
+    }, NUDGE_ARM_MS);
     return () => window.clearTimeout(t);
-  }, [fresh]);
+  }, [fresh, open]);
 
   if (!film.enabled || !film.eggs.enabled) return null;
   const n = count === null ? "–" : String(count);
@@ -150,7 +154,7 @@ export function HuntChip() {
           <HuntPanel id={panelId} chip={btn} onClose={close} />
         </Suspense>
       ) : null}
-      {nudge && enabled && !open ? (
+      {nudge && fresh && !open ? (
         <Suspense fallback={null}>
           <HuntNudge
             onOpen={() => {

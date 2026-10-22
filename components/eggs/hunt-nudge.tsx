@@ -6,7 +6,7 @@ import { isQuiet, whenQuietEnd } from "@/lib/ladder";
 import { copyText, copyVisible } from "@/lib/sections";
 import { useDirectorsCut, overlayOpen } from "@/components/director/api";
 import { eggsSessionOff } from "@/components/eggs/egg-bus";
-import { markNudgeSeen } from "@/components/eggs/hunt-store";
+import { markNudgeSeen, nudgeSeen } from "@/components/eggs/hunt-store";
 // its CSS (eggs-lazy.css) loads with this lazy chunk, not the page
 import "@/app/p3/eggs-lazy.css";
 
@@ -72,6 +72,13 @@ export default function HuntNudge({ onOpen, onGone }: { onOpen: () => void; onGo
     const root = document.documentElement;
     const check = () => {
       if (!alive || document.visibilityState !== "visible") return;
+      // the panel was opened (or the plate shown) since this watcher was armed: once per tab, never again
+      if (nudgeSeen()) {
+        alive = false;
+        window.clearInterval(poll);
+        gone();
+        return;
+      }
       if (root.classList.contains("intro-armed") || isQuiet() || eggsSessionOff()) return;
       if (tourBusy() || root.hasAttribute("data-game") || overlayOpen()) return;
       if (performance.now() - lastScroll < CALM_MS || cardPlaying()) return;
